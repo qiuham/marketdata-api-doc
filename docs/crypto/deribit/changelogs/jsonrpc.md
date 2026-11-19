@@ -2,12 +2,28 @@
 exchange: deribit
 source_url: https://docs.deribit.com/changelogs/jsonrpc
 api_type: Changelog
-updated_at: 2026-11-18 18:58:58.502579
+updated_at: 2026-11-19 19:05:32.909366
 ---
 
 # JSON-RPC API Changelog
 
 > Release notes for the Deribit JSON-RPC API covering new endpoints, parameter changes, subscription updates, and backward-compatibility announcements.
+
+**Release 19.11.2026**
+
+**Lower rate limit for ticker and order book methods**
+
+A new shared rate limit of **5 requests per second, with a burst of 25**, applies to these methods combined:
+
+* [public/ticker](https://docs.deribit.com/api-reference/market-data/public-ticker.md)
+* [public/get\_order\_book](https://docs.deribit.com/api-reference/market-data/public-get_order_book.md)
+* [public/get\_order\_book\_by\_instrument\_id](https://docs.deribit.com/api-reference/market-data/public-get_order_book_by_instrument_id.md)
+
+Until now, these methods were limited only by the default non-matching engine limit of 20 requests per second, with a burst of 100, shared with all other non-matching engine requests. That limit still applies, so every call to these methods counts against both. Requests over the limit fail with `too_many_requests` (code `10028`). See [Rate Limits](https://docs.deribit.com/articles/rate-limits.md).
+
+> [!WARNING]
+>
+> To avoid rate limits, we recommend subscribing to `ticker.{instrument_name}.{interval}` or `book.{instrument_name}.{interval}` instead of polling these methods.
 
 **Release 10.11.2026**
 

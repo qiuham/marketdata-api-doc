@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/asyncapi.yaml'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # asyncapi.yaml
@@ -665,6 +665,7 @@ channels:
       | 3292         | `Equity.Index.US30/USD`         | US30 (Dow Jones Industrial Average) Index in USD (24/5) |
       | 1530         | `InterestRate.US2Y`             | US 2-year Treasury yield in percent                     |
       | 1534         | `InterestRate.US5Y`             | US 5-year Treasury yield in percent                     |
+      | 1536         | `InterestRate.US7Y`             | US 7-year Treasury yield in percent                     |
       | 1527         | `InterestRate.US10Y`            | US 10-year Treasury yield in percent                    |
       | 1531         | `InterestRate.US30Y`            | US 30-year Treasury yield in percent                    |
       | 327          | `FX.EUR/USD`                    | Euro / US Dollar                                        |
@@ -684,7 +685,7 @@ channels:
 
       Use `underlying_list` to discover recently streamed tickers on your connection. Availability can change, including as futures contracts expire; the table does not guarantee that every feed is streaming in every environment.
 
-      Treasury yields use the exact symbols above, without a `/USD` suffix. They are included in `["all"]` subscriptions and can also be requested individually, for example with `underlying_tickers: ["InterestRate.US2Y"]`. These are the yield feeds behind the `KX{2,5,10,30}YRRATE15M` and `KX{2,5,10,30}YRRATEH` markets; `/USD` symbols identify separate bond-price feeds.
+      Treasury yields use the exact symbols above, without a `/USD` suffix. They are included in `["all"]` subscriptions and can also be requested individually, for example with `underlying_tickers: ["InterestRate.US2Y"]`. These are the yield feeds behind the `KX{2,5,10,30}YRRATE15M` and `KX{2,5,7,10,30}YRRATEH` markets; `/USD` symbols identify separate bond-price feeds.
 
       ## Requirements
 
@@ -3669,7 +3670,7 @@ components:
               description: Qualified Pyth underlying ticker
             value_usd:
               type: string
-              description: 'Value formatted to 8 decimal places in the underlying''s quoted units. For Treasury yields (InterestRate.US2Y, InterestRate.US5Y, InterestRate.US10Y, InterestRate.US30Y), this is percent: "4.25000000" means 4.25%. The field name is retained for compatibility.'
+              description: 'Value formatted to 8 decimal places in the underlying''s quoted units. For Treasury yields (InterestRate.US2Y, InterestRate.US5Y, InterestRate.US7Y, InterestRate.US10Y, InterestRate.US30Y), this is percent: "4.25000000" means 4.25%. The field name is retained for compatibility.'
             source_ts_ms:
               type: integer
               description: Pyth source timestamp (unix ms)

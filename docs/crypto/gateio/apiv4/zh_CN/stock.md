@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/stock
 api_type: REST
-updated_at: 2026-11-18 18:56:40.121964
+updated_at: 2026-11-19 19:01:48.493229
 ---
 
 # 股票
@@ -50,40 +50,63 @@ pnl_calc_price | 2
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object |   
-»» equity | string | 账户净值  
-»» balance | string | 账户余额  
-»» available | string | 可用余额  
-»» loan_amount | string | 借款金额。非负；由原始可用余额为负时取其绝对值，否则为 0。  
-»» buy_power | string | 购买力  
-»» leverage | string | 杠杆  
-»» leave_liquidity | string | 剩余流动性  
-»» leave_liquidity_rate | string | 剩余流动性比率  
-»» aee | string | 可用资产（Available Excess Equity）  
-»» options_margin | string | 期权保证金  
-»» position_market_value | string | 持仓市值  
-»» position_pnl | string | 持仓盈亏  
-»» today_pnl | string | 今日盈亏  
-»» option_position_market_value | string | 期权持仓市值  
-»» option_position_pnl | string | 期权持仓盈亏  
-»» option_today_pnl | string | 期权今日盈亏  
-»» user_exists | boolean | 用户是否已开通业务  
-»» margin_enabled | boolean | 是否已开启融资功能  
-»» long_borrowing_rate | string | 融资年利率。空字符串表示暂无有效利率。  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradfiSpotUserAssetResp |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+equity | string | Optional |  | 账户净值  
+balance | string | Optional |  | 账户余额  
+available | string | Optional |  | 可用余额  
+loan_amount | string | Optional |  | 借款金额。非负；由原始可用余额为负时取其绝对值，否则为 0。  
+buy_power | string | Optional |  | 购买力  
+leverage | string | Optional |  | 杠杆  
+leave_liquidity | string | Optional |  | 剩余流动性  
+leave_liquidity_rate | string | Optional |  | 剩余流动性比率  
+aee | string | Optional |  | 可用资产（Available Excess Equity）  
+options_margin | string | Optional |  | 期权保证金  
+position_market_value | string | Optional |  | 持仓市值  
+position_pnl | string | Optional |  | 持仓盈亏  
+today_pnl | string | Optional |  | 今日盈亏  
+option_position_market_value | string | Optional |  | 期权持仓市值  
+option_position_pnl | string | Optional |  | 期权持仓盈亏  
+option_today_pnl | string | Optional |  | 期权今日盈亏  
+user_exists | boolean | Optional |  | 用户是否已开通业务  
+margin_enabled | boolean | Optional |  | 是否已开启融资功能  
+long_borrowing_rate | string | Optional |  | 融资年利率。空字符串表示暂无有效利率。  
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 WARNING
 
@@ -189,7 +212,21 @@ _设置融资功能开关_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | TradFiSpotSetMarginFeatureRequest | 是 |   
-» margin_feature | body | boolean | 是 | 是否开启融资功能。true 表示开启，false 表示关闭。  
+margin_feature | body | boolean | 是 | 是否开启融资功能。true 表示开启，false 表示关闭。  
+  
+####  请求体结构
+
+设置融资功能开关请求参数
+
+请求体结构类型 | 约束  
+---|---  
+TradFiSpotSetMarginFeatureRequest | required: ["margin_feature"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+margin_feature | boolean | Required |  | 是否开启融资功能。true 表示开启，false 表示关闭。  
   
 ### 返回
 
@@ -202,21 +239,33 @@ body | body | TradFiSpotSetMarginFeatureRequest | 是 |
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object | 成功时返回空对象  
-» timestamp | integer(int64) |   
+类型 | 约束  
+---|---  
+SetMarginFeature |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional | additionalProperties: false | 成功时返回空对象  
+timestamp | integer(int64) | Optional |  |   
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 WARNING
 
@@ -348,24 +397,61 @@ exchange | jp
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object |   
-»» total | integer(int64) | 总数量  
-»» total_page | integer | 总页数  
-»» list | array | 交易对列表  
-»»» symbol | string | 交易对代码  
-»»» exchange | string | 交易所。  
+类型 | 约束  
+---|---  
+TradfiSpotSymbols |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | 总数量  
+total_page | integer | Optional |  | 总页数  
+list | array | Optional |  | 交易对列表  
+  
+**data / list**
+
+交易对列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+symbol | string | Optional |  | 交易对代码  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | 交易所。  
 \- us: 美股。  
 \- hk: 港股。  
 \- kr: 韩股。  
 \- jp: 日股。  
-»»» exchange_desc | string | 交易所描述  
-»»» quote_currency | string | 报价币种  
-»»» quote_currency_precision | integer | 报价币种精度  
-»»» fx_rate | string | 报价币种对美元的汇率  
-»»» symbol_desc | string | 交易对描述  
-»»» category | string | Symbol 分类。  
+exchange_desc | string | Optional |  | 交易所描述  
+quote_currency | string | Optional |  | 报价币种  
+quote_currency_precision | integer | Optional |  | 报价币种精度  
+fx_rate | string | Optional |  | 报价币种对美元的汇率  
+symbol_desc | string | Optional |  | 交易对描述  
+category | string | Optional | enum: ["CS","ETF","ADRC","ADR","ETV","PFD","ETS","ETN","FUND"] | Symbol 分类。  
 \- CS: 股票。  
 \- ETF: 交易所基金。  
 \- ADRC、ADR: 美股里的外国公司股票凭证。  
@@ -374,95 +460,78 @@ exchange | jp
 \- ETS: 交易所交易证券。  
 \- ETN: 交易所票据。  
 \- FUND: 基金。  
-»»» asset_type | string | 资产类型。  
+asset_type | string | Optional | enum: ["STOCK","ETF"] | 资产类型。  
 \- STOCK: 股票。  
 \- ETF: 交易所基金。  
-»»» trade_status | string | 交易状态。  
+trade_status | string | Optional | enum: ["pre_market","open","post_market"] | 交易状态。  
 \- pre_market: 盘前。  
 \- open: 盘中。  
 \- post_market: 盘后。  
-»»» trade_mode | integer | 当前时段交易模式。  
+trade_mode | integer | Optional | enum: [0,1,2,4,5] | 当前时段交易模式。  
 \- 0: 禁止交易。  
 \- 1: 仅允许买入。  
 \- 2: 仅允许卖出。  
 \- 4: 支持买入和卖出。  
 \- 5: 交易暂停。  
-\- 6: 交易暂停。  
-\- 7: 交易暂停。  
-\- 8: 交易暂停。  
-»»» order_fill_timing | integer | 下单可成交时机（1=立即成交，2=盘前开始后可成交，3=盘中开始后可成交）  
-»»» icon_link | string | 图标链接  
-»»» quote_currency_symbol | string | 报价币种符号  
-»»» price_precision | integer | 价格精度  
-»»» volume_precision | integer | 数量精度  
-»»» is_ipo | boolean | 是否 IPO 交易对  
-»»» ipo_price | string | IPO 价格  
-»»» sell_price_protection | string | 卖出价格保护比例  
-»»» buy_price_protection | string | 买入价格保护比例  
-»»» symbol_descs | array | 多语言交易对描述  
-»»»» lang | string | 语言  
-»»»» value | string | 多语言描述  
-»»» margin_mode | integer | 融资融券模式。  
+order_fill_timing | integer | Optional | enum: [1,2,3] | 下单可成交时机（1=立即成交，2=盘前开始后可成交，3=盘中开始后可成交）  
+icon_link | string | Optional |  | 图标链接  
+quote_currency_symbol | string | Optional |  | 报价币种符号  
+price_precision | integer | Optional |  | 价格精度  
+volume_precision | integer | Optional |  | 数量精度  
+is_ipo | boolean | Optional |  | 是否 IPO 交易对  
+ipo_price | string | Optional |  | IPO 价格  
+sell_price_protection | string | Optional |  | 卖出价格保护比例  
+buy_price_protection | string | Optional |  | 买入价格保护比例  
+symbol_descs | array | Optional |  | 多语言交易对描述  
+margin_mode | integer | Optional | enum: [0,1,2,3] | 融资融券模式。  
 \- 0: 不支持融资融券。  
 \- 1: 可融资。  
 \- 2: 可融券。  
 \- 3: 可融资和融券。  
-»»» long_im | string | 多头初始保证金率  
-»»» long_mm | string | 多头维持保证金率  
-»»» short_im | string | 空头初始保证金率  
-»»» short_mm | string | 空头维持保证金率  
-»»» long_borrowing_rate | string | 融资年利率。空字符串表示暂无有效利率。  
-»»» short_borrowing_rate | string | 融券年利率。空字符串表示暂无有效利率。  
-»» timestamp | integer(int64) |   
+long_im | string | Optional |  | 多头初始保证金率  
+long_mm | string | Optional |  | 多头维持保证金率  
+short_im | string | Optional |  | 空头初始保证金率  
+short_mm | string | Optional |  | 空头维持保证金率  
+long_borrowing_rate | string | Optional |  | 融资年利率。空字符串表示暂无有效利率。  
+short_borrowing_rate | string | Optional |  | 融券年利率。空字符串表示暂无有效利率。  
   
-####  枚举值列表
+**data / list / items / symbol_descs**
 
-枚举值列表属性 | 值  
+多语言交易对描述
+
+类型 | 约束  
 ---|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-category | CS  
-category | ETF  
-category | ADRC  
-category | ADR  
-category | ETV  
-category | PFD  
-category | ETS  
-category | ETN  
-category | FUND  
-asset_type | STOCK  
-asset_type | ETF  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
-trade_mode | 0  
-trade_mode | 1  
-trade_mode | 2  
-trade_mode | 4  
-trade_mode | 5  
-trade_mode | 6  
-trade_mode | 7  
-trade_mode | 8  
-order_fill_timing | 1  
-order_fill_timing | 2  
-order_fill_timing | 3  
-margin_mode | 0  
-margin_mode | 1  
-margin_mode | 2  
-margin_mode | 3  
+array |   
+  
+**data / list / items / symbol_descs / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+lang | string | Optional |  | 语言  
+value | string | Optional |  | 多语言描述  
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 该请求不需要认证 
 
@@ -601,24 +670,59 @@ exchange | jp
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object |   
-»» total | integer(int64) | 总数量  
-»» total_page | integer | 总页数  
-»» list | array |   
-»»» symbol | string | 交易对代码  
-»»» exchange | string | 交易所。  
+类型 | 约束  
+---|---  
+SymbolDetail |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | 总数量  
+total_page | integer | Optional |  | 总页数  
+list | array | Optional |  |   
+  
+**data / list**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+symbol | string | Optional |  | 交易对代码  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | 交易所。  
 \- us: 美股。  
 \- hk: 港股。  
 \- kr: 韩股。  
 \- jp: 日股。  
-»»» exchange_desc | string | 交易所描述  
-»»» quote_currency | string | 报价币种  
-»»» quote_currency_precision | integer | 报价币种精度  
-»»» fx_rate | string | 报价币种对美元的汇率  
-»»» symbol_desc | string | 交易对描述  
-»»» category | string | Symbol 分类。  
+exchange_desc | string | Optional |  | 交易所描述  
+quote_currency | string | Optional |  | 报价币种  
+quote_currency_precision | integer | Optional |  | 报价币种精度  
+fx_rate | string | Optional |  | 报价币种对美元的汇率  
+symbol_desc | string | Optional |  | 交易对描述  
+category | string | Optional | enum: ["CS","ETF","ADRC","ADR","ETV","PFD","ETS","ETN","FUND"] | Symbol 分类。  
 \- CS: 股票。  
 \- ETF: 交易所基金。  
 \- ADRC、ADR: 美股里的外国公司股票凭证。  
@@ -627,101 +731,84 @@ exchange | jp
 \- ETS: 交易所交易证券。  
 \- ETN: 交易所票据。  
 \- FUND: 基金。  
-»»» asset_type | string | 资产类型。  
+asset_type | string | Optional | enum: ["STOCK","ETF"] | 资产类型。  
 \- STOCK: 股票。  
 \- ETF: 交易所基金。  
-»»» settlement_currency | string | 结算币种  
-»»» max_order_volume | string | 最大下单数量  
-»»» step_order_volume | string | 下单步长  
-»»» min_order_volume | string | 最小下单数量  
-»»» price_precision | integer | 价格精度  
-»»» volume_precision | integer | 数量精度  
-»»» is_ipo | boolean | 是否 IPO 交易对  
-»»» ipo_price | string | IPO 价格  
-»»» price_protection | string | 价格保护范围  
-»»» sell_price_protection | string | 卖出价格保护比例  
-»»» buy_price_protection | string | 买入价格保护比例  
-»»» slippage_rate | string | 滑点  
-»»» commission_rate | string | 手续费率  
-»»» trade_status | string | 交易状态。  
+settlement_currency | string | Optional |  | 结算币种  
+max_order_volume | string | Optional |  | 最大下单数量  
+step_order_volume | string | Optional |  | 下单步长  
+min_order_volume | string | Optional |  | 最小下单数量  
+price_precision | integer | Optional |  | 价格精度  
+volume_precision | integer | Optional |  | 数量精度  
+is_ipo | boolean | Optional |  | 是否 IPO 交易对  
+ipo_price | string | Optional |  | IPO 价格  
+price_protection | string | Optional |  | 价格保护范围  
+sell_price_protection | string | Optional |  | 卖出价格保护比例  
+buy_price_protection | string | Optional |  | 买入价格保护比例  
+slippage_rate | string | Optional |  | 滑点  
+commission_rate | string | Optional |  | 手续费率  
+trade_status | string | Optional | enum: ["pre_market","open","post_market"] | 交易状态。  
 \- pre_market: 盘前。  
 \- open: 盘中。  
 \- post_market: 盘后。  
-»»» trade_mode | integer | 当前时段交易模式。  
+trade_mode | integer | Optional | enum: [0,1,2,4,5] | 当前时段交易模式。  
 \- 0: 禁止交易。  
 \- 1: 仅允许买入。  
 \- 2: 仅允许卖出。  
 \- 4: 支持买入和卖出。  
 \- 5: 交易暂停。  
-\- 6: 交易暂停。  
-\- 7: 交易暂停。  
-\- 8: 交易暂停。  
-»»» order_fill_timing | integer | 下单可成交时机（1=立即成交，2=盘前开始后可成交，3=盘中开始后可成交）  
-»»» symbol_descs | array | 多语言交易对描述  
-»»»» lang | string | 语言  
-»»»» value | string | 多语言描述  
-»»» icon_link | string | 图标链接  
-»»» margin_mode | integer | 融资融券模式。  
+order_fill_timing | integer | Optional | enum: [1,2,3] | 下单可成交时机（1=立即成交，2=盘前开始后可成交，3=盘中开始后可成交）  
+symbol_descs | array | Optional |  | 多语言交易对描述  
+icon_link | string | Optional |  | 图标链接  
+margin_mode | integer | Optional | enum: [0,1,2,3] | 融资融券模式。  
 \- 0: 不支持融资融券。  
 \- 1: 可融资。  
 \- 2: 可融券。  
 \- 3: 可融资和融券。  
-»»» long_im | string | 多头初始保证金率  
-»»» long_mm | string | 多头维持保证金率  
-»»» short_im | string | 空头初始保证金率  
-»»» short_mm | string | 空头维持保证金率  
-»»» long_borrowing_rate | string | 融资年利率。空字符串表示暂无有效利率。  
-»»» short_borrowing_rate | string | 融券年利率。空字符串表示暂无有效利率。  
-»» timestamp | integer(int64) |   
+long_im | string | Optional |  | 多头初始保证金率  
+long_mm | string | Optional |  | 多头维持保证金率  
+short_im | string | Optional |  | 空头初始保证金率  
+short_mm | string | Optional |  | 空头维持保证金率  
+long_borrowing_rate | string | Optional |  | 融资年利率。空字符串表示暂无有效利率。  
+short_borrowing_rate | string | Optional |  | 融券年利率。空字符串表示暂无有效利率。  
   
-####  枚举值列表
+**data / list / items / symbol_descs**
 
-枚举值列表属性 | 值  
+多语言交易对描述
+
+类型 | 约束  
 ---|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-category | CS  
-category | ETF  
-category | ADRC  
-category | ADR  
-category | ETV  
-category | PFD  
-category | ETS  
-category | ETN  
-category | FUND  
-asset_type | STOCK  
-asset_type | ETF  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
-trade_mode | 0  
-trade_mode | 1  
-trade_mode | 2  
-trade_mode | 4  
-trade_mode | 5  
-trade_mode | 6  
-trade_mode | 7  
-trade_mode | 8  
-order_fill_timing | 1  
-order_fill_timing | 2  
-order_fill_timing | 3  
-margin_mode | 0  
-margin_mode | 1  
-margin_mode | 2  
-margin_mode | 3  
+array |   
+  
+**data / list / items / symbol_descs / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+lang | string | Optional |  | 语言  
+value | string | Optional |  | 多语言描述  
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 该请求不需要认证 
 
@@ -843,28 +930,89 @@ symbol | URL | string | 是 | 交易对代码
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object |   
-»» symbol | string | 交易对代码  
-»» bids | array | 买盘  
-»»» p | string | 价格  
-»»» user_order | boolean | 是否为用户自己的订单  
-»» asks | array | 卖盘  
-»»» p | string | 价格  
-»»» user_order | boolean | 是否为用户自己的订单  
-»» timestamp | integer(int64) |   
+类型 | 约束  
+---|---  
+TradfiSpotOrderBook |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+symbol | string | Optional |  | 交易对代码  
+bids | array | Optional |  | 买盘  
+asks | array | Optional |  | 卖盘  
+  
+**data / bids**
+
+买盘
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / bids / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+p | string | Optional |  | 价格  
+user_order | boolean | Optional |  | 是否为用户自己的订单  
+  
+**data / asks**
+
+卖盘
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / asks / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+p | string | Optional |  | 价格  
+user_order | boolean | Optional |  | 是否为用户自己的订单  
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 该请求不需要认证 
 
@@ -954,36 +1102,70 @@ symbol | 请求参数 | string | 否 | 交易对代码
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object |   
-»» list | array | 当前委托单列表  
-»»» order_id | string | 订单 ID  
-»»» symbol | string | 交易对代码  
-»»» exchange | string | 交易所。  
+类型 | 约束  
+---|---  
+TradfiSpotOrderList |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Optional |  | 当前委托单列表  
+  
+**data / list**
+
+当前委托单列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | string | Optional |  | 订单 ID  
+symbol | string | Optional |  | 交易对代码  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | 交易所。  
 \- us: 美股。  
 \- hk: 港股。  
 \- kr: 韩股。  
 \- jp: 日股。  
-»»» quote_currency | string | 报价币种  
-»»» fx_rate | string | 报价币种对美元的汇率  
-»»» symbol_desc | string | 交易对描述  
-»»» trade_status | string | 交易状态。  
+quote_currency | string | Optional |  | 报价币种  
+fx_rate | string | Optional |  | 报价币种对美元的汇率  
+symbol_desc | string | Optional |  | 交易对描述  
+trade_status | string | Optional | enum: ["pre_market","open","post_market"] | 交易状态。  
 \- pre_market: 盘前。  
 \- open: 盘中。  
 \- post_market: 盘后。  
-»»» trade_mode | integer | 当前时段交易模式。  
+trade_mode | integer | Optional | enum: [0,1,2,4,5] | 当前时段交易模式。  
 \- 0: 禁止交易。  
 \- 1: 仅允许买入。  
 \- 2: 仅允许卖出。  
 \- 4: 支持买入和卖出。  
 \- 5: 交易暂停。  
-\- 6: 交易暂停。  
-\- 7: 交易暂停。  
-\- 8: 交易暂停。  
-»»» price_type | string | 价格类型（market=市价，limit=限价）  
-»»» side | integer | 买卖方向（1=卖，2=买）  
-»»» status | integer | 订单状态。  
+price_type | string | Optional | enum: ["market","limit"] | 价格类型（market=市价，limit=限价）  
+side | integer | Optional | enum: [1,2] | 买卖方向（1=卖，2=买）  
+status | integer | Optional | enum: [0,1,2,3,4,5,6,7,8] | 订单状态。  
 \- 0: 未知。  
 \- 1: 新订单，订单已验证，等待处理。  
 \- 2: 部分成交。  
@@ -993,65 +1175,37 @@ symbol | 请求参数 | string | 否 | 交易对代码
 \- 6: 撤单被拒绝。  
 \- 7: 改单成功。  
 \- 8: 改单拒绝。  
-»»» volume | string | 委托数量  
-»»» fill_volume | string | 成交数量  
-»»» price | string | 委托价格  
-»»» time_setup | integer(int64) | 下单时间（Unix 时间戳，秒）  
-»»» time_update | integer(int64) | 订单更新时间（Unix 时间戳，秒）  
-»»» max_order_volume | string | 最大下单数量  
-»»» step_order_volume | string | 下单步长  
-»»» min_order_volume | string | 最小下单数量  
-»»» price_precision | integer | 价格精度  
-»»» price_protection | string | 价格保护范围  
-»»» sell_price_protection | string | 卖出价格保护比例  
-»»» buy_price_protection | string | 买入价格保护比例  
-»»» commission_rate | string | 手续费率  
-»»» slippage_rate | string | 滑点  
-»» timestamp | integer(int64) |   
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
-trade_mode | 0  
-trade_mode | 1  
-trade_mode | 2  
-trade_mode | 4  
-trade_mode | 5  
-trade_mode | 6  
-trade_mode | 7  
-trade_mode | 8  
-price_type | market  
-price_type | limit  
-side | 1  
-side | 2  
-status | 0  
-status | 1  
-status | 2  
-status | 3  
-status | 4  
-status | 5  
-status | 6  
-status | 7  
-status | 8  
+volume | string | Optional |  | 委托数量  
+fill_volume | string | Optional |  | 成交数量  
+price | string | Optional |  | 委托价格  
+time_setup | integer(int64) | Optional |  | 下单时间（Unix 时间戳，秒）  
+time_update | integer(int64) | Optional |  | 订单更新时间（Unix 时间戳，秒）  
+max_order_volume | string | Optional |  | 最大下单数量  
+step_order_volume | string | Optional |  | 下单步长  
+min_order_volume | string | Optional |  | 最小下单数量  
+price_precision | integer | Optional |  | 价格精度  
+price_protection | string | Optional |  | 价格保护范围  
+sell_price_protection | string | Optional |  | 卖出价格保护比例  
+buy_price_protection | string | Optional |  | 买入价格保护比例  
+commission_rate | string | Optional |  | 手续费率  
+slippage_rate | string | Optional |  | 滑点  
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 WARNING
 
@@ -1167,36 +1321,59 @@ _下单_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | TradFiSpotOrderRequest | 是 |   
-» volume | body | string | 是 | 下单数量  
-» symbol | body | string | 是 | 交易对代码  
-» side | body | integer | 是 | 买卖方向（1=卖，2=买）  
-» price_type | body | string | 是 | 价格类型（market=市价，limit=限价）  
-» trading_session | body | string | 是 | 交易时段。  
+volume | body | string | 是 | 下单数量  
+symbol | body | string | 是 | 交易对代码  
+side | body | integer | 是 | 买卖方向（1=卖，2=买）  
+price_type | body | string | 是 | 价格类型（market=市价，limit=限价）  
+trading_session | body | string | 是 | 交易时段。  
 限价单仅支持 all，市价单仅支持 regular。  
-» time_in_force | body | string | 是 | 订单有效方式。  
+time_in_force | body | string | 是 | 订单有效方式。  
 \- day: 当日有效。  
-» price | body | string | 否 | 委托价格，限价单使用  
-» client_order_id | body | string | 否 | 客户端自定义订单 ID  
+price | body | string | 否 | 委托价格，限价单使用  
+client_order_id | body | string | 否 | 客户端自定义订单 ID  
   
 ####  详细描述
 
-**» trading_session** : 交易时段。  
+** trading_session**: 交易时段。  
 限价单仅支持 all，市价单仅支持 regular。
 
-**» time_in_force** : 订单有效方式。  
+** time_in_force**: 订单有效方式。  
 \- day: 当日有效。
 
 ####  枚举值列表
 
 枚举值列表参数 | 值  
 ---|---  
-» side | 1  
-» side | 2  
-» price_type | market  
-» price_type | limit  
-» trading_session | regular  
-» trading_session | all  
-» time_in_force | day  
+side | 1  
+side | 2  
+price_type | market  
+price_type | limit  
+trading_session | regular  
+trading_session | all  
+time_in_force | day  
+  
+####  请求体结构
+
+下单请求参数
+
+请求体结构类型 | 约束  
+---|---  
+TradFiSpotOrderRequest | required: ["volume","symbol","side","price_type","trading_session","time_in_force"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+volume | string | Required |  | 下单数量  
+symbol | string | Required |  | 交易对代码  
+side | integer | Required | enum: [1,2] | 买卖方向（1=卖，2=买）  
+price_type | string | Required | enum: ["market","limit"] | 价格类型（market=市价，limit=限价）  
+trading_session | string | Required | enum: ["regular","all"] | 交易时段。  
+限价单仅支持 all，市价单仅支持 regular。  
+time_in_force | string | Required | enum: ["day"] | 订单有效方式。  
+\- day: 当日有效。  
+price | string | Optional |  | 委托价格，限价单使用  
+client_order_id | string | Optional |  | 客户端自定义订单 ID  
   
 ### 返回
 
@@ -1209,22 +1386,45 @@ body | body | TradFiSpotOrderRequest | 是 |
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object |   
-»» id | string | 订单 ID  
-» timestamp | integer(int64) |   
+类型 | 约束  
+---|---  
+TradfiSpotCreateOrder |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | string | Optional |  | 订单 ID  
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 WARNING
 
@@ -1334,21 +1534,33 @@ _撤销全部委托单_
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object | 成功时返回空对象  
-» timestamp | integer(int64) |   
+类型 | 约束  
+---|---  
+DeleteOrder |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional | additionalProperties: false | 成功时返回空对象  
+timestamp | integer(int64) | Optional |  |   
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 WARNING
 
@@ -1459,24 +1671,61 @@ side | 2
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object |   
-»» total | integer(int64) | 总数量  
-»» total_page | integer | 总页数  
-»» list | array | 历史委托单列表  
-»»» order_id | string | 订单 ID  
-»»» symbol | string | 交易对代码  
-»»» exchange | string | 交易所。  
+类型 | 约束  
+---|---  
+TradfiSpotOrderHistoryList |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | 总数量  
+total_page | integer | Optional |  | 总页数  
+list | array | Optional |  | 历史委托单列表  
+  
+**data / list**
+
+历史委托单列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | string | Optional |  | 订单 ID  
+symbol | string | Optional |  | 交易对代码  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | 交易所。  
 \- us: 美股。  
 \- hk: 港股。  
 \- kr: 韩股。  
 \- jp: 日股。  
-»»» quote_currency | string | 报价币种  
-»»» fx_rate | string | 报价币种对美元的汇率  
-»»» symbol_desc | string | 交易对描述  
-»»» price_type | string | 价格类型（market=市价，limit=限价）  
-»»» status | integer | 订单状态。  
+quote_currency | string | Optional |  | 报价币种  
+fx_rate | string | Optional |  | 报价币种对美元的汇率  
+symbol_desc | string | Optional |  | 交易对描述  
+price_type | string | Optional | enum: ["market","limit"] | 价格类型（market=市价，limit=限价）  
+status | integer | Optional | enum: [0,1,2,3,4,5,6,7,8] | 订单状态。  
 \- 0: 未知。  
 \- 1: 新订单，订单已验证，等待处理。  
 \- 2: 部分成交。  
@@ -1486,11 +1735,9 @@ side | 2
 \- 6: 撤单被拒绝。  
 \- 7: 改单成功。  
 \- 8: 改单拒绝。  
-»»» status_desc | string | 订单状态描述  
-»»» status_detail | object|null | 订单状态详情  
-»»»» title | string | 状态标题  
-»»»» message | string | 状态说明  
-»»» finish_as | integer | 订单完成原因。  
+status_desc | string | Optional |  | 订单状态描述  
+status_detail | object|null | Optional | nullable: true | 订单状态详情  
+finish_as | integer | Optional | enum: [0,1,2,3,4,5,6,7,8,9,13] | 订单完成原因。  
 \- 0: 未知。  
 \- 1: 没有找到报价。  
 \- 2: 没有找到匹配。  
@@ -1502,62 +1749,48 @@ side | 2
 \- 8: 超过订单有效期自动撤单。  
 \- 9: 当前交易时段暂不支持交易。  
 \- 13: 公司行动撤单。  
-»»» side | integer | 买卖方向（1=卖，2=买）  
-»»» time_in_force | string | 订单有效方式。  
+side | integer | Optional | enum: [1,2] | 买卖方向（1=卖，2=买）  
+time_in_force | string | Optional | enum: ["day"] | 订单有效方式。  
 \- day: 当日有效。  
-»»» volume | string | 委托数量  
-»»» fill_volume | string | 成交数量  
-»»» price | string | 委托价格  
-»»» avg_fill_price | string|null | 平均成交价格  
-»»» commission | string | 手续费  
-»»» time_setup | integer(int64) | 下单时间（Unix 时间戳，秒）  
-»»» time_done | integer(int64) | 订单完成时间（Unix 时间戳，秒）  
-»» timestamp | integer(int64) |   
+volume | string | Optional |  | 委托数量  
+fill_volume | string | Optional |  | 成交数量  
+price | string | Optional |  | 委托价格  
+avg_fill_price | string|null | Optional | nullable: true | 平均成交价格  
+commission | string | Optional |  | 手续费  
+time_setup | integer(int64) | Optional |  | 下单时间（Unix 时间戳，秒）  
+time_done | integer(int64) | Optional |  | 订单完成时间（Unix 时间戳，秒）  
   
-####  枚举值列表
+**data / list / items / status_detail**
 
-枚举值列表属性 | 值  
+订单状态详情
+
+类型 | 约束  
 ---|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-price_type | market  
-price_type | limit  
-status | 0  
-status | 1  
-status | 2  
-status | 3  
-status | 4  
-status | 5  
-status | 6  
-status | 7  
-status | 8  
-finish_as | 0  
-finish_as | 1  
-finish_as | 2  
-finish_as | 3  
-finish_as | 4  
-finish_as | 5  
-finish_as | 6  
-finish_as | 7  
-finish_as | 8  
-finish_as | 9  
-finish_as | 13  
-side | 1  
-side | 2  
-time_in_force | day  
+object|null | nullable: true  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+title | string | Optional |  | 状态标题  
+message | string | Optional |  | 状态说明  
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 WARNING
 
@@ -1687,59 +1920,88 @@ page_size | 请求参数 | integer | 否 | 每页数量，不传默认 10，最�
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object |   
-»» total | integer(int64) | 总数量  
-»» total_page | integer(int64) | 总页数  
-»» list | array | 成交流水列表  
-»»» id | integer(int64) | 成交流水主键 ID  
-»»» deal_id | integer(int64) | 成交 ID  
-»»» order_id | integer(int64) | 订单 ID  
-»»» client_order_id | string | 客户端自定义订单 ID  
-»»» user_id | integer | 用户 ID  
-»»» symbol | string | 交易对代码  
-»»» exchange | string | 交易所。  
+类型 | 约束  
+---|---  
+OrderDealList |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | 总数量  
+total_page | integer(int64) | Optional |  | 总页数  
+list | array | Optional |  | 成交流水列表  
+  
+**data / list**
+
+成交流水列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 成交流水主键 ID  
+deal_id | integer(int64) | Optional |  | 成交 ID  
+order_id | integer(int64) | Optional |  | 订单 ID  
+client_order_id | string | Optional |  | 客户端自定义订单 ID  
+user_id | integer | Optional |  | 用户 ID  
+symbol | string | Optional |  | 交易对代码  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | 交易所。  
 \- us: 美股。  
 \- hk: 港股。  
 \- kr: 韩股。  
 \- jp: 日股。  
-»»» side | integer | 买卖方向（1=卖，2=买）  
-»»» role | string | 成交角色。  
+side | integer | Optional | enum: [1,2] | 买卖方向（1=卖，2=买）  
+role | string | Optional | enum: ["maker","taker"] | 成交角色。  
 \- maker: 挂单方。  
 \- taker: 吃单方。  
-»»» price | string | 成交价格，以标的交易币种计价  
-»»» quantity | string | 成交数量  
-»»» position_qty | string | 成交后持仓数量  
-»»» avg_entry_price | string | 平均开仓价格  
-»»» value | string | 成交金额，以标的交易币种计价  
-»»» fx_rate | string | 报价币种对美元的汇率  
-»»» fee | string | 手续费，以标的交易币种计价  
-»» timestamp | integer(int64) |   
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-side | 1  
-side | 2  
-role | maker  
-role | taker  
+price | string | Optional |  | 成交价格，以标的交易币种计价  
+quantity | string | Optional |  | 成交数量  
+position_qty | string | Optional |  | 成交后持仓数量  
+avg_entry_price | string | Optional |  | 平均开仓价格  
+value | string | Optional |  | 成交金额，以标的交易币种计价  
+fx_rate | string | Optional |  | 报价币种对美元的汇率  
+fee | string | Optional |  | 手续费，以标的交易币种计价  
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 WARNING
 
@@ -1848,9 +2110,24 @@ _修改委托单_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | TradFiSpotOrderUpdateRequest | 是 |   
-» volume | body | string | 是 | 修改后的委托数量  
-» price | body | string | 是 | 修改后的委托价格  
+volume | body | string | 是 | 修改后的委托数量  
+price | body | string | 是 | 修改后的委托价格  
 order_id | URL | integer(int64) | 是 | 订单 ID  
+  
+####  请求体结构
+
+修改委托单请求参数
+
+请求体结构类型 | 约束  
+---|---  
+TradFiSpotOrderUpdateRequest | required: ["volume","price"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+volume | string | Required |  | 修改后的委托数量  
+price | string | Required |  | 修改后的委托价格  
   
 ### 返回
 
@@ -1863,22 +2140,45 @@ order_id | URL | integer(int64) | 是 | 订单 ID
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object |   
-»» order_id | integer(int64) | 订单 ID  
-» timestamp | integer(int64) |   
+类型 | 约束  
+---|---  
+TradfiSpotUpdateOrder |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | 订单 ID  
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 WARNING
 
@@ -1988,21 +2288,33 @@ order_id | URL | integer(int64) | 是 | 订单 ID
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object | 成功时返回空对象  
-» timestamp | integer(int64) |   
+类型 | 约束  
+---|---  
+DeleteOrder |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional | additionalProperties: false | 成功时返回空对象  
+timestamp | integer(int64) | Optional |  |   
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 WARNING
 
@@ -2128,72 +2440,102 @@ exchange | jp
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object |   
-»» list | array | 当前仓位列表  
-»»» symbol | string | 交易对代码  
-»»» exchange | string | 交易所。  
+类型 | 约束  
+---|---  
+TradfiSpotPositionList |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Optional |  | 当前仓位列表  
+  
+**data / list**
+
+当前仓位列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+symbol | string | Optional |  | 交易对代码  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | 交易所。  
 \- us: 美股。  
 \- hk: 港股。  
 \- kr: 韩股。  
 \- jp: 日股。  
-»»» quote_currency | string | 报价币种  
-»»» quote_currency_precision | integer | 报价币种精度  
-»»» fx_rate | string | 报价币种对美元的汇率  
-»»» trade_status | string | 交易状态。  
+quote_currency | string | Optional |  | 报价币种  
+quote_currency_precision | integer | Optional |  | 报价币种精度  
+fx_rate | string | Optional |  | 报价币种对美元的汇率  
+trade_status | string | Optional | enum: ["pre_market","open","post_market"] | 交易状态。  
 \- pre_market: 盘前。  
 \- open: 盘中。  
 \- post_market: 盘后。  
-»»» symbol_desc | string | 交易对描述  
-»»» position_pnl | string | 持仓盈亏  
-»»» today_pnl | string | 今日盈亏  
-»»» pnl_rate | string | 收益率  
-»»» today_sell_amount | string | 今日卖出额  
-»»» today_buy_amount | string | 今日买入额  
-»»» today_sell_volume | string | 今日卖出量  
-»»» today_buy_volume | string | 今日买入量  
-»»» yesterday_volume | string | 昨日收盘持仓量  
-»»» volume | string | 持仓量  
-»»» available | string | 可用持仓量  
-»»» transfer_out_pending_qty | string | 股票转出处理中数量  
-»»» avg_cost_price | string | 成本价  
-»»» diluted_cost_price | string | 摊薄成本价  
-»»» last_price | string | 最新价格  
-»»» extended_last_price | string|null | 延长时段最新价格  
-»»» max_order_volume | string | 最大下单数量  
-»»» step_order_volume | string | 下单步长  
-»»» min_order_volume | string | 最小下单数量  
-»»» price_precision | integer | 价格精度  
-»»» price_protection | string | 价格保护范围  
-»»» sell_price_protection | string | 卖出价格保护比例  
-»»» buy_price_protection | string | 买入价格保护比例  
-»»» commission_rate | string | 手续费率  
-»»» slippage_rate | string | 滑点  
-»» timestamp | integer(int64) |   
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
+symbol_desc | string | Optional |  | 交易对描述  
+position_pnl | string | Optional |  | 持仓盈亏  
+today_pnl | string | Optional |  | 今日盈亏  
+pnl_rate | string | Optional |  | 收益率  
+today_sell_amount | string | Optional |  | 今日卖出额  
+today_buy_amount | string | Optional |  | 今日买入额  
+today_sell_volume | string | Optional |  | 今日卖出量  
+today_buy_volume | string | Optional |  | 今日买入量  
+yesterday_volume | string | Optional |  | 昨日收盘持仓量  
+volume | string | Optional |  | 持仓量  
+available | string | Optional |  | 可用持仓量  
+transfer_out_pending_qty | string | Optional |  | 股票转出处理中数量  
+avg_cost_price | string | Optional |  | 成本价  
+diluted_cost_price | string | Optional |  | 摊薄成本价  
+last_price | string | Optional |  | 最新价格  
+extended_last_price | string|null | Optional | nullable: true | 延长时段最新价格  
+max_order_volume | string | Optional |  | 最大下单数量  
+step_order_volume | string | Optional |  | 下单步长  
+min_order_volume | string | Optional |  | 最小下单数量  
+price_precision | integer | Optional |  | 价格精度  
+price_protection | string | Optional |  | 价格保护范围  
+sell_price_protection | string | Optional |  | 卖出价格保护比例  
+buy_price_protection | string | Optional |  | 买入价格保护比例  
+commission_rate | string | Optional |  | 手续费率  
+slippage_rate | string | Optional |  | 滑点  
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 WARNING
 
@@ -2315,16 +2657,32 @@ _平仓_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | TradFiSpotClosePositionRequest | 是 |   
-» symbol | body | string | 是 | 交易对代码  
-» close_volume | body | string | 否 | 平仓数量；部分平仓时必填  
-» close_type | body | integer | 是 | 平仓类型（1=部分平仓，2=全平）  
+symbol | body | string | 是 | 交易对代码  
+close_volume | body | string | 否 | 平仓数量；部分平仓时必填  
+close_type | body | integer | 是 | 平仓类型（1=部分平仓，2=全平）  
   
 ####  枚举值列表
 
 枚举值列表参数 | 值  
 ---|---  
-» close_type | 1  
-» close_type | 2  
+close_type | 1  
+close_type | 2  
+  
+####  请求体结构
+
+平仓请求参数
+
+请求体结构类型 | 约束  
+---|---  
+TradFiSpotClosePositionRequest | required: ["symbol","close_type"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+symbol | string | Required |  | 交易对代码  
+close_volume | string | Optional |  | 平仓数量；部分平仓时必填  
+close_type | integer | Required | enum: [1,2] | 平仓类型（1=部分平仓，2=全平）  
   
 ### 返回
 
@@ -2337,22 +2695,45 @@ body | body | TradFiSpotClosePositionRequest | 是 |
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object |   
-»» order_id | integer(int64) | 平仓订单 ID  
-» timestamp | integer(int64) |   
+类型 | 约束  
+---|---  
+ClosePosition |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | 平仓订单 ID  
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 WARNING
 
@@ -2504,16 +2885,53 @@ type | stock_transfer_out
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object |   
-»» total | integer(int64) |   
-»» total_page | integer(int64) |   
-»» list | array | 资金流水列表  
-»»» asset | string | 资产  
-»»» symbol | string | 交易对代码  
-»»» symbol_display | string | 交易对展示名  
-»»» type | string | 流水类型。  
+类型 | 约束  
+---|---  
+TradfiSpotTransactionList |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer(int64) | Optional |  |   
+total_page | integer(int64) | Optional |  |   
+list | array | Optional |  | 资金流水列表  
+  
+**data / list**
+
+资金流水列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+asset | string | Optional |  | 资产  
+symbol | string | Optional |  | 交易对代码  
+symbol_display | string | Optional |  | 交易对展示名  
+type | string | Optional | enum: ["deposit","withdraw","fee","dividend","sell","buy","award","stock_transfer_in","stock_transfer_out"] | 流水类型。  
 \- deposit: 资金转入。  
 \- withdraw: 资金转出。  
 \- fee: 交易手续费。  
@@ -2523,39 +2941,30 @@ type | stock_transfer_out
 \- award: 空投奖励。  
 \- stock_transfer_in: 股票转入。  
 \- stock_transfer_out: 股票转出。  
-»»» type_desc | string | 流水类型描述  
-»»» change | string | 变动数量。正数表示入账，负数表示出账。  
-»»» balance | string | 变动后余额  
-»»» ref_id | string | 业务幂等 ID  
-»»» time | integer(int64) | 时间戳（秒）  
-»»» unit_text | string | 单位展示文案  
-»»» detail | object | 业务详情  
-»» timestamp | integer(int64) |   
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-type | deposit  
-type | withdraw  
-type | fee  
-type | dividend  
-type | sell  
-type | buy  
-type | award  
-type | stock_transfer_in  
-type | stock_transfer_out  
+type_desc | string | Optional |  | 流水类型描述  
+change | string | Optional |  | 变动数量。正数表示入账，负数表示出账。  
+balance | string | Optional |  | 变动后余额  
+ref_id | string | Optional |  | 业务幂等 ID  
+time | integer(int64) | Optional |  | 时间戳（秒）  
+unit_text | string | Optional |  | 单位展示文案  
+detail | object | Optional | additionalProperties: true | 业务详情  
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 WARNING
 
@@ -2664,18 +3073,35 @@ _资金转入转出_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | TradFiSpotTransactionRequest | 是 |   
-» asset | body | string | 是 | 资产，仅支持 USDT  
-» change | body | string | 是 | 变动数量，必须大于 0  
-» type | body | string | 是 | 交易类型。deposit 表示从现货账户转入到股票账户，withdraw 表示从股票账户转出到现货账户。  
-» ref_id | body | string | 是 | 业务幂等 ID  
+asset | body | string | 是 | 资产，仅支持 USDT  
+change | body | string | 是 | 变动数量，必须大于 0  
+type | body | string | 是 | 交易类型。deposit 表示从现货账户转入到股票账户，withdraw 表示从股票账户转出到现货账户。  
+ref_id | body | string | 是 | 业务幂等 ID  
   
 ####  枚举值列表
 
 枚举值列表参数 | 值  
 ---|---  
-» asset | USDT  
-» type | deposit  
-» type | withdraw  
+asset | USDT  
+type | deposit  
+type | withdraw  
+  
+####  请求体结构
+
+资金转入转出请求参数。转入表示从现货账户转入到股票账户，转出表示从股票账户转出到现货账户。
+
+请求体结构类型 | 约束  
+---|---  
+TradFiSpotTransactionRequest | required: ["asset","change","type","ref_id"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+asset | string | Required | enum: ["USDT"] | 资产，仅支持 USDT  
+change | string | Required |  | 变动数量，必须大于 0  
+type | string | Required | enum: ["deposit","withdraw"] | 交易类型。deposit 表示从现货账户转入到股票账户，withdraw 表示从股票账户转出到现货账户。  
+ref_id | string | Required |  | 业务幂等 ID  
   
 ### 返回
 
@@ -2688,21 +3114,33 @@ body | body | TradFiSpotTransactionRequest | 是 |
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object | 成功时返回空对象  
-» timestamp | integer(int64) |   
+类型 | 约束  
+---|---  
+TradfiSpotCreateTransaction |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional | additionalProperties: false | 成功时返回空对象  
+timestamp | integer(int64) | Optional |  |   
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 WARNING
 
@@ -2844,18 +3282,55 @@ sort_direction | desc
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object |   
-»» total | integer(int64) | 总数量  
-»» total_page | integer(int64) | 总页数  
-»» list | array | 资金流水明细列表  
-»»» id | integer(int64) | 资金流水主键 ID  
-»»» user_id | integer | 用户 ID  
-»»» change | string | 资金变动数量。正数表示入账，负数表示出账。  
-»»» balance | string | 变动后资金余额快照  
-»»» stock_change | string | 股票数量变动；股票数量类流水从 detail.amount 解析，其他流水可能为空字符串  
-»»» type | string | 流水类型原始值。常见值包括：  
+类型 | 约束  
+---|---  
+BalanceRecordList |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | 总数量  
+total_page | integer(int64) | Optional |  | 总页数  
+list | array | Optional |  | 资金流水明细列表  
+  
+**data / list**
+
+资金流水明细列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 资金流水主键 ID  
+user_id | integer | Optional |  | 用户 ID  
+change | string | Optional |  | 资金变动数量。正数表示入账，负数表示出账。  
+balance | string | Optional |  | 变动后资金余额快照  
+stock_change | string | Optional |  | 股票数量变动；股票数量类流水从 detail.amount 解析，其他流水可能为空字符串  
+type | string | Optional |  | 流水类型原始值。常见值包括：  
 \- deposit: 资金转入。  
 \- withdraw: 资金转出。  
 \- fee: 交易手续费。  
@@ -2865,25 +3340,30 @@ sort_direction | desc
 \- award: 空投奖励。  
 \- stock_transfer_in: 股票转入。  
 \- stock_transfer_out: 股票转出。  
-»»» business | string | 业务标识  
-»»» business_id | integer(int64) | 业务关联 ID  
-»»» symbol | string | 交易对代码  
-»»» detail | string | 原始业务详情 JSON 字符串；仅当请求 include_detail=true 时返回  
-»»» version | integer | 记录版本号  
-»»» time_create | integer(int64) | 业务时间（Unix 时间戳，秒）  
-»»» create_time | integer(int64) | 记录创建时间（Unix 时间戳，秒）  
-»» timestamp | integer(int64) |   
+business | string | Optional |  | 业务标识  
+business_id | integer(int64) | Optional |  | 业务关联 ID  
+symbol | string | Optional |  | 交易对代码  
+detail | string | Optional |  | 原始业务详情 JSON 字符串；仅当请求 include_detail=true 时返回  
+version | integer | Optional |  | 记录版本号  
+time_create | integer(int64) | Optional |  | 业务时间（Unix 时间戳，秒）  
+create_time | integer(int64) | Optional |  | 记录创建时间（Unix 时间戳，秒）  
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 WARNING
 
@@ -2995,39 +3475,70 @@ _查询支持交易市场_
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object |   
-»» list | array |   
-»»» exchange | string | 交易市场。  
+类型 | 约束  
+---|---  
+Exchanges |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Optional |  |   
+  
+**data / list**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | 交易市场。  
 \- us: 美股。  
 \- hk: 港股。  
 \- kr: 韩股。  
 \- jp: 日股。  
-»»» exchange_desc | string | 市场展示名称  
-»»» icon_link | string | 市场图标  
-»»» support_transfer | boolean | 是否支持股票转移  
-»» timestamp | integer(int64) |   
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
+exchange_desc | string | Optional |  | 市场展示名称  
+icon_link | string | Optional |  | 市场图标  
+support_transfer | boolean | Optional |  | 是否支持股票转移  
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 该请求不需要认证 
 
@@ -3106,25 +3617,65 @@ _查询日股、韩股手续费率_
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» data | object |   
-»» list | array |   
-»»» vip_level | integer | VIP 等级  
-»»» maker_fee | string | 日股、韩股 Maker 手续费率  
-»»» taker_fee | string | 日股、韩股 Taker 手续费率  
-»» timestamp | integer(int64) |   
+类型 | 约束  
+---|---  
+FeeRate |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Optional |  |   
+  
+**data / list**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+vip_level | integer | Optional |  | VIP 等级  
+maker_fee | string | Optional |  | 日股、韩股 Maker 手续费率  
+taker_fee | string | Optional |  | 日股、韩股 Taker 手续费率  
   
 状态码 **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-名称 | 类型 | 描述  
----|---|---  
-» label | string | 业务错误标签  
-» message | string | 错误信息  
-» data | object|null | 错误附加数据  
-» timestamp | integer(int64) | 服务器时间戳（毫秒）  
+类型 | 约束  
+---|---  
+TradFiSpotError |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
   
 该请求不需要认证 
 
@@ -3185,12 +3736,16 @@ _TradFiSpotError_
 
 ##  SetMarginFeature
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-data | object | false | none | 成功时返回空对象  
-timestamp | integer(int64) | false | none | none  
+data | object | Optional | additionalProperties: false | 成功时返回空对象  
+timestamp | integer(int64) | Optional |  |   
       
     
     {
@@ -3200,80 +3755,167 @@ timestamp | integer(int64) | false | none | none
     
     
 
-##  TradFiSpotClosePositionRequest
+##  TradFiSpotOrderRequest
 
-_平仓请求参数_
+下单请求参数
 
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-symbol | string | true | none | 交易对代码  
-close_volume | string | false | none | 平仓数量；部分平仓时必填  
-close_type | integer | true | none | 平仓类型（1=部分平仓，2=全平）  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
+类型 | 约束  
 ---|---  
-close_type | 1  
-close_type | 2  
+object | required: ["volume","symbol","side","price_type","trading_session","time_in_force"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+volume | string | Required |  | 下单数量  
+symbol | string | Required |  | 交易对代码  
+side | integer | Required | enum: [1,2] | 买卖方向（1=卖，2=买）  
+price_type | string | Required | enum: ["market","limit"] | 价格类型（market=市价，limit=限价）  
+trading_session | string | Required | enum: ["regular","all"] | 交易时段。  
+限价单仅支持 all，市价单仅支持 regular。  
+time_in_force | string | Required | enum: ["day"] | 订单有效方式。  
+\- day: 当日有效。  
+price | string | Optional |  | 委托价格，限价单使用  
+client_order_id | string | Optional |  | 客户端自定义订单 ID  
       
     
     {
+      "volume": "10",
       "symbol": "AAPL",
-      "close_volume": "2",
-      "close_type": 1
+      "side": 2,
+      "price_type": "limit",
+      "trading_session": "all",
+      "time_in_force": "day",
+      "price": "200.12",
+      "client_order_id": "client-202607070001"
     }
     
     
 
-##  OrderDealList
+##  SymbolDetail
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-data | object | false | none | none  
-» total | integer(int64) | false | none | 总数量  
-» total_page | integer(int64) | false | none | 总页数  
-» list | array | false | none | 成交流水列表  
-»» id | integer(int64) | false | none | 成交流水主键 ID  
-»» deal_id | integer(int64) | false | none | 成交 ID  
-»» order_id | integer(int64) | false | none | 订单 ID  
-»» client_order_id | string | false | none | 客户端自定义订单 ID  
-»» user_id | integer | false | none | 用户 ID  
-»» symbol | string | false | none | 交易对代码  
-»» exchange | string | false | none | 交易所。  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | 总数量  
+total_page | integer | Optional |  | 总页数  
+list | array | Optional |  |   
+  
+**data / list**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+symbol | string | Optional |  | 交易对代码  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | 交易所。  
 \- us: 美股。  
 \- hk: 港股。  
 \- kr: 韩股。  
 \- jp: 日股。  
-»» side | integer | false | none | 买卖方向（1=卖，2=买）  
-»» role | string | false | none | 成交角色。  
-\- maker: 挂单方。  
-\- taker: 吃单方。  
-»» price | string | false | none | 成交价格，以标的交易币种计价  
-»» quantity | string | false | none | 成交数量  
-»» position_qty | string | false | none | 成交后持仓数量  
-»» avg_entry_price | string | false | none | 平均开仓价格  
-»» value | string | false | none | 成交金额，以标的交易币种计价  
-»» fx_rate | string | false | none | 报价币种对美元的汇率  
-»» fee | string | false | none | 手续费，以标的交易币种计价  
-» timestamp | integer(int64) | false | none | none  
+exchange_desc | string | Optional |  | 交易所描述  
+quote_currency | string | Optional |  | 报价币种  
+quote_currency_precision | integer | Optional |  | 报价币种精度  
+fx_rate | string | Optional |  | 报价币种对美元的汇率  
+symbol_desc | string | Optional |  | 交易对描述  
+category | string | Optional | enum: ["CS","ETF","ADRC","ADR","ETV","PFD","ETS","ETN","FUND"] | Symbol 分类。  
+\- CS: 股票。  
+\- ETF: 交易所基金。  
+\- ADRC、ADR: 美股里的外国公司股票凭证。  
+\- ETV: 交易所交易产品。  
+\- PFD: 优先股。  
+\- ETS: 交易所交易证券。  
+\- ETN: 交易所票据。  
+\- FUND: 基金。  
+asset_type | string | Optional | enum: ["STOCK","ETF"] | 资产类型。  
+\- STOCK: 股票。  
+\- ETF: 交易所基金。  
+settlement_currency | string | Optional |  | 结算币种  
+max_order_volume | string | Optional |  | 最大下单数量  
+step_order_volume | string | Optional |  | 下单步长  
+min_order_volume | string | Optional |  | 最小下单数量  
+price_precision | integer | Optional |  | 价格精度  
+volume_precision | integer | Optional |  | 数量精度  
+is_ipo | boolean | Optional |  | 是否 IPO 交易对  
+ipo_price | string | Optional |  | IPO 价格  
+price_protection | string | Optional |  | 价格保护范围  
+sell_price_protection | string | Optional |  | 卖出价格保护比例  
+buy_price_protection | string | Optional |  | 买入价格保护比例  
+slippage_rate | string | Optional |  | 滑点  
+commission_rate | string | Optional |  | 手续费率  
+trade_status | string | Optional | enum: ["pre_market","open","post_market"] | 交易状态。  
+\- pre_market: 盘前。  
+\- open: 盘中。  
+\- post_market: 盘后。  
+trade_mode | integer | Optional | enum: [0,1,2,4,5] | 当前时段交易模式。  
+\- 0: 禁止交易。  
+\- 1: 仅允许买入。  
+\- 2: 仅允许卖出。  
+\- 4: 支持买入和卖出。  
+\- 5: 交易暂停。  
+order_fill_timing | integer | Optional | enum: [1,2,3] | 下单可成交时机（1=立即成交，2=盘前开始后可成交，3=盘中开始后可成交）  
+symbol_descs | array | Optional |  | 多语言交易对描述  
+icon_link | string | Optional |  | 图标链接  
+margin_mode | integer | Optional | enum: [0,1,2,3] | 融资融券模式。  
+\- 0: 不支持融资融券。  
+\- 1: 可融资。  
+\- 2: 可融券。  
+\- 3: 可融资和融券。  
+long_im | string | Optional |  | 多头初始保证金率  
+long_mm | string | Optional |  | 多头维持保证金率  
+short_im | string | Optional |  | 空头初始保证金率  
+short_mm | string | Optional |  | 空头维持保证金率  
+long_borrowing_rate | string | Optional |  | 融资年利率。空字符串表示暂无有效利率。  
+short_borrowing_rate | string | Optional |  | 融券年利率。空字符串表示暂无有效利率。  
   
-####  枚举值列表
+**data / list / items / symbol_descs**
 
-枚举值列表属性 | 值  
+多语言交易对描述
+
+类型 | 约束  
 ---|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-side | 1  
-side | 2  
-role | maker  
-role | taker  
+array |   
+  
+**data / list / items / symbol_descs / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+lang | string | Optional |  | 语言  
+value | string | Optional |  | 多语言描述  
       
     
     {
@@ -3289,42 +3931,147 @@ role | taker
     
     
 
-##  TradFiSpotError
+##  TradfiSpotTransactionList
 
-_TradFiSpotError_
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-label | string | false | none | 业务错误标签  
-message | string | false | none | 错误信息  
-data | object|null | false | none | 错误附加数据  
-timestamp | integer(int64) | false | none | 服务器时间戳（毫秒）  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer(int64) | Optional |  |   
+total_page | integer(int64) | Optional |  |   
+list | array | Optional |  | 资金流水列表  
+  
+**data / list**
+
+资金流水列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+asset | string | Optional |  | 资产  
+symbol | string | Optional |  | 交易对代码  
+symbol_display | string | Optional |  | 交易对展示名  
+type | string | Optional | enum: ["deposit","withdraw","fee","dividend","sell","buy","award","stock_transfer_in","stock_transfer_out"] | 流水类型。  
+\- deposit: 资金转入。  
+\- withdraw: 资金转出。  
+\- fee: 交易手续费。  
+\- dividend: 分红派息。  
+\- sell: 卖出股票入账。  
+\- buy: 买入股票出账。  
+\- award: 空投奖励。  
+\- stock_transfer_in: 股票转入。  
+\- stock_transfer_out: 股票转出。  
+type_desc | string | Optional |  | 流水类型描述  
+change | string | Optional |  | 变动数量。正数表示入账，负数表示出账。  
+balance | string | Optional |  | 变动后余额  
+ref_id | string | Optional |  | 业务幂等 ID  
+time | integer(int64) | Optional |  | 时间戳（秒）  
+unit_text | string | Optional |  | 单位展示文案  
+detail | object | Optional | additionalProperties: true | 业务详情  
       
     
     {
-      "label": "INVALID_ARGUMENT",
-      "message": "invalid argument",
-      "data": {},
-      "timestamp": 1783411200000
+      "data": {
+        "total": 0,
+        "total_page": 0,
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 0
     }
     
     
 
 ##  TradfiSpotOrderBook
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-data | object | false | none | none  
-» symbol | string | false | none | 交易对代码  
-» bids | array | false | none | 买盘  
-»» p | string | false | none | 价格  
-»» user_order | boolean | false | none | 是否为用户自己的订单  
-» asks | [TradfiSpotOrderBook/properties/data/properties/bids/items] | false | none | 卖盘  
-timestamp | integer(int64) | false | none | none  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+symbol | string | Optional |  | 交易对代码  
+bids | array | Optional |  | 买盘  
+asks | array | Optional |  | 卖盘  
+  
+**data / bids**
+
+买盘
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / bids / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+p | string | Optional |  | 价格  
+user_order | boolean | Optional |  | 是否为用户自己的订单  
+  
+**data / asks**
+
+卖盘
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / asks / items**
+
+类型 | 约束  
+---|---  
+object |   
       
     
     {
@@ -3342,97 +4089,110 @@ timestamp | integer(int64) | false | none | none
     
     
 
-##  TradfiSpotOrderList
+##  TradFiSpotOrderUpdateRequest
 
-###  属性
+修改委托单请求参数
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+类型 | 约束  
+---|---  
+object | required: ["volume","price"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-data | object | false | none | none  
-» list | array | false | none | 当前委托单列表  
-»» order_id | string | false | none | 订单 ID  
-»» symbol | string | false | none | 交易对代码  
-»» exchange | string | false | none | 交易所。  
+volume | string | Required |  | 修改后的委托数量  
+price | string | Required |  | 修改后的委托价格  
+      
+    
+    {
+      "volume": "8",
+      "price": "201.23"
+    }
+    
+    
+
+##  TradfiSpotPositionList
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Optional |  | 当前仓位列表  
+  
+**data / list**
+
+当前仓位列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+symbol | string | Optional |  | 交易对代码  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | 交易所。  
 \- us: 美股。  
 \- hk: 港股。  
 \- kr: 韩股。  
 \- jp: 日股。  
-»» quote_currency | string | false | none | 报价币种  
-»» fx_rate | string | false | none | 报价币种对美元的汇率  
-»» symbol_desc | string | false | none | 交易对描述  
-»» trade_status | string | false | none | 交易状态。  
+quote_currency | string | Optional |  | 报价币种  
+quote_currency_precision | integer | Optional |  | 报价币种精度  
+fx_rate | string | Optional |  | 报价币种对美元的汇率  
+trade_status | string | Optional | enum: ["pre_market","open","post_market"] | 交易状态。  
 \- pre_market: 盘前。  
 \- open: 盘中。  
 \- post_market: 盘后。  
-»» trade_mode | integer | false | none | 当前时段交易模式。  
-\- 0: 禁止交易。  
-\- 1: 仅允许买入。  
-\- 2: 仅允许卖出。  
-\- 4: 支持买入和卖出。  
-\- 5: 交易暂停。  
-\- 6: 交易暂停。  
-\- 7: 交易暂停。  
-\- 8: 交易暂停。  
-»» price_type | string | false | none | 价格类型（market=市价，limit=限价）  
-»» side | integer | false | none | 买卖方向（1=卖，2=买）  
-»» status | integer | false | none | 订单状态。  
-\- 0: 未知。  
-\- 1: 新订单，订单已验证，等待处理。  
-\- 2: 部分成交。  
-\- 3: 全部成交。  
-\- 4: 已撤销。  
-\- 5: 下单被拒绝。  
-\- 6: 撤单被拒绝。  
-\- 7: 改单成功。  
-\- 8: 改单拒绝。  
-»» volume | string | false | none | 委托数量  
-»» fill_volume | string | false | none | 成交数量  
-»» price | string | false | none | 委托价格  
-»» time_setup | integer(int64) | false | none | 下单时间（Unix 时间戳，秒）  
-»» time_update | integer(int64) | false | none | 订单更新时间（Unix 时间戳，秒）  
-»» max_order_volume | string | false | none | 最大下单数量  
-»» step_order_volume | string | false | none | 下单步长  
-»» min_order_volume | string | false | none | 最小下单数量  
-»» price_precision | integer | false | none | 价格精度  
-»» price_protection | string | false | none | 价格保护范围  
-»» sell_price_protection | string | false | none | 卖出价格保护比例  
-»» buy_price_protection | string | false | none | 买入价格保护比例  
-»» commission_rate | string | false | none | 手续费率  
-»» slippage_rate | string | false | none | 滑点  
-» timestamp | integer(int64) | false | none | none  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
-trade_mode | 0  
-trade_mode | 1  
-trade_mode | 2  
-trade_mode | 4  
-trade_mode | 5  
-trade_mode | 6  
-trade_mode | 7  
-trade_mode | 8  
-price_type | market  
-price_type | limit  
-side | 1  
-side | 2  
-status | 0  
-status | 1  
-status | 2  
-status | 3  
-status | 4  
-status | 5  
-status | 6  
-status | 7  
-status | 8  
+symbol_desc | string | Optional |  | 交易对描述  
+position_pnl | string | Optional |  | 持仓盈亏  
+today_pnl | string | Optional |  | 今日盈亏  
+pnl_rate | string | Optional |  | 收益率  
+today_sell_amount | string | Optional |  | 今日卖出额  
+today_buy_amount | string | Optional |  | 今日买入额  
+today_sell_volume | string | Optional |  | 今日卖出量  
+today_buy_volume | string | Optional |  | 今日买入量  
+yesterday_volume | string | Optional |  | 昨日收盘持仓量  
+volume | string | Optional |  | 持仓量  
+available | string | Optional |  | 可用持仓量  
+transfer_out_pending_qty | string | Optional |  | 股票转出处理中数量  
+avg_cost_price | string | Optional |  | 成本价  
+diluted_cost_price | string | Optional |  | 摊薄成本价  
+last_price | string | Optional |  | 最新价格  
+extended_last_price | string|null | Optional | nullable: true | 延长时段最新价格  
+max_order_volume | string | Optional |  | 最大下单数量  
+step_order_volume | string | Optional |  | 下单步长  
+min_order_volume | string | Optional |  | 最小下单数量  
+price_precision | integer | Optional |  | 价格精度  
+price_protection | string | Optional |  | 价格保护范围  
+sell_price_protection | string | Optional |  | 卖出价格保护比例  
+buy_price_protection | string | Optional |  | 买入价格保护比例  
+commission_rate | string | Optional |  | 手续费率  
+slippage_rate | string | Optional |  | 滑点  
       
     
     {
@@ -3446,26 +4206,159 @@ status | 8
     
     
 
+##  TradfiSpotOrderList
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Optional |  | 当前委托单列表  
+  
+**data / list**
+
+当前委托单列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | string | Optional |  | 订单 ID  
+symbol | string | Optional |  | 交易对代码  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | 交易所。  
+\- us: 美股。  
+\- hk: 港股。  
+\- kr: 韩股。  
+\- jp: 日股。  
+quote_currency | string | Optional |  | 报价币种  
+fx_rate | string | Optional |  | 报价币种对美元的汇率  
+symbol_desc | string | Optional |  | 交易对描述  
+trade_status | string | Optional | enum: ["pre_market","open","post_market"] | 交易状态。  
+\- pre_market: 盘前。  
+\- open: 盘中。  
+\- post_market: 盘后。  
+trade_mode | integer | Optional | enum: [0,1,2,4,5] | 当前时段交易模式。  
+\- 0: 禁止交易。  
+\- 1: 仅允许买入。  
+\- 2: 仅允许卖出。  
+\- 4: 支持买入和卖出。  
+\- 5: 交易暂停。  
+price_type | string | Optional | enum: ["market","limit"] | 价格类型（market=市价，limit=限价）  
+side | integer | Optional | enum: [1,2] | 买卖方向（1=卖，2=买）  
+status | integer | Optional | enum: [0,1,2,3,4,5,6,7,8] | 订单状态。  
+\- 0: 未知。  
+\- 1: 新订单，订单已验证，等待处理。  
+\- 2: 部分成交。  
+\- 3: 全部成交。  
+\- 4: 已撤销。  
+\- 5: 下单被拒绝。  
+\- 6: 撤单被拒绝。  
+\- 7: 改单成功。  
+\- 8: 改单拒绝。  
+volume | string | Optional |  | 委托数量  
+fill_volume | string | Optional |  | 成交数量  
+price | string | Optional |  | 委托价格  
+time_setup | integer(int64) | Optional |  | 下单时间（Unix 时间戳，秒）  
+time_update | integer(int64) | Optional |  | 订单更新时间（Unix 时间戳，秒）  
+max_order_volume | string | Optional |  | 最大下单数量  
+step_order_volume | string | Optional |  | 下单步长  
+min_order_volume | string | Optional |  | 最小下单数量  
+price_precision | integer | Optional |  | 价格精度  
+price_protection | string | Optional |  | 价格保护范围  
+sell_price_protection | string | Optional |  | 卖出价格保护比例  
+buy_price_protection | string | Optional |  | 买入价格保护比例  
+commission_rate | string | Optional |  | 手续费率  
+slippage_rate | string | Optional |  | 滑点  
+      
+    
+    {
+      "data": {
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradfiSpotUpdateOrder
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | 订单 ID  
+      
+    
+    {
+      "data": {
+        "order_id": 123456
+      },
+      "timestamp": 0
+    }
+    
+    
+
 ##  TradFiSpotTransactionRequest
 
-_资金转入转出请求参数。转入表示从现货账户转入到股票账户，转出表示从股票账户转出到现货账户。_
+资金转入转出请求参数。转入表示从现货账户转入到股票账户，转出表示从股票账户转出到现货账户。
 
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-asset | string | true | none | 资产，仅支持 USDT  
-change | string | true | none | 变动数量，必须大于 0  
-type | string | true | none | 交易类型。deposit 表示从现货账户转入到股票账户，withdraw 表示从股票账户转出到现货账户。  
-ref_id | string | true | none | 业务幂等 ID  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
+类型 | 约束  
 ---|---  
-asset | USDT  
-type | deposit  
-type | withdraw  
+object | required: ["asset","change","type","ref_id"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+asset | string | Required | enum: ["USDT"] | 资产，仅支持 USDT  
+change | string | Required |  | 变动数量，必须大于 0  
+type | string | Required | enum: ["deposit","withdraw"] | 交易类型。deposit 表示从现货账户转入到股票账户，withdraw 表示从股票账户转出到现货账户。  
+ref_id | string | Required |  | 业务幂等 ID  
       
     
     {
@@ -3477,96 +4370,181 @@ type | withdraw
     
     
 
-##  TradFiSpotOrderRequest
+##  Exchanges
 
-_下单请求参数_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-volume | string | true | none | 下单数量  
-symbol | string | true | none | 交易对代码  
-side | integer | true | none | 买卖方向（1=卖，2=买）  
-price_type | string | true | none | 价格类型（market=市价，limit=限价）  
-trading_session | string | true | none | 交易时段。  
-限价单仅支持 all，市价单仅支持 regular。  
-time_in_force | string | true | none | 订单有效方式。  
-\- day: 当日有效。  
-price | string | false | none | 委托价格，限价单使用  
-client_order_id | string | false | none | 客户端自定义订单 ID  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
+类型 | 约束  
 ---|---  
-side | 1  
-side | 2  
-price_type | market  
-price_type | limit  
-trading_session | regular  
-trading_session | all  
-time_in_force | day  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Optional |  |   
+  
+**data / list**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | 交易市场。  
+\- us: 美股。  
+\- hk: 港股。  
+\- kr: 韩股。  
+\- jp: 日股。  
+exchange_desc | string | Optional |  | 市场展示名称  
+icon_link | string | Optional |  | 市场图标  
+support_transfer | boolean | Optional |  | 是否支持股票转移  
       
     
     {
-      "volume": "10",
-      "symbol": "AAPL",
-      "side": 2,
-      "price_type": "limit",
-      "trading_session": "all",
-      "time_in_force": "day",
-      "price": "200.12",
-      "client_order_id": "client-202607070001"
+      "data": {
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 0
     }
     
     
 
-##  TradfiSpotTransactionList
+##  TradfiSpotSymbols
 
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» total | integer(int64) | false | none | none  
-» total_page | integer(int64) | false | none | none  
-» list | array | false | none | 资金流水列表  
-»» asset | string | false | none | 资产  
-»» symbol | string | false | none | 交易对代码  
-»» symbol_display | string | false | none | 交易对展示名  
-»» type | string | false | none | 流水类型。  
-\- deposit: 资金转入。  
-\- withdraw: 资金转出。  
-\- fee: 交易手续费。  
-\- dividend: 分红派息。  
-\- sell: 卖出股票入账。  
-\- buy: 买入股票出账。  
-\- award: 空投奖励。  
-\- stock_transfer_in: 股票转入。  
-\- stock_transfer_out: 股票转出。  
-»» type_desc | string | false | none | 流水类型描述  
-»» change | string | false | none | 变动数量。正数表示入账，负数表示出账。  
-»» balance | string | false | none | 变动后余额  
-»» ref_id | string | false | none | 业务幂等 ID  
-»» time | integer(int64) | false | none | 时间戳（秒）  
-»» unit_text | string | false | none | 单位展示文案  
-»» detail | object | false | none | 业务详情  
-» timestamp | integer(int64) | false | none | none  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
+类型 | 约束  
 ---|---  
-type | deposit  
-type | withdraw  
-type | fee  
-type | dividend  
-type | sell  
-type | buy  
-type | award  
-type | stock_transfer_in  
-type | stock_transfer_out  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | 总数量  
+total_page | integer | Optional |  | 总页数  
+list | array | Optional |  | 交易对列表  
+  
+**data / list**
+
+交易对列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+symbol | string | Optional |  | 交易对代码  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | 交易所。  
+\- us: 美股。  
+\- hk: 港股。  
+\- kr: 韩股。  
+\- jp: 日股。  
+exchange_desc | string | Optional |  | 交易所描述  
+quote_currency | string | Optional |  | 报价币种  
+quote_currency_precision | integer | Optional |  | 报价币种精度  
+fx_rate | string | Optional |  | 报价币种对美元的汇率  
+symbol_desc | string | Optional |  | 交易对描述  
+category | string | Optional | enum: ["CS","ETF","ADRC","ADR","ETV","PFD","ETS","ETN","FUND"] | Symbol 分类。  
+\- CS: 股票。  
+\- ETF: 交易所基金。  
+\- ADRC、ADR: 美股里的外国公司股票凭证。  
+\- ETV: 交易所交易产品。  
+\- PFD: 优先股。  
+\- ETS: 交易所交易证券。  
+\- ETN: 交易所票据。  
+\- FUND: 基金。  
+asset_type | string | Optional | enum: ["STOCK","ETF"] | 资产类型。  
+\- STOCK: 股票。  
+\- ETF: 交易所基金。  
+trade_status | string | Optional | enum: ["pre_market","open","post_market"] | 交易状态。  
+\- pre_market: 盘前。  
+\- open: 盘中。  
+\- post_market: 盘后。  
+trade_mode | integer | Optional | enum: [0,1,2,4,5] | 当前时段交易模式。  
+\- 0: 禁止交易。  
+\- 1: 仅允许买入。  
+\- 2: 仅允许卖出。  
+\- 4: 支持买入和卖出。  
+\- 5: 交易暂停。  
+order_fill_timing | integer | Optional | enum: [1,2,3] | 下单可成交时机（1=立即成交，2=盘前开始后可成交，3=盘中开始后可成交）  
+icon_link | string | Optional |  | 图标链接  
+quote_currency_symbol | string | Optional |  | 报价币种符号  
+price_precision | integer | Optional |  | 价格精度  
+volume_precision | integer | Optional |  | 数量精度  
+is_ipo | boolean | Optional |  | 是否 IPO 交易对  
+ipo_price | string | Optional |  | IPO 价格  
+sell_price_protection | string | Optional |  | 卖出价格保护比例  
+buy_price_protection | string | Optional |  | 买入价格保护比例  
+symbol_descs | array | Optional |  | 多语言交易对描述  
+margin_mode | integer | Optional | enum: [0,1,2,3] | 融资融券模式。  
+\- 0: 不支持融资融券。  
+\- 1: 可融资。  
+\- 2: 可融券。  
+\- 3: 可融资和融券。  
+long_im | string | Optional |  | 多头初始保证金率  
+long_mm | string | Optional |  | 多头维持保证金率  
+short_im | string | Optional |  | 空头初始保证金率  
+short_mm | string | Optional |  | 空头维持保证金率  
+long_borrowing_rate | string | Optional |  | 融资年利率。空字符串表示暂无有效利率。  
+short_borrowing_rate | string | Optional |  | 融券年利率。空字符串表示暂无有效利率。  
+  
+**data / list / items / symbol_descs**
+
+多语言交易对描述
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items / symbol_descs / items**
+
+类型 | 约束  
+---|---  
+object |   
       
     
     {
@@ -3582,52 +4560,454 @@ type | stock_transfer_out
     
     
 
-##  TradFiSpotOrderUpdateRequest
+##  TradFiSpotError
 
-_修改委托单请求参数_
+TradFiSpotError
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-volume | string | true | none | 修改后的委托数量  
-price | string | true | none | 修改后的委托价格  
+label | string | Optional |  | 业务错误标签  
+message | string | Optional |  | 错误信息  
+data | object|null | Optional | nullable: true | 错误附加数据  
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
       
     
     {
-      "volume": "8",
-      "price": "201.23"
+      "label": "INVALID_ARGUMENT",
+      "message": "invalid argument",
+      "data": {},
+      "timestamp": 1783411200000
+    }
+    
+    
+
+##  OrderDealList
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | 总数量  
+total_page | integer(int64) | Optional |  | 总页数  
+list | array | Optional |  | 成交流水列表  
+  
+**data / list**
+
+成交流水列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 成交流水主键 ID  
+deal_id | integer(int64) | Optional |  | 成交 ID  
+order_id | integer(int64) | Optional |  | 订单 ID  
+client_order_id | string | Optional |  | 客户端自定义订单 ID  
+user_id | integer | Optional |  | 用户 ID  
+symbol | string | Optional |  | 交易对代码  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | 交易所。  
+\- us: 美股。  
+\- hk: 港股。  
+\- kr: 韩股。  
+\- jp: 日股。  
+side | integer | Optional | enum: [1,2] | 买卖方向（1=卖，2=买）  
+role | string | Optional | enum: ["maker","taker"] | 成交角色。  
+\- maker: 挂单方。  
+\- taker: 吃单方。  
+price | string | Optional |  | 成交价格，以标的交易币种计价  
+quantity | string | Optional |  | 成交数量  
+position_qty | string | Optional |  | 成交后持仓数量  
+avg_entry_price | string | Optional |  | 平均开仓价格  
+value | string | Optional |  | 成交金额，以标的交易币种计价  
+fx_rate | string | Optional |  | 报价币种对美元的汇率  
+fee | string | Optional |  | 手续费，以标的交易币种计价  
+      
+    
+    {
+      "data": {
+        "total": 0,
+        "total_page": 0,
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradfiSpotCreateTransaction
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional | additionalProperties: false | 成功时返回空对象  
+timestamp | integer(int64) | Optional |  |   
+      
+    
+    {
+      "data": {},
+      "timestamp": 0
+    }
+    
+    
+
+##  ClosePosition
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | 平仓订单 ID  
+      
+    
+    {
+      "data": {
+        "order_id": 123456
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradFiSpotSetMarginFeatureRequest
+
+设置融资功能开关请求参数
+
+类型 | 约束  
+---|---  
+object | required: ["margin_feature"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+margin_feature | boolean | Required |  | 是否开启融资功能。true 表示开启，false 表示关闭。  
+      
+    
+    {
+      "margin_feature": true
+    }
+    
+    
+
+##  TradfiSpotCreateOrder
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | string | Optional |  | 订单 ID  
+      
+    
+    {
+      "data": {
+        "id": "123456"
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  DeleteOrder
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional | additionalProperties: false | 成功时返回空对象  
+timestamp | integer(int64) | Optional |  |   
+      
+    
+    {
+      "data": {},
+      "timestamp": 0
+    }
+    
+    
+
+##  BalanceRecordList
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | 总数量  
+total_page | integer(int64) | Optional |  | 总页数  
+list | array | Optional |  | 资金流水明细列表  
+  
+**data / list**
+
+资金流水明细列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 资金流水主键 ID  
+user_id | integer | Optional |  | 用户 ID  
+change | string | Optional |  | 资金变动数量。正数表示入账，负数表示出账。  
+balance | string | Optional |  | 变动后资金余额快照  
+stock_change | string | Optional |  | 股票数量变动；股票数量类流水从 detail.amount 解析，其他流水可能为空字符串  
+type | string | Optional |  | 流水类型原始值。常见值包括：  
+\- deposit: 资金转入。  
+\- withdraw: 资金转出。  
+\- fee: 交易手续费。  
+\- dividend: 分红派息。  
+\- sell: 卖出股票入账。  
+\- buy: 买入股票出账。  
+\- award: 空投奖励。  
+\- stock_transfer_in: 股票转入。  
+\- stock_transfer_out: 股票转出。  
+business | string | Optional |  | 业务标识  
+business_id | integer(int64) | Optional |  | 业务关联 ID  
+symbol | string | Optional |  | 交易对代码  
+detail | string | Optional |  | 原始业务详情 JSON 字符串；仅当请求 include_detail=true 时返回  
+version | integer | Optional |  | 记录版本号  
+time_create | integer(int64) | Optional |  | 业务时间（Unix 时间戳，秒）  
+create_time | integer(int64) | Optional |  | 记录创建时间（Unix 时间戳，秒）  
+      
+    
+    {
+      "data": {
+        "total": 0,
+        "total_page": 0,
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  FeeRate
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Optional |  |   
+  
+**data / list**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+vip_level | integer | Optional |  | VIP 等级  
+maker_fee | string | Optional |  | 日股、韩股 Maker 手续费率  
+taker_fee | string | Optional |  | 日股、韩股 Taker 手续费率  
+      
+    
+    {
+      "data": {
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradFiSpotClosePositionRequest
+
+平仓请求参数
+
+类型 | 约束  
+---|---  
+object | required: ["symbol","close_type"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+symbol | string | Required |  | 交易对代码  
+close_volume | string | Optional |  | 平仓数量；部分平仓时必填  
+close_type | integer | Required | enum: [1,2] | 平仓类型（1=部分平仓，2=全平）  
+      
+    
+    {
+      "symbol": "AAPL",
+      "close_volume": "2",
+      "close_type": 1
     }
     
     
 
 ##  TradfiSpotUserAssetResp
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-data | object | false | none | none  
-» equity | string | false | none | 账户净值  
-» balance | string | false | none | 账户余额  
-» available | string | false | none | 可用余额  
-» loan_amount | string | false | none | 借款金额。非负；由原始可用余额为负时取其绝对值，否则为 0。  
-» buy_power | string | false | none | 购买力  
-» leverage | string | false | none | 杠杆  
-» leave_liquidity | string | false | none | 剩余流动性  
-» leave_liquidity_rate | string | false | none | 剩余流动性比率  
-» aee | string | false | none | 可用资产（Available Excess Equity）  
-» options_margin | string | false | none | 期权保证金  
-» position_market_value | string | false | none | 持仓市值  
-» position_pnl | string | false | none | 持仓盈亏  
-» today_pnl | string | false | none | 今日盈亏  
-» option_position_market_value | string | false | none | 期权持仓市值  
-» option_position_pnl | string | false | none | 期权持仓盈亏  
-» option_today_pnl | string | false | none | 期权今日盈亏  
-» user_exists | boolean | false | none | 用户是否已开通业务  
-» margin_enabled | boolean | false | none | 是否已开启融资功能  
-» long_borrowing_rate | string | false | none | 融资年利率。空字符串表示暂无有效利率。  
-timestamp | integer(int64) | false | none | 服务器时间戳（毫秒）  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  | 服务器时间戳（毫秒）  
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+equity | string | Optional |  | 账户净值  
+balance | string | Optional |  | 账户余额  
+available | string | Optional |  | 可用余额  
+loan_amount | string | Optional |  | 借款金额。非负；由原始可用余额为负时取其绝对值，否则为 0。  
+buy_power | string | Optional |  | 购买力  
+leverage | string | Optional |  | 杠杆  
+leave_liquidity | string | Optional |  | 剩余流动性  
+leave_liquidity_rate | string | Optional |  | 剩余流动性比率  
+aee | string | Optional |  | 可用资产（Available Excess Equity）  
+options_margin | string | Optional |  | 期权保证金  
+position_market_value | string | Optional |  | 持仓市值  
+position_pnl | string | Optional |  | 持仓盈亏  
+today_pnl | string | Optional |  | 今日盈亏  
+option_position_market_value | string | Optional |  | 期权持仓市值  
+option_position_pnl | string | Optional |  | 期权持仓盈亏  
+option_today_pnl | string | Optional |  | 期权今日盈亏  
+user_exists | boolean | Optional |  | 用户是否已开通业务  
+margin_enabled | boolean | Optional |  | 是否已开启融资功能  
+long_borrowing_rate | string | Optional |  | 融资年利率。空字符串表示暂无有效利率。  
       
     
     {
@@ -3657,359 +5037,63 @@ timestamp | integer(int64) | false | none | 服务器时间戳（毫秒）
     
     
 
-##  TradfiSpotCreateTransaction
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | 成功时返回空对象  
-timestamp | integer(int64) | false | none | none  
-      
-    
-    {
-      "data": {},
-      "timestamp": 0
-    }
-    
-    
-
-##  FeeRate
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» list | array | false | none | none  
-»» vip_level | integer | false | none | VIP 等级  
-»» maker_fee | string | false | none | 日股、韩股 Maker 手续费率  
-»» taker_fee | string | false | none | 日股、韩股 Taker 手续费率  
-» timestamp | integer(int64) | false | none | none  
-      
-    
-    {
-      "data": {
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  ClosePosition
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» order_id | integer(int64) | false | none | 平仓订单 ID  
-timestamp | integer(int64) | false | none | none  
-      
-    
-    {
-      "data": {
-        "order_id": 123456
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  TradFiSpotSetMarginFeatureRequest
-
-_设置融资功能开关请求参数_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-margin_feature | boolean | true | none | 是否开启融资功能。true 表示开启，false 表示关闭。  
-      
-    
-    {
-      "margin_feature": true
-    }
-    
-    
-
-##  Exchanges
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» list | array | false | none | none  
-»» exchange | string | false | none | 交易市场。  
-\- us: 美股。  
-\- hk: 港股。  
-\- kr: 韩股。  
-\- jp: 日股。  
-»» exchange_desc | string | false | none | 市场展示名称  
-»» icon_link | string | false | none | 市场图标  
-»» support_transfer | boolean | false | none | 是否支持股票转移  
-» timestamp | integer(int64) | false | none | none  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-      
-    
-    {
-      "data": {
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  TradfiSpotCreateOrder
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» id | string | false | none | 订单 ID  
-timestamp | integer(int64) | false | none | none  
-      
-    
-    {
-      "data": {
-        "id": "123456"
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  TradfiSpotSymbols
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» total | integer(int64) | false | none | 总数量  
-» total_page | integer | false | none | 总页数  
-» list | array | false | none | 交易对列表  
-»» symbol | string | false | none | 交易对代码  
-»» exchange | string | false | none | 交易所。  
-\- us: 美股。  
-\- hk: 港股。  
-\- kr: 韩股。  
-\- jp: 日股。  
-»» exchange_desc | string | false | none | 交易所描述  
-»» quote_currency | string | false | none | 报价币种  
-»» quote_currency_precision | integer | false | none | 报价币种精度  
-»» fx_rate | string | false | none | 报价币种对美元的汇率  
-»» symbol_desc | string | false | none | 交易对描述  
-»» category | string | false | none | Symbol 分类。  
-\- CS: 股票。  
-\- ETF: 交易所基金。  
-\- ADRC、ADR: 美股里的外国公司股票凭证。  
-\- ETV: 交易所交易产品。  
-\- PFD: 优先股。  
-\- ETS: 交易所交易证券。  
-\- ETN: 交易所票据。  
-\- FUND: 基金。  
-»» asset_type | string | false | none | 资产类型。  
-\- STOCK: 股票。  
-\- ETF: 交易所基金。  
-»» trade_status | string | false | none | 交易状态。  
-\- pre_market: 盘前。  
-\- open: 盘中。  
-\- post_market: 盘后。  
-»» trade_mode | integer | false | none | 当前时段交易模式。  
-\- 0: 禁止交易。  
-\- 1: 仅允许买入。  
-\- 2: 仅允许卖出。  
-\- 4: 支持买入和卖出。  
-\- 5: 交易暂停。  
-\- 6: 交易暂停。  
-\- 7: 交易暂停。  
-\- 8: 交易暂停。  
-»» order_fill_timing | integer | false | none | 下单可成交时机（1=立即成交，2=盘前开始后可成交，3=盘中开始后可成交）  
-»» icon_link | string | false | none | 图标链接  
-»» quote_currency_symbol | string | false | none | 报价币种符号  
-»» price_precision | integer | false | none | 价格精度  
-»» volume_precision | integer | false | none | 数量精度  
-»» is_ipo | boolean | false | none | 是否 IPO 交易对  
-»» ipo_price | string | false | none | IPO 价格  
-»» sell_price_protection | string | false | none | 卖出价格保护比例  
-»» buy_price_protection | string | false | none | 买入价格保护比例  
-»» symbol_descs | [TradfiSpotSymbols/definitions/SymbolListItem/properties/symbol_descs/items] | false | none | 多语言交易对描述  
-»» margin_mode | integer | false | none | 融资融券模式。  
-\- 0: 不支持融资融券。  
-\- 1: 可融资。  
-\- 2: 可融券。  
-\- 3: 可融资和融券。  
-»» long_im | string | false | none | 多头初始保证金率  
-»» long_mm | string | false | none | 多头维持保证金率  
-»» short_im | string | false | none | 空头初始保证金率  
-»» short_mm | string | false | none | 空头维持保证金率  
-»» long_borrowing_rate | string | false | none | 融资年利率。空字符串表示暂无有效利率。  
-»» short_borrowing_rate | string | false | none | 融券年利率。空字符串表示暂无有效利率。  
-» timestamp | integer(int64) | false | none | none  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-category | CS  
-category | ETF  
-category | ADRC  
-category | ADR  
-category | ETV  
-category | PFD  
-category | ETS  
-category | ETN  
-category | FUND  
-asset_type | STOCK  
-asset_type | ETF  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
-trade_mode | 0  
-trade_mode | 1  
-trade_mode | 2  
-trade_mode | 4  
-trade_mode | 5  
-trade_mode | 6  
-trade_mode | 7  
-trade_mode | 8  
-order_fill_timing | 1  
-order_fill_timing | 2  
-order_fill_timing | 3  
-margin_mode | 0  
-margin_mode | 1  
-margin_mode | 2  
-margin_mode | 3  
-      
-    
-    {
-      "data": {
-        "total": 0,
-        "total_page": 0,
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  TradfiSpotPositionList
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» list | array | false | none | 当前仓位列表  
-»» symbol | string | false | none | 交易对代码  
-»» exchange | string | false | none | 交易所。  
-\- us: 美股。  
-\- hk: 港股。  
-\- kr: 韩股。  
-\- jp: 日股。  
-»» quote_currency | string | false | none | 报价币种  
-»» quote_currency_precision | integer | false | none | 报价币种精度  
-»» fx_rate | string | false | none | 报价币种对美元的汇率  
-»» trade_status | string | false | none | 交易状态。  
-\- pre_market: 盘前。  
-\- open: 盘中。  
-\- post_market: 盘后。  
-»» symbol_desc | string | false | none | 交易对描述  
-»» position_pnl | string | false | none | 持仓盈亏  
-»» today_pnl | string | false | none | 今日盈亏  
-»» pnl_rate | string | false | none | 收益率  
-»» today_sell_amount | string | false | none | 今日卖出额  
-»» today_buy_amount | string | false | none | 今日买入额  
-»» today_sell_volume | string | false | none | 今日卖出量  
-»» today_buy_volume | string | false | none | 今日买入量  
-»» yesterday_volume | string | false | none | 昨日收盘持仓量  
-»» volume | string | false | none | 持仓量  
-»» available | string | false | none | 可用持仓量  
-»» transfer_out_pending_qty | string | false | none | 股票转出处理中数量  
-»» avg_cost_price | string | false | none | 成本价  
-»» diluted_cost_price | string | false | none | 摊薄成本价  
-»» last_price | string | false | none | 最新价格  
-»» extended_last_price | string|null | false | none | 延长时段最新价格  
-»» max_order_volume | string | false | none | 最大下单数量  
-»» step_order_volume | string | false | none | 下单步长  
-»» min_order_volume | string | false | none | 最小下单数量  
-»» price_precision | integer | false | none | 价格精度  
-»» price_protection | string | false | none | 价格保护范围  
-»» sell_price_protection | string | false | none | 卖出价格保护比例  
-»» buy_price_protection | string | false | none | 买入价格保护比例  
-»» commission_rate | string | false | none | 手续费率  
-»» slippage_rate | string | false | none | 滑点  
-» timestamp | integer(int64) | false | none | none  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
-      
-    
-    {
-      "data": {
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
 ##  TradfiSpotOrderHistoryList
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-data | object | false | none | none  
-» total | integer(int64) | false | none | 总数量  
-» total_page | integer | false | none | 总页数  
-» list | array | false | none | 历史委托单列表  
-»» order_id | string | false | none | 订单 ID  
-»» symbol | string | false | none | 交易对代码  
-»» exchange | string | false | none | 交易所。  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | 总数量  
+total_page | integer | Optional |  | 总页数  
+list | array | Optional |  | 历史委托单列表  
+  
+**data / list**
+
+历史委托单列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | string | Optional |  | 订单 ID  
+symbol | string | Optional |  | 交易对代码  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | 交易所。  
 \- us: 美股。  
 \- hk: 港股。  
 \- kr: 韩股。  
 \- jp: 日股。  
-»» quote_currency | string | false | none | 报价币种  
-»» fx_rate | string | false | none | 报价币种对美元的汇率  
-»» symbol_desc | string | false | none | 交易对描述  
-»» price_type | string | false | none | 价格类型（market=市价，limit=限价）  
-»» status | integer | false | none | 订单状态。  
+quote_currency | string | Optional |  | 报价币种  
+fx_rate | string | Optional |  | 报价币种对美元的汇率  
+symbol_desc | string | Optional |  | 交易对描述  
+price_type | string | Optional | enum: ["market","limit"] | 价格类型（market=市价，limit=限价）  
+status | integer | Optional | enum: [0,1,2,3,4,5,6,7,8] | 订单状态。  
 \- 0: 未知。  
 \- 1: 新订单，订单已验证，等待处理。  
 \- 2: 部分成交。  
@@ -4019,11 +5103,9 @@ data | object | false | none | none
 \- 6: 撤单被拒绝。  
 \- 7: 改单成功。  
 \- 8: 改单拒绝。  
-»» status_desc | string | false | none | 订单状态描述  
-»» status_detail | object|null | false | none | 订单状态详情  
-»»» title | string | false | none | 状态标题  
-»»» message | string | false | none | 状态说明  
-»» finish_as | integer | false | none | 订单完成原因。  
+status_desc | string | Optional |  | 订单状态描述  
+status_detail | object|null | Optional | nullable: true | 订单状态详情  
+finish_as | integer | Optional | enum: [0,1,2,3,4,5,6,7,8,9,13] | 订单完成原因。  
 \- 0: 未知。  
 \- 1: 没有找到报价。  
 \- 2: 没有找到匹配。  
@@ -4035,265 +5117,31 @@ data | object | false | none | none
 \- 8: 超过订单有效期自动撤单。  
 \- 9: 当前交易时段暂不支持交易。  
 \- 13: 公司行动撤单。  
-»» side | integer | false | none | 买卖方向（1=卖，2=买）  
-»» time_in_force | string | false | none | 订单有效方式。  
+side | integer | Optional | enum: [1,2] | 买卖方向（1=卖，2=买）  
+time_in_force | string | Optional | enum: ["day"] | 订单有效方式。  
 \- day: 当日有效。  
-»» volume | string | false | none | 委托数量  
-»» fill_volume | string | false | none | 成交数量  
-»» price | string | false | none | 委托价格  
-»» avg_fill_price | string|null | false | none | 平均成交价格  
-»» commission | string | false | none | 手续费  
-»» time_setup | integer(int64) | false | none | 下单时间（Unix 时间戳，秒）  
-»» time_done | integer(int64) | false | none | 订单完成时间（Unix 时间戳，秒）  
-» timestamp | integer(int64) | false | none | none  
+volume | string | Optional |  | 委托数量  
+fill_volume | string | Optional |  | 成交数量  
+price | string | Optional |  | 委托价格  
+avg_fill_price | string|null | Optional | nullable: true | 平均成交价格  
+commission | string | Optional |  | 手续费  
+time_setup | integer(int64) | Optional |  | 下单时间（Unix 时间戳，秒）  
+time_done | integer(int64) | Optional |  | 订单完成时间（Unix 时间戳，秒）  
   
-####  枚举值列表
+**data / list / items / status_detail**
 
-枚举值列表属性 | 值  
+订单状态详情
+
+类型 | 约束  
 ---|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-price_type | market  
-price_type | limit  
-status | 0  
-status | 1  
-status | 2  
-status | 3  
-status | 4  
-status | 5  
-status | 6  
-status | 7  
-status | 8  
-finish_as | 0  
-finish_as | 1  
-finish_as | 2  
-finish_as | 3  
-finish_as | 4  
-finish_as | 5  
-finish_as | 6  
-finish_as | 7  
-finish_as | 8  
-finish_as | 9  
-finish_as | 13  
-side | 1  
-side | 2  
-time_in_force | day  
-      
-    
-    {
-      "data": {
-        "total": 0,
-        "total_page": 0,
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  TradfiSpotUpdateOrder
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» order_id | integer(int64) | false | none | 订单 ID  
-timestamp | integer(int64) | false | none | none  
-      
-    
-    {
-      "data": {
-        "order_id": 123456
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  BalanceRecordList
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» total | integer(int64) | false | none | 总数量  
-» total_page | integer(int64) | false | none | 总页数  
-» list | array | false | none | 资金流水明细列表  
-»» id | integer(int64) | false | none | 资金流水主键 ID  
-»» user_id | integer | false | none | 用户 ID  
-»» change | string | false | none | 资金变动数量。正数表示入账，负数表示出账。  
-»» balance | string | false | none | 变动后资金余额快照  
-»» stock_change | string | false | none | 股票数量变动；股票数量类流水从 detail.amount 解析，其他流水可能为空字符串  
-»» type | string | false | none | 流水类型原始值。常见值包括：  
-\- deposit: 资金转入。  
-\- withdraw: 资金转出。  
-\- fee: 交易手续费。  
-\- dividend: 分红派息。  
-\- sell: 卖出股票入账。  
-\- buy: 买入股票出账。  
-\- award: 空投奖励。  
-\- stock_transfer_in: 股票转入。  
-\- stock_transfer_out: 股票转出。  
-»» business | string | false | none | 业务标识  
-»» business_id | integer(int64) | false | none | 业务关联 ID  
-»» symbol | string | false | none | 交易对代码  
-»» detail | string | false | none | 原始业务详情 JSON 字符串；仅当请求 include_detail=true 时返回  
-»» version | integer | false | none | 记录版本号  
-»» time_create | integer(int64) | false | none | 业务时间（Unix 时间戳，秒）  
-»» create_time | integer(int64) | false | none | 记录创建时间（Unix 时间戳，秒）  
-» timestamp | integer(int64) | false | none | none  
-      
-    
-    {
-      "data": {
-        "total": 0,
-        "total_page": 0,
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  DeleteOrder
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | 成功时返回空对象  
-timestamp | integer(int64) | false | none | none  
-      
-    
-    {
-      "data": {},
-      "timestamp": 0
-    }
-    
-    
-
-##  SymbolDetail
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» total | integer(int64) | false | none | 总数量  
-» total_page | integer | false | none | 总页数  
-» list | array | false | none | none  
-»» symbol | string | false | none | 交易对代码  
-»» exchange | string | false | none | 交易所。  
-\- us: 美股。  
-\- hk: 港股。  
-\- kr: 韩股。  
-\- jp: 日股。  
-»» exchange_desc | string | false | none | 交易所描述  
-»» quote_currency | string | false | none | 报价币种  
-»» quote_currency_precision | integer | false | none | 报价币种精度  
-»» fx_rate | string | false | none | 报价币种对美元的汇率  
-»» symbol_desc | string | false | none | 交易对描述  
-»» category | string | false | none | Symbol 分类。  
-\- CS: 股票。  
-\- ETF: 交易所基金。  
-\- ADRC、ADR: 美股里的外国公司股票凭证。  
-\- ETV: 交易所交易产品。  
-\- PFD: 优先股。  
-\- ETS: 交易所交易证券。  
-\- ETN: 交易所票据。  
-\- FUND: 基金。  
-»» asset_type | string | false | none | 资产类型。  
-\- STOCK: 股票。  
-\- ETF: 交易所基金。  
-»» settlement_currency | string | false | none | 结算币种  
-»» max_order_volume | string | false | none | 最大下单数量  
-»» step_order_volume | string | false | none | 下单步长  
-»» min_order_volume | string | false | none | 最小下单数量  
-»» price_precision | integer | false | none | 价格精度  
-»» volume_precision | integer | false | none | 数量精度  
-»» is_ipo | boolean | false | none | 是否 IPO 交易对  
-»» ipo_price | string | false | none | IPO 价格  
-»» price_protection | string | false | none | 价格保护范围  
-»» sell_price_protection | string | false | none | 卖出价格保护比例  
-»» buy_price_protection | string | false | none | 买入价格保护比例  
-»» slippage_rate | string | false | none | 滑点  
-»» commission_rate | string | false | none | 手续费率  
-»» trade_status | string | false | none | 交易状态。  
-\- pre_market: 盘前。  
-\- open: 盘中。  
-\- post_market: 盘后。  
-»» trade_mode | integer | false | none | 当前时段交易模式。  
-\- 0: 禁止交易。  
-\- 1: 仅允许买入。  
-\- 2: 仅允许卖出。  
-\- 4: 支持买入和卖出。  
-\- 5: 交易暂停。  
-\- 6: 交易暂停。  
-\- 7: 交易暂停。  
-\- 8: 交易暂停。  
-»» order_fill_timing | integer | false | none | 下单可成交时机（1=立即成交，2=盘前开始后可成交，3=盘中开始后可成交）  
-»» symbol_descs | array | false | none | 多语言交易对描述  
-»»» lang | string | false | none | 语言  
-»»» value | string | false | none | 多语言描述  
-»» icon_link | string | false | none | 图标链接  
-»» margin_mode | integer | false | none | 融资融券模式。  
-\- 0: 不支持融资融券。  
-\- 1: 可融资。  
-\- 2: 可融券。  
-\- 3: 可融资和融券。  
-»» long_im | string | false | none | 多头初始保证金率  
-»» long_mm | string | false | none | 多头维持保证金率  
-»» short_im | string | false | none | 空头初始保证金率  
-»» short_mm | string | false | none | 空头维持保证金率  
-»» long_borrowing_rate | string | false | none | 融资年利率。空字符串表示暂无有效利率。  
-»» short_borrowing_rate | string | false | none | 融券年利率。空字符串表示暂无有效利率。  
-» timestamp | integer(int64) | false | none | none  
+object|null | nullable: true  
   
-####  枚举值列表
+**属性**
 
-枚举值列表属性 | 值  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-category | CS  
-category | ETF  
-category | ADRC  
-category | ADR  
-category | ETV  
-category | PFD  
-category | ETS  
-category | ETN  
-category | FUND  
-asset_type | STOCK  
-asset_type | ETF  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
-trade_mode | 0  
-trade_mode | 1  
-trade_mode | 2  
-trade_mode | 4  
-trade_mode | 5  
-trade_mode | 6  
-trade_mode | 7  
-trade_mode | 8  
-order_fill_timing | 1  
-order_fill_timing | 2  
-order_fill_timing | 3  
-margin_mode | 0  
-margin_mode | 1  
-margin_mode | 2  
-margin_mode | 3  
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+title | string | Optional |  | 状态标题  
+message | string | Optional |  | 状态说明  
       
     
     {

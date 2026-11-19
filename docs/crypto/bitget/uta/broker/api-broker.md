@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/broker/api-broker
 api_type: Guide
-updated_at: 2026-11-18 19:00:16.028764
+updated_at: 2026-11-19 19:06:54.806069
 ---
 
 # API Broker

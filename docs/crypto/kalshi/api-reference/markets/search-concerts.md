@@ -10,12 +10,13 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/markets/search-concerts'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Search Concerts
 
-> Lists upcoming concerts matching a name, across metros, that a
+> Lists upcoming concerts matching a name, across the metros that
+availability lists, that a
 cancellation market can still be created for: up to 50, in the same
 shape as `GET /concert_cancellation_markets/concerts`. The name is
 matched against the acts on the bill, and may also match venues and
@@ -86,7 +87,8 @@ paths:
         - markets
       summary: Search Concerts
       description: |
-        Lists upcoming concerts matching a name, across metros, that a
+        Lists upcoming concerts matching a name, across the metros that
+        availability lists, that a
         cancellation market can still be created for: up to 50, in the same
         shape as `GET /concert_cancellation_markets/concerts`. The name is
         matched against the acts on the bill, and may also match venues and
@@ -126,6 +128,8 @@ paths:
           $ref: '#/components/responses/RateLimitError'
         '500':
           $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailableError'
       security:
         - kalshiAccessKey: []
           kalshiAccessSignature: []
@@ -286,6 +290,12 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
     InternalServerError:
       description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ServiceUnavailableError:
+      description: Service temporarily unavailable
       content:
         application/json:
           schema:

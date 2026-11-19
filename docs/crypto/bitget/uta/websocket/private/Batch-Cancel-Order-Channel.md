@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/private/Batch-Cancel-Order-Channel
 api_type: WebSocket
-updated_at: 2026-11-18 19:00:43.687235
+updated_at: 2026-11-19 19:07:21.496825
 ---
 
 # Batch Cancel Order Channel

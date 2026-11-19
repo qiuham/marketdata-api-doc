@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/rebate/change-log
 api_type: Changelog
-updated_at: 2026-11-18 18:28:36.682448
+updated_at: 2026-11-19 18:31:11.436893
 ---
 
 # Change Log

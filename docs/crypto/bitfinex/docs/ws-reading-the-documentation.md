@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/docs/ws-reading-the-documentation'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Reading the Documentation (WS)

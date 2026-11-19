@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/delivery
 api_type: Trading
-updated_at: 2026-11-18 18:56:20.486436
+updated_at: 2026-11-19 19:01:26.634472
 ---
 
 # Delivery
@@ -39,63 +39,63 @@ settle | usdt
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array | [合约详情]  
-» _None_ | DeliveryContract | 合约详情  
-»» name | string | 合约标识  
-»» underlying | string | 标的物  
-»» cycle | string | 周期类型, 季度合约, 周合约等  
-»» type | string | 合约类型, inverse - 反向合约, direct - 正向合约  
-»» quanto_multiplier | string | 合约乘数，表示一张合约的面值为多少个标的物币种  
-»» leverage_min | string | 最小杠杆  
-»» leverage_max | string | 最大杠杆  
-»» maintenance_rate | string | 风险限额的第一档维持保证金率要求  
-»» mark_type | string | 已废弃  
-»» mark_price | string | 当前标记价格  
-»» index_price | string | 当前指数价格  
-»» last_price | string | 上一次成交价格  
-»» maker_fee_rate | string | 挂单成交的手续费率，负数代表返还后续费  
-»» taker_fee_rate | string | 吃单成交的手续费率  
-»» order_price_round | string | 委托价格最小单位  
-»» mark_price_round | string | 标记价格的最小单位  
-»» basis_rate | string | 当前合理基差率  
-»» basis_value | string | 当前合理基差值  
-»» basis_impact_value | string | 计算合理基差率时加权深度影响额  
-»» settle_price | string | 预计结算价格  
-»» settle_price_interval | integer | 结算价格更新间隔  
-»» settle_price_duration | integer | 加权平均计算结算价格时长, 单位秒  
-»» expire_time | integer(int64) | 合约到期时间戳  
-»» risk_limit_base | string | 基础风险限额  
-»» risk_limit_step | string | 风险限额调整步长  
-»» risk_limit_max | string | 合约允许的最大风险限额  
-»» order_size_min | integer(int64) | 最小下单数量  
-»» order_size_max | integer(int64) | 最大下单数量  
-»» order_price_deviate | string | 下单价与当前标记价格允许的正负偏移量， 即下单价 `order_price` 需满足如下条件:  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+合约详情
+
+类型 | 约束  
+---|---  
+DeliveryContract |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+name | string | Optional |  | 合约标识  
+underlying | string | Optional |  | 标的物  
+cycle | string | Optional | enum: ["WEEKLY","BI-WEEKLY","QUARTERLY","BI-QUARTERLY"] | 周期类型, 季度合约, 周合约等  
+type | string | Optional | enum: ["inverse","direct"] | 合约类型, inverse - 反向合约, direct - 正向合约  
+quanto_multiplier | string | Optional |  | 合约乘数，表示一张合约的面值为多少个标的物币种  
+leverage_min | string | Optional |  | 最小杠杆  
+leverage_max | string | Optional |  | 最大杠杆  
+maintenance_rate | string | Optional |  | 风险限额的第一档维持保证金率要求  
+mark_type | string | Optional | enum: ["internal","index"] | 已废弃  
+mark_price | string | Optional |  | 当前标记价格  
+index_price | string | Optional |  | 当前指数价格  
+last_price | string | Optional |  | 上一次成交价格  
+maker_fee_rate | string | Optional |  | 挂单成交的手续费率，负数代表返还后续费  
+taker_fee_rate | string | Optional |  | 吃单成交的手续费率  
+order_price_round | string | Optional |  | 委托价格最小单位  
+mark_price_round | string | Optional |  | 标记价格的最小单位  
+basis_rate | string | Optional |  | 当前合理基差率  
+basis_value | string | Optional |  | 当前合理基差值  
+basis_impact_value | string | Optional |  | 计算合理基差率时加权深度影响额  
+settle_price | string | Optional |  | 预计结算价格  
+settle_price_interval | integer | Optional |  | 结算价格更新间隔  
+settle_price_duration | integer | Optional |  | 加权平均计算结算价格时长, 单位秒  
+expire_time | integer(int64) | Optional |  | 合约到期时间戳  
+risk_limit_base | string | Optional |  | 基础风险限额  
+risk_limit_step | string | Optional |  | 风险限额调整步长  
+risk_limit_max | string | Optional |  | 合约允许的最大风险限额  
+order_size_min | integer(int64) | Optional |  | 最小下单数量  
+order_size_max | integer(int64) | Optional |  | 最大下单数量  
+order_price_deviate | string | Optional |  | 下单价与当前标记价格允许的正负偏移量， 即下单价 `order_price` 需满足如下条件:  
   
 abs(order_price - mark_price) <= mark_price * order_price_deviate  
-»» ref_discount_rate | string | 被推荐人享受交易费率折扣  
-»» ref_rebate_rate | string | 推荐人享受交易费率返佣比例  
-»» orderbook_id | integer(int64) | orderbook更新ID  
-»» trade_id | integer(int64) | 当前成交ID  
-»» trade_size | integer(int64) | 历史累计成交  
-»» position_size | integer(int64) | 当前做多用户持有仓位总和  
-»» config_change_time | number(double) | 配置最后更新时间  
-»» in_delisting | boolean | 合约下线中  
-»» orders_limit | integer | 最多挂单数量  
+ref_discount_rate | string | Optional |  | 被推荐人享受交易费率折扣  
+ref_rebate_rate | string | Optional |  | 推荐人享受交易费率返佣比例  
+orderbook_id | integer(int64) | Optional |  | orderbook更新ID  
+trade_id | integer(int64) | Optional |  | 当前成交ID  
+trade_size | integer(int64) | Optional |  | 历史累计成交  
+position_size | integer(int64) | Optional |  | 当前做多用户持有仓位总和  
+config_change_time | number(double) | Optional |  | 配置最后更新时间  
+in_delisting | boolean | Optional |  | 合约下线中  
+orders_limit | integer | Optional |  | 最多挂单数量  
   
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-cycle | WEEKLY  
-cycle | BI-WEEKLY  
-cycle | QUARTERLY  
-cycle | BI-QUARTERLY  
-type | inverse  
-type | direct  
-mark_type | internal  
-mark_type | index  
 该请求不需要认证 
 
 示例代码
@@ -202,63 +202,57 @@ settle | usdt
 
 状态码 **200**
 
-_合约详情_
+合约详情
 
-名称 | 类型 | 描述  
----|---|---  
-» name | string | 合约标识  
-» underlying | string | 标的物  
-» cycle | string | 周期类型, 季度合约, 周合约等  
-» type | string | 合约类型, inverse - 反向合约, direct - 正向合约  
-» quanto_multiplier | string | 合约乘数，表示一张合约的面值为多少个标的物币种  
-» leverage_min | string | 最小杠杆  
-» leverage_max | string | 最大杠杆  
-» maintenance_rate | string | 风险限额的第一档维持保证金率要求  
-» mark_type | string | 已废弃  
-» mark_price | string | 当前标记价格  
-» index_price | string | 当前指数价格  
-» last_price | string | 上一次成交价格  
-» maker_fee_rate | string | 挂单成交的手续费率，负数代表返还后续费  
-» taker_fee_rate | string | 吃单成交的手续费率  
-» order_price_round | string | 委托价格最小单位  
-» mark_price_round | string | 标记价格的最小单位  
-» basis_rate | string | 当前合理基差率  
-» basis_value | string | 当前合理基差值  
-» basis_impact_value | string | 计算合理基差率时加权深度影响额  
-» settle_price | string | 预计结算价格  
-» settle_price_interval | integer | 结算价格更新间隔  
-» settle_price_duration | integer | 加权平均计算结算价格时长, 单位秒  
-» expire_time | integer(int64) | 合约到期时间戳  
-» risk_limit_base | string | 基础风险限额  
-» risk_limit_step | string | 风险限额调整步长  
-» risk_limit_max | string | 合约允许的最大风险限额  
-» order_size_min | integer(int64) | 最小下单数量  
-» order_size_max | integer(int64) | 最大下单数量  
-» order_price_deviate | string | 下单价与当前标记价格允许的正负偏移量， 即下单价 `order_price` 需满足如下条件:  
+类型 | 约束  
+---|---  
+DeliveryContract |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+name | string | Optional |  | 合约标识  
+underlying | string | Optional |  | 标的物  
+cycle | string | Optional | enum: ["WEEKLY","BI-WEEKLY","QUARTERLY","BI-QUARTERLY"] | 周期类型, 季度合约, 周合约等  
+type | string | Optional | enum: ["inverse","direct"] | 合约类型, inverse - 反向合约, direct - 正向合约  
+quanto_multiplier | string | Optional |  | 合约乘数，表示一张合约的面值为多少个标的物币种  
+leverage_min | string | Optional |  | 最小杠杆  
+leverage_max | string | Optional |  | 最大杠杆  
+maintenance_rate | string | Optional |  | 风险限额的第一档维持保证金率要求  
+mark_type | string | Optional | enum: ["internal","index"] | 已废弃  
+mark_price | string | Optional |  | 当前标记价格  
+index_price | string | Optional |  | 当前指数价格  
+last_price | string | Optional |  | 上一次成交价格  
+maker_fee_rate | string | Optional |  | 挂单成交的手续费率，负数代表返还后续费  
+taker_fee_rate | string | Optional |  | 吃单成交的手续费率  
+order_price_round | string | Optional |  | 委托价格最小单位  
+mark_price_round | string | Optional |  | 标记价格的最小单位  
+basis_rate | string | Optional |  | 当前合理基差率  
+basis_value | string | Optional |  | 当前合理基差值  
+basis_impact_value | string | Optional |  | 计算合理基差率时加权深度影响额  
+settle_price | string | Optional |  | 预计结算价格  
+settle_price_interval | integer | Optional |  | 结算价格更新间隔  
+settle_price_duration | integer | Optional |  | 加权平均计算结算价格时长, 单位秒  
+expire_time | integer(int64) | Optional |  | 合约到期时间戳  
+risk_limit_base | string | Optional |  | 基础风险限额  
+risk_limit_step | string | Optional |  | 风险限额调整步长  
+risk_limit_max | string | Optional |  | 合约允许的最大风险限额  
+order_size_min | integer(int64) | Optional |  | 最小下单数量  
+order_size_max | integer(int64) | Optional |  | 最大下单数量  
+order_price_deviate | string | Optional |  | 下单价与当前标记价格允许的正负偏移量， 即下单价 `order_price` 需满足如下条件:  
   
 abs(order_price - mark_price) <= mark_price * order_price_deviate  
-» ref_discount_rate | string | 被推荐人享受交易费率折扣  
-» ref_rebate_rate | string | 推荐人享受交易费率返佣比例  
-» orderbook_id | integer(int64) | orderbook更新ID  
-» trade_id | integer(int64) | 当前成交ID  
-» trade_size | integer(int64) | 历史累计成交  
-» position_size | integer(int64) | 当前做多用户持有仓位总和  
-» config_change_time | number(double) | 配置最后更新时间  
-» in_delisting | boolean | 合约下线中  
-» orders_limit | integer | 最多挂单数量  
+ref_discount_rate | string | Optional |  | 被推荐人享受交易费率折扣  
+ref_rebate_rate | string | Optional |  | 推荐人享受交易费率返佣比例  
+orderbook_id | integer(int64) | Optional |  | orderbook更新ID  
+trade_id | integer(int64) | Optional |  | 当前成交ID  
+trade_size | integer(int64) | Optional |  | 历史累计成交  
+position_size | integer(int64) | Optional |  | 当前做多用户持有仓位总和  
+config_change_time | number(double) | Optional |  | 配置最后更新时间  
+in_delisting | boolean | Optional |  | 合约下线中  
+orders_limit | integer | Optional |  | 最多挂单数量  
   
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-cycle | WEEKLY  
-cycle | BI-WEEKLY  
-cycle | QUARTERLY  
-cycle | BI-QUARTERLY  
-type | inverse  
-type | direct  
-mark_type | internal  
-mark_type | index  
 该请求不需要认证 
 
 示例代码
@@ -371,19 +365,65 @@ interval | 0.01
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» id | integer(int64) | 深度更新 ID，深度每发生一次变化，该 ID 加 1，只有设置 `with_id=true` 时才返回  
-» current | number(double) | 接口数据返回时间戳  
-» update | number(double) | 深度变化时间戳  
-» asks | array | 卖方深度列表  
-»» DeliveryOrderBookItem | object |   
-»»» p | string | 价格 (计价货币)  
-»»» s | integer(int64) | 数量  
-»» bids | array | 买方深度列表  
-»»» DeliveryOrderBookItem | object |   
-»»»» p | string | 价格 (计价货币)  
-»»»» s | integer(int64) | 数量  
+类型 | 约束  
+---|---  
+DeliveryOrderBook | required: ["asks","bids"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 深度更新 ID，深度每发生一次变化，该 ID 加 1，只有设置 `with_id=true` 时才返回  
+current | number(double) | Optional |  | 接口数据返回时间戳  
+update | number(double) | Optional |  | 深度变化时间戳  
+asks | array | Required |  | 卖方深度列表  
+bids | array | Required |  | 买方深度列表  
+  
+**asks**
+
+卖方深度列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**asks / items**
+
+DeliveryOrderBookItem
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+p | string | Optional |  | 价格 (计价货币)  
+s | integer(int64) | Optional |  | 数量  
+  
+**bids**
+
+买方深度列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**bids / items**
+
+DeliveryOrderBookItem
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+p | string | Optional |  | 价格 (计价货币)  
+s | integer(int64) | Optional |  | 数量  
   
 该请求不需要认证 
 
@@ -487,16 +527,27 @@ settle | usdt
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» id | integer(int64) | 成交记录 ID  
-» create_time | number(double) | 成交时间  
-» create_time_ms | number(double) | 成交时间，保留 3 位小数的毫秒精度  
-» contract | string | 合约标识  
-» size | integer(int64) | 成交数量  
-» price | string | 成交价格 (计价货币)  
-» is_internal | boolean | 已废弃  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+DeliveryTrade |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 成交记录 ID  
+create_time | number(double) | Optional |  | 成交时间  
+create_time_ms | number(double) | Optional |  | 成交时间，保留 3 位小数的毫秒精度  
+contract | string | Optional |  | 合约标识  
+size | integer(int64) | Optional |  | 成交数量  
+price | string | Optional |  | 成交价格 (计价货币)  
+is_internal | boolean | Optional |  | 已废弃  
   
 该请求不需要认证 
 
@@ -592,16 +643,28 @@ interval | 30d
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array | [每个时间粒度的 K 线数据]  
-» _None_ | DeliveryCandlestick | 每个时间粒度的 K 线数据  
-»» t | number(double) | 秒 s 精度的 Unix 时间戳  
-»» v | integer(int64) | 交易量，只有市场行情的 K 线数据里有该值 (合约张数)  
-»» c | string | 收盘价 (计价货币)  
-»» h | string | 最高价 (计价货币)  
-»» l | string | 最低价 (计价货币)  
-»» o | string | 开盘价 (计价货币)  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+每个时间粒度的 K 线数据
+
+类型 | 约束  
+---|---  
+DeliveryCandlestick |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+t | number(double) | Optional |  | 秒 s 精度的 Unix 时间戳  
+v | integer(int64) | Optional |  | 交易量，只有市场行情的 K 线数据里有该值 (合约张数)  
+c | string | Optional |  | 收盘价 (计价货币)  
+h | string | Optional |  | 最高价 (计价货币)  
+l | string | Optional |  | 最低价 (计价货币)  
+o | string | Optional |  | 开盘价 (计价货币)  
   
 该请求不需要认证 
 
@@ -676,32 +739,43 @@ settle | usdt
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» contract | string | 合约标识  
-» last | string | 最新成交价  
-» change_percentage | string | 涨跌百分比，跌用负数标识，如 -7.45  
-» total_size | string | 当前合约总持仓量  
-» low_24h | string | 最近24小时最低价  
-» high_24h | string | 最近24小时最高价  
-» volume_24h | string | 最近24小时成交总量  
-» volume_24h_btc | string | 最近24小时成交总量，BTC单位(即将废弃，建议使用 `volume_24h_base`, `volume_24h_quote`, `volume_24h_settle`)  
-» volume_24h_usd | string | 最近24小时成交总量，USD单位(即将废弃，建议使用 `volume_24h_base`, `volume_24h_quote`, `volume_24h_settle`)  
-» volume_24h_base | string | 最近24小时成交量，以基础货币为单位  
-» volume_24h_quote | string | 最近24小时成交量，以计价货币为单位  
-» volume_24h_settle | string | 最近24小时成交量，以结算货币为单位  
-» mark_price | string | 最近标记价格  
-» funding_rate | string | 资金费率  
-» funding_rate_indicative | string | 下一周期预测资金费率（已弃用，改用funding_rate）  
-» index_price | string | 指数价格  
-» quanto_base_rate | string | 已废弃  
-» basis_rate | string | 基差率  
-» basis_value | string | 基差数值  
-» lowest_ask | string | 最新卖方最低价  
-» lowest_size | string | 最新卖方最低价的挂单量  
-» highest_bid | string | 最新买方最高价  
-» highest_size | string | 最新买方最高价的挂单量  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+DeliveryTicker |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+contract | string | Optional |  | 合约标识  
+last | string | Optional |  | 最新成交价  
+change_percentage | string | Optional |  | 涨跌百分比，跌用负数标识，如 -7.45  
+total_size | string | Optional |  | 当前合约总持仓量  
+low_24h | string | Optional |  | 最近24小时最低价  
+high_24h | string | Optional |  | 最近24小时最高价  
+volume_24h | string | Optional |  | 最近24小时成交总量  
+volume_24h_btc | string | Optional |  | 最近24小时成交总量，BTC单位(即将废弃，建议使用 `volume_24h_base`, `volume_24h_quote`, `volume_24h_settle`)  
+volume_24h_usd | string | Optional |  | 最近24小时成交总量，USD单位(即将废弃，建议使用 `volume_24h_base`, `volume_24h_quote`, `volume_24h_settle`)  
+volume_24h_base | string | Optional |  | 最近24小时成交量，以基础货币为单位  
+volume_24h_quote | string | Optional |  | 最近24小时成交量，以计价货币为单位  
+volume_24h_settle | string | Optional |  | 最近24小时成交量，以结算货币为单位  
+mark_price | string | Optional |  | 最近标记价格  
+funding_rate | string | Optional |  | 资金费率  
+funding_rate_indicative | string | Optional |  | 下一周期预测资金费率（已弃用，改用funding_rate）  
+index_price | string | Optional |  | 指数价格  
+quanto_base_rate | string | Optional |  | 已废弃  
+basis_rate | string | Optional |  | 基差率  
+basis_value | string | Optional |  | 基差数值  
+lowest_ask | string | Optional |  | 最新卖方最低价  
+lowest_size | string | Optional |  | 最新卖方最低价的挂单量  
+highest_bid | string | Optional |  | 最新买方最高价  
+highest_size | string | Optional |  | 最新买方最高价的挂单量  
   
 该请求不需要认证 
 
@@ -790,11 +864,22 @@ settle | usdt
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» t | integer(int64) | 秒 s 精度的 Unix 时间戳  
-» b | string | 保险基金余额  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+InsuranceRecord |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+t | integer(int64) | Optional |  | 秒 s 精度的 Unix 时间戳  
+b | string | Optional |  | 保险基金余额  
   
 该请求不需要认证 
 
@@ -864,44 +949,63 @@ settle | usdt
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» total | string | 钱包余额，只适用于经典合约账户。钱包余额为所有历史已发生的资金流水之和，包括历史转入转出、平仓结算、手续费支出等，不包含仓位的未实现盈亏。total = SUM(history_dnw, history_pnl, history_fee, history_refr, history_fund)  
-» unrealised_pnl | string | 未实现盈亏  
-» position_margin | string | 已废弃  
-» order_margin | string | 所有未完成订单的起始保证金  
-» available | string | 可用的转出或交易的额度，统一账户下包含授信额度的可用额度(有包含体验金,体验金无法转出,所以要转出,转出金额需要扣除体验金)  
-» point | string | 点卡数额  
-» currency | string | 结算币种  
-» in_dual_mode | boolean | 是否为双向持仓模式  
-» enable_credit | boolean | 是否开启统一账户模式  
-» position_initial_margin | string | 头寸占用的起始保证金，适用于统一账户模式  
-» maintenance_margin | string | 头寸占用的维持保证金，适用于新经典账户保证金模式和统一账户模式  
-» bonus | string | 体验金  
-» enable_evolved_classic | boolean | 已废弃  
-» cross_order_margin | string | 全仓挂单保证金，适用于新经典账户保证金模式  
-» cross_initial_margin | string | 全仓初始保证金，适用于新经典账户保证金模式  
-» cross_maintenance_margin | string | 全仓维持保证金，适用于新经典账户保证金模式  
-» cross_unrealised_pnl | string | 全仓未实现盈亏，适用于新经典账户保证金模式  
-» cross_available | string | 全仓可用额度，适用于新经典账户保证金模式  
-» cross_margin_balance | string | 全仓保证金余额，适用于新经典账户保证金模式  
-» cross_mmr | string | 全仓维持保证金率，适用于新经典账户保证金模式  
-» cross_imr | string | 全仓初始保证金率，适用于新经典账户保证金模式  
-» isolated_position_margin | string | 逐仓仓位保证金，适用于新经典账户保证金模式  
-» enable_new_dual_mode | boolean | 已废弃  
-» margin_mode | integer | 保证金模式，0-经典保证金模式，1-跨币种保证金模式，2-组合保证金模式，3-单币种保证金模式  
-» enable_tiered_mm | boolean | 是否开启梯度式计算维持保证金  
-» history | object | 累计统计数据  
-»» dnw | string | 累计转入转出  
-»» pnl | string | 累计交易盈亏  
-»» fee | string | 累计手续费  
-»» refr | string | 累计获取的推荐人返佣  
-»» fund | string | 累计资金费用  
-»» point_dnw | string | 累计点卡转入转出  
-»» point_fee | string | 累计点卡抵扣手续费  
-»» point_refr | string | 累计获取的点卡推荐人返佣  
-»» bonus_dnw | string | 累计体验金转入转出  
-»» bonus_offset | string | 累计体验金抵扣  
+类型 | 约束  
+---|---  
+DeliveryAccount |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | string | Optional |  | 钱包余额，只适用于经典合约账户。钱包余额为所有历史已发生的资金流水之和，包括历史转入转出、平仓结算、手续费支出等，不包含仓位的未实现盈亏。total = SUM(history_dnw, history_pnl, history_fee, history_refr, history_fund)  
+unrealised_pnl | string | Optional |  | 未实现盈亏  
+position_margin | string | Optional |  | 已废弃  
+order_margin | string | Optional |  | 所有未完成订单的起始保证金  
+available | string | Optional |  | 可用的转出或交易的额度，统一账户下包含授信额度的可用额度(有包含体验金,体验金无法转出,所以要转出,转出金额需要扣除体验金)  
+point | string | Optional |  | 点卡数额  
+currency | string | Optional |  | 结算币种  
+in_dual_mode | boolean | Optional |  | 是否为双向持仓模式  
+enable_credit | boolean | Optional |  | 是否开启统一账户模式  
+position_initial_margin | string | Optional |  | 头寸占用的起始保证金，适用于统一账户模式  
+maintenance_margin | string | Optional |  | 头寸占用的维持保证金，适用于新经典账户保证金模式和统一账户模式  
+bonus | string | Optional |  | 体验金  
+enable_evolved_classic | boolean | Optional |  | 已废弃  
+cross_order_margin | string | Optional |  | 全仓挂单保证金，适用于新经典账户保证金模式  
+cross_initial_margin | string | Optional |  | 全仓初始保证金，适用于新经典账户保证金模式  
+cross_maintenance_margin | string | Optional |  | 全仓维持保证金，适用于新经典账户保证金模式  
+cross_unrealised_pnl | string | Optional |  | 全仓未实现盈亏，适用于新经典账户保证金模式  
+cross_available | string | Optional |  | 全仓可用额度，适用于新经典账户保证金模式  
+cross_margin_balance | string | Optional |  | 全仓保证金余额，适用于新经典账户保证金模式  
+cross_mmr | string | Optional |  | 全仓维持保证金率，适用于新经典账户保证金模式  
+cross_imr | string | Optional |  | 全仓初始保证金率，适用于新经典账户保证金模式  
+isolated_position_margin | string | Optional |  | 逐仓仓位保证金，适用于新经典账户保证金模式  
+enable_new_dual_mode | boolean | Optional |  | 已废弃  
+margin_mode | integer | Optional |  | 保证金模式，0-经典保证金模式，1-跨币种保证金模式，2-组合保证金模式，3-单币种保证金模式  
+enable_tiered_mm | boolean | Optional |  | 是否开启梯度式计算维持保证金  
+history | object | Optional |  | 累计统计数据  
+  
+**history**
+
+累计统计数据
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+dnw | string | Optional |  | 累计转入转出  
+pnl | string | Optional |  | 累计交易盈亏  
+fee | string | Optional |  | 累计手续费  
+refr | string | Optional |  | 累计获取的推荐人返佣  
+fund | string | Optional |  | 累计资金费用  
+point_dnw | string | Optional |  | 累计点卡转入转出  
+point_fee | string | Optional |  | 累计点卡抵扣手续费  
+point_refr | string | Optional |  | 累计获取的点卡推荐人返佣  
+bonus_dnw | string | Optional |  | 累计体验金转入转出  
+bonus_offset | string | Optional |  | 累计体验金抵扣  
   
 WARNING
 
@@ -1066,13 +1170,24 @@ type | point_refr
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» time | number(double) | 时间  
-» change | string | 变更金额  
-» balance | string | 变更后账户余额  
-» type | string | 变更类型：  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+DeliveryAccountBook |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+time | number(double) | Optional |  | 时间  
+change | string | Optional |  | 变更金额  
+balance | string | Optional |  | 变更后账户余额  
+type | string | Optional | enum: ["dnw","pnl","fee","refr","fund","point_dnw","point_fee","point_refr","bonus_offset"] | 变更类型：  
   
 \- dnw: 转入转出  
 \- pnl: 减仓盈亏  
@@ -1083,24 +1198,10 @@ _None_ | array |
 \- point_fee: 点卡交易手续费  
 \- point_refr: 点卡推荐人返佣  
 \- bonus_offset: 体验金抵扣  
-» text | string | 注释  
-» contract | string | 合约标识，只有2023-10-30后的数据才有该字段  
-» trade_id | string | 成交 id  
-» id | string | 账户变更记录 id  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-type | dnw  
-type | pnl  
-type | fee  
-type | refr  
-type | fund  
-type | point_dnw  
-type | point_fee  
-type | point_refr  
-type | bonus_offset  
+text | string | Optional |  | 注释  
+contract | string | Optional |  | 合约标识，只有2023-10-30后的数据才有该字段  
+trade_id | string | Optional |  | 成交 id  
+id | string | Optional |  | 账户变更记录 id  
   
 WARNING
 
@@ -1198,58 +1299,77 @@ settle | usdt
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array | [合约仓位详情]  
-» _None_ | DeliveryPosition | 合约仓位详情  
-»» user | integer(int64) | 用户ID  
-»» contract | string | 合约标识  
-»» size | integer(int64) | 头寸大小  
-»» leverage | string | 杠杆倍数，0代表全仓，正数代表逐仓  
-»» risk_limit | string | 风险限额  
-»» leverage_max | string | 当前风险限额下，允许的最大杠杆倍数  
-»» maintenance_rate | string | 风险限额的第一档维持保证金率要求  
-»» value | string | 按结算币种标记价格计算的合约价值  
-»» margin | string | 保证金  
-»» entry_price | string | 开仓价格  
-»» liq_price | string | 爆仓价格  
-»» mark_price | string | 合约当前标记价格  
-»» initial_margin | string | 仓位占用的起始保证金，适用于统一账户  
-»» maintenance_margin | string | 仓位所需的维持保证金，适用于统一账户  
-»» unrealised_pnl | string | 未实现盈亏  
-»» realised_pnl | string | 已实现盈亏  
-»» pnl_pnl | string | 已实现盈亏-仓位盈亏  
-»» pnl_fund | string | 已实现盈亏-资金费用  
-»» pnl_fee | string | 已实现盈亏-手续费  
-»» history_pnl | string | 已平仓的仓位总盈亏  
-»» last_close_pnl | string | 最近一次平仓的盈亏  
-»» realised_point | string | 点卡已实现盈亏  
-»» history_point | string | 已平仓的点卡总盈亏  
-»» adl_ranking | integer | 自动减仓排名，共1-5个等级，`1` 最高，`5` 最低，特殊情况 `6` 是没有持仓或在爆仓中  
-»» pending_orders | integer | 当前未完成委托数量  
-»» close_order | object|null | 当前平仓委托信息，如果没有平仓则为`null`  
-»»» id | integer(int64) | 委托ID  
-»»» price | string | 委托价格  
-»»» is_liq | boolean | 是否为强制平仓  
-»» mode | string | 持仓模式。包括：  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+合约仓位详情
+
+类型 | 约束  
+---|---  
+DeliveryPosition |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user | integer(int64) | Optional | readOnly: true | 用户ID  
+contract | string | Optional | readOnly: true | 合约标识  
+size | integer(int64) | Optional | readOnly: true | 头寸大小  
+leverage | string | Optional |  | 杠杆倍数，0代表全仓，正数代表逐仓  
+risk_limit | string | Optional |  | 风险限额  
+leverage_max | string | Optional | readOnly: true | 当前风险限额下，允许的最大杠杆倍数  
+maintenance_rate | string | Optional | readOnly: true | 风险限额的第一档维持保证金率要求  
+value | string | Optional | readOnly: true | 按结算币种标记价格计算的合约价值  
+margin | string | Optional |  | 保证金  
+entry_price | string | Optional | readOnly: true | 开仓价格  
+liq_price | string | Optional | readOnly: true | 爆仓价格  
+mark_price | string | Optional | readOnly: true | 合约当前标记价格  
+initial_margin | string | Optional | readOnly: true | 仓位占用的起始保证金，适用于统一账户  
+maintenance_margin | string | Optional | readOnly: true | 仓位所需的维持保证金，适用于统一账户  
+unrealised_pnl | string | Optional | readOnly: true | 未实现盈亏  
+realised_pnl | string | Optional | readOnly: true | 已实现盈亏  
+pnl_pnl | string | Optional | readOnly: true | 已实现盈亏-仓位盈亏  
+pnl_fund | string | Optional | readOnly: true | 已实现盈亏-资金费用  
+pnl_fee | string | Optional | readOnly: true | 已实现盈亏-手续费  
+history_pnl | string | Optional | readOnly: true | 已平仓的仓位总盈亏  
+last_close_pnl | string | Optional | readOnly: true | 最近一次平仓的盈亏  
+realised_point | string | Optional | readOnly: true | 点卡已实现盈亏  
+history_point | string | Optional | readOnly: true | 已平仓的点卡总盈亏  
+adl_ranking | integer | Optional | readOnly: true | 自动减仓排名，共1-5个等级，`1` 最高，`5` 最低，特殊情况 `6` 是没有持仓或在爆仓中  
+pending_orders | integer | Optional | readOnly: true | 当前未完成委托数量  
+close_order | object|null | Optional | nullable: true  
+readOnly: true | 当前平仓委托信息，如果没有平仓则为`null`  
+mode | string | Optional | enum: ["single","dual_long","dual_short"] | 持仓模式。包括：  
   
 \- `single`: 单向持仓模式  
 \- `dual_long`: 双向持仓模式下的做多仓位  
 \- `dual_short`: 双向持仓模式下的做空仓位  
-»» cross_leverage_limit | string | 全仓模式下的杠杆倍数（即 `leverage` 为 0 时）  
-»» update_time | integer(int64) | 最后更新时间  
-»» update_id | integer(int64) | 更新id，仓位每更新一次，数值会+1  
-»» open_time | integer(int64) | 开仓时间  
-»» risk_limit_table | string | 风险限额梯度表id  
-»» average_maintenance_rate | string | 平均维持保证金率  
+cross_leverage_limit | string | Optional |  | 全仓模式下的杠杆倍数（即 `leverage` 为 0 时）  
+update_time | integer(int64) | Optional | readOnly: true | 最后更新时间  
+update_id | integer(int64) | Optional | readOnly: true | 更新id，仓位每更新一次，数值会+1  
+open_time | integer(int64) | Optional |  | 开仓时间  
+risk_limit_table | string | Optional | readOnly: true | 风险限额梯度表id  
+average_maintenance_rate | string | Optional | readOnly: true | 平均维持保证金率  
   
-####  枚举值列表
+**items / close_order**
 
-枚举值列表属性 | 值  
+当前平仓委托信息，如果没有平仓则为`null`
+
+类型 | 约束  
 ---|---  
-mode | single  
-mode | dual_long  
-mode | dual_short  
+object|null | nullable: true  
+readOnly: true  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 委托ID  
+price | string | Optional |  | 委托价格  
+is_liq | boolean | Optional |  | 是否为强制平仓  
   
 WARNING
 
@@ -1374,58 +1494,71 @@ settle | usdt
 
 状态码 **200**
 
-_合约仓位详情_
+合约仓位详情
 
-名称 | 类型 | 描述  
----|---|---  
-» user | integer(int64) | 用户ID  
-» contract | string | 合约标识  
-» size | integer(int64) | 头寸大小  
-» leverage | string | 杠杆倍数，0代表全仓，正数代表逐仓  
-» risk_limit | string | 风险限额  
-» leverage_max | string | 当前风险限额下，允许的最大杠杆倍数  
-» maintenance_rate | string | 风险限额的第一档维持保证金率要求  
-» value | string | 按结算币种标记价格计算的合约价值  
-» margin | string | 保证金  
-» entry_price | string | 开仓价格  
-» liq_price | string | 爆仓价格  
-» mark_price | string | 合约当前标记价格  
-» initial_margin | string | 仓位占用的起始保证金，适用于统一账户  
-» maintenance_margin | string | 仓位所需的维持保证金，适用于统一账户  
-» unrealised_pnl | string | 未实现盈亏  
-» realised_pnl | string | 已实现盈亏  
-» pnl_pnl | string | 已实现盈亏-仓位盈亏  
-» pnl_fund | string | 已实现盈亏-资金费用  
-» pnl_fee | string | 已实现盈亏-手续费  
-» history_pnl | string | 已平仓的仓位总盈亏  
-» last_close_pnl | string | 最近一次平仓的盈亏  
-» realised_point | string | 点卡已实现盈亏  
-» history_point | string | 已平仓的点卡总盈亏  
-» adl_ranking | integer | 自动减仓排名，共1-5个等级，`1` 最高，`5` 最低，特殊情况 `6` 是没有持仓或在爆仓中  
-» pending_orders | integer | 当前未完成委托数量  
-» close_order | object|null | 当前平仓委托信息，如果没有平仓则为`null`  
-»» id | integer(int64) | 委托ID  
-»» price | string | 委托价格  
-»» is_liq | boolean | 是否为强制平仓  
-» mode | string | 持仓模式。包括：  
+类型 | 约束  
+---|---  
+DeliveryPosition |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user | integer(int64) | Optional | readOnly: true | 用户ID  
+contract | string | Optional | readOnly: true | 合约标识  
+size | integer(int64) | Optional | readOnly: true | 头寸大小  
+leverage | string | Optional |  | 杠杆倍数，0代表全仓，正数代表逐仓  
+risk_limit | string | Optional |  | 风险限额  
+leverage_max | string | Optional | readOnly: true | 当前风险限额下，允许的最大杠杆倍数  
+maintenance_rate | string | Optional | readOnly: true | 风险限额的第一档维持保证金率要求  
+value | string | Optional | readOnly: true | 按结算币种标记价格计算的合约价值  
+margin | string | Optional |  | 保证金  
+entry_price | string | Optional | readOnly: true | 开仓价格  
+liq_price | string | Optional | readOnly: true | 爆仓价格  
+mark_price | string | Optional | readOnly: true | 合约当前标记价格  
+initial_margin | string | Optional | readOnly: true | 仓位占用的起始保证金，适用于统一账户  
+maintenance_margin | string | Optional | readOnly: true | 仓位所需的维持保证金，适用于统一账户  
+unrealised_pnl | string | Optional | readOnly: true | 未实现盈亏  
+realised_pnl | string | Optional | readOnly: true | 已实现盈亏  
+pnl_pnl | string | Optional | readOnly: true | 已实现盈亏-仓位盈亏  
+pnl_fund | string | Optional | readOnly: true | 已实现盈亏-资金费用  
+pnl_fee | string | Optional | readOnly: true | 已实现盈亏-手续费  
+history_pnl | string | Optional | readOnly: true | 已平仓的仓位总盈亏  
+last_close_pnl | string | Optional | readOnly: true | 最近一次平仓的盈亏  
+realised_point | string | Optional | readOnly: true | 点卡已实现盈亏  
+history_point | string | Optional | readOnly: true | 已平仓的点卡总盈亏  
+adl_ranking | integer | Optional | readOnly: true | 自动减仓排名，共1-5个等级，`1` 最高，`5` 最低，特殊情况 `6` 是没有持仓或在爆仓中  
+pending_orders | integer | Optional | readOnly: true | 当前未完成委托数量  
+close_order | object|null | Optional | nullable: true  
+readOnly: true | 当前平仓委托信息，如果没有平仓则为`null`  
+mode | string | Optional | enum: ["single","dual_long","dual_short"] | 持仓模式。包括：  
   
 \- `single`: 单向持仓模式  
 \- `dual_long`: 双向持仓模式下的做多仓位  
 \- `dual_short`: 双向持仓模式下的做空仓位  
-» cross_leverage_limit | string | 全仓模式下的杠杆倍数（即 `leverage` 为 0 时）  
-» update_time | integer(int64) | 最后更新时间  
-» update_id | integer(int64) | 更新id，仓位每更新一次，数值会+1  
-» open_time | integer(int64) | 开仓时间  
-» risk_limit_table | string | 风险限额梯度表id  
-» average_maintenance_rate | string | 平均维持保证金率  
+cross_leverage_limit | string | Optional |  | 全仓模式下的杠杆倍数（即 `leverage` 为 0 时）  
+update_time | integer(int64) | Optional | readOnly: true | 最后更新时间  
+update_id | integer(int64) | Optional | readOnly: true | 更新id，仓位每更新一次，数值会+1  
+open_time | integer(int64) | Optional |  | 开仓时间  
+risk_limit_table | string | Optional | readOnly: true | 风险限额梯度表id  
+average_maintenance_rate | string | Optional | readOnly: true | 平均维持保证金率  
   
-####  枚举值列表
+**close_order**
 
-枚举值列表属性 | 值  
+当前平仓委托信息，如果没有平仓则为`null`
+
+类型 | 约束  
 ---|---  
-mode | single  
-mode | dual_long  
-mode | dual_short  
+object|null | nullable: true  
+readOnly: true  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 委托ID  
+price | string | Optional |  | 委托价格  
+is_liq | boolean | Optional |  | 是否为强制平仓  
   
 WARNING
 
@@ -1549,58 +1682,71 @@ settle | usdt
 
 状态码 **200**
 
-_合约仓位详情_
+合约仓位详情
 
-名称 | 类型 | 描述  
----|---|---  
-» user | integer(int64) | 用户ID  
-» contract | string | 合约标识  
-» size | integer(int64) | 头寸大小  
-» leverage | string | 杠杆倍数，0代表全仓，正数代表逐仓  
-» risk_limit | string | 风险限额  
-» leverage_max | string | 当前风险限额下，允许的最大杠杆倍数  
-» maintenance_rate | string | 风险限额的第一档维持保证金率要求  
-» value | string | 按结算币种标记价格计算的合约价值  
-» margin | string | 保证金  
-» entry_price | string | 开仓价格  
-» liq_price | string | 爆仓价格  
-» mark_price | string | 合约当前标记价格  
-» initial_margin | string | 仓位占用的起始保证金，适用于统一账户  
-» maintenance_margin | string | 仓位所需的维持保证金，适用于统一账户  
-» unrealised_pnl | string | 未实现盈亏  
-» realised_pnl | string | 已实现盈亏  
-» pnl_pnl | string | 已实现盈亏-仓位盈亏  
-» pnl_fund | string | 已实现盈亏-资金费用  
-» pnl_fee | string | 已实现盈亏-手续费  
-» history_pnl | string | 已平仓的仓位总盈亏  
-» last_close_pnl | string | 最近一次平仓的盈亏  
-» realised_point | string | 点卡已实现盈亏  
-» history_point | string | 已平仓的点卡总盈亏  
-» adl_ranking | integer | 自动减仓排名，共1-5个等级，`1` 最高，`5` 最低，特殊情况 `6` 是没有持仓或在爆仓中  
-» pending_orders | integer | 当前未完成委托数量  
-» close_order | object|null | 当前平仓委托信息，如果没有平仓则为`null`  
-»» id | integer(int64) | 委托ID  
-»» price | string | 委托价格  
-»» is_liq | boolean | 是否为强制平仓  
-» mode | string | 持仓模式。包括：  
+类型 | 约束  
+---|---  
+DeliveryPosition |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user | integer(int64) | Optional | readOnly: true | 用户ID  
+contract | string | Optional | readOnly: true | 合约标识  
+size | integer(int64) | Optional | readOnly: true | 头寸大小  
+leverage | string | Optional |  | 杠杆倍数，0代表全仓，正数代表逐仓  
+risk_limit | string | Optional |  | 风险限额  
+leverage_max | string | Optional | readOnly: true | 当前风险限额下，允许的最大杠杆倍数  
+maintenance_rate | string | Optional | readOnly: true | 风险限额的第一档维持保证金率要求  
+value | string | Optional | readOnly: true | 按结算币种标记价格计算的合约价值  
+margin | string | Optional |  | 保证金  
+entry_price | string | Optional | readOnly: true | 开仓价格  
+liq_price | string | Optional | readOnly: true | 爆仓价格  
+mark_price | string | Optional | readOnly: true | 合约当前标记价格  
+initial_margin | string | Optional | readOnly: true | 仓位占用的起始保证金，适用于统一账户  
+maintenance_margin | string | Optional | readOnly: true | 仓位所需的维持保证金，适用于统一账户  
+unrealised_pnl | string | Optional | readOnly: true | 未实现盈亏  
+realised_pnl | string | Optional | readOnly: true | 已实现盈亏  
+pnl_pnl | string | Optional | readOnly: true | 已实现盈亏-仓位盈亏  
+pnl_fund | string | Optional | readOnly: true | 已实现盈亏-资金费用  
+pnl_fee | string | Optional | readOnly: true | 已实现盈亏-手续费  
+history_pnl | string | Optional | readOnly: true | 已平仓的仓位总盈亏  
+last_close_pnl | string | Optional | readOnly: true | 最近一次平仓的盈亏  
+realised_point | string | Optional | readOnly: true | 点卡已实现盈亏  
+history_point | string | Optional | readOnly: true | 已平仓的点卡总盈亏  
+adl_ranking | integer | Optional | readOnly: true | 自动减仓排名，共1-5个等级，`1` 最高，`5` 最低，特殊情况 `6` 是没有持仓或在爆仓中  
+pending_orders | integer | Optional | readOnly: true | 当前未完成委托数量  
+close_order | object|null | Optional | nullable: true  
+readOnly: true | 当前平仓委托信息，如果没有平仓则为`null`  
+mode | string | Optional | enum: ["single","dual_long","dual_short"] | 持仓模式。包括：  
   
 \- `single`: 单向持仓模式  
 \- `dual_long`: 双向持仓模式下的做多仓位  
 \- `dual_short`: 双向持仓模式下的做空仓位  
-» cross_leverage_limit | string | 全仓模式下的杠杆倍数（即 `leverage` 为 0 时）  
-» update_time | integer(int64) | 最后更新时间  
-» update_id | integer(int64) | 更新id，仓位每更新一次，数值会+1  
-» open_time | integer(int64) | 开仓时间  
-» risk_limit_table | string | 风险限额梯度表id  
-» average_maintenance_rate | string | 平均维持保证金率  
+cross_leverage_limit | string | Optional |  | 全仓模式下的杠杆倍数（即 `leverage` 为 0 时）  
+update_time | integer(int64) | Optional | readOnly: true | 最后更新时间  
+update_id | integer(int64) | Optional | readOnly: true | 更新id，仓位每更新一次，数值会+1  
+open_time | integer(int64) | Optional |  | 开仓时间  
+risk_limit_table | string | Optional | readOnly: true | 风险限额梯度表id  
+average_maintenance_rate | string | Optional | readOnly: true | 平均维持保证金率  
   
-####  枚举值列表
+**close_order**
 
-枚举值列表属性 | 值  
+当前平仓委托信息，如果没有平仓则为`null`
+
+类型 | 约束  
 ---|---  
-mode | single  
-mode | dual_long  
-mode | dual_short  
+object|null | nullable: true  
+readOnly: true  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 委托ID  
+price | string | Optional |  | 委托价格  
+is_liq | boolean | Optional |  | 是否为强制平仓  
   
 WARNING
 
@@ -1724,58 +1870,71 @@ settle | usdt
 
 状态码 **200**
 
-_合约仓位详情_
+合约仓位详情
 
-名称 | 类型 | 描述  
----|---|---  
-» user | integer(int64) | 用户ID  
-» contract | string | 合约标识  
-» size | integer(int64) | 头寸大小  
-» leverage | string | 杠杆倍数，0代表全仓，正数代表逐仓  
-» risk_limit | string | 风险限额  
-» leverage_max | string | 当前风险限额下，允许的最大杠杆倍数  
-» maintenance_rate | string | 风险限额的第一档维持保证金率要求  
-» value | string | 按结算币种标记价格计算的合约价值  
-» margin | string | 保证金  
-» entry_price | string | 开仓价格  
-» liq_price | string | 爆仓价格  
-» mark_price | string | 合约当前标记价格  
-» initial_margin | string | 仓位占用的起始保证金，适用于统一账户  
-» maintenance_margin | string | 仓位所需的维持保证金，适用于统一账户  
-» unrealised_pnl | string | 未实现盈亏  
-» realised_pnl | string | 已实现盈亏  
-» pnl_pnl | string | 已实现盈亏-仓位盈亏  
-» pnl_fund | string | 已实现盈亏-资金费用  
-» pnl_fee | string | 已实现盈亏-手续费  
-» history_pnl | string | 已平仓的仓位总盈亏  
-» last_close_pnl | string | 最近一次平仓的盈亏  
-» realised_point | string | 点卡已实现盈亏  
-» history_point | string | 已平仓的点卡总盈亏  
-» adl_ranking | integer | 自动减仓排名，共1-5个等级，`1` 最高，`5` 最低，特殊情况 `6` 是没有持仓或在爆仓中  
-» pending_orders | integer | 当前未完成委托数量  
-» close_order | object|null | 当前平仓委托信息，如果没有平仓则为`null`  
-»» id | integer(int64) | 委托ID  
-»» price | string | 委托价格  
-»» is_liq | boolean | 是否为强制平仓  
-» mode | string | 持仓模式。包括：  
+类型 | 约束  
+---|---  
+DeliveryPosition |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user | integer(int64) | Optional | readOnly: true | 用户ID  
+contract | string | Optional | readOnly: true | 合约标识  
+size | integer(int64) | Optional | readOnly: true | 头寸大小  
+leverage | string | Optional |  | 杠杆倍数，0代表全仓，正数代表逐仓  
+risk_limit | string | Optional |  | 风险限额  
+leverage_max | string | Optional | readOnly: true | 当前风险限额下，允许的最大杠杆倍数  
+maintenance_rate | string | Optional | readOnly: true | 风险限额的第一档维持保证金率要求  
+value | string | Optional | readOnly: true | 按结算币种标记价格计算的合约价值  
+margin | string | Optional |  | 保证金  
+entry_price | string | Optional | readOnly: true | 开仓价格  
+liq_price | string | Optional | readOnly: true | 爆仓价格  
+mark_price | string | Optional | readOnly: true | 合约当前标记价格  
+initial_margin | string | Optional | readOnly: true | 仓位占用的起始保证金，适用于统一账户  
+maintenance_margin | string | Optional | readOnly: true | 仓位所需的维持保证金，适用于统一账户  
+unrealised_pnl | string | Optional | readOnly: true | 未实现盈亏  
+realised_pnl | string | Optional | readOnly: true | 已实现盈亏  
+pnl_pnl | string | Optional | readOnly: true | 已实现盈亏-仓位盈亏  
+pnl_fund | string | Optional | readOnly: true | 已实现盈亏-资金费用  
+pnl_fee | string | Optional | readOnly: true | 已实现盈亏-手续费  
+history_pnl | string | Optional | readOnly: true | 已平仓的仓位总盈亏  
+last_close_pnl | string | Optional | readOnly: true | 最近一次平仓的盈亏  
+realised_point | string | Optional | readOnly: true | 点卡已实现盈亏  
+history_point | string | Optional | readOnly: true | 已平仓的点卡总盈亏  
+adl_ranking | integer | Optional | readOnly: true | 自动减仓排名，共1-5个等级，`1` 最高，`5` 最低，特殊情况 `6` 是没有持仓或在爆仓中  
+pending_orders | integer | Optional | readOnly: true | 当前未完成委托数量  
+close_order | object|null | Optional | nullable: true  
+readOnly: true | 当前平仓委托信息，如果没有平仓则为`null`  
+mode | string | Optional | enum: ["single","dual_long","dual_short"] | 持仓模式。包括：  
   
 \- `single`: 单向持仓模式  
 \- `dual_long`: 双向持仓模式下的做多仓位  
 \- `dual_short`: 双向持仓模式下的做空仓位  
-» cross_leverage_limit | string | 全仓模式下的杠杆倍数（即 `leverage` 为 0 时）  
-» update_time | integer(int64) | 最后更新时间  
-» update_id | integer(int64) | 更新id，仓位每更新一次，数值会+1  
-» open_time | integer(int64) | 开仓时间  
-» risk_limit_table | string | 风险限额梯度表id  
-» average_maintenance_rate | string | 平均维持保证金率  
+cross_leverage_limit | string | Optional |  | 全仓模式下的杠杆倍数（即 `leverage` 为 0 时）  
+update_time | integer(int64) | Optional | readOnly: true | 最后更新时间  
+update_id | integer(int64) | Optional | readOnly: true | 更新id，仓位每更新一次，数值会+1  
+open_time | integer(int64) | Optional |  | 开仓时间  
+risk_limit_table | string | Optional | readOnly: true | 风险限额梯度表id  
+average_maintenance_rate | string | Optional | readOnly: true | 平均维持保证金率  
   
-####  枚举值列表
+**close_order**
 
-枚举值列表属性 | 值  
+当前平仓委托信息，如果没有平仓则为`null`
+
+类型 | 约束  
 ---|---  
-mode | single  
-mode | dual_long  
-mode | dual_short  
+object|null | nullable: true  
+readOnly: true  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 委托ID  
+price | string | Optional |  | 委托价格  
+is_liq | boolean | Optional |  | 是否为强制平仓  
   
 WARNING
 
@@ -1899,58 +2058,71 @@ settle | usdt
 
 状态码 **200**
 
-_合约仓位详情_
+合约仓位详情
 
-名称 | 类型 | 描述  
----|---|---  
-» user | integer(int64) | 用户ID  
-» contract | string | 合约标识  
-» size | integer(int64) | 头寸大小  
-» leverage | string | 杠杆倍数，0代表全仓，正数代表逐仓  
-» risk_limit | string | 风险限额  
-» leverage_max | string | 当前风险限额下，允许的最大杠杆倍数  
-» maintenance_rate | string | 风险限额的第一档维持保证金率要求  
-» value | string | 按结算币种标记价格计算的合约价值  
-» margin | string | 保证金  
-» entry_price | string | 开仓价格  
-» liq_price | string | 爆仓价格  
-» mark_price | string | 合约当前标记价格  
-» initial_margin | string | 仓位占用的起始保证金，适用于统一账户  
-» maintenance_margin | string | 仓位所需的维持保证金，适用于统一账户  
-» unrealised_pnl | string | 未实现盈亏  
-» realised_pnl | string | 已实现盈亏  
-» pnl_pnl | string | 已实现盈亏-仓位盈亏  
-» pnl_fund | string | 已实现盈亏-资金费用  
-» pnl_fee | string | 已实现盈亏-手续费  
-» history_pnl | string | 已平仓的仓位总盈亏  
-» last_close_pnl | string | 最近一次平仓的盈亏  
-» realised_point | string | 点卡已实现盈亏  
-» history_point | string | 已平仓的点卡总盈亏  
-» adl_ranking | integer | 自动减仓排名，共1-5个等级，`1` 最高，`5` 最低，特殊情况 `6` 是没有持仓或在爆仓中  
-» pending_orders | integer | 当前未完成委托数量  
-» close_order | object|null | 当前平仓委托信息，如果没有平仓则为`null`  
-»» id | integer(int64) | 委托ID  
-»» price | string | 委托价格  
-»» is_liq | boolean | 是否为强制平仓  
-» mode | string | 持仓模式。包括：  
+类型 | 约束  
+---|---  
+DeliveryPosition |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user | integer(int64) | Optional | readOnly: true | 用户ID  
+contract | string | Optional | readOnly: true | 合约标识  
+size | integer(int64) | Optional | readOnly: true | 头寸大小  
+leverage | string | Optional |  | 杠杆倍数，0代表全仓，正数代表逐仓  
+risk_limit | string | Optional |  | 风险限额  
+leverage_max | string | Optional | readOnly: true | 当前风险限额下，允许的最大杠杆倍数  
+maintenance_rate | string | Optional | readOnly: true | 风险限额的第一档维持保证金率要求  
+value | string | Optional | readOnly: true | 按结算币种标记价格计算的合约价值  
+margin | string | Optional |  | 保证金  
+entry_price | string | Optional | readOnly: true | 开仓价格  
+liq_price | string | Optional | readOnly: true | 爆仓价格  
+mark_price | string | Optional | readOnly: true | 合约当前标记价格  
+initial_margin | string | Optional | readOnly: true | 仓位占用的起始保证金，适用于统一账户  
+maintenance_margin | string | Optional | readOnly: true | 仓位所需的维持保证金，适用于统一账户  
+unrealised_pnl | string | Optional | readOnly: true | 未实现盈亏  
+realised_pnl | string | Optional | readOnly: true | 已实现盈亏  
+pnl_pnl | string | Optional | readOnly: true | 已实现盈亏-仓位盈亏  
+pnl_fund | string | Optional | readOnly: true | 已实现盈亏-资金费用  
+pnl_fee | string | Optional | readOnly: true | 已实现盈亏-手续费  
+history_pnl | string | Optional | readOnly: true | 已平仓的仓位总盈亏  
+last_close_pnl | string | Optional | readOnly: true | 最近一次平仓的盈亏  
+realised_point | string | Optional | readOnly: true | 点卡已实现盈亏  
+history_point | string | Optional | readOnly: true | 已平仓的点卡总盈亏  
+adl_ranking | integer | Optional | readOnly: true | 自动减仓排名，共1-5个等级，`1` 最高，`5` 最低，特殊情况 `6` 是没有持仓或在爆仓中  
+pending_orders | integer | Optional | readOnly: true | 当前未完成委托数量  
+close_order | object|null | Optional | nullable: true  
+readOnly: true | 当前平仓委托信息，如果没有平仓则为`null`  
+mode | string | Optional | enum: ["single","dual_long","dual_short"] | 持仓模式。包括：  
   
 \- `single`: 单向持仓模式  
 \- `dual_long`: 双向持仓模式下的做多仓位  
 \- `dual_short`: 双向持仓模式下的做空仓位  
-» cross_leverage_limit | string | 全仓模式下的杠杆倍数（即 `leverage` 为 0 时）  
-» update_time | integer(int64) | 最后更新时间  
-» update_id | integer(int64) | 更新id，仓位每更新一次，数值会+1  
-» open_time | integer(int64) | 开仓时间  
-» risk_limit_table | string | 风险限额梯度表id  
-» average_maintenance_rate | string | 平均维持保证金率  
+cross_leverage_limit | string | Optional |  | 全仓模式下的杠杆倍数（即 `leverage` 为 0 时）  
+update_time | integer(int64) | Optional | readOnly: true | 最后更新时间  
+update_id | integer(int64) | Optional | readOnly: true | 更新id，仓位每更新一次，数值会+1  
+open_time | integer(int64) | Optional |  | 开仓时间  
+risk_limit_table | string | Optional | readOnly: true | 风险限额梯度表id  
+average_maintenance_rate | string | Optional | readOnly: true | 平均维持保证金率  
   
-####  枚举值列表
+**close_order**
 
-枚举值列表属性 | 值  
+当前平仓委托信息，如果没有平仓则为`null`
+
+类型 | 约束  
 ---|---  
-mode | single  
-mode | dual_long  
-mode | dual_short  
+object|null | nullable: true  
+readOnly: true  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 委托ID  
+price | string | Optional |  | 委托价格  
+is_liq | boolean | Optional |  | 是否为强制平仓  
   
 WARNING
 
@@ -2092,15 +2264,28 @@ settle | usdt
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array | [合约订单详情]  
-» _None_ | DeliveryOrder | 合约订单详情  
-»» id | integer(int64) | 合约订单 ID  
-»» user | integer | 用户 ID  
-»» create_time | number(double) | 订单创建时间  
-»» finish_time | number(double) | 订单结束时间，未结束订单无此字段返回  
-»» finish_as | string | 结束方式，包括：  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+合约订单详情
+
+类型 | 约束  
+---|---  
+DeliveryOrder | required: ["contract","size"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | 合约订单 ID  
+user | integer | Optional | readOnly: true | 用户 ID  
+create_time | number(double) | Optional | readOnly: true | 订单创建时间  
+finish_time | number(double) | Optional | readOnly: true | 订单结束时间，未结束订单无此字段返回  
+finish_as | string | Optional | enum: ["filled","cancelled","liquidated","ioc","auto_deleveraged","reduce_only","position_closed","reduce_out","stp"]  
+readOnly: true | 结束方式，包括：  
   
 \- filled: 完全成交  
 \- cancelled: 用户撤销  
@@ -2111,26 +2296,32 @@ _None_ | array | [合约订单详情]
 \- position_closed: 因为仓位平掉了，所以挂单被撤掉  
 \- reduce_out: 只减仓被排除的不容易成交的挂单  
 \- stp: 订单发生自成交限制而被撤销  
-»» status | string | 订单状态。  
+status | string | Optional | enum: ["open","finished"]  
+readOnly: true | 订单状态。  
   
 \- `open`: 等待处理  
 \- `finished`: 已结束的订单  
-»» contract | string | 合约标识  
-»» size | integer(int64) | 必选。交易数量，正数为买入，负数为卖出。平仓委托则设置为0。  
-»» iceberg | integer(int64) | 冰山委托显示数量。0为完全不隐藏。注意，隐藏部分成交按照taker收取手续费。  
-»» price | string | 委托价。价格为0并且`tif`为`ioc`，代表市价委托。  
-»» is_close | boolean | 是否为平仓委托。对应请求中的`close`。  
-»» is_reduce_only | boolean | 是否为只减仓委托。对应请求中的`reduce_only`。  
-»» is_liq | boolean | 是否为强制平仓委托  
-»» tif | string | Time in force 策略，市价单当前只支持 ioc 模式  
+contract | string | Required |  | 合约标识  
+size | integer(int64) | Required |  | 必选。交易数量，正数为买入，负数为卖出。平仓委托则设置为0。  
+iceberg | integer(int64) | Optional |  | 冰山委托显示数量。0为完全不隐藏。注意，隐藏部分成交按照taker收取手续费。  
+price | string | Optional |  | 委托价。价格为0并且`tif`为`ioc`，代表市价委托。  
+close | boolean | Optional | default: false  
+writeOnly: true | 设置为 true 的时候执行平仓操作，并且`size`应设置为0  
+is_close | boolean | Optional | readOnly: true | 是否为平仓委托。对应请求中的`close`。  
+reduce_only | boolean | Optional | default: false  
+writeOnly: true | 设置为 true 的时候，为只减仓委托  
+is_reduce_only | boolean | Optional | readOnly: true | 是否为只减仓委托。对应请求中的`reduce_only`。  
+is_liq | boolean | Optional | readOnly: true | 是否为强制平仓委托  
+tif | string | Optional | enum: ["gtc","ioc","poc","fok"]  
+default: "gtc" | Time in force 策略，市价单当前只支持 ioc 模式  
   
 \- gtc: GoodTillCancelled  
 \- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
 \- poc: PendingOrCancelled，被动委托，只挂单不吃单  
 \- fok: FillOrKill, 完全成交，或者完全取消  
-»» left | integer(int64) | 未成交数量  
-»» fill_price | string | 成交价  
-»» text | string | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+left | integer(int64) | Optional | readOnly: true | 未成交数量  
+fill_price | string | Optional | readOnly: true | 成交价  
+text | string | Optional |  | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
   
 1\. 必须以 `t-` 开头  
 2\. 不计算 `t-` ，长度不能超过 28 字节  
@@ -2149,14 +2340,16 @@ _None_ | array | [合约订单详情]
 \- comb_margin_liquidate: 统⼀账户组合保证金模式强制平仓  
 \- scm_liquidate: 统⼀账户单币种保证金模式仓位强制平仓  
 \- insurance: 保险  
-»» tkfr | string | 吃单费率  
-»» mkfr | string | 做单费率  
-»» refu | integer | 推荐人用户 ID  
-»» stp_id | integer | 订单所属的`STP用户组`id，同一个`STP用户组`内用户之间的订单不允许发生自成交。  
+tkfr | string | Optional | readOnly: true | 吃单费率  
+mkfr | string | Optional | readOnly: true | 做单费率  
+refu | integer | Optional | readOnly: true | 推荐人用户 ID  
+auto_size | string | Optional | enum: ["close_long","close_short"]  
+writeOnly: true | 双仓模式下用于设置平仓的方向，`close_long` 平多头， `close_short` 平空头，需要同时设置 `size` 为 0  
+stp_id | integer | Optional | readOnly: true | 订单所属的`STP用户组`id，同一个`STP用户组`内用户之间的订单不允许发生自成交。  
   
 1\. 如果撮合时两个订单的 `stp_id` 非 `0` 且相等，则不成交，而是根据 `taker` 的 `stp_act` 执行相应策略。  
 2\. 没有设置`STP用户组`成交的订单，`stp_id` 默认返回 `0`。  
-»» stp_act | string | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
+stp_act | string | Optional | enum: ["co","cn","cb","-"] | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
   
 1\. 用户在设置加入`STP用户组`后，可以通过传递 `stp_act` 来限制用户发生自成交的策略，没有传递 `stp_act` 默认按照 `cn` 的策略。  
 2\. 用户在没有设置加入`STP用户组`时，传递 `stp_act` 参数会报错。  
@@ -2165,31 +2358,7 @@ _None_ | array | [合约订单详情]
 \- cn: Cancel newest,取消新订单，保留老订单  
 \- co: Cancel oldest,取消⽼订单，保留新订单  
 \- cb: Cancel both,新旧订单都取消  
-»» amend_text | string | 用户修改订单时备注的信息  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-finish_as | filled  
-finish_as | cancelled  
-finish_as | liquidated  
-finish_as | ioc  
-finish_as | auto_deleveraged  
-finish_as | reduce_only  
-finish_as | position_closed  
-finish_as | reduce_out  
-finish_as | stp  
-status | open  
-status | finished  
-tif | gtc  
-tif | ioc  
-tif | poc  
-tif | fok  
-stp_act | co  
-stp_act | cn  
-stp_act | cb  
-stp_act | -  
+amend_text | string | Optional | readOnly: true | 用户修改订单时备注的信息  
   
 ###  返回头部
 
@@ -2295,123 +2464,11 @@ _合约交易下单_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | DeliveryOrder | 是 |   
-» contract | body | string | 是 | 合约标识  
-» size | body | integer(int64) | 是 | 必选。交易数量，正数为买入，负数为卖出。平仓委托则设置为0。  
-» iceberg | body | integer(int64) | 否 | 冰山委托显示数量。0为完全不隐藏。注意，隐藏部分成交按照taker收取手续费。  
-» price | body | string | 否 | 委托价。价格为0并且`tif`为`ioc`，代表市价委托。  
-» close | body | boolean | 否 | 设置为 true 的时候执行平仓操作，并且`size`应设置为0  
-» reduce_only | body | boolean | 否 | 设置为 true 的时候，为只减仓委托  
-» tif | body | string | 否 | Time in force 策略，市价单当前只支持 ioc 模式  
-  
-\- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
-\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
-\- fok: FillOrKill, 完全成交，或者完全取消  
-» text | body | string | 否 | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
-  
-1\. 必须以 `t-` 开头  
-2\. 不计算 `t-` ，长度不能超过 28 字节  
-3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
-  
-除用户自定义信息以外，以下为内部保留字段，标识订单来源:  
-  
-\- web: 网页  
-\- api: API 调用  
-\- app: 移动端  
-\- auto_deleveraging: 自动减仓  
-\- liquidation: ⽼经典模式仓位强制平仓  
-\- liq-xxx: a. 新经典模式仓位强制平仓，包含逐仓、单向全仓、双向全仓⾮对冲仓位强平。 b. 统⼀账户单币种保证金模式逐仓强制平仓  
-\- hedge-liq-xxx: 新经典模式双向全仓对冲部分强制平仓，即同时平多空仓位  
-\- pm_liquidate: 统⼀账户跨币种保证金模式强制平仓  
-\- comb_margin_liquidate: 统⼀账户组合保证金模式强制平仓  
-\- scm_liquidate: 统⼀账户单币种保证金模式仓位强制平仓  
-\- insurance: 保险  
-» auto_size | body | string | 否 | 双仓模式下用于设置平仓的方向，`close_long` 平多头， `close_short` 平空头，需要同时设置 `size` 为 0  
-» stp_act | body | string | 否 | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
-  
-1\. 用户在设置加入`STP用户组`后，可以通过传递 `stp_act` 来限制用户发生自成交的策略，没有传递 `stp_act` 默认按照 `cn` 的策略。  
-2\. 用户在没有设置加入`STP用户组`时，传递 `stp_act` 参数会报错。  
-3\. 用户没有使用 `stp_act` 发生成交的订单，`stp_act` 返回 `-`。  
-  
-\- cn: Cancel newest,取消新订单，保留老订单  
-\- co: Cancel oldest,取消⽼订单，保留新订单  
-\- cb: Cancel both,新旧订单都取消  
-settle | URL | string | 是 | 结算货币  
-  
-####  详细描述
-
-**» tif** : Time in force 策略，市价单当前只支持 ioc 模式  
-  
-\- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
-\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
-\- fok: FillOrKill, 完全成交，或者完全取消
-
-**» text** : 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
-  
-1\. 必须以 `t-` 开头  
-2\. 不计算 `t-` ，长度不能超过 28 字节  
-3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
-  
-除用户自定义信息以外，以下为内部保留字段，标识订单来源:  
-  
-\- web: 网页  
-\- api: API 调用  
-\- app: 移动端  
-\- auto_deleveraging: 自动减仓  
-\- liquidation: ⽼经典模式仓位强制平仓  
-\- liq-xxx: a. 新经典模式仓位强制平仓，包含逐仓、单向全仓、双向全仓⾮对冲仓位强平。 b. 统⼀账户单币种保证金模式逐仓强制平仓  
-\- hedge-liq-xxx: 新经典模式双向全仓对冲部分强制平仓，即同时平多空仓位  
-\- pm_liquidate: 统⼀账户跨币种保证金模式强制平仓  
-\- comb_margin_liquidate: 统⼀账户组合保证金模式强制平仓  
-\- scm_liquidate: 统⼀账户单币种保证金模式仓位强制平仓  
-\- insurance: 保险
-
-**» stp_act** : Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
-  
-1\. 用户在设置加入`STP用户组`后，可以通过传递 `stp_act` 来限制用户发生自成交的策略，没有传递 `stp_act` 默认按照 `cn` 的策略。  
-2\. 用户在没有设置加入`STP用户组`时，传递 `stp_act` 参数会报错。  
-3\. 用户没有使用 `stp_act` 发生成交的订单，`stp_act` 返回 `-`。  
-  
-\- cn: Cancel newest,取消新订单，保留老订单  
-\- co: Cancel oldest,取消⽼订单，保留新订单  
-\- cb: Cancel both,新旧订单都取消
-
-####  枚举值列表
-
-枚举值列表参数 | 值  
----|---  
-» tif | gtc  
-» tif | ioc  
-» tif | poc  
-» tif | fok  
-» auto_size | close_long  
-» auto_size | close_short  
-» stp_act | co  
-» stp_act | cn  
-» stp_act | cb  
-» stp_act | -  
-settle | usdt  
-  
-### 返回
-
-返回状态码 | 含义 | 描述 | 格式  
----|---|---|---  
-201 | [Created ](https://tools.ietf.org/html/rfc7231#section-6.3.2) | 订单详情 | DeliveryOrder  
-  
-### 返回格式
-
-状态码 **201**
-
-_合约订单详情_
-
-名称 | 类型 | 描述  
----|---|---  
-» id | integer(int64) | 合约订单 ID  
-» user | integer | 用户 ID  
-» create_time | number(double) | 订单创建时间  
-» finish_time | number(double) | 订单结束时间，未结束订单无此字段返回  
-» finish_as | string | 结束方式，包括：  
+id | body | integer(int64) | 否 | 合约订单 ID  
+user | body | integer | 否 | 用户 ID  
+create_time | body | number(double) | 否 | 订单创建时间  
+finish_time | body | number(double) | 否 | 订单结束时间，未结束订单无此字段返回  
+finish_as | body | string | 否 | 结束方式，包括：  
   
 \- filled: 完全成交  
 \- cancelled: 用户撤销  
@@ -2422,26 +2479,34 @@ _合约订单详情_
 \- position_closed: 因为仓位平掉了，所以挂单被撤掉  
 \- reduce_out: 只减仓被排除的不容易成交的挂单  
 \- stp: 订单发生自成交限制而被撤销  
-» status | string | 订单状态。  
+  
+status | body | string | 否 | 订单状态。  
   
 \- `open`: 等待处理  
 \- `finished`: 已结束的订单  
-» contract | string | 合约标识  
-» size | integer(int64) | 必选。交易数量，正数为买入，负数为卖出。平仓委托则设置为0。  
-» iceberg | integer(int64) | 冰山委托显示数量。0为完全不隐藏。注意，隐藏部分成交按照taker收取手续费。  
-» price | string | 委托价。价格为0并且`tif`为`ioc`，代表市价委托。  
-» is_close | boolean | 是否为平仓委托。对应请求中的`close`。  
-» is_reduce_only | boolean | 是否为只减仓委托。对应请求中的`reduce_only`。  
-» is_liq | boolean | 是否为强制平仓委托  
-» tif | string | Time in force 策略，市价单当前只支持 ioc 模式  
+  
+contract | body | string | 是 | 合约标识  
+size | body | integer(int64) | 是 | 必选。交易数量，正数为买入，负数为卖出。平仓委托则设置为0。  
+  
+iceberg | body | integer(int64) | 否 | 冰山委托显示数量。0为完全不隐藏。注意，隐藏部分成交按照taker收取手续费。  
+  
+price | body | string | 否 | 委托价。价格为0并且`tif`为`ioc`，代表市价委托。  
+close | body | boolean | 否 | 设置为 true 的时候执行平仓操作，并且`size`应设置为0  
+is_close | body | boolean | 否 | 是否为平仓委托。对应请求中的`close`。  
+reduce_only | body | boolean | 否 | 设置为 true 的时候，为只减仓委托  
+is_reduce_only | body | boolean | 否 | 是否为只减仓委托。对应请求中的`reduce_only`。  
+is_liq | body | boolean | 否 | 是否为强制平仓委托  
+tif | body | string | 否 | Time in force 策略，市价单当前只支持 ioc 模式  
   
 \- gtc: GoodTillCancelled  
 \- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
 \- poc: PendingOrCancelled，被动委托，只挂单不吃单  
 \- fok: FillOrKill, 完全成交，或者完全取消  
-» left | integer(int64) | 未成交数量  
-» fill_price | string | 成交价  
-» text | string | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+left | body | integer(int64) | 否 | 未成交数量  
+  
+fill_price | body | string | 否 | 成交价  
+text | body | string | 否 | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
   
 1\. 必须以 `t-` 开头  
 2\. 不计算 `t-` ，长度不能超过 28 字节  
@@ -2460,14 +2525,17 @@ _合约订单详情_
 \- comb_margin_liquidate: 统⼀账户组合保证金模式强制平仓  
 \- scm_liquidate: 统⼀账户单币种保证金模式仓位强制平仓  
 \- insurance: 保险  
-» tkfr | string | 吃单费率  
-» mkfr | string | 做单费率  
-» refu | integer | 推荐人用户 ID  
-» stp_id | integer | 订单所属的`STP用户组`id，同一个`STP用户组`内用户之间的订单不允许发生自成交。  
+  
+tkfr | body | string | 否 | 吃单费率  
+mkfr | body | string | 否 | 做单费率  
+refu | body | integer | 否 | 推荐人用户 ID  
+auto_size | body | string | 否 | 双仓模式下用于设置平仓的方向，`close_long` 平多头， `close_short` 平空头，需要同时设置 `size` 为 0  
+stp_id | body | integer | 否 | 订单所属的`STP用户组`id，同一个`STP用户组`内用户之间的订单不允许发生自成交。  
   
 1\. 如果撮合时两个订单的 `stp_id` 非 `0` 且相等，则不成交，而是根据 `taker` 的 `stp_act` 执行相应策略。  
 2\. 没有设置`STP用户组`成交的订单，`stp_id` 默认返回 `0`。  
-» stp_act | string | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
+  
+stp_act | body | string | 否 | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
   
 1\. 用户在设置加入`STP用户组`后，可以通过传递 `stp_act` 来限制用户发生自成交的策略，没有传递 `stp_act` 默认按照 `cn` 的策略。  
 2\. 用户在没有设置加入`STP用户组`时，传递 `stp_act` 参数会报错。  
@@ -2476,11 +2544,80 @@ _合约订单详情_
 \- cn: Cancel newest,取消新订单，保留老订单  
 \- co: Cancel oldest,取消⽼订单，保留新订单  
 \- cb: Cancel both,新旧订单都取消  
-» amend_text | string | 用户修改订单时备注的信息  
   
+amend_text | body | string | 否 | 用户修改订单时备注的信息  
+settle | URL | string | 是 | 结算货币  
+  
+####  详细描述
+
+** finish_as**: 结束方式，包括：  
+  
+\- filled: 完全成交  
+\- cancelled: 用户撤销  
+\- liquidated: 强制平仓撤销  
+\- ioc: 未立即完全成交，因为tif设置为ioc  
+\- auto_deleveraged: 自动减仓撤销  
+\- reduce_only: 增持仓位撤销，因为设置reduce_only或平仓  
+\- position_closed: 因为仓位平掉了，所以挂单被撤掉  
+\- reduce_out: 只减仓被排除的不容易成交的挂单  
+\- stp: 订单发生自成交限制而被撤销  
+
+** status**: 订单状态。  
+  
+\- `open`: 等待处理  
+\- `finished`: 已结束的订单  
+
+** size**: 必选。交易数量，正数为买入，负数为卖出。平仓委托则设置为0。  
+
+** iceberg**: 冰山委托显示数量。0为完全不隐藏。注意，隐藏部分成交按照taker收取手续费。  
+
+** tif**: Time in force 策略，市价单当前只支持 ioc 模式  
+  
+\- gtc: GoodTillCancelled  
+\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
+\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
+\- fok: FillOrKill, 完全成交，或者完全取消  
+
+** left**: 未成交数量  
+
+** text**: 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+  
+除用户自定义信息以外，以下为内部保留字段，标识订单来源:  
+  
+\- web: 网页  
+\- api: API 调用  
+\- app: 移动端  
+\- auto_deleveraging: 自动减仓  
+\- liquidation: ⽼经典模式仓位强制平仓  
+\- liq-xxx: a. 新经典模式仓位强制平仓，包含逐仓、单向全仓、双向全仓⾮对冲仓位强平。 b. 统⼀账户单币种保证金模式逐仓强制平仓  
+\- hedge-liq-xxx: 新经典模式双向全仓对冲部分强制平仓，即同时平多空仓位  
+\- pm_liquidate: 统⼀账户跨币种保证金模式强制平仓  
+\- comb_margin_liquidate: 统⼀账户组合保证金模式强制平仓  
+\- scm_liquidate: 统⼀账户单币种保证金模式仓位强制平仓  
+\- insurance: 保险  
+
+** stp_id**: 订单所属的`STP用户组`id，同一个`STP用户组`内用户之间的订单不允许发生自成交。  
+  
+1\. 如果撮合时两个订单的 `stp_id` 非 `0` 且相等，则不成交，而是根据 `taker` 的 `stp_act` 执行相应策略。  
+2\. 没有设置`STP用户组`成交的订单，`stp_id` 默认返回 `0`。  
+
+** stp_act**: Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
+  
+1\. 用户在设置加入`STP用户组`后，可以通过传递 `stp_act` 来限制用户发生自成交的策略，没有传递 `stp_act` 默认按照 `cn` 的策略。  
+2\. 用户在没有设置加入`STP用户组`时，传递 `stp_act` 参数会报错。  
+3\. 用户没有使用 `stp_act` 发生成交的订单，`stp_act` 返回 `-`。  
+  
+\- cn: Cancel newest,取消新订单，保留老订单  
+\- co: Cancel oldest,取消⽼订单，保留新订单  
+\- cb: Cancel both,新旧订单都取消  
+
 ####  枚举值列表
 
-枚举值列表属性 | 值  
+枚举值列表参数 | 值  
 ---|---  
 finish_as | filled  
 finish_as | cancelled  
@@ -2497,10 +2634,205 @@ tif | gtc
 tif | ioc  
 tif | poc  
 tif | fok  
+auto_size | close_long  
+auto_size | close_short  
 stp_act | co  
 stp_act | cn  
 stp_act | cb  
 stp_act | -  
+settle | usdt  
+  
+####  请求体结构
+
+合约订单详情
+
+请求体结构类型 | 约束  
+---|---  
+DeliveryOrder | required: ["contract","size"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | 合约订单 ID  
+user | integer | Optional | readOnly: true | 用户 ID  
+create_time | number(double) | Optional | readOnly: true | 订单创建时间  
+finish_time | number(double) | Optional | readOnly: true | 订单结束时间，未结束订单无此字段返回  
+finish_as | string | Optional | enum: ["filled","cancelled","liquidated","ioc","auto_deleveraged","reduce_only","position_closed","reduce_out","stp"]  
+readOnly: true | 结束方式，包括：  
+  
+\- filled: 完全成交  
+\- cancelled: 用户撤销  
+\- liquidated: 强制平仓撤销  
+\- ioc: 未立即完全成交，因为tif设置为ioc  
+\- auto_deleveraged: 自动减仓撤销  
+\- reduce_only: 增持仓位撤销，因为设置reduce_only或平仓  
+\- position_closed: 因为仓位平掉了，所以挂单被撤掉  
+\- reduce_out: 只减仓被排除的不容易成交的挂单  
+\- stp: 订单发生自成交限制而被撤销  
+status | string | Optional | enum: ["open","finished"]  
+readOnly: true | 订单状态。  
+  
+\- `open`: 等待处理  
+\- `finished`: 已结束的订单  
+contract | string | Required |  | 合约标识  
+size | integer(int64) | Required |  | 必选。交易数量，正数为买入，负数为卖出。平仓委托则设置为0。  
+iceberg | integer(int64) | Optional |  | 冰山委托显示数量。0为完全不隐藏。注意，隐藏部分成交按照taker收取手续费。  
+price | string | Optional |  | 委托价。价格为0并且`tif`为`ioc`，代表市价委托。  
+close | boolean | Optional | default: false  
+writeOnly: true | 设置为 true 的时候执行平仓操作，并且`size`应设置为0  
+is_close | boolean | Optional | readOnly: true | 是否为平仓委托。对应请求中的`close`。  
+reduce_only | boolean | Optional | default: false  
+writeOnly: true | 设置为 true 的时候，为只减仓委托  
+is_reduce_only | boolean | Optional | readOnly: true | 是否为只减仓委托。对应请求中的`reduce_only`。  
+is_liq | boolean | Optional | readOnly: true | 是否为强制平仓委托  
+tif | string | Optional | enum: ["gtc","ioc","poc","fok"]  
+default: "gtc" | Time in force 策略，市价单当前只支持 ioc 模式  
+  
+\- gtc: GoodTillCancelled  
+\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
+\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
+\- fok: FillOrKill, 完全成交，或者完全取消  
+left | integer(int64) | Optional | readOnly: true | 未成交数量  
+fill_price | string | Optional | readOnly: true | 成交价  
+text | string | Optional |  | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+  
+除用户自定义信息以外，以下为内部保留字段，标识订单来源:  
+  
+\- web: 网页  
+\- api: API 调用  
+\- app: 移动端  
+\- auto_deleveraging: 自动减仓  
+\- liquidation: ⽼经典模式仓位强制平仓  
+\- liq-xxx: a. 新经典模式仓位强制平仓，包含逐仓、单向全仓、双向全仓⾮对冲仓位强平。 b. 统⼀账户单币种保证金模式逐仓强制平仓  
+\- hedge-liq-xxx: 新经典模式双向全仓对冲部分强制平仓，即同时平多空仓位  
+\- pm_liquidate: 统⼀账户跨币种保证金模式强制平仓  
+\- comb_margin_liquidate: 统⼀账户组合保证金模式强制平仓  
+\- scm_liquidate: 统⼀账户单币种保证金模式仓位强制平仓  
+\- insurance: 保险  
+tkfr | string | Optional | readOnly: true | 吃单费率  
+mkfr | string | Optional | readOnly: true | 做单费率  
+refu | integer | Optional | readOnly: true | 推荐人用户 ID  
+auto_size | string | Optional | enum: ["close_long","close_short"]  
+writeOnly: true | 双仓模式下用于设置平仓的方向，`close_long` 平多头， `close_short` 平空头，需要同时设置 `size` 为 0  
+stp_id | integer | Optional | readOnly: true | 订单所属的`STP用户组`id，同一个`STP用户组`内用户之间的订单不允许发生自成交。  
+  
+1\. 如果撮合时两个订单的 `stp_id` 非 `0` 且相等，则不成交，而是根据 `taker` 的 `stp_act` 执行相应策略。  
+2\. 没有设置`STP用户组`成交的订单，`stp_id` 默认返回 `0`。  
+stp_act | string | Optional | enum: ["co","cn","cb","-"] | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
+  
+1\. 用户在设置加入`STP用户组`后，可以通过传递 `stp_act` 来限制用户发生自成交的策略，没有传递 `stp_act` 默认按照 `cn` 的策略。  
+2\. 用户在没有设置加入`STP用户组`时，传递 `stp_act` 参数会报错。  
+3\. 用户没有使用 `stp_act` 发生成交的订单，`stp_act` 返回 `-`。  
+  
+\- cn: Cancel newest,取消新订单，保留老订单  
+\- co: Cancel oldest,取消⽼订单，保留新订单  
+\- cb: Cancel both,新旧订单都取消  
+amend_text | string | Optional | readOnly: true | 用户修改订单时备注的信息  
+  
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+201 | [Created ](https://tools.ietf.org/html/rfc7231#section-6.3.2) | 订单详情 | DeliveryOrder  
+  
+### 返回格式
+
+状态码 **201**
+
+合约订单详情
+
+类型 | 约束  
+---|---  
+DeliveryOrder | required: ["contract","size"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | 合约订单 ID  
+user | integer | Optional | readOnly: true | 用户 ID  
+create_time | number(double) | Optional | readOnly: true | 订单创建时间  
+finish_time | number(double) | Optional | readOnly: true | 订单结束时间，未结束订单无此字段返回  
+finish_as | string | Optional | enum: ["filled","cancelled","liquidated","ioc","auto_deleveraged","reduce_only","position_closed","reduce_out","stp"]  
+readOnly: true | 结束方式，包括：  
+  
+\- filled: 完全成交  
+\- cancelled: 用户撤销  
+\- liquidated: 强制平仓撤销  
+\- ioc: 未立即完全成交，因为tif设置为ioc  
+\- auto_deleveraged: 自动减仓撤销  
+\- reduce_only: 增持仓位撤销，因为设置reduce_only或平仓  
+\- position_closed: 因为仓位平掉了，所以挂单被撤掉  
+\- reduce_out: 只减仓被排除的不容易成交的挂单  
+\- stp: 订单发生自成交限制而被撤销  
+status | string | Optional | enum: ["open","finished"]  
+readOnly: true | 订单状态。  
+  
+\- `open`: 等待处理  
+\- `finished`: 已结束的订单  
+contract | string | Required |  | 合约标识  
+size | integer(int64) | Required |  | 必选。交易数量，正数为买入，负数为卖出。平仓委托则设置为0。  
+iceberg | integer(int64) | Optional |  | 冰山委托显示数量。0为完全不隐藏。注意，隐藏部分成交按照taker收取手续费。  
+price | string | Optional |  | 委托价。价格为0并且`tif`为`ioc`，代表市价委托。  
+close | boolean | Optional | default: false  
+writeOnly: true | 设置为 true 的时候执行平仓操作，并且`size`应设置为0  
+is_close | boolean | Optional | readOnly: true | 是否为平仓委托。对应请求中的`close`。  
+reduce_only | boolean | Optional | default: false  
+writeOnly: true | 设置为 true 的时候，为只减仓委托  
+is_reduce_only | boolean | Optional | readOnly: true | 是否为只减仓委托。对应请求中的`reduce_only`。  
+is_liq | boolean | Optional | readOnly: true | 是否为强制平仓委托  
+tif | string | Optional | enum: ["gtc","ioc","poc","fok"]  
+default: "gtc" | Time in force 策略，市价单当前只支持 ioc 模式  
+  
+\- gtc: GoodTillCancelled  
+\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
+\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
+\- fok: FillOrKill, 完全成交，或者完全取消  
+left | integer(int64) | Optional | readOnly: true | 未成交数量  
+fill_price | string | Optional | readOnly: true | 成交价  
+text | string | Optional |  | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+  
+除用户自定义信息以外，以下为内部保留字段，标识订单来源:  
+  
+\- web: 网页  
+\- api: API 调用  
+\- app: 移动端  
+\- auto_deleveraging: 自动减仓  
+\- liquidation: ⽼经典模式仓位强制平仓  
+\- liq-xxx: a. 新经典模式仓位强制平仓，包含逐仓、单向全仓、双向全仓⾮对冲仓位强平。 b. 统⼀账户单币种保证金模式逐仓强制平仓  
+\- hedge-liq-xxx: 新经典模式双向全仓对冲部分强制平仓，即同时平多空仓位  
+\- pm_liquidate: 统⼀账户跨币种保证金模式强制平仓  
+\- comb_margin_liquidate: 统⼀账户组合保证金模式强制平仓  
+\- scm_liquidate: 统⼀账户单币种保证金模式仓位强制平仓  
+\- insurance: 保险  
+tkfr | string | Optional | readOnly: true | 吃单费率  
+mkfr | string | Optional | readOnly: true | 做单费率  
+refu | integer | Optional | readOnly: true | 推荐人用户 ID  
+auto_size | string | Optional | enum: ["close_long","close_short"]  
+writeOnly: true | 双仓模式下用于设置平仓的方向，`close_long` 平多头， `close_short` 平空头，需要同时设置 `size` 为 0  
+stp_id | integer | Optional | readOnly: true | 订单所属的`STP用户组`id，同一个`STP用户组`内用户之间的订单不允许发生自成交。  
+  
+1\. 如果撮合时两个订单的 `stp_id` 非 `0` 且相等，则不成交，而是根据 `taker` 的 `stp_act` 执行相应策略。  
+2\. 没有设置`STP用户组`成交的订单，`stp_id` 默认返回 `0`。  
+stp_act | string | Optional | enum: ["co","cn","cb","-"] | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
+  
+1\. 用户在设置加入`STP用户组`后，可以通过传递 `stp_act` 来限制用户发生自成交的策略，没有传递 `stp_act` 默认按照 `cn` 的策略。  
+2\. 用户在没有设置加入`STP用户组`时，传递 `stp_act` 参数会报错。  
+3\. 用户没有使用 `stp_act` 发生成交的订单，`stp_act` 返回 `-`。  
+  
+\- cn: Cancel newest,取消新订单，保留老订单  
+\- co: Cancel oldest,取消⽼订单，保留新订单  
+\- cb: Cancel both,新旧订单都取消  
+amend_text | string | Optional | readOnly: true | 用户修改订单时备注的信息  
   
 WARNING
 
@@ -2632,15 +2964,28 @@ settle | usdt
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array | [合约订单详情]  
-» _None_ | DeliveryOrder | 合约订单详情  
-»» id | integer(int64) | 合约订单 ID  
-»» user | integer | 用户 ID  
-»» create_time | number(double) | 订单创建时间  
-»» finish_time | number(double) | 订单结束时间，未结束订单无此字段返回  
-»» finish_as | string | 结束方式，包括：  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+合约订单详情
+
+类型 | 约束  
+---|---  
+DeliveryOrder | required: ["contract","size"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | 合约订单 ID  
+user | integer | Optional | readOnly: true | 用户 ID  
+create_time | number(double) | Optional | readOnly: true | 订单创建时间  
+finish_time | number(double) | Optional | readOnly: true | 订单结束时间，未结束订单无此字段返回  
+finish_as | string | Optional | enum: ["filled","cancelled","liquidated","ioc","auto_deleveraged","reduce_only","position_closed","reduce_out","stp"]  
+readOnly: true | 结束方式，包括：  
   
 \- filled: 完全成交  
 \- cancelled: 用户撤销  
@@ -2651,26 +2996,32 @@ _None_ | array | [合约订单详情]
 \- position_closed: 因为仓位平掉了，所以挂单被撤掉  
 \- reduce_out: 只减仓被排除的不容易成交的挂单  
 \- stp: 订单发生自成交限制而被撤销  
-»» status | string | 订单状态。  
+status | string | Optional | enum: ["open","finished"]  
+readOnly: true | 订单状态。  
   
 \- `open`: 等待处理  
 \- `finished`: 已结束的订单  
-»» contract | string | 合约标识  
-»» size | integer(int64) | 必选。交易数量，正数为买入，负数为卖出。平仓委托则设置为0。  
-»» iceberg | integer(int64) | 冰山委托显示数量。0为完全不隐藏。注意，隐藏部分成交按照taker收取手续费。  
-»» price | string | 委托价。价格为0并且`tif`为`ioc`，代表市价委托。  
-»» is_close | boolean | 是否为平仓委托。对应请求中的`close`。  
-»» is_reduce_only | boolean | 是否为只减仓委托。对应请求中的`reduce_only`。  
-»» is_liq | boolean | 是否为强制平仓委托  
-»» tif | string | Time in force 策略，市价单当前只支持 ioc 模式  
+contract | string | Required |  | 合约标识  
+size | integer(int64) | Required |  | 必选。交易数量，正数为买入，负数为卖出。平仓委托则设置为0。  
+iceberg | integer(int64) | Optional |  | 冰山委托显示数量。0为完全不隐藏。注意，隐藏部分成交按照taker收取手续费。  
+price | string | Optional |  | 委托价。价格为0并且`tif`为`ioc`，代表市价委托。  
+close | boolean | Optional | default: false  
+writeOnly: true | 设置为 true 的时候执行平仓操作，并且`size`应设置为0  
+is_close | boolean | Optional | readOnly: true | 是否为平仓委托。对应请求中的`close`。  
+reduce_only | boolean | Optional | default: false  
+writeOnly: true | 设置为 true 的时候，为只减仓委托  
+is_reduce_only | boolean | Optional | readOnly: true | 是否为只减仓委托。对应请求中的`reduce_only`。  
+is_liq | boolean | Optional | readOnly: true | 是否为强制平仓委托  
+tif | string | Optional | enum: ["gtc","ioc","poc","fok"]  
+default: "gtc" | Time in force 策略，市价单当前只支持 ioc 模式  
   
 \- gtc: GoodTillCancelled  
 \- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
 \- poc: PendingOrCancelled，被动委托，只挂单不吃单  
 \- fok: FillOrKill, 完全成交，或者完全取消  
-»» left | integer(int64) | 未成交数量  
-»» fill_price | string | 成交价  
-»» text | string | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+left | integer(int64) | Optional | readOnly: true | 未成交数量  
+fill_price | string | Optional | readOnly: true | 成交价  
+text | string | Optional |  | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
   
 1\. 必须以 `t-` 开头  
 2\. 不计算 `t-` ，长度不能超过 28 字节  
@@ -2689,14 +3040,16 @@ _None_ | array | [合约订单详情]
 \- comb_margin_liquidate: 统⼀账户组合保证金模式强制平仓  
 \- scm_liquidate: 统⼀账户单币种保证金模式仓位强制平仓  
 \- insurance: 保险  
-»» tkfr | string | 吃单费率  
-»» mkfr | string | 做单费率  
-»» refu | integer | 推荐人用户 ID  
-»» stp_id | integer | 订单所属的`STP用户组`id，同一个`STP用户组`内用户之间的订单不允许发生自成交。  
+tkfr | string | Optional | readOnly: true | 吃单费率  
+mkfr | string | Optional | readOnly: true | 做单费率  
+refu | integer | Optional | readOnly: true | 推荐人用户 ID  
+auto_size | string | Optional | enum: ["close_long","close_short"]  
+writeOnly: true | 双仓模式下用于设置平仓的方向，`close_long` 平多头， `close_short` 平空头，需要同时设置 `size` 为 0  
+stp_id | integer | Optional | readOnly: true | 订单所属的`STP用户组`id，同一个`STP用户组`内用户之间的订单不允许发生自成交。  
   
 1\. 如果撮合时两个订单的 `stp_id` 非 `0` 且相等，则不成交，而是根据 `taker` 的 `stp_act` 执行相应策略。  
 2\. 没有设置`STP用户组`成交的订单，`stp_id` 默认返回 `0`。  
-»» stp_act | string | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
+stp_act | string | Optional | enum: ["co","cn","cb","-"] | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
   
 1\. 用户在设置加入`STP用户组`后，可以通过传递 `stp_act` 来限制用户发生自成交的策略，没有传递 `stp_act` 默认按照 `cn` 的策略。  
 2\. 用户在没有设置加入`STP用户组`时，传递 `stp_act` 参数会报错。  
@@ -2705,31 +3058,7 @@ _None_ | array | [合约订单详情]
 \- cn: Cancel newest,取消新订单，保留老订单  
 \- co: Cancel oldest,取消⽼订单，保留新订单  
 \- cb: Cancel both,新旧订单都取消  
-»» amend_text | string | 用户修改订单时备注的信息  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-finish_as | filled  
-finish_as | cancelled  
-finish_as | liquidated  
-finish_as | ioc  
-finish_as | auto_deleveraged  
-finish_as | reduce_only  
-finish_as | position_closed  
-finish_as | reduce_out  
-finish_as | stp  
-status | open  
-status | finished  
-tif | gtc  
-tif | ioc  
-tif | poc  
-tif | fok  
-stp_act | co  
-stp_act | cn  
-stp_act | cb  
-stp_act | -  
+amend_text | string | Optional | readOnly: true | 用户修改订单时备注的信息  
   
 WARNING
 
@@ -2845,15 +3174,22 @@ settle | usdt
 
 状态码 **200**
 
-_合约订单详情_
+合约订单详情
 
-名称 | 类型 | 描述  
----|---|---  
-» id | integer(int64) | 合约订单 ID  
-» user | integer | 用户 ID  
-» create_time | number(double) | 订单创建时间  
-» finish_time | number(double) | 订单结束时间，未结束订单无此字段返回  
-» finish_as | string | 结束方式，包括：  
+类型 | 约束  
+---|---  
+DeliveryOrder | required: ["contract","size"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | 合约订单 ID  
+user | integer | Optional | readOnly: true | 用户 ID  
+create_time | number(double) | Optional | readOnly: true | 订单创建时间  
+finish_time | number(double) | Optional | readOnly: true | 订单结束时间，未结束订单无此字段返回  
+finish_as | string | Optional | enum: ["filled","cancelled","liquidated","ioc","auto_deleveraged","reduce_only","position_closed","reduce_out","stp"]  
+readOnly: true | 结束方式，包括：  
   
 \- filled: 完全成交  
 \- cancelled: 用户撤销  
@@ -2864,26 +3200,32 @@ _合约订单详情_
 \- position_closed: 因为仓位平掉了，所以挂单被撤掉  
 \- reduce_out: 只减仓被排除的不容易成交的挂单  
 \- stp: 订单发生自成交限制而被撤销  
-» status | string | 订单状态。  
+status | string | Optional | enum: ["open","finished"]  
+readOnly: true | 订单状态。  
   
 \- `open`: 等待处理  
 \- `finished`: 已结束的订单  
-» contract | string | 合约标识  
-» size | integer(int64) | 必选。交易数量，正数为买入，负数为卖出。平仓委托则设置为0。  
-» iceberg | integer(int64) | 冰山委托显示数量。0为完全不隐藏。注意，隐藏部分成交按照taker收取手续费。  
-» price | string | 委托价。价格为0并且`tif`为`ioc`，代表市价委托。  
-» is_close | boolean | 是否为平仓委托。对应请求中的`close`。  
-» is_reduce_only | boolean | 是否为只减仓委托。对应请求中的`reduce_only`。  
-» is_liq | boolean | 是否为强制平仓委托  
-» tif | string | Time in force 策略，市价单当前只支持 ioc 模式  
+contract | string | Required |  | 合约标识  
+size | integer(int64) | Required |  | 必选。交易数量，正数为买入，负数为卖出。平仓委托则设置为0。  
+iceberg | integer(int64) | Optional |  | 冰山委托显示数量。0为完全不隐藏。注意，隐藏部分成交按照taker收取手续费。  
+price | string | Optional |  | 委托价。价格为0并且`tif`为`ioc`，代表市价委托。  
+close | boolean | Optional | default: false  
+writeOnly: true | 设置为 true 的时候执行平仓操作，并且`size`应设置为0  
+is_close | boolean | Optional | readOnly: true | 是否为平仓委托。对应请求中的`close`。  
+reduce_only | boolean | Optional | default: false  
+writeOnly: true | 设置为 true 的时候，为只减仓委托  
+is_reduce_only | boolean | Optional | readOnly: true | 是否为只减仓委托。对应请求中的`reduce_only`。  
+is_liq | boolean | Optional | readOnly: true | 是否为强制平仓委托  
+tif | string | Optional | enum: ["gtc","ioc","poc","fok"]  
+default: "gtc" | Time in force 策略，市价单当前只支持 ioc 模式  
   
 \- gtc: GoodTillCancelled  
 \- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
 \- poc: PendingOrCancelled，被动委托，只挂单不吃单  
 \- fok: FillOrKill, 完全成交，或者完全取消  
-» left | integer(int64) | 未成交数量  
-» fill_price | string | 成交价  
-» text | string | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+left | integer(int64) | Optional | readOnly: true | 未成交数量  
+fill_price | string | Optional | readOnly: true | 成交价  
+text | string | Optional |  | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
   
 1\. 必须以 `t-` 开头  
 2\. 不计算 `t-` ，长度不能超过 28 字节  
@@ -2902,14 +3244,16 @@ _合约订单详情_
 \- comb_margin_liquidate: 统⼀账户组合保证金模式强制平仓  
 \- scm_liquidate: 统⼀账户单币种保证金模式仓位强制平仓  
 \- insurance: 保险  
-» tkfr | string | 吃单费率  
-» mkfr | string | 做单费率  
-» refu | integer | 推荐人用户 ID  
-» stp_id | integer | 订单所属的`STP用户组`id，同一个`STP用户组`内用户之间的订单不允许发生自成交。  
+tkfr | string | Optional | readOnly: true | 吃单费率  
+mkfr | string | Optional | readOnly: true | 做单费率  
+refu | integer | Optional | readOnly: true | 推荐人用户 ID  
+auto_size | string | Optional | enum: ["close_long","close_short"]  
+writeOnly: true | 双仓模式下用于设置平仓的方向，`close_long` 平多头， `close_short` 平空头，需要同时设置 `size` 为 0  
+stp_id | integer | Optional | readOnly: true | 订单所属的`STP用户组`id，同一个`STP用户组`内用户之间的订单不允许发生自成交。  
   
 1\. 如果撮合时两个订单的 `stp_id` 非 `0` 且相等，则不成交，而是根据 `taker` 的 `stp_act` 执行相应策略。  
 2\. 没有设置`STP用户组`成交的订单，`stp_id` 默认返回 `0`。  
-» stp_act | string | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
+stp_act | string | Optional | enum: ["co","cn","cb","-"] | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
   
 1\. 用户在设置加入`STP用户组`后，可以通过传递 `stp_act` 来限制用户发生自成交的策略，没有传递 `stp_act` 默认按照 `cn` 的策略。  
 2\. 用户在没有设置加入`STP用户组`时，传递 `stp_act` 参数会报错。  
@@ -2918,31 +3262,7 @@ _合约订单详情_
 \- cn: Cancel newest,取消新订单，保留老订单  
 \- co: Cancel oldest,取消⽼订单，保留新订单  
 \- cb: Cancel both,新旧订单都取消  
-» amend_text | string | 用户修改订单时备注的信息  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-finish_as | filled  
-finish_as | cancelled  
-finish_as | liquidated  
-finish_as | ioc  
-finish_as | auto_deleveraged  
-finish_as | reduce_only  
-finish_as | position_closed  
-finish_as | reduce_out  
-finish_as | stp  
-status | open  
-status | finished  
-tif | gtc  
-tif | ioc  
-tif | poc  
-tif | fok  
-stp_act | co  
-stp_act | cn  
-stp_act | cb  
-stp_act | -  
+amend_text | string | Optional | readOnly: true | 用户修改订单时备注的信息  
   
 WARNING
 
@@ -3054,15 +3374,22 @@ settle | usdt
 
 状态码 **200**
 
-_合约订单详情_
+合约订单详情
 
-名称 | 类型 | 描述  
----|---|---  
-» id | integer(int64) | 合约订单 ID  
-» user | integer | 用户 ID  
-» create_time | number(double) | 订单创建时间  
-» finish_time | number(double) | 订单结束时间，未结束订单无此字段返回  
-» finish_as | string | 结束方式，包括：  
+类型 | 约束  
+---|---  
+DeliveryOrder | required: ["contract","size"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | 合约订单 ID  
+user | integer | Optional | readOnly: true | 用户 ID  
+create_time | number(double) | Optional | readOnly: true | 订单创建时间  
+finish_time | number(double) | Optional | readOnly: true | 订单结束时间，未结束订单无此字段返回  
+finish_as | string | Optional | enum: ["filled","cancelled","liquidated","ioc","auto_deleveraged","reduce_only","position_closed","reduce_out","stp"]  
+readOnly: true | 结束方式，包括：  
   
 \- filled: 完全成交  
 \- cancelled: 用户撤销  
@@ -3073,26 +3400,32 @@ _合约订单详情_
 \- position_closed: 因为仓位平掉了，所以挂单被撤掉  
 \- reduce_out: 只减仓被排除的不容易成交的挂单  
 \- stp: 订单发生自成交限制而被撤销  
-» status | string | 订单状态。  
+status | string | Optional | enum: ["open","finished"]  
+readOnly: true | 订单状态。  
   
 \- `open`: 等待处理  
 \- `finished`: 已结束的订单  
-» contract | string | 合约标识  
-» size | integer(int64) | 必选。交易数量，正数为买入，负数为卖出。平仓委托则设置为0。  
-» iceberg | integer(int64) | 冰山委托显示数量。0为完全不隐藏。注意，隐藏部分成交按照taker收取手续费。  
-» price | string | 委托价。价格为0并且`tif`为`ioc`，代表市价委托。  
-» is_close | boolean | 是否为平仓委托。对应请求中的`close`。  
-» is_reduce_only | boolean | 是否为只减仓委托。对应请求中的`reduce_only`。  
-» is_liq | boolean | 是否为强制平仓委托  
-» tif | string | Time in force 策略，市价单当前只支持 ioc 模式  
+contract | string | Required |  | 合约标识  
+size | integer(int64) | Required |  | 必选。交易数量，正数为买入，负数为卖出。平仓委托则设置为0。  
+iceberg | integer(int64) | Optional |  | 冰山委托显示数量。0为完全不隐藏。注意，隐藏部分成交按照taker收取手续费。  
+price | string | Optional |  | 委托价。价格为0并且`tif`为`ioc`，代表市价委托。  
+close | boolean | Optional | default: false  
+writeOnly: true | 设置为 true 的时候执行平仓操作，并且`size`应设置为0  
+is_close | boolean | Optional | readOnly: true | 是否为平仓委托。对应请求中的`close`。  
+reduce_only | boolean | Optional | default: false  
+writeOnly: true | 设置为 true 的时候，为只减仓委托  
+is_reduce_only | boolean | Optional | readOnly: true | 是否为只减仓委托。对应请求中的`reduce_only`。  
+is_liq | boolean | Optional | readOnly: true | 是否为强制平仓委托  
+tif | string | Optional | enum: ["gtc","ioc","poc","fok"]  
+default: "gtc" | Time in force 策略，市价单当前只支持 ioc 模式  
   
 \- gtc: GoodTillCancelled  
 \- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
 \- poc: PendingOrCancelled，被动委托，只挂单不吃单  
 \- fok: FillOrKill, 完全成交，或者完全取消  
-» left | integer(int64) | 未成交数量  
-» fill_price | string | 成交价  
-» text | string | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+left | integer(int64) | Optional | readOnly: true | 未成交数量  
+fill_price | string | Optional | readOnly: true | 成交价  
+text | string | Optional |  | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
   
 1\. 必须以 `t-` 开头  
 2\. 不计算 `t-` ，长度不能超过 28 字节  
@@ -3111,14 +3444,16 @@ _合约订单详情_
 \- comb_margin_liquidate: 统⼀账户组合保证金模式强制平仓  
 \- scm_liquidate: 统⼀账户单币种保证金模式仓位强制平仓  
 \- insurance: 保险  
-» tkfr | string | 吃单费率  
-» mkfr | string | 做单费率  
-» refu | integer | 推荐人用户 ID  
-» stp_id | integer | 订单所属的`STP用户组`id，同一个`STP用户组`内用户之间的订单不允许发生自成交。  
+tkfr | string | Optional | readOnly: true | 吃单费率  
+mkfr | string | Optional | readOnly: true | 做单费率  
+refu | integer | Optional | readOnly: true | 推荐人用户 ID  
+auto_size | string | Optional | enum: ["close_long","close_short"]  
+writeOnly: true | 双仓模式下用于设置平仓的方向，`close_long` 平多头， `close_short` 平空头，需要同时设置 `size` 为 0  
+stp_id | integer | Optional | readOnly: true | 订单所属的`STP用户组`id，同一个`STP用户组`内用户之间的订单不允许发生自成交。  
   
 1\. 如果撮合时两个订单的 `stp_id` 非 `0` 且相等，则不成交，而是根据 `taker` 的 `stp_act` 执行相应策略。  
 2\. 没有设置`STP用户组`成交的订单，`stp_id` 默认返回 `0`。  
-» stp_act | string | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
+stp_act | string | Optional | enum: ["co","cn","cb","-"] | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
   
 1\. 用户在设置加入`STP用户组`后，可以通过传递 `stp_act` 来限制用户发生自成交的策略，没有传递 `stp_act` 默认按照 `cn` 的策略。  
 2\. 用户在没有设置加入`STP用户组`时，传递 `stp_act` 参数会报错。  
@@ -3127,31 +3462,7 @@ _合约订单详情_
 \- cn: Cancel newest,取消新订单，保留老订单  
 \- co: Cancel oldest,取消⽼订单，保留新订单  
 \- cb: Cancel both,新旧订单都取消  
-» amend_text | string | 用户修改订单时备注的信息  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-finish_as | filled  
-finish_as | cancelled  
-finish_as | liquidated  
-finish_as | ioc  
-finish_as | auto_deleveraged  
-finish_as | reduce_only  
-finish_as | position_closed  
-finish_as | reduce_out  
-finish_as | stp  
-status | open  
-status | finished  
-tif | gtc  
-tif | ioc  
-tif | poc  
-tif | fok  
-stp_act | co  
-stp_act | cn  
-stp_act | cb  
-stp_act | -  
+amend_text | string | Optional | readOnly: true | 用户修改订单时备注的信息  
   
 WARNING
 
@@ -3278,15 +3589,26 @@ count_total | 1
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» id | integer(int64) | 成交记录 ID  
-» create_time | number(double) | 成交时间  
-» contract | string | 合约标识  
-» order_id | string | 成交记录关联订单 ID  
-» size | integer(int64) | 成交数量  
-» close_size | integer(int64) | 平仓数量:  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+DeliveryMyTrade |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 成交记录 ID  
+create_time | number(double) | Optional |  | 成交时间  
+contract | string | Optional |  | 合约标识  
+order_id | string | Optional |  | 成交记录关联订单 ID  
+size | integer(int64) | Optional |  | 成交数量  
+close_size | integer(int64) | Optional |  | 平仓数量:  
   
 close_size=0 && size＞0 开多  
 close_size=0 && size＜0 开空  
@@ -3294,18 +3616,11 @@ close_size>0 && size>0 && size <= close_size 平空
 close_size>0 && size>0 && size > close_size 平空且开多  
 close_size<0 && size<0 && size >= close_size 平多  
 close_size<0 && size<0 && size < close_size 平多且开空  
-» price | string | 成交价格  
-» role | string | 成交角色， taker - 吃单, maker - 做单  
-» text | string | 订单的自定义信息  
-» fee | string | 成交手续费  
-» point_fee | string | 成交点卡手续费  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-role | taker  
-role | maker  
+price | string | Optional |  | 成交价格  
+role | string | Optional | enum: ["taker","maker"] | 成交角色， taker - 吃单, maker - 做单  
+text | string | Optional |  | 订单的自定义信息  
+fee | string | Optional |  | 成交手续费  
+point_fee | string | Optional |  | 成交点卡手续费  
   
 ###  返回头部
 
@@ -3416,32 +3731,37 @@ settle | usdt
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» time | number(double) | 平仓时间  
-» contract | string | 合约标识  
-» side | string | 多空方向  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+DeliveryPositionClose |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+time | number(double) | Optional | readOnly: true | 平仓时间  
+contract | string | Optional | readOnly: true | 合约标识  
+side | string | Optional | enum: ["long","short"]  
+readOnly: true | 多空方向  
   
 \- `long`: 做多  
 \- `short`: 做空  
-» pnl | string | 盈亏  
-» pnl_pnl | string | 盈亏-仓位盈亏  
-» pnl_fund | string | 盈亏-资金费用  
-» pnl_fee | string | 盈亏-手续费  
-» text | string | 平仓委托的来源，具体取值参见`order.text`字段  
-» max_size | integer(int64) | 最大持仓量  
-» accum_size | integer(int64) | 累计平仓量  
-» first_open_time | integer(int64) | 开仓时间  
-» long_price | string | side为long时表示开仓均价，为short时表示平仓均价  
-» short_price | string | side为long时表示平仓均价，为short时表示开仓均价  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-side | long  
-side | short  
+pnl | string | Optional | readOnly: true | 盈亏  
+pnl_pnl | string | Optional | readOnly: true | 盈亏-仓位盈亏  
+pnl_fund | string | Optional | readOnly: true | 盈亏-资金费用  
+pnl_fee | string | Optional | readOnly: true | 盈亏-手续费  
+text | string | Optional | readOnly: true | 平仓委托的来源，具体取值参见`order.text`字段  
+max_size | integer(int64) | Optional | readOnly: true | 最大持仓量  
+accum_size | integer(int64) | Optional | readOnly: true | 累计平仓量  
+first_open_time | integer(int64) | Optional | readOnly: true | 开仓时间  
+long_price | string | Optional | readOnly: true | side为long时表示开仓均价，为short时表示平仓均价  
+short_price | string | Optional | readOnly: true | side为long时表示平仓均价，为short时表示开仓均价  
   
 WARNING
 
@@ -3547,21 +3867,32 @@ settle | usdt
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» time | integer(int64) | 强制平仓时间  
-» contract | string | 合约标识  
-» leverage | string | 杠杆倍数，公共接口无该字段返回  
-» size | integer(int64) | 仓位大小  
-» margin | string | 保证金，公共接口无该字段返回  
-» entry_price | string | 平均开仓价，公共接口无该字段返回  
-» liq_price | string | 强制平仓价，公共接口无该字段返回  
-» mark_price | string | 市场标记价，公共接口无该字段返回  
-» order_id | integer(int64) | 强平委托ID，公共接口无该字段返回  
-» order_price | string | 强平委托价  
-» fill_price | string | 强平委托吃单平均成交价  
-» left | integer(int64) | 强平委托挂单大小  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+DeliveryLiquidate |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+time | integer(int64) | Optional | readOnly: true | 强制平仓时间  
+contract | string | Optional | readOnly: true | 合约标识  
+leverage | string | Optional | readOnly: true | 杠杆倍数，公共接口无该字段返回  
+size | integer(int64) | Optional | readOnly: true | 仓位大小  
+margin | string | Optional | readOnly: true | 保证金，公共接口无该字段返回  
+entry_price | string | Optional | readOnly: true | 平均开仓价，公共接口无该字段返回  
+liq_price | string | Optional | readOnly: true | 强制平仓价，公共接口无该字段返回  
+mark_price | string | Optional | readOnly: true | 市场标记价，公共接口无该字段返回  
+order_id | integer(int64) | Optional | readOnly: true | 强平委托ID，公共接口无该字段返回  
+order_price | string | Optional | readOnly: true | 强平委托价  
+fill_price | string | Optional | readOnly: true | 强平委托吃单平均成交价  
+left | integer(int64) | Optional | readOnly: true | 强平委托挂单大小  
   
 WARNING
 
@@ -3666,18 +3997,29 @@ settle | usdt
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» time | integer(int64) | 强制平仓时间  
-» contract | string | 合约标识  
-» leverage | string | 杠杆倍数  
-» size | integer(int64) | 仓位大小  
-» margin | string | 保证金  
-» entry_price | string | 平均开仓价  
-» settle_price | string | 结算价  
-» profit | string | 盈利  
-» fee | string | 结算费  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+DeliverySettlement |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+time | integer(int64) | Optional | readOnly: true | 强制平仓时间  
+contract | string | Optional | readOnly: true | 合约标识  
+leverage | string | Optional | readOnly: true | 杠杆倍数  
+size | integer(int64) | Optional | readOnly: true | 仓位大小  
+margin | string | Optional | readOnly: true | 保证金  
+entry_price | string | Optional | readOnly: true | 平均开仓价  
+settle_price | string | Optional | readOnly: true | 结算价  
+profit | string | Optional | readOnly: true | 盈利  
+fee | string | Optional | readOnly: true | 结算费  
   
 WARNING
 
@@ -3781,17 +4123,29 @@ settle | usdt
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array | [返回某个指定合同下,不同档位的风险限额配置]  
-» _None_ | DeliveryLimitRiskTiers | 返回某个指定合同下,不同档位的风险限额配置  
-»» tier | integer(int) | 档位  
-»» risk_limit | string | 风险限额  
-»» initial_rate | string | 初始保证金率  
-»» maintenance_rate | string | 风险限额的第一档维持保证金率要求  
-»» leverage_max | string | 最大杠杆  
-»» contract | string | 市场,仅当市场分页请求时可见  
-»» deduction | string | 维持保证金速算扣减额  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+返回某个指定合同下,不同档位的风险限额配置
+
+类型 | 约束  
+---|---  
+DeliveryLimitRiskTiers |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+tier | integer(int) | Optional |  | 档位  
+risk_limit | string | Optional |  | 风险限额  
+initial_rate | string | Optional |  | 初始保证金率  
+maintenance_rate | string | Optional |  | 风险限额的第一档维持保证金率要求  
+leverage_max | string | Optional |  | 最大杠杆  
+contract | string | Optional |  | 市场,仅当市场分页请求时可见  
+deduction | string | Optional |  | 维持保证金速算扣减额  
   
 该请求不需要认证 
 
@@ -3908,58 +4262,42 @@ settle | usdt
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array | [合约价格单详情]  
-» _None_ | FuturesPriceTriggeredOrder | 合约价格单详情  
-»» initial | object |   
-»»» contract | string | 合约标识  
-»»» size | integer(int64) | 代表需要平仓的合约张数，全平仓:size=0  
-部分平仓:plan-close-short-position size>0   
-部分平仓:plan-close-long-position size<0  
-»»» amount | string | 同size参数，用于兼容小数,同时存在时以amount为准  
-»»» price | string | 交易价，当价格为 0 时，表示通过市价方式来下单  
-»»» tif | string | Time in force 策略,默认为gtc，市价单当前只支持 ioc 模式市价单当前只支持 ioc 模式  
+类型 | 约束  
+---|---  
+array |   
   
-\- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled  
-»»» text | string | 订单的来源，包括：  
+**items**
+
+合约价格单详情
+
+类型 | 约束  
+---|---  
+FuturesPriceTriggeredOrder | required: ["initial","trigger"]  
   
-\- web: 网页  
-\- api: API 调用  
-\- app: 移动端  
-»»» reduce_only | boolean | 设置为 true 的时候执行自动减仓操作，设为 true可确保订单不会开新仓，只用于平仓或减仓  
-»»» is_reduce_only | boolean | 是否为只减仓委托。对应请求中的`reduce_only`。  
-»»» is_close | boolean | 是否为平仓委托。对应请求中的`close`。  
-»» trigger | object |   
-»»» strategy_type | integer(int32) | 触发策略  
-  
-\- 0: 价格触发，即当价格满足条件时触发  
-\- 1: 价差触发，即指定 `price_type` 的最近一次价格减去倒数第二个价格的差值  
-目前暂时只支持0即最新成交价  
-»»» price_type | integer(int32) | 参考价格类型。 0 - 最新成交价，1 - 标记价格，2 - 指数价格  
-»»» price | string | 价格触发时为价格，价差触发时为价差  
-»»» rule | integer(int32) | 价格条件类型  
-  
-\- 1: 表示根据 `strategy_type` 和 `price_type` 算出的价格大于等于 `Trigger.Price` 时触发，同时Trigger.Price must > last_price  
-\- 2: 表示根据 `strategy_type` 和 `price_type` 算出的价格小于等于 `Trigger.Price` 时触发，同时Trigger.Price must < last_price  
-»»» expiration | integer | 最长等待触发时间，超时则取消该订单，单位是秒 s  
-»» id | integer(int64) | 自动订单 ID  
-»» id_string | string | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+initial | object | Required | required: ["contract","price"] |   
+trigger | object | Required | required: ["price","rule"] |   
+id | integer(int64) | Optional | readOnly: true | 自动订单 ID  
+id_string | string | Optional | readOnly: true | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
 前端展示订单编号或需要字符串类型唯一标识时建议使用本字段；与 `id` 一一对应。合约价格触发单相关 REST 与 `futures.orders`、`futures.autoorders` 等 WebSocket 推送中的同名字段含义一致。  
-»» user | integer | 用户 ID  
-»» create_time | number(double) | 创建时间  
-»» finish_time | number(double) | 结束时间  
-»» trade_id | integer(int64) | 触发后委托单ID  
-»» status | string | 订单状态  
+user | integer | Optional | readOnly: true | 用户 ID  
+create_time | number(double) | Optional | readOnly: true | 创建时间  
+finish_time | number(double) | Optional | readOnly: true | 结束时间  
+trade_id | integer(int64) | Optional | readOnly: true | 触发后委托单ID  
+status | string | Optional | enum: ["open","finished","inactive","invalid"]  
+readOnly: true | 订单状态  
   
 \- `open`: 活跃中  
 \- `finished`: 已结束  
 \- `inactive`: 未生效，只针对委托单止盈止损  
 \- `invalid`: 无效，只针对委托单止盈止损  
-»» finish_as | string | 结束状态，cancelled - 被取消；succeeded - 成功；failed - 失败；expired - 过期  
-»» reason | string | 订单结束的附加描述信息  
-»» order_type | string | 止盈止损的类型，包括：  
+finish_as | string | Optional | enum: ["cancelled","succeeded","failed","expired"]  
+readOnly: true | 结束状态，cancelled - 被取消；succeeded - 成功；failed - 失败；expired - 过期  
+reason | string | Optional | readOnly: true | 订单结束的附加描述信息  
+order_type | string | Optional |  | 止盈止损的类型，包括：  
   
 \- `close-long-order`: 委托单止盈止损，平做多仓  
 \- `close-short-order`: 委托单止盈止损，平做空仓  
@@ -3969,33 +4307,68 @@ _None_ | array | [合约价格单详情]
 \- `plan-close-short-position`: 仓位计划止盈止损，用于全部平空仓或部分平空仓  
   
 其中委托单止盈止损的两种类型只读，不能通过请求传入  
-»» me_order_id | integer(int64) | 委托单止盈止损对应的委托 ID  
-»» pos_margin_mode | string | 仓位保证金模式：`isolated`（逐仓）、`cross`（全仓）。  
+me_order_id | integer(int64) | Optional | readOnly: true | 委托单止盈止损对应的委托 ID  
+pos_margin_mode | string | Optional | enum: ["isolated","cross"] | 仓位保证金模式：`isolated`（逐仓）、`cross`（全仓）。  
 在简易分仓模式下服务端会返回；写入场景下请仅使用下列取值。  
   
-####  枚举值列表
+**items / initial**
 
-枚举值列表属性 | 值  
+类型 | 约束  
 ---|---  
-tif | gtc  
-tif | ioc  
-strategy_type | 0  
-strategy_type | 1  
-price_type | 0  
-price_type | 1  
-price_type | 2  
-rule | 1  
-rule | 2  
-status | open  
-status | finished  
-status | inactive  
-status | invalid  
-finish_as | cancelled  
-finish_as | succeeded  
-finish_as | failed  
-finish_as | expired  
-pos_margin_mode | isolated  
-pos_margin_mode | cross  
+object | required: ["contract","price"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+contract | string | Required |  | 合约标识  
+size | integer(int64) | Optional |  | 代表需要平仓的合约张数，全平仓:size=0  
+部分平仓:plan-close-short-position size>0   
+部分平仓:plan-close-long-position size<0  
+amount | string | Optional |  | 同size参数，用于兼容小数,同时存在时以amount为准  
+price | string | Required |  | 交易价，当价格为 0 时，表示通过市价方式来下单  
+close | boolean | Optional | default: false  
+writeOnly: true | 单仓模式全部平仓时,必须设置为true执行平仓操作  
+单仓模式部分平仓时/双仓模式下，可以不设置close，或close=false  
+tif | string | Optional | enum: ["gtc","ioc"]  
+default: "gtc" | Time in force 策略,默认为gtc，市价单当前只支持 ioc 模式市价单当前只支持 ioc 模式  
+  
+\- gtc: GoodTillCancelled  
+\- ioc: ImmediateOrCancelled  
+text | string | Optional |  | 订单的来源，包括：  
+  
+\- web: 网页  
+\- api: API 调用  
+\- app: 移动端  
+reduce_only | boolean | Optional | default: false | 设置为 true 的时候执行自动减仓操作，设为 true可确保订单不会开新仓，只用于平仓或减仓  
+auto_size | string | Optional | writeOnly: true | 单仓模式不需设置auto_size  
+双仓模式全部平仓（size=0）时，必须设置auto_size，close_long 平多头， close_short 平空头  
+双仓模式部分平仓（size≠0）时，不需设置auto_size  
+is_reduce_only | boolean | Optional | readOnly: true | 是否为只减仓委托。对应请求中的`reduce_only`。  
+is_close | boolean | Optional | readOnly: true | 是否为平仓委托。对应请求中的`close`。  
+  
+**items / trigger**
+
+类型 | 约束  
+---|---  
+object | required: ["price","rule"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+strategy_type | integer(int32) | Optional | enum: [0,1] | 触发策略  
+  
+\- 0: 价格触发，即当价格满足条件时触发  
+\- 1: 价差触发，即指定 `price_type` 的最近一次价格减去倒数第二个价格的差值  
+目前暂时只支持0即最新成交价  
+price_type | integer(int32) | Optional | enum: [0,1,2] | 参考价格类型。 0 - 最新成交价，1 - 标记价格，2 - 指数价格  
+price | string | Required |  | 价格触发时为价格，价差触发时为价差  
+rule | integer(int32) | Required | enum: [1,2] | 价格条件类型  
+  
+\- 1: 表示根据 `strategy_type` 和 `price_type` 算出的价格大于等于 `Trigger.Price` 时触发，同时Trigger.Price must > last_price  
+\- 2: 表示根据 `strategy_type` 和 `price_type` 算出的价格小于等于 `Trigger.Price` 时触发，同时Trigger.Price must < last_price  
+expiration | integer | Optional |  | 最长等待触发时间，超时则取消该订单，单位是秒 s  
   
 WARNING
 
@@ -4091,42 +4464,68 @@ _创建价格触发订单_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | FuturesPriceTriggeredOrder | 是 |   
-» initial | body | object | 是 |   
-»» contract | body | string | 是 | 合约标识  
-»» size | body | integer(int64) | 否 | 代表需要平仓的合约张数，全平仓:size=0  
+initial | body | object | 是 |   
+» contract | body | string | 是 | 合约标识  
+» size | body | integer(int64) | 否 | 代表需要平仓的合约张数，全平仓:size=0  
 部分平仓:plan-close-short-position size>0   
 部分平仓:plan-close-long-position size<0  
-»» amount | body | string | 否 | 同size参数，用于兼容小数,同时存在时以amount为准  
-»» price | body | string | 是 | 交易价，当价格为 0 时，表示通过市价方式来下单  
-»» close | body | boolean | 否 | 单仓模式全部平仓时,必须设置为true执行平仓操作  
+  
+» amount | body | string | 否 | 同size参数，用于兼容小数,同时存在时以amount为准  
+» price | body | string | 是 | 交易价，当价格为 0 时，表示通过市价方式来下单  
+» close | body | boolean | 否 | 单仓模式全部平仓时,必须设置为true执行平仓操作  
 单仓模式部分平仓时/双仓模式下，可以不设置close，或close=false  
-»» tif | body | string | 否 | Time in force 策略,默认为gtc，市价单当前只支持 ioc 模式市价单当前只支持 ioc 模式  
+  
+» tif | body | string | 否 | Time in force 策略,默认为gtc，市价单当前只支持 ioc 模式市价单当前只支持 ioc 模式  
   
 \- gtc: GoodTillCancelled  
 \- ioc: ImmediateOrCancelled  
-»» text | body | string | 否 | 订单的来源，包括：  
+  
+» text | body | string | 否 | 订单的来源，包括：  
   
 \- web: 网页  
 \- api: API 调用  
 \- app: 移动端  
-»» reduce_only | body | boolean | 否 | 设置为 true 的时候执行自动减仓操作，设为 true可确保订单不会开新仓，只用于平仓或减仓  
-»» auto_size | body | string | 否 | 单仓模式不需设置auto_size  
+  
+» reduce_only | body | boolean | 否 | 设置为 true 的时候执行自动减仓操作，设为 true可确保订单不会开新仓，只用于平仓或减仓  
+» auto_size | body | string | 否 | 单仓模式不需设置auto_size  
 双仓模式全部平仓（size=0）时，必须设置auto_size，close_long 平多头， close_short 平空头  
 双仓模式部分平仓（size≠0）时，不需设置auto_size  
-» trigger | body | object | 是 |   
-»» strategy_type | body | integer(int32) | 否 | 触发策略  
+  
+» is_reduce_only | body | boolean | 否 | 是否为只减仓委托。对应请求中的`reduce_only`。  
+» is_close | body | boolean | 否 | 是否为平仓委托。对应请求中的`close`。  
+trigger | body | object | 是 |   
+» strategy_type | body | integer(int32) | 否 | 触发策略  
   
 \- 0: 价格触发，即当价格满足条件时触发  
 \- 1: 价差触发，即指定 `price_type` 的最近一次价格减去倒数第二个价格的差值  
 目前暂时只支持0即最新成交价  
-»» price_type | body | integer(int32) | 否 | 参考价格类型。 0 - 最新成交价，1 - 标记价格，2 - 指数价格  
-»» price | body | string | 是 | 价格触发时为价格，价差触发时为价差  
-»» rule | body | integer(int32) | 是 | 价格条件类型  
+  
+» price_type | body | integer(int32) | 否 | 参考价格类型。 0 - 最新成交价，1 - 标记价格，2 - 指数价格  
+» price | body | string | 是 | 价格触发时为价格，价差触发时为价差  
+» rule | body | integer(int32) | 是 | 价格条件类型  
   
 \- 1: 表示根据 `strategy_type` 和 `price_type` 算出的价格大于等于 `Trigger.Price` 时触发，同时Trigger.Price must > last_price  
 \- 2: 表示根据 `strategy_type` 和 `price_type` 算出的价格小于等于 `Trigger.Price` 时触发，同时Trigger.Price must < last_price  
-»» expiration | body | integer | 否 | 最长等待触发时间，超时则取消该订单，单位是秒 s  
-» order_type | body | string | 否 | 止盈止损的类型，包括：  
+  
+» expiration | body | integer | 否 | 最长等待触发时间，超时则取消该订单，单位是秒 s  
+id | body | integer(int64) | 否 | 自动订单 ID  
+id_string | body | string | 否 | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
+前端展示订单编号或需要字符串类型唯一标识时建议使用本字段；与 `id` 一一对应。合约价格触发单相关 REST 与 `futures.orders`、`futures.autoorders` 等 WebSocket 推送中的同名字段含义一致。  
+  
+user | body | integer | 否 | 用户 ID  
+create_time | body | number(double) | 否 | 创建时间  
+finish_time | body | number(double) | 否 | 结束时间  
+trade_id | body | integer(int64) | 否 | 触发后委托单ID  
+status | body | string | 否 | 订单状态  
+  
+\- `open`: 活跃中  
+\- `finished`: 已结束  
+\- `inactive`: 未生效，只针对委托单止盈止损  
+\- `invalid`: 无效，只针对委托单止盈止损  
+  
+finish_as | body | string | 否 | 结束状态，cancelled - 被取消；succeeded - 成功；failed - 失败；expired - 过期  
+reason | body | string | 否 | 订单结束的附加描述信息  
+order_type | body | string | 否 | 止盈止损的类型，包括：  
   
 \- `close-long-order`: 委托单止盈止损，平做多仓  
 \- `close-short-order`: 委托单止盈止损，平做空仓  
@@ -4136,46 +4535,59 @@ body | body | FuturesPriceTriggeredOrder | 是 |
 \- `plan-close-short-position`: 仓位计划止盈止损，用于全部平空仓或部分平空仓  
   
 其中委托单止盈止损的两种类型只读，不能通过请求传入  
-» pos_margin_mode | body | string | 否 | 仓位保证金模式：`isolated`（逐仓）、`cross`（全仓）。  
+  
+me_order_id | body | integer(int64) | 否 | 委托单止盈止损对应的委托 ID  
+pos_margin_mode | body | string | 否 | 仓位保证金模式：`isolated`（逐仓）、`cross`（全仓）。  
 在简易分仓模式下服务端会返回；写入场景下请仅使用下列取值。  
+  
 settle | URL | string | 是 | 结算货币  
   
 ####  详细描述
 
-**»» size** : 代表需要平仓的合约张数，全平仓:size=0  
+**» size** : 代表需要平仓的合约张数，全平仓:size=0  
 部分平仓:plan-close-short-position size>0   
-部分平仓:plan-close-long-position size<0
+部分平仓:plan-close-long-position size<0  
 
-**»» close** : 单仓模式全部平仓时,必须设置为true执行平仓操作  
-单仓模式部分平仓时/双仓模式下，可以不设置close，或close=false
+**» close** : 单仓模式全部平仓时,必须设置为true执行平仓操作  
+单仓模式部分平仓时/双仓模式下，可以不设置close，或close=false  
 
-**»» tif** : Time in force 策略,默认为gtc，市价单当前只支持 ioc 模式市价单当前只支持 ioc 模式  
+**» tif** : Time in force 策略,默认为gtc，市价单当前只支持 ioc 模式市价单当前只支持 ioc 模式  
   
 \- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled
+\- ioc: ImmediateOrCancelled  
 
-**»» text** : 订单的来源，包括：  
+**» text** : 订单的来源，包括：  
   
 \- web: 网页  
 \- api: API 调用  
-\- app: 移动端
+\- app: 移动端  
 
-**»» auto_size** : 单仓模式不需设置auto_size  
+**» auto_size** : 单仓模式不需设置auto_size  
 双仓模式全部平仓（size=0）时，必须设置auto_size，close_long 平多头， close_short 平空头  
-双仓模式部分平仓（size≠0）时，不需设置auto_size
+双仓模式部分平仓（size≠0）时，不需设置auto_size  
 
-**»» strategy_type** : 触发策略  
+**» strategy_type** : 触发策略  
   
 \- 0: 价格触发，即当价格满足条件时触发  
 \- 1: 价差触发，即指定 `price_type` 的最近一次价格减去倒数第二个价格的差值  
-目前暂时只支持0即最新成交价
+目前暂时只支持0即最新成交价  
 
-**»» rule** : 价格条件类型  
+**» rule** : 价格条件类型  
   
 \- 1: 表示根据 `strategy_type` 和 `price_type` 算出的价格大于等于 `Trigger.Price` 时触发，同时Trigger.Price must > last_price  
-\- 2: 表示根据 `strategy_type` 和 `price_type` 算出的价格小于等于 `Trigger.Price` 时触发，同时Trigger.Price must < last_price
+\- 2: 表示根据 `strategy_type` 和 `price_type` 算出的价格小于等于 `Trigger.Price` 时触发，同时Trigger.Price must < last_price  
 
-**» order_type** : 止盈止损的类型，包括：  
+** id_string**: 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
+前端展示订单编号或需要字符串类型唯一标识时建议使用本字段；与 `id` 一一对应。合约价格触发单相关 REST 与 `futures.orders`、`futures.autoorders` 等 WebSocket 推送中的同名字段含义一致。  
+
+** status**: 订单状态  
+  
+\- `open`: 活跃中  
+\- `finished`: 已结束  
+\- `inactive`: 未生效，只针对委托单止盈止损  
+\- `invalid`: 无效，只针对委托单止盈止损  
+
+** order_type**: 止盈止损的类型，包括：  
   
 \- `close-long-order`: 委托单止盈止损，平做多仓  
 \- `close-short-order`: 委托单止盈止损，平做空仓  
@@ -4184,27 +4596,139 @@ settle | URL | string | 是 | 结算货币
 \- `plan-close-long-position`: 仓位计划止盈止损，用于全部平多仓或部分平多仓  
 \- `plan-close-short-position`: 仓位计划止盈止损，用于全部平空仓或部分平空仓  
   
-其中委托单止盈止损的两种类型只读，不能通过请求传入
+其中委托单止盈止损的两种类型只读，不能通过请求传入  
 
-**» pos_margin_mode** : 仓位保证金模式：`isolated`（逐仓）、`cross`（全仓）。  
-在简易分仓模式下服务端会返回；写入场景下请仅使用下列取值。
+** pos_margin_mode**: 仓位保证金模式：`isolated`（逐仓）、`cross`（全仓）。  
+在简易分仓模式下服务端会返回；写入场景下请仅使用下列取值。  
 
 ####  枚举值列表
 
 枚举值列表参数 | 值  
 ---|---  
-»» tif | gtc  
-»» tif | ioc  
-»» strategy_type | 0  
-»» strategy_type | 1  
-»» price_type | 0  
-»» price_type | 1  
-»» price_type | 2  
-»» rule | 1  
-»» rule | 2  
-» pos_margin_mode | isolated  
-» pos_margin_mode | cross  
+» tif | gtc  
+» tif | ioc  
+» strategy_type | 0  
+» strategy_type | 1  
+» price_type | 0  
+» price_type | 1  
+» price_type | 2  
+» rule | 1  
+» rule | 2  
+status | open  
+status | finished  
+status | inactive  
+status | invalid  
+finish_as | cancelled  
+finish_as | succeeded  
+finish_as | failed  
+finish_as | expired  
+pos_margin_mode | isolated  
+pos_margin_mode | cross  
 settle | usdt  
+  
+####  请求体结构
+
+合约价格单详情
+
+请求体结构类型 | 约束  
+---|---  
+FuturesPriceTriggeredOrder | required: ["initial","trigger"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+initial | object | Required | required: ["contract","price"] |   
+trigger | object | Required | required: ["price","rule"] |   
+id | integer(int64) | Optional | readOnly: true | 自动订单 ID  
+id_string | string | Optional | readOnly: true | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
+前端展示订单编号或需要字符串类型唯一标识时建议使用本字段；与 `id` 一一对应。合约价格触发单相关 REST 与 `futures.orders`、`futures.autoorders` 等 WebSocket 推送中的同名字段含义一致。  
+user | integer | Optional | readOnly: true | 用户 ID  
+create_time | number(double) | Optional | readOnly: true | 创建时间  
+finish_time | number(double) | Optional | readOnly: true | 结束时间  
+trade_id | integer(int64) | Optional | readOnly: true | 触发后委托单ID  
+status | string | Optional | enum: ["open","finished","inactive","invalid"]  
+readOnly: true | 订单状态  
+  
+\- `open`: 活跃中  
+\- `finished`: 已结束  
+\- `inactive`: 未生效，只针对委托单止盈止损  
+\- `invalid`: 无效，只针对委托单止盈止损  
+finish_as | string | Optional | enum: ["cancelled","succeeded","failed","expired"]  
+readOnly: true | 结束状态，cancelled - 被取消；succeeded - 成功；failed - 失败；expired - 过期  
+reason | string | Optional | readOnly: true | 订单结束的附加描述信息  
+order_type | string | Optional |  | 止盈止损的类型，包括：  
+  
+\- `close-long-order`: 委托单止盈止损，平做多仓  
+\- `close-short-order`: 委托单止盈止损，平做空仓  
+\- `close-long-position`: 仓位止盈止损，用于全部平多仓  
+\- `close-short-position`: 仓位止盈止损，用于全部平空仓  
+\- `plan-close-long-position`: 仓位计划止盈止损，用于全部平多仓或部分平多仓  
+\- `plan-close-short-position`: 仓位计划止盈止损，用于全部平空仓或部分平空仓  
+  
+其中委托单止盈止损的两种类型只读，不能通过请求传入  
+me_order_id | integer(int64) | Optional | readOnly: true | 委托单止盈止损对应的委托 ID  
+pos_margin_mode | string | Optional | enum: ["isolated","cross"] | 仓位保证金模式：`isolated`（逐仓）、`cross`（全仓）。  
+在简易分仓模式下服务端会返回；写入场景下请仅使用下列取值。  
+  
+**initial**
+
+请求体结构类型 | 约束  
+---|---  
+object | required: ["contract","price"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+contract | string | Required |  | 合约标识  
+size | integer(int64) | Optional |  | 代表需要平仓的合约张数，全平仓:size=0  
+部分平仓:plan-close-short-position size>0   
+部分平仓:plan-close-long-position size<0  
+amount | string | Optional |  | 同size参数，用于兼容小数,同时存在时以amount为准  
+price | string | Required |  | 交易价，当价格为 0 时，表示通过市价方式来下单  
+close | boolean | Optional | default: false  
+writeOnly: true | 单仓模式全部平仓时,必须设置为true执行平仓操作  
+单仓模式部分平仓时/双仓模式下，可以不设置close，或close=false  
+tif | string | Optional | enum: ["gtc","ioc"]  
+default: "gtc" | Time in force 策略,默认为gtc，市价单当前只支持 ioc 模式市价单当前只支持 ioc 模式  
+  
+\- gtc: GoodTillCancelled  
+\- ioc: ImmediateOrCancelled  
+text | string | Optional |  | 订单的来源，包括：  
+  
+\- web: 网页  
+\- api: API 调用  
+\- app: 移动端  
+reduce_only | boolean | Optional | default: false | 设置为 true 的时候执行自动减仓操作，设为 true可确保订单不会开新仓，只用于平仓或减仓  
+auto_size | string | Optional | writeOnly: true | 单仓模式不需设置auto_size  
+双仓模式全部平仓（size=0）时，必须设置auto_size，close_long 平多头， close_short 平空头  
+双仓模式部分平仓（size≠0）时，不需设置auto_size  
+is_reduce_only | boolean | Optional | readOnly: true | 是否为只减仓委托。对应请求中的`reduce_only`。  
+is_close | boolean | Optional | readOnly: true | 是否为平仓委托。对应请求中的`close`。  
+  
+**trigger**
+
+请求体结构类型 | 约束  
+---|---  
+object | required: ["price","rule"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+strategy_type | integer(int32) | Optional | enum: [0,1] | 触发策略  
+  
+\- 0: 价格触发，即当价格满足条件时触发  
+\- 1: 价差触发，即指定 `price_type` 的最近一次价格减去倒数第二个价格的差值  
+目前暂时只支持0即最新成交价  
+price_type | integer(int32) | Optional | enum: [0,1,2] | 参考价格类型。 0 - 最新成交价，1 - 标记价格，2 - 指数价格  
+price | string | Required |  | 价格触发时为价格，价差触发时为价差  
+rule | integer(int32) | Required | enum: [1,2] | 价格条件类型  
+  
+\- 1: 表示根据 `strategy_type` 和 `price_type` 算出的价格大于等于 `Trigger.Price` 时触发，同时Trigger.Price must > last_price  
+\- 2: 表示根据 `strategy_type` 和 `price_type` 算出的价格小于等于 `Trigger.Price` 时触发，同时Trigger.Price must < last_price  
+expiration | integer | Optional |  | 最长等待触发时间，超时则取消该订单，单位是秒 s  
   
 ### 返回
 
@@ -4216,12 +4740,18 @@ settle | usdt
 
 状态码 **201**
 
-_TriggerOrderResponse_
+TriggerOrderResponse
 
-名称 | 类型 | 描述  
----|---|---  
-» id | integer(int64) | 自动订单 ID  
-» id_string | string | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
+类型 | 约束  
+---|---  
+TriggerOrderResponse |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 自动订单 ID  
+id_string | string | Optional | readOnly: true | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
 前端展示订单编号或需要字符串类型唯一标识时建议使用本字段；与 `id` 一一对应。合约价格触发单相关 REST 与 `futures.orders`、`futures.autoorders` 等 WebSocket 推送中的同名字段含义一致。  
   
 WARNING
@@ -4334,58 +4864,42 @@ settle | usdt
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array | [合约价格单详情]  
-» _None_ | FuturesPriceTriggeredOrder | 合约价格单详情  
-»» initial | object |   
-»»» contract | string | 合约标识  
-»»» size | integer(int64) | 代表需要平仓的合约张数，全平仓:size=0  
-部分平仓:plan-close-short-position size>0   
-部分平仓:plan-close-long-position size<0  
-»»» amount | string | 同size参数，用于兼容小数,同时存在时以amount为准  
-»»» price | string | 交易价，当价格为 0 时，表示通过市价方式来下单  
-»»» tif | string | Time in force 策略,默认为gtc，市价单当前只支持 ioc 模式市价单当前只支持 ioc 模式  
+类型 | 约束  
+---|---  
+array |   
   
-\- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled  
-»»» text | string | 订单的来源，包括：  
+**items**
+
+合约价格单详情
+
+类型 | 约束  
+---|---  
+FuturesPriceTriggeredOrder | required: ["initial","trigger"]  
   
-\- web: 网页  
-\- api: API 调用  
-\- app: 移动端  
-»»» reduce_only | boolean | 设置为 true 的时候执行自动减仓操作，设为 true可确保订单不会开新仓，只用于平仓或减仓  
-»»» is_reduce_only | boolean | 是否为只减仓委托。对应请求中的`reduce_only`。  
-»»» is_close | boolean | 是否为平仓委托。对应请求中的`close`。  
-»» trigger | object |   
-»»» strategy_type | integer(int32) | 触发策略  
-  
-\- 0: 价格触发，即当价格满足条件时触发  
-\- 1: 价差触发，即指定 `price_type` 的最近一次价格减去倒数第二个价格的差值  
-目前暂时只支持0即最新成交价  
-»»» price_type | integer(int32) | 参考价格类型。 0 - 最新成交价，1 - 标记价格，2 - 指数价格  
-»»» price | string | 价格触发时为价格，价差触发时为价差  
-»»» rule | integer(int32) | 价格条件类型  
-  
-\- 1: 表示根据 `strategy_type` 和 `price_type` 算出的价格大于等于 `Trigger.Price` 时触发，同时Trigger.Price must > last_price  
-\- 2: 表示根据 `strategy_type` 和 `price_type` 算出的价格小于等于 `Trigger.Price` 时触发，同时Trigger.Price must < last_price  
-»»» expiration | integer | 最长等待触发时间，超时则取消该订单，单位是秒 s  
-»» id | integer(int64) | 自动订单 ID  
-»» id_string | string | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+initial | object | Required | required: ["contract","price"] |   
+trigger | object | Required | required: ["price","rule"] |   
+id | integer(int64) | Optional | readOnly: true | 自动订单 ID  
+id_string | string | Optional | readOnly: true | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
 前端展示订单编号或需要字符串类型唯一标识时建议使用本字段；与 `id` 一一对应。合约价格触发单相关 REST 与 `futures.orders`、`futures.autoorders` 等 WebSocket 推送中的同名字段含义一致。  
-»» user | integer | 用户 ID  
-»» create_time | number(double) | 创建时间  
-»» finish_time | number(double) | 结束时间  
-»» trade_id | integer(int64) | 触发后委托单ID  
-»» status | string | 订单状态  
+user | integer | Optional | readOnly: true | 用户 ID  
+create_time | number(double) | Optional | readOnly: true | 创建时间  
+finish_time | number(double) | Optional | readOnly: true | 结束时间  
+trade_id | integer(int64) | Optional | readOnly: true | 触发后委托单ID  
+status | string | Optional | enum: ["open","finished","inactive","invalid"]  
+readOnly: true | 订单状态  
   
 \- `open`: 活跃中  
 \- `finished`: 已结束  
 \- `inactive`: 未生效，只针对委托单止盈止损  
 \- `invalid`: 无效，只针对委托单止盈止损  
-»» finish_as | string | 结束状态，cancelled - 被取消；succeeded - 成功；failed - 失败；expired - 过期  
-»» reason | string | 订单结束的附加描述信息  
-»» order_type | string | 止盈止损的类型，包括：  
+finish_as | string | Optional | enum: ["cancelled","succeeded","failed","expired"]  
+readOnly: true | 结束状态，cancelled - 被取消；succeeded - 成功；failed - 失败；expired - 过期  
+reason | string | Optional | readOnly: true | 订单结束的附加描述信息  
+order_type | string | Optional |  | 止盈止损的类型，包括：  
   
 \- `close-long-order`: 委托单止盈止损，平做多仓  
 \- `close-short-order`: 委托单止盈止损，平做空仓  
@@ -4395,33 +4909,68 @@ _None_ | array | [合约价格单详情]
 \- `plan-close-short-position`: 仓位计划止盈止损，用于全部平空仓或部分平空仓  
   
 其中委托单止盈止损的两种类型只读，不能通过请求传入  
-»» me_order_id | integer(int64) | 委托单止盈止损对应的委托 ID  
-»» pos_margin_mode | string | 仓位保证金模式：`isolated`（逐仓）、`cross`（全仓）。  
+me_order_id | integer(int64) | Optional | readOnly: true | 委托单止盈止损对应的委托 ID  
+pos_margin_mode | string | Optional | enum: ["isolated","cross"] | 仓位保证金模式：`isolated`（逐仓）、`cross`（全仓）。  
 在简易分仓模式下服务端会返回；写入场景下请仅使用下列取值。  
   
-####  枚举值列表
+**items / initial**
 
-枚举值列表属性 | 值  
+类型 | 约束  
 ---|---  
-tif | gtc  
-tif | ioc  
-strategy_type | 0  
-strategy_type | 1  
-price_type | 0  
-price_type | 1  
-price_type | 2  
-rule | 1  
-rule | 2  
-status | open  
-status | finished  
-status | inactive  
-status | invalid  
-finish_as | cancelled  
-finish_as | succeeded  
-finish_as | failed  
-finish_as | expired  
-pos_margin_mode | isolated  
-pos_margin_mode | cross  
+object | required: ["contract","price"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+contract | string | Required |  | 合约标识  
+size | integer(int64) | Optional |  | 代表需要平仓的合约张数，全平仓:size=0  
+部分平仓:plan-close-short-position size>0   
+部分平仓:plan-close-long-position size<0  
+amount | string | Optional |  | 同size参数，用于兼容小数,同时存在时以amount为准  
+price | string | Required |  | 交易价，当价格为 0 时，表示通过市价方式来下单  
+close | boolean | Optional | default: false  
+writeOnly: true | 单仓模式全部平仓时,必须设置为true执行平仓操作  
+单仓模式部分平仓时/双仓模式下，可以不设置close，或close=false  
+tif | string | Optional | enum: ["gtc","ioc"]  
+default: "gtc" | Time in force 策略,默认为gtc，市价单当前只支持 ioc 模式市价单当前只支持 ioc 模式  
+  
+\- gtc: GoodTillCancelled  
+\- ioc: ImmediateOrCancelled  
+text | string | Optional |  | 订单的来源，包括：  
+  
+\- web: 网页  
+\- api: API 调用  
+\- app: 移动端  
+reduce_only | boolean | Optional | default: false | 设置为 true 的时候执行自动减仓操作，设为 true可确保订单不会开新仓，只用于平仓或减仓  
+auto_size | string | Optional | writeOnly: true | 单仓模式不需设置auto_size  
+双仓模式全部平仓（size=0）时，必须设置auto_size，close_long 平多头， close_short 平空头  
+双仓模式部分平仓（size≠0）时，不需设置auto_size  
+is_reduce_only | boolean | Optional | readOnly: true | 是否为只减仓委托。对应请求中的`reduce_only`。  
+is_close | boolean | Optional | readOnly: true | 是否为平仓委托。对应请求中的`close`。  
+  
+**items / trigger**
+
+类型 | 约束  
+---|---  
+object | required: ["price","rule"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+strategy_type | integer(int32) | Optional | enum: [0,1] | 触发策略  
+  
+\- 0: 价格触发，即当价格满足条件时触发  
+\- 1: 价差触发，即指定 `price_type` 的最近一次价格减去倒数第二个价格的差值  
+目前暂时只支持0即最新成交价  
+price_type | integer(int32) | Optional | enum: [0,1,2] | 参考价格类型。 0 - 最新成交价，1 - 标记价格，2 - 指数价格  
+price | string | Required |  | 价格触发时为价格，价差触发时为价差  
+rule | integer(int32) | Required | enum: [1,2] | 价格条件类型  
+  
+\- 1: 表示根据 `strategy_type` 和 `price_type` 算出的价格大于等于 `Trigger.Price` 时触发，同时Trigger.Price must > last_price  
+\- 2: 表示根据 `strategy_type` 和 `price_type` 算出的价格小于等于 `Trigger.Price` 时触发，同时Trigger.Price must < last_price  
+expiration | integer | Optional |  | 最长等待触发时间，超时则取消该订单，单位是秒 s  
   
 WARNING
 
@@ -4535,58 +5084,36 @@ settle | usdt
 
 状态码 **200**
 
-_合约价格单详情_
+合约价格单详情
 
-名称 | 类型 | 描述  
----|---|---  
-» initial | object |   
-»» contract | string | 合约标识  
-»» size | integer(int64) | 代表需要平仓的合约张数，全平仓:size=0  
-部分平仓:plan-close-short-position size>0   
-部分平仓:plan-close-long-position size<0  
-»» amount | string | 同size参数，用于兼容小数,同时存在时以amount为准  
-»» price | string | 交易价，当价格为 0 时，表示通过市价方式来下单  
-»» tif | string | Time in force 策略,默认为gtc，市价单当前只支持 ioc 模式市价单当前只支持 ioc 模式  
+类型 | 约束  
+---|---  
+FuturesPriceTriggeredOrder | required: ["initial","trigger"]  
   
-\- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled  
-»» text | string | 订单的来源，包括：  
-  
-\- web: 网页  
-\- api: API 调用  
-\- app: 移动端  
-»» reduce_only | boolean | 设置为 true 的时候执行自动减仓操作，设为 true可确保订单不会开新仓，只用于平仓或减仓  
-»» is_reduce_only | boolean | 是否为只减仓委托。对应请求中的`reduce_only`。  
-»» is_close | boolean | 是否为平仓委托。对应请求中的`close`。  
-» trigger | object |   
-»» strategy_type | integer(int32) | 触发策略  
-  
-\- 0: 价格触发，即当价格满足条件时触发  
-\- 1: 价差触发，即指定 `price_type` 的最近一次价格减去倒数第二个价格的差值  
-目前暂时只支持0即最新成交价  
-»» price_type | integer(int32) | 参考价格类型。 0 - 最新成交价，1 - 标记价格，2 - 指数价格  
-»» price | string | 价格触发时为价格，价差触发时为价差  
-»» rule | integer(int32) | 价格条件类型  
-  
-\- 1: 表示根据 `strategy_type` 和 `price_type` 算出的价格大于等于 `Trigger.Price` 时触发，同时Trigger.Price must > last_price  
-\- 2: 表示根据 `strategy_type` 和 `price_type` 算出的价格小于等于 `Trigger.Price` 时触发，同时Trigger.Price must < last_price  
-»» expiration | integer | 最长等待触发时间，超时则取消该订单，单位是秒 s  
-» id | integer(int64) | 自动订单 ID  
-» id_string | string | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+initial | object | Required | required: ["contract","price"] |   
+trigger | object | Required | required: ["price","rule"] |   
+id | integer(int64) | Optional | readOnly: true | 自动订单 ID  
+id_string | string | Optional | readOnly: true | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
 前端展示订单编号或需要字符串类型唯一标识时建议使用本字段；与 `id` 一一对应。合约价格触发单相关 REST 与 `futures.orders`、`futures.autoorders` 等 WebSocket 推送中的同名字段含义一致。  
-» user | integer | 用户 ID  
-» create_time | number(double) | 创建时间  
-» finish_time | number(double) | 结束时间  
-» trade_id | integer(int64) | 触发后委托单ID  
-» status | string | 订单状态  
+user | integer | Optional | readOnly: true | 用户 ID  
+create_time | number(double) | Optional | readOnly: true | 创建时间  
+finish_time | number(double) | Optional | readOnly: true | 结束时间  
+trade_id | integer(int64) | Optional | readOnly: true | 触发后委托单ID  
+status | string | Optional | enum: ["open","finished","inactive","invalid"]  
+readOnly: true | 订单状态  
   
 \- `open`: 活跃中  
 \- `finished`: 已结束  
 \- `inactive`: 未生效，只针对委托单止盈止损  
 \- `invalid`: 无效，只针对委托单止盈止损  
-» finish_as | string | 结束状态，cancelled - 被取消；succeeded - 成功；failed - 失败；expired - 过期  
-» reason | string | 订单结束的附加描述信息  
-» order_type | string | 止盈止损的类型，包括：  
+finish_as | string | Optional | enum: ["cancelled","succeeded","failed","expired"]  
+readOnly: true | 结束状态，cancelled - 被取消；succeeded - 成功；failed - 失败；expired - 过期  
+reason | string | Optional | readOnly: true | 订单结束的附加描述信息  
+order_type | string | Optional |  | 止盈止损的类型，包括：  
   
 \- `close-long-order`: 委托单止盈止损，平做多仓  
 \- `close-short-order`: 委托单止盈止损，平做空仓  
@@ -4596,33 +5123,68 @@ _合约价格单详情_
 \- `plan-close-short-position`: 仓位计划止盈止损，用于全部平空仓或部分平空仓  
   
 其中委托单止盈止损的两种类型只读，不能通过请求传入  
-» me_order_id | integer(int64) | 委托单止盈止损对应的委托 ID  
-» pos_margin_mode | string | 仓位保证金模式：`isolated`（逐仓）、`cross`（全仓）。  
+me_order_id | integer(int64) | Optional | readOnly: true | 委托单止盈止损对应的委托 ID  
+pos_margin_mode | string | Optional | enum: ["isolated","cross"] | 仓位保证金模式：`isolated`（逐仓）、`cross`（全仓）。  
 在简易分仓模式下服务端会返回；写入场景下请仅使用下列取值。  
   
-####  枚举值列表
+**initial**
 
-枚举值列表属性 | 值  
+类型 | 约束  
 ---|---  
-tif | gtc  
-tif | ioc  
-strategy_type | 0  
-strategy_type | 1  
-price_type | 0  
-price_type | 1  
-price_type | 2  
-rule | 1  
-rule | 2  
-status | open  
-status | finished  
-status | inactive  
-status | invalid  
-finish_as | cancelled  
-finish_as | succeeded  
-finish_as | failed  
-finish_as | expired  
-pos_margin_mode | isolated  
-pos_margin_mode | cross  
+object | required: ["contract","price"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+contract | string | Required |  | 合约标识  
+size | integer(int64) | Optional |  | 代表需要平仓的合约张数，全平仓:size=0  
+部分平仓:plan-close-short-position size>0   
+部分平仓:plan-close-long-position size<0  
+amount | string | Optional |  | 同size参数，用于兼容小数,同时存在时以amount为准  
+price | string | Required |  | 交易价，当价格为 0 时，表示通过市价方式来下单  
+close | boolean | Optional | default: false  
+writeOnly: true | 单仓模式全部平仓时,必须设置为true执行平仓操作  
+单仓模式部分平仓时/双仓模式下，可以不设置close，或close=false  
+tif | string | Optional | enum: ["gtc","ioc"]  
+default: "gtc" | Time in force 策略,默认为gtc，市价单当前只支持 ioc 模式市价单当前只支持 ioc 模式  
+  
+\- gtc: GoodTillCancelled  
+\- ioc: ImmediateOrCancelled  
+text | string | Optional |  | 订单的来源，包括：  
+  
+\- web: 网页  
+\- api: API 调用  
+\- app: 移动端  
+reduce_only | boolean | Optional | default: false | 设置为 true 的时候执行自动减仓操作，设为 true可确保订单不会开新仓，只用于平仓或减仓  
+auto_size | string | Optional | writeOnly: true | 单仓模式不需设置auto_size  
+双仓模式全部平仓（size=0）时，必须设置auto_size，close_long 平多头， close_short 平空头  
+双仓模式部分平仓（size≠0）时，不需设置auto_size  
+is_reduce_only | boolean | Optional | readOnly: true | 是否为只减仓委托。对应请求中的`reduce_only`。  
+is_close | boolean | Optional | readOnly: true | 是否为平仓委托。对应请求中的`close`。  
+  
+**trigger**
+
+类型 | 约束  
+---|---  
+object | required: ["price","rule"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+strategy_type | integer(int32) | Optional | enum: [0,1] | 触发策略  
+  
+\- 0: 价格触发，即当价格满足条件时触发  
+\- 1: 价差触发，即指定 `price_type` 的最近一次价格减去倒数第二个价格的差值  
+目前暂时只支持0即最新成交价  
+price_type | integer(int32) | Optional | enum: [0,1,2] | 参考价格类型。 0 - 最新成交价，1 - 标记价格，2 - 指数价格  
+price | string | Required |  | 价格触发时为价格，价差触发时为价差  
+rule | integer(int32) | Required | enum: [1,2] | 价格条件类型  
+  
+\- 1: 表示根据 `strategy_type` 和 `price_type` 算出的价格大于等于 `Trigger.Price` 时触发，同时Trigger.Price must > last_price  
+\- 2: 表示根据 `strategy_type` 和 `price_type` 算出的价格小于等于 `Trigger.Price` 时触发，同时Trigger.Price must < last_price  
+expiration | integer | Optional |  | 最长等待触发时间，超时则取消该订单，单位是秒 s  
   
 WARNING
 
@@ -4734,58 +5296,36 @@ settle | usdt
 
 状态码 **200**
 
-_合约价格单详情_
+合约价格单详情
 
-名称 | 类型 | 描述  
----|---|---  
-» initial | object |   
-»» contract | string | 合约标识  
-»» size | integer(int64) | 代表需要平仓的合约张数，全平仓:size=0  
-部分平仓:plan-close-short-position size>0   
-部分平仓:plan-close-long-position size<0  
-»» amount | string | 同size参数，用于兼容小数,同时存在时以amount为准  
-»» price | string | 交易价，当价格为 0 时，表示通过市价方式来下单  
-»» tif | string | Time in force 策略,默认为gtc，市价单当前只支持 ioc 模式市价单当前只支持 ioc 模式  
+类型 | 约束  
+---|---  
+FuturesPriceTriggeredOrder | required: ["initial","trigger"]  
   
-\- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled  
-»» text | string | 订单的来源，包括：  
-  
-\- web: 网页  
-\- api: API 调用  
-\- app: 移动端  
-»» reduce_only | boolean | 设置为 true 的时候执行自动减仓操作，设为 true可确保订单不会开新仓，只用于平仓或减仓  
-»» is_reduce_only | boolean | 是否为只减仓委托。对应请求中的`reduce_only`。  
-»» is_close | boolean | 是否为平仓委托。对应请求中的`close`。  
-» trigger | object |   
-»» strategy_type | integer(int32) | 触发策略  
-  
-\- 0: 价格触发，即当价格满足条件时触发  
-\- 1: 价差触发，即指定 `price_type` 的最近一次价格减去倒数第二个价格的差值  
-目前暂时只支持0即最新成交价  
-»» price_type | integer(int32) | 参考价格类型。 0 - 最新成交价，1 - 标记价格，2 - 指数价格  
-»» price | string | 价格触发时为价格，价差触发时为价差  
-»» rule | integer(int32) | 价格条件类型  
-  
-\- 1: 表示根据 `strategy_type` 和 `price_type` 算出的价格大于等于 `Trigger.Price` 时触发，同时Trigger.Price must > last_price  
-\- 2: 表示根据 `strategy_type` 和 `price_type` 算出的价格小于等于 `Trigger.Price` 时触发，同时Trigger.Price must < last_price  
-»» expiration | integer | 最长等待触发时间，超时则取消该订单，单位是秒 s  
-» id | integer(int64) | 自动订单 ID  
-» id_string | string | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+initial | object | Required | required: ["contract","price"] |   
+trigger | object | Required | required: ["price","rule"] |   
+id | integer(int64) | Optional | readOnly: true | 自动订单 ID  
+id_string | string | Optional | readOnly: true | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
 前端展示订单编号或需要字符串类型唯一标识时建议使用本字段；与 `id` 一一对应。合约价格触发单相关 REST 与 `futures.orders`、`futures.autoorders` 等 WebSocket 推送中的同名字段含义一致。  
-» user | integer | 用户 ID  
-» create_time | number(double) | 创建时间  
-» finish_time | number(double) | 结束时间  
-» trade_id | integer(int64) | 触发后委托单ID  
-» status | string | 订单状态  
+user | integer | Optional | readOnly: true | 用户 ID  
+create_time | number(double) | Optional | readOnly: true | 创建时间  
+finish_time | number(double) | Optional | readOnly: true | 结束时间  
+trade_id | integer(int64) | Optional | readOnly: true | 触发后委托单ID  
+status | string | Optional | enum: ["open","finished","inactive","invalid"]  
+readOnly: true | 订单状态  
   
 \- `open`: 活跃中  
 \- `finished`: 已结束  
 \- `inactive`: 未生效，只针对委托单止盈止损  
 \- `invalid`: 无效，只针对委托单止盈止损  
-» finish_as | string | 结束状态，cancelled - 被取消；succeeded - 成功；failed - 失败；expired - 过期  
-» reason | string | 订单结束的附加描述信息  
-» order_type | string | 止盈止损的类型，包括：  
+finish_as | string | Optional | enum: ["cancelled","succeeded","failed","expired"]  
+readOnly: true | 结束状态，cancelled - 被取消；succeeded - 成功；failed - 失败；expired - 过期  
+reason | string | Optional | readOnly: true | 订单结束的附加描述信息  
+order_type | string | Optional |  | 止盈止损的类型，包括：  
   
 \- `close-long-order`: 委托单止盈止损，平做多仓  
 \- `close-short-order`: 委托单止盈止损，平做空仓  
@@ -4795,33 +5335,68 @@ _合约价格单详情_
 \- `plan-close-short-position`: 仓位计划止盈止损，用于全部平空仓或部分平空仓  
   
 其中委托单止盈止损的两种类型只读，不能通过请求传入  
-» me_order_id | integer(int64) | 委托单止盈止损对应的委托 ID  
-» pos_margin_mode | string | 仓位保证金模式：`isolated`（逐仓）、`cross`（全仓）。  
+me_order_id | integer(int64) | Optional | readOnly: true | 委托单止盈止损对应的委托 ID  
+pos_margin_mode | string | Optional | enum: ["isolated","cross"] | 仓位保证金模式：`isolated`（逐仓）、`cross`（全仓）。  
 在简易分仓模式下服务端会返回；写入场景下请仅使用下列取值。  
   
-####  枚举值列表
+**initial**
 
-枚举值列表属性 | 值  
+类型 | 约束  
 ---|---  
-tif | gtc  
-tif | ioc  
-strategy_type | 0  
-strategy_type | 1  
-price_type | 0  
-price_type | 1  
-price_type | 2  
-rule | 1  
-rule | 2  
-status | open  
-status | finished  
-status | inactive  
-status | invalid  
-finish_as | cancelled  
-finish_as | succeeded  
-finish_as | failed  
-finish_as | expired  
-pos_margin_mode | isolated  
-pos_margin_mode | cross  
+object | required: ["contract","price"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+contract | string | Required |  | 合约标识  
+size | integer(int64) | Optional |  | 代表需要平仓的合约张数，全平仓:size=0  
+部分平仓:plan-close-short-position size>0   
+部分平仓:plan-close-long-position size<0  
+amount | string | Optional |  | 同size参数，用于兼容小数,同时存在时以amount为准  
+price | string | Required |  | 交易价，当价格为 0 时，表示通过市价方式来下单  
+close | boolean | Optional | default: false  
+writeOnly: true | 单仓模式全部平仓时,必须设置为true执行平仓操作  
+单仓模式部分平仓时/双仓模式下，可以不设置close，或close=false  
+tif | string | Optional | enum: ["gtc","ioc"]  
+default: "gtc" | Time in force 策略,默认为gtc，市价单当前只支持 ioc 模式市价单当前只支持 ioc 模式  
+  
+\- gtc: GoodTillCancelled  
+\- ioc: ImmediateOrCancelled  
+text | string | Optional |  | 订单的来源，包括：  
+  
+\- web: 网页  
+\- api: API 调用  
+\- app: 移动端  
+reduce_only | boolean | Optional | default: false | 设置为 true 的时候执行自动减仓操作，设为 true可确保订单不会开新仓，只用于平仓或减仓  
+auto_size | string | Optional | writeOnly: true | 单仓模式不需设置auto_size  
+双仓模式全部平仓（size=0）时，必须设置auto_size，close_long 平多头， close_short 平空头  
+双仓模式部分平仓（size≠0）时，不需设置auto_size  
+is_reduce_only | boolean | Optional | readOnly: true | 是否为只减仓委托。对应请求中的`reduce_only`。  
+is_close | boolean | Optional | readOnly: true | 是否为平仓委托。对应请求中的`close`。  
+  
+**trigger**
+
+类型 | 约束  
+---|---  
+object | required: ["price","rule"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+strategy_type | integer(int32) | Optional | enum: [0,1] | 触发策略  
+  
+\- 0: 价格触发，即当价格满足条件时触发  
+\- 1: 价差触发，即指定 `price_type` 的最近一次价格减去倒数第二个价格的差值  
+目前暂时只支持0即最新成交价  
+price_type | integer(int32) | Optional | enum: [0,1,2] | 参考价格类型。 0 - 最新成交价，1 - 标记价格，2 - 指数价格  
+price | string | Required |  | 价格触发时为价格，价差触发时为价差  
+rule | integer(int32) | Required | enum: [1,2] | 价格条件类型  
+  
+\- 1: 表示根据 `strategy_type` 和 `price_type` 算出的价格大于等于 `Trigger.Price` 时触发，同时Trigger.Price must > last_price  
+\- 2: 表示根据 `strategy_type` 和 `price_type` 算出的价格小于等于 `Trigger.Price` 时触发，同时Trigger.Price must < last_price  
+expiration | integer | Optional |  | 最长等待触发时间，超时则取消该订单，单位是秒 s  
   
 WARNING
 
@@ -4904,75 +5479,65 @@ WARNING
 
 #  模型
 
-##  DeliveryCandlestick
-
-_每个时间粒度的 K 线数据_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-t | number(double) | false | none | 秒 s 精度的 Unix 时间戳  
-v | integer(int64) | false | none | 交易量，只有市场行情的 K 线数据里有该值 (合约张数)  
-c | string | false | none | 收盘价 (计价货币)  
-h | string | false | none | 最高价 (计价货币)  
-l | string | false | none | 最低价 (计价货币)  
-o | string | false | none | 开盘价 (计价货币)  
-      
-    
-    {
-      "t": 0,
-      "v": 0,
-      "c": "string",
-      "h": "string",
-      "l": "string",
-      "o": "string"
-    }
-    
-    
-
 ##  DeliveryAccount
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-total | string | false | none | 钱包余额，只适用于经典合约账户。钱包余额为所有历史已发生的资金流水之和，包括历史转入转出、平仓结算、手续费支出等，不包含仓位的未实现盈亏。total = SUM(history_dnw, history_pnl, history_fee, history_refr, history_fund)  
-unrealised_pnl | string | false | none | 未实现盈亏  
-position_margin | string | false | none | 已废弃  
-order_margin | string | false | none | 所有未完成订单的起始保证金  
-available | string | false | none | 可用的转出或交易的额度，统一账户下包含授信额度的可用额度(有包含体验金,体验金无法转出,所以要转出,转出金额需要扣除体验金)  
-point | string | false | none | 点卡数额  
-currency | string | false | none | 结算币种  
-in_dual_mode | boolean | false | none | 是否为双向持仓模式  
-enable_credit | boolean | false | none | 是否开启统一账户模式  
-position_initial_margin | string | false | none | 头寸占用的起始保证金，适用于统一账户模式  
-maintenance_margin | string | false | none | 头寸占用的维持保证金，适用于新经典账户保证金模式和统一账户模式  
-bonus | string | false | none | 体验金  
-enable_evolved_classic | boolean | false | none | 已废弃  
-cross_order_margin | string | false | none | 全仓挂单保证金，适用于新经典账户保证金模式  
-cross_initial_margin | string | false | none | 全仓初始保证金，适用于新经典账户保证金模式  
-cross_maintenance_margin | string | false | none | 全仓维持保证金，适用于新经典账户保证金模式  
-cross_unrealised_pnl | string | false | none | 全仓未实现盈亏，适用于新经典账户保证金模式  
-cross_available | string | false | none | 全仓可用额度，适用于新经典账户保证金模式  
-cross_margin_balance | string | false | none | 全仓保证金余额，适用于新经典账户保证金模式  
-cross_mmr | string | false | none | 全仓维持保证金率，适用于新经典账户保证金模式  
-cross_imr | string | false | none | 全仓初始保证金率，适用于新经典账户保证金模式  
-isolated_position_margin | string | false | none | 逐仓仓位保证金，适用于新经典账户保证金模式  
-enable_new_dual_mode | boolean | false | none | 已废弃  
-margin_mode | integer | false | none | 保证金模式，0-经典保证金模式，1-跨币种保证金模式，2-组合保证金模式，3-单币种保证金模式  
-enable_tiered_mm | boolean | false | none | 是否开启梯度式计算维持保证金  
-history | object | false | none | 累计统计数据  
-» dnw | string | false | none | 累计转入转出  
-» pnl | string | false | none | 累计交易盈亏  
-» fee | string | false | none | 累计手续费  
-» refr | string | false | none | 累计获取的推荐人返佣  
-» fund | string | false | none | 累计资金费用  
-» point_dnw | string | false | none | 累计点卡转入转出  
-» point_fee | string | false | none | 累计点卡抵扣手续费  
-» point_refr | string | false | none | 累计获取的点卡推荐人返佣  
-» bonus_dnw | string | false | none | 累计体验金转入转出  
-» bonus_offset | string | false | none | 累计体验金抵扣  
+total | string | Optional |  | 钱包余额，只适用于经典合约账户。钱包余额为所有历史已发生的资金流水之和，包括历史转入转出、平仓结算、手续费支出等，不包含仓位的未实现盈亏。total = SUM(history_dnw, history_pnl, history_fee, history_refr, history_fund)  
+unrealised_pnl | string | Optional |  | 未实现盈亏  
+position_margin | string | Optional |  | 已废弃  
+order_margin | string | Optional |  | 所有未完成订单的起始保证金  
+available | string | Optional |  | 可用的转出或交易的额度，统一账户下包含授信额度的可用额度(有包含体验金,体验金无法转出,所以要转出,转出金额需要扣除体验金)  
+point | string | Optional |  | 点卡数额  
+currency | string | Optional |  | 结算币种  
+in_dual_mode | boolean | Optional |  | 是否为双向持仓模式  
+enable_credit | boolean | Optional |  | 是否开启统一账户模式  
+position_initial_margin | string | Optional |  | 头寸占用的起始保证金，适用于统一账户模式  
+maintenance_margin | string | Optional |  | 头寸占用的维持保证金，适用于新经典账户保证金模式和统一账户模式  
+bonus | string | Optional |  | 体验金  
+enable_evolved_classic | boolean | Optional |  | 已废弃  
+cross_order_margin | string | Optional |  | 全仓挂单保证金，适用于新经典账户保证金模式  
+cross_initial_margin | string | Optional |  | 全仓初始保证金，适用于新经典账户保证金模式  
+cross_maintenance_margin | string | Optional |  | 全仓维持保证金，适用于新经典账户保证金模式  
+cross_unrealised_pnl | string | Optional |  | 全仓未实现盈亏，适用于新经典账户保证金模式  
+cross_available | string | Optional |  | 全仓可用额度，适用于新经典账户保证金模式  
+cross_margin_balance | string | Optional |  | 全仓保证金余额，适用于新经典账户保证金模式  
+cross_mmr | string | Optional |  | 全仓维持保证金率，适用于新经典账户保证金模式  
+cross_imr | string | Optional |  | 全仓初始保证金率，适用于新经典账户保证金模式  
+isolated_position_margin | string | Optional |  | 逐仓仓位保证金，适用于新经典账户保证金模式  
+enable_new_dual_mode | boolean | Optional |  | 已废弃  
+margin_mode | integer | Optional |  | 保证金模式，0-经典保证金模式，1-跨币种保证金模式，2-组合保证金模式，3-单币种保证金模式  
+enable_tiered_mm | boolean | Optional |  | 是否开启梯度式计算维持保证金  
+history | object | Optional |  | 累计统计数据  
+  
+**history**
+
+累计统计数据
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+dnw | string | Optional |  | 累计转入转出  
+pnl | string | Optional |  | 累计交易盈亏  
+fee | string | Optional |  | 累计手续费  
+refr | string | Optional |  | 累计获取的推荐人返佣  
+fund | string | Optional |  | 累计资金费用  
+point_dnw | string | Optional |  | 累计点卡转入转出  
+point_fee | string | Optional |  | 累计点卡抵扣手续费  
+point_refr | string | Optional |  | 累计获取的点卡推荐人返佣  
+bonus_dnw | string | Optional |  | 累计体验金转入转出  
+bonus_offset | string | Optional |  | 累计体验金抵扣  
       
     
     {
@@ -5017,107 +5582,167 @@ history | object | false | none | 累计统计数据
     
     
 
-##  DeliveryPositionClose
+##  FuturesPriceTriggeredOrder
 
-###  属性
+合约价格单详情
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-time | number(double) | false | 只读 | 平仓时间  
-contract | string | false | 只读 | 合约标识  
-side | string | false | 只读 | 多空方向  
-  
-\- `long`: 做多  
-\- `short`: 做空  
-pnl | string | false | 只读 | 盈亏  
-pnl_pnl | string | false | 只读 | 盈亏-仓位盈亏  
-pnl_fund | string | false | 只读 | 盈亏-资金费用  
-pnl_fee | string | false | 只读 | 盈亏-手续费  
-text | string | false | 只读 | 平仓委托的来源，具体取值参见`order.text`字段  
-max_size | integer(int64) | false | 只读 | 最大持仓量  
-accum_size | integer(int64) | false | 只读 | 累计平仓量  
-first_open_time | integer(int64) | false | 只读 | 开仓时间  
-long_price | string | false | 只读 | side为long时表示开仓均价，为short时表示平仓均价  
-short_price | string | false | 只读 | side为long时表示平仓均价，为short时表示开仓均价  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
+类型 | 约束  
 ---|---  
-side | long  
-side | short  
-      
-    
-    {
-      "time": 0,
-      "contract": "string",
-      "side": "long",
-      "pnl": "string",
-      "pnl_pnl": "string",
-      "pnl_fund": "string",
-      "pnl_fee": "string",
-      "text": "string",
-      "max_size": 0,
-      "accum_size": 0,
-      "first_open_time": 0,
-      "long_price": "string",
-      "short_price": "string"
-    }
-    
-    
+object | required: ["initial","trigger"]  
+  
+**属性**
 
-##  DeliveryLiquidate
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-time | integer(int64) | false | 只读 | 强制平仓时间  
-contract | string | false | 只读 | 合约标识  
-leverage | string | false | 只读 | 杠杆倍数，公共接口无该字段返回  
-size | integer(int64) | false | 只读 | 仓位大小  
-margin | string | false | 只读 | 保证金，公共接口无该字段返回  
-entry_price | string | false | 只读 | 平均开仓价，公共接口无该字段返回  
-liq_price | string | false | 只读 | 强制平仓价，公共接口无该字段返回  
-mark_price | string | false | 只读 | 市场标记价，公共接口无该字段返回  
-order_id | integer(int64) | false | 只读 | 强平委托ID，公共接口无该字段返回  
-order_price | string | false | 只读 | 强平委托价  
-fill_price | string | false | 只读 | 强平委托吃单平均成交价  
-left | integer(int64) | false | 只读 | 强平委托挂单大小  
+initial | object | Required | required: ["contract","price"] |   
+trigger | object | Required | required: ["price","rule"] |   
+id | integer(int64) | Optional | readOnly: true | 自动订单 ID  
+id_string | string | Optional | readOnly: true | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
+前端展示订单编号或需要字符串类型唯一标识时建议使用本字段；与 `id` 一一对应。合约价格触发单相关 REST 与 `futures.orders`、`futures.autoorders` 等 WebSocket 推送中的同名字段含义一致。  
+user | integer | Optional | readOnly: true | 用户 ID  
+create_time | number(double) | Optional | readOnly: true | 创建时间  
+finish_time | number(double) | Optional | readOnly: true | 结束时间  
+trade_id | integer(int64) | Optional | readOnly: true | 触发后委托单ID  
+status | string | Optional | enum: ["open","finished","inactive","invalid"]  
+readOnly: true | 订单状态  
+  
+\- `open`: 活跃中  
+\- `finished`: 已结束  
+\- `inactive`: 未生效，只针对委托单止盈止损  
+\- `invalid`: 无效，只针对委托单止盈止损  
+finish_as | string | Optional | enum: ["cancelled","succeeded","failed","expired"]  
+readOnly: true | 结束状态，cancelled - 被取消；succeeded - 成功；failed - 失败；expired - 过期  
+reason | string | Optional | readOnly: true | 订单结束的附加描述信息  
+order_type | string | Optional |  | 止盈止损的类型，包括：  
+  
+\- `close-long-order`: 委托单止盈止损，平做多仓  
+\- `close-short-order`: 委托单止盈止损，平做空仓  
+\- `close-long-position`: 仓位止盈止损，用于全部平多仓  
+\- `close-short-position`: 仓位止盈止损，用于全部平空仓  
+\- `plan-close-long-position`: 仓位计划止盈止损，用于全部平多仓或部分平多仓  
+\- `plan-close-short-position`: 仓位计划止盈止损，用于全部平空仓或部分平空仓  
+  
+其中委托单止盈止损的两种类型只读，不能通过请求传入  
+me_order_id | integer(int64) | Optional | readOnly: true | 委托单止盈止损对应的委托 ID  
+pos_margin_mode | string | Optional | enum: ["isolated","cross"] | 仓位保证金模式：`isolated`（逐仓）、`cross`（全仓）。  
+在简易分仓模式下服务端会返回；写入场景下请仅使用下列取值。  
+  
+**initial**
+
+类型 | 约束  
+---|---  
+object | required: ["contract","price"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+contract | string | Required |  | 合约标识  
+size | integer(int64) | Optional |  | 代表需要平仓的合约张数，全平仓:size=0  
+部分平仓:plan-close-short-position size>0   
+部分平仓:plan-close-long-position size<0  
+amount | string | Optional |  | 同size参数，用于兼容小数,同时存在时以amount为准  
+price | string | Required |  | 交易价，当价格为 0 时，表示通过市价方式来下单  
+close | boolean | Optional | default: false  
+writeOnly: true | 单仓模式全部平仓时,必须设置为true执行平仓操作  
+单仓模式部分平仓时/双仓模式下，可以不设置close，或close=false  
+tif | string | Optional | enum: ["gtc","ioc"]  
+default: "gtc" | Time in force 策略,默认为gtc，市价单当前只支持 ioc 模式市价单当前只支持 ioc 模式  
+  
+\- gtc: GoodTillCancelled  
+\- ioc: ImmediateOrCancelled  
+text | string | Optional |  | 订单的来源，包括：  
+  
+\- web: 网页  
+\- api: API 调用  
+\- app: 移动端  
+reduce_only | boolean | Optional | default: false | 设置为 true 的时候执行自动减仓操作，设为 true可确保订单不会开新仓，只用于平仓或减仓  
+auto_size | string | Optional | writeOnly: true | 单仓模式不需设置auto_size  
+双仓模式全部平仓（size=0）时，必须设置auto_size，close_long 平多头， close_short 平空头  
+双仓模式部分平仓（size≠0）时，不需设置auto_size  
+is_reduce_only | boolean | Optional | readOnly: true | 是否为只减仓委托。对应请求中的`reduce_only`。  
+is_close | boolean | Optional | readOnly: true | 是否为平仓委托。对应请求中的`close`。  
+  
+**trigger**
+
+类型 | 约束  
+---|---  
+object | required: ["price","rule"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+strategy_type | integer(int32) | Optional | enum: [0,1] | 触发策略  
+  
+\- 0: 价格触发，即当价格满足条件时触发  
+\- 1: 价差触发，即指定 `price_type` 的最近一次价格减去倒数第二个价格的差值  
+目前暂时只支持0即最新成交价  
+price_type | integer(int32) | Optional | enum: [0,1,2] | 参考价格类型。 0 - 最新成交价，1 - 标记价格，2 - 指数价格  
+price | string | Required |  | 价格触发时为价格，价差触发时为价差  
+rule | integer(int32) | Required | enum: [1,2] | 价格条件类型  
+  
+\- 1: 表示根据 `strategy_type` 和 `price_type` 算出的价格大于等于 `Trigger.Price` 时触发，同时Trigger.Price must > last_price  
+\- 2: 表示根据 `strategy_type` 和 `price_type` 算出的价格小于等于 `Trigger.Price` 时触发，同时Trigger.Price must < last_price  
+expiration | integer | Optional |  | 最长等待触发时间，超时则取消该订单，单位是秒 s  
       
     
     {
-      "time": 0,
-      "contract": "string",
-      "leverage": "string",
-      "size": 0,
-      "margin": "string",
-      "entry_price": "string",
-      "liq_price": "string",
-      "mark_price": "string",
-      "order_id": 0,
-      "order_price": "string",
-      "fill_price": "string",
-      "left": 0
+      "initial": {
+        "contract": "string",
+        "size": 0,
+        "amount": "string",
+        "price": "string",
+        "close": false,
+        "tif": "gtc",
+        "text": "string",
+        "reduce_only": false,
+        "auto_size": "string",
+        "is_reduce_only": true,
+        "is_close": true
+      },
+      "trigger": {
+        "strategy_type": 0,
+        "price_type": 0,
+        "price": "string",
+        "rule": 1,
+        "expiration": 0
+      },
+      "id": 0,
+      "id_string": "string",
+      "user": 0,
+      "create_time": 0,
+      "finish_time": 0,
+      "trade_id": 0,
+      "status": "open",
+      "finish_as": "cancelled",
+      "reason": "string",
+      "order_type": "string",
+      "me_order_id": 0,
+      "pos_margin_mode": "isolated"
     }
     
     
 
 ##  DeliveryLimitRiskTiers
 
-_返回某个指定合同下,不同档位的风险限额配置_
+返回某个指定合同下,不同档位的风险限额配置
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-tier | integer(int) | false | none | 档位  
-risk_limit | string | false | none | 风险限额  
-initial_rate | string | false | none | 初始保证金率  
-maintenance_rate | string | false | none | 风险限额的第一档维持保证金率要求  
-leverage_max | string | false | none | 最大杠杆  
-contract | string | false | none | 市场,仅当市场分页请求时可见  
-deduction | string | false | none | 维持保证金速算扣减额  
+tier | integer(int) | Optional |  | 档位  
+risk_limit | string | Optional |  | 风险限额  
+initial_rate | string | Optional |  | 初始保证金率  
+maintenance_rate | string | Optional |  | 风险限额的第一档维持保证金率要求  
+leverage_max | string | Optional |  | 最大杠杆  
+contract | string | Optional |  | 市场,仅当市场分页请求时可见  
+deduction | string | Optional |  | 维持保证金速算扣减额  
       
     
     {
@@ -5132,67 +5757,89 @@ deduction | string | false | none | 维持保证金速算扣减额
     
     
 
+##  DeliveryCandlestick
+
+每个时间粒度的 K 线数据
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+t | number(double) | Optional |  | 秒 s 精度的 Unix 时间戳  
+v | integer(int64) | Optional |  | 交易量，只有市场行情的 K 线数据里有该值 (合约张数)  
+c | string | Optional |  | 收盘价 (计价货币)  
+h | string | Optional |  | 最高价 (计价货币)  
+l | string | Optional |  | 最低价 (计价货币)  
+o | string | Optional |  | 开盘价 (计价货币)  
+      
+    
+    {
+      "t": 0,
+      "v": 0,
+      "c": "string",
+      "h": "string",
+      "l": "string",
+      "o": "string"
+    }
+    
+    
+
 ##  DeliveryContract
 
-_合约详情_
+合约详情
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-name | string | false | none | 合约标识  
-underlying | string | false | none | 标的物  
-cycle | string | false | none | 周期类型, 季度合约, 周合约等  
-type | string | false | none | 合约类型, inverse - 反向合约, direct - 正向合约  
-quanto_multiplier | string | false | none | 合约乘数，表示一张合约的面值为多少个标的物币种  
-leverage_min | string | false | none | 最小杠杆  
-leverage_max | string | false | none | 最大杠杆  
-maintenance_rate | string | false | none | 风险限额的第一档维持保证金率要求  
-mark_type | string | false | none | 已废弃  
-mark_price | string | false | none | 当前标记价格  
-index_price | string | false | none | 当前指数价格  
-last_price | string | false | none | 上一次成交价格  
-maker_fee_rate | string | false | none | 挂单成交的手续费率，负数代表返还后续费  
-taker_fee_rate | string | false | none | 吃单成交的手续费率  
-order_price_round | string | false | none | 委托价格最小单位  
-mark_price_round | string | false | none | 标记价格的最小单位  
-basis_rate | string | false | none | 当前合理基差率  
-basis_value | string | false | none | 当前合理基差值  
-basis_impact_value | string | false | none | 计算合理基差率时加权深度影响额  
-settle_price | string | false | none | 预计结算价格  
-settle_price_interval | integer | false | none | 结算价格更新间隔  
-settle_price_duration | integer | false | none | 加权平均计算结算价格时长, 单位秒  
-expire_time | integer(int64) | false | none | 合约到期时间戳  
-risk_limit_base | string | false | none | 基础风险限额  
-risk_limit_step | string | false | none | 风险限额调整步长  
-risk_limit_max | string | false | none | 合约允许的最大风险限额  
-order_size_min | integer(int64) | false | none | 最小下单数量  
-order_size_max | integer(int64) | false | none | 最大下单数量  
-order_price_deviate | string | false | none | 下单价与当前标记价格允许的正负偏移量， 即下单价 `order_price` 需满足如下条件:  
+name | string | Optional |  | 合约标识  
+underlying | string | Optional |  | 标的物  
+cycle | string | Optional | enum: ["WEEKLY","BI-WEEKLY","QUARTERLY","BI-QUARTERLY"] | 周期类型, 季度合约, 周合约等  
+type | string | Optional | enum: ["inverse","direct"] | 合约类型, inverse - 反向合约, direct - 正向合约  
+quanto_multiplier | string | Optional |  | 合约乘数，表示一张合约的面值为多少个标的物币种  
+leverage_min | string | Optional |  | 最小杠杆  
+leverage_max | string | Optional |  | 最大杠杆  
+maintenance_rate | string | Optional |  | 风险限额的第一档维持保证金率要求  
+mark_type | string | Optional | enum: ["internal","index"] | 已废弃  
+mark_price | string | Optional |  | 当前标记价格  
+index_price | string | Optional |  | 当前指数价格  
+last_price | string | Optional |  | 上一次成交价格  
+maker_fee_rate | string | Optional |  | 挂单成交的手续费率，负数代表返还后续费  
+taker_fee_rate | string | Optional |  | 吃单成交的手续费率  
+order_price_round | string | Optional |  | 委托价格最小单位  
+mark_price_round | string | Optional |  | 标记价格的最小单位  
+basis_rate | string | Optional |  | 当前合理基差率  
+basis_value | string | Optional |  | 当前合理基差值  
+basis_impact_value | string | Optional |  | 计算合理基差率时加权深度影响额  
+settle_price | string | Optional |  | 预计结算价格  
+settle_price_interval | integer | Optional |  | 结算价格更新间隔  
+settle_price_duration | integer | Optional |  | 加权平均计算结算价格时长, 单位秒  
+expire_time | integer(int64) | Optional |  | 合约到期时间戳  
+risk_limit_base | string | Optional |  | 基础风险限额  
+risk_limit_step | string | Optional |  | 风险限额调整步长  
+risk_limit_max | string | Optional |  | 合约允许的最大风险限额  
+order_size_min | integer(int64) | Optional |  | 最小下单数量  
+order_size_max | integer(int64) | Optional |  | 最大下单数量  
+order_price_deviate | string | Optional |  | 下单价与当前标记价格允许的正负偏移量， 即下单价 `order_price` 需满足如下条件:  
   
 abs(order_price - mark_price) <= mark_price * order_price_deviate  
-ref_discount_rate | string | false | none | 被推荐人享受交易费率折扣  
-ref_rebate_rate | string | false | none | 推荐人享受交易费率返佣比例  
-orderbook_id | integer(int64) | false | none | orderbook更新ID  
-trade_id | integer(int64) | false | none | 当前成交ID  
-trade_size | integer(int64) | false | none | 历史累计成交  
-position_size | integer(int64) | false | none | 当前做多用户持有仓位总和  
-config_change_time | number(double) | false | none | 配置最后更新时间  
-in_delisting | boolean | false | none | 合约下线中  
-orders_limit | integer | false | none | 最多挂单数量  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-cycle | WEEKLY  
-cycle | BI-WEEKLY  
-cycle | QUARTERLY  
-cycle | BI-QUARTERLY  
-type | inverse  
-type | direct  
-mark_type | internal  
-mark_type | index  
+ref_discount_rate | string | Optional |  | 被推荐人享受交易费率折扣  
+ref_rebate_rate | string | Optional |  | 推荐人享受交易费率返佣比例  
+orderbook_id | integer(int64) | Optional |  | orderbook更新ID  
+trade_id | integer(int64) | Optional |  | 当前成交ID  
+trade_size | integer(int64) | Optional |  | 历史累计成交  
+position_size | integer(int64) | Optional |  | 当前做多用户持有仓位总和  
+config_change_time | number(double) | Optional |  | 配置最后更新时间  
+in_delisting | boolean | Optional |  | 合约下线中  
+orders_limit | integer | Optional |  | 最多挂单数量  
       
     
     {
@@ -5238,23 +5885,210 @@ mark_type | index
     
     
 
+##  TriggerOrderResponse
+
+TriggerOrderResponse
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 自动订单 ID  
+id_string | string | Optional | readOnly: true | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
+前端展示订单编号或需要字符串类型唯一标识时建议使用本字段；与 `id` 一一对应。合约价格触发单相关 REST 与 `futures.orders`、`futures.autoorders` 等 WebSocket 推送中的同名字段含义一致。  
+      
+    
+    {
+      "id": 0,
+      "id_string": "string"
+    }
+    
+    
+
+##  DeliveryLiquidate
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+time | integer(int64) | Optional | readOnly: true | 强制平仓时间  
+contract | string | Optional | readOnly: true | 合约标识  
+leverage | string | Optional | readOnly: true | 杠杆倍数，公共接口无该字段返回  
+size | integer(int64) | Optional | readOnly: true | 仓位大小  
+margin | string | Optional | readOnly: true | 保证金，公共接口无该字段返回  
+entry_price | string | Optional | readOnly: true | 平均开仓价，公共接口无该字段返回  
+liq_price | string | Optional | readOnly: true | 强制平仓价，公共接口无该字段返回  
+mark_price | string | Optional | readOnly: true | 市场标记价，公共接口无该字段返回  
+order_id | integer(int64) | Optional | readOnly: true | 强平委托ID，公共接口无该字段返回  
+order_price | string | Optional | readOnly: true | 强平委托价  
+fill_price | string | Optional | readOnly: true | 强平委托吃单平均成交价  
+left | integer(int64) | Optional | readOnly: true | 强平委托挂单大小  
+      
+    
+    {
+      "time": 0,
+      "contract": "string",
+      "leverage": "string",
+      "size": 0,
+      "margin": "string",
+      "entry_price": "string",
+      "liq_price": "string",
+      "mark_price": "string",
+      "order_id": 0,
+      "order_price": "string",
+      "fill_price": "string",
+      "left": 0
+    }
+    
+    
+
+##  DeliverySettlement
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+time | integer(int64) | Optional | readOnly: true | 强制平仓时间  
+contract | string | Optional | readOnly: true | 合约标识  
+leverage | string | Optional | readOnly: true | 杠杆倍数  
+size | integer(int64) | Optional | readOnly: true | 仓位大小  
+margin | string | Optional | readOnly: true | 保证金  
+entry_price | string | Optional | readOnly: true | 平均开仓价  
+settle_price | string | Optional | readOnly: true | 结算价  
+profit | string | Optional | readOnly: true | 盈利  
+fee | string | Optional | readOnly: true | 结算费  
+      
+    
+    {
+      "time": 0,
+      "contract": "string",
+      "leverage": "string",
+      "size": 0,
+      "margin": "string",
+      "entry_price": "string",
+      "settle_price": "string",
+      "profit": "string",
+      "fee": "string"
+    }
+    
+    
+
+##  DeliveryAccountBook
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+time | number(double) | Optional |  | 时间  
+change | string | Optional |  | 变更金额  
+balance | string | Optional |  | 变更后账户余额  
+type | string | Optional | enum: ["dnw","pnl","fee","refr","fund","point_dnw","point_fee","point_refr","bonus_offset"] | 变更类型：  
+  
+\- dnw: 转入转出  
+\- pnl: 减仓盈亏  
+\- fee: 交易手续费  
+\- refr: 推荐人返佣  
+\- fund: 资金费用  
+\- point_dnw: 点卡转入转出  
+\- point_fee: 点卡交易手续费  
+\- point_refr: 点卡推荐人返佣  
+\- bonus_offset: 体验金抵扣  
+text | string | Optional |  | 注释  
+contract | string | Optional |  | 合约标识，只有2023-10-30后的数据才有该字段  
+trade_id | string | Optional |  | 成交 id  
+id | string | Optional |  | 账户变更记录 id  
+      
+    
+    {
+      "time": 0,
+      "change": "string",
+      "balance": "string",
+      "type": "dnw",
+      "text": "string",
+      "contract": "string",
+      "trade_id": "string",
+      "id": "string"
+    }
+    
+    
+
 ##  DeliveryOrderBook
 
-###  属性
+类型 | 约束  
+---|---  
+object | required: ["asks","bids"]  
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-id | integer(int64) | false | none | 深度更新 ID，深度每发生一次变化，该 ID 加 1，只有设置 `with_id=true` 时才返回  
-current | number(double) | false | none | 接口数据返回时间戳  
-update | number(double) | false | none | 深度变化时间戳  
-asks | array | true | none | 卖方深度列表  
-» DeliveryOrderBookItem | object | false | none | none  
-»» p | string | false | none | 价格 (计价货币)  
-»» s | integer(int64) | false | none | 数量  
-» bids | array | true | none | 买方深度列表  
-»» DeliveryOrderBookItem | object | false | none | none  
-»»» p | string | false | none | 价格 (计价货币)  
-»»» s | integer(int64) | false | none | 数量  
+id | integer(int64) | Optional |  | 深度更新 ID，深度每发生一次变化，该 ID 加 1，只有设置 `with_id=true` 时才返回  
+current | number(double) | Optional |  | 接口数据返回时间戳  
+update | number(double) | Optional |  | 深度变化时间戳  
+asks | array | Required |  | 卖方深度列表  
+bids | array | Required |  | 买方深度列表  
+  
+**asks**
+
+卖方深度列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**asks / items**
+
+DeliveryOrderBookItem
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+p | string | Optional |  | 价格 (计价货币)  
+s | integer(int64) | Optional |  | 数量  
+  
+**bids**
+
+买方深度列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**bids / items**
+
+DeliveryOrderBookItem
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+p | string | Optional |  | 价格 (计价货币)  
+s | integer(int64) | Optional |  | 数量  
       
     
     {
@@ -5277,35 +6111,287 @@ asks | array | true | none | 卖方深度列表
     
     
 
+##  DeliveryOrder
+
+合约订单详情
+
+类型 | 约束  
+---|---  
+object | required: ["contract","size"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | 合约订单 ID  
+user | integer | Optional | readOnly: true | 用户 ID  
+create_time | number(double) | Optional | readOnly: true | 订单创建时间  
+finish_time | number(double) | Optional | readOnly: true | 订单结束时间，未结束订单无此字段返回  
+finish_as | string | Optional | enum: ["filled","cancelled","liquidated","ioc","auto_deleveraged","reduce_only","position_closed","reduce_out","stp"]  
+readOnly: true | 结束方式，包括：  
+  
+\- filled: 完全成交  
+\- cancelled: 用户撤销  
+\- liquidated: 强制平仓撤销  
+\- ioc: 未立即完全成交，因为tif设置为ioc  
+\- auto_deleveraged: 自动减仓撤销  
+\- reduce_only: 增持仓位撤销，因为设置reduce_only或平仓  
+\- position_closed: 因为仓位平掉了，所以挂单被撤掉  
+\- reduce_out: 只减仓被排除的不容易成交的挂单  
+\- stp: 订单发生自成交限制而被撤销  
+status | string | Optional | enum: ["open","finished"]  
+readOnly: true | 订单状态。  
+  
+\- `open`: 等待处理  
+\- `finished`: 已结束的订单  
+contract | string | Required |  | 合约标识  
+size | integer(int64) | Required |  | 必选。交易数量，正数为买入，负数为卖出。平仓委托则设置为0。  
+iceberg | integer(int64) | Optional |  | 冰山委托显示数量。0为完全不隐藏。注意，隐藏部分成交按照taker收取手续费。  
+price | string | Optional |  | 委托价。价格为0并且`tif`为`ioc`，代表市价委托。  
+close | boolean | Optional | default: false  
+writeOnly: true | 设置为 true 的时候执行平仓操作，并且`size`应设置为0  
+is_close | boolean | Optional | readOnly: true | 是否为平仓委托。对应请求中的`close`。  
+reduce_only | boolean | Optional | default: false  
+writeOnly: true | 设置为 true 的时候，为只减仓委托  
+is_reduce_only | boolean | Optional | readOnly: true | 是否为只减仓委托。对应请求中的`reduce_only`。  
+is_liq | boolean | Optional | readOnly: true | 是否为强制平仓委托  
+tif | string | Optional | enum: ["gtc","ioc","poc","fok"]  
+default: "gtc" | Time in force 策略，市价单当前只支持 ioc 模式  
+  
+\- gtc: GoodTillCancelled  
+\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
+\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
+\- fok: FillOrKill, 完全成交，或者完全取消  
+left | integer(int64) | Optional | readOnly: true | 未成交数量  
+fill_price | string | Optional | readOnly: true | 成交价  
+text | string | Optional |  | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+  
+除用户自定义信息以外，以下为内部保留字段，标识订单来源:  
+  
+\- web: 网页  
+\- api: API 调用  
+\- app: 移动端  
+\- auto_deleveraging: 自动减仓  
+\- liquidation: ⽼经典模式仓位强制平仓  
+\- liq-xxx: a. 新经典模式仓位强制平仓，包含逐仓、单向全仓、双向全仓⾮对冲仓位强平。 b. 统⼀账户单币种保证金模式逐仓强制平仓  
+\- hedge-liq-xxx: 新经典模式双向全仓对冲部分强制平仓，即同时平多空仓位  
+\- pm_liquidate: 统⼀账户跨币种保证金模式强制平仓  
+\- comb_margin_liquidate: 统⼀账户组合保证金模式强制平仓  
+\- scm_liquidate: 统⼀账户单币种保证金模式仓位强制平仓  
+\- insurance: 保险  
+tkfr | string | Optional | readOnly: true | 吃单费率  
+mkfr | string | Optional | readOnly: true | 做单费率  
+refu | integer | Optional | readOnly: true | 推荐人用户 ID  
+auto_size | string | Optional | enum: ["close_long","close_short"]  
+writeOnly: true | 双仓模式下用于设置平仓的方向，`close_long` 平多头， `close_short` 平空头，需要同时设置 `size` 为 0  
+stp_id | integer | Optional | readOnly: true | 订单所属的`STP用户组`id，同一个`STP用户组`内用户之间的订单不允许发生自成交。  
+  
+1\. 如果撮合时两个订单的 `stp_id` 非 `0` 且相等，则不成交，而是根据 `taker` 的 `stp_act` 执行相应策略。  
+2\. 没有设置`STP用户组`成交的订单，`stp_id` 默认返回 `0`。  
+stp_act | string | Optional | enum: ["co","cn","cb","-"] | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
+  
+1\. 用户在设置加入`STP用户组`后，可以通过传递 `stp_act` 来限制用户发生自成交的策略，没有传递 `stp_act` 默认按照 `cn` 的策略。  
+2\. 用户在没有设置加入`STP用户组`时，传递 `stp_act` 参数会报错。  
+3\. 用户没有使用 `stp_act` 发生成交的订单，`stp_act` 返回 `-`。  
+  
+\- cn: Cancel newest,取消新订单，保留老订单  
+\- co: Cancel oldest,取消⽼订单，保留新订单  
+\- cb: Cancel both,新旧订单都取消  
+amend_text | string | Optional | readOnly: true | 用户修改订单时备注的信息  
+      
+    
+    {
+      "id": 0,
+      "user": 0,
+      "create_time": 0,
+      "finish_time": 0,
+      "finish_as": "filled",
+      "status": "open",
+      "contract": "string",
+      "size": 0,
+      "iceberg": 0,
+      "price": "string",
+      "close": false,
+      "is_close": true,
+      "reduce_only": false,
+      "is_reduce_only": true,
+      "is_liq": true,
+      "tif": "gtc",
+      "left": 0,
+      "fill_price": "string",
+      "text": "string",
+      "tkfr": "string",
+      "mkfr": "string",
+      "refu": 0,
+      "auto_size": "close_long",
+      "stp_id": 0,
+      "stp_act": "co",
+      "amend_text": "string"
+    }
+    
+    
+
+##  DeliveryPositionClose
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+time | number(double) | Optional | readOnly: true | 平仓时间  
+contract | string | Optional | readOnly: true | 合约标识  
+side | string | Optional | enum: ["long","short"]  
+readOnly: true | 多空方向  
+  
+\- `long`: 做多  
+\- `short`: 做空  
+pnl | string | Optional | readOnly: true | 盈亏  
+pnl_pnl | string | Optional | readOnly: true | 盈亏-仓位盈亏  
+pnl_fund | string | Optional | readOnly: true | 盈亏-资金费用  
+pnl_fee | string | Optional | readOnly: true | 盈亏-手续费  
+text | string | Optional | readOnly: true | 平仓委托的来源，具体取值参见`order.text`字段  
+max_size | integer(int64) | Optional | readOnly: true | 最大持仓量  
+accum_size | integer(int64) | Optional | readOnly: true | 累计平仓量  
+first_open_time | integer(int64) | Optional | readOnly: true | 开仓时间  
+long_price | string | Optional | readOnly: true | side为long时表示开仓均价，为short时表示平仓均价  
+short_price | string | Optional | readOnly: true | side为long时表示平仓均价，为short时表示开仓均价  
+      
+    
+    {
+      "time": 0,
+      "contract": "string",
+      "side": "long",
+      "pnl": "string",
+      "pnl_pnl": "string",
+      "pnl_fund": "string",
+      "pnl_fee": "string",
+      "text": "string",
+      "max_size": 0,
+      "accum_size": 0,
+      "first_open_time": 0,
+      "long_price": "string",
+      "short_price": "string"
+    }
+    
+    
+
+##  DeliveryTrade
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 成交记录 ID  
+create_time | number(double) | Optional |  | 成交时间  
+create_time_ms | number(double) | Optional |  | 成交时间，保留 3 位小数的毫秒精度  
+contract | string | Optional |  | 合约标识  
+size | integer(int64) | Optional |  | 成交数量  
+price | string | Optional |  | 成交价格 (计价货币)  
+is_internal | boolean | Optional |  | 已废弃  
+      
+    
+    {
+      "id": 0,
+      "create_time": 0,
+      "create_time_ms": 0,
+      "contract": "string",
+      "size": 0,
+      "price": "string",
+      "is_internal": true
+    }
+    
+    
+
+##  DeliveryMyTrade
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 成交记录 ID  
+create_time | number(double) | Optional |  | 成交时间  
+contract | string | Optional |  | 合约标识  
+order_id | string | Optional |  | 成交记录关联订单 ID  
+size | integer(int64) | Optional |  | 成交数量  
+close_size | integer(int64) | Optional |  | 平仓数量:  
+  
+close_size=0 && size＞0 开多  
+close_size=0 && size＜0 开空  
+close_size>0 && size>0 && size <= close_size 平空  
+close_size>0 && size>0 && size > close_size 平空且开多  
+close_size<0 && size<0 && size >= close_size 平多  
+close_size<0 && size<0 && size < close_size 平多且开空  
+price | string | Optional |  | 成交价格  
+role | string | Optional | enum: ["taker","maker"] | 成交角色， taker - 吃单, maker - 做单  
+text | string | Optional |  | 订单的自定义信息  
+fee | string | Optional |  | 成交手续费  
+point_fee | string | Optional |  | 成交点卡手续费  
+      
+    
+    {
+      "id": 0,
+      "create_time": 0,
+      "contract": "string",
+      "order_id": "string",
+      "size": 0,
+      "close_size": 0,
+      "price": "string",
+      "role": "taker",
+      "text": "string",
+      "fee": "string",
+      "point_fee": "string"
+    }
+    
+    
+
 ##  DeliveryTicker
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-contract | string | false | none | 合约标识  
-last | string | false | none | 最新成交价  
-change_percentage | string | false | none | 涨跌百分比，跌用负数标识，如 -7.45  
-total_size | string | false | none | 当前合约总持仓量  
-low_24h | string | false | none | 最近24小时最低价  
-high_24h | string | false | none | 最近24小时最高价  
-volume_24h | string | false | none | 最近24小时成交总量  
-volume_24h_btc | string | false | none | 最近24小时成交总量，BTC单位(即将废弃，建议使用 `volume_24h_base`, `volume_24h_quote`, `volume_24h_settle`)  
-volume_24h_usd | string | false | none | 最近24小时成交总量，USD单位(即将废弃，建议使用 `volume_24h_base`, `volume_24h_quote`, `volume_24h_settle`)  
-volume_24h_base | string | false | none | 最近24小时成交量，以基础货币为单位  
-volume_24h_quote | string | false | none | 最近24小时成交量，以计价货币为单位  
-volume_24h_settle | string | false | none | 最近24小时成交量，以结算货币为单位  
-mark_price | string | false | none | 最近标记价格  
-funding_rate | string | false | none | 资金费率  
-funding_rate_indicative | string | false | none | 下一周期预测资金费率（已弃用，改用funding_rate）  
-index_price | string | false | none | 指数价格  
-quanto_base_rate | string | false | none | 已废弃  
-basis_rate | string | false | none | 基差率  
-basis_value | string | false | none | 基差数值  
-lowest_ask | string | false | none | 最新卖方最低价  
-lowest_size | string | false | none | 最新卖方最低价的挂单量  
-highest_bid | string | false | none | 最新买方最高价  
-highest_size | string | false | none | 最新买方最高价的挂单量  
+contract | string | Optional |  | 合约标识  
+last | string | Optional |  | 最新成交价  
+change_percentage | string | Optional |  | 涨跌百分比，跌用负数标识，如 -7.45  
+total_size | string | Optional |  | 当前合约总持仓量  
+low_24h | string | Optional |  | 最近24小时最低价  
+high_24h | string | Optional |  | 最近24小时最高价  
+volume_24h | string | Optional |  | 最近24小时成交总量  
+volume_24h_btc | string | Optional |  | 最近24小时成交总量，BTC单位(即将废弃，建议使用 `volume_24h_base`, `volume_24h_quote`, `volume_24h_settle`)  
+volume_24h_usd | string | Optional |  | 最近24小时成交总量，USD单位(即将废弃，建议使用 `volume_24h_base`, `volume_24h_quote`, `volume_24h_settle`)  
+volume_24h_base | string | Optional |  | 最近24小时成交量，以基础货币为单位  
+volume_24h_quote | string | Optional |  | 最近24小时成交量，以计价货币为单位  
+volume_24h_settle | string | Optional |  | 最近24小时成交量，以结算货币为单位  
+mark_price | string | Optional |  | 最近标记价格  
+funding_rate | string | Optional |  | 资金费率  
+funding_rate_indicative | string | Optional |  | 下一周期预测资金费率（已弃用，改用funding_rate）  
+index_price | string | Optional |  | 指数价格  
+quanto_base_rate | string | Optional |  | 已废弃  
+basis_rate | string | Optional |  | 基差率  
+basis_value | string | Optional |  | 基差数值  
+lowest_ask | string | Optional |  | 最新卖方最低价  
+lowest_size | string | Optional |  | 最新卖方最低价的挂单量  
+highest_bid | string | Optional |  | 最新买方最高价  
+highest_size | string | Optional |  | 最新买方最高价的挂单量  
       
     
     {
@@ -5336,93 +6422,94 @@ highest_size | string | false | none | 最新买方最高价的挂单量
     
     
 
-##  DeliverySettlement
+##  InsuranceRecord
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-time | integer(int64) | false | 只读 | 强制平仓时间  
-contract | string | false | 只读 | 合约标识  
-leverage | string | false | 只读 | 杠杆倍数  
-size | integer(int64) | false | 只读 | 仓位大小  
-margin | string | false | 只读 | 保证金  
-entry_price | string | false | 只读 | 平均开仓价  
-settle_price | string | false | 只读 | 结算价  
-profit | string | false | 只读 | 盈利  
-fee | string | false | 只读 | 结算费  
+t | integer(int64) | Optional |  | 秒 s 精度的 Unix 时间戳  
+b | string | Optional |  | 保险基金余额  
       
     
     {
-      "time": 0,
-      "contract": "string",
-      "leverage": "string",
-      "size": 0,
-      "margin": "string",
-      "entry_price": "string",
-      "settle_price": "string",
-      "profit": "string",
-      "fee": "string"
+      "t": 0,
+      "b": "string"
     }
     
     
 
 ##  DeliveryPosition
 
-_合约仓位详情_
+合约仓位详情
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-user | integer(int64) | false | 只读 | 用户ID  
-contract | string | false | 只读 | 合约标识  
-size | integer(int64) | false | 只读 | 头寸大小  
-leverage | string | false | none | 杠杆倍数，0代表全仓，正数代表逐仓  
-risk_limit | string | false | none | 风险限额  
-leverage_max | string | false | 只读 | 当前风险限额下，允许的最大杠杆倍数  
-maintenance_rate | string | false | 只读 | 风险限额的第一档维持保证金率要求  
-value | string | false | 只读 | 按结算币种标记价格计算的合约价值  
-margin | string | false | none | 保证金  
-entry_price | string | false | 只读 | 开仓价格  
-liq_price | string | false | 只读 | 爆仓价格  
-mark_price | string | false | 只读 | 合约当前标记价格  
-initial_margin | string | false | 只读 | 仓位占用的起始保证金，适用于统一账户  
-maintenance_margin | string | false | 只读 | 仓位所需的维持保证金，适用于统一账户  
-unrealised_pnl | string | false | 只读 | 未实现盈亏  
-realised_pnl | string | false | 只读 | 已实现盈亏  
-pnl_pnl | string | false | 只读 | 已实现盈亏-仓位盈亏  
-pnl_fund | string | false | 只读 | 已实现盈亏-资金费用  
-pnl_fee | string | false | 只读 | 已实现盈亏-手续费  
-history_pnl | string | false | 只读 | 已平仓的仓位总盈亏  
-last_close_pnl | string | false | 只读 | 最近一次平仓的盈亏  
-realised_point | string | false | 只读 | 点卡已实现盈亏  
-history_point | string | false | 只读 | 已平仓的点卡总盈亏  
-adl_ranking | integer | false | 只读 | 自动减仓排名，共1-5个等级，`1` 最高，`5` 最低，特殊情况 `6` 是没有持仓或在爆仓中  
-pending_orders | integer | false | 只读 | 当前未完成委托数量  
-close_order | object|null | false | 只读 | 当前平仓委托信息，如果没有平仓则为`null`  
-» id | integer(int64) | false | none | 委托ID  
-» price | string | false | none | 委托价格  
-» is_liq | boolean | false | none | 是否为强制平仓  
-mode | string | false | none | 持仓模式。包括：  
+user | integer(int64) | Optional | readOnly: true | 用户ID  
+contract | string | Optional | readOnly: true | 合约标识  
+size | integer(int64) | Optional | readOnly: true | 头寸大小  
+leverage | string | Optional |  | 杠杆倍数，0代表全仓，正数代表逐仓  
+risk_limit | string | Optional |  | 风险限额  
+leverage_max | string | Optional | readOnly: true | 当前风险限额下，允许的最大杠杆倍数  
+maintenance_rate | string | Optional | readOnly: true | 风险限额的第一档维持保证金率要求  
+value | string | Optional | readOnly: true | 按结算币种标记价格计算的合约价值  
+margin | string | Optional |  | 保证金  
+entry_price | string | Optional | readOnly: true | 开仓价格  
+liq_price | string | Optional | readOnly: true | 爆仓价格  
+mark_price | string | Optional | readOnly: true | 合约当前标记价格  
+initial_margin | string | Optional | readOnly: true | 仓位占用的起始保证金，适用于统一账户  
+maintenance_margin | string | Optional | readOnly: true | 仓位所需的维持保证金，适用于统一账户  
+unrealised_pnl | string | Optional | readOnly: true | 未实现盈亏  
+realised_pnl | string | Optional | readOnly: true | 已实现盈亏  
+pnl_pnl | string | Optional | readOnly: true | 已实现盈亏-仓位盈亏  
+pnl_fund | string | Optional | readOnly: true | 已实现盈亏-资金费用  
+pnl_fee | string | Optional | readOnly: true | 已实现盈亏-手续费  
+history_pnl | string | Optional | readOnly: true | 已平仓的仓位总盈亏  
+last_close_pnl | string | Optional | readOnly: true | 最近一次平仓的盈亏  
+realised_point | string | Optional | readOnly: true | 点卡已实现盈亏  
+history_point | string | Optional | readOnly: true | 已平仓的点卡总盈亏  
+adl_ranking | integer | Optional | readOnly: true | 自动减仓排名，共1-5个等级，`1` 最高，`5` 最低，特殊情况 `6` 是没有持仓或在爆仓中  
+pending_orders | integer | Optional | readOnly: true | 当前未完成委托数量  
+close_order | object|null | Optional | nullable: true  
+readOnly: true | 当前平仓委托信息，如果没有平仓则为`null`  
+mode | string | Optional | enum: ["single","dual_long","dual_short"] | 持仓模式。包括：  
   
 \- `single`: 单向持仓模式  
 \- `dual_long`: 双向持仓模式下的做多仓位  
 \- `dual_short`: 双向持仓模式下的做空仓位  
-cross_leverage_limit | string | false | none | 全仓模式下的杠杆倍数（即 `leverage` 为 0 时）  
-update_time | integer(int64) | false | 只读 | 最后更新时间  
-update_id | integer(int64) | false | 只读 | 更新id，仓位每更新一次，数值会+1  
-open_time | integer(int64) | false | none | 开仓时间  
-risk_limit_table | string | false | 只读 | 风险限额梯度表id  
-average_maintenance_rate | string | false | 只读 | 平均维持保证金率  
+cross_leverage_limit | string | Optional |  | 全仓模式下的杠杆倍数（即 `leverage` 为 0 时）  
+update_time | integer(int64) | Optional | readOnly: true | 最后更新时间  
+update_id | integer(int64) | Optional | readOnly: true | 更新id，仓位每更新一次，数值会+1  
+open_time | integer(int64) | Optional |  | 开仓时间  
+risk_limit_table | string | Optional | readOnly: true | 风险限额梯度表id  
+average_maintenance_rate | string | Optional | readOnly: true | 平均维持保证金率  
   
-####  枚举值列表
+**close_order**
 
-枚举值列表属性 | 值  
+当前平仓委托信息，如果没有平仓则为`null`
+
+类型 | 约束  
 ---|---  
-mode | single  
-mode | dual_long  
-mode | dual_short  
+object|null | nullable: true  
+readOnly: true  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 委托ID  
+price | string | Optional |  | 委托价格  
+is_liq | boolean | Optional |  | 是否为强制平仓  
       
     
     {
@@ -5463,446 +6550,4 @@ mode | dual_short
       "open_time": 0,
       "risk_limit_table": "string",
       "average_maintenance_rate": "string"
-    }
-    
-    
-
-##  DeliveryMyTrade
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | integer(int64) | false | none | 成交记录 ID  
-create_time | number(double) | false | none | 成交时间  
-contract | string | false | none | 合约标识  
-order_id | string | false | none | 成交记录关联订单 ID  
-size | integer(int64) | false | none | 成交数量  
-close_size | integer(int64) | false | none | 平仓数量:  
-  
-close_size=0 && size＞0 开多  
-close_size=0 && size＜0 开空  
-close_size>0 && size>0 && size <= close_size 平空  
-close_size>0 && size>0 && size > close_size 平空且开多  
-close_size<0 && size<0 && size >= close_size 平多  
-close_size<0 && size<0 && size < close_size 平多且开空  
-price | string | false | none | 成交价格  
-role | string | false | none | 成交角色， taker - 吃单, maker - 做单  
-text | string | false | none | 订单的自定义信息  
-fee | string | false | none | 成交手续费  
-point_fee | string | false | none | 成交点卡手续费  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-role | taker  
-role | maker  
-      
-    
-    {
-      "id": 0,
-      "create_time": 0,
-      "contract": "string",
-      "order_id": "string",
-      "size": 0,
-      "close_size": 0,
-      "price": "string",
-      "role": "taker",
-      "text": "string",
-      "fee": "string",
-      "point_fee": "string"
-    }
-    
-    
-
-##  DeliveryTrade
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | integer(int64) | false | none | 成交记录 ID  
-create_time | number(double) | false | none | 成交时间  
-create_time_ms | number(double) | false | none | 成交时间，保留 3 位小数的毫秒精度  
-contract | string | false | none | 合约标识  
-size | integer(int64) | false | none | 成交数量  
-price | string | false | none | 成交价格 (计价货币)  
-is_internal | boolean | false | none | 已废弃  
-      
-    
-    {
-      "id": 0,
-      "create_time": 0,
-      "create_time_ms": 0,
-      "contract": "string",
-      "size": 0,
-      "price": "string",
-      "is_internal": true
-    }
-    
-    
-
-##  DeliveryOrder
-
-_合约订单详情_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | integer(int64) | false | 只读 | 合约订单 ID  
-user | integer | false | 只读 | 用户 ID  
-create_time | number(double) | false | 只读 | 订单创建时间  
-finish_time | number(double) | false | 只读 | 订单结束时间，未结束订单无此字段返回  
-finish_as | string | false | 只读 | 结束方式，包括：  
-  
-\- filled: 完全成交  
-\- cancelled: 用户撤销  
-\- liquidated: 强制平仓撤销  
-\- ioc: 未立即完全成交，因为tif设置为ioc  
-\- auto_deleveraged: 自动减仓撤销  
-\- reduce_only: 增持仓位撤销，因为设置reduce_only或平仓  
-\- position_closed: 因为仓位平掉了，所以挂单被撤掉  
-\- reduce_out: 只减仓被排除的不容易成交的挂单  
-\- stp: 订单发生自成交限制而被撤销  
-status | string | false | 只读 | 订单状态。  
-  
-\- `open`: 等待处理  
-\- `finished`: 已结束的订单  
-contract | string | true | none | 合约标识  
-size | integer(int64) | true | none | 必选。交易数量，正数为买入，负数为卖出。平仓委托则设置为0。  
-iceberg | integer(int64) | false | none | 冰山委托显示数量。0为完全不隐藏。注意，隐藏部分成交按照taker收取手续费。  
-price | string | false | none | 委托价。价格为0并且`tif`为`ioc`，代表市价委托。  
-close | boolean | false | 只写 | 设置为 true 的时候执行平仓操作，并且`size`应设置为0  
-is_close | boolean | false | 只读 | 是否为平仓委托。对应请求中的`close`。  
-reduce_only | boolean | false | 只写 | 设置为 true 的时候，为只减仓委托  
-is_reduce_only | boolean | false | 只读 | 是否为只减仓委托。对应请求中的`reduce_only`。  
-is_liq | boolean | false | 只读 | 是否为强制平仓委托  
-tif | string | false | none | Time in force 策略，市价单当前只支持 ioc 模式  
-  
-\- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
-\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
-\- fok: FillOrKill, 完全成交，或者完全取消  
-left | integer(int64) | false | 只读 | 未成交数量  
-fill_price | string | false | 只读 | 成交价  
-text | string | false | none | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
-  
-1\. 必须以 `t-` 开头  
-2\. 不计算 `t-` ，长度不能超过 28 字节  
-3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
-  
-除用户自定义信息以外，以下为内部保留字段，标识订单来源:  
-  
-\- web: 网页  
-\- api: API 调用  
-\- app: 移动端  
-\- auto_deleveraging: 自动减仓  
-\- liquidation: ⽼经典模式仓位强制平仓  
-\- liq-xxx: a. 新经典模式仓位强制平仓，包含逐仓、单向全仓、双向全仓⾮对冲仓位强平。 b. 统⼀账户单币种保证金模式逐仓强制平仓  
-\- hedge-liq-xxx: 新经典模式双向全仓对冲部分强制平仓，即同时平多空仓位  
-\- pm_liquidate: 统⼀账户跨币种保证金模式强制平仓  
-\- comb_margin_liquidate: 统⼀账户组合保证金模式强制平仓  
-\- scm_liquidate: 统⼀账户单币种保证金模式仓位强制平仓  
-\- insurance: 保险  
-tkfr | string | false | 只读 | 吃单费率  
-mkfr | string | false | 只读 | 做单费率  
-refu | integer | false | 只读 | 推荐人用户 ID  
-auto_size | string | false | 只写 | 双仓模式下用于设置平仓的方向，`close_long` 平多头， `close_short` 平空头，需要同时设置 `size` 为 0  
-stp_id | integer | false | 只读 | 订单所属的`STP用户组`id，同一个`STP用户组`内用户之间的订单不允许发生自成交。  
-  
-1\. 如果撮合时两个订单的 `stp_id` 非 `0` 且相等，则不成交，而是根据 `taker` 的 `stp_act` 执行相应策略。  
-2\. 没有设置`STP用户组`成交的订单，`stp_id` 默认返回 `0`。  
-stp_act | string | false | none | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
-  
-1\. 用户在设置加入`STP用户组`后，可以通过传递 `stp_act` 来限制用户发生自成交的策略，没有传递 `stp_act` 默认按照 `cn` 的策略。  
-2\. 用户在没有设置加入`STP用户组`时，传递 `stp_act` 参数会报错。  
-3\. 用户没有使用 `stp_act` 发生成交的订单，`stp_act` 返回 `-`。  
-  
-\- cn: Cancel newest,取消新订单，保留老订单  
-\- co: Cancel oldest,取消⽼订单，保留新订单  
-\- cb: Cancel both,新旧订单都取消  
-amend_text | string | false | 只读 | 用户修改订单时备注的信息  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-finish_as | filled  
-finish_as | cancelled  
-finish_as | liquidated  
-finish_as | ioc  
-finish_as | auto_deleveraged  
-finish_as | reduce_only  
-finish_as | position_closed  
-finish_as | reduce_out  
-finish_as | stp  
-status | open  
-status | finished  
-tif | gtc  
-tif | ioc  
-tif | poc  
-tif | fok  
-auto_size | close_long  
-auto_size | close_short  
-stp_act | co  
-stp_act | cn  
-stp_act | cb  
-stp_act | -  
-      
-    
-    {
-      "id": 0,
-      "user": 0,
-      "create_time": 0,
-      "finish_time": 0,
-      "finish_as": "filled",
-      "status": "open",
-      "contract": "string",
-      "size": 0,
-      "iceberg": 0,
-      "price": "string",
-      "close": false,
-      "is_close": true,
-      "reduce_only": false,
-      "is_reduce_only": true,
-      "is_liq": true,
-      "tif": "gtc",
-      "left": 0,
-      "fill_price": "string",
-      "text": "string",
-      "tkfr": "string",
-      "mkfr": "string",
-      "refu": 0,
-      "auto_size": "close_long",
-      "stp_id": 0,
-      "stp_act": "co",
-      "amend_text": "string"
-    }
-    
-    
-
-##  FuturesPriceTriggeredOrder
-
-_合约价格单详情_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-initial | object | true | none | none  
-» contract | string | true | none | 合约标识  
-» size | integer(int64) | false | none | 代表需要平仓的合约张数，全平仓:size=0  
-部分平仓:plan-close-short-position size>0   
-部分平仓:plan-close-long-position size<0  
-» amount | string | false | none | 同size参数，用于兼容小数,同时存在时以amount为准  
-» price | string | true | none | 交易价，当价格为 0 时，表示通过市价方式来下单  
-» close | boolean | false | 只写 | 单仓模式全部平仓时,必须设置为true执行平仓操作  
-单仓模式部分平仓时/双仓模式下，可以不设置close，或close=false  
-» tif | string | false | none | Time in force 策略,默认为gtc，市价单当前只支持 ioc 模式市价单当前只支持 ioc 模式  
-  
-\- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled  
-» text | string | false | none | 订单的来源，包括：  
-  
-\- web: 网页  
-\- api: API 调用  
-\- app: 移动端  
-» reduce_only | boolean | false | none | 设置为 true 的时候执行自动减仓操作，设为 true可确保订单不会开新仓，只用于平仓或减仓  
-» auto_size | string | false | 只写 | 单仓模式不需设置auto_size  
-双仓模式全部平仓（size=0）时，必须设置auto_size，close_long 平多头， close_short 平空头  
-双仓模式部分平仓（size≠0）时，不需设置auto_size  
-» is_reduce_only | boolean | false | 只读 | 是否为只减仓委托。对应请求中的`reduce_only`。  
-» is_close | boolean | false | 只读 | 是否为平仓委托。对应请求中的`close`。  
-trigger | object | true | none | none  
-» strategy_type | integer(int32) | false | none | 触发策略  
-  
-\- 0: 价格触发，即当价格满足条件时触发  
-\- 1: 价差触发，即指定 `price_type` 的最近一次价格减去倒数第二个价格的差值  
-目前暂时只支持0即最新成交价  
-» price_type | integer(int32) | false | none | 参考价格类型。 0 - 最新成交价，1 - 标记价格，2 - 指数价格  
-» price | string | true | none | 价格触发时为价格，价差触发时为价差  
-» rule | integer(int32) | true | none | 价格条件类型  
-  
-\- 1: 表示根据 `strategy_type` 和 `price_type` 算出的价格大于等于 `Trigger.Price` 时触发，同时Trigger.Price must > last_price  
-\- 2: 表示根据 `strategy_type` 和 `price_type` 算出的价格小于等于 `Trigger.Price` 时触发，同时Trigger.Price must < last_price  
-» expiration | integer | false | none | 最长等待触发时间，超时则取消该订单，单位是秒 s  
-id | integer(int64) | false | 只读 | 自动订单 ID  
-id_string | string | false | 只读 | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
-前端展示订单编号或需要字符串类型唯一标识时建议使用本字段；与 `id` 一一对应。合约价格触发单相关 REST 与 `futures.orders`、`futures.autoorders` 等 WebSocket 推送中的同名字段含义一致。  
-user | integer | false | 只读 | 用户 ID  
-create_time | number(double) | false | 只读 | 创建时间  
-finish_time | number(double) | false | 只读 | 结束时间  
-trade_id | integer(int64) | false | 只读 | 触发后委托单ID  
-status | string | false | 只读 | 订单状态  
-  
-\- `open`: 活跃中  
-\- `finished`: 已结束  
-\- `inactive`: 未生效，只针对委托单止盈止损  
-\- `invalid`: 无效，只针对委托单止盈止损  
-finish_as | string | false | 只读 | 结束状态，cancelled - 被取消；succeeded - 成功；failed - 失败；expired - 过期  
-reason | string | false | 只读 | 订单结束的附加描述信息  
-order_type | string | false | none | 止盈止损的类型，包括：  
-  
-\- `close-long-order`: 委托单止盈止损，平做多仓  
-\- `close-short-order`: 委托单止盈止损，平做空仓  
-\- `close-long-position`: 仓位止盈止损，用于全部平多仓  
-\- `close-short-position`: 仓位止盈止损，用于全部平空仓  
-\- `plan-close-long-position`: 仓位计划止盈止损，用于全部平多仓或部分平多仓  
-\- `plan-close-short-position`: 仓位计划止盈止损，用于全部平空仓或部分平空仓  
-  
-其中委托单止盈止损的两种类型只读，不能通过请求传入  
-me_order_id | integer(int64) | false | 只读 | 委托单止盈止损对应的委托 ID  
-pos_margin_mode | string | false | none | 仓位保证金模式：`isolated`（逐仓）、`cross`（全仓）。  
-在简易分仓模式下服务端会返回；写入场景下请仅使用下列取值。  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-tif | gtc  
-tif | ioc  
-strategy_type | 0  
-strategy_type | 1  
-price_type | 0  
-price_type | 1  
-price_type | 2  
-rule | 1  
-rule | 2  
-status | open  
-status | finished  
-status | inactive  
-status | invalid  
-finish_as | cancelled  
-finish_as | succeeded  
-finish_as | failed  
-finish_as | expired  
-pos_margin_mode | isolated  
-pos_margin_mode | cross  
-      
-    
-    {
-      "initial": {
-        "contract": "string",
-        "size": 0,
-        "amount": "string",
-        "price": "string",
-        "close": false,
-        "tif": "gtc",
-        "text": "string",
-        "reduce_only": false,
-        "auto_size": "string",
-        "is_reduce_only": true,
-        "is_close": true
-      },
-      "trigger": {
-        "strategy_type": 0,
-        "price_type": 0,
-        "price": "string",
-        "rule": 1,
-        "expiration": 0
-      },
-      "id": 0,
-      "id_string": "string",
-      "user": 0,
-      "create_time": 0,
-      "finish_time": 0,
-      "trade_id": 0,
-      "status": "open",
-      "finish_as": "cancelled",
-      "reason": "string",
-      "order_type": "string",
-      "me_order_id": 0,
-      "pos_margin_mode": "isolated"
-    }
-    
-    
-
-##  DeliveryAccountBook
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-time | number(double) | false | none | 时间  
-change | string | false | none | 变更金额  
-balance | string | false | none | 变更后账户余额  
-type | string | false | none | 变更类型：  
-  
-\- dnw: 转入转出  
-\- pnl: 减仓盈亏  
-\- fee: 交易手续费  
-\- refr: 推荐人返佣  
-\- fund: 资金费用  
-\- point_dnw: 点卡转入转出  
-\- point_fee: 点卡交易手续费  
-\- point_refr: 点卡推荐人返佣  
-\- bonus_offset: 体验金抵扣  
-text | string | false | none | 注释  
-contract | string | false | none | 合约标识，只有2023-10-30后的数据才有该字段  
-trade_id | string | false | none | 成交 id  
-id | string | false | none | 账户变更记录 id  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-type | dnw  
-type | pnl  
-type | fee  
-type | refr  
-type | fund  
-type | point_dnw  
-type | point_fee  
-type | point_refr  
-type | bonus_offset  
-      
-    
-    {
-      "time": 0,
-      "change": "string",
-      "balance": "string",
-      "type": "dnw",
-      "text": "string",
-      "contract": "string",
-      "trade_id": "string",
-      "id": "string"
-    }
-    
-    
-
-##  TriggerOrderResponse
-
-_TriggerOrderResponse_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | integer(int64) | false | none | 自动订单 ID  
-id_string | string | false | 只读 | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
-前端展示订单编号或需要字符串类型唯一标识时建议使用本字段；与 `id` 一一对应。合约价格触发单相关 REST 与 `futures.orders`、`futures.autoorders` 等 WebSocket 推送中的同名字段含义一致。  
-      
-    
-    {
-      "id": 0,
-      "id_string": "string"
-    }
-    
-    
-
-##  InsuranceRecord
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-t | integer(int64) | false | none | 秒 s 精度的 Unix 时间戳  
-b | string | false | none | 保险基金余额  
-      
-    
-    {
-      "t": 0,
-      "b": "string"
     }

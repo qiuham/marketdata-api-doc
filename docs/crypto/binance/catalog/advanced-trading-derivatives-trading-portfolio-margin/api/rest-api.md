@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api
 api_type: REST
-updated_at: 2026-11-18 18:48:23.667435
+updated_at: 2026-11-19 18:51:44.177541
 ---
 
 # Portfolio Margin REST API

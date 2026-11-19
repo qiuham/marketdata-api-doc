@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/api-reference/unified-ws/set_preference'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Set Preference
@@ -43,7 +43,7 @@ The permitted leverage depends on the market's margin schedule and the account's
 >
 > **token** `string` *required*
 >
-> WebSocket authentication token. See the [Unified WebSocket authentication flow](https://docs.kraken.com/exchange/api-reference/unified-websocket#authentication).
+> WebSocket authentication token. See the [Unified WebSocket authentication flow](https://docs.kraken.com/exchange/api-reference/unified-websocket.md#authentication).
 >
 > **leverage\_mode** `object` *required*
 >

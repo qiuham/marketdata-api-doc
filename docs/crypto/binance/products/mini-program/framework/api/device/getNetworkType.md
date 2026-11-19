@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/device/getNetworkType
 api_type: Guide
-updated_at: 2026-11-18 18:46:52.503585
+updated_at: 2026-11-19 18:50:05.265014
 ---
 
 # bn.getNetworkType

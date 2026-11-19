@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/Introduction
 api_type: Guide
-updated_at: 2026-11-18 18:59:24.974434
+updated_at: 2026-11-19 19:06:03.566666
 ---
 
 # Introduction

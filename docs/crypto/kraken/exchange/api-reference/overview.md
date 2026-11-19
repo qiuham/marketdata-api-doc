@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/api-reference/overview'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Exchange API reference
@@ -43,9 +43,9 @@ Order management, account data, market data, funding, and Earn on Kraken's Spot 
 
 Perpetuals and dated contracts on BTC, ETH, and more.
 
-> [card] [Derivatives REST](https://docs.kraken.com/api-reference/market-data/get-tickers.md)
+> [card] [Derivatives REST](https://docs.kraken.com/exchange/api-reference/futures-rest.md)
 >
-> Order entry, account, positions, fills, and historical data.
+> Deprecated. Decommissioned on 1 March 2027. Order entry, account, positions, fills, and historical data.
 
 > [card] [Derivatives WebSocket](https://docs.kraken.com/exchange/api-reference/futures-websocket.md)
 >

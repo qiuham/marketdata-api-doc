@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-contract-position
 api_type: REST
-updated_at: 2026-11-18 19:01:11.965469
+updated_at: 2026-11-19 19:07:48.629853
 ---
 
 # Classic Contract Position API

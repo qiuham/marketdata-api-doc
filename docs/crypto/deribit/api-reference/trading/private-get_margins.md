@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-get_margins
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:19.728942
+updated_at: 2026-11-19 19:05:55.968824
 ---
 
 # private/get_margins
@@ -326,5 +326,5 @@ components:
 - [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md)
 - [Using the currency Parameter](https://docs.deribit.com/articles/currency-parameter.md)
 - [private/get_position](https://docs.deribit.com/api-reference/account-management/private-get_position.md)
-- [private/get_subaccounts](https://docs.deribit.com/api-reference/account-management/private-get_subaccounts.md)
 - [private/get_order_margin_by_ids](https://docs.deribit.com/api-reference/trading/private-get_order_margin_by_ids.md)
+- [private/get_subaccounts](https://docs.deribit.com/api-reference/account-management/private-get_subaccounts.md)

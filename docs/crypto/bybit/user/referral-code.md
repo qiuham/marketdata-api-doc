@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/referral-code
 api_type: REST
-updated_at: 2026-11-18 18:51:35.351297
+updated_at: 2026-11-19 18:55:38.937621
 ---
 
 # Get Referral Code

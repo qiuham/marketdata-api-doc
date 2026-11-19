@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/agent-hub
 api_type: Guide
-updated_at: 2026-11-18 18:59:24.975344
+updated_at: 2026-11-19 19:06:03.616364
 ---
 
 # Agent Hub

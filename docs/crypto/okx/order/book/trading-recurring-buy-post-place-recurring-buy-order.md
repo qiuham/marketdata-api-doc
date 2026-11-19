@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-recurring-buy-post-place-recurring-buy-order
 anchor_id: order-book-trading-recurring-buy-post-place-recurring-buy-order
 api_type: API
-updated_at: 2026-11-18 18:57:46.944535
+updated_at: 2026-11-19 19:03:18.163135
 ---
 
 # POST / Place recurring buy order

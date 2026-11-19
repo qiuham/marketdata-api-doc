@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/investment-and-services-vip-loan/api/rest-api
 api_type: REST
-updated_at: 2026-11-18 18:48:32.730614
+updated_at: 2026-11-19 18:51:55.989449
 ---
 
 # VIP Loan REST API

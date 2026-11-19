@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/portfolio-management
 api_type: Starbase
-updated_at: 2026-11-18 18:59:11.674591
+updated_at: 2026-11-19 19:05:49.430870
 ---
 
 # Portfolio Management
@@ -82,4 +82,4 @@ Portfolio management complements but does not replace other Starbase risk featur
 - [Creating a Starbase API Key](https://docs.deribit.com/starbase/creating-api-key.md)
 - [Starbase API Rate Limits](https://docs.deribit.com/starbase/api-rate-limits.md)
 - [REST Order Gateway Authentication](https://docs.deribit.com/starbase/rest-authentication.md)
-- [Starbase Connectivity Quickstart](https://docs.deribit.com/starbase/quickstart.md)
+- [Order Management](https://docs.deribit.com/articles/order-management-best-practices.md)

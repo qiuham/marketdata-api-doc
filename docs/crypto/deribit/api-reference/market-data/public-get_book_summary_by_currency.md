@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_book_summary_by_currency
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:16.672537
+updated_at: 2026-11-19 19:05:53.375440
 ---
 
 # public/get_book_summary_by_currency

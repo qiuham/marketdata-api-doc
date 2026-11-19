@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/sports-match-list
 api_type: REST
-updated_at: 2026-11-18 18:49:04.588452
+updated_at: 2026-11-19 18:52:36.542965
 ---
 
 # Get Sports Match List

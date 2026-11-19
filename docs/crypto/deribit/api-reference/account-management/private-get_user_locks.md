@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-get_user_locks
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:13.949202
+updated_at: 2026-11-19 19:05:51.014851
 ---
 
 # private/get_user_locks

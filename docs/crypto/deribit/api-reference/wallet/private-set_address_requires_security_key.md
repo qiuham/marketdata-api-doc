@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-set_address_requires_security_key
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:22.028810
+updated_at: 2026-11-19 19:05:59.458855
 ---
 
 # private/set_address_requires_security_key
@@ -165,8 +165,8 @@ paths:
           in: query
           required: true
           schema:
-            example: true
             type: boolean
+            example: true
           description: If `true`, withdrawals to the address require a security key
       requestBody:
         content:

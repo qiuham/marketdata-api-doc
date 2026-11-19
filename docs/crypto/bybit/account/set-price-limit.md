@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/set-price-limit
 api_type: Account
-updated_at: 2026-11-18 18:48:53.251704
+updated_at: 2026-11-19 18:52:21.853793
 ---
 
 # Set Price Limit Behaviour

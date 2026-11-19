@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/agentic-wallet/use-cases/basics/send-tokens
 api_type: Guide
-updated_at: 2026-11-18 18:42:59.922475
+updated_at: 2026-11-19 18:46:05.349993
 ---
 
 # Send Tokens

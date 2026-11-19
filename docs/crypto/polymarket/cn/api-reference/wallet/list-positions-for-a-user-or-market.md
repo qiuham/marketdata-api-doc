@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/wallet/list-positions-for-a-user-or-market'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # 获取用户或市场的仓位

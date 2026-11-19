@@ -2,14 +2,27 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-toggle_subaccount_login
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:15.078133
+updated_at: 2026-11-19 19:05:51.632971
 ---
 
 # private/toggle_subaccount_login
 
 > Enables or disables direct login access for a subaccount. When login is disabled, the subaccount cannot be accessed directly using email and password authentication, but can still be accessed through the main account.
 
-If login is disabled while an active session exists for the subaccount, that session will be immediately terminated.
+If login is disabled while an active session exists for the subaccount, that session will be immediately terminated (all sessions of the subaccount are dropped). Requesting the state the subaccount already has is accepted and returns `ok`.
+
+**Access & Restrictions:**
+- Must be called by the main account that owns the subaccount (`sid`). Any other account is rejected with `13009` (`unauthorized`); a removed subaccount returns `13009` with `data.reason` = `already_removed`.
+- Vault subaccounts are rejected with `14049` (`vault_subaccount_not_allowed`).
+- Also rejected for accounts without subaccount management (`13009`), retail brokers (`14021`) and locked accounts (`11098`).
+- `state` must be `enable` or `disable`; any other value returns `11043` (`bad_argument`) with `data` = `state`.
+
+**Enabling login** additionally requires:
+- no email change pending for the subaccount;
+- an email address different from the main account's email;
+- a password configured for the subaccount.
+
+**Known limitation:** if one of these conditions is not met, the call currently returns `ok` but login stays disabled. Check `login_enabled` in `private/get_subaccounts` to confirm the change.
 
 **[TFA required](https://docs.deribit.com/articles/security-keys)**
 
@@ -79,7 +92,39 @@ paths:
 
 
         If login is disabled while an active session exists for the subaccount,
-        that session will be immediately terminated.
+        that session will be immediately terminated (all sessions of the
+        subaccount are dropped). Requesting the state the subaccount already has
+        is accepted and returns `ok`.
+
+
+        **Access & Restrictions:**
+
+        - Must be called by the main account that owns the subaccount (`sid`).
+        Any other account is rejected with `13009` (`unauthorized`); a removed
+        subaccount returns `13009` with `data.reason` = `already_removed`.
+
+        - Vault subaccounts are rejected with `14049`
+        (`vault_subaccount_not_allowed`).
+
+        - Also rejected for accounts without subaccount management (`13009`),
+        retail brokers (`14021`) and locked accounts (`11098`).
+
+        - `state` must be `enable` or `disable`; any other value returns `11043`
+        (`bad_argument`) with `data` = `state`.
+
+
+        **Enabling login** additionally requires:
+
+        - no email change pending for the subaccount;
+
+        - an email address different from the main account's email;
+
+        - a password configured for the subaccount.
+
+
+        **Known limitation:** if one of these conditions is not met, the call
+        currently returns `ok` but login stays disabled. Check `login_enabled`
+        in `private/get_subaccounts` to confirm the change.
 
 
         **[TFA required](https://docs.deribit.com/articles/security-keys)**
@@ -102,7 +147,9 @@ paths:
             type: integer
             example: 7
           required: true
-          description: The user id for the subaccount
+          description: >-
+            The user id of the subaccount (must belong to the authenticated main
+            account)
         - name: state
           in: query
           schema:
@@ -112,7 +159,9 @@ paths:
               - disable
             example: enable
           required: true
-          description: enable or disable login.
+          description: >-
+            `enable` or `disable` direct login. Disabling terminates the
+            subaccount's active sessions
       requestBody:
         content:
           application/json:
@@ -187,5 +236,5 @@ components:
 - [Managing Subaccounts](https://docs.deribit.com/articles/managing-subaccounts-api.md)
 - [private/toggle_notifications_from_subaccount](https://docs.deribit.com/api-reference/account-management/private-toggle_notifications_from_subaccount.md)
 - [private/get_subaccounts](https://docs.deribit.com/api-reference/account-management/private-get_subaccounts.md)
-- [private/set_email_for_subaccount](https://docs.deribit.com/api-reference/account-management/private-set_email_for_subaccount.md)
 - [private/create_subaccount](https://docs.deribit.com/api-reference/account-management/private-create_subaccount.md)
+- [private/set_email_for_subaccount](https://docs.deribit.com/api-reference/account-management/private-set_email_for_subaccount.md)

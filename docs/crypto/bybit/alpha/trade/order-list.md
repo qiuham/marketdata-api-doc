@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/trade/order-list
 api_type: Trading
-updated_at: 2026-11-18 18:49:06.467402
+updated_at: 2026-11-19 18:52:38.768690
 ---
 
 # Get Order List

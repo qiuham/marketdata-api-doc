@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-close_position
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:19.544622
+updated_at: 2026-11-19 19:05:55.749964
 ---
 
 # private/close_position

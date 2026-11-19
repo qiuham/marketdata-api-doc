@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/trading-settings/get-the-off-book-max-leverage-cap'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Get the off-book max leverage cap

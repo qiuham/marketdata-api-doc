@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-ws-amend-order
 anchor_id: order-book-trading-trade-ws-amend-order
 api_type: WebSocket
-updated_at: 2026-11-18 18:57:45.882211
+updated_at: 2026-11-19 19:03:16.445366
 ---
 
 # WS / Amend order
@@ -154,7 +154,7 @@ msg | String | Error message
 data | Array of objects | Data  
 > ordId | String | Order ID  
 > clOrdId | String | Client Order ID as assigned by the client  
-> ts | String | Order creation time. Unix timestamp format in milliseconds, e.g. `1597026383085`. Equivalent to `cTime` in the order channel.  
+> ts | String | Amendment time. Unix timestamp format in milliseconds, e.g. `1597026383085`.  
 > reqId | String | Client Request ID as assigned by the client for order amendment  
 > sCode | String | Order status code, `0` means success  
 > sMsg | String | Order status message  
@@ -310,7 +310,7 @@ msg | String | 消息
 data | Array of objects | 请求成功后返回的数据  
 > ordId | String | 订单ID  
 > clOrdId | String | 用户提供的订单ID  
-> ts | String | 订单创建时间，Unix时间戳的毫秒数格式，如 `1597026383085`。与订单频道中的 `cTime` 相同。  
+> ts | String | 改单时间，Unix时间戳的毫秒数格式，如 `1597026383085`。  
 > reqId | String | 用户提供的reqId  
 如果用户在请求中提供reqId，则返回相应reqId  
 > sCode | String | 订单状态码，0 代表成功  

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/gift-card/general-info
 api_type: Guide
-updated_at: 2026-11-18 18:30:02.537899
+updated_at: 2026-11-19 18:32:41.345592
 ---
 
 # General Info

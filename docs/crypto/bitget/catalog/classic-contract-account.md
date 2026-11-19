@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-contract-account
 api_type: REST
-updated_at: 2026-11-18 19:01:10.896438
+updated_at: 2026-11-19 19:07:47.200527
 ---
 
 # Classic Contract Account API

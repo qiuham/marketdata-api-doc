@@ -2,14 +2,34 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-remove_subaccount
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:14.631538
+updated_at: 2026-11-19 19:05:51.223870
 ---
 
 # private/remove_subaccount
 
-> Permanently removes a subaccount. The subaccount must be empty (no positions, no open orders, and zero balance) before it can be removed.
+> Removes a subaccount from the main account. The subaccount must be empty before it can be removed.
 
-This operation cannot be undone. All subaccount data will be permanently deleted.
+Removal cannot be undone through the API. The subaccount can no longer be used or logged in to, it disappears from `private/get_subaccounts`, all of its active sessions are terminated, and its deposit addresses are moved to the main account.
+
+**Access & Restrictions:**
+- Must be called by the main account that owns the subaccount. Any other account is rejected with `13009` (`unauthorized`); an already removed subaccount returns `13009` with `data.reason` = `already_removed`.
+- Also rejected for accounts without subaccount management (`13009`), retail brokers (`14021`) and locked accounts (`11098`).
+- Vault subaccounts are rejected during access validation with `14049` (`vault_subaccount_not_allowed`).
+- Only one subaccount can be removed per main account every 5 minutes. A repeated call earlier returns `12006` (`remove_subaccount_over_limit`) with the remaining time in `data.wait` (seconds).
+
+**Removal is refused with `12007` (`subaccount_not_removable`)**; `data.reason` is one of:
+- `"has not zero equity"`: open positions, a position closed since the last daily settlement (08:00 UTC) whose realized profit/loss is not settled yet (the subaccount becomes removable after that settlement), non-zero initial or maintenance margin, or absolute equity or balance at or above the currency's minimum balance (only dust whose absolute value is below the threshold is allowed);
+- `"has opened trigger orders"`: untriggered trigger orders;
+- `"has pending deposits"`;
+- `"is owner of app"`: the subaccount owns an API application;
+- `"has active block rfq"` or `"is part of block rfq allocation"`;
+- `"is linked to a voice broker"`;
+- `"is an LSP participant"`;
+- `"has a locked portfolio, reason: <reasons>"`, where `<reasons>` is a comma-separated list such as `liquidation running`, `negative equity`, `locked by admin`, `locked on user request` or `legacy lock`.
+
+Other reason strings may be returned in rare cases.
+
+If the subaccount's portfolio could not be cleaned up or verified, or the change could not be saved, the call fails with `13008` (`request_failed`).
 
 **[TFA required](https://docs.deribit.com/articles/security-keys)**
 
@@ -72,12 +92,66 @@ paths:
         - Account Management
         - Private
       description: >+
-        Permanently removes a subaccount. The subaccount must be empty (no
-        positions, no open orders, and zero balance) before it can be removed.
+        Removes a subaccount from the main account. The subaccount must be empty
+        before it can be removed.
 
 
-        This operation cannot be undone. All subaccount data will be permanently
-        deleted.
+        Removal cannot be undone through the API. The subaccount can no longer
+        be used or logged in to, it disappears from `private/get_subaccounts`,
+        all of its active sessions are terminated, and its deposit addresses are
+        moved to the main account.
+
+
+        **Access & Restrictions:**
+
+        - Must be called by the main account that owns the subaccount. Any other
+        account is rejected with `13009` (`unauthorized`); an already removed
+        subaccount returns `13009` with `data.reason` = `already_removed`.
+
+        - Also rejected for accounts without subaccount management (`13009`),
+        retail brokers (`14021`) and locked accounts (`11098`).
+
+        - Vault subaccounts are rejected during access validation with `14049`
+        (`vault_subaccount_not_allowed`).
+
+        - Only one subaccount can be removed per main account every 5 minutes. A
+        repeated call earlier returns `12006` (`remove_subaccount_over_limit`)
+        with the remaining time in `data.wait` (seconds).
+
+
+        **Removal is refused with `12007` (`subaccount_not_removable`)**;
+        `data.reason` is one of:
+
+        - `"has not zero equity"`: open positions, a position closed since the
+        last daily settlement (08:00 UTC) whose realized profit/loss is not
+        settled yet (the subaccount becomes removable after that settlement),
+        non-zero initial or maintenance margin, or absolute equity or balance at
+        or above the currency's minimum balance (only dust whose absolute value
+        is below the threshold is allowed);
+
+        - `"has opened trigger orders"`: untriggered trigger orders;
+
+        - `"has pending deposits"`;
+
+        - `"is owner of app"`: the subaccount owns an API application;
+
+        - `"has active block rfq"` or `"is part of block rfq allocation"`;
+
+        - `"is linked to a voice broker"`;
+
+        - `"is an LSP participant"`;
+
+        - `"has a locked portfolio, reason: <reasons>"`, where `<reasons>` is a
+        comma-separated list such as `liquidation running`, `negative equity`,
+        `locked by admin`, `locked on user request` or `legacy lock`.
+
+
+        Other reason strings may be returned in rare cases.
+
+
+        If the subaccount's portfolio could not be cleaned up or verified, or
+        the change could not be saved, the call fails with `13008`
+        (`request_failed`).
 
 
         **[TFA required](https://docs.deribit.com/articles/security-keys)**
@@ -98,9 +172,12 @@ paths:
           in: query
           schema:
             type: integer
+            minimum: 1
             example: 120
           required: true
-          description: The user id for the subaccount
+          description: >-
+            The user id of the subaccount to remove (must belong to the
+            authenticated main account)
       requestBody:
         content:
           application/json:
@@ -173,5 +250,5 @@ components:
 - [Managing Subaccounts](https://docs.deribit.com/articles/managing-subaccounts-api.md)
 - [private/create_subaccount](https://docs.deribit.com/api-reference/account-management/private-create_subaccount.md)
 - [private/get_subaccounts](https://docs.deribit.com/api-reference/account-management/private-get_subaccounts.md)
-- [private/change_subaccount_name](https://docs.deribit.com/api-reference/account-management/private-change_subaccount_name.md)
 - [private/toggle_subaccount_login](https://docs.deribit.com/api-reference/account-management/private-toggle_subaccount_login.md)
+- [private/change_subaccount_name](https://docs.deribit.com/api-reference/account-management/private-change_subaccount_name.md)

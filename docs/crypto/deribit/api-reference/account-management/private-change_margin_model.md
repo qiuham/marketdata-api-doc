@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-change_margin_model
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:12.337024
+updated_at: 2026-11-19 19:05:50.033991
 ---
 
 # private/change_margin_model
@@ -119,8 +119,8 @@ paths:
         - name: dry_run
           in: query
           schema:
-            example: true
             type: boolean
+            example: true
           required: false
           description: >-
             If `true` request returns the result without switching the margining
@@ -267,4 +267,4 @@ components:
 - [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md)
 - [private/get_subaccounts](https://docs.deribit.com/api-reference/account-management/private-get_subaccounts.md)
 - [private/simulate_portfolio](https://docs.deribit.com/api-reference/account-management/private-simulate_portfolio.md)
-- [Account Model](https://docs.deribit.com/starbase/account-model.md)
+- [private/create_subaccount](https://docs.deribit.com/api-reference/account-management/private-create_subaccount.md)

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/enums
 api_type: Guide
-updated_at: 2026-11-18 18:35:09.503649
+updated_at: 2026-11-19 18:37:56.464809
 ---
 
 # ENUM Definitions

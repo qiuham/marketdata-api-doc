@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/connectivity-best-practices
 api_type: Starbase
-updated_at: 2026-11-18 18:59:10.323317
+updated_at: 2026-11-19 19:05:48.436715
 ---
 
 # Infrastructure, Connectivity & Best Practices

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/futures/ws/en
 api_type: WebSocket
-updated_at: 2026-11-18 18:57:00.934079
+updated_at: 2026-11-19 19:02:11.837318
 ---
 
 # Gate Futures WebSocket v4.0.0
@@ -52,6 +52,10 @@ WARNING
 If you use old server urls(`wss://fx-ws.gateio.ws/v4/ws` or `wss://fx-ws-testnet.gateio.ws/v4/ws`), we will use BTC contract for you.
 
 ##  Changelog
+
+2026-11-19
+
+  * 3.0 users can pass `X-Gate-Client-Send-Us` and `X-Gate-Timeout-Window-Us` in `payload.req_header` on `futures.order_place`, `futures.order_cancel`, `futures.order_amend`, and `futures.order_cancel_cp`. These two parameters take effect in the matching engine. The matching engine rejects the request when the elapsed time since the client send timestamp exceeds the timeout window. `futures.order_batch_place`, `futures.order_cancel_ids`, `futures.order_list`, and `futures.order_status` do not forward these fields. See Request timeout for 3.0 users.
 
 2026-10-22
 
@@ -7908,6 +7912,60 @@ Error Response Notification example（rate limit）
     }
     
 
+##  Request timeout for 3.0 users
+
+3.0 users can declare the client send time and an allowed timeout window on selected trading requests. A request that is already outside the window is rejected.
+
+Put both fields in `payload.req_header`. Do not put them on the WebSocket handshake, and do not put them in `req_param`. The names are case-sensitive and must match the table below. Values must be decimal integer strings, in microseconds. The server does not generate the send time. A non-empty value is forwarded unchanged.
+
+Field | Type | Required | Description  
+---|---|---|---  
+`X-Gate-Client-Send-Us` | `string` | No | Unix timestamp when the client sent the request, in microseconds. For example, `1700000000123456`  
+`X-Gate-Timeout-Window-Us` | `string` | No | Timeout window in microseconds. For example, `500000` means 500 milliseconds  
+  
+These two parameters take effect in the matching engine. When both fields contain a valid value, the matching engine keeps the request valid only if:
+
+`current time in microseconds - X-Gate-Client-Send-Us <= X-Gate-Timeout-Window-Us`
+
+A request outside that window is rejected.
+
+Supported channels:
+
+  * `futures.order_place`
+  * `futures.order_cancel`
+  * `futures.order_amend`
+  * `futures.order_cancel_cp`
+
+`futures.order_batch_place`, `futures.order_cancel_ids`, `futures.order_list`, and `futures.order_status` do not forward these fields.
+
+  * This applies only to 3.0 users. For other users, these fields are not forwarded.
+  * The window check requires both fields. If only one is set, the server still forwards that non-empty value.
+  * An empty string, or a value that is empty after trimming, is treated as omitted. Leading and trailing spaces are removed before forwarding.
+  * This is separate from `x-gate-exptime`. `x-gate-exptime` is still an absolute expiration time in milliseconds, checked by the WebSocket service when the request arrives. Do not mix that millisecond unit with the microsecond fields above.
+
+Pass the timeout fields when placing an order. Cancel, amend, and cancel-matched-open-orders use the same `req_header`. Replace `channel` and `req_param`. Login is unchanged.
+    
+    
+    {
+      "time": 1681195484,
+      "channel": "futures.order_place",
+      "event": "api",
+      "payload": {
+        "req_id": "request-id-1",
+        "req_header": {
+          "X-Gate-Client-Send-Us": "1700000000123456",
+          "X-Gate-Timeout-Window-Us": "500000"
+        },
+        "req_param": {
+          "contract": "BTC_USDT",
+          "size": "1",
+          "price": "50000",
+          "tif": "gtc"
+        }
+      }
+    }
+    
+
 ##  Login
 
 WARNING
@@ -8228,6 +8286,8 @@ Field | Type | Required | Description
 Field | Type | Required | Description  
 ---|---|---|---  
 `x-gate-exptime` | `string` | false | Specifies the expiration timestamp (in milliseconds). If the request time received by the WebSocket is later than the expiration time, the request will be rejected  
+`X-Gate-Client-Send-Us` | `string` | false | Client send time in microseconds for 3.0 users. Send it together with `X-Gate-Timeout-Window-Us`. See Request timeout for 3.0 users  
+`X-Gate-Timeout-Window-Us` | `string` | false | Timeout window in microseconds for 3.0 users. See Request timeout for 3.0 users  
   
 ####  Detail
 
@@ -8804,6 +8864,8 @@ Field | Type | Required | Description
 Field | Type | Required | Description  
 ---|---|---|---  
 `x-gate-exptime` | `string` | false | Specifies the expiration timestamp (in milliseconds). If the request time received by the WebSocket is later than the expiration time, the request will be rejected  
+`X-Gate-Client-Send-Us` | `string` | false | Client send time in microseconds for 3.0 users. Send it together with `X-Gate-Timeout-Window-Us`. See Request timeout for 3.0 users  
+`X-Gate-Timeout-Window-Us` | `string` | false | Timeout window in microseconds for 3.0 users. See Request timeout for 3.0 users  
   
 Code example: Login is required before making requests
     
@@ -9192,6 +9254,8 @@ Field | Type | Required | Description
 Field | Type | Required | Description  
 ---|---|---|---  
 `x-gate-exptime` | `string` | false | Specifies the expiration timestamp (in milliseconds). If the request time received by the WebSocket is later than the expiration time, the request will be rejected  
+`X-Gate-Client-Send-Us` | `string` | false | Client send time in microseconds for 3.0 users. Send it together with `X-Gate-Timeout-Window-Us`. See Request timeout for 3.0 users  
+`X-Gate-Timeout-Window-Us` | `string` | false | Timeout window in microseconds for 3.0 users. See Request timeout for 3.0 users  
   
 Code example: Login is required before making requests
     
@@ -9397,6 +9461,8 @@ it's different from outside's`id`
 Field | Type | Required | Description  
 ---|---|---|---  
 `x-gate-exptime` | `string` | false | Specifies the expiration timestamp (in milliseconds). If the request time received by the WebSocket is later than the expiration time, the request will be rejected  
+`X-Gate-Client-Send-Us` | `string` | false | Client send time in microseconds for 3.0 users. Send it together with `X-Gate-Timeout-Window-Us`. See Request timeout for 3.0 users  
+`X-Gate-Timeout-Window-Us` | `string` | false | Timeout window in microseconds for 3.0 users. See Request timeout for 3.0 users  
   
 ####  Detail descriptions
 
@@ -9967,4 +10033,4 @@ Order status notification example
     }
     
 
-Last Updated: 10/22/2026, 7:54:06 AM
+Last Updated: 11/19/2026, 2:06:06 AM

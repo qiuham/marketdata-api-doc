@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/trading
 api_type: REST
-updated_at: 2026-11-18 19:01:35.243634
+updated_at: 2026-11-19 19:08:09.739271
 ---
 
 # Trading
@@ -29,6 +29,8 @@ Place, amend, cancel and query UTA orders, positions, strategy / trigger orders,
 - `GET /api/v3/trade/history-orders` — Get Order History
 - `GET /api/v3/trade/fills` — Get Fill History
 - `POST /api/v3/trade/countdown-cancel-all` — CountDown Cancel All
+- `POST /api/v3/trade/place-reality-order` — Place Reality Order
+- `POST /api/v3/trade/cancel-reality-order` — Cancel Reality Order
 - `POST /api/v3/trade/close-positions` — Close All Positions
 - `POST /api/v3/account/move-positions` — Move Positions
 - `GET /api/v3/account/move-position-history` — Get Move Position History
@@ -65,9 +67,7 @@ Place, amend, cancel and query UTA orders, positions, strategy / trigger orders,
 - Rate limit: 10/sec/UID
 - Permission: UTA trade (read & write)
 
-> This endpoint now supports Reality stock trading pairs (rToken, e.g., `rAAPLUSDT`). For rToken orders the rate limit is determined by `venue`: `internal_market` (on-exchange) follows the Crypto rate limit, 10/sec/UID; the default strategy (`venue` omitted) and `lit_market` (off-exchange) follow the rToken rate limit, 5/sec/UID by default, 30/sec/UID for whitelisted users.
-
-> **Order modification is not supported for rToken orders.** To change the price or quantity of a resting rToken order, cancel it and place a new one. See the [Reality Trading Guide](/docs/uta/reality-trading-guide) for details on order routing (`venue`) and matching mechanics.
+> This endpoint now supports Reality stock trading pairs (rToken, e.g., `rAAPLUSDT`). Reality orders are subject to a separate rate limit: 5/sec/UID by default, 30/sec/UID for whitelisted users.
 
 This endpoint allows the order placement across spot, margin, or futures markets with customizable parameters, including price, quantity, and order type, etc.
 
@@ -80,7 +80,7 @@ This endpoint allows the order placement across spot, margin, or futures markets
 
 
 - **Order Check**
-  - **Futures**:`price` must meet the price multiplier and be a multiple of `priceMultiplier`, and conform to the `pricePrecision` decimal places. `qty` must be greater than or equal to `minOrderAmount` and be a multiple of `quantityMultiplier`.
+  - **Futures**:`price` must meet the price multiplier and be a multiple of `priceMultiplier`, and conform to the `pricePrecision` decimal places. `qty` must be greater than or equal to `minOrderAmount` and be a multiple of `sizeMultiplier`.
 
   - **Spot**:`price` must meet the decimal place requirement. `qty` must be greater than or equal to `minOrderAmount`.
 
@@ -150,11 +150,11 @@ Operation ID: `utaTradeOrderPlaceOrder`
 | price | string |  | Order price <br/>This field is required when the order type is a `limit` order .<br/>This field is not applicable  when the order type is a `market` order. |
 | side | string | 是 | Order side<br/>`buy`/`sell` |
 | orderType | string | 是 | Order type<br/>`limit`/`market` |
-| timeInForce | string |  | Time in force<br/>`ioc` Immediate or cancel. It must be executed immediately, with any unfilled portion canceled. <br/>`fok` Fill or kill. It must be fully executed immediately, or it is canceled entirely. <br/>`gtc` Good 'til canceled. It remains active until it is either filled or manually canceled.<br/>`post_only` Post only. It will only be added to the order book as a maker.<br/>`rpi` Retail Price Improvement order. A non-displayed limit order that provides price improvement for retail order flow. Only available for accounts with RPI market maker permissions.<br/> When orderType is `limit`, it defaults to `gtc`; <br/>when orderType is `market`, the system will execute it as `ioc`<br/>This field is ignored when trading Reality stock pairs (rtoken, e.g. rAAPLUSDT) |
+| timeInForce | string |  | Time in force<br/>`ioc` Immediate or cancel. It must be executed immediately, with any unfilled portion canceled. <br/>`fok` Fill or kill. It must be fully executed immediately, or it is canceled entirely. <br/>`gtc` Good 'til canceled. It remains active until it is either filled or manually canceled.<br/>`post_only` Post only. It will only be added to the order book as a maker.<br/>`rpi` Retail Price Improvement order. A non-displayed limit order that provides price improvement for retail order flow. Only available for accounts with RPI market maker permissions.<br/> When orderType is `limit`, it defaults to `gtc`; <br/>when orderType is `market`, the system will execute it as `ioc` |
 | posSide | string |  | Position side<br/>`long`/`short`<br/>This field is required in hedge-mode position.<br/>Available only for futures |
 | clientOid | string |  | Client order ID |
 | reduceOnly | string |  | Reduce-only identifier<br/>`yes`/`no`, default `no`; <br/>`yes` indicates that your position may only be reduced in size upon the activation of this order |
-| stpMode | string |  | [STP Mode(Self Trade Prevention)](https://www.bitget.com/support/articles/12560603812732)<br/>`none`: not setting STP(default)<br/>`cancel_taker`: cancel taker order <br/>`cancel_maker`: cancel maker order <br/>`cancel_both`: cancel both of taker and maker orders |
+| stpMode | string |  | STP Mode(Self Trade Prevention)<br/>`none`: not setting STP(default)<br/>`cancel_taker`: cancel taker order <br/>`cancel_maker`: cancel maker order <br/>`cancel_both`: cancel both of taker and maker orders |
 | tpTriggerBy | string |  | Preset Take-Profit Trigger Type<br/>`market`: Market Price<br/>`mark`: Mark Price<br/>If not specified, the default value is market price<br/>Note: This field is only valid for the contract business lines: USDT-Futures, COIN-Futures, and USDC-Futures. |
 | slTriggerBy | string |  | Preset Stop-Loss Trigger Type<br/>`market`: Market Price<br/>`mark`: Mark Price<br/>If not filled in, the default value is market price<br/>Note: This field is only valid for the contract business lines: USDT-Futures, COIN-Futures, and USDC-Futures |
 | takeProfit | string |  | Preset Take-Profit Trigger Price |
@@ -166,12 +166,6 @@ Operation ID: `utaTradeOrderPlaceOrder`
 | marginMode | string |  | Margin mode<br/>`crossed` Cross margin<br/>`isolated` Isolated margin<br/>If not provided, defaults to cross margin<br/>Available only for futures |
 | autoBorrow | string |  | Auto borrow switch<br/>`yes` Enable<br/>`no` Disable (default)<br/>Only applicable to spot orders. When enabled, if the obtained coin does not support borrowing while the consumed coin does, and the available balance of the consumed coin is insufficient, the system automatically borrows the consumed coin to make up the shortfall. |
 | pxAmendType | string |  | Order price amendment type<br/>`no` When the order price exceeds the price limit range, the system is not allowed to adjust the order price; the order will be rejected (default)<br/>`yes` When the order price exceeds the price limit range, the system is allowed to adjust the price to the best value within the limit range and place the order<br/>Only applicable to limit orders (`orderType`=`limit`) |
-| venue | string |  | Order routing strategy<br/>`internal_market` Orders are matched only within the exchange and are never submitted to the U.S. stock broker, regardless of whether the U.S. market is open or closed<br/>`lit_market` Orders are submitted to the U.S. stock broker for execution. During U.S. market hours they are not matched within the exchange; while the U.S. market is closed (e.g. weekends) the broker is unavailable, so these orders rest internally within the exchange and the unfilled portion is routed to the broker once the market reopens<br/>If not provided, the default strategy applies: orders are first matched internally within the exchange at the best price; any unfilled portion is submitted to the broker<br/>This field is only effective for Reality (rtoken) trading pairs |
-| rTokenTimeInForce | string |  | Order execution strategy for Reality (rtoken) trading pairs<br/>`gtd` Valid for the current session. If placed during US market trading hours (weekdays), the limit order is valid until the end of after-hours trading; if placed on weekends, it is valid until just before the next US market open<br/>`gtc` Valid for 90 days<br/>If not provided, defaults to `gtd`<br/>This field is only effective for Reality (rtoken) trading pairs |
-| bboLevel | string |  | BBO level<br/>`queue1` Same-side price level 1<br/>`queue5` Same-side price level 5<br/>`counterparty1` Opposite-side price level 1<br/>`counterparty5` Opposite-side price level 5<br/>Only supported for limit orders; ignored for market orders |
-| slippageTolerance | string |  | Slippage percentage<br/>Default: 2%. Range: [0.001, 0.05], up to 3 decimal places<br/>Only supported for market orders<br/>Higher slippage can increase the likelihood of executing orders, but the execution price may deviate significantly from the last price. |
-| requestTime | string |  | Request time, used together with `receiveWindow` to calculate the validity window of the request. If this field is not provided, `receiveWindow` has no effect. |
-| receiveWindow | string |  | Receive window, in milliseconds. Valid range: `[10, 60000]`.<br/>If the matching engine receives the order before `requestTime + receiveWindow`, the order is accepted and placed into the order book as usual. If it is received after that window, the order is canceled. |
 
 ### 响应 200：Successful response
 
@@ -257,7 +251,7 @@ Operation ID: `utaTradeOrderModifyOrder`
 
 `POST /api/v3/trade/cancel-order`
 
-> This endpoint now supports Reality stock trading pairs (rToken, e.g., `rAAPLUSDT`) for cancellation. Reality orders follow the same rate limit as Crypto.
+> This endpoint now supports Reality stock trading pairs (rToken, e.g., `rAAPLUSDT`). Reality orders are subject to a separate rate limit: 5/sec/UID by default, 30/sec/UID for whitelisted users.
 
 This endpoint allows you to cancel a single unfilled or partially filled order across spot, margin, and futures markets.
 - Rate limit: 10/sec/UID
@@ -317,7 +311,7 @@ This endpoint allows the order placement across spot, margin, or futures markets
 
 
 **Order Check**
-    - **Futures**:`price` must meet the price multiplier and be a multiple of `priceMultiplier`, and conform to the<br/>      `pricePrecision` decimal places. `qty` must be greater than or equal to `minOrderAmount` and be a multiple of<br/>      `quantityMultiplier`.
+    - **Futures**:`price` must meet the price multiplier and be a multiple of `priceMultiplier`, and conform to the<br/>      `pricePrecision` decimal places. `qty` must be greater than or equal to `minOrderAmount` and be a multiple of<br/>      `sizeMultiplier`.
 
     - **Spot**:`price` must meet the decimal place requirement. `qty` must be greater than or equal to `minOrderAmount`.
 
@@ -399,13 +393,11 @@ Operation ID: `utaTradeOrderPlaceBatch`
 | price | string |  | Order price <br/>This field is required when orderType is `limit` |
 | side | string | 是 | Order side<br/>`buy`/`sell` |
 | orderType | string | 是 | Order type<br/>`limit`/`market` |
-| timeInForce | string |  | Time in force<br/>`ioc` Immediate or cancel. It must be executed immediately, with any unfilled portion canceled. <br/>`fok` Fill or kill. It must be fully executed immediately, or it is canceled entirely. <br/>`gtc` Good 'til canceled. It remains active until it is either filled or manually canceled.<br/>`post_only` Post only. It will only be added to the order book as a maker.<br/>`rpi` Retail Price Improvement order. A non-displayed limit order that provides price improvement for retail order flow. Only available for accounts with RPI market maker permissions.<br/>When orderType is `limit`, it defaults to `gtc`; <br/>when orderType is `market`, the system will execute it as `ioc`<br/>This field is ignored when trading Reality stock pairs (rtoken, e.g. rAAPLUSDT) |
+| timeInForce | string |  | Time in force<br/>`ioc` Immediate or cancel. It must be executed immediately, with any unfilled portion canceled. <br/>`fok` Fill or kill. It must be fully executed immediately, or it is canceled entirely. <br/>`gtc` Good 'til canceled. It remains active until it is either filled or manually canceled.<br/>`post_only` Post only. It will only be added to the order book as a maker.<br/>`rpi` Retail Price Improvement order. A non-displayed limit order that provides price improvement for retail order flow. Only available for accounts with RPI market maker permissions.<br/>When orderType is `limit`, it defaults to `gtc`; <br/>when orderType is `market`, the system will execute it as `ioc` |
 | posSide | string |  | Position side<br/>`long`/`short`<br/>This field is required in hedge-mode position.<br/>Available only for futures |
 | clientOid | string |  | Client order ID |
 | stpMode | string |  | STP Mode, default `none` <br/>`none` not setting STP <br/>`cancel_taker` cancel taker order <br/>`cancel_maker` cancel maker order <br/>`cancel_both` cancel both of taker and maker orders |
 | pxAmendType | string |  | Order price amendment type<br/>`no` When the order price exceeds the price limit range, the system is not allowed to adjust the order price; the order will be rejected (default)<br/>`yes` When the order price exceeds the price limit range, the system is allowed to adjust the price to the best value within the limit range and place the order<br/>Only applicable to limit orders (`orderType`=`limit`) |
-| requestTime | string |  | Request time, used together with `receiveWindow` to calculate the validity window of the request. If this field is not provided, `receiveWindow` has no effect. |
-| receiveWindow | string |  | Receive window, in milliseconds. Valid range: `[10, 60000]`.<br/>If the matching engine receives the order before `requestTime + receiveWindow`, the order is accepted and placed into the order book as usual. If it is received after that window, the order is canceled. |
 
 ### 响应 200：Successful response
 
@@ -591,10 +583,7 @@ Operation ID: `utaTradeOrderCancelAllOrder`
 
 `GET /api/v3/trade/order-info`
 
-Query order details using either orderId or clientOid;
-
- [in historical order records placed via API, orders in 'cancelled' status are retained for only 2 hours; orders not placed via API are not affected](https://www.bitget.com/support/articles/12560603823188).
-
+Query order details using either orderId or clientOid.
 - Rate limit: 20/sec/UID
 - Permission: UTA trade (read)
 
@@ -629,13 +618,11 @@ Operation ID: `utaTradeOrderGetOrderDetails`
 | data.orderStatus | string |  | Order status<br/>`live` Order created. <br/>`new` Order matching. <br/>`partially_filled` Partially filled<br/>`filled` Fully filled<br/>`cancelled` Cancelled |
 | data.side | string |  | Order side<br/>`buy`/`sell` |
 | data.timeInForce | string |  | Time in force<br/>`ioc` Immediate or cancel<br/>`fok`: Fill or kill<br/>`gtc`: Good 'til canceled<br/>`post_only`: Post (Maker) only<br/>`rpi`: Retail Price Improvement order |
-| data.venue | string |  | Order routing strategy<br/>`default` Default strategy: orders are first matched internally within the exchange at the best price; any unfilled portion is submitted to the broker<br/>`internal_market` Orders are matched only within the exchange and are never submitted to the U.S. stock broker, regardless of whether the U.S. market is open or closed<br/>`lit_market` Orders are submitted to the U.S. stock broker for execution. During U.S. market hours they are not matched within the exchange; while the U.S. market is closed (e.g. weekends) the broker is unavailable, so these orders rest internally within the exchange and the unfilled portion is routed to the broker once the market reopens<br/>This field is only effective for Reality (rtoken) trading pairs |
-| data.rTokenTimeInForce | string |  | Order execution strategy for Reality (rtoken) trading pairs<br/>`gtd` Valid for the current session. If placed during US market trading hours (weekdays), the limit order is valid until the end of after-hours trading; if placed on weekends, it is valid until just before the next US market open<br/>`gtc` Valid for 90 days<br/>This field is only effective for Reality (rtoken) trading pairs |
 | data.posSide | string |  | Position side<br/>`long`/`short` |
 | data.tradeSide | string |  | Trade side<br/>`open`/`close` |
 | data.holdMode | string |  | Position mode<br/>`one_way_mode`/`hedge_mode` |
 | data.marginMode | string |  | Margin mode<br/>`crossed`: Cross margin<br/>`isolated`: Isolated margin<br/>Available only for futures |
-| data.stpMode | string |  | [STP Mode(Self Trade Prevention)](https://www.bitget.com/support/articles/12560603812732)<br/>`none`: not setting STP(default)<br/>`cancel_taker`: cancel taker order <br/>`cancel_maker`: cancel maker order <br/>`cancel_both`: cancel both of taker and maker orders |
+| data.stpMode | string |  | STP Mode(Self Trade Prevention)<br/>`none`: not setting STP(default)<br/>`cancel_taker`: cancel taker order <br/>`cancel_maker`: cancel maker order <br/>`cancel_both`: cancel both of taker and maker orders |
 | data.takeProfit | string |  | Take-Profit Trigger Price |
 | data.stopLoss | string |  | Stop-Loss Trigger Price |
 | data.tpTriggerBy | string |  | Take-Profit Trigger Type<br/>`market`: Market Price<br/>`mark`: Mark Price |
@@ -673,8 +660,6 @@ Operation ID: `utaTradeOrderGetOrderDetails`
     "cumExecValue": "99.853356",
     "avgPrice": "2684.23",
     "timeInForce": "gtc",
-    "venue": "default",
-    "rTokenTimeInForce": "gtd",
     "orderStatus": "filled",
     "posSide": "",
     "holdMode": "",
@@ -770,6 +755,7 @@ Operation ID: `utaTradeOrderGetOrderPending`
 | data.list[].feeDetail | object[] |  | Fee detail list |
 | data.list[].feeDetail[].feeCoin | string |  | Fee coin |
 | data.list[].feeDetail[].fee | string |  | Total fee |
+| data.list[].channelCode | string |  | Channel identifier<br/>Used for broker users to reconcile commission rebates |
 | data.list[].createdTime | string |  | Order created timestamp<br/>A Unix millisecond timestamp |
 | data.list[].updatedTime | string |  | Order update timestamp<br/>A Unix millisecond timestamp |
 | data.cursor | string |  | Cursor for the next page (the smallest orderId in current page; pass it to query older orders) |
@@ -816,6 +802,7 @@ Operation ID: `utaTradeOrderGetOrderPending`
             "fee": null
           }
         ],
+        "channelCode": "",
         "createdTime": "1730186725663",
         "updatedTime": "1730186725691"
       }
@@ -892,6 +879,7 @@ Operation ID: `utaTradeOrderGetOrderHistory`
 | data.list[].slOrderType | string |  | Stop-Loss Order Type<br/>`limit`: Limit Order<br/>`market`: Market Order |
 | data.list[].tpLimitPrice | string |  | Take-Profit Limit Order Execution Price |
 | data.list[].slLimitPrice | string |  | Stop-Loss Limit Order Execution Price |
+| data.list[].channelCode | string |  | Channel identifier<br/>Used for broker users to reconcile commission rebates |
 | data.list[].createdTime | string |  | Created timestamp<br/>A Unix millisecond timestamp. e.g.,`1736388000` |
 | data.list[].updatedTime | string |  | Updated timestamp<br/>A Unix millisecond timestamp. e.g.,`1736388000` |
 | data.cursor | string |  | Cursor |
@@ -940,6 +928,7 @@ Operation ID: `utaTradeOrderGetOrderHistory`
         ],
         "cancelReason": "normal_cancel",
         "execType": "liquidation",
+        "channelCode": "",
         "createdTime": "1730181468493",
         "updatedTime": "1730181468493"
       }
@@ -956,8 +945,6 @@ Operation ID: `utaTradeOrderGetOrderHistory`
 Query historical fills within the last 90 days.
 
 **Query Range Constraint**<br/> Each individual query can only cover a maximum of 30 days within the 90-day window.
-
-You can export your historical orders on our <a href="https://www.bitget.com/asset/export/downOrders">web</a>.
 - Rate limit: 20/sec/UID
 - Permission: UTA trade (read)
 
@@ -969,7 +956,6 @@ Operation ID: `utaTradeOrderGetOrderFills`
 |---|---|---|---|---|
 | category | query | string |  | Product type <br/>`SPOT` Spot trading <br/>`MARGIN` Margin trading <br/>`USDT-FUTURES` USDT futures <br/>`COIN-FUTURES` Coin-M futures <br/>`USDC-FUTURES` USDC futures |
 | orderId | query | string |  | Order ID |
-| execVenue | query | string |  | Execution venue<br/>`internal_market` Internal fill<br/>`lit_market` Lit market fill<br/>Only applicable to Reality (rToken) fills. When filtering by this parameter, records with an empty `execVenue` are not returned |
 | startTime | query | string |  | Start timestamp <br/>A Unix timestamp in milliseconds e.g.,`1597026383085`<br/>The access window is 90 days. |
 | endTime | query | string |  | End timestamp <br/>A Unix timestamp in milliseconds e.g.,`1597026383185`<br/>The time range between `startTime` and `endTime` must not exceed 30 days. |
 | limit | query | string |  | Limit per page <br/>Default:`100`. Maximum:`100` |
@@ -1000,7 +986,6 @@ Operation ID: `utaTradeOrderGetOrderFills`
 | data.list[].side | string |  | Fill side<br/>`buy`/`sell` |
 | data.list[].tradeScope | string |  | Trade scope<br/>`taker`/`maker` |
 | data.list[].tradeSide | string |  | Trade side <br/>`open`/`close`    <br/>Detailed enumerations can be obtained on the Enumeration page. |
-| data.list[].execVenue | string |  | Execution venue<br/>`internal_market` Internal fill: matched in the internal order book<br/>`lit_market` Lit market fill: routed to an external broker and executed on the public market<br/>Only returned for Reality (rToken) fills; empty string for fills of other business lines.<br/>For some historical fills whose source cannot be traced, an empty string is returned.<br/>Note: `execVenue` is where the fill actually took place, which differs from the `venue` order parameter (routing strategy) |
 | data.list[].createdTime | string |  | Created timestamp<br/>A Unix millisecond timestamp. e.g.,`1736388000` |
 | data.list[].updatedTime | string |  | Updated timestamp<br/>A Unix millisecond timestamp. e.g.,`1736388000` |
 | data.list[].execPnl | string |  | Closed Position Profit and Loss |
@@ -1034,7 +1019,6 @@ Operation ID: `utaTradeOrderGetOrderFills`
             "fee": "0.6417006"
           }
         ],
-        "execVenue": "",
         "createdTime": "1750141421721",
         "updatedTime": "1750141421728",
         "execPnl": "-0.002",
@@ -1094,9 +1078,98 @@ Operation ID: `utaTradeOrderCountDownCancelAll`
 }
 ```
 
+## Place Reality Order
+
+`POST /api/v3/trade/place-reality-order`
+
+Place a limit or market order for Reality stock trading pairs.<br/>This endpoint is only available for whitelisted UIDs, please contact BD if needed.
+- Rate limit: 10/sec/UID
+- Permission: UTA trade (read & write)
+
+Operation ID: `utaTradeOrderPlaceRealityOrder`
+
+### 请求体（application/json）
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| category | string |  | Category<br/>`SPOT` Spot trading<br/>`MARGIN` Margin trading<br/>Default: `SPOT` |
+| symbol | string | 是 | Symbol name<br/>e.g., `rAAPLUSDT` <br/>This endpoint only supports Reality stock trading pairs |
+| side | string | 是 | Order side<br/>`buy` Buy<br/>`sell` Sell |
+| orderType | string | 是 | Order type<br/>`limit` Limit order<br/>`market` Market order |
+| qty | string | 是 | Order quantity<br/>For market buy orders, the unit is **quote coin**<br/>For limit and market sell orders, the unit is **base coin** |
+| price | string |  | Order price<br/>Required when `orderType=limit` |
+| clientOid | string |  | Client order ID |
+
+### 响应 200：Successful response
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| code | string |  |  |
+| msg | string |  |  |
+| requestTime | integer |  |  |
+| data | object |  |  |
+| data.orderId | string |  | Order ID |
+| data.clientOid | string |  | Client order ID. Returns an empty string if not provided |
+
+```json
+{
+  "code": "00000",
+  "msg": "success",
+  "requestTime": 1695806875837,
+  "data": {
+    "orderId": "121211212122",
+    "clientOid": "myOrder001"
+  }
+}
+```
+
+## Cancel Reality Order
+
+`POST /api/v3/trade/cancel-reality-order`
+
+Cancel an unfilled or partially filled Reality stock order.<br/>This endpoint is only available for whitelisted UIDs, please contact BD if needed.
+- Rate limit: 10/sec/UID
+- Permission: UTA trade (read & write)
+
+Operation ID: `utaTradeOrderCancelRealityOrder`
+
+### 请求体（application/json）
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| category | string |  | Category<br/>`SPOT` Spot trading<br/>`MARGIN` Margin trading<br/>Default: `SPOT` |
+| symbol | string | 是 | Symbol name<br/>e.g., `rAAPLUSDT` |
+| orderId | string |  | Order ID<br/>Either `orderId` or `clientOid` must be provided. If both are provided, `orderId` takes priority |
+| clientOid | string |  | Client order ID<br/>Either `orderId` or `clientOid` must be provided. If both are provided, `orderId` takes priority |
+
+### 响应 200：Successful response
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| code | string |  |  |
+| msg | string |  |  |
+| requestTime | integer |  |  |
+| data | object |  |  |
+| data.orderId | string |  | Order ID |
+| data.clientOid | string |  | Client order ID. Returns an empty string if not provided |
+
+```json
+{
+  "code": "00000",
+  "msg": "success",
+  "requestTime": 1695806875837,
+  "data": {
+    "orderId": "121211212122",
+    "clientOid": "myOrder001"
+  }
+}
+```
+
 ## Close All Positions
 
 `POST /api/v3/trade/close-positions`
+
+Rate limit: 5/sec/UID
 
 Close positions by position side or category. All positions will be closed at market price, subject to slippage.
 
@@ -1104,8 +1177,11 @@ Close positions by position side or category. All positions will be closed at ma
 **API Broker rebate identifier**:
 
   The following code block needs to be added to the HTTP Header of the request.
+
   > "X-CHANNEL-API-CODE":"your-channel-api-code"
+
 - Rate limit: 5/sec/UID
+
 - Permission: UTA trade (read & write)
 
 Operation ID: `utaTradePositionCloseAllPositions`
@@ -1114,9 +1190,9 @@ Operation ID: `utaTradePositionCloseAllPositions`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | Product type <br> `USDT-FUTURES` USDT futures <br> `COIN-FUTURES` Coin-M futures <br> `USDC-FUTURES` USDC futures |
-| symbol | string |  | Symbol name <br>e.g.,`BTCUSDT`<br>If no symbol is provided, all positions in the corresponding category will be closed. |
-| posSide | string |  | Position side <br>`long`/`short`  <br> If this field is provided, only the position in the corresponding side will be closed. |
+| category | string | 是 | Product type <br><br> `USDT-FUTURES` USDT futures <br><br> `COIN-FUTURES` Coin-M futures <br><br> `USDC-FUTURES` USDC futures |
+| symbol | string |  | Symbol name <br><br>e.g.,`BTCUSDT`<br><br>If no symbol is provided, all positions in the corresponding category will be closed. |
+| posSide | string |  | Position side <br><br>`long`/`short`  <br><br> If this field is provided, only the position in the corresponding side will be closed. |
 
 ### 响应 200：Successful response
 
@@ -1154,26 +1230,44 @@ Operation ID: `utaTradePositionCloseAllPositions`
 
 `POST /api/v3/account/move-positions`
 
+Rate limit: 1/sec/UID
+
 Supports position moves between master and sub-accounts, as well as between sub-accounts:
 
 1. Master account → Sub-account
+
 2. Sub-account → Master account
+
 3. Sub-account → Sub-account (must belong to the same master account)
 
 This feature is only available to whitelisted users and can only be called using the master account's API Key. The
+
   `fromUid` and `toUid` must belong to the same master-sub account system. Currently only supports USDT futures and USDC
+
   futures. Only cross-margin mode is supported.
+
 The trades generated by position moves will **not** appear in the public market trades and **no trading fees** will be
+
   charged.
+
 Position moves are **not supported** within 5 minutes before or after each hour (funding fee settlement period).
+
   Position moves are **not supported** when the source account's MMR ≥ 80%. Before the position move, the system will
+
   cancel all pending orders for the corresponding symbol in both the source and target accounts. The move price defaults
+
   to and only supports the **mark price**.
+
 Users can trigger up to **100** position move requests per day per UID (counting from a successful call). Each
+
   request must be at least **30 seconds** apart. A maximum of **10** positions can be moved per request.
+
 After the position move, the position mode and leverage are based on the target account's original settings.
+
 - Rate limit: 1/sec/UID
+
 - **Business limit: 100 times/day/UID, minimum interval 30 seconds between requests**
+
 - Permission: UTA trade (read & write)
 
 Operation ID: `utaTradePositionMovePositions`
@@ -1182,13 +1276,13 @@ Operation ID: `utaTradePositionMovePositions`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| fromUid | string | 是 | Source account UID <br>The account from which positions are transferred <br>`fromUid` and `toUid` must belong to the same master-sub account system |
-| toUid | string | 是 | Target account UID <br>The account to which positions are transferred <br>`fromUid` and `toUid` must belong to the same master-sub account system |
-| category | string | 是 | Product type <br>`USDT-FUTURES` USDT futures <br>`COIN-FUTURES` Coin-M futures <br>`USDC-FUTURES` USDC futures |
-| positionList | string[] | 是 | Position list <br>Maximum of 10 positions per request |
-| >symbol | string | 是 | Symbol name <br>e.g., `BTCUSDT` |
-| >side | string | 是 | Order side (from the source account's perspective) <br>`buy`/`sell` <br>The logic is consistent for both one-way mode and hedge mode. <br>When the source holds a long position, pass `side=sell` to reduce the position. <br>When the source holds a short position, pass `side=buy` to reduce the position. |
-| >qty | string | 是 | Transfer quantity <br>Must meet the minimum quantity precision requirement |
+| fromUid | string | 是 | Source account UID <br><br>The account from which positions are transferred <br><br>`fromUid` and `toUid` must belong to the same master-sub account system |
+| toUid | string | 是 | Target account UID <br><br>The account to which positions are transferred <br><br>`fromUid` and `toUid` must belong to the same master-sub account system |
+| category | string | 是 | Product type <br><br>`USDT-FUTURES` USDT futures <br><br>`COIN-FUTURES` Coin-M futures <br><br>`USDC-FUTURES` USDC futures |
+| positionList | string[] | 是 | Position list <br><br>Maximum of 10 positions per request |
+| >symbol | string | 是 | Symbol name <br><br>e.g., `BTCUSDT` |
+| >side | string | 是 | Order side (from the source account's perspective) <br><br>`buy`/`sell` <br><br>The logic is consistent for both one-way mode and hedge mode. <br><br>When the source holds a long position, pass `side=sell` to reduce the position. <br><br>When the source holds a short position, pass `side=buy` to reduce the position. |
+| >qty | string | 是 | Transfer quantity <br><br>Must meet the minimum quantity precision requirement |
 
 ### 响应 200：Successful response
 
@@ -1201,8 +1295,8 @@ Operation ID: `utaTradePositionMovePositions`
 | data.closePosition | string[] |  | Source account position result list |
 | data.>orderId | string |  | Target order ID |
 | data.>clientOid | string |  | Target client order ID |
-| data.>code | string |  | Error code <br>Returned when an error occurs during the open position operation |
-| data.>msg | string |  | Error message <br>Returned when an error occurs during the open position operation |
+| data.>code | string |  | Error code <br><br>Returned when an error occurs during the open position operation |
+| data.>msg | string |  | Error message <br><br>Returned when an error occurs during the open position operation |
 | data.openPosition | string[] |  | Target account position result list |
 
 ```json
@@ -1235,13 +1329,20 @@ Operation ID: `utaTradePositionMovePositions`
 
 `GET /api/v3/account/move-position-history`
 
+Rate limit: 5/sec/UID
+
 Query the history of position moves. Only callable by the master account. You can query the move position history for a
+
 specified source account (master account or sub-account).
 
 **Query Range Constraint**
+
  If `endTime` is not provided, the default query range is the last 30 days. The maximum
+
   supported time span is 90 days.
+
 - Rate limit: 5/sec/UID
+
 - Permission: UTA trade (read)
 
 Operation ID: `utaTradePositionGetMovePositionHistory`
@@ -1250,12 +1351,12 @@ Operation ID: `utaTradePositionGetMovePositionHistory`
 
 | 名称 | 位置 | 类型 | 必填 | 说明 |
 |---|---|---|---|---|
-| category | query | string | 是 | Product type <br>`USDT-FUTURES` USDT futures <br>`COIN-FUTURES` Coin-M futures <br>`USDC-FUTURES` USDC futures |
-| symbol | query | string |  | Symbol name <br>e.g., `BTCUSDT` |
-| startTime | query | string |  | Start timestamp <br>A Unix timestamp in milliseconds e.g., `1597026383085` |
-| endTime | query | string |  | End timestamp <br>A Unix timestamp in milliseconds e.g., `1597026383185` <br>If not provided, defaults to querying the last 30 days. <br>Maximum supported time span is 90 days |
-| cursor | query | string |  | Cursor <br>Pagination is implemented by omitting the cursor in the first query and applying the cursor from the previous query for subsequent pages |
-| limit | query | string |  | Limit per page <br>Default: `100`. Maximum: `100` |
+| category | query | string | 是 | Product type <br><br>`USDT-FUTURES` USDT futures <br><br>`COIN-FUTURES` Coin-M futures <br><br>`USDC-FUTURES` USDC futures |
+| symbol | query | string |  | Symbol name <br><br>e.g., `BTCUSDT` |
+| startTime | query | string |  | Start timestamp <br><br>A Unix timestamp in milliseconds e.g., `1597026383085` |
+| endTime | query | string |  | End timestamp <br><br>A Unix timestamp in milliseconds e.g., `1597026383185` <br><br>If not provided, defaults to querying the last 30 days. <br><br>Maximum supported time span is 90 days |
+| cursor | query | string |  | Cursor <br><br>Pagination is implemented by omitting the cursor in the first query and applying the cursor from the previous query for subsequent pages |
+| limit | query | string |  | Limit per page <br><br>Default: `100`. Maximum: `100` |
 
 ### 响应 200：Successful response
 
@@ -1266,19 +1367,19 @@ Operation ID: `utaTradePositionGetMovePositionHistory`
 | requestTime | integer |  |  |
 | data | object |  |  |
 | data.list | string[] |  | Move position history list |
-| data.>category | string |  | Product type <br>`USDT-FUTURES` USDT futures <br>`COIN-FUTURES` Coin-M futures <br>`USDC-FUTURES` USDC futures |
+| data.>category | string |  | Product type <br><br>`USDT-FUTURES` USDT futures <br><br>`COIN-FUTURES` Coin-M futures <br><br>`USDC-FUTURES` USDC futures |
 | data.>fromUid | string |  | Source account UID |
 | data.>toUid | string |  | Target account UID |
 | data.>orderId | string |  | Order ID |
 | data.>openExecId | string |  | Open Position Execution ID |
 | data.>closeExecId | string |  | Close Position Execution ID |
-| data.>symbol | string |  | Symbol name <br>e.g., `BTCUSDT` |
-| data.>posSide | string |  | Position side <br>`long` Long position <br>`short` Short position |
+| data.>symbol | string |  | Symbol name <br><br>e.g., `BTCUSDT` |
+| data.>posSide | string |  | Position side <br><br>`long` Long position <br><br>`short` Short position |
 | data.>qty | string |  | Transfer quantity |
 | data.>price | string |  | Transfer price |
-| data.>status | string |  | Transfer status <br>`processing` In progress <br>`completed` Completed <br>`failed` Failed |
-| data.>createdTime | string |  | Created timestamp <br>A Unix millisecond timestamp |
-| data.>updatedTime | string |  | Updated timestamp <br>A Unix millisecond timestamp |
+| data.>status | string |  | Transfer status <br><br>`processing` In progress <br><br>`completed` Completed <br><br>`failed` Failed |
+| data.>createdTime | string |  | Created timestamp <br><br>A Unix millisecond timestamp |
+| data.>updatedTime | string |  | Updated timestamp <br><br>A Unix millisecond timestamp |
 | data.cursor | string |  | Cursor |
 
 ```json
@@ -1313,8 +1414,12 @@ Operation ID: `utaTradePositionGetMovePositionHistory`
 
 `GET /api/v3/position/current-position`
 
+Rate limit: 20/sec/UID
+
 Query real-time position data by symbol, side, or category.
+
 - Rate limit: 20/sec/UID
+
 - Permission: UTA trade (read)
 
 Operation ID: `utaTradePositionGetPosition`
@@ -1323,9 +1428,9 @@ Operation ID: `utaTradePositionGetPosition`
 
 | 名称 | 位置 | 类型 | 必填 | 说明 |
 |---|---|---|---|---|
-| category | query | string | 是 | Product type <br> `USDT-FUTURES` USDT futures <br> `COIN-FUTURES` Coin-M futures <br> `USDC-FUTURES` USDC futures |
-| symbol | query | string |  | Symbol name<br>e.g.`BTCUSDT`<br>If no symbol is provided, all positions in the corresponding category will be returned. |
-| posSide | query | string |  | Position side <br>`long`/`short`<br> If this field is provided, only the position in the corresponding side will be returned. |
+| category | query | string | 是 | Product type <br><br> `USDT-FUTURES` USDT futures <br><br> `COIN-FUTURES` Coin-M futures <br><br> `USDC-FUTURES` USDC futures |
+| symbol | query | string |  | Symbol name<br><br>e.g.`BTCUSDT`<br><br>If no symbol is provided, all positions in the corresponding category will be returned. |
+| posSide | query | string |  | Position side <br><br>`long`/`short`<br><br> If this field is provided, only the position in the corresponding side will be returned. |
 
 ### 响应 200：Successful response
 
@@ -1336,32 +1441,32 @@ Operation ID: `utaTradePositionGetPosition`
 | requestTime | integer |  |  |
 | data | object |  |  |
 | data.list | string[] |  | Position list |
-| data.>category | string |  | Product Type <br>`USDT-FUTURES` USDT futures <br> `COIN-FUTURES` Coin-M futures <br> `USDC-FUTURES` USDC futures |
+| data.>category | string |  | Product Type <br><br>`USDT-FUTURES` USDT futures <br><br> `COIN-FUTURES` Coin-M futures <br><br> `USDC-FUTURES` USDC futures |
 | data.>symbol | string |  | Symbol name |
 | data.>marginCoin | string |  | Margin coin |
-| data.>posSide | string |  | Position side <br>`long`/`short` |
-| data.>positionBalance | string |  | Position balance (margin amount)<br>_The unit is margin coin_<br>In isolated margin mode, reflects the isolated margin amount for this position |
+| data.>posSide | string |  | Position side <br><br>`long`/`short` |
+| data.>positionBalance | string |  | Position balance (margin amount)<br><br>_The unit is margin coin_<br><br>In isolated margin mode, reflects the isolated margin amount for this position |
 | data.>available | string |  | Available position |
 | data.>frozen | string |  | Frozen position |
 | data.>total | string |  | Total position (available + frozen) |
 | data.>leverage | string |  | Leverage multiple |
 | data.>curRealisedPnl | string |  | Current realised profit and loss |
 | data.>avgPrice | string |  | Average entry price |
-| data.>marginMode | string |  | Margin mode<br>`crossed` crossed margin<br>`isolated` isolated margin |
-| data.>positionStatus | string |  | Position status<br>`normal` |
-| data.>holdMode | string |  | Holding mode<br>`one_way_mode`/`hedge_mode` |
-| data.>unrealisedPnl | string |  | Unrealised profit and loss<br>In isolated margin mode, reflects the unrealised PnL for this isolated position |
-| data.>liquidationPrice | string |  | Estimated liquidation price<br>Less than or equal to 0 means liquidation will not occur |
+| data.>marginMode | string |  | Margin mode<br><br>`crossed` crossed margin<br><br>`isolated` isolated margin |
+| data.>positionStatus | string |  | Position status<br><br>`normal` |
+| data.>holdMode | string |  | Holding mode<br><br>`one_way_mode`/`hedge_mode` |
+| data.>unrealisedPnl | string |  | Unrealised profit and loss<br><br>In isolated margin mode, reflects the unrealised PnL for this isolated position |
+| data.>liquidationPrice | string |  | Estimated liquidation price<br><br>Less than or equal to 0 means liquidation will not occur |
 | data.>mmr | string |  | Maintenance margin rate |
 | data.>profitRate | string |  | Profit rate |
 | data.>markPrice | string |  | Mark price |
 | data.>breakEvenPrice | string |  | Break-even price |
-| data.>totalFunding | string |  | Total funding<br>The accumulated fund fee during the position's duration. If the value is zero, it indicates no fees have been charged |
-| data.>openFeeTotal | string |  | Fees deducted on position opening <br>Opening fees deducted during the position's lifetime |
-| data.>closeFeeTotal | string |  | Fees deducted on position closing <br>Closing fees deducted during the position's lifetime |
-| data.>cashDividend | string |  | Cash dividend<br>The unit is USDT |
-| data.>createdTime | string |  | Created timestamp<br> A Unix millisecond timestamp |
-| data.>updatedTime | string |  | Updated timestamp<br> A Unix millisecond timestamp |
+| data.>totalFunding | string |  | Total funding<br><br>The accumulated fund fee during the position's duration. If the value is zero, it indicates no fees have been charged |
+| data.>openFeeTotal | string |  | Fees deducted on position opening <br><br>Opening fees deducted during the position's lifetime |
+| data.>closeFeeTotal | string |  | Fees deducted on position closing <br><br>Closing fees deducted during the position's lifetime |
+| data.>cashDividend | string |  | Cash dividend<br><br>The unit is USDT |
+| data.>createdTime | string |  | Created timestamp<br><br> A Unix millisecond timestamp |
+| data.>updatedTime | string |  | Updated timestamp<br><br> A Unix millisecond timestamp |
 
 ```json
 {
@@ -1407,8 +1512,12 @@ Operation ID: `utaTradePositionGetPosition`
 
 `GET /api/v3/position/history-position`
 
+Rate limit: 20/sec/UID
+
 Query historical positions within the last 90 days. You can download your <a href="https://www.bitget.com/trade-asset-order/uta-order-history-order">full historical positions</a> (data available as early as January 1, 2018) via our website.
+
 - Rate limit: 20/sec/UID
+
 - Permission: UTA trade (read & write)
 
 Operation ID: `utaTradePositionGetPositionHistory`
@@ -1417,12 +1526,12 @@ Operation ID: `utaTradePositionGetPositionHistory`
 
 | 名称 | 位置 | 类型 | 必填 | 说明 |
 |---|---|---|---|---|
-| category | query | string | 是 | Product type<br> `USDT-FUTURES` USDT futures <br> `COIN-FUTURES` Coin-M futures <br> `USDC-FUTURES` USDC futures |
-| symbol | query | string |  | Symbol name<br>e.g.,`BTCUSDT` |
-| startTime | query | string |  | Start timestamp <br>A Unix timestamp in milliseconds e.g.,`1597026383085`<br>The access window is 90 days |
-| endTime | query | string |  | End timestamp <br>A Unix timestamp in milliseconds e.g.,`1597026383185`<br> The time range between `startTime` and `endTime` must not exceed 30 days |
-| limit | query | string |  | Limit per page<br>Default:`100`. Maximum:`100` |
-| cursor | query | string |  | Cursor <br>Pagination is implemented by omitting the cursor in the first query and applying the cursor from the previous query for subsequent pages |
+| category | query | string | 是 | Product type<br><br> `USDT-FUTURES` USDT futures <br><br> `COIN-FUTURES` Coin-M futures <br><br> `USDC-FUTURES` USDC futures |
+| symbol | query | string |  | Symbol name<br><br>e.g.,`BTCUSDT` |
+| startTime | query | string |  | Start timestamp <br><br>A Unix timestamp in milliseconds e.g.,`1597026383085`<br><br>The access window is 90 days |
+| endTime | query | string |  | End timestamp <br><br>A Unix timestamp in milliseconds e.g.,`1597026383185`<br><br> The time range between `startTime` and `endTime` must not exceed 30 days |
+| limit | query | string |  | Limit per page<br><br>Default:`100`. Maximum:`100` |
+| cursor | query | string |  | Cursor <br><br>Pagination is implemented by omitting the cursor in the first query and applying the cursor from the previous query for subsequent pages |
 
 ### 响应 200：Successful response
 
@@ -1434,24 +1543,24 @@ Operation ID: `utaTradePositionGetPositionHistory`
 | data | object |  |  |
 | data.list | string[] |  | List |
 | data.>positionId | string |  | Position ID |
-| data.>category | string |  | Product Type <br> `USDT-FUTURES` USDT futures <br> `COIN-FUTURES` Coin-M futures <br> `USDC-FUTURES` USDC futures |
+| data.>category | string |  | Product Type <br><br> `USDT-FUTURES` USDT futures <br><br> `COIN-FUTURES` Coin-M futures <br><br> `USDC-FUTURES` USDC futures |
 | data.>symbol | string |  | Symbol name |
 | data.>marginCoin | string |  | Margin coin |
-| data.>posSide | string |  | Position side<br>`long`/`short` |
+| data.>posSide | string |  | Position side<br><br>`long`/`short` |
 | data.>openPriceAvg | string |  | Average opening price |
 | data.>closePriceAvg | string |  | Average closing price |
 | data.>openTotalPos | string |  | Total open position |
 | data.>closeTotalPos | string |  | Total closed position |
-| data.>marginMode | string |  | Margin mode<br>`crossed`/`isolated` |
-| data.>holdMode | string |  | Holding mode<br>`one_way_mode` /`hedge_mode` |
-| data.>cumRealisedPnl | string |  | Cumulative realised profit and loss<br>Excluding fees and funding costs |
-| data.>netProfit | string |  | Net profit and loss<br>Including fees and funding costs |
-| data.>totalFunding | string |  | Total funding<br>The accumulated fund fee during the position's duration. If the value is zero, it indicates no fees have been charged |
-| data.>openFeeTotal | string |  | Fees deducted on position opening <br>Opening fees deducted during the position's lifetime |
-| data.>closeFeeTotal | string |  | Fees deducted on position closing <br>Closing fees deducted during the position's lifetime |
-| data.>cashDividend | string |  | Cash dividend<br>The unit is USDT |
-| data.>createdTime | string |  | Position created timestamp <br> A Unix millisecond timestamp |
-| data.>updatedTime | string |  | Position updated timestamp <br> A Unix millisecond timestamp |
+| data.>marginMode | string |  | Margin mode<br><br>`crossed`/`isolated` |
+| data.>holdMode | string |  | Holding mode<br><br>`one_way_mode` /`hedge_mode` |
+| data.>cumRealisedPnl | string |  | Cumulative realised profit and loss<br><br>Excluding fees and funding costs |
+| data.>netProfit | string |  | Net profit and loss<br><br>Including fees and funding costs |
+| data.>totalFunding | string |  | Total funding<br><br>The accumulated fund fee during the position's duration. If the value is zero, it indicates no fees have been charged |
+| data.>openFeeTotal | string |  | Fees deducted on position opening <br><br>Opening fees deducted during the position's lifetime |
+| data.>closeFeeTotal | string |  | Fees deducted on position closing <br><br>Closing fees deducted during the position's lifetime |
+| data.>cashDividend | string |  | Cash dividend<br><br>The unit is USDT |
+| data.>createdTime | string |  | Position created timestamp <br><br> A Unix millisecond timestamp |
+| data.>updatedTime | string |  | Position updated timestamp <br><br> A Unix millisecond timestamp |
 | data.cursor | string |  | Cursor |
 
 ```json
@@ -1492,8 +1601,12 @@ Operation ID: `utaTradePositionGetPositionHistory`
 
 `POST /api/v3/account/max-open-available`
 
+Rate limit: 5/sec/UID
+
 Get max open available
+
 - Rate limit: 5/sec/UID
+
 - Permission: UTA trade (read)
 
 Operation ID: `utaTradePositionGetMaxOpenAvailable`
@@ -1502,11 +1615,11 @@ Operation ID: `utaTradePositionGetMaxOpenAvailable`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | Product type <br> `SPOT` Spot trading <br> `MARGIN` Margin trading <br> `USDT-FUTURES` USDT futures <br> `COIN-FUTURES` Coin-M futures <br> `USDC-FUTURES` USDC futures |
-| symbol | string | 是 | Symbol name <br>e.g.,`BTCUSDT` |
-| orderType | string | 是 | Order type<br>`limit`/`market` |
+| category | string | 是 | Product type <br><br> `SPOT` Spot trading <br><br> `MARGIN` Margin trading <br><br> `USDT-FUTURES` USDT futures <br><br> `COIN-FUTURES` Coin-M futures <br><br> `USDC-FUTURES` USDC futures |
+| symbol | string | 是 | Symbol name <br><br>e.g.,`BTCUSDT` |
+| orderType | string | 是 | Order type<br><br>`limit`/`market` |
 | side | string | 是 | Transaction direction `buy`/`sell` |
-| price | string |  | Order price <br>This field is required when orderType is `limit` |
+| price | string |  | Order price <br><br>This field is required when orderType is `limit` |
 | size | string |  | Order quantity, base coin |
 | autoBorrow | string |  | Auto borrow switch<br/>`yes` Enable<br/>`no` Disable (default)<br/>Only applicable to spot orders. When enabled, if the obtained coin does not support borrowing while the consumed coin does, and the available balance of the consumed coin is insufficient, the system automatically borrows the consumed coin to make up the shortfall. |
 | marginMode | string |  | Margin mode<br/>`crossed` Cross margin<br/>`isolated` Isolated margin<br/>If not provided, defaults to `crossed`<br/>Under isolated margin mode, the `available` calculation excludes futures trial funds |
@@ -1519,12 +1632,12 @@ Operation ID: `utaTradePositionGetMaxOpenAvailable`
 | msg | string |  |  |
 | requestTime | integer |  |  |
 | data | object |  |  |
-| data.available | string |  | Available <br> For spot/margin When `side=buy`, it represents the number of quote coins; when `side=sell`, it represents the number of base coins. <br> The futures represents the quantity of the quote coins |
-| data.maxOpen | string |  | Maximum openable size <br> When `side=buy`, it represents the number of quote coins; when `side=sell`, it represents the number of base coins. <br>  Has a value for margin, and for spot when auto borrow (`autoBorrow`) is enabled. |
-| data.buyOpenCost | string |  | When buying, the quantity of the quote coin required to open a position is calculated based on the input `size`. <br>Only the futures has a value. |
-| data.sellOpenCost | string |  | When selling, the quantity of the quote coin required to open a position is calculated based on the input `size`.<br>Only the futures has a value. |
-| data.maxBuyOpen | string |  | The maximum position that can be opened for purchase. <br> Base coin quantity calculated based on account balance.<br> Only the futures has a value. |
-| data.maxSellOpen | string |  | The maximum position that can be opened for sale. <br>  Base coin quantity calculated based on account balance. <br>  Only the futures has a value. |
+| data.available | string |  | Available <br><br> For spot/margin When `side=buy`, it represents the number of quote coins; when `side=sell`, it represents the number of base coins. <br><br> The futures represents the quantity of the quote coins |
+| data.maxOpen | string |  | Maximum openable size <br><br> When `side=buy`, it represents the number of quote coins; when `side=sell`, it represents the number of base coins. <br><br>  Has a value for margin, and for spot when auto borrow (`autoBorrow`) is enabled. |
+| data.buyOpenCost | string |  | When buying, the quantity of the quote coin required to open a position is calculated based on the input `size`. <br><br>Only the futures has a value. |
+| data.sellOpenCost | string |  | When selling, the quantity of the quote coin required to open a position is calculated based on the input `size`.<br><br>Only the futures has a value. |
+| data.maxBuyOpen | string |  | The maximum position that can be opened for purchase. <br><br> Base coin quantity calculated based on account balance.<br><br> Only the futures has a value. |
+| data.maxSellOpen | string |  | The maximum position that can be opened for sale. <br><br>  Base coin quantity calculated based on account balance. <br><br>  Only the futures has a value. |
 | data.maxBuyAvailable | string |  | Maximum buy available |
 | data.maxSellAvailable | string |  | Maximum sell available |
 
@@ -1550,8 +1663,12 @@ Operation ID: `utaTradePositionGetMaxOpenAvailable`
 
 `GET /api/v3/position/adlRank`
 
+Rate limit: 1/sec/UID
+
 Get Position ADL Rank
+
 - Rate limit: 1/sec/UID
+
 - Permission: UTA trade (read & write)
 
 Operation ID: `utaTradePositionGetPositionADLRank`
@@ -1566,8 +1683,8 @@ Operation ID: `utaTradePositionGetPositionADLRank`
 | data | object |  |  |
 | data.symbol | string |  | Symbol |
 | data.marginCoin | string |  | Margin Coin |
-| data.adlRank | string |  | ADL Ranking<br>The ranking of your current position in the auto-deleveraging sequence. When an auto-deleveraging event occurs in the market, the closer the value is to 1, the higher the probability that your position will be reduced |
-| data.holdSide | string |  | Position Direction <br>`long` long position <br>`short` short position |
+| data.adlRank | string |  | ADL Ranking<br><br>The ranking of your current position in the auto-deleveraging sequence. When an auto-deleveraging event occurs in the market, the closer the value is to 1, the higher the probability that your position will be reduced |
+| data.holdSide | string |  | Position Direction <br><br>`long` long position <br><br>`short` short position |
 
 ```json
 {
@@ -1589,8 +1706,12 @@ Operation ID: `utaTradePositionGetPositionADLRank`
 
 `GET /api/v3/trade/loan-data`
 
+Rate limit: 10/sec/UID
+
 Query the current loan data for the unified trading account, including total borrowed amount, next interest payment time, and debt details by coin.
+
 - Rate limit: 10/sec/UID
+
 - Permission: UTA trade (read)
 
 Operation ID: `utaTradePositionGetLoanData`
@@ -1604,12 +1725,12 @@ Operation ID: `utaTradePositionGetLoanData`
 | requestTime | integer |  |  |
 | data | object |  |  |
 | data.currentLoans | string |  | Total current borrowed amount (USD) |
-| data.interestPaymentTime | string |  | Next interest deduction time<br>A Unix timestamp in milliseconds |
+| data.interestPaymentTime | string |  | Next interest deduction time<br><br>A Unix timestamp in milliseconds |
 | data.debtCoinList | object[] |  | Debt coin list |
 | data.debtCoinList[].coin | string |  | Debt coin |
-| data.debtCoinList[].debt | string |  | Debt amount<br>Unit is the debt coin |
-| data.debtCoinList[].interestFreeAmount | string |  | Interest-free quota<br>Unit is the debt coin |
-| data.debtCoinList[].interestRateNextHour | string |  | Next hour borrow rate (annualized)<br>In decimal form, e.g., 0.1 means 10% |
+| data.debtCoinList[].debt | string |  | Debt amount<br><br>Unit is the debt coin |
+| data.debtCoinList[].interestFreeAmount | string |  | Interest-free quota<br><br>Unit is the debt coin |
+| data.debtCoinList[].interestRateNextHour | string |  | Next hour borrow rate (annualized)<br><br>In decimal form, e.g., 0.1 means 10% |
 
 ```json
 {
@@ -1640,8 +1761,13 @@ Place a strategy order
 **API Broker rebate identifier**:
 
   The following code block needs to be added to the HTTP Header of the request.
+
   > "X-CHANNEL-API-CODE":"your-channel-api-code"
+
+  This header is now effective for every strategy `type` (`tpsl`/`trigger`/`oco`/`trailing_stop`/`iceberg`/`twap`).
+
 - Speed limit is 10 times/s (UID)
+
 - Permission: UTA trade (read & write)
 
 ### Common Request Parameters
@@ -1654,14 +1780,14 @@ Operation ID: `utaStrategyPlaceStrategyOrder`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | Product type <br> `SPOT` Spot <br> `MARGIN` Margin <br> `USDT-FUTURES` USDT futures <br> `COIN-FUTURES` Coin-M futures <br> `USDC-FUTURES` USDC futures |
-| symbol | string | 是 | Symbol name <br>e.g.,`BTCUSDT` |
-| type | string |  | Strategy Type<br>`tpsl` Take-Profit and Stop-Loss<br>`trigger` Trigger Order<br>`oco` One-Cancels-the-Other Order<br>`trailing_stop` Trailing Stop Order<br>`iceberg` Iceberg Order<br>`twap` TWAP Order<br>Default:`tpsl` |
-| side | string |  | Trade side<br>`buy`/`sell`<br>Hedge-mode:<br>Open long: `side=buy` & `posSide=long`<br>Open short: `side=sell` & `posSide=short`<br>Close long: `side=sell` & `posSide=long`<br>Close short: `side=buy` & `posSide=short`<br>One-way mode:<br>Open long: `side=buy`<br>Open short: `side=sell`<br>Close long: `side=sell` & `reduceOnly=yes`<br>Close short: `side=buy` & `reduceOnly=yes` |
-| posSide | string |  | Position side<br>`long`/`short` |
+| category | string | 是 | Product type <br><br> `SPOT` Spot <br><br> `MARGIN` Margin <br><br> `USDT-FUTURES` USDT futures <br><br> `COIN-FUTURES` Coin-M futures <br><br> `USDC-FUTURES` USDC futures |
+| symbol | string | 是 | Symbol name <br><br>e.g.,`BTCUSDT` |
+| type | string |  | Strategy Type<br><br>`tpsl` Take-Profit and Stop-Loss<br><br>`trigger` Trigger Order<br><br>`oco` One-Cancels-the-Other Order<br><br>`trailing_stop` Trailing Stop Order<br><br>`iceberg` Iceberg Order<br><br>`twap` TWAP Order<br><br>Default:`tpsl` |
+| side | string |  | Trade side<br><br>`buy`/`sell`<br><br>Hedge-mode:<br><br>Open long: `side=buy` & `posSide=long`<br><br>Open short: `side=sell` & `posSide=short`<br><br>Close long: `side=sell` & `posSide=long`<br><br>Close short: `side=buy` & `posSide=short`<br><br>One-way mode:<br><br>Open long: `side=buy`<br><br>Open short: `side=sell`<br><br>Close long: `side=sell` & `reduceOnly=yes`<br><br>Close short: `side=buy` & `reduceOnly=yes` |
+| posSide | string |  | Position side<br><br>`long`/`short` |
 | qty | string |  | Order Quantity |
 | marginMode | string |  | Margin mode<br/>`crossed` Cross margin<br/>`isolated` Isolated margin<br/>If not provided, defaults to cross margin<br/>Available only for futures |
-| clientOid | string |  | Client order ID<br> The idempotent validity period is six hours (not fully guaranteed)<br>Only valid when `type=tpsl`; not supported for other strategy types |
+| clientOid | string |  | Client order ID<br><br>Format: `^[\.A-Z\:/a-z0-9_-]{1,32}$`<br><br>The idempotent validity period is six hours<br><br>Now supported for every strategy `type` (`tpsl`/`trigger`/`oco`/`trailing_stop`/`iceberg`/`twap`). |
 
 ```json
 {
@@ -1702,7 +1828,9 @@ Operation ID: `utaStrategyPlaceStrategyOrder`
 `POST /api/v3/trade/modify-strategy-order`
 
 Modify strategy order
+
 - Speed limit is 10 times/s (UID)
+
 - Permission: UTA trade (read & write)
 
 Operation ID: `utaStrategyModifyStrategyOrder`
@@ -1711,21 +1839,21 @@ Operation ID: `utaStrategyModifyStrategyOrder`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| orderId | string | 是 | Order ID<br>Either orderId or clientOid must be provided<br>If both orderId and clientOid are provided simultaneously, orderId takes higher priority |
-| clientOid | string |  | Client order ID <br>Either orderId or clientOid must be provided<br>If both orderId and clientOid are provided simultaneously, orderId takes higher priority |
-| qty | string | 是 | Order Quantity<br>Can be modified under partial take-profit/stop-loss mode, and the unit is in the `base coin` |
-| tpTriggerBy | string |  | Take-Profit Trigger Type<br>`market`: Market Price<br>`mark`: Mark Price |
-| slTriggerBy | string |  | Stop-Loss Trigger Type<br>`market`: Market Price<br>`mark`: Mark Price |
+| orderId | string | 是 | Order ID<br><br>Either orderId or clientOid must be provided<br><br>If both orderId and clientOid are provided simultaneously, orderId takes higher priority |
+| clientOid | string |  | Client order ID <br><br>Either orderId or clientOid must be provided<br><br>If both orderId and clientOid are provided simultaneously, orderId takes higher priority |
+| qty | string | 是 | Order Quantity<br><br>Can be modified under partial take-profit/stop-loss mode, and the unit is in the `base coin` |
+| tpTriggerBy | string |  | Take-Profit Trigger Type<br><br>`market`: Market Price<br><br>`mark`: Mark Price |
+| slTriggerBy | string |  | Stop-Loss Trigger Type<br><br>`market`: Market Price<br><br>`mark`: Mark Price |
 | takeProfit | string |  | Take-Profit Trigger Price |
 | stopLoss | string |  | Stop-Loss Trigger Price |
-| tpOrderType | string |  | Take-Profit Trigger Strategy Order Type<br>`limit`: Limit Order<br>`market`: Market Order |
-| slOrderType | string |  | Stop-Loss Trigger Strategy Order Type<br>`limit`: Limit Order<br>`market`: Market Order |
-| tpLimitPrice | string |  | Take-Profit Strategy Order Execution Price<br>This field is only valid for limit orders (when `tpOrderType=limit`); it is ignored for market orders. |
-| slLimitPrice | string |  | Stop-Loss Strategy Order Execution Price<br>This field is only valid for limit orders (when `slOrderType=limit`); it is ignored for market orders |
-| triggerBy | string |  | Trigger order trigger price type<br>`market`: Market Price<br>`mark`: Mark Price |
-| triggerPrice | string |  | Trigger order trigger price<br>Only valid for limit orders (when `triggerOrderType=limit`) |
-| triggerOrderType | string |  | Trigger order type<br>`limit`: Limit Order<br>`market`: Market Order |
-| triggerOrderPrice | string |  | Trigger order execution price<br>Only valid for limit orders (when `triggerOrderType=limit`) |
+| tpOrderType | string |  | Take-Profit Trigger Strategy Order Type<br><br>`limit`: Limit Order<br><br>`market`: Market Order |
+| slOrderType | string |  | Stop-Loss Trigger Strategy Order Type<br><br>`limit`: Limit Order<br><br>`market`: Market Order |
+| tpLimitPrice | string |  | Take-Profit Strategy Order Execution Price<br><br>This field is only valid for limit orders (when `tpOrderType=limit`); it is ignored for market orders. |
+| slLimitPrice | string |  | Stop-Loss Strategy Order Execution Price<br><br>This field is only valid for limit orders (when `slOrderType=limit`); it is ignored for market orders |
+| triggerBy | string |  | Trigger order trigger price type<br><br>`market`: Market Price<br><br>`mark`: Mark Price |
+| triggerPrice | string |  | Trigger order trigger price<br><br>Only valid for limit orders (when `triggerOrderType=limit`) |
+| triggerOrderType | string |  | Trigger order type<br><br>`limit`: Limit Order<br><br>`market`: Market Order |
+| triggerOrderPrice | string |  | Trigger order execution price<br><br>Only valid for limit orders (when `triggerOrderType=limit`) |
 
 ### 响应 200：Successful response
 
@@ -1755,8 +1883,11 @@ Operation ID: `utaStrategyModifyStrategyOrder`
 `POST /api/v3/trade/cancel-strategy-order`
 
 Cancel strategy order
+
 For `iceberg`/`twap` orders, cancelling the parent order also cancels all of its unfilled child orders. For `oco` orders, cancelling either leg of the pair also cancels the other leg.
+
 - Speed limit is 10 times/s (UID)
+
 - Permission: UTA trade (read & write)
 
 Operation ID: `utaStrategyCancelStrategyOrder`
@@ -1765,8 +1896,8 @@ Operation ID: `utaStrategyCancelStrategyOrder`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| orderId | string | 是 | Order ID<br>Either orderId or clientOid must be provided<br>If both orderId and clientOid are provided simultaneously, orderId takes higher priority |
-| clientOid | string |  | Client order ID <br>Either orderId or clientOid must be provided<br>If both orderId and clientOid are provided simultaneously, orderId takes higher priority |
+| orderId | string | 是 | Order ID<br><br>Either orderId or clientOid must be provided<br><br>If both orderId and clientOid are provided simultaneously, orderId takes higher priority |
+| clientOid | string |  | Client order ID <br><br>Either orderId or clientOid must be provided<br><br>If both orderId and clientOid are provided simultaneously, orderId takes higher priority |
 
 ### 响应 200：Successful response
 
@@ -1794,7 +1925,9 @@ Operation ID: `utaStrategyCancelStrategyOrder`
 `GET /api/v3/trade/unfilled-strategy-orders`
 
 Get unfilled strategy orders
+
 - Speed limit is 20 times/s (UID)
+
 - Permission: UTA trade (read)
 
 Operation ID: `utaStrategyGetUnfilledStrategyOrders`
@@ -1803,8 +1936,8 @@ Operation ID: `utaStrategyGetUnfilledStrategyOrders`
 
 | 名称 | 位置 | 类型 | 必填 | 说明 |
 |---|---|---|---|---|
-| category | query | string | 是 | Product type <br> `SPOT` Spot <br> `MARGIN` Margin <br> `USDT-FUTURES` USDT futures <br> `COIN-FUTURES` Coin-M futures <br> `USDC-FUTURES` USDC futures |
-| type | query | string |  | Strategy Type<br>`tpsl` Take-Profit and Stop-Loss<br>`trigger` Trigger Order<br>`oco` OCO<br>`trailing_stop` Trailing Stop<br>`iceberg` Iceberg<br>`twap` TWAP |
+| category | query | string | 是 | Product type <br><br> `SPOT` Spot <br><br> `MARGIN` Margin <br><br> `USDT-FUTURES` USDT futures <br><br> `COIN-FUTURES` Coin-M futures <br><br> `USDC-FUTURES` USDC futures |
+| type | query | string |  | Strategy Type<br><br>`tpsl` Take-Profit and Stop-Loss<br><br>`trigger` Trigger Order<br><br>`oco` OCO<br><br>`trailing_stop` Trailing Stop<br><br>`iceberg` Iceberg<br><br>`twap` TWAP |
 
 ### 响应 200：Successful response
 
@@ -1816,16 +1949,16 @@ Operation ID: `utaStrategyGetUnfilledStrategyOrders`
 | data | object[] |  | Order list |
 | data[].orderId | string |  | Order ID |
 | data[].clientOid | string |  | Client order ID |
-| data[].category | string |  | Product type <br> `USDT-FUTURES` USDT futures <br> `COIN-FUTURES` Coin-M futures <br> `USDC-FUTURES` USDC futures |
-| data[].symbol | string |  | Symbol name <br>e.g.,`BTCUSDT` |
+| data[].category | string |  | Product type <br><br> `USDT-FUTURES` USDT futures <br><br> `COIN-FUTURES` Coin-M futures <br><br> `USDC-FUTURES` USDC futures |
+| data[].symbol | string |  | Symbol name <br><br>e.g.,`BTCUSDT` |
 | data[].qty | string |  | Order Quantity |
-| data[].side | string |  | Order side<br>`buy`/`sell` |
-| data[].posSide | string |  | Position side<br>`long`/`short` |
-| data[].status | string |  | Strategy order status<br>`pending` Waiting to be executed<br>`success` Executed<br>`failed` Execution failed<br>`cancelled` Cancelled<br>`submitting` Submitting |
+| data[].side | string |  | Order side<br><br>`buy`/`sell` |
+| data[].posSide | string |  | Position side<br><br>`long`/`short` |
+| data[].status | string |  | Strategy order status<br><br>`pending` Waiting to be executed<br><br>`success` Executed<br><br>`failed` Execution failed<br><br>`cancelled` Cancelled<br><br>`submitting` Submitting |
 | data[].marginMode | string |  | Margin mode<br/>`crossed` Cross margin<br/>`isolated` Isolated margin<br/>If not provided, defaults to cross margin<br/>Available only for futures |
 | data[].type | string |  | Strategy Type<br><br>`tpsl` Take-Profit and Stop-Loss<br><br>`trigger` Trigger Order<br><br>`oco` OCO<br><br>`trailing_stop` Trailing Stop<br><br>`iceberg` Iceberg<br><br>`twap` TWAP |
-| data[].createdTime | string |  | Order created timestamp<br>A Unix millisecond timestamp |
-| data[].updatedTime | string |  | Order update timestamp<br>A Unix millisecond timestamp |
+| data[].createdTime | string |  | Order created timestamp<br><br>A Unix millisecond timestamp |
+| data[].updatedTime | string |  | Order update timestamp<br><br>A Unix millisecond timestamp |
 
 ```json
 {
@@ -1867,7 +2000,9 @@ Operation ID: `utaStrategyGetUnfilledStrategyOrders`
 `GET /api/v3/trade/history-strategy-orders`
 
 Get historical strategy orders
+
 - Speed limit is 20 times/s (UID)
+
 - Permission: UTA trade (read)
 
 Operation ID: `utaStrategyGetHistoryStrategyOrders`
@@ -1876,12 +2011,12 @@ Operation ID: `utaStrategyGetHistoryStrategyOrders`
 
 | 名称 | 位置 | 类型 | 必填 | 说明 |
 |---|---|---|---|---|
-| category | query | string | 是 | Product type <br> `SPOT` Spot <br> `MARGIN` Margin <br> `USDT-FUTURES` USDT futures <br> `COIN-FUTURES` Coin-M futures <br> `USDC-FUTURES` USDC futures |
-| type | query | string |  | Strategy Type<br>`tpsl` Take-Profit and Stop-Loss<br>`trigger` Trigger Order<br>`oco` OCO<br>`trailing_stop` Trailing Stop<br>`iceberg` Iceberg<br>`twap` TWAP |
-| startTime | query | string |  | Start timestamp <br>A Unix timestamp in milliseconds e.g.,`1597026383085` |
-| endTime | query | string |  | End timestamp <br>A Unix timestamp in milliseconds e.g.,`1597026383085` |
-| limit | query | string |  | Limit per page<br>Default:`100`. Maximum:`100` |
-| cursor | query | string |  | Cursor <br>Pagination is implemented by omitting the cursor in the first query and applying the cursor from the previous query for subsequent pages |
+| category | query | string | 是 | Product type <br><br> `SPOT` Spot <br><br> `MARGIN` Margin <br><br> `USDT-FUTURES` USDT futures <br><br> `COIN-FUTURES` Coin-M futures <br><br> `USDC-FUTURES` USDC futures |
+| type | query | string |  | Strategy Type<br><br>`tpsl` Take-Profit and Stop-Loss<br><br>`trigger` Trigger Order<br><br>`oco` OCO<br><br>`trailing_stop` Trailing Stop<br><br>`iceberg` Iceberg<br><br>`twap` TWAP<br><br>Defaults to `tpsl` |
+| startTime | query | string |  | Start timestamp <br><br>A Unix timestamp in milliseconds e.g.,`1597026383085` |
+| endTime | query | string |  | End timestamp <br><br>A Unix timestamp in milliseconds e.g.,`1597026383085` |
+| limit | query | string |  | Limit per page<br><br>Default:`100`. Maximum:`100` |
+| cursor | query | string |  | Cursor <br><br>Pagination is implemented by omitting the cursor in the first query and applying the cursor from the previous query for subsequent pages |
 
 ### 响应 200：Successful response
 
@@ -1894,16 +2029,17 @@ Operation ID: `utaStrategyGetHistoryStrategyOrders`
 | data.list | object[] |  | Order list |
 | data.list[].orderId | string |  | Order ID |
 | data.list[].clientOid | string |  | Client order ID |
-| data.list[].category | string |  | Product type <br> `USDT-FUTURES` USDT futures <br> `COIN-FUTURES` Coin-M futures <br> `USDC-FUTURES` USDC futures |
-| data.list[].symbol | string |  | Symbol name <br>e.g.,`BTCUSDT` |
+| data.list[].category | string |  | Product type <br><br> `USDT-FUTURES` USDT futures <br><br> `COIN-FUTURES` Coin-M futures <br><br> `USDC-FUTURES` USDC futures |
+| data.list[].symbol | string |  | Symbol name <br><br>e.g.,`BTCUSDT` |
 | data.list[].qty | string |  | Order Quantity |
-| data.list[].posSide | string |  | Position side<br>`long`/`short` |
-| data.list[].status | string |  | Strategy order status<br>`success` Executed<br>`failed` Execution failed<br>`cancelled` Cancelled |
+| data.list[].posSide | string |  | Position side<br><br>`long`/`short` |
+| data.list[].status | string |  | Strategy order status<br><br>`success` Executed<br><br>`failed` Execution failed<br><br>`cancelled` Cancelled |
 | data.list[].marginMode | string |  | Margin mode<br/>`crossed` Cross margin<br/>`isolated` Isolated margin<br/>If not provided, defaults to cross margin<br/>Available only for futures |
 | data.list[].type | string |  | Strategy Type<br><br>`tpsl` Take-Profit and Stop-Loss<br><br>`trigger` Trigger Order<br><br>`oco` OCO<br><br>`trailing_stop` Trailing Stop<br><br>`iceberg` Iceberg<br><br>`twap` TWAP |
-| data.list[].createdTime | string |  | Order created timestamp<br>A Unix millisecond timestamp |
-| data.list[].updatedTime | string |  | Order update timestamp<br>A Unix millisecond timestamp |
-| data.cursor | string |  | Cursor for next page<br>Pass this value as the `cursor` parameter in the next request to get the next page of data |
+| data.list[].tpslMode | string |  | Take-Profit/Stop-Loss mode<br><br>`full`: Take-Profit/Stop-Loss for the entire position<br><br>`partial`: Take-Profit/Stop-Loss for part of the position<br><br>Only has a value for orders with `type=tpsl`; returns an empty string `""` for other strategy types |
+| data.list[].createdTime | string |  | Order created timestamp<br><br>A Unix millisecond timestamp |
+| data.list[].updatedTime | string |  | Order update timestamp<br><br>A Unix millisecond timestamp |
+| data.cursor | string |  | Cursor for next page<br><br>Pass this value as the `cursor` parameter in the next request to get the next page of data |
 
 ```json
 {
@@ -1933,6 +2069,7 @@ Operation ID: `utaStrategyGetHistoryStrategyOrders`
         "triggerOrderType": "limit",
         "triggerOrderPrice": "100500",
         "marginMode": "crossed",
+        "tpslMode": "full",
         "createdTime": "1730186725663",
         "updatedTime": "1730186725691"
       }
@@ -1947,7 +2084,11 @@ Operation ID: `utaStrategyGetHistoryStrategyOrders`
 `GET /api/v3/trade/strategy-sub-orders`
 
 Get historical sub-orders generated by a strategy order
+
+Only sub-orders created within 7 days after the strategy order was created can be queried
+
 - Rate limit: 10 times/s (UID)
+
 - Permission: UTA trade (read)
 
 Operation ID: `utaStrategyGetStrategySubOrders`
@@ -1957,8 +2098,8 @@ Operation ID: `utaStrategyGetStrategySubOrders`
 | 名称 | 位置 | 类型 | 必填 | 说明 |
 |---|---|---|---|---|
 | orderId | query | string | 是 | Strategy order ID |
-| limit | query | string |  | Limit per page<br>Default:`100`. Maximum:`100` |
-| cursor | query | string |  | Cursor<br>Pagination is implemented by omitting the cursor in the first query and applying the cursor from the previous query for subsequent pages |
+| limit | query | string |  | Limit per page<br><br>Default:`100`. Maximum:`100` |
+| cursor | query | string |  | Cursor<br><br>Pagination is implemented by omitting the cursor in the first query and applying the cursor from the previous query for subsequent pages |
 
 ### 响应 200：Successful response
 
@@ -1971,18 +2112,18 @@ Operation ID: `utaStrategyGetStrategySubOrders`
 | data.list | object[] |  | Sub-order list |
 | data.list[].subOrderId | string |  | Sub-order ID |
 | data.list[].subClientOid | string |  | Client order ID |
-| data.list[].category | string |  | Product type<br>`SPOT` Spot<br>`MARGIN` Margin<br>`USDT-FUTURES` USDT futures<br>`COIN-FUTURES` Coin-M futures<br>`USDC-FUTURES` USDC futures |
+| data.list[].category | string |  | Product type<br><br>`SPOT` Spot<br><br>`MARGIN` Margin<br><br>`USDT-FUTURES` USDT futures<br><br>`COIN-FUTURES` Coin-M futures<br><br>`USDC-FUTURES` USDC futures |
 | data.list[].symbol | string |  | Symbol name |
 | data.list[].price | string |  | Order price |
-| data.list[].qty | string |  | Order quantity<br>Unit: base coin |
-| data.list[].cumExecQty | string |  | Cumulative executed quantity<br>Unit: base coin |
+| data.list[].qty | string |  | Order quantity<br><br>Unit: base coin |
+| data.list[].cumExecQty | string |  | Cumulative executed quantity<br><br>Unit: base coin |
 | data.list[].avgPrice | string |  | Average execution price |
-| data.list[].side | string |  | Trade side<br>`buy`/`sell` |
-| data.list[].posSide | string |  | Position side<br>`long`/`short`<br>Applies to futures orders only |
-| data.list[].status | string |  | Order status<br>`filled` Filled<br>`cancelled` Cancelled<br>`failed` Failed |
-| data.list[].createdTime | string |  | Order created timestamp<br>Unix millisecond timestamp |
-| data.list[].updatedTime | string |  | Order updated timestamp<br>Unix millisecond timestamp |
-| data.cursor | integer |  | Cursor for next page<br>Pass this value as the `cursor` parameter in the next request to get the next page of data |
+| data.list[].side | string |  | Trade side<br><br>`buy`/`sell` |
+| data.list[].posSide | string |  | Position side<br><br>`long`/`short`<br><br>Applies to futures orders only |
+| data.list[].status | string |  | Order status<br><br>`filled` Filled<br><br>`cancelled` Cancelled<br><br>`failed` Failed |
+| data.list[].createdTime | string |  | Order created timestamp<br><br>Unix millisecond timestamp |
+| data.list[].updatedTime | string |  | Order updated timestamp<br><br>Unix millisecond timestamp |
+| data.cursor | integer |  | Cursor for next page<br><br>Pass this value as the `cursor` parameter in the next request to get the next page of data |
 
 ```json
 {
@@ -2017,7 +2158,9 @@ Operation ID: `utaStrategyGetStrategySubOrders`
 `POST /api/v3/trade/grid/add-investment`
 
 Add investment amount to a grid trading bot. Supports adding spot investment amount and adjusting futures margin.
+
 - Rate limit: 1/sec/UID
+
 - Permission: UTA trade (read & write)
 
 Operation ID: `utaGridAddInvestment`
@@ -2030,9 +2173,9 @@ Operation ID: `utaGridAddInvestment`
 | botId | string | 是 | Grid bot ID. The business line must match the grid bot ID, otherwise an error will be returned |
 | coin | string | 是 | Coin to add |
 | size | string | 是 | Amount |
-| fundsSource | string[] | 是 | Source of funds<br>`funding`: Funding account<br>`uta`: Unified account<br>`otc`: OTC account |
-| adjustType | string |  | Adjustment type. Only applicable to futures grid, required for futures<br>`increase`<br>`decrease` |
-| reinvestProfit | string |  | Whether to reinvest profit, default `yes`. Only applicable to spot grid<br>`yes`<br>`no` |
+| fundsSource | string[] | 是 | Source of funds<br><br>`funding`: Funding account<br><br>`uta`: Unified account<br><br>`otc`: OTC account |
+| adjustType | string |  | Adjustment type. Only applicable to futures grid, required for futures<br><br>`increase`<br><br>`decrease` |
+| reinvestProfit | string |  | Whether to reinvest profit, default `yes`. Only applicable to spot grid<br><br>`yes`<br><br>`no` |
 
 ### 响应 200：Successful response
 
@@ -2049,7 +2192,9 @@ Operation ID: `utaGridAddInvestment`
 `GET /api/v3/trade/grid/bot-detail`
 
 Query the detailed information of a specified strategy, including parameter configuration, current status, accumulated profit, etc.
+
 - Rate limit: 10/sec/UID
+
 - Permission: UTA trade (read-only)
 
 Operation ID: `utaGridBotDetail`
@@ -2070,7 +2215,7 @@ Operation ID: `utaGridBotDetail`
 | data | object |  |  |
 | data.botId | string |  | Grid bot ID |
 | data.symbol | string |  | Trading pair |
-| data.status | string |  | Status<br>`init`: Initializing<br>`waiting`: Waiting to start<br>`running`: Running<br>`terminating`: Terminating<br>`terminated`: Terminated |
+| data.status | string |  | Status<br><br>`init`: Initializing<br><br>`waiting`: Waiting to start<br><br>`running`: Running<br><br>`terminating`: Terminating<br><br>`terminated`: Terminated |
 | data.totalProfit | string |  | Total profit, in USDT |
 | data.roi | string |  | ROI, in decimal form |
 | data.gridProfit | string |  | Grid profit, in USDT |
@@ -2089,43 +2234,45 @@ Operation ID: `utaGridBotDetail`
 | data.reservedBaseTradingFee | string |  | Reserved base coin trading fee |
 | data.reservedQuoteTradingFee | string |  | Reserved quote coin trading fee |
 | data.gridStartPrice | string |  | Grid start price |
-| data.gridType | string |  | Grid type<br>`long`<br>`short`<br>`netural` |
+| data.gridType | string |  | Grid type<br><br>`long`<br><br>`short`<br><br>`netural` |
 | data.maxPrice | string |  | Grid upper limit price |
 | data.minPrice | string |  | Grid lower limit price |
 | data.gridNum | string |  | Number of grids |
-| data.gridOrderMode | string |  | Grid order mode<br>`arithmetic`<br>`geometric` |
+| data.gridOrderMode | string |  | Grid order mode<br><br>`arithmetic`<br><br>`geometric` |
 | data.baseInvestmentCoin | string |  | Base coin of investment |
 | data.baseInvestmentAmount | string |  | Base coin investment amount |
 | data.quoteInvestmentCoin | string |  | Quote coin of investment |
 | data.quoteInvestmentAmount | string |  | Quote coin investment amount |
-| data.slippage | string |  | Slippage<br>`1%`<br>`2%`<br>`none` |
-| data.triggerCondition | string |  | Trigger condition<br>`instant`<br>`price`<br>`rsi`<br>`boll` |
+| data.slippage | string |  | Slippage<br><br>`1%`<br><br>`2%`<br><br>`none` |
+| data.triggerCondition | string |  | Trigger condition<br><br>`instant`<br><br>`price`<br><br>`rsi`<br><br>`boll` |
 | data.triggerParams | object[] |  | Trigger parameters |
 | data.triggerParams[].indicatorLength | string |  | Indicator period |
 | data.triggerParams[].threshold | string |  | Threshold |
 | data.triggerParams[].multiplier | string |  | Multiplier |
 | data.triggerParams[].interval | string |  | Interval |
 | data.triggerPrice | string |  | Trigger price |
-| data.terminationCondition | string |  | Termination condition<br>`rsi`<br>`boll` |
+| data.terminationCondition | string |  | Termination condition<br><br>`rsi`<br><br>`boll` |
 | data.terminationParams | object[] |  | Termination parameters |
 | data.terminationParams[].indicatorLength | string |  | Indicator period |
 | data.terminationParams[].threshold | string |  | Threshold |
 | data.terminationParams[].multiplier | string |  | Multiplier |
 | data.terminationParams[].interval | string |  | Interval |
-| data.terminationSell | string |  | Whether to sell on termination<br>`yes`<br>`no` |
+| data.terminationSell | string |  | Whether to sell on termination<br><br>`yes`<br><br>`no` |
 | data.stopLoss | string |  | Stop-loss price |
 | data.takeProfit | string |  | Take-profit price |
-| data.hodlMode | string |  | HODL mode<br>`yes`<br>`no` |
-| data.autoTransferProfits | string |  | Auto transfer profit<br>`yes`<br>`no` |
+| data.hodlMode | string |  | HODL mode<br><br>`yes`<br><br>`no` |
+| data.autoTransferProfits | string |  | Auto transfer profit<br><br>`yes`<br><br>`no` |
 | data.arbitrageCount | string |  | Arbitrage count |
-| data.terminationReason | string |  | Termination reason<br>`MANUAL_END`: Manually terminated<br>`NEW_WAIT`: Waiting to start<br>`ACCOUNT_BALANCE_LACKING_END`: Terminated due to insufficient available funds<br>`STOP_PROFIT_END`: Terminated by take-profit<br>`STOP_LOSS_END`: Terminated by stop-loss<br>`CANCEL_END`: Terminated by cancellation<br>`SYSTEM_END`: Cancelled due to order placement failure<br>`FOLLOW_END`: Terminated by follow<br>`SUBSCRIBE_STOP_PROFIT_END`: Terminated by subscription take-profit<br>`SUBSCRIBE_STOP_LOSS_END`: Terminated by subscription stop-loss<br>`PLACE_ORDER_FAIL_END`: Terminated by consecutive order placement failures<br>`SYMBOL_DOWN_END`: Terminated due to trading pair delisting<br>`SUB_ACCOUNT_TRANSFER_FAIL`: Terminated due to fund transfer failure<br>`HIGHEST_PRICE_END`: Terminated at highest price<br>`BOTTOM_PRICE_END`: Terminated at lowest price<br>`BURST_END`: Terminated by liquidation<br>`MOVE_GRID_FAIL`: Terminated due to grid move failure<br>`EXPIRE_TIME_END`: Terminated by scheduled expiration<br>`HANDLE_SUB_POSITION_END`: Terminated by manual position reduction<br>`STOP_PRICE_ACHIEVE`: Terminated upon reaching stop price<br>`ADL_END`: Terminated by ADL<br>`AUTO_CONVERT_END`: Terminated by auto-conversion<br>`CONDITION_TRIGGER_END`: Terminated by condition trigger<br>`ADL_CONVERT_END`: Terminated by ADL reduction<br>`CANCEL_DELIVERY_ORDER`: Cancelled due to delivery<br>`BASIS_RATE_TRIGGER`: Terminated by basis rate trigger<br>`EARN_REDEEM_FAIL`: Terminated due to earn redemption failure<br>`SYSTEM_CANCEL`: Cancelled by system<br>`SYMBOL_RSTOCK_SPLIT`: Cancelled due to stock split/reverse split |
+| data.terminationReason | string |  | Termination reason<br><br>`MANUAL_END`: Manually terminated<br><br>`NEW_WAIT`: Waiting to start<br><br>`ACCOUNT_BALANCE_LACKING_END`: Terminated due to insufficient available funds<br><br>`STOP_PROFIT_END`: Terminated by take-profit<br><br>`STOP_LOSS_END`: Terminated by stop-loss<br><br>`CANCEL_END`: Terminated by cancellation<br><br>`SYSTEM_END`: Cancelled due to order placement failure<br><br>`FOLLOW_END`: Terminated by follow<br><br>`SUBSCRIBE_STOP_PROFIT_END`: Terminated by subscription take-profit<br><br>`SUBSCRIBE_STOP_LOSS_END`: Terminated by subscription stop-loss<br><br>`PLACE_ORDER_FAIL_END`: Terminated by consecutive order placement failures<br><br>`SYMBOL_DOWN_END`: Terminated due to trading pair delisting<br><br>`SUB_ACCOUNT_TRANSFER_FAIL`: Terminated due to fund transfer failure<br><br>`HIGHEST_PRICE_END`: Terminated at highest price<br><br>`BOTTOM_PRICE_END`: Terminated at lowest price<br><br>`BURST_END`: Terminated by liquidation<br><br>`MOVE_GRID_FAIL`: Terminated due to grid move failure<br><br>`EXPIRE_TIME_END`: Terminated by scheduled expiration<br><br>`HANDLE_SUB_POSITION_END`: Terminated by manual position reduction<br><br>`STOP_PRICE_ACHIEVE`: Terminated upon reaching stop price<br><br>`ADL_END`: Terminated by ADL<br><br>`AUTO_CONVERT_END`: Terminated by auto-conversion<br><br>`CONDITION_TRIGGER_END`: Terminated by condition trigger<br><br>`ADL_CONVERT_END`: Terminated by ADL reduction<br><br>`CANCEL_DELIVERY_ORDER`: Cancelled due to delivery<br><br>`BASIS_RATE_TRIGGER`: Terminated by basis rate trigger<br><br>`EARN_REDEEM_FAIL`: Terminated due to earn redemption failure<br><br>`SYSTEM_CANCEL`: Cancelled by system<br><br>`SYMBOL_RSTOCK_SPLIT`: Cancelled due to stock split/reverse split |
 
 ## Close Grid Bot
 
 `POST /api/v3/trade/grid/close-bot`
 
 Terminate a specified bot, stopping order placement and handling unfilled orders/positions according to the strategy configuration.
+
 - Rate limit: 1/sec/UID
+
 - Permission: UTA trade (read & write)
 
 Operation ID: `utaGridCloseBot`
@@ -2150,7 +2297,9 @@ Operation ID: `utaGridCloseBot`
 `POST /api/v3/trade/grid/create-bot`
 
 Submit a request to create a spot or futures grid trading bot.
+
 - Rate limit: 1/sec/UID
+
 - Permission: UTA trade (read & write)
 
 Operation ID: `utaGridCreateBot`
@@ -2159,44 +2308,44 @@ Operation ID: `utaGridCreateBot`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | Business line<br>`SPOT`: Spot trading<br>`USDT-FUTURES`: USDT-margined futures<br>`USDC-FUTURES`: USDC-margined futures |
+| category | string | 是 | Business line<br><br>`SPOT`: Spot trading<br><br>`USDT-FUTURES`: USDT-margined futures<br><br>`USDC-FUTURES`: USDC-margined futures |
 | symbol | string | 是 | Trading pair name |
 | gridType | string |  | Grid direction<br>`long`<br>`short`<br>`neutral`<br>**Required when category is futures (`USDT-FUTURES` / `USDC-FUTURES`); optional for `SPOT`** |
 | maxPrice | string | 是 | Grid upper limit price |
 | minPrice | string | 是 | Grid lower limit price |
 | gridNum | string | 是 | Number of grids |
-| gridOrderMode | string | 是 | Grid order mode<br>`arithmetic`: Arithmetic<br>`geometric`: Geometric |
+| gridOrderMode | string | 是 | Grid order mode<br><br>`arithmetic`: Arithmetic<br><br>`geometric`: Geometric |
 | leverage | string |  | Leverage, default 1. Only effective for futures |
 | investmentAmount | object[] | 是 | Investment amount |
 | investmentAmount[].coin | string | 是 | Coin |
 | investmentAmount[].amount | string | 是 | Amount |
-| fundsSource | string[] | 是 | Source of funds<br>`funding`: Funding account<br>`uta`: Unified account<br>`otc`: OTC account |
+| fundsSource | string[] | 是 | Source of funds<br><br>`funding`: Funding account<br><br>`uta`: Unified account<br><br>`otc`: OTC account |
 | autoReserveMargin | string |  | Auto reserve margin |
 | reservedMargin | string |  | Reserved margin. Only effective for futures |
-| triggerCondition | string |  | Trigger condition, default `instant`<br>`instant`<br>`price`<br>`rsi`<br>`boll` |
+| triggerCondition | string |  | Trigger condition, default `instant`<br><br>`instant`<br><br>`price`<br><br>`rsi`<br><br>`boll` |
 | triggerParams | object[] |  | Trigger parameters |
 | triggerParams[].indicatorLength | string |  | Indicator length |
 | triggerParams[].threshold | string |  | Threshold |
 | triggerParams[].multiplier | string |  | Multiplier |
 | triggerParams[].interval | string |  | Interval |
 | triggerPrice | string |  | Trigger price |
-| terminationCondition | string |  | Termination condition<br>`rsi`<br>`boll` |
+| terminationCondition | string |  | Termination condition<br><br>`rsi`<br><br>`boll` |
 | terminationParams | object[] |  | Termination parameters |
 | terminationParams[].indicatorLength | string |  | Indicator length |
 | terminationParams[].threshold | string |  | Threshold |
 | terminationParams[].multiplier | string |  | Multiplier |
 | terminationParams[].interval | string |  | Interval |
-| terminationSell | string |  | Whether to sell on termination. Only for spot grid<br>`yes`<br>`no` |
+| terminationSell | string |  | Whether to sell on termination. Only for spot grid<br><br>`yes`<br><br>`no` |
 | stopLoss | string |  | Stop-loss price |
 | takeProfit | string |  | Take-profit price |
 | slippage | string | 是 | Slippage |
-| trailingGrid | string |  | Trailing grid, default `no`<br>`yes`<br>`no` |
+| trailingGrid | string |  | Trailing grid, default `no`<br><br>`yes`<br><br>`no` |
 | movingAverageGains | string |  | Moving average gains |
 | stopUpwardPrice | string |  | Stop upward price |
-| hodlMode | string |  | HODL mode, default `no`. Only effective for spot<br>`yes`<br>`no` |
-| marketOpen | string |  | Market open, default enabled. Only effective for futures<br>`yes`<br>`no` |
-| lossReserve | string |  | Loss reserve, default enabled. Only effective for futures<br>`yes`<br>`no` |
-| autoTransferProfits | string | 是 | Auto transfer profits, default `no`<br>`yes`<br>`no` |
+| hodlMode | string |  | HODL mode, default `no`. Only effective for spot<br><br>`yes`<br><br>`no` |
+| marketOpen | string |  | Market open, default enabled. Only effective for futures<br><br>`yes`<br><br>`no` |
+| lossReserve | string |  | Loss reserve, default enabled. Only effective for futures<br><br>`yes`<br><br>`no` |
+| autoTransferProfits | string | 是 | Auto transfer profits, default `no`<br><br>`yes`<br><br>`no` |
 
 ### 响应 200：Successful response
 
@@ -2213,7 +2362,9 @@ Operation ID: `utaGridCreateBot`
 `POST /api/v3/trade/grid/create-neutral-bot`
 
 Submit a request to create a neutral futures grid trading bot.
+
 - Rate limit: 1/sec/UID
+
 - Permission: UTA trade (read & write)
 
 Operation ID: `utaGridCreateNeutralBot`
@@ -2222,12 +2373,12 @@ Operation ID: `utaGridCreateNeutralBot`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | Business line<br>`USDT-FUTURES`: USDT-margined futures<br>`USDC-FUTURES`: USDC-margined futures |
+| category | string | 是 | Business line<br><br>`USDT-FUTURES`: USDT-margined futures<br><br>`USDC-FUTURES`: USDC-margined futures |
 | symbol | string | 是 | Trading pair |
 | maxPrice | string | 是 | Upper limit price |
 | minPrice | string | 是 | Lower limit price |
 | gridNum | string | 是 | Number of grids |
-| gridOrderMode | string | 是 | Grid order mode<br>`arithmetic`: Arithmetic<br>`geometric`: Geometric |
+| gridOrderMode | string | 是 | Grid order mode<br><br>`arithmetic`: Arithmetic<br><br>`geometric`: Geometric |
 | leverage | string |  | Leverage |
 | investmentAmount | object[] |  | List of investment coins and amounts. For futures, only quote coin USDT/USDC is supported |
 | investmentAmount[].coin | string | 是 | Investment coin |
@@ -2236,7 +2387,7 @@ Operation ID: `utaGridCreateNeutralBot`
 | stopLoss | string |  | Stop-loss price |
 | takeProfit | string |  | Take-profit price |
 | autoTransferProfits | string |  | Auto transfer profit |
-| fundsSource | string[] | 是 | Source of funds<br>`funding`: Funding account<br>`uta`: UTA account<br>`otc`: OTC account |
+| fundsSource | string[] | 是 | Source of funds<br><br>`funding`: Funding account<br><br>`uta`: UTA account<br><br>`otc`: OTC account |
 
 ### 响应 200：Successful response
 
@@ -2253,7 +2404,9 @@ Operation ID: `utaGridCreateNeutralBot`
 `GET /api/v3/trade/grid/list-details`
 
 Query the order details associated with a specified strategy.
+
 - Rate limit: 1/sec/UID
+
 - Permission: UTA trade (read-only)
 
 Operation ID: `utaGridListDetails`
@@ -2291,7 +2444,9 @@ Operation ID: `utaGridListDetails`
 `POST /api/v3/trade/grid/modify-bot`
 
 Modify the basic parameters (price range, investment amount, etc.) of a running grid trading bot.
+
 - Rate limit: 1/sec/UID
+
 - Permission: UTA trade (read & write)
 
 Operation ID: `utaGridModifyBot`
@@ -2304,14 +2459,14 @@ Operation ID: `utaGridModifyBot`
 | botId | string | 是 | Grid bot ID |
 | takeProfit | string |  | Take-profit price. **If not passed, the take-profit price will be cleared.** If you do not want to modify the current take-profit price, pass in the current value |
 | stopLoss | string |  | Stop-loss price. **If not passed, the stop-loss price will be cleared.** If you do not want to modify the current stop-loss price, pass in the current value |
-| terminationCondition | string |  | Termination condition<br>`rsi`<br>`boll` |
+| terminationCondition | string |  | Termination condition<br><br>`rsi`<br><br>`boll` |
 | terminationParams | object[] |  | Termination parameters |
 | terminationParams[].indicatorLength | string |  | Indicator length |
 | terminationParams[].threshold | string |  | Threshold |
 | terminationParams[].multiplier | string |  | Multiplier |
 | terminationParams[].interval | string |  | Interval |
-| hodlMode | string |  | HODL mode<br>`yes`<br>`no` |
-| autoTransferProfits | string |  | Auto transfer profits<br>`yes`: transfer out<br>`no`: do not transfer out |
+| hodlMode | string |  | HODL mode<br><br>`yes`<br><br>`no` |
+| autoTransferProfits | string |  | Auto transfer profits<br><br>`yes`: transfer out<br><br>`no`: do not transfer out |
 
 ### 响应 200：Successful response
 
@@ -2328,7 +2483,9 @@ Operation ID: `utaGridModifyBot`
 `POST /api/v3/trade/grid/modify-grid-interval`
 
 Modify the grid price range and grid number.
+
 - Rate limit: 1/sec/UID
+
 - Permission: UTA trade (read & write)
 
 Operation ID: `utaGridModifyGridInterval`
@@ -2337,7 +2494,7 @@ Operation ID: `utaGridModifyGridInterval`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | Business line<br>`SPOT`: Spot trading<br>`USDT-FUTURES`: USDT-margined futures<br>`USDC-FUTURES`: USDC-margined futures |
+| category | string | 是 | Business line<br><br>`SPOT`: Spot trading<br><br>`USDT-FUTURES`: USDT-margined futures<br><br>`USDC-FUTURES`: USDC-margined futures |
 | botId | string | 是 | Grid bot ID |
 | maxPrice | string | 是 | Grid upper limit price |
 | minPrice | string | 是 | Grid lower limit price |
@@ -2358,7 +2515,9 @@ Operation ID: `utaGridModifyGridInterval`
 `POST /api/v3/trade/grid/modify-neutral-bot`
 
 Modify the basic parameters of a running neutral grid trading bot.
+
 - Rate limit: 1/sec/UID
+
 - Permission: UTA trade (read & write)
 
 Operation ID: `utaGridModifyNeutralBot`
@@ -2368,10 +2527,10 @@ Operation ID: `utaGridModifyNeutralBot`
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
 | botId | string | 是 | Grid bot ID |
-| category | string | 是 | Business line<br>`USDT-FUTURES`: USDT-margined futures<br>`USDC-FUTURES`: USDC-margined futures |
+| category | string | 是 | Business line<br><br>`USDT-FUTURES`: USDT-margined futures<br><br>`USDC-FUTURES`: USDC-margined futures |
 | takeProfit | string |  | Take-profit price. **If not passed, the take-profit price will be cleared.** Pass the current value if no change is intended |
 | stopLoss | string |  | Stop-loss price. **If not passed, the stop-loss price will be cleared.** Pass the current value if no change is intended |
-| autoTransferProfits | string |  | Auto transfer profit<br>`yes`: Transfer out<br>`no`: Do not transfer out |
+| autoTransferProfits | string |  | Auto transfer profit<br><br>`yes`: Transfer out<br><br>`no`: Do not transfer out |
 
 ### 响应 200：Successful response
 
@@ -2388,7 +2547,9 @@ Operation ID: `utaGridModifyNeutralBot`
 `POST /api/v3/trade/grid/modify-neutral-grid-interval`
 
 Modify the grid price range and number of grids.
+
 - Rate limit: 1/sec/UID
+
 - Permission: UTA trade (read & write)
 
 Operation ID: `utaGridModifyNeutralGridInterval`
@@ -2397,7 +2558,7 @@ Operation ID: `utaGridModifyNeutralGridInterval`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | Business line<br>`USDT-FUTURES`: USDT-margined futures<br>`USDC-FUTURES`: USDC-margined futures |
+| category | string | 是 | Business line<br><br>`USDT-FUTURES`: USDT-margined futures<br><br>`USDC-FUTURES`: USDC-margined futures |
 | botId | string | 是 | Grid bot ID |
 | maxPrice | string | 是 | Upper limit price |
 | minPrice | string | 是 | Lower limit price |
@@ -2418,7 +2579,9 @@ Operation ID: `utaGridModifyNeutralGridInterval`
 `GET /api/v3/trade/grid/neutral-bot-detail`
 
 Query the detailed information of a specified neutral futures grid strategy, including parameter configuration, current status, and cumulative profit.
+
 - Rate limit: 10/sec/UID
+
 - Permission: UTA trade (read-only)
 
 Operation ID: `utaGridNeutralBotDetail`
@@ -2439,7 +2602,7 @@ Operation ID: `utaGridNeutralBotDetail`
 | data | object |  |  |
 | data.botId | string |  | Grid bot ID |
 | data.symbol | string |  | Trading pair |
-| data.status | string |  | Status<br>`init`: Initializing<br>`waiting`: Waiting<br>`running`: Running<br>`terminating`: Terminating<br>`terminated`: Terminated |
+| data.status | string |  | Status<br><br>`init`: Initializing<br><br>`waiting`: Waiting<br><br>`running`: Running<br><br>`terminating`: Terminating<br><br>`terminated`: Terminated |
 | data.totalProfit | string |  | Total profit, in USDT |
 | data.roi | string |  | ROI, in decimal form |
 | data.gridProfit | string |  | Grid profit, in USDT, equal to realized arbitrage profit minus fees |
@@ -2455,7 +2618,7 @@ Operation ID: `utaGridNeutralBotDetail`
 | data.maxPrice | string |  | Upper limit price |
 | data.minPrice | string |  | Lower limit price |
 | data.gridNum | string |  | Number of grids |
-| data.gridOrderMode | string |  | Grid order mode<br>`arithmetic`: Arithmetic<br>`geometric`: Geometric |
+| data.gridOrderMode | string |  | Grid order mode<br><br>`arithmetic`: Arithmetic<br><br>`geometric`: Geometric |
 | data.triggerPrice | string |  | Trigger price |
 | data.leverage | string |  | Leverage |
 | data.stopLoss | string |  | Stop-loss price |
@@ -2463,14 +2626,16 @@ Operation ID: `utaGridNeutralBotDetail`
 | data.holdPosition | string |  | Holding position |
 | data.oneGridMinProfit | string |  | Minimum profit per grid |
 | data.oneGridMaxProfit | string |  | Maximum profit per grid |
-| data.autoTransferProfits | string |  | Auto transfer profit<br>`yes`: Transfer out<br>`no`: Do not transfer out |
+| data.autoTransferProfits | string |  | Auto transfer profit<br><br>`yes`: Transfer out<br><br>`no`: Do not transfer out |
 
 ## Get Neutral Grid Bot Order Details
 
 `GET /api/v3/trade/grid/neutral-list-details`
 
 Query the order details associated with a specified neutral futures grid strategy.
+
 - Rate limit: 1/sec/UID
+
 - Permission: UTA trade (read-only)
 
 Operation ID: `utaGridNeutralListDetails`
@@ -2508,7 +2673,9 @@ Operation ID: `utaGridNeutralListDetails`
 `POST /api/v3/trade/grid/validate-neutral`
 
 Before creating a neutral grid strategy, validate whether the grid parameters (price range, number of grids, investment amount, etc.) are legal, without actually creating the strategy.
+
 - Rate limit: 1/sec/UID
+
 - Permission: UTA trade (read & write)
 
 Operation ID: `utaGridValidateNeutral`
@@ -2517,12 +2684,12 @@ Operation ID: `utaGridValidateNeutral`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | Business line<br>`USDT-FUTURES`: USDT-margined futures<br>`USDC-FUTURES`: USDC-margined futures |
+| category | string | 是 | Business line<br><br>`USDT-FUTURES`: USDT-margined futures<br><br>`USDC-FUTURES`: USDC-margined futures |
 | symbol | string | 是 | Trading pair |
 | maxPrice | string | 是 | Upper limit price |
 | minPrice | string | 是 | Lower limit price |
 | gridNum | string | 是 | Number of grids |
-| gridOrderMode | string | 是 | Grid order mode<br>`arithmetic`: Arithmetic<br>`geometric`: Geometric |
+| gridOrderMode | string | 是 | Grid order mode<br><br>`arithmetic`: Arithmetic<br><br>`geometric`: Geometric |
 | leverage | string |  | Leverage |
 | investmentAmount | object[] |  | List of investment coins and amounts. For futures, only quote coin USDT/USDC is supported |
 | investmentAmount[].coin | string | 是 | Investment coin |
@@ -2549,7 +2716,9 @@ Operation ID: `utaGridValidateNeutral`
 `POST /api/v3/trade/grid/validate`
 
 Before creating a grid strategy, validate whether the grid parameters (price range, grid number, investment amount, etc.) are legal. This does not actually create a strategy.
+
 - Rate limit: 1/sec/UID
+
 - Permission: UTA trade (read & write)
 
 Operation ID: `utaGridValidate`
@@ -2558,26 +2727,26 @@ Operation ID: `utaGridValidate`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | Business line<br>`SPOT`: Spot trading<br>`USDT-FUTURES`: USDT-margined futures<br>`USDC-FUTURES`: USDC-margined futures |
+| category | string | 是 | Business line<br><br>`SPOT`: Spot trading<br><br>`USDT-FUTURES`: USDT-margined futures<br><br>`USDC-FUTURES`: USDC-margined futures |
 | symbol | string | 是 | Trading pair name |
 | gridType | string |  | Grid direction<br>`long`<br>`short`<br>`neutral`<br>**Required when category is futures (`USDT-FUTURES` / `USDC-FUTURES`); optional for `SPOT`** |
 | maxPrice | string | 是 | Grid upper limit price |
 | minPrice | string | 是 | Grid lower limit price |
 | gridNum | string | 是 | Number of grids |
-| gridOrderMode | string | 是 | Grid order mode<br>`arithmetic`: Arithmetic<br>`geometric`: Geometric |
+| gridOrderMode | string | 是 | Grid order mode<br><br>`arithmetic`: Arithmetic<br><br>`geometric`: Geometric |
 | leverage | string |  | Leverage, default 1. Only effective for futures |
 | investmentAmount | object[] | 是 | Investment amount |
 | investmentAmount[].coin | string | 是 | Coin |
 | investmentAmount[].amount | string | 是 | Amount |
 | reservedMargin | string |  | Reserved margin. Only effective for futures |
-| triggerCondition | string |  | Trigger condition, default `instant`<br>`instant`<br>`price`<br>`rsi`<br>`boll` |
+| triggerCondition | string |  | Trigger condition, default `instant`<br><br>`instant`<br><br>`price`<br><br>`rsi`<br><br>`boll` |
 | triggerParams | object[] |  | Trigger parameters |
 | triggerParams[].indicatorLength | string |  | Indicator length |
 | triggerParams[].threshold | string |  | Threshold |
 | triggerParams[].multiplier | string |  | Multiplier |
 | triggerParams[].interval | string |  | Interval |
 | triggerPrice | string |  | Trigger price |
-| terminationCondition | string |  | Termination condition<br>`rsi`<br>`boll` |
+| terminationCondition | string |  | Termination condition<br><br>`rsi`<br><br>`boll` |
 | terminationParams | object[] |  | Termination parameters |
 | terminationParams[].indicatorLength | string |  | Indicator length |
 | terminationParams[].threshold | string |  | Threshold |
@@ -2585,13 +2754,13 @@ Operation ID: `utaGridValidate`
 | terminationParams[].interval | string |  | Interval |
 | stopLoss | string |  | Stop-loss price |
 | takeProfit | string |  | Take-profit price |
-| trailingGrid | string |  | Trailing grid, default `no`<br>`yes`<br>`no` |
+| trailingGrid | string |  | Trailing grid, default `no`<br><br>`yes`<br><br>`no` |
 | movingAverageGains | string |  | Moving average gains |
 | stopUpwardPrice | string |  | Stop upward price |
-| hodlMode | string |  | HODL mode, default `no`. Only effective for spot<br>`yes`<br>`no` |
-| marketOpen | string |  | Market open, default enabled. Only effective for futures<br>`yes`<br>`no` |
-| lossReserve | string |  | Loss reserve, default enabled. Only effective for futures<br>`yes`<br>`no` |
-| autoTransferProfits | string | 是 | Auto transfer profits, default `no`<br>`yes`<br>`no` |
+| hodlMode | string |  | HODL mode, default `no`. Only effective for spot<br><br>`yes`<br><br>`no` |
+| marketOpen | string |  | Market open, default enabled. Only effective for futures<br><br>`yes`<br><br>`no` |
+| lossReserve | string |  | Loss reserve, default enabled. Only effective for futures<br><br>`yes`<br><br>`no` |
+| autoTransferProfits | string | 是 | Auto transfer profits, default `no`<br><br>`yes`<br><br>`no` |
 
 ### 响应 200：Successful response
 
@@ -2630,6 +2799,8 @@ Operation ID: `utaGridValidate`
 - `GET /api/v3/trade/unfilled-orders` — 获取当前委托
 - `GET /api/v3/trade/history-orders` — 获取历史委托
 - `GET /api/v3/trade/fills` — 获取成交明细
+- `POST /api/v3/trade/place-reality-order` — 创建Reality股票订单
+- `POST /api/v3/trade/cancel-reality-order` — 撤销Reality股票订单
 - `POST /api/v3/account/max-open-available` — 获取最大可开可用
 - `POST /api/v3/trade/close-positions` — 一键平仓
 - `POST /api/v3/account/move-positions` — 仓位转移
@@ -2666,9 +2837,7 @@ Operation ID: `utaGridValidate`
 - 限频规则: 10次/秒/UID
 - 需要统一账户交易读写权限
 
-> 该接口现支持 Reality 股票交易对（rtoken，如 `rAAPLUSDT`）下单。rToken 订单的限频按 `venue` 区分：`internal_market`（场内）按 Crypto 限频规则，`10次/秒/UID`；默认策略（不传 `venue`）及 `lit_market`（场外）按 rToken 限频规则，默认 `5次/秒/UID`，白名单用户 `30次/秒/UID`。
-
-> **rToken订单暂不支持改单。** 如需调整rToken挂单的价格或数量，请先撤单，再重新下单。订单路由（`venue`）与撮合机制详见 [Reality 交易指南](/zh-CN/docs/uta/reality-trading-guide)。
+> 该接口现支持 Reality 股票交易对（rtoken，如 `rAAPLUSDT`）下单。Reality 订单适用独立限频规则：默认 `5次/秒/UID`，白名单用户 `30次/秒/UID`。
 
 该接口支持现货、杠杆及合约下单，并可以自定义包括价格、数量和订单类型等参数。
 
@@ -2679,7 +2848,7 @@ Operation ID: `utaGridValidate`
 
 
 - **订单检查**
-    - **合约**：`Price`下单价格要满足价格乘数`priceMultiplier`的倍数，并且符合`pricePrecision`小数位。`qty`要满足大于`minOrderAmount`并且满足`quantityMultiplier`的倍数
+    - **合约**：`Price`下单价格要满足价格乘数`priceMultiplier`的倍数，并且符合`pricePrecision`小数位。`qty`要满足大于`minOrderAmount`并且满足`sizeMultiplier`的倍数
 
     - **现货**：`price`要满足小数位。`qty`下单数量必须要大于`minOrderAmount`
 
@@ -2745,11 +2914,11 @@ Operation ID: `utaTradeOrderPlaceOrder`
 | price | string |  | 下单价格<br/>订单类型为限价单`limit`时，该字段必填<br/>订单类型为市价单`market`时，该字段失效 |
 | side | string | 是 | 下单方向<br/>`buy`: 买<br/>`sell`: 卖 |
 | orderType | string | 是 | 订单类型<br/>`limit`: 限价单<br/>`market`: 市价单 |
-| timeInForce | string |  | 订单执行策略<br/>`ioc`: 无法立即成交的部分就撤销<br/>`fok`: 无法全部立即成交就撤销<br/>`gtc`: 普通订单, 订单会一直有效，直到被成交或者取消<br/>`post_only`: 只做maker<br/>`rpi`: 零售价格优化订单，为零售订单流提供价格优化的非显示限价单。仅限拥有RPI做市商权限的账户使用。<br/>订单类型为限价单`limit`时，默认值为`gtc`；<br/>订单类型为市价单`market`时，系统会按照`ioc`执行<br/>交易Reality 股票交易对（rtoken，如 rAAPLUSDT）时忽略该字段 |
+| timeInForce | string |  | 订单执行策略<br/>`ioc`: 无法立即成交的部分就撤销<br/>`fok`: 无法全部立即成交就撤销<br/>`gtc`: 普通订单, 订单会一直有效，直到被成交或者取消<br/>`post_only`: 只做maker<br/>`rpi`: 零售价格优化订单，为零售订单流提供价格优化的非显示限价单。仅限拥有RPI做市商权限的账户使用。<br/>订单类型为限价单`limit`时，默认值为`gtc`；<br/>订单类型为市价单`market`时，系统会按照`ioc`执行 |
 | posSide | string |  | 仓位方向 <br/>双向持仓模式下必填，单向持仓时不要填，否则会报错<br/>`long`: 多头<br/>`short`: 空头   <br/>只适用于合约交易 |
 | clientOid | string |  | 自定义订单ID, `^[0-9A-Za-z_:#\\-+\\s]{1,32}$` |
 | reduceOnly | string |  | 是否只减仓:`yes`,`no`，默认`no`;<br/>`yes`表示确保委托的执行只以平仓为目的，减少仓位<br/>仅适用于**单向持仓**模式下 |
-| stpMode | string |  | [STP模式（自成交预防）](https://www.bitget.com/zh-CN/support/articles/12560603812732)<br/>`none`：不设置STP（默认值）<br/>`cancel_taker`：取消taker单 <br/>`cancel_maker`：取消maker单 <br/>`cancel_both`：两者都取消 |
+| stpMode | string |  | STP模式（自成交预防）<br/>`none`：不设置STP（默认值）<br/>`cancel_taker`：取消taker单 <br/>`cancel_maker`：取消maker单 <br/>`cancel_both`：两者都取消 |
 | tpTriggerBy | string |  | 预设止盈触发类型<br/>`market`：市场价格<br/>`mark`：标记价格<br/>如不填写，默认值为market市场价格<br/>该字段仅针对合约业务线usdt-futures，coin-futures及usdc-futures生效 |
 | slTriggerBy | string |  | 预设止损触发类型<br/>`market`市场价格<br/>`mark`标记价格<br/>如不填写，默认值为market市场价格<br/>该字段仅针对合约业务线usdt-futures，coin-futures及usdc-futures生效 |
 | takeProfit | string |  | 预设止盈触发价格 |
@@ -2761,12 +2930,6 @@ Operation ID: `utaTradeOrderPlaceOrder`
 | marginMode | string |  | 保证金模式<br/>`crossed` 全仓<br/>`isolated` 逐仓<br/>不传默认为全仓<br/>仅适用于合约 |
 | autoBorrow | string |  | 自动借币开关<br/>`yes` 开启<br/>`no` 关闭（默认）<br/>仅用于现货下单。开启后，若得到币不支持借贷、消耗币支持借贷，则在消耗币可用余额不足时，系统将自动借入消耗币，补足委托所需金额。 |
 | pxAmendType | string |  | 订单价格修正类型<br/>`no` 当委托价格超出价格限制时，不允许系统修改订单价格，委托单会被拒绝（默认）<br/>`yes` 当委托价格超出价格限制时，允许系统将价格修改为限制范围内的最优值进行下单<br/>仅对限价单（`orderType`=`limit`）生效 |
-| venue | string |  | 订单路由策略<br/>`internal_market` 订单只在交易所内撮合，不提交美股券商，不受开市/休市切换影响<br/>`lit_market` 订单提交至美股券商执行；美股开市时段不在交易所内撮合，但美股休市（如周末）时外部券商不可用，此时订单会先在场内挂单等待撮合，待开市后未成交部分再路由至券商<br/>如不传，为默认策略：优先交易所内部比价撮合，未成交部分提交至券商<br/>该参数仅针对 Reality（rtoken）交易对生效 |
-| rTokenTimeInForce | string |  | Reality（rtoken）订单执行策略<br/>`gtd` 当前时段有效。若在美股交易时间（周中）挂单，限价单有效期至美股盘后结束；若在周末挂单，有效期至美股下次开盘前<br/>`gtc` 订单有效期 90 天<br/>如不传，默认值为`gtd`<br/>该参数仅针对 Reality（rtoken）交易对生效 |
-| bboLevel | string |  | BBO档位<br/>`queue1` 同向价1<br/>`queue5` 同向价5<br/>`counterparty1` 对手价1<br/>`counterparty5` 对手价5<br/>仅支持限价单设置，在市价单时无效 |
-| slippageTolerance | string |  | 滑点百分比<br/>默认值为 2%，范围是 [0.001, 0.05]，最多 3 位小数<br/>仅支持市价单设置<br/>滑点设置越高，成交的可能性越大，但成交价格可能与最新价格偏差较大。 |
-| requestTime | string |  | 请求时间，用于配合`receiveWindow`计算请求的有效期窗口。若不传此参数，则`receiveWindow`参数无效 |
-| receiveWindow | string |  | 接收窗口有效期，单位毫秒，取值范围`[10, 60000]`<br/>若撮合引擎接收到订单的时间早于`requestTime + receiveWindow`，订单正常提交到订单簿；若超出该时间窗口，订单将被撤销 |
 
 ### 响应 200：Successful response
 
@@ -2852,7 +3015,7 @@ Operation ID: `utaTradeOrderModifyOrder`
 
 `POST /api/v3/trade/cancel-order`
 
-> 该接口现支持 Reality 股票交易对（rtoken，如 `rAAPLUSDT`）撤单。Reality 订单限频规则与 Crypto 一致。
+> 该接口现支持 Reality 股票交易对（rtoken，如 `rAAPLUSDT`）撤单。Reality 订单适用独立限频规则：默认 `5次/秒/UID`，白名单用户 `30次/秒/UID`。
 
 该接口支持取消单独的现货、合约、杠杆的未成交以及部分成交订单
 - 限频规则: 10次/秒/UID
@@ -2958,7 +3121,7 @@ Operation ID: `utaTradeOrderCountDownCancelAll`
 
 
 **订单检查**
-    - **合约**：`Price`下单价格要满足价格乘数`priceMultiplier`的倍数，并且符合`pricePrecision`小数位。`qty`要满足大于<br/>      `minTradeUSDT`并且满足`quantityMultiplier`的倍数
+    - **合约**：`Price`下单价格要满足价格乘数`priceMultiplier`的倍数，并且符合`pricePrecision`小数位。`qty`要满足大于<br/>      `minTradeUSDT`并且满足`sizeMultiplier`的倍数
 
     - **现货**：`price`要满足小数位。`qty`下单数量必须要大于`minTradeUSDT`
 
@@ -3035,13 +3198,11 @@ Operation ID: `utaTradeOrderPlaceBatch`
 | price | string |  | 下单价格<br/>订单类型为限价单`limit`时，该字段必填<br/>订单类型为市价单`market`时，该字段失效 |
 | side | string | 是 | 下单方向<br/>`buy`: 买<br/>`sell`: 卖 |
 | orderType | string | 是 | 订单类型<br/>`limit`: 限价单<br/>`market`: 市价单 |
-| timeInForce | string |  | 订单执行策略<br/>`ioc`: 无法立即成交的部分就撤销<br/>`fok`: 无法全部立即成交就撤销<br/>`gtc`: 普通订单, 订单会一直有效，直到被成交或者取消<br/>`post_only`: 只做maker<br/>`rpi`: 零售价格优化订单，为零售订单流提供价格优化的非显示限价单。仅限拥有RPI做市商权限的账户使用。<br/>订单类型为限价单`limit`时，默认值为`gtc`；<br/>订单类型为市价单`market`时，系统会按照`ioc`执行<br/>交易Reality 股票交易对（rtoken，如 rAAPLUSDT）时忽略该字段 |
+| timeInForce | string |  | 订单执行策略<br/>`ioc`: 无法立即成交的部分就撤销<br/>`fok`: 无法全部立即成交就撤销<br/>`gtc`: 普通订单, 订单会一直有效，直到被成交或者取消<br/>`post_only`: 只做maker<br/>`rpi`: 零售价格优化订单，为零售订单流提供价格优化的非显示限价单。仅限拥有RPI做市商权限的账户使用。<br/>订单类型为限价单`limit`时，默认值为`gtc`；<br/>订单类型为市价单`market`时，系统会按照`ioc`执行 |
 | posSide | string |  | 仓位方向 <br/>双向持仓模式下必填，单向持仓时不要填，否则会报错<br/>`long`: 多头<br/>`short`: 空头   <br/>只适用于合约交易 |
 | clientOid | string |  | 自定义订单ID,  `[0-9A-Za-z_:#\\-+\\s]{1,32}$` |
 | stpMode | string |  | STP模式<br/>`none` 不设置STP（默认） <br/>`cancel_taker` 取消taker单 <br/>`cancel_maker` 取消maker单 <br/>`cancel_both` 两者都取消 |
 | pxAmendType | string |  | 订单价格修正类型<br/>`no` 当委托价格超出价格限制时，不允许系统修改订单价格，委托单会被拒绝（默认）<br/>`yes` 当委托价格超出价格限制时，允许系统将价格修改为限制范围内的最优值进行下单<br/>仅对限价单（`orderType`=`limit`）生效 |
-| requestTime | string |  | 请求时间，用于配合`receiveWindow`计算请求的有效期窗口。若不传此参数，则`receiveWindow`参数无效 |
-| receiveWindow | string |  | 接收窗口有效期，单位毫秒，取值范围`[10, 60000]`<br/>若撮合引擎接收到订单的时间早于`requestTime + receiveWindow`，订单正常提交到订单簿；若超出该时间窗口，订单将被撤销 |
 
 ### 响应 200：Successful response
 
@@ -3229,8 +3390,7 @@ Operation ID: `utaTradeOrderCancelAllOrder`
 
 `GET /api/v3/trade/order-info`
 
-通过orderId或者clientOid获取订单详情；[通过API下单的历史订单记录中，委托订单为cancelled状态的记录，仅支持保留2小时，非API下单的委托订单数据不受影响](https://www.bitget.com/zh-CN/support/articles/12560603823188)；
-
+通过orderId或者clientOid获取订单详情
 - 限频规则: 20次/秒/UID
 - 需要统一账户交易只读/读写权限
 
@@ -3265,13 +3425,11 @@ Operation ID: `utaTradeOrderGetOrderDetails`
 | data.orderStatus | string |  | 订单状态<br/>`live`: 订单已创建<br/>`new`: 订单已进入撮合<br/>`partially_filled`: 部分成交<br/>`filled`: 全部成交<br/>`cancelled`: 已撤销 |
 | data.side | string |  | 开单方向<br/>`buy`: 买<br/>`sell`: 卖 |
 | data.timeInForce | string |  | 订单执行策略<br/>`ioc`: 无法立即成交的部分就撤销<br/>`fok`: 无法全部立即成交就撤<br/>`gtc`: 普通订单, 订单会一直有效，直到被成交或者取消<br/>`post_only`: 只做maker<br/>`rpi`: 零售价格优化订单 |
-| data.venue | string |  | 订单路由策略<br/>`default` 默认策略，优先交易所内部比价撮合，未成交部分提交至券商<br/>`internal_market` 订单只在交易所内撮合，不提交美股券商，不受开市/休市切换影响<br/>`lit_market` 订单提交至美股券商执行；美股开市时段不在交易所内撮合，但美股休市（如周末）时外部券商不可用，此时订单会先在场内挂单等待撮合，待开市后未成交部分再路由至券商<br/>该字段仅针对 Reality（rtoken）交易对生效 |
-| data.rTokenTimeInForce | string |  | Reality（rtoken）订单执行策略<br/>`gtd` 当前时段有效。若在美股交易时间（周中）挂单，限价单有效期至美股盘后结束；若在周末挂单，有效期至美股下次开盘前<br/>`gtc` 订单有效期 90 天<br/>该字段仅针对 Reality（rtoken）交易对生效 |
 | data.posSide | string |  | 仓位方向<br/>`long`: 开<br/>`short`: 平<br/>只适用合约订单 |
 | data.tradeSide | string |  | 交易方向 <br/>`open`: 开 <br/>`close` : 平     <br/>详细枚举可以在 枚举 页面获取 |
 | data.holdMode | string |  | 持仓模式<br/>`one_way_mode`: 单向持仓<br/>`hedge_mode`: 双向持仓<br/>只适用合约订单 |
 | data.marginMode | string |  | 保证金模式<br/>`crossed`: 全仓<br/>`isolated`: 逐仓<br/>只适用合约订单 |
-| data.stpMode | string |  | [STP模式（自成交预防）](https://www.bitget.com/zh-CN/support/articles/12560603812732)<br/>`none`：不设置STP（默认值）<br/>`cancel_taker`：取消taker单 <br/>`cancel_maker`：取消maker单 <br/>`cancel_both`：两者都取消 |
+| data.stpMode | string |  | STP模式（自成交预防）<br/>`none`：不设置STP（默认值）<br/>`cancel_taker`：取消taker单 <br/>`cancel_maker`：取消maker单 <br/>`cancel_both`：两者都取消 |
 | data.takeProfit | string |  | 止盈触发价格 |
 | data.stopLoss | string |  | 止损触发价格 |
 | data.tpTriggerBy | string |  | 止盈触发类型<br/>`market`: 市场价格<br/>`mark`: 标记价格 |
@@ -3309,8 +3467,6 @@ Operation ID: `utaTradeOrderGetOrderDetails`
     "cumExecValue": "99.853356",
     "avgPrice": "2684.23",
     "timeInForce": "gtc",
-    "venue": "default",
-    "rTokenTimeInForce": "gtd",
     "orderStatus": "filled",
     "posSide": "",
     "tradeSide": "open",
@@ -3406,6 +3562,7 @@ Operation ID: `utaTradeOrderGetOrderPending`
 | data.>feeDetail | string[] |  | 手续费明细 |
 | data.>> feeCoin | string |  | 手续费币种 |
 | data.>> fee | string |  | 总计手续费 |
+| data.>channelCode | string |  | 渠道标识<br/>用于经纪商用户返佣核对 |
 | data.>createdTime | string |  | 订单创建时间<br/>Unix毫秒时间戳，例如1690196141868 |
 | data.>updatedTime | string |  | 订单更新时间<br/>Unix毫秒时间戳，例如1690196141868 |
 | data.cursor | string |  | 翻页游标（取当前页最小 orderId，传入查询更早的订单） |
@@ -3452,6 +3609,7 @@ Operation ID: `utaTradeOrderGetOrderPending`
             "fee": null
           }
         ],
+        "channelCode": "",
         "createdTime": "1730186725663",
         "updatedTime": "1730186725691"
       }
@@ -3530,6 +3688,7 @@ Operation ID: `utaTradeOrderGetOrderHistory`
 | data.list[].slOrderType | string |  | 止损订单类型<br/>`limit`: 限价单<br/>`market`: 市价单 |
 | data.list[].tpLimitPrice | string |  | 止盈限价单执行价格 |
 | data.list[].slLimitPrice | string |  | 止损限价单执行价格 |
+| data.list[].channelCode | string |  | 渠道标识<br/>用于经纪商用户返佣核对 |
 | data.list[].createdTime | string |  | 创建时间<br/>Unix毫秒时间戳 |
 | data.list[].updatedTime | string |  | 更新时间<br/>Unix毫秒时间戳 |
 | data.cursor | string |  | 分页游标 |
@@ -3578,6 +3737,7 @@ Operation ID: `utaTradeOrderGetOrderHistory`
         ],
         "cancelReason": "normal_cancel",
         "execType": "liquidation",
+        "channelCode": "",
         "createdTime": "1730181468493",
         "updatedTime": "1730181468493"
       }
@@ -3596,8 +3756,6 @@ Operation ID: `utaTradeOrderGetOrderHistory`
 **查询时间范围**
 
   每次查询只支持查询90天内的30天数据
-
-您可以在网页端<a href="https://www.bitget.com/zh-CN/asset/export/downOrders">导出</a>历史订单。
 - 限频规则: 20次/秒/UID
 - 需要统一账户交易只读/读写权限
 
@@ -3609,7 +3767,6 @@ Operation ID: `utaTradeOrderGetOrderFills`
 |---|---|---|---|---|
 | category | query | string |  | 产品类型<br/>`SPOT` 现货交易<br/>`MARGIN` 杠杆交易<br/>`USDT-FUTURES` USDT合约<br/>`COIN-FUTURES` 币本位合约<br/>`USDC-FUTURES` USDC合约 |
 | orderId | query | string |  | 订单ID |
-| execVenue | query | string |  | 成交发生地<br/>`internal_market` 内部成交<br/>`lit_market` 公开市场成交<br/>仅适用于 Reality（rToken）交易对的成交；按该参数筛选时不返回 `execVenue` 为空的记录 |
 | startTime | query | string |  | 开始时间戳 <br/>Unix时间戳的毫秒数格式，如 1597026383085<br/>最大查询范围90天 |
 | endTime | query | string |  | 结束时间戳 <br/>Unix时间戳的毫秒数格式，如 1597026383085<br/>`startTime`和`endTime`间隔不超过30天 |
 | limit | query | string |  | 查询条数<br/>最大`100`，默认`100` |
@@ -3640,7 +3797,6 @@ Operation ID: `utaTradeOrderGetOrderFills`
 | data.list[].side | string |  | 成交类型<br/>`buy` 买<br/>`sell` 卖 |
 | data.list[].tradeScope | string |  | 交易方标识<br/>`taker`: Taker<br/>`maker`: Maker |
 | data.list[].tradeSide | string |  | 交易方向 <br/>`open`: 开 <br/>`close` : 平     <br/>详细枚举可以在 枚举 页面获取 |
-| data.list[].execVenue | string |  | 成交发生地<br/>`internal_market` 内部成交：在内部订单簿成交<br/>`lit_market` 公开市场成交：路由到外部券商，在公开市场成交<br/>仅 Reality（rToken）交易对的成交返回该字段，其他业务线成交该字段为空字符串<br/>部分历史成交若无法回溯来源，返回空字符串<br/>注：`execVenue` 为实际成交地，不同于下单参数 `venue`（订单路由策略） |
 | data.list[].createdTime | string |  | 订单创建时间<br/>Unix毫秒时间戳，例如1690196141868 |
 | data.list[].updatedTime | string |  | 订单更新时间<br/>Unix毫秒时间戳，例如1690196141868 |
 | data.list[].execPnl | string |  | 成交盈亏 |
@@ -3674,7 +3830,6 @@ Operation ID: `utaTradeOrderGetOrderFills`
             "fee": "0.6417006"
           }
         ],
-        "execVenue": "",
         "createdTime": "1750141421721",
         "updatedTime": "1750141421728",
         "execPnl": "-0.002",
@@ -3686,12 +3841,103 @@ Operation ID: `utaTradeOrderGetOrderFills`
 }
 ```
 
+## 创建Reality股票订单
+
+`POST /api/v3/trade/place-reality-order`
+
+对 Reality 股票交易对进行限价或市价下单。<br/>该接口仅对白名单 UID 开放，如有需要请联系BD。
+- 限频规则: 10次/秒/UID
+- 需要统一账户交易权限
+
+Operation ID: `utaTradeOrderPlaceRealityOrder`
+
+### 请求体（application/json）
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| category | string |  | 交易类型<br/>`SPOT` 现货交易<br/>`MARGIN` 杠杆交易<br/>默认值：`SPOT` |
+| symbol | string | 是 | 交易对名称<br/>如 `rAAPLUSDT`<br/>该接口仅支持 Reality 股票交易对 |
+| side | string | 是 | 方向<br/>`buy` 买<br/>`sell` 卖 |
+| orderType | string | 是 | 订单类型<br/>`limit` 限价单<br/>`market` 市价单 |
+| qty | string | 是 | 下单数量<br/>市价买单，单位为 **quote coin**<br/>限价及市价卖单，单位为 **base coin** |
+| price | string |  | 委托价格<br/>`orderType=limit` 时必传 |
+| clientOid | string |  | 自定义订单 ID |
+
+### 响应 200：Successful response
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| code | string |  |  |
+| msg | string |  |  |
+| requestTime | integer |  |  |
+| data | object |  |  |
+| data.orderId | string |  | 系统订单 ID |
+| data.clientOid | string |  | 客户端自定义订单 ID，未传则返回空字符串 |
+
+```json
+{
+  "code": "00000",
+  "msg": "success",
+  "requestTime": 1695806875837,
+  "data": {
+    "orderId": "121211212122",
+    "clientOid": "myOrder001"
+  }
+}
+```
+
+## 撤销Reality股票订单
+
+`POST /api/v3/trade/cancel-reality-order`
+
+撤销未成交或部分成交的 Reality 股票订单。<br/>该接口仅对白名单 UID 开放，如有需要请联系BD。
+- 限频规则: 10次/秒/UID
+- 需要统一账户交易权限
+
+Operation ID: `utaTradeOrderCancelRealityOrder`
+
+### 请求体（application/json）
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| category | string |  | 交易类型<br/>`SPOT` 现货交易<br/>`MARGIN` 杠杆交易<br/>默认值：`SPOT` |
+| symbol | string | 是 | 交易对名称<br/>如 `rAAPLUSDT` |
+| orderId | string |  | 系统订单 ID<br/>`orderId` 与 `clientOid` 至少传其一；同时传入时 `orderId` 优先 |
+| clientOid | string |  | 自定义订单 ID<br/>`orderId` 与 `clientOid` 至少传其一；同时传入时 `orderId` 优先 |
+
+### 响应 200：Successful response
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| code | string |  |  |
+| msg | string |  |  |
+| requestTime | integer |  |  |
+| data | object |  |  |
+| data.orderId | string |  | 系统订单 ID |
+| data.clientOid | string |  | 客户端自定义订单 ID，未传则返回空字符串 |
+
+```json
+{
+  "code": "00000",
+  "msg": "success",
+  "requestTime": 1695806875837,
+  "data": {
+    "orderId": "121211212122",
+    "clientOid": "myOrder001"
+  }
+}
+```
+
 ## 获取最大可开可用
 
 `POST /api/v3/account/max-open-available`
 
+限频规则: 5次/秒/UID
+
 获取最大可开可用
+
 - 限频规则: 5次/秒/UID
+
 - 需要统一账户交易只读权限
 
 Operation ID: `utaTradePositionGetMaxOpenAvailable`
@@ -3700,11 +3946,11 @@ Operation ID: `utaTradePositionGetMaxOpenAvailable`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | 产品类型<br>`SPOT` 现货交易<br>`MARGIN` 杠杆交易<br>`USDT-FUTURES` USDT合约<br>`COIN-FUTURES` 币本位合约<br>`USDC-FUTURES` USDC合约 |
-| symbol | string | 是 | 交易对名称<br>例如：`BTCUSDT` |
-| orderType | string | 是 | 订单类型<br>`limit`: 限价单<br>`market`: 市价单 |
+| category | string | 是 | 产品类型<br><br>`SPOT` 现货交易<br><br>`MARGIN` 杠杆交易<br><br>`USDT-FUTURES` USDT合约<br><br>`COIN-FUTURES` 币本位合约<br><br>`USDC-FUTURES` USDC合约 |
+| symbol | string | 是 | 交易对名称<br><br>例如：`BTCUSDT` |
+| orderType | string | 是 | 订单类型<br><br>`limit`: 限价单<br><br>`market`: 市价单 |
 | side | string | 是 | 交易方向 `buy` 买 `sell` 卖 |
-| price | string |  | 下单价格<br>订单类型为限价单`limit`时，该字段必填 |
+| price | string |  | 下单价格<br><br>订单类型为限价单`limit`时，该字段必填 |
 | size | string |  | 下单数量 基础币 |
 | autoBorrow | string |  | 自动借币开关<br/>`yes` 开启<br/>`no` 关闭（默认）<br/>仅用于现货下单。开启后，若得到币不支持借贷、消耗币支持借贷，则在消耗币可用余额不足时，系统将自动借入消耗币，补足委托所需金额。 |
 | marginMode | string |  | 保证金模式<br/>`crossed` 全仓<br/>`isolated` 逐仓<br/>不传默认为`crossed`<br/>逐仓模式下，`available`计算会剔除合约体验金 |
@@ -3717,12 +3963,12 @@ Operation ID: `utaTradePositionGetMaxOpenAvailable`
 | msg | string |  |  |
 | requestTime | integer |  |  |
 | data | object |  |  |
-| data.available | string |  | 可用 <br> 现货/杠杆 `side=buy` 时代表计价币数量 `side=sell`时代表基础币数量 <br> 合约代表计价币数量 |
-| data.maxOpen | string |  | 最大可开  <br>`side=buy` 时代表计价币数量 `side=sell`时代表基础币数量  <br>杠杆有值；现货在开启自动借币（`autoBorrow`）时也有值 |
-| data.buyOpenCost | string |  | 买入时以输入的`size`计算开仓所需的计价币数量 <br>只有合约有值 |
-| data.sellOpenCost | string |  | 卖出时以输入的`size`计算开仓所需的计价币数量 <br>只有合约有值 |
-| data.maxBuyOpen | string |  | 买入最大可开 以账户余额计算的基础币数量<br> 只有合约有值 |
-| data.maxSellOpen | string |  | 卖出最大可开 以账户余额计算的基础币数量<br> 只有合约有值 |
+| data.available | string |  | 可用 <br><br> 现货/杠杆 `side=buy` 时代表计价币数量 `side=sell`时代表基础币数量 <br><br> 合约代表计价币数量 |
+| data.maxOpen | string |  | 最大可开  <br><br>`side=buy` 时代表计价币数量 `side=sell`时代表基础币数量  <br><br>杠杆有值；现货在开启自动借币（`autoBorrow`）时也有值 |
+| data.buyOpenCost | string |  | 买入时以输入的`size`计算开仓所需的计价币数量 <br><br>只有合约有值 |
+| data.sellOpenCost | string |  | 卖出时以输入的`size`计算开仓所需的计价币数量 <br><br>只有合约有值 |
+| data.maxBuyOpen | string |  | 买入最大可开 以账户余额计算的基础币数量<br><br> 只有合约有值 |
+| data.maxSellOpen | string |  | 卖出最大可开 以账户余额计算的基础币数量<br><br> 只有合约有值 |
 | data.maxBuyAvailable | string |  | 最大可买 |
 | data.maxSellAvailable | string |  | 最大可卖 |
 
@@ -3748,14 +3994,19 @@ Operation ID: `utaTradePositionGetMaxOpenAvailable`
 
 `POST /api/v3/trade/close-positions`
 
+限频规则: 5次/秒/UID
+
 支持把当前仓位按产品类型或者持仓方向以市价进行平仓，可能会有滑点
 
 
 **API Broker返佣标识**:
 
   需在HTTP Header请求头中添加如下代码块
+
   > "X-CHANNEL-API-CODE":"your-channel-api-code"
+
 - 限频规则: 5次/秒/UID
+
 - 需要统一账户交易读写权限
 
 Operation ID: `utaTradePositionCloseAllPositions`
@@ -3764,9 +4015,9 @@ Operation ID: `utaTradePositionCloseAllPositions`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | 产品类型<br>`USDT-FUTURES` U本位合约<br>`COIN-FUTURES` 币本位合约<br>`USDC-FUTURES` USDC合约 |
-| symbol | string |  | 交易对名称<br>例如：`BTCUSDT`<br>如果不填此参数，会平掉对应的产品类型下的所有仓位 |
-| posSide | string |  | 持仓方向 <br>`long` 多仓<br>`short` 空仓<br> 如填此参数 则只会平对应方向下仓位 |
+| category | string | 是 | 产品类型<br><br>`USDT-FUTURES` U本位合约<br><br>`COIN-FUTURES` 币本位合约<br><br>`USDC-FUTURES` USDC合约 |
+| symbol | string |  | 交易对名称<br><br>例如：`BTCUSDT`<br><br>如果不填此参数，会平掉对应的产品类型下的所有仓位 |
+| posSide | string |  | 持仓方向 <br><br>`long` 多仓<br><br>`short` 空仓<br><br> 如填此参数 则只会平对应方向下仓位 |
 
 ### 响应 200：Successful response
 
@@ -3804,19 +4055,30 @@ Operation ID: `utaTradePositionCloseAllPositions`
 
 `POST /api/v3/account/move-positions`
 
+限频规则: 1次/秒/UID
+
 支持母子账户互转及子账户间移仓：
 
 1. 母账户向子账户移仓
+
 2. 子账户向母账户移仓
+
 3. 子账户向子账户移仓（需隶属于相同母账户）
 
 该功能仅对白名单用户开放，仅能通过母账户的API Key调用，必须是同一母账户体系，当前仅支持USDT和USDC合约，仅支持全仓模式。
+
 移仓生成的交易不会出现在公有行情的成交中，不产生手续费。
+
 整点前后5分钟不支持移仓，源账户mmr>=80%不支持移仓。移仓前会撤销源账户和目标账户对应合约的订单，移仓价格默认且仅支持标记价格。
+
 用户每日最多可触发**100**次移仓请求，调用成功算1次，每次移仓请求需间隔**30秒**，每个移仓请求最多支持10个仓位。
+
 移仓之后的持仓模式和杠杆倍数以目标账户原先的设置为准。
+
 - 限频规则: 1次/秒/UID
+
 - **业务限制: 100次/天/UID，请求间隔最少30秒**
+
 - 需要统一账户交易读写权限
 
 Operation ID: `utaTradePositionMovePositions`
@@ -3825,13 +4087,13 @@ Operation ID: `utaTradePositionMovePositions`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| fromUid | string | 是 | 移仓发起账户UID <br>转出仓位的账户 <br>`fromUid`及`toUid`需隶属于同一母子账户体系 |
-| toUid | string | 是 | 移仓目标账户UID <br>接收仓位的账户 <br>`fromUid`及`toUid`需隶属于同一母子账户体系 |
-| category | string | 是 | 产品类型 <br>`USDT-FUTURES` USDT合约 <br>`COIN-FUTURES` 币本位合约 <br>`USDC-FUTURES` USDC合约 |
-| positionList | string[] | 是 | 仓位列表 <br>单次请求最多10个仓位 |
-| >symbol | string | 是 | 交易对名称 <br>例如：`BTCUSDT` |
-| >side | string | 是 | 下单方向<br>`buy`/`sell` <br>单向模式/双向模式处理逻辑一致 <br>持有多仓时，需传入`side=sell`进行减仓 <br>持有空仓时，需传入`side=buy`进行减仓 |
-| >qty | string | 是 | 转移数量 <br>需满足最小数量精度要求 |
+| fromUid | string | 是 | 移仓发起账户UID <br><br>转出仓位的账户 <br><br>`fromUid`及`toUid`需隶属于同一母子账户体系 |
+| toUid | string | 是 | 移仓目标账户UID <br><br>接收仓位的账户 <br><br>`fromUid`及`toUid`需隶属于同一母子账户体系 |
+| category | string | 是 | 产品类型 <br><br>`USDT-FUTURES` USDT合约 <br><br>`COIN-FUTURES` 币本位合约 <br><br>`USDC-FUTURES` USDC合约 |
+| positionList | string[] | 是 | 仓位列表 <br><br>单次请求最多10个仓位 |
+| >symbol | string | 是 | 交易对名称 <br><br>例如：`BTCUSDT` |
+| >side | string | 是 | 下单方向<br><br>`buy`/`sell` <br><br>单向模式/双向模式处理逻辑一致 <br><br>持有多仓时，需传入`side=sell`进行减仓 <br><br>持有空仓时，需传入`side=buy`进行减仓 |
+| >qty | string | 是 | 转移数量 <br><br>需满足最小数量精度要求 |
 
 ### 响应 200：Successful response
 
@@ -3844,8 +4106,8 @@ Operation ID: `utaTradePositionMovePositions`
 | data.closePosition | string[] |  | 发起账户仓位列表 |
 | data.>orderId | string |  | 目标订单ID |
 | data.>clientOid | string |  | 目标订单自定义ID |
-| data.>code | string |  | 错误码 <br>开仓产生错误时返回 |
-| data.>msg | string |  | 错误信息 <br>开仓产生错误时返回 |
+| data.>code | string |  | 错误码 <br><br>开仓产生错误时返回 |
+| data.>msg | string |  | 错误信息 <br><br>开仓产生错误时返回 |
 | data.openPosition | string[] |  | 目标账户仓位结果列表 |
 
 ```json
@@ -3878,12 +4140,16 @@ Operation ID: `utaTradePositionMovePositions`
 
 `GET /api/v3/account/move-position-history`
 
+限频规则: 5次/秒/UID
+
 查询移仓历史记录。仅支持母账户调用。
 
 **查询时间范围**
 
   如不传`endTime`，默认查询最近30天数据。最大支持的时间跨度为90天。
+
 - 限频规则: 5次/秒/UID
+
 - 需要统一账户交易只读/读写权限
 
 Operation ID: `utaTradePositionGetMovePositionHistory`
@@ -3892,12 +4158,12 @@ Operation ID: `utaTradePositionGetMovePositionHistory`
 
 | 名称 | 位置 | 类型 | 必填 | 说明 |
 |---|---|---|---|---|
-| category | query | string | 是 | 产品类型 <br>`USDT-FUTURES` USDT合约 <br>`COIN-FUTURES` 币本位合约 <br>`USDC-FUTURES` USDC合约 |
-| symbol | query | string |  | 交易对名称 <br>例如：`BTCUSDT` |
-| startTime | query | string |  | 开始时间戳 <br>Unix时间戳的毫秒数格式，如 `1597026383085` |
-| endTime | query | string |  | 结束时间戳 <br>Unix时间戳的毫秒数格式，如 `1597026383185` <br>如不传，默认查询最近30天数据 <br>最大支持的时间跨度为90天 |
-| cursor | query | string |  | 游标ID <br>用于分页。首次不传，后续传上次响应结果 |
-| limit | query | string |  | 每页条目数 <br>默认值为`100`，最大值为`100` |
+| category | query | string | 是 | 产品类型 <br><br>`USDT-FUTURES` USDT合约 <br><br>`COIN-FUTURES` 币本位合约 <br><br>`USDC-FUTURES` USDC合约 |
+| symbol | query | string |  | 交易对名称 <br><br>例如：`BTCUSDT` |
+| startTime | query | string |  | 开始时间戳 <br><br>Unix时间戳的毫秒数格式，如 `1597026383085` |
+| endTime | query | string |  | 结束时间戳 <br><br>Unix时间戳的毫秒数格式，如 `1597026383185` <br><br>如不传，默认查询最近30天数据 <br><br>最大支持的时间跨度为90天 |
+| cursor | query | string |  | 游标ID <br><br>用于分页。首次不传，后续传上次响应结果 |
+| limit | query | string |  | 每页条目数 <br><br>默认值为`100`，最大值为`100` |
 
 ### 响应 200：Successful response
 
@@ -3908,19 +4174,19 @@ Operation ID: `utaTradePositionGetMovePositionHistory`
 | requestTime | integer |  |  |
 | data | object |  |  |
 | data.list | string[] |  | 移仓历史列表 |
-| data.>category | string |  | 产品类型 <br>`USDT-FUTURES` USDT合约 <br>`COIN-FUTURES` 币本位合约 <br>`USDC-FUTURES` USDC合约 |
+| data.>category | string |  | 产品类型 <br><br>`USDT-FUTURES` USDT合约 <br><br>`COIN-FUTURES` 币本位合约 <br><br>`USDC-FUTURES` USDC合约 |
 | data.>fromUid | string |  | 发起账户UID |
 | data.>toUid | string |  | 目标账户UID |
 | data.>orderId | string |  | 订单ID |
 | data.>openExecId | string |  | 开仓成交ID |
 | data.>closeExecId | string |  | 平仓成交ID |
-| data.>symbol | string |  | 交易对名称 <br>例如：`BTCUSDT` |
-| data.>posSide | string |  | 仓位方向 <br>`long` 多仓 <br>`short` 空仓 |
+| data.>symbol | string |  | 交易对名称 <br><br>例如：`BTCUSDT` |
+| data.>posSide | string |  | 仓位方向 <br><br>`long` 多仓 <br><br>`short` 空仓 |
 | data.>qty | string |  | 转移数量 |
 | data.>price | string |  | 转移价格 |
-| data.>status | string |  | 转移状态 <br>`processing` 处理中 <br>`completed` 已完成 <br>`failed` 失败 |
-| data.>createdTime | string |  | 订单创建时间 <br>Unix毫秒时间戳 |
-| data.>updatedTime | string |  | 订单更新时间 <br>Unix毫秒时间戳 |
+| data.>status | string |  | 转移状态 <br><br>`processing` 处理中 <br><br>`completed` 已完成 <br><br>`failed` 失败 |
+| data.>createdTime | string |  | 订单创建时间 <br><br>Unix毫秒时间戳 |
+| data.>updatedTime | string |  | 订单更新时间 <br><br>Unix毫秒时间戳 |
 | data.cursor | string |  | 分页游标 |
 
 ```json
@@ -3955,8 +4221,12 @@ Operation ID: `utaTradePositionGetMovePositionHistory`
 
 `GET /api/v3/position/current-position`
 
+限频规则: 20次/秒/UID
+
 以交易对、仓位方向，或者产品类型维度获取实时仓位信息
+
 - 限频规则: 20次/秒/UID
+
 - 需要统一账户管理只读/读写权限
 
 Operation ID: `utaTradePositionGetPosition`
@@ -3965,9 +4235,9 @@ Operation ID: `utaTradePositionGetPosition`
 
 | 名称 | 位置 | 类型 | 必填 | 说明 |
 |---|---|---|---|---|
-| category | query | string | 是 | 产品类型<br>`USDT-FUTURES` USDT合约<br>`COIN-FUTURES` 币本位合约<br>`USDC-FUTURES` USDC合约 |
-| symbol | query | string |  | 交易币对<br>例如:`BTCUSDT`<br>如果不传symbol，那么将返回对应产品类型的所有仓位 |
-| posSide | query | string |  | 仓位方向 <br>`long`: 多仓<br>`short`: 空仓<br>如果传入此参数，那么仅返回对应仓位方向的仓位信息 |
+| category | query | string | 是 | 产品类型<br><br>`USDT-FUTURES` USDT合约<br><br>`COIN-FUTURES` 币本位合约<br><br>`USDC-FUTURES` USDC合约 |
+| symbol | query | string |  | 交易币对<br><br>例如:`BTCUSDT`<br><br>如果不传symbol，那么将返回对应产品类型的所有仓位 |
+| posSide | query | string |  | 仓位方向 <br><br>`long`: 多仓<br><br>`short`: 空仓<br><br>如果传入此参数，那么仅返回对应仓位方向的仓位信息 |
 
 ### 响应 200：Successful response
 
@@ -3978,30 +4248,30 @@ Operation ID: `utaTradePositionGetPosition`
 | requestTime | integer |  |  |
 | data | object |  |  |
 | data.list | string[] |  | 列表 |
-| data.>category | string |  | 产品类型 <br>`USDT-FUTURES` USDT合约<br>`COIN-FUTURES` 币本位合约<br>`USDC-FUTURES` USDC合约 |
+| data.>category | string |  | 产品类型 <br><br>`USDT-FUTURES` USDT合约<br><br>`COIN-FUTURES` 币本位合约<br><br>`USDC-FUTURES` USDC合约 |
 | data.>symbol | string |  | 币对名称 |
 | data.>marginCoin | string |  | 保证金币种 |
-| data.>posSide | string |  | 持仓方向 持仓方向<br>`long`: 多仓<br>`short`:空仓 |
-| data.>positionBalance | string |  | 仓位保证金数量 (保证金币种)<br>逐仓模式下反映该仓位的逐仓保证金数量 |
+| data.>posSide | string |  | 持仓方向 持仓方向<br><br>`long`: 多仓<br><br>`short`:空仓 |
+| data.>positionBalance | string |  | 仓位保证金数量 (保证金币种)<br><br>逐仓模式下反映该仓位的逐仓保证金数量 |
 | data.>available | string |  | 仓位可用(基础币) |
-| data.>frozen | string |  | 仓位冻结(基础币)<br>平仓单占用 |
+| data.>frozen | string |  | 仓位冻结(基础币)<br><br>平仓单占用 |
 | data.>total | string |  | 仓位总数量(available + frozen) |
 | data.>leverage | string |  | 杠杆倍数 |
-| data.>curRealisedPnl | string |  | 已实现盈亏<br>不包含手续费和资金费率 |
+| data.>curRealisedPnl | string |  | 已实现盈亏<br><br>不包含手续费和资金费率 |
 | data.>avgPrice | string |  | 平均开仓价 |
-| data.>marginMode | string |  | 保证金模式<br>`crossed` 全仓<br>`isolated` 逐仓 |
-| data.>positionStatus | string |  | 仓位执行状态<br>`normal` 正常 |
-| data.>holdMode | string |  | 持仓模式<br>`one_way_mode` 单向持仓<br>`hedge_mode` 双向持仓 |
-| data.>unrealisedPnl | string |  | 未实现盈亏<br>逐仓模式下反映该逐仓仓位的未实现盈亏 |
-| data.>liquidationPrice | string |  | 预估强平价<br>小于等于0，代表永不爆仓 |
+| data.>marginMode | string |  | 保证金模式<br><br>`crossed` 全仓<br><br>`isolated` 逐仓 |
+| data.>positionStatus | string |  | 仓位执行状态<br><br>`normal` 正常 |
+| data.>holdMode | string |  | 持仓模式<br><br>`one_way_mode` 单向持仓<br><br>`hedge_mode` 双向持仓 |
+| data.>unrealisedPnl | string |  | 未实现盈亏<br><br>逐仓模式下反映该逐仓仓位的未实现盈亏 |
+| data.>liquidationPrice | string |  | 预估强平价<br><br>小于等于0，代表永不爆仓 |
 | data.>mmr | string |  | 维持保证金率 |
 | data.>profitRate | string |  | 收益率 |
 | data.>markPrice | string |  | 标记价格 |
 | data.>breakEvenPrice | string |  | 仓位盈亏平衡价 |
 | data.>totalFunding | string |  | 资金总费用，仓位存续期间，资金费用的累加值,初始值为空，表示还没收取过资金费 |
-| data.>openFeeTotal | string |  | 开仓已扣除手续费<br>仓位存续期间扣除的开仓交易手续费 |
-| data.>closeFeeTotal | string |  | 平仓已扣手续费<br>仓位存续期间扣除的平仓交易手续费 |
-| data.>cashDividend | string |  | 现金派息<br>单位为USDT |
+| data.>openFeeTotal | string |  | 开仓已扣除手续费<br><br>仓位存续期间扣除的开仓交易手续费 |
+| data.>closeFeeTotal | string |  | 平仓已扣手续费<br><br>仓位存续期间扣除的平仓交易手续费 |
+| data.>cashDividend | string |  | 现金派息<br><br>单位为USDT |
 | data.>createdTime | string |  | 仓位创建时间 时间戳 毫秒 |
 | data.>updatedTime | string |  | 最近更新时间 时间戳 毫秒 |
 
@@ -4049,8 +4319,12 @@ Operation ID: `utaTradePositionGetPosition`
 
 `GET /api/v3/position/history-position`
 
-查询历史90天内持仓列表，用户可以通过网页端下载[全部时间历史仓位信息](https://www.bitget.com/zh-CN/trade-asset-order/uta-order-history-order)(最早可导出2018年1月1日的数据)
+限频规则: 20次/秒/UID
+
+查询历史90天内持仓列表；用户可以通过网页端下载[全部时间历史仓位信息](https://www.bitget.com/zh-CN/trade-asset-order/uta-order-history-order)(最早可导出2018年1月1日的数据)
+
 - 限频规则: 20次/秒/UID
+
 - 需要统一账户管理只读/读写权限
 
 Operation ID: `utaTradePositionGetPositionHistory`
@@ -4059,12 +4333,12 @@ Operation ID: `utaTradePositionGetPositionHistory`
 
 | 名称 | 位置 | 类型 | 必填 | 说明 |
 |---|---|---|---|---|
-| category | query | string | 是 | 产品类型<br>`USDT-FUTURES` USDT合约<br>`COIN-FUTURES` 币本位合约<br>`USDC-FUTURES` USDC合约 |
+| category | query | string | 是 | 产品类型<br><br>`USDT-FUTURES` USDT合约<br><br>`COIN-FUTURES` 币本位合约<br><br>`USDC-FUTURES` USDC合约 |
 | symbol | query | string |  | 交易对 如:`BTCUSDT` |
-| startTime | query | string |  | 开始时间戳 <br>Unix时间戳的毫秒数格式，如 1597026383085<br> 最大查询范围90天天 |
-| endTime | query | string |  | 结束时间戳 <br>Unix时间戳的毫秒数格式，如 1597026383085<br> `startTime`和`endTime`间隔不超过30天 |
-| limit | query | string |  | 每页查询条数<br>最大`100`，默认`100` |
-| cursor | query | string |  | 分页游标<br>用于翻页，首次查询不传，查询第二页及后面的数据时，取上一次查询返回cursor |
+| startTime | query | string |  | 开始时间戳 <br><br>Unix时间戳的毫秒数格式，如 1597026383085<br><br> 最大查询范围90天天 |
+| endTime | query | string |  | 结束时间戳 <br><br>Unix时间戳的毫秒数格式，如 1597026383085<br><br> `startTime`和`endTime`间隔不超过30天 |
+| limit | query | string |  | 每页查询条数<br><br>最大`100`，默认`100` |
+| cursor | query | string |  | 分页游标<br><br>用于翻页，首次查询不传，查询第二页及后面的数据时，取上一次查询返回cursor |
 
 ### 响应 200：Successful response
 
@@ -4076,24 +4350,24 @@ Operation ID: `utaTradePositionGetPositionHistory`
 | data | object |  |  |
 | data.list | string[] |  | 列表 |
 | data.>positionId | string |  | 仓位id |
-| data.>category | string |  | 产品类型 <br>`USDT-FUTURES` USDT合约<br>`COIN-FUTURES` 币本位合约<br>`USDC-FUTURES` USDC合约 |
+| data.>category | string |  | 产品类型 <br><br>`USDT-FUTURES` USDT合约<br><br>`COIN-FUTURES` 币本位合约<br><br>`USDC-FUTURES` USDC合约 |
 | data.>symbol | string |  | 币对名称 BTCUSDT |
 | data.>marginCoin | string |  | 保证金币种 |
-| data.>posSide | string |  | 仓位方向<br>`long`/`short` |
+| data.>posSide | string |  | 仓位方向<br><br>`long`/`short` |
 | data.>openPriceAvg | string |  | 开仓平均价 |
 | data.>closePriceAvg | string |  | 平仓平均价 |
 | data.>openTotalPos | string |  | 累计开仓数量 |
 | data.>closeTotalPos | string |  | 累计平仓数量 |
-| data.>marginMode | string |  | 保证金模式<br>`crossed` 全仓<br>`isolated` 逐仓 |
-| data.>holdMode | string |  | 持仓模式<br>`one_way_mode` 单向持仓<br>`hedge_mode` 双向持仓 |
+| data.>marginMode | string |  | 保证金模式<br><br>`crossed` 全仓<br><br>`isolated` 逐仓 |
+| data.>holdMode | string |  | 持仓模式<br><br>`one_way_mode` 单向持仓<br><br>`hedge_mode` 双向持仓 |
 | data.>cumRealisedPnl | string |  | 已实现盈亏(不包含手续费和资金费用) |
 | data.>netProfit | string |  | 净盈亏 (包含扣除手续费和资金费用) |
-| data.>totalFunding | string |  | 资金总费用<br>仓位存续期间，资金费用的累加值,初始值为空，表示还没收取过资金费 |
-| data.>openFeeTotal | string |  | 开仓已扣除手续费<br>仓位存续期间扣除的开仓交易手续费 |
-| data.>closeFeeTotal | string |  | 平仓已扣手续费<br>仓位存续期间扣除的平仓交易手续费 |
-| data.>cashDividend | string |  | 现金派息<br>单位为USDT |
-| data.>createdTime | string |  | 仓位创建时间<br>时间戳 毫秒 |
-| data.>updatedTime | string |  | 仓位更新时间<br>时间戳 毫秒 |
+| data.>totalFunding | string |  | 资金总费用<br><br>仓位存续期间，资金费用的累加值,初始值为空，表示还没收取过资金费 |
+| data.>openFeeTotal | string |  | 开仓已扣除手续费<br><br>仓位存续期间扣除的开仓交易手续费 |
+| data.>closeFeeTotal | string |  | 平仓已扣手续费<br><br>仓位存续期间扣除的平仓交易手续费 |
+| data.>cashDividend | string |  | 现金派息<br><br>单位为USDT |
+| data.>createdTime | string |  | 仓位创建时间<br><br>时间戳 毫秒 |
+| data.>updatedTime | string |  | 仓位更新时间<br><br>时间戳 毫秒 |
 | data.cursor | string |  | 分页游标 |
 
 ```json
@@ -4134,8 +4408,12 @@ Operation ID: `utaTradePositionGetPositionHistory`
 
 `GET /api/v3/position/adlRank`
 
+限频规则: 1次/秒/UID
+
 获取合约仓位ADL排名
+
 - 限频规则: 1次/秒/UID
+
 - 需要统一账户交易只读/读写权限
 
 Operation ID: `utaTradePositionGetPositionADLRank`
@@ -4150,8 +4428,8 @@ Operation ID: `utaTradePositionGetPositionADLRank`
 | data | object |  |  |
 | data.symbol | string |  | 交易对名称 |
 | data.marginCoin | string |  | 保证金币种 |
-| data.adlRank | string |  | ADL排序<br>当前仓位在自动减仓序列中的排序。当市场发生自动减仓事件时，值越接近1，您的持仓被减少的概率越大 |
-| data.holdSide | string |  | 持仓方向<br>`long` 多仓<br>`short`空仓 |
+| data.adlRank | string |  | ADL排序<br><br>当前仓位在自动减仓序列中的排序。当市场发生自动减仓事件时，值越接近1，您的持仓被减少的概率越大 |
+| data.holdSide | string |  | 持仓方向<br><br>`long` 多仓<br><br>`short`空仓 |
 
 ```json
 {
@@ -4173,8 +4451,12 @@ Operation ID: `utaTradePositionGetPositionADLRank`
 
 `GET /api/v3/trade/loan-data`
 
+限频规则: 10次/秒/UID
+
 查询统一账户当前的借币数据，包含借币总额、下次扣息时间及各币种负债明细。
+
 - 限频规则: 10次/秒/UID
+
 - 需要统一账户交易只读/读写权限
 
 Operation ID: `utaTradePositionGetLoanData`
@@ -4187,13 +4469,13 @@ Operation ID: `utaTradePositionGetLoanData`
 | msg | string |  |  |
 | requestTime | integer |  |  |
 | data | object |  |  |
-| data.currentLoans | string |  | 当前借币总额<br>单位为USD |
-| data.interestPaymentTime | string |  | 下次扣息时间<br>Unix毫秒时间戳 |
+| data.currentLoans | string |  | 当前借币总额<br><br>单位为USD |
+| data.interestPaymentTime | string |  | 下次扣息时间<br><br>Unix毫秒时间戳 |
 | data.debtCoinList | object[] |  | 负债币种列表 |
 | data.debtCoinList[].coin | string |  | 负债币种 |
-| data.debtCoinList[].debt | string |  | 负债数量<br>单位为负债币种 |
-| data.debtCoinList[].interestFreeAmount | string |  | 免息额度<br>单位为coin |
-| data.debtCoinList[].interestRateNextHour | string |  | 下小时借贷利率（年化）<br>小数形式，如0.1代表10% |
+| data.debtCoinList[].debt | string |  | 负债数量<br><br>单位为负债币种 |
+| data.debtCoinList[].interestFreeAmount | string |  | 免息额度<br><br>单位为coin |
+| data.debtCoinList[].interestRateNextHour | string |  | 下小时借贷利率（年化）<br><br>小数形式，如0.1代表10% |
 
 ```json
 {
@@ -4219,13 +4501,20 @@ Operation ID: `utaTradePositionGetLoanData`
 
 `POST /api/v3/trade/place-strategy-order`
 
+限频规则: 10次/秒/UID
+
 创建策略单
 
 **API Broker返佣标识**:
 
   需在HTTP Header请求头中添加如下代码块
+
   > "X-CHANNEL-API-CODE":"your-channel-api-code"
+
+  该返佣标识 header 现已对全部策略 `type`（`tpsl`/`trigger`/`oco`/`trailing_stop`/`iceberg`/`twap`）生效。
+
 - 限频规则: 10次/秒/UID
+
 - 需要统一账户交易读写权限
 
 ### 公共请求参数
@@ -4238,14 +4527,14 @@ Operation ID: `utaStrategyPlaceStrategyOrder`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | 产品类型<br>`SPOT` 现货<br>`MARGIN` 杠杆<br>`USDT-FUTURES` USDT合约<br>`COIN-FUTURES` 币本位合约<br>`USDC-FUTURES` USDC合约 |
-| symbol | string | 是 | 交易对名称<br>例如：`BTCUSDT` |
-| type | string |  | 策略类型<br>`tpsl`止盈止损<br>`trigger`计划委托<br>`oco`OCO委托<br>`trailing_stop`追踪委托<br>`iceberg`冰山委托<br>`twap`TWAP委托<br>默认为`tpsl`止盈止损 |
-| side | string |  | 交易方向<br>`buy`买<br>`sell`卖<br>双向持仓：<br>开多：`side=buy` & `posSide=long`<br>开空：`side=sell` & `posSide=short`<br>平多：`side=sell` & `posSide=long`<br>平空：`side=buy` & `posSide=short`<br>单向持仓：<br>开多 `side=buy`<br>开空 `side=sell`<br>平多 `side=sell` & `reduceOnly=yes`<br>平空 `side=buy` & `reduceOnly=yes` |
-| posSide | string |  | 持仓方向<br>`long` 多<br>`short` 空 |
+| category | string | 是 | 产品类型<br><br>`SPOT` 现货<br><br>`MARGIN` 杠杆<br><br>`USDT-FUTURES` USDT合约<br><br>`COIN-FUTURES` 币本位合约<br><br>`USDC-FUTURES` USDC合约 |
+| symbol | string | 是 | 交易对名称<br><br>例如：`BTCUSDT` |
+| type | string |  | 策略类型<br><br>`tpsl`止盈止损<br><br>`trigger`计划委托<br><br>`oco`OCO委托<br><br>`trailing_stop`追踪委托<br><br>`iceberg`冰山委托<br><br>`twap`TWAP委托<br><br>默认为`tpsl`止盈止损 |
+| side | string |  | 交易方向<br><br>`buy`买<br><br>`sell`卖<br><br>双向持仓：<br><br>开多：`side=buy` & `posSide=long`<br><br>开空：`side=sell` & `posSide=short`<br><br>平多：`side=sell` & `posSide=long`<br><br>平空：`side=buy` & `posSide=short`<br><br>单向持仓：<br><br>开多 `side=buy`<br><br>开空 `side=sell`<br><br>平多 `side=sell` & `reduceOnly=yes`<br><br>平空 `side=buy` & `reduceOnly=yes` |
+| posSide | string |  | 持仓方向<br><br>`long` 多<br><br>`short` 空 |
 | qty | string |  | 委托数量 |
 | marginMode | string |  | 保证金模式<br/>`crossed` 全仓<br/>`isolated` 逐仓<br/>不传默认为全仓<br/>仅适用于合约 |
-| clientOid | string |  | 自定义策略订单id, 幂等有效期六小时 （不完全保证） `^[\.A-Z\:/a-z0-9_-]{1,32}$`<br>仅在 `type=tpsl` 时生效，其他策略类型不支持 |
+| clientOid | string |  | 自定义策略单 ID<br><br>格式：`^[\.A-Z\:/a-z0-9_-]{1,32}$`<br><br>幂等有效期六小时<br><br>现已支持全部策略 `type`（`tpsl`/`trigger`/`oco`/`trailing_stop`/`iceberg`/`twap`）。 |
 
 ```json
 {
@@ -4285,8 +4574,12 @@ Operation ID: `utaStrategyPlaceStrategyOrder`
 
 `POST /api/v3/trade/modify-strategy-order`
 
+限频规则: 10次/秒/UID
+
 修改策略单
+
 - 限频规则: 10次/秒/UID
+
 - 需要统一账户交易读写权限
 
 Operation ID: `utaStrategyModifyStrategyOrder`
@@ -4295,21 +4588,21 @@ Operation ID: `utaStrategyModifyStrategyOrder`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| orderId | string | 是 | 策略订单id<br>`orderId`和`clientOid`二者必填其一<br>如同时传入`orderId`及`clientOid`，则`orderId`先级更高，忽略`clientOid`入参 |
-| clientOid | string |  | 自定义策略订单id<br>`orderId`和`clientOid`二者必填其一<br>如同时传入`orderId`及`clientOid`，则`orderId`先级更高，忽略`clientOid`入参 |
-| qty | string | 是 | 委托数量<br>部分止盈止损模式下可修改，单位为`base coin` |
-| tpTriggerBy | string |  | 止盈触发类型<br>`market`市场价格<br>`mark`标记价格 |
-| slTriggerBy | string |  | 止损触发类型<br>`market`市场价格<br>`mark`标记价格 |
+| orderId | string | 是 | 策略订单id<br><br>`orderId`和`clientOid`二者必填其一<br><br>如同时传入`orderId`及`clientOid`，则`orderId`先级更高，忽略`clientOid`入参 |
+| clientOid | string |  | 自定义策略订单id<br><br>`orderId`和`clientOid`二者必填其一<br><br>如同时传入`orderId`及`clientOid`，则`orderId`先级更高，忽略`clientOid`入参 |
+| qty | string | 是 | 委托数量<br><br>部分止盈止损模式下可修改，单位为`base coin` |
+| tpTriggerBy | string |  | 止盈触发类型<br><br>`market`市场价格<br><br>`mark`标记价格 |
+| slTriggerBy | string |  | 止损触发类型<br><br>`market`市场价格<br><br>`mark`标记价格 |
 | takeProfit | string |  | 止盈触发价格 |
 | stopLoss | string |  | 止损触发价格 |
-| tpOrderType | string |  | 止盈触发的策略单类型<br>`limit` 限价单<br>`market` 市价单 |
-| slOrderType | string |  | 止损触发的策略单类型<br>`limit` 限价单<br>`market` 市价单 |
-| tpLimitPrice | string |  | 止盈策略单执行价格<br>仅限价单`tpOrderType=limit`时可修改 |
-| slLimitPrice | string |  | 止损策略单执行价格<br>仅限价单`slOrderType=limit`时可修改 |
-| triggerBy | string |  | 计划委托触发价格类型<br>`market`市场价格<br>`mark`标记价格 |
-| triggerPrice | string |  | 计划委托触发价格<br>仅限价单`triggerOrderType=limit`时可修改 |
-| triggerOrderType | string |  | 计划委托订单类型<br>`limit`限价单<br>`market`市价单 |
-| triggerOrderPrice | string |  | 计划委托执行价格<br>仅限价单`triggerOrderType=limit`时可修改 |
+| tpOrderType | string |  | 止盈触发的策略单类型<br><br>`limit` 限价单<br><br>`market` 市价单 |
+| slOrderType | string |  | 止损触发的策略单类型<br><br>`limit` 限价单<br><br>`market` 市价单 |
+| tpLimitPrice | string |  | 止盈策略单执行价格<br><br>仅限价单`tpOrderType=limit`时可修改 |
+| slLimitPrice | string |  | 止损策略单执行价格<br><br>仅限价单`slOrderType=limit`时可修改 |
+| triggerBy | string |  | 计划委托触发价格类型<br><br>`market`市场价格<br><br>`mark`标记价格 |
+| triggerPrice | string |  | 计划委托触发价格<br><br>仅限价单`triggerOrderType=limit`时可修改 |
+| triggerOrderType | string |  | 计划委托订单类型<br><br>`limit`限价单<br><br>`market`市价单 |
+| triggerOrderPrice | string |  | 计划委托执行价格<br><br>仅限价单`triggerOrderType=limit`时可修改 |
 
 ### 响应 200：Successful response
 
@@ -4338,9 +4631,14 @@ Operation ID: `utaStrategyModifyStrategyOrder`
 
 `POST /api/v3/trade/cancel-strategy-order`
 
+限频规则: 10次/秒/UID
+
 撤销策略单
+
 对于`iceberg`/`twap`委托，撤销母订单会同时撤销其所有未成交子订单；对于`oco`委托，撤销其中一笔委托会同时撤销另一笔委托。
+
 - 限频规则: 10次/秒/UID
+
 - 需要统一账户交易读写权限
 
 Operation ID: `utaStrategyCancelStrategyOrder`
@@ -4349,8 +4647,8 @@ Operation ID: `utaStrategyCancelStrategyOrder`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| orderId | string | 是 | 策略订单id<br>`orderId`和`clientOid`二者必填其一<br>如同时传入`orderId`及`clientOid`，则`orderId`先级更高，忽略`clientOid`入参 |
-| clientOid | string |  | 自定义策略订单id<br>`orderId`和`clientOid`二者必填其一<br>如同时传入`orderId`及`clientOid`，则`orderId`先级更高，忽略`clientOid`入参 |
+| orderId | string | 是 | 策略订单id<br><br>`orderId`和`clientOid`二者必填其一<br><br>如同时传入`orderId`及`clientOid`，则`orderId`先级更高，忽略`clientOid`入参 |
+| clientOid | string |  | 自定义策略订单id<br><br>`orderId`和`clientOid`二者必填其一<br><br>如同时传入`orderId`及`clientOid`，则`orderId`先级更高，忽略`clientOid`入参 |
 
 ### 响应 200：Successful response
 
@@ -4377,8 +4675,12 @@ Operation ID: `utaStrategyCancelStrategyOrder`
 
 `GET /api/v3/trade/unfilled-strategy-orders`
 
+限频规则: 20次/秒/UID
+
 获取当前策略单
+
 - 限频规则: 20次/秒/UID
+
 - 需要统一账户交易只读/读写权限
 
 Operation ID: `utaStrategyGetUnfilledStrategyOrders`
@@ -4387,8 +4689,8 @@ Operation ID: `utaStrategyGetUnfilledStrategyOrders`
 
 | 名称 | 位置 | 类型 | 必填 | 说明 |
 |---|---|---|---|---|
-| category | query | string | 是 | 产品类型<br>`spot` 现货<br>`margin` 杠杆<br>`usdt-futures` U本位合约<br>`coin-futures` 币本位合约<br>`usdc-futures` USDC合约 |
-| type | query | string |  | 策略类型<br>`tpsl`止盈止损<br>`trigger`计划委托<br>`oco` OCO<br>`trailing_stop`追踪委托<br>`iceberg`冰山委托<br>`twap`分时委托 |
+| category | query | string | 是 | 产品类型<br><br>`spot` 现货<br><br>`margin` 杠杆<br><br>`usdt-futures` U本位合约<br><br>`coin-futures` 币本位合约<br><br>`usdc-futures` USDC合约 |
+| type | query | string |  | 策略类型<br><br>`tpsl`止盈止损<br><br>`trigger`计划委托<br><br>`oco` OCO<br><br>`trailing_stop`追踪委托<br><br>`iceberg`冰山委托<br><br>`twap`分时委托 |
 
 ### 响应 200：Successful response
 
@@ -4450,8 +4752,12 @@ Operation ID: `utaStrategyGetUnfilledStrategyOrders`
 
 `GET /api/v3/trade/history-strategy-orders`
 
+限频规则: 20次/秒/UID
+
 查询历史策略单
+
 - 限频规则: 20次/秒/UID
+
 - 需要统一账户交易只读/读写权限
 
 Operation ID: `utaStrategyGetHistoryStrategyOrders`
@@ -4460,12 +4766,12 @@ Operation ID: `utaStrategyGetHistoryStrategyOrders`
 
 | 名称 | 位置 | 类型 | 必填 | 说明 |
 |---|---|---|---|---|
-| category | query | string | 是 | 产品类型<br>`spot` 现货<br>`margin` 杠杆<br>`usdt-futures` U本位合约<br>`coin-futures` 币本位合约<br>`usdc-futures` USDC合约 |
-| type | query | string |  | 策略类型<br>`tpsl`止盈止损<br>`trigger`计划委托<br>`oco` OCO<br>`trailing_stop`追踪委托<br>`iceberg`冰山委托<br>`twap`分时委托 |
-| startTime | query | string |  | 开始时间戳 <br>Unix时间戳的毫秒数格式，如 1597026383085<br> - 默认查询时间为近30天<br>- 开始和结束的最大时间间隔为90天 |
-| endTime | query | string |  | 结束时间戳 <br>Unix时间戳的毫秒数格式，如 1597026383085<br> - 默认查询时间为近30天<br>- 开始和结束的最大时间间隔为90天 |
-| limit | query | string |  | 每页条目数<br> 最大`100`，默认`100` |
-| cursor | query | string |  | 分页游标<br>用于翻页，首次查询不传，查询第二页及后面的数据时，取上一次查询返回的最小orderId，结果会返回小于该值的数据 |
+| category | query | string | 是 | 产品类型<br><br>`spot` 现货<br><br>`margin` 杠杆<br><br>`usdt-futures` U本位合约<br><br>`coin-futures` 币本位合约<br><br>`usdc-futures` USDC合约 |
+| type | query | string |  | 策略类型<br><br>`tpsl`止盈止损<br><br>`trigger`计划委托<br><br>`oco` OCO<br><br>`trailing_stop`追踪委托<br><br>`iceberg`冰山委托<br><br>`twap`分时委托<br><br>默认值为`tpsl` |
+| startTime | query | string |  | 开始时间戳 <br><br>Unix时间戳的毫秒数格式，如 1597026383085<br><br> - 默认查询时间为近30天<br><br>- 开始和结束的最大时间间隔为90天 |
+| endTime | query | string |  | 结束时间戳 <br><br>Unix时间戳的毫秒数格式，如 1597026383085<br><br> - 默认查询时间为近30天<br><br>- 开始和结束的最大时间间隔为90天 |
+| limit | query | string |  | 每页条目数<br><br> 最大`100`，默认`100` |
+| cursor | query | string |  | 分页游标<br><br>用于翻页，首次查询不传，查询第二页及后面的数据时，取上一次查询返回的最小orderId，结果会返回小于该值的数据 |
 
 ### 响应 200：Successful response
 
@@ -4478,16 +4784,17 @@ Operation ID: `utaStrategyGetHistoryStrategyOrders`
 | data.list | object[] |  | 订单列表 |
 | data.list[].orderId | string |  | 策略订单id |
 | data.list[].clientOid | string |  | 自定义策略订单id |
-| data.list[].category | string |  | 产品类型<br>`usdt-futures` U本位合约<br>`coin-futures` 币本位合约<br>`usdc-futures` USDC合约 |
-| data.list[].symbol | string |  | 交易对名称 <br>例如：`BTCUSDT` |
+| data.list[].category | string |  | 产品类型<br><br>`usdt-futures` U本位合约<br><br>`coin-futures` 币本位合约<br><br>`usdc-futures` USDC合约 |
+| data.list[].symbol | string |  | 交易对名称 <br><br>例如：`BTCUSDT` |
 | data.list[].qty | string |  | 委托数量 |
-| data.list[].posSide | string |  | 交易方向<br>`long` 多仓<br>`short` 空仓 |
-| data.list[].status | string |  | 策略订单状态<br>`success` 已执行<br>`failed` 执行失败<br>`cancelled` 已撤销 |
+| data.list[].posSide | string |  | 交易方向<br><br>`long` 多仓<br><br>`short` 空仓 |
+| data.list[].status | string |  | 策略订单状态<br><br>`success` 已执行<br><br>`failed` 执行失败<br><br>`cancelled` 已撤销 |
 | data.list[].marginMode | string |  | 保证金模式<br/>`crossed` 全仓<br/>`isolated` 逐仓<br/>不传默认为全仓<br/>仅适用于合约 |
 | data.list[].type | string |  | 策略类型<br><br>`tpsl`止盈止损<br><br>`trigger`计划委托<br><br>`oco` OCO<br><br>`trailing_stop`追踪委托<br><br>`iceberg`冰山委托<br><br>`twap`分时委托 |
-| data.list[].createdTime | string |  | 订单创建时间<br>Unix毫秒时间戳，例如1690196141868 |
-| data.list[].updatedTime | string |  | 订单更新时间<br>Unix毫秒时间戳，例如1690196141868 |
-| data.cursor | string |  | 下一页游标<br>把该值作为下次请求的`cursor`参数，可获取下一页数据 |
+| data.list[].tpslMode | string |  | 止盈止损模式<br><br>`full` 全部止盈止损<br><br>`partial` 部分止盈止损<br><br>仅 `type=tpsl` 的订单有值，其他策略类型返回空字符串 `""` |
+| data.list[].createdTime | string |  | 订单创建时间<br><br>Unix毫秒时间戳，例如1690196141868 |
+| data.list[].updatedTime | string |  | 订单更新时间<br><br>Unix毫秒时间戳，例如1690196141868 |
+| data.cursor | string |  | 下一页游标<br><br>把该值作为下次请求的`cursor`参数，可获取下一页数据 |
 
 ```json
 {
@@ -4517,6 +4824,7 @@ Operation ID: `utaStrategyGetHistoryStrategyOrders`
         "triggerOrderType": "limit",
         "triggerOrderPrice": "100500",
         "marginMode": "crossed",
+        "tpslMode": "full",
         "createdTime": "1730186725663",
         "updatedTime": "1730186725691"
       }
@@ -4531,7 +4839,11 @@ Operation ID: `utaStrategyGetHistoryStrategyOrders`
 `GET /api/v3/trade/strategy-sub-orders`
 
 查询策略生成的终态历史子订单
+
+仅支持查询策略订单创建后 7 天内的子订单
+
 - 限频规则: 10次/秒/UID
+
 - 需要统一账户交易只读/读写权限
 
 Operation ID: `utaStrategyGetStrategySubOrders`
@@ -4541,8 +4853,8 @@ Operation ID: `utaStrategyGetStrategySubOrders`
 | 名称 | 位置 | 类型 | 必填 | 说明 |
 |---|---|---|---|---|
 | orderId | query | string | 是 | 策略订单ID |
-| limit | query | string |  | 每页条目数<br>最大`100`，默认`100` |
-| cursor | query | string |  | 分页游标<br>用于翻页，首次查询不传，查询第二页及后面的数据时，取上一次查询返回的最小orderId，结果会返回小于该值的数据 |
+| limit | query | string |  | 每页条目数<br><br>最大`100`，默认`100` |
+| cursor | query | string |  | 分页游标<br><br>用于翻页，首次查询不传，查询第二页及后面的数据时，取上一次查询返回的最小orderId，结果会返回小于该值的数据 |
 
 ### 响应 200：Successful response
 
@@ -4555,18 +4867,18 @@ Operation ID: `utaStrategyGetStrategySubOrders`
 | data.list | object[] |  | 子订单列表 |
 | data.list[].subOrderId | string |  | 子订单ID |
 | data.list[].subClientOid | string |  | 自定义订单ID |
-| data.list[].category | string |  | 业务线<br>`SPOT` 现货交易<br>`MARGIN` 杠杆交易<br>`USDT-FUTURES` U本位合约<br>`COIN-FUTURES` 币本位合约<br>`USDC-FUTURES` USDC合约 |
+| data.list[].category | string |  | 业务线<br><br>`SPOT` 现货交易<br><br>`MARGIN` 杠杆交易<br><br>`USDT-FUTURES` U本位合约<br><br>`COIN-FUTURES` 币本位合约<br><br>`USDC-FUTURES` USDC合约 |
 | data.list[].symbol | string |  | 交易对名称 |
 | data.list[].price | string |  | 委托价格 |
-| data.list[].qty | string |  | 委托数量<br>单位为base coin |
-| data.list[].cumExecQty | string |  | 累计成交数量<br>单位为base coin |
+| data.list[].qty | string |  | 委托数量<br><br>单位为base coin |
+| data.list[].cumExecQty | string |  | 累计成交数量<br><br>单位为base coin |
 | data.list[].avgPrice | string |  | 平均成交价 |
-| data.list[].side | string |  | 开单方向<br>`buy` 买<br>`sell` 卖 |
-| data.list[].posSide | string |  | 仓位方向<br>`long` 多<br>`short` 空<br>只适用合约订单 |
-| data.list[].status | string |  | 订单状态<br>`filled` 已成交<br>`cancelled` 已撤销<br>`failed` 失败 |
-| data.list[].createdTime | string |  | 订单创建时间<br>Unix毫秒时间戳 |
-| data.list[].updatedTime | string |  | 订单更新时间<br>Unix毫秒时间戳 |
-| data.cursor | integer |  | 下一页游标<br>把该值作为下次请求的`cursor`参数，可获取下一页数据 |
+| data.list[].side | string |  | 开单方向<br><br>`buy` 买<br><br>`sell` 卖 |
+| data.list[].posSide | string |  | 仓位方向<br><br>`long` 多<br><br>`short` 空<br><br>只适用合约订单 |
+| data.list[].status | string |  | 订单状态<br><br>`filled` 已成交<br><br>`cancelled` 已撤销<br><br>`failed` 失败 |
+| data.list[].createdTime | string |  | 订单创建时间<br><br>Unix毫秒时间戳 |
+| data.list[].updatedTime | string |  | 订单更新时间<br><br>Unix毫秒时间戳 |
+| data.cursor | integer |  | 下一页游标<br><br>把该值作为下次请求的`cursor`参数，可获取下一页数据 |
 
 ```json
 {
@@ -4601,7 +4913,9 @@ Operation ID: `utaStrategyGetStrategySubOrders`
 `POST /api/v3/trade/grid/add-investment`
 
 交易机器人投资追加金额，支持追加现货金额及合约调整保证金。
+
 - 限频规则: 1次/秒/UID
+
 - 需要统一账户交易权限
 
 Operation ID: `utaGridAddInvestment`
@@ -4614,9 +4928,9 @@ Operation ID: `utaGridAddInvestment`
 | botId | string | 是 | 网格机器人ID，需保证业务线与网格机器人ID匹配，否则报错 |
 | coin | string | 是 | 追加币种 |
 | size | string | 是 | 金额 |
-| fundsSource | string[] | 是 | 资金来源<br>`funding`：资金账户<br>`uta`：统一账户<br>`otc`：OTC账户 |
-| adjustType | string |  | 调整类型，仅适用于合约网格，合约必填<br>`increase`<br>`decrease` |
-| reinvestProfit | string |  | 是否复投利润，默认`yes`，仅适用于现货网格<br>`yes`<br>`no` |
+| fundsSource | string[] | 是 | 资金来源<br><br>`funding`：资金账户<br><br>`uta`：统一账户<br><br>`otc`：OTC账户 |
+| adjustType | string |  | 调整类型，仅适用于合约网格，合约必填<br><br>`increase`<br><br>`decrease` |
+| reinvestProfit | string |  | 是否复投利润，默认`yes`，仅适用于现货网格<br><br>`yes`<br><br>`no` |
 
 ### 响应 200：Successful response
 
@@ -4633,7 +4947,9 @@ Operation ID: `utaGridAddInvestment`
 `GET /api/v3/trade/grid/bot-detail`
 
 查询指定策略的详细信息，含参数配置、当前状态、累计收益等。
+
 - 限频规则: 10次/秒/UID
+
 - 需要统一账户交易只读权限
 
 Operation ID: `utaGridBotDetail`
@@ -4654,7 +4970,7 @@ Operation ID: `utaGridBotDetail`
 | data | object |  |  |
 | data.botId | string |  | 网格机器人ID |
 | data.symbol | string |  | 交易对 |
-| data.status | string |  | 状态<br>`init`：初始化<br>`waiting`：待启动<br>`running`：运行中<br>`terminating`：终止中<br>`terminated`：已终止 |
+| data.status | string |  | 状态<br><br>`init`：初始化<br><br>`waiting`：待启动<br><br>`running`：运行中<br><br>`terminating`：终止中<br><br>`terminated`：已终止 |
 | data.totalProfit | string |  | 总收益，单位USDT |
 | data.roi | string |  | 收益率，小数形式 |
 | data.gridProfit | string |  | 网格利润，单位USDT |
@@ -4673,43 +4989,45 @@ Operation ID: `utaGridBotDetail`
 | data.reservedBaseTradingFee | string |  | 预留基础币交易手续费 |
 | data.reservedQuoteTradingFee | string |  | 预留计价币交易手续费 |
 | data.gridStartPrice | string |  | 网格起始价 |
-| data.gridType | string |  | 网格类型<br>`long`：做多<br>`short`：做空<br>`netural`：中性 |
+| data.gridType | string |  | 网格类型<br><br>`long`：做多<br><br>`short`：做空<br><br>`netural`：中性 |
 | data.maxPrice | string |  | 网格上限价格 |
 | data.minPrice | string |  | 网格下限价格 |
 | data.gridNum | string |  | 网格格数 |
-| data.gridOrderMode | string |  | 网格模式<br>`arithmetic`：等差<br>`geometric`：等比 |
+| data.gridOrderMode | string |  | 网格模式<br><br>`arithmetic`：等差<br><br>`geometric`：等比 |
 | data.baseInvestmentCoin | string |  | 基础币投入币种 |
 | data.baseInvestmentAmount | string |  | 基础币投入金额 |
 | data.quoteInvestmentCoin | string |  | 计价币投入币种 |
 | data.quoteInvestmentAmount | string |  | 计价币投入金额 |
-| data.slippage | string |  | 滑点<br>`1%`<br>`2%`<br>`none` |
-| data.triggerCondition | string |  | 触发条件<br>`instant`：立即<br>`price`：价格<br>`rsi`<br>`boll` |
+| data.slippage | string |  | 滑点<br><br>`1%`<br><br>`2%`<br><br>`none` |
+| data.triggerCondition | string |  | 触发条件<br><br>`instant`：立即<br><br>`price`：价格<br><br>`rsi`<br><br>`boll` |
 | data.triggerParams | object[] |  | 触发参数 |
 | data.triggerParams[].indicatorLength | string |  | 指标周期 |
 | data.triggerParams[].threshold | string |  | 阈值 |
 | data.triggerParams[].multiplier | string |  | 倍数 |
 | data.triggerParams[].interval | string |  | 周期 |
 | data.triggerPrice | string |  | 触发价格 |
-| data.terminationCondition | string |  | 终止条件<br>`rsi`<br>`boll` |
+| data.terminationCondition | string |  | 终止条件<br><br>`rsi`<br><br>`boll` |
 | data.terminationParams | object[] |  | 终止参数 |
 | data.terminationParams[].indicatorLength | string |  | 指标周期 |
 | data.terminationParams[].threshold | string |  | 阈值 |
 | data.terminationParams[].multiplier | string |  | 倍数 |
 | data.terminationParams[].interval | string |  | 周期 |
-| data.terminationSell | string |  | 终止时是否卖出<br>`yes`<br>`no` |
+| data.terminationSell | string |  | 终止时是否卖出<br><br>`yes`<br><br>`no` |
 | data.stopLoss | string |  | 止损价格 |
 | data.takeProfit | string |  | 止盈价格 |
-| data.hodlMode | string |  | 屯币模式<br>`yes`<br>`no` |
-| data.autoTransferProfits | string |  | 自动转出利润<br>`yes`<br>`no` |
+| data.hodlMode | string |  | 屯币模式<br><br>`yes`<br><br>`no` |
+| data.autoTransferProfits | string |  | 自动转出利润<br><br>`yes`<br><br>`no` |
 | data.arbitrageCount | string |  | 套利次数 |
-| data.terminationReason | string |  | 终止原因<br>`MANUAL_END`：手动终止<br>`NEW_WAIT`：待启动<br>`ACCOUNT_BALANCE_LACKING_END`：可用资金不足<br>`STOP_PROFIT_END`：止盈终止<br>`STOP_LOSS_END`：止损终止<br>`CANCEL_END`：撤单终止<br>`SYSTEM_END`：下单失败导致撤单<br>`FOLLOW_END`：跟随终止<br>`SUBSCRIBE_STOP_PROFIT_END`：订阅止盈终止<br>`SUBSCRIBE_STOP_LOSS_END`：订阅止损终止<br>`PLACE_ORDER_FAIL_END`：下单连续失败终止<br>`SYMBOL_DOWN_END`：币对下架终止<br>`SUB_ACCOUNT_TRANSFER_FAIL`：资金划转失败<br>`HIGHEST_PRICE_END`：最高价终止<br>`BOTTOM_PRICE_END`：最低价终止<br>`BURST_END`：爆仓终止<br>`MOVE_GRID_FAIL`：网格移动失败终止<br>`EXPIRE_TIME_END`：系统定时终止<br>`HANDLE_SUB_POSITION_END`：手动减仓终止<br>`STOP_PRICE_ACHIEVE`：达到终止价格<br>`ADL_END`：ADL终止<br>`AUTO_CONVERT_END`：自动兑换终止<br>`CONDITION_TRIGGER_END`：条件触发终止<br>`ADL_CONVERT_END`：ADL减仓终止<br>`CANCEL_DELIVERY_ORDER`：交割撤单<br>`BASIS_RATE_TRIGGER`：基差率触发终止<br>`EARN_REDEEM_FAIL`：理财资金赎回失败<br>`SYSTEM_CANCEL`：系统取消<br>`SYMBOL_RSTOCK_SPLIT`：拆合股撤单 |
+| data.terminationReason | string |  | 终止原因<br><br>`MANUAL_END`：手动终止<br><br>`NEW_WAIT`：待启动<br><br>`ACCOUNT_BALANCE_LACKING_END`：可用资金不足<br><br>`STOP_PROFIT_END`：止盈终止<br><br>`STOP_LOSS_END`：止损终止<br><br>`CANCEL_END`：撤单终止<br><br>`SYSTEM_END`：下单失败导致撤单<br><br>`FOLLOW_END`：跟随终止<br><br>`SUBSCRIBE_STOP_PROFIT_END`：订阅止盈终止<br><br>`SUBSCRIBE_STOP_LOSS_END`：订阅止损终止<br><br>`PLACE_ORDER_FAIL_END`：下单连续失败终止<br><br>`SYMBOL_DOWN_END`：币对下架终止<br><br>`SUB_ACCOUNT_TRANSFER_FAIL`：资金划转失败<br><br>`HIGHEST_PRICE_END`：最高价终止<br><br>`BOTTOM_PRICE_END`：最低价终止<br><br>`BURST_END`：爆仓终止<br><br>`MOVE_GRID_FAIL`：网格移动失败终止<br><br>`EXPIRE_TIME_END`：系统定时终止<br><br>`HANDLE_SUB_POSITION_END`：手动减仓终止<br><br>`STOP_PRICE_ACHIEVE`：达到终止价格<br><br>`ADL_END`：ADL终止<br><br>`AUTO_CONVERT_END`：自动兑换终止<br><br>`CONDITION_TRIGGER_END`：条件触发终止<br><br>`ADL_CONVERT_END`：ADL减仓终止<br><br>`CANCEL_DELIVERY_ORDER`：交割撤单<br><br>`BASIS_RATE_TRIGGER`：基差率触发终止<br><br>`EARN_REDEEM_FAIL`：理财资金赎回失败<br><br>`SYSTEM_CANCEL`：系统取消<br><br>`SYMBOL_RSTOCK_SPLIT`：拆合股撤单 |
 
 ## 终止网格交易机器人
 
 `POST /api/v3/trade/grid/close-bot`
 
 终止指定机器人，停止挂单并按策略配置处理未成交订单/持仓。
+
 - 限频规则: 1次/秒/UID
+
 - 需要统一账户交易权限
 
 Operation ID: `utaGridCloseBot`
@@ -4734,7 +5052,9 @@ Operation ID: `utaGridCloseBot`
 `POST /api/v3/trade/grid/create-bot`
 
 提交现货及合约网格交易机器人创建请求。
+
 - 限频规则: 1次/秒/UID
+
 - 需要统一账户交易权限
 
 Operation ID: `utaGridCreateBot`
@@ -4743,44 +5063,44 @@ Operation ID: `utaGridCreateBot`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | 业务线<br>`SPOT`：现货交易<br>`USDT-FUTURES`：U本位合约<br>`USDC-FUTURES`：USDC合约 |
+| category | string | 是 | 业务线<br><br>`SPOT`：现货交易<br><br>`USDT-FUTURES`：U本位合约<br><br>`USDC-FUTURES`：USDC合约 |
 | symbol | string | 是 | 交易对名称 |
 | gridType | string |  | 网格方向<br>`long`<br>`short`<br>`neutral`<br>**合约（`USDT-FUTURES` / `USDC-FUTURES`）必填；现货（`SPOT`）可选** |
 | maxPrice | string | 是 | 网格上限价格 |
 | minPrice | string | 是 | 网格下限价格 |
 | gridNum | string | 是 | 网格格数 |
-| gridOrderMode | string | 是 | 网格挂单模式<br>`arithmetic`：等差<br>`geometric`：等比 |
+| gridOrderMode | string | 是 | 网格挂单模式<br><br>`arithmetic`：等差<br><br>`geometric`：等比 |
 | leverage | string |  | 杠杆倍数，默认1，仅合约生效 |
 | investmentAmount | object[] | 是 | 投入金额 |
 | investmentAmount[].coin | string | 是 | 币种 |
 | investmentAmount[].amount | string | 是 | 金额 |
-| fundsSource | string[] | 是 | 资金来源<br>`funding`：资金账户<br>`uta`：统一账户<br>`otc`：OTC账户 |
+| fundsSource | string[] | 是 | 资金来源<br><br>`funding`：资金账户<br><br>`uta`：统一账户<br><br>`otc`：OTC账户 |
 | autoReserveMargin | string |  | 自动预留保证金 |
 | reservedMargin | string |  | 预留保证金，仅合约生效 |
-| triggerCondition | string |  | 触发条件，默认`instant`<br>`instant`<br>`price`<br>`rsi`<br>`boll` |
+| triggerCondition | string |  | 触发条件，默认`instant`<br><br>`instant`<br><br>`price`<br><br>`rsi`<br><br>`boll` |
 | triggerParams | object[] |  | 触发参数 |
 | triggerParams[].indicatorLength | string |  | 指标周期 |
 | triggerParams[].threshold | string |  | 阈值 |
 | triggerParams[].multiplier | string |  | 倍数 |
 | triggerParams[].interval | string |  | 周期 |
 | triggerPrice | string |  | 触发价格 |
-| terminationCondition | string |  | 终止条件<br>`rsi`<br>`boll` |
+| terminationCondition | string |  | 终止条件<br><br>`rsi`<br><br>`boll` |
 | terminationParams | object[] |  | 终止参数 |
 | terminationParams[].indicatorLength | string |  | 指标周期 |
 | terminationParams[].threshold | string |  | 阈值 |
 | terminationParams[].multiplier | string |  | 倍数 |
 | terminationParams[].interval | string |  | 周期 |
-| terminationSell | string |  | 终止时是否卖出，仅现货网格有<br>`yes`<br>`no` |
+| terminationSell | string |  | 终止时是否卖出，仅现货网格有<br><br>`yes`<br><br>`no` |
 | stopLoss | string |  | 止损价格 |
 | takeProfit | string |  | 止盈价格 |
 | slippage | string | 是 | 滑点 |
-| trailingGrid | string |  | 移动网格，默认`no`<br>`yes`<br>`no` |
+| trailingGrid | string |  | 移动网格，默认`no`<br><br>`yes`<br><br>`no` |
 | movingAverageGains | string |  | 移动平均收益 |
 | stopUpwardPrice | string |  | 上移止损价格 |
-| hodlMode | string |  | 屯币模式，默认`no`，仅现货生效<br>`yes`<br>`no` |
-| marketOpen | string |  | 市价开仓，默认开启，仅合约生效<br>`yes`<br>`no` |
-| lossReserve | string |  | 亏损预留，默认开启，仅合约生效<br>`yes`<br>`no` |
-| autoTransferProfits | string | 是 | 自动转出利润，默认`no`<br>`yes`<br>`no` |
+| hodlMode | string |  | 屯币模式，默认`no`，仅现货生效<br><br>`yes`<br><br>`no` |
+| marketOpen | string |  | 市价开仓，默认开启，仅合约生效<br><br>`yes`<br><br>`no` |
+| lossReserve | string |  | 亏损预留，默认开启，仅合约生效<br><br>`yes`<br><br>`no` |
+| autoTransferProfits | string | 是 | 自动转出利润，默认`no`<br><br>`yes`<br><br>`no` |
 
 ### 响应 200：Successful response
 
@@ -4797,7 +5117,9 @@ Operation ID: `utaGridCreateBot`
 `POST /api/v3/trade/grid/create-neutral-bot`
 
 提交合约中性交易机器人创建请求。
+
 - 限频规则: 1次/秒/UID
+
 - 需要统一账户交易权限
 
 Operation ID: `utaGridCreateNeutralBot`
@@ -4806,12 +5128,12 @@ Operation ID: `utaGridCreateNeutralBot`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | 业务线<br>`USDT-FUTURES`：USDT保证金合约<br>`USDC-FUTURES`：USDC保证金合约 |
+| category | string | 是 | 业务线<br><br>`USDT-FUTURES`：USDT保证金合约<br><br>`USDC-FUTURES`：USDC保证金合约 |
 | symbol | string | 是 | 交易对 |
 | maxPrice | string | 是 | 上限价格 |
 | minPrice | string | 是 | 下限价格 |
 | gridNum | string | 是 | 网格格数 |
-| gridOrderMode | string | 是 | 网格模式<br>`arithmetic`：等差<br>`geometric`：等比 |
+| gridOrderMode | string | 是 | 网格模式<br><br>`arithmetic`：等差<br><br>`geometric`：等比 |
 | leverage | string |  | 杠杆 |
 | investmentAmount | object[] |  | 投入币种及金额列表，合约仅支持计价币USDT/USDC |
 | investmentAmount[].coin | string | 是 | 投入币种 |
@@ -4820,7 +5142,7 @@ Operation ID: `utaGridCreateNeutralBot`
 | stopLoss | string |  | 止损价格 |
 | takeProfit | string |  | 止盈价格 |
 | autoTransferProfits | string |  | 是否自动转出利润 |
-| fundsSource | string[] | 是 | 资金来源<br>`funding`：资金账户<br>`uta`：统一账户<br>`otc`：OTC账户 |
+| fundsSource | string[] | 是 | 资金来源<br><br>`funding`：资金账户<br><br>`uta`：统一账户<br><br>`otc`：OTC账户 |
 
 ### 响应 200：Successful response
 
@@ -4837,7 +5159,9 @@ Operation ID: `utaGridCreateNeutralBot`
 `GET /api/v3/trade/grid/list-details`
 
 查询指定策略关联的挂单详情。
+
 - 限频规则: 1次/秒/UID
+
 - 需要统一账户交易只读权限
 
 Operation ID: `utaGridListDetails`
@@ -4875,7 +5199,9 @@ Operation ID: `utaGridListDetails`
 `POST /api/v3/trade/grid/modify-bot`
 
 运行中修改网格交易机器人的基本参数（价格区间、投入金额等）。
+
 - 限频规则: 1次/秒/UID
+
 - 需要统一账户交易权限
 
 Operation ID: `utaGridModifyBot`
@@ -4888,14 +5214,14 @@ Operation ID: `utaGridModifyBot`
 | botId | string | 是 | 网格机器人ID |
 | takeProfit | string |  | 止盈价格。**如不传，会清空止盈价格。**如不修改止盈价格，需要传入当前值 |
 | stopLoss | string |  | 止损价格。**如不传，会清空止损价格。**如不修改止损价格，需要传入当前值 |
-| terminationCondition | string |  | 终止条件<br>`rsi`<br>`boll` |
+| terminationCondition | string |  | 终止条件<br><br>`rsi`<br><br>`boll` |
 | terminationParams | object[] |  | 终止参数 |
 | terminationParams[].indicatorLength | string |  | 指标周期 |
 | terminationParams[].threshold | string |  | 阈值 |
 | terminationParams[].multiplier | string |  | 倍数 |
 | terminationParams[].interval | string |  | 周期 |
-| hodlMode | string |  | 屯币模式<br>`yes`<br>`no` |
-| autoTransferProfits | string |  | 自动转出利润<br>`yes`：转出<br>`no`：不转出 |
+| hodlMode | string |  | 屯币模式<br><br>`yes`<br><br>`no` |
+| autoTransferProfits | string |  | 自动转出利润<br><br>`yes`：转出<br><br>`no`：不转出 |
 
 ### 响应 200：Successful response
 
@@ -4912,7 +5238,9 @@ Operation ID: `utaGridModifyBot`
 `POST /api/v3/trade/grid/modify-grid-interval`
 
 修改网格区间及网格数接口。
+
 - 限频规则: 1次/秒/UID
+
 - 需要统一账户交易权限
 
 Operation ID: `utaGridModifyGridInterval`
@@ -4921,7 +5249,7 @@ Operation ID: `utaGridModifyGridInterval`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | 业务线<br>`SPOT`：现货交易<br>`USDT-FUTURES`：U本位合约<br>`USDC-FUTURES`：USDC合约 |
+| category | string | 是 | 业务线<br><br>`SPOT`：现货交易<br><br>`USDT-FUTURES`：U本位合约<br><br>`USDC-FUTURES`：USDC合约 |
 | botId | string | 是 | 网格机器人ID |
 | maxPrice | string | 是 | 网格上限价格 |
 | minPrice | string | 是 | 网格下限价格 |
@@ -4942,7 +5270,9 @@ Operation ID: `utaGridModifyGridInterval`
 `POST /api/v3/trade/grid/modify-neutral-bot`
 
 修改运行中的中性网格交易机器人基本参数。
+
 - 限频规则: 1次/秒/UID
+
 - 需要统一账户交易权限
 
 Operation ID: `utaGridModifyNeutralBot`
@@ -4952,10 +5282,10 @@ Operation ID: `utaGridModifyNeutralBot`
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
 | botId | string | 是 | 网格机器人ID |
-| category | string | 是 | 业务线<br>`USDT-FUTURES`：USDT保证金合约<br>`USDC-FUTURES`：USDC保证金合约 |
+| category | string | 是 | 业务线<br><br>`USDT-FUTURES`：USDT保证金合约<br><br>`USDC-FUTURES`：USDC保证金合约 |
 | takeProfit | string |  | 止盈价格。**如不传，会清空止盈价格**，如不修改需传入当前值 |
 | stopLoss | string |  | 止损价格。**如不传，会清空止损价格**，如不修改需传入当前值 |
-| autoTransferProfits | string |  | 是否自动转出利润<br>`yes`：转出<br>`no`：不转出 |
+| autoTransferProfits | string |  | 是否自动转出利润<br><br>`yes`：转出<br><br>`no`：不转出 |
 
 ### 响应 200：Successful response
 
@@ -4971,8 +5301,10 @@ Operation ID: `utaGridModifyNeutralBot`
 
 `POST /api/v3/trade/grid/modify-neutral-grid-interval`
 
-修改运行中的中性网格交易机器人的网格参数（价格区间、格数等）。
+修改网格区间及网格数接口。
+
 - 限频规则: 1次/秒/UID
+
 - 需要统一账户交易权限
 
 Operation ID: `utaGridModifyNeutralGridInterval`
@@ -4981,7 +5313,7 @@ Operation ID: `utaGridModifyNeutralGridInterval`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | 业务线<br>`USDT-FUTURES`：USDT保证金合约<br>`USDC-FUTURES`：USDC保证金合约 |
+| category | string | 是 | 业务线<br><br>`USDT-FUTURES`：USDT保证金合约<br><br>`USDC-FUTURES`：USDC保证金合约 |
 | botId | string | 是 | 网格机器人ID |
 | maxPrice | string | 是 | 网格上限价格 |
 | minPrice | string | 是 | 网格下限价格 |
@@ -5002,7 +5334,9 @@ Operation ID: `utaGridModifyNeutralGridInterval`
 `GET /api/v3/trade/grid/neutral-bot-detail`
 
 查询指定合约中性策略的详细信息，含参数配置、当前状态、累计收益等。
+
 - 限频规则: 10次/秒/UID
+
 - 需要统一账户交易只读权限
 
 Operation ID: `utaGridNeutralBotDetail`
@@ -5023,7 +5357,7 @@ Operation ID: `utaGridNeutralBotDetail`
 | data | object |  |  |
 | data.botId | string |  | 网格机器人ID |
 | data.symbol | string |  | 交易对 |
-| data.status | string |  | 状态<br>`init`：初始化中<br>`waiting`：等待中<br>`running`：运行中<br>`terminating`：终止中<br>`terminated`：已终止 |
+| data.status | string |  | 状态<br><br>`init`：初始化中<br><br>`waiting`：等待中<br><br>`running`：运行中<br><br>`terminating`：终止中<br><br>`terminated`：已终止 |
 | data.totalProfit | string |  | 总收益，单位USDT |
 | data.roi | string |  | 收益率，小数形式 |
 | data.gridProfit | string |  | 网格收益，单位USDT，等于已套利利润减去手续费 |
@@ -5039,7 +5373,7 @@ Operation ID: `utaGridNeutralBotDetail`
 | data.maxPrice | string |  | 网格上限价格 |
 | data.minPrice | string |  | 网格下限价格 |
 | data.gridNum | string |  | 网格格数 |
-| data.gridOrderMode | string |  | 网格模式<br>`arithmetic`：等差<br>`geometric`：等比 |
+| data.gridOrderMode | string |  | 网格模式<br><br>`arithmetic`：等差<br><br>`geometric`：等比 |
 | data.triggerPrice | string |  | 触发价格 |
 | data.leverage | string |  | 杠杆 |
 | data.stopLoss | string |  | 止损价格 |
@@ -5047,14 +5381,16 @@ Operation ID: `utaGridNeutralBotDetail`
 | data.holdPosition | string |  | 持仓量 |
 | data.oneGridMinProfit | string |  | 单格最小利润 |
 | data.oneGridMaxProfit | string |  | 单格最大利润 |
-| data.autoTransferProfits | string |  | 是否自动转出利润<br>`yes`：转出<br>`no`：不转出 |
+| data.autoTransferProfits | string |  | 是否自动转出利润<br><br>`yes`：转出<br><br>`no`：不转出 |
 
 ## 查询中性网格机器人挂单详情
 
 `GET /api/v3/trade/grid/neutral-list-details`
 
 查询指定合约中性策略关联的挂单详情。
+
 - 限频规则: 1次/秒/UID
+
 - 需要统一账户交易只读权限
 
 Operation ID: `utaGridNeutralListDetails`
@@ -5092,7 +5428,9 @@ Operation ID: `utaGridNeutralListDetails`
 `POST /api/v3/trade/grid/validate-neutral`
 
 创建网格中性策略前，校验网格参数（价格区间、格数、投入金额等）是否合法，不实际创建策略。
+
 - 限频规则: 1次/秒/UID
+
 - 需要统一账户交易权限
 
 Operation ID: `utaGridValidateNeutral`
@@ -5101,12 +5439,12 @@ Operation ID: `utaGridValidateNeutral`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | 业务线<br>`USDT-FUTURES`：USDT保证金合约<br>`USDC-FUTURES`：USDC保证金合约 |
+| category | string | 是 | 业务线<br><br>`USDT-FUTURES`：USDT保证金合约<br><br>`USDC-FUTURES`：USDC保证金合约 |
 | symbol | string | 是 | 交易对 |
 | maxPrice | string | 是 | 上限价格 |
 | minPrice | string | 是 | 下限价格 |
 | gridNum | string | 是 | 网格格数 |
-| gridOrderMode | string | 是 | 网格模式<br>`arithmetic`：等差<br>`geometric`：等比 |
+| gridOrderMode | string | 是 | 网格模式<br><br>`arithmetic`：等差<br><br>`geometric`：等比 |
 | leverage | string |  | 杠杆 |
 | investmentAmount | object[] |  | 投入币种及金额列表，合约仅支持计价币USDT/USDC |
 | investmentAmount[].coin | string | 是 | 投入币种 |
@@ -5133,7 +5471,9 @@ Operation ID: `utaGridValidateNeutral`
 `POST /api/v3/trade/grid/validate`
 
 创建网格策略前，校验网格参数（价格区间、格数、投入金额等）是否合法，不实际创建策略。
+
 - 限频规则: 1次/秒/UID
+
 - 需要统一账户交易权限
 
 Operation ID: `utaGridValidate`
@@ -5142,26 +5482,26 @@ Operation ID: `utaGridValidate`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| category | string | 是 | 业务线<br>`SPOT`：现货交易<br>`USDT-FUTURES`：U本位合约<br>`USDC-FUTURES`：USDC合约 |
+| category | string | 是 | 业务线<br><br>`SPOT`：现货交易<br><br>`USDT-FUTURES`：U本位合约<br><br>`USDC-FUTURES`：USDC合约 |
 | symbol | string | 是 | 交易对名称 |
 | gridType | string |  | 网格方向<br>`long`<br>`short`<br>`neutral`<br>**合约（`USDT-FUTURES` / `USDC-FUTURES`）必填；现货（`SPOT`）可选** |
 | maxPrice | string | 是 | 网格上限价格 |
 | minPrice | string | 是 | 网格下限价格 |
 | gridNum | string | 是 | 网格格数 |
-| gridOrderMode | string | 是 | 网格挂单模式<br>`arithmetic`：等差<br>`geometric`：等比 |
+| gridOrderMode | string | 是 | 网格挂单模式<br><br>`arithmetic`：等差<br><br>`geometric`：等比 |
 | leverage | string |  | 杠杆倍数，默认1，仅合约生效 |
 | investmentAmount | object[] | 是 | 投入金额 |
 | investmentAmount[].coin | string | 是 | 币种 |
 | investmentAmount[].amount | string | 是 | 金额 |
 | reservedMargin | string |  | 预留保证金，仅合约生效 |
-| triggerCondition | string |  | 触发条件，默认`instant`<br>`instant`<br>`price`<br>`rsi`<br>`boll` |
+| triggerCondition | string |  | 触发条件，默认`instant`<br><br>`instant`<br><br>`price`<br><br>`rsi`<br><br>`boll` |
 | triggerParams | object[] |  | 触发参数 |
 | triggerParams[].indicatorLength | string |  | 指标周期 |
 | triggerParams[].threshold | string |  | 阈值 |
 | triggerParams[].multiplier | string |  | 倍数 |
 | triggerParams[].interval | string |  | 周期 |
 | triggerPrice | string |  | 触发价格 |
-| terminationCondition | string |  | 终止条件<br>`rsi`<br>`boll` |
+| terminationCondition | string |  | 终止条件<br><br>`rsi`<br><br>`boll` |
 | terminationParams | object[] |  | 终止参数 |
 | terminationParams[].indicatorLength | string |  | 指标周期 |
 | terminationParams[].threshold | string |  | 阈值 |
@@ -5169,13 +5509,13 @@ Operation ID: `utaGridValidate`
 | terminationParams[].interval | string |  | 周期 |
 | stopLoss | string |  | 止损价格 |
 | takeProfit | string |  | 止盈价格 |
-| trailingGrid | string |  | 移动网格，默认`no`<br>`yes`<br>`no` |
+| trailingGrid | string |  | 移动网格，默认`no`<br><br>`yes`<br><br>`no` |
 | movingAverageGains | string |  | 移动平均收益 |
 | stopUpwardPrice | string |  | 上移止损价格 |
-| hodlMode | string |  | 屯币模式，默认`no`，仅现货生效<br>`yes`<br>`no` |
-| marketOpen | string |  | 市价开仓，默认开启，仅合约生效<br>`yes`<br>`no` |
-| lossReserve | string |  | 亏损预留，默认开启，仅合约生效<br>`yes`<br>`no` |
-| autoTransferProfits | string | 是 | 自动转出利润，默认`no`<br>`yes`<br>`no` |
+| hodlMode | string |  | 屯币模式，默认`no`，仅现货生效<br><br>`yes`<br><br>`no` |
+| marketOpen | string |  | 市价开仓，默认开启，仅合约生效<br><br>`yes`<br><br>`no` |
+| lossReserve | string |  | 亏损预留，默认开启，仅合约生效<br><br>`yes`<br><br>`no` |
+| autoTransferProfits | string | 是 | 自动转出利润，默认`no`<br><br>`yes`<br><br>`no` |
 
 ### 响应 200：Successful response
 

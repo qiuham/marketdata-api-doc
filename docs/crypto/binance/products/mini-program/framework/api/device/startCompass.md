@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/device/startCompass
 api_type: Guide
-updated_at: 2026-11-18 18:46:25.500142
+updated_at: 2026-11-19 18:49:37.514203
 ---
 
 # bn.startCompass

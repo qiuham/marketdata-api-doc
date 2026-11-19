@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/simple-earn/error-code
 api_type: Guide
-updated_at: 2026-11-18 18:28:09.048081
+updated_at: 2026-11-19 18:30:42.523308
 ---
 
 # Error Codes

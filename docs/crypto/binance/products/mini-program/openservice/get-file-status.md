@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/openservice/get-file-status
 api_type: Guide
-updated_at: 2026-11-18 18:36:37.563941
+updated_at: 2026-11-19 18:39:27.768408
 ---
 
 # GetFileStatus

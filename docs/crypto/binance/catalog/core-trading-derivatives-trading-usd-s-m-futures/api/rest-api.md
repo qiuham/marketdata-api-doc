@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api
 api_type: REST
-updated_at: 2026-11-18 18:48:17.017022
+updated_at: 2026-11-19 18:51:34.135648
 ---
 
 # Futures (USDⓈ-M) REST API

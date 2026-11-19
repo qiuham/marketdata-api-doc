@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/showSharePanelV2
 api_type: Guide
-updated_at: 2026-11-18 18:45:29.111015
+updated_at: 2026-11-19 18:48:40.757154
 ---
 
 # bn.showSharePanelV2

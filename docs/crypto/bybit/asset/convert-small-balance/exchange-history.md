@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/convert-small-balance/exchange-history
 api_type: REST
-updated_at: 2026-11-18 18:49:11.322885
+updated_at: 2026-11-19 18:52:45.003118
 ---
 
 # Get Exchange History

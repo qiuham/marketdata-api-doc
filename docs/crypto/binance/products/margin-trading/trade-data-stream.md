@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/margin-trading/trade-data-stream
 api_type: WebSocket
-updated_at: 2026-11-18 18:29:27.710745
+updated_at: 2026-11-19 18:32:04.577396
 ---
 
 # (deprecated) Trade Data Stream

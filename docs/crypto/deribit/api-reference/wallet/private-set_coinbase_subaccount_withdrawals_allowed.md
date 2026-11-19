@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-set_coinbase_subaccount_withdrawals_allowed
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:22.362449
+updated_at: 2026-11-19 19:05:59.827762
 ---
 
 # private/set_coinbase_subaccount_withdrawals_allowed
@@ -90,8 +90,8 @@ paths:
           in: query
           required: true
           schema:
-            example: true
             type: boolean
+            example: true
           description: If `true`, subaccounts of the account are allowed to withdraw
       requestBody:
         content:

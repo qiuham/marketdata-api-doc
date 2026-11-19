@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/media/createLottieContext
 api_type: Guide
-updated_at: 2026-11-18 18:44:49.736859
+updated_at: 2026-11-19 18:48:00.296218
 ---
 
 # bn.createLottieContext

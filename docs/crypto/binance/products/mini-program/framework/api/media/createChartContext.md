@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/media/createChartContext
 api_type: Guide
-updated_at: 2026-11-18 18:44:53.986198
+updated_at: 2026-11-19 18:48:05.436702
 ---
 
 # bn.createChartContext

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/simple-earn/quick-start
 api_type: Guide
-updated_at: 2026-11-18 18:28:06.196854
+updated_at: 2026-11-19 18:30:38.796529
 ---
 
 # Quick Start

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-get_access_log
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:13.151819
+updated_at: 2026-11-19 19:05:50.432384
 ---
 
 # private/get_access_log
@@ -272,6 +272,6 @@ components:
 
 - [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md)
 - [private/get_transaction_log](https://docs.deribit.com/api-reference/account-management/private-get_transaction_log.md)
-- [private/get_members](https://docs.deribit.com/api-reference/account-management/private-get_members.md)
 - [private/get_subaccounts](https://docs.deribit.com/api-reference/account-management/private-get_subaccounts.md)
+- [private/get_members](https://docs.deribit.com/api-reference/account-management/private-get_members.md)
 - [private/toggle_subaccount_login](https://docs.deribit.com/api-reference/account-management/private-toggle_subaccount_login.md)

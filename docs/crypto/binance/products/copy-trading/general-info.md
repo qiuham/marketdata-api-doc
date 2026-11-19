@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/copy-trading/general-info
 api_type: Guide
-updated_at: 2026-11-18 18:31:31.586050
+updated_at: 2026-11-19 18:34:14.379062
 ---
 
 # General Info

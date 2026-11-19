@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-get_order_margin_by_ids
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:20.134298
+updated_at: 2026-11-19 19:05:56.184969
 ---
 
 # private/get_order_margin_by_ids
@@ -202,7 +202,7 @@ components:
 ## Related topics
 
 - [private/get_margins](https://docs.deribit.com/api-reference/trading/private-get_margins.md)
-- [private/get_subaccounts](https://docs.deribit.com/api-reference/account-management/private-get_subaccounts.md)
 - [private/get_subaccounts_details](https://docs.deribit.com/api-reference/account-management/private-get_subaccounts_details.md)
 - [private/get_order_state](https://docs.deribit.com/api-reference/trading/private-get_order_state.md)
 - [private/get_open_orders](https://docs.deribit.com/api-reference/trading/private-get_open_orders.md)
+- [private/get_position](https://docs.deribit.com/api-reference/account-management/private-get_position.md)

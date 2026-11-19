@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/demo-trading/websocket
 api_type: WebSocket
-updated_at: 2026-11-18 19:00:30.190649
+updated_at: 2026-11-19 19:07:08.485298
 ---
 
 # Demo Trading (WebSocket)

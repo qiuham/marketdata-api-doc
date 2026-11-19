@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/public/Position-Tier-Channel
 api_type: WebSocket
-updated_at: 2026-11-18 19:00:56.068873
+updated_at: 2026-11-19 19:07:33.867078
 ---
 
 # Position Tier Channel

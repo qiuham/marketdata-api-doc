@@ -2,14 +2,23 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-create_subaccount
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:12.798804
+updated_at: 2026-11-19 19:05:50.382716
 ---
 
 # private/create_subaccount
 
 > Creates a new subaccount under the authenticated main account. Subaccounts allow you to organize trading activities and manage risk separately from the main account.
 
-This method takes no parameters. The new subaccount will be created with default settings and can be configured using other subaccount management methods.
+This method takes no parameters. The new subaccount inherits the main account's email address and is created with direct login disabled (`login_enabled: false`). It is accessible through the main account; the response contains an empty `portfolio` entry for every currency.
+
+**Access & Restrictions:**
+- Requires scope `account:read_write` and `mainaccount`, i.e. a main account token. Tokens without `mainaccount` (for example subaccount tokens) are rejected with `13021` (`forbidden`).
+- Not available for accounts without subaccount management and for some partner account types (`13009`, `unauthorized`), nor for locked accounts (`11098`).
+
+**Limits & Errors:**
+- A main account can have up to 20 regular subaccounts by default (the limit can be configured per account by Deribit). Exceeding it returns `12001` (`too_many_subaccounts`).
+
+**Example:** values are illustrative. Only BTC and ETH portfolio entries are shown; the actual currency set depends on the service configuration. The example assumes the main account has no disabled trading products or subaccount consent requirements.
 
 **📖 Related Article:** [Managing Subaccounts](https://docs.deribit.com/articles/managing-subaccounts-api)
 
@@ -75,9 +84,34 @@ paths:
         separately from the main account.
 
 
-        This method takes no parameters. The new subaccount will be created with
-        default settings and can be configured using other subaccount management
-        methods.
+        This method takes no parameters. The new subaccount inherits the main
+        account's email address and is created with direct login disabled
+        (`login_enabled: false`). It is accessible through the main account; the
+        response contains an empty `portfolio` entry for every currency.
+
+
+        **Access & Restrictions:**
+
+        - Requires scope `account:read_write` and `mainaccount`, i.e. a main
+        account token. Tokens without `mainaccount` (for example subaccount
+        tokens) are rejected with `13021` (`forbidden`).
+
+        - Not available for accounts without subaccount management and for some
+        partner account types (`13009`, `unauthorized`), nor for locked accounts
+        (`11098`).
+
+
+        **Limits & Errors:**
+
+        - A main account can have up to 20 regular subaccounts by default (the
+        limit can be configured per account by Deribit). Exceeding it returns
+        `12001` (`too_many_subaccounts`).
+
+
+        **Example:** values are illustrative. Only BTC and ETH portfolio entries
+        are shown; the actual currency set depends on the service configuration.
+        The example assumes the main account has no disabled trading products or
+        subaccount consent requirements.
 
 
         **📖 Related Article:** [Managing
@@ -115,15 +149,47 @@ paths:
                     jsonrpc: '2.0'
                     id: 5414
                     result:
-                      email: user_AAA@email.com
+                      email: user_AAA@example.com
                       id: 13
                       is_password: false
                       login_enabled: false
+                      security_keys_assignments: []
+                      margin_model: segregated_sm
+                      disabled_trading_products: []
+                      trading_products_details:
+                        - product: perpetual
+                          enabled: true
+                          overwriteable: true
+                          requires_consent: false
+                        - product: futures
+                          enabled: true
+                          overwriteable: true
+                          requires_consent: false
+                        - product: options
+                          enabled: true
+                          overwriteable: true
+                          requires_consent: false
+                        - product: future_combos
+                          enabled: true
+                          overwriteable: true
+                          requires_consent: false
+                        - product: option_combos
+                          enabled: true
+                          overwriteable: true
+                          requires_consent: false
+                        - product: spots
+                          enabled: true
+                          overwriteable: true
+                          requires_consent: false
+                      referrals_count: 0
                       portfolio:
                         eth:
                           available_funds: 0
                           available_withdrawal_funds: 0
                           balance: 0
+                          locked_balance: 0
+                          additional_reserve: 0
+                          spot_reserve: 0
                           currency: eth
                           equity: 0
                           initial_margin: 0
@@ -133,6 +199,9 @@ paths:
                           available_funds: 0
                           available_withdrawal_funds: 0
                           balance: 0
+                          locked_balance: 0
+                          additional_reserve: 0
+                          spot_reserve: 0
                           currency: btc
                           equity: 0
                           initial_margin: 0
@@ -185,7 +254,11 @@ components:
               description: '`true` when password for the subaccount has been configured'
             receive_notifications:
               type: boolean
-              description: When `true` - receive all notification emails on the main email
+              description: >-
+                Email-forwarding flag reported for the account. It does not
+                reflect changes made with
+                `private/toggle_notifications_from_subaccount`; see the known
+                limitation there
             system_name:
               example: username_1
               type: string
@@ -225,10 +298,10 @@ components:
               items:
                 type: object
                 properties:
-                  enabled:
-                    type: boolean
                   product:
                     type: string
+                  enabled:
+                    type: boolean
                   overwriteable:
                     type: boolean
                   requires_consent:
@@ -334,7 +407,7 @@ components:
 ## Related topics
 
 - [Managing Subaccounts](https://docs.deribit.com/articles/managing-subaccounts-api.md)
+- [private/toggle_notifications_from_subaccount](https://docs.deribit.com/api-reference/account-management/private-toggle_notifications_from_subaccount.md)
 - [private/submit_transfer_to_subaccount](https://docs.deribit.com/api-reference/wallet/private-submit_transfer_to_subaccount.md)
 - [private/submit_transfer_between_subaccounts](https://docs.deribit.com/api-reference/wallet/private-submit_transfer_between_subaccounts.md)
 - [private/remove_subaccount](https://docs.deribit.com/api-reference/account-management/private-remove_subaccount.md)
-- [private/get_subaccounts](https://docs.deribit.com/api-reference/account-management/private-get_subaccounts.md)

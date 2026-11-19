@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/media/openDocument
 api_type: Guide
-updated_at: 2026-11-18 18:44:38.946407
+updated_at: 2026-11-19 18:47:49.003661
 ---
 
 # bn.openDocument

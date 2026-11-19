@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/private/Account-Channel
 api_type: WebSocket
-updated_at: 2026-11-18 19:00:42.970036
+updated_at: 2026-11-19 19:07:20.882392
 ---
 
 # Account Channel
@@ -95,7 +95,8 @@ Data will be pushed when the following events occurred:
       "equity": "0.9992",
       "coin": "ETH",
       "usdValue": "2488.667472",
-      "bonus": "0"
+      "bonus": "0",
+      "collateralLimitStatus": "normal"
     }, {
       "debts": "0",
       "balance": "52.00819",
@@ -106,7 +107,8 @@ Data will be pushed when the following events occurred:
       "equity": "52.00819",
       "coin": "BTC",
       "usdValue": "4630564.31304974",
-      "bonus": "0"
+      "bonus": "0",
+      "collateralLimitStatus": "normal"
     }, {
       "debts": "0",
       "balance": "354411.45536458",
@@ -117,7 +119,8 @@ Data will be pushed when the following events occurred:
       "equity": "344282.65536458",
       "coin": "USDT",
       "usdValue": "343866.07335159",
-      "bonus": "10"
+      "bonus": "10",
+      "collateralLimitStatus": "normal"
     }]
   }],
   "arg": {
@@ -157,6 +160,7 @@ Data will be pushed when the following events occurred:
 | &gt;&gt; borrow      | String | Borrowed amount                                                                                                                        |
 | &gt;&gt; debts       | String | Debt <br/> _Only applicable for margin trading_                                                                                        |
 | &gt;&gt; bonus       | String | USDT bonus amount                                                                                                                      |
+| &gt;&gt; collateralLimitStatus | String | Platform collateral limit status <br/>`normal` Normal <br/>`user_warning` User limit warning: the limit has not been triggered, but this coin is approaching the user's collateral limit <br/>`platform_warning` Platform limit warning: the limit has not been triggered, but this coin is approaching the platform's collateral limit <br/>`user_limited` User limit triggered <br/>`platform_limited` Platform limit triggered <br/>Returns `normal` for coins not under collateral limit management |
 
 
 </div>
@@ -256,7 +260,8 @@ Data will be pushed when the following events occurred:
       "equity": "0.9992",
       "coin": "ETH",
       "usdValue": "2488.667472",
-      "bonus": "0"
+      "bonus": "0",
+      "collateralLimitStatus": "normal"
     }, {
       "debts": "0",
       "balance": "52.00819",
@@ -267,7 +272,8 @@ Data will be pushed when the following events occurred:
       "equity": "52.00819",
       "coin": "BTC",
       "usdValue": "4630564.31304974",
-      "bonus": "0"
+      "bonus": "0",
+      "collateralLimitStatus": "normal"
     }, {
       "debts": "0",
       "balance": "354411.45536458",
@@ -278,7 +284,8 @@ Data will be pushed when the following events occurred:
       "equity": "344282.65536458",
       "coin": "USDT",
       "usdValue": "343866.07335159",
-      "bonus": "10"
+      "bonus": "10",
+      "collateralLimitStatus": "normal"
     }]
   }],
   "arg": {
@@ -318,6 +325,7 @@ Data will be pushed when the following events occurred:
 | &gt;&gt;borrow       | String             | 借款                                                       |
 | &gt;&gt;debts        | String             | 负债<br/>当前币种的已用借贷额度 (仅现货杠杆借贷时)                            |
 | &gt;&gt;bonus        | String             | USDT 体验金金额                                                 |
+| &gt;&gt;collateralLimitStatus | String   | 平台抵押品限额状态<br/>`normal`正常 <br/>`user_warning`用户限额预警。未触发限额，但该币种已接近用户抵押品限额 <br/>`platform_warning`平台限额预警。未触发限额，但该币种已接近平台抵押品限额 <br/>`user_limited`用户已触发限额 <br/>`platform_limited`平台已触发限额 <br/>未纳入抵押品限额管理的币种返回 `normal` |
 
 
 </div>

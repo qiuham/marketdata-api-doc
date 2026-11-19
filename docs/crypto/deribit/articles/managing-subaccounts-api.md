@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/managing-subaccounts-api
 api_type: Guide
-updated_at: 2026-11-18 18:58:58.036946
+updated_at: 2026-11-19 19:05:32.349248
 ---
 
 # Managing Subaccounts
@@ -228,8 +228,8 @@ The subaccount ID (`id`) returned when creating a subaccount is required for all
 
 ## Related topics
 
-- [private/remove_subaccount](https://docs.deribit.com/api-reference/account-management/private-remove_subaccount.md)
 - [private/create_subaccount](https://docs.deribit.com/api-reference/account-management/private-create_subaccount.md)
 - [private/get_subaccounts](https://docs.deribit.com/api-reference/account-management/private-get_subaccounts.md)
-- [private/change_subaccount_name](https://docs.deribit.com/api-reference/account-management/private-change_subaccount_name.md)
+- [private/remove_subaccount](https://docs.deribit.com/api-reference/account-management/private-remove_subaccount.md)
 - [private/get_subaccounts_details](https://docs.deribit.com/api-reference/account-management/private-get_subaccounts_details.md)
+- [private/toggle_subaccount_login](https://docs.deribit.com/api-reference/account-management/private-toggle_subaccount_login.md)

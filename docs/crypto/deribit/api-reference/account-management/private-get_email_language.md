@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-get_email_language
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:13.357107
+updated_at: 2026-11-19 19:05:50.607359
 ---
 
 # private/get_email_language
@@ -145,6 +145,6 @@ components:
 
 - [private/set_email_language](https://docs.deribit.com/api-reference/account-management/private-set_email_language.md)
 - [private/get_subaccounts](https://docs.deribit.com/api-reference/account-management/private-get_subaccounts.md)
-- [private/get_account_summaries](https://docs.deribit.com/api-reference/account-management/private-get_account_summaries.md)
 - [private/get_access_log](https://docs.deribit.com/api-reference/account-management/private-get_access_log.md)
-- [private/get_account_summary](https://docs.deribit.com/api-reference/account-management/private-get_account_summary.md)
+- [private/get_account_summaries](https://docs.deribit.com/api-reference/account-management/private-get_account_summaries.md)
+- [private/get_address_book](https://docs.deribit.com/api-reference/wallet/private-get_address_book.md)

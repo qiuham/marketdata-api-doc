@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/account
 api_type: Account
-updated_at: 2026-11-18 18:56:11.727575
+updated_at: 2026-11-19 19:01:18.084571
 ---
 
 # Account
@@ -27,17 +27,66 @@ _获取用户账户信息_
 
 状态码 **200**
 
-_AccountDetail_
+AccountDetail
 
-名称 | 类型 | 描述  
----|---|---  
-» ip_whitelist | array | IP 白名单  
-» currency_pairs | array | 交易对白名单  
-» user_id | integer(int64) | 用户ID  
-» tier | integer(int64) | 用户 vip 等级  
-» key | object | API Key 详情  
-»» mode | integer(int32) | 模式： 1 - 经典模式 2 - 旧版统一模式  
-» copy_trading_role | integer(int32) | 用户角色： 0 - 普通用户 1 - 带单者 2 - 跟单者 3 - 带单者与跟单者  
+账户详情
+
+类型 | 约束  
+---|---  
+AccountDetail |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+ip_whitelist | array | Optional |  | IP 白名单  
+currency_pairs | array | Optional |  | 交易对白名单  
+user_id | integer(int64) | Optional |  | 用户ID  
+tier | integer(int64) | Optional |  | 用户 vip 等级  
+key | object | Optional |  | API Key 详情  
+copy_trading_role | integer(int32) | Optional |  | 用户角色： 0 - 普通用户 1 - 带单者 2 - 跟单者 3 - 带单者与跟单者  
+  
+**ip_whitelist**
+
+IP 白名单
+
+类型 | 约束  
+---|---  
+array |   
+  
+**ip_whitelist / items**
+
+类型 | 约束  
+---|---  
+string |   
+  
+**currency_pairs**
+
+交易对白名单
+
+类型 | 约束  
+---|---  
+array |   
+  
+**currency_pairs / items**
+
+类型 | 约束  
+---|---  
+string |   
+  
+**key**
+
+API Key 详情
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+mode | integer(int32) | Optional |  | 模式： 1 - 经典模式 2 - 旧版统一模式  
   
 WARNING
 
@@ -125,18 +174,75 @@ _查询主账户下的全部Key信息_
 
 状态码 **200**
 
-_AccountKeyInfo_
+AccountKeyInfo
 
-名称 | 类型 | 描述  
----|---|---  
-» state | integer(int32) | apikey状态： 1 - 正常状态 2 - 锁定状态 3 - 冻结状态(只能修改，创建默认为1）  
-» mode | integer(int32) | 用户模式： 1 - 经典模式 2 - 旧版统一模式 (只能创建时指定，不能修改）  
-» name | string | api key 备注  
-» currency_pairs | array | 交易对白名单列表，最多 30 个交易对  
-» user_id | integer(int64) | 用户ID  
-» ip_whitelist | array | IP 白名单  
-» perms | array |   
-»» name | string | 权限功能名称（不传值即为清空）  
+主账户apikey信息
+
+类型 | 约束  
+---|---  
+AccountKeyInfo |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+state | integer(int32) | Optional |  | apikey状态： 1 - 正常状态 2 - 锁定状态 3 - 冻结状态(只能修改，创建默认为1）  
+mode | integer(int32) | Optional |  | 用户模式： 1 - 经典模式 2 - 旧版统一模式 (只能创建时指定，不能修改）  
+name | string | Optional |  | api key 备注  
+currency_pairs | array | Optional |  | 交易对白名单列表，最多 30 个交易对  
+user_id | integer(int64) | Optional |  | 用户ID  
+ip_whitelist | array | Optional |  | IP 白名单  
+perms | array | Optional |  |   
+key | object | Optional |  | API Key 详情  
+created_at | string | Optional | readOnly: true | 创建时间  
+updated_at | string | Optional | readOnly: true | 最近更新时间  
+last_access | string | Optional | readOnly: true | 最近使用时间  
+  
+**currency_pairs**
+
+交易对白名单列表，最多 30 个交易对
+
+类型 | 约束  
+---|---  
+array |   
+  
+**currency_pairs / items**
+
+类型 | 约束  
+---|---  
+string |   
+  
+**ip_whitelist**
+
+IP 白名单
+
+类型 | 约束  
+---|---  
+array |   
+  
+**ip_whitelist / items**
+
+类型 | 约束  
+---|---  
+string |   
+  
+**perms**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**perms / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+name | string | Optional |  | 权限功能名称（不传值即为清空）  
   
 \- `wallet`: 钱包  
 \- `spot`: 现货/杠杆  
@@ -159,12 +265,21 @@ _AccountKeyInfo_
 \- `cfd_copy`: CFD带单  
 \- `stock_copy`: 股票带单  
 \- `sub_accounts`: 子账号  
-»» read_only | boolean | 该功能是否只读  
-» key | object | API Key 详情  
-»» mode | integer(int32) | 模式： 1 - 经典模式 2 - 旧版统一模式  
-» created_at | string | 创建时间  
-» updated_at | string | 最近更新时间  
-» last_access | string | 最近使用时间  
+read_only | boolean | Optional |  | 该功能是否只读  
+  
+**key**
+
+API Key 详情
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+mode | integer(int32) | Optional |  | 模式： 1 - 经典模式 2 - 旧版统一模式  
   
 WARNING
 
@@ -292,15 +407,28 @@ _获取用户成交比率限频信息_
 
 状态码 **200**
 
-_AccountRateLimit_
+AccountRateLimit
 
-名称 | 类型 | 描述  
----|---|---  
-AccountRateLimit | array | 账户限流  
-» tier | string | 限频等级（详细限频规则查看成交比率限频）  
-» ratio | string | 成交率  
-» main_ratio | string | 主账户合计成交比率  
-» updated_at | string | 更新时间  
+账户限流
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+AccountRateLimit |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+tier | string | Optional | readOnly: true | 限频等级（详细限频规则查看成交比率限频）  
+ratio | string | Optional |  | 成交率  
+main_ratio | string | Optional | readOnly: true | 主账户合计成交比率  
+updated_at | string | Optional | readOnly: true | 更新时间  
   
 WARNING
 
@@ -398,13 +526,24 @@ name | 请求参数 | string | 否 | 根据名称模糊查询
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» id | integer(int64) | STP用户组ID  
-» name | string | STP用户组名称  
-» creator_id | integer(int64) | 创建人账户ID  
-» create_time | integer(int64) | 创建时间  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+StpGroup | required: ["name"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | STP用户组ID  
+name | string | Required |  | STP用户组名称  
+creator_id | integer(int64) | Optional | readOnly: true | 创建人账户ID  
+create_time | integer(int64) | Optional | readOnly: true | 创建时间  
   
 WARNING
 
@@ -483,7 +622,25 @@ _新建STP用户组_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | StpGroup | 是 |   
-» name | body | string | 是 | STP用户组名称  
+id | body | integer(int64) | 否 | STP用户组ID  
+name | body | string | 是 | STP用户组名称  
+creator_id | body | integer(int64) | 否 | 创建人账户ID  
+create_time | body | integer(int64) | 否 | 创建时间  
+  
+####  请求体结构
+
+请求体结构类型 | 约束  
+---|---  
+StpGroup | required: ["name"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | STP用户组ID  
+name | string | Required |  | STP用户组名称  
+creator_id | integer(int64) | Optional | readOnly: true | 创建人账户ID  
+create_time | integer(int64) | Optional | readOnly: true | 创建时间  
   
 ### 返回
 
@@ -495,12 +652,18 @@ body | body | StpGroup | 是 |
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» id | integer(int64) | STP用户组ID  
-» name | string | STP用户组名称  
-» creator_id | integer(int64) | 创建人账户ID  
-» create_time | integer(int64) | 创建时间  
+类型 | 约束  
+---|---  
+StpGroup | required: ["name"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | STP用户组ID  
+name | string | Required |  | STP用户组名称  
+creator_id | integer(int64) | Optional | readOnly: true | 创建人账户ID  
+create_time | integer(int64) | Optional | readOnly: true | 创建时间  
   
 WARNING
 
@@ -597,12 +760,23 @@ stp_id | URL | integer(int64) | 是 | STP用户组ID
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» user_id | integer(int64) | 用户ID  
-» stp_id | integer(int64) | STP用户组ID  
-» create_time | integer(int64) | 创建时间  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+StpGroupUser |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | 用户ID  
+stp_id | integer(int64) | Optional | readOnly: true | STP用户组ID  
+create_time | integer(int64) | Optional | readOnly: true | 创建时间  
   
 WARNING
 
@@ -683,6 +857,18 @@ _STP用户组中添加用户_
 stp_id | URL | integer(int64) | 是 | STP用户组ID  
 body | body | AddSTPGroupUsersRequest | 是 | 用户ID  
   
+####  请求体结构
+
+请求体结构类型 | 约束  
+---|---  
+AddSTPGroupUsersRequest |   
+  
+**items**
+
+请求体结构类型 | 约束  
+---|---  
+integer(int64) |   
+  
 ### 返回
 
 返回状态码 | 含义 | 描述 | 格式  
@@ -693,12 +879,23 @@ body | body | AddSTPGroupUsersRequest | 是 | 用户ID
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» user_id | integer(int64) | 用户ID  
-» stp_id | integer(int64) | STP用户组ID  
-» create_time | integer(int64) | 创建时间  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+StpGroupUser |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | 用户ID  
+stp_id | integer(int64) | Optional | readOnly: true | STP用户组ID  
+create_time | integer(int64) | Optional | readOnly: true | 创建时间  
   
 WARNING
 
@@ -800,12 +997,23 @@ user_id | 请求参数 | integer(int64) | 是 | STP用户ID，多个可以用逗
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» user_id | integer(int64) | 用户ID  
-» stp_id | integer(int64) | STP用户组ID  
-» create_time | integer(int64) | 创建时间  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+StpGroupUser |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | 用户ID  
+stp_id | integer(int64) | Optional | readOnly: true | STP用户组ID  
+create_time | integer(int64) | Optional | readOnly: true | 创建时间  
   
 WARNING
 
@@ -888,9 +1096,15 @@ _查询GT抵扣配置_
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» enabled | boolean | 是否开启GT抵扣  
+类型 | 约束  
+---|---  
+DebitFee | required: ["enabled"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+enabled | boolean | Required |  | 是否开启GT抵扣  
   
 WARNING
 
@@ -964,7 +1178,19 @@ _设定GT抵扣_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | DebitFee | 是 |   
-» enabled | body | boolean | 是 | 是否开启GT抵扣  
+enabled | body | boolean | 是 | 是否开启GT抵扣  
+  
+####  请求体结构
+
+请求体结构类型 | 约束  
+---|---  
+DebitFee | required: ["enabled"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+enabled | boolean | Required |  | 是否开启GT抵扣  
   
 ### 返回
 
@@ -1030,49 +1256,93 @@ WARNING
 
 #  模型
 
-##  AddSTPGroupUsersRequest
+##  AccountRateLimit
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-_无_
-    
-    
-    [
-      0
-    ]
-    
-    
-
-##  DebitFee
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-enabled | boolean | true | none | 是否开启GT抵扣  
+tier | string | Optional | readOnly: true | 限频等级（详细限频规则查看成交比率限频）  
+ratio | string | Optional |  | 成交率  
+main_ratio | string | Optional | readOnly: true | 主账户合计成交比率  
+updated_at | string | Optional | readOnly: true | 更新时间  
       
     
     {
-      "enabled": true
+      "tier": "string",
+      "ratio": "string",
+      "main_ratio": "string",
+      "updated_at": "string"
     }
     
     
 
 ##  AccountDetail
 
-_AccountDetail_
+AccountDetail
 
-###  属性
+账户详情
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-ip_whitelist | array | false | none | IP 白名单  
-currency_pairs | array | false | none | 交易对白名单  
-user_id | integer(int64) | false | none | 用户ID  
-tier | integer(int64) | false | none | 用户 vip 等级  
-key | object | false | none | API Key 详情  
-» mode | integer(int32) | false | none | 模式： 1 - 经典模式 2 - 旧版统一模式  
-copy_trading_role | integer(int32) | false | none | 用户角色： 0 - 普通用户 1 - 带单者 2 - 跟单者 3 - 带单者与跟单者  
+ip_whitelist | array | Optional |  | IP 白名单  
+currency_pairs | array | Optional |  | 交易对白名单  
+user_id | integer(int64) | Optional |  | 用户ID  
+tier | integer(int64) | Optional |  | 用户 vip 等级  
+key | object | Optional |  | API Key 详情  
+copy_trading_role | integer(int32) | Optional |  | 用户角色： 0 - 普通用户 1 - 带单者 2 - 跟单者 3 - 带单者与跟单者  
+  
+**ip_whitelist**
+
+IP 白名单
+
+类型 | 约束  
+---|---  
+array |   
+  
+**ip_whitelist / items**
+
+类型 | 约束  
+---|---  
+string |   
+  
+**currency_pairs**
+
+交易对白名单
+
+类型 | 约束  
+---|---  
+array |   
+  
+**currency_pairs / items**
+
+类型 | 约束  
+---|---  
+string |   
+  
+**key**
+
+API Key 详情
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+mode | integer(int32) | Optional |  | 模式： 1 - 经典模式 2 - 旧版统一模式  
       
     
     {
@@ -1092,37 +1362,81 @@ copy_trading_role | integer(int32) | false | none | 用户角色： 0 - 普通�
     
     
 
-##  AccountRateLimit
+##  DebitFee
 
-###  属性
+类型 | 约束  
+---|---  
+object | required: ["enabled"]  
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-tier | string | false | 只读 | 限频等级（详细限频规则查看成交比率限频）  
-ratio | string | false | none | 成交率  
-main_ratio | string | false | 只读 | 主账户合计成交比率  
-updated_at | string | false | 只读 | 更新时间  
+enabled | boolean | Required |  | 是否开启GT抵扣  
       
     
     {
-      "tier": "string",
-      "ratio": "string",
-      "main_ratio": "string",
-      "updated_at": "string"
+      "enabled": true
     }
+    
+    
+
+##  StpGroupUser
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | 用户ID  
+stp_id | integer(int64) | Optional | readOnly: true | STP用户组ID  
+create_time | integer(int64) | Optional | readOnly: true | 创建时间  
+      
+    
+    {
+      "user_id": 0,
+      "stp_id": 0,
+      "create_time": 0
+    }
+    
+    
+
+##  AddSTPGroupUsersRequest
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+integer(int64) |   
+      
+    
+    [
+      0
+    ]
     
     
 
 ##  StpGroup
 
-###  属性
+类型 | 约束  
+---|---  
+object | required: ["name"]  
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-id | integer(int64) | false | 只读 | STP用户组ID  
-name | string | true | none | STP用户组名称  
-creator_id | integer(int64) | false | 只读 | 创建人账户ID  
-create_time | integer(int64) | false | 只读 | 创建时间  
+id | integer(int64) | Optional | readOnly: true | STP用户组ID  
+name | string | Required |  | STP用户组名称  
+creator_id | integer(int64) | Optional | readOnly: true | 创建人账户ID  
+create_time | integer(int64) | Optional | readOnly: true | 创建时间  
       
     
     {
@@ -1134,41 +1448,77 @@ create_time | integer(int64) | false | 只读 | 创建时间
     
     
 
-##  StpGroupUser
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-user_id | integer(int64) | false | none | 用户ID  
-stp_id | integer(int64) | false | 只读 | STP用户组ID  
-create_time | integer(int64) | false | 只读 | 创建时间  
-      
-    
-    {
-      "user_id": 0,
-      "stp_id": 0,
-      "create_time": 0
-    }
-    
-    
-
 ##  AccountKeyInfo
 
-_AccountKeyInfo_
+AccountKeyInfo
 
-###  属性
+主账户apikey信息
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-state | integer(int32) | false | none | apikey状态： 1 - 正常状态 2 - 锁定状态 3 - 冻结状态(只能修改，创建默认为1）  
-mode | integer(int32) | false | none | 用户模式： 1 - 经典模式 2 - 旧版统一模式 (只能创建时指定，不能修改）  
-name | string | false | none | api key 备注  
-currency_pairs | array | false | none | 交易对白名单列表，最多 30 个交易对  
-user_id | integer(int64) | false | none | 用户ID  
-ip_whitelist | array | false | none | IP 白名单  
-perms | array | false | none | none  
-» name | string | false | none | 权限功能名称（不传值即为清空）  
+state | integer(int32) | Optional |  | apikey状态： 1 - 正常状态 2 - 锁定状态 3 - 冻结状态(只能修改，创建默认为1）  
+mode | integer(int32) | Optional |  | 用户模式： 1 - 经典模式 2 - 旧版统一模式 (只能创建时指定，不能修改）  
+name | string | Optional |  | api key 备注  
+currency_pairs | array | Optional |  | 交易对白名单列表，最多 30 个交易对  
+user_id | integer(int64) | Optional |  | 用户ID  
+ip_whitelist | array | Optional |  | IP 白名单  
+perms | array | Optional |  |   
+key | object | Optional |  | API Key 详情  
+created_at | string | Optional | readOnly: true | 创建时间  
+updated_at | string | Optional | readOnly: true | 最近更新时间  
+last_access | string | Optional | readOnly: true | 最近使用时间  
+  
+**currency_pairs**
+
+交易对白名单列表，最多 30 个交易对
+
+类型 | 约束  
+---|---  
+array |   
+  
+**currency_pairs / items**
+
+类型 | 约束  
+---|---  
+string |   
+  
+**ip_whitelist**
+
+IP 白名单
+
+类型 | 约束  
+---|---  
+array |   
+  
+**ip_whitelist / items**
+
+类型 | 约束  
+---|---  
+string |   
+  
+**perms**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**perms / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+name | string | Optional |  | 权限功能名称（不传值即为清空）  
   
 \- `wallet`: 钱包  
 \- `spot`: 现货/杠杆  
@@ -1191,12 +1541,21 @@ perms | array | false | none | none
 \- `cfd_copy`: CFD带单  
 \- `stock_copy`: 股票带单  
 \- `sub_accounts`: 子账号  
-» read_only | boolean | false | none | 该功能是否只读  
-key | object | false | none | API Key 详情  
-» mode | integer(int32) | false | none | 模式： 1 - 经典模式 2 - 旧版统一模式  
-created_at | string | false | 只读 | 创建时间  
-updated_at | string | false | 只读 | 最近更新时间  
-last_access | string | false | 只读 | 最近使用时间  
+read_only | boolean | Optional |  | 该功能是否只读  
+  
+**key**
+
+API Key 详情
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+mode | integer(int32) | Optional |  | 模式： 1 - 经典模式 2 - 旧版统一模式  
       
     
     {

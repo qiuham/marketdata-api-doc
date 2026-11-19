@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/sor_faq
 api_type: Guide
-updated_at: 2026-11-18 18:35:23.707012
+updated_at: 2026-11-19 18:38:10.885104
 ---
 
 # Smart Order Routing (SOR)

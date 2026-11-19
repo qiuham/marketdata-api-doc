@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/managing-withdrawals-api
 api_type: Guide
-updated_at: 2026-11-18 18:58:57.947903
+updated_at: 2026-11-19 19:05:32.485864
 ---
 
 # Managing Withdrawals

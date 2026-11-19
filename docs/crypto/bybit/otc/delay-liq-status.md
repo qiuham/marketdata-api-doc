@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/delay-liq-status
 api_type: REST
-updated_at: 2026-11-18 18:50:51.091777
+updated_at: 2026-11-19 18:54:44.882027
 ---
 
 # Get Delay Liquidation Status

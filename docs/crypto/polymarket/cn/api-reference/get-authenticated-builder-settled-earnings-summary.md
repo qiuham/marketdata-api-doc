@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/get-authenticated-builder-settled-earnings-summary'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # 查询构建者收益汇总

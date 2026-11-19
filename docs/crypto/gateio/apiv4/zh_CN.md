@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN
 api_type: REST
-updated_at: 2026-11-18 18:56:10.914012
+updated_at: 2026-11-19 19:01:16.236158
 ---
 
 # Gate API v4.106.184
@@ -111,6 +111,15 @@ DANGER
 
   * 新增 `POST /p2p/merchant/chat/pre_upload_chat_file`，请求必填字段为 `content_type`，仅支持 `image/jpeg`、`image/jpg`、`image/png`、`image/webp` 和 `video/mp4`。响应包含 `data.url`、签名表单字段 `data.fields` 和 `data.file_key`，用于直传成功后发送文件消息。
   * 废弃 `POST /p2p/merchant/chat/upload_chat_file`，改用 `POST /p2p/merchant/chat/pre_upload_chat_file`。
+
+**v4.106.182**
+
+2026-11-13
+
+  * 新增股票期权行情接口：**`GET /stock_options/fee-rate`** 、**`GET /stock_options/underlyings`** 、**`GET /stock_options/contracts`** 、**`GET /stock_options/market/expirations`** 、**`GET /stock_options/market/chain`** 和 **`GET /stock_options/market/{symbol}/orderbook`** 。
+  * 新增 **`GET /stock_options/positions`** 和 **`POST /stock_options/positions/close`** ，用于查询及平仓股票期权持仓。
+  * 新增股票期权委托接口：**`GET /stock_options/orders`** 、**`POST /stock_options/orders`** 、**`DELETE /stock_options/orders`** 、**`GET /stock_options/orders/{order_id}`** 、**`PUT /stock_options/orders/{order_id}`** 、**`DELETE /stock_options/orders/{order_id}`** 和 **`GET /stock_options/orders/history`** 。委托价格和数量使用十进制字符串。
+  * **不兼容变更：** **`GET /stock/symbols`** 、**`GET /stock/symbols/detail`** 和 **`GET /stock/orders`** 响应的 `trade_mode` 枚举删除 `6`、`7` 和 `8`。文档中的可取值为 `0`、`1`、`2`、`4` 和 `5`（`5`：交易暂停）。引用已删除 SDK 枚举常量的客户端需要适配。
 
 **v4.106.180**
 
@@ -256,11 +265,20 @@ DANGER
 
   * 新增 **`GET /spot/rpi_order_book`** 接口，查询现货 RPI 市场深度，买单按照价格从高到低排序，卖单按照价格从低到高排序。无需 API Key。
 
-**v4.106.152**
+**v4.106.153**
 
 2026-10-13
 
   * 新增 **`GET /futures/{settle}/rpi_order_book`** 接口，无需 API Key 认证即可查询合约 RPI 深度，支持价格合并、深度档位限制及可选的深度更新 ID。
+
+**v4.106.152**
+
+2026-10-13
+
+  * CrossEx 新增美股、港股、韩股和日股的股票及 ETF 交易能力，交易对格式为 `{市场}_{STOCK或ETF}_{证券代码}_USDT`；下单仅支持跨所账户模式、`GTC` 和 `qty`，不支持 `quote_qty`，并额外限制为单用户每秒一次请求。委托价格和证券持仓价值使用上市市场原生计价币种（`USD`、`HKD`、`KRW` 或 `JPY`）。
+  * 新增 **`GET /crossex/security_positions`** （`listCrossexSecurityPositions`）证券仓位查询接口，支持可选的 `symbol` 和 `exchange_type` 筛选参数。
+  * **`GET /crossex/rule/symbols`** （`Symbol`）响应新增必填 `tag` 字段，用于证券描述和 Hyperliquid DEX 信息。解析该响应的调用方需支持新增字段。
+  * **`GET /crossex/account_book`** 返回的资金流水类型说明新增 `SECURITY_DIVIDEND` 和 `SECURITY_CORPORATE_ACTION`。
 
 **v4.106.150**
 

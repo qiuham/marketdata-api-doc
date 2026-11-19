@@ -2,16 +2,22 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-get_subaccounts
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:13.755022
+updated_at: 2026-11-19 19:05:50.829683
 ---
 
 # private/get_subaccounts
 
-> Retrieves information about all subaccounts associated with the main account. Returns details such as subaccount IDs, names, and status.
+> Retrieves the main account and its subaccounts, with identifiers, names, email, login and security status. The list always includes the main account itself (`type: main`); removed subaccounts are not listed.
 
-When called from a subaccount, the response includes limited details for the main account and full details for the subaccount initiating the request.
+**Visibility:**
+- Main account access is available when the authenticated account is the main account, or its token grants access to that main account (`mainaccount` scope or impersonated access). The response lists the main account and its eligible subaccounts.
+- Without main account access, a subaccount caller receives only the main account, with limited details (login, password and security-key related fields and `disabled_trading_products` are omitted), and the calling subaccount with full details.
+- Vault subaccounts are excluded from ordinary public listings. Isolated-margin subaccounts are not listed.
+- Not available for retail brokers (`14021`).
 
-Set the `with_portfolio` parameter to `true` to include portfolio information (balances, positions, etc.) in the response. By default, only subaccount metadata is returned.
+**Portfolio:** set `with_portfolio` to `true` to include per-currency balance and margin summaries (equity, balance, available funds, margin; no positions or orders). With main account access, each returned account has a `portfolio` object. Without it, only the calling subaccount has `portfolio`; the main account entry omits it. The flag also adds `referrals_count` and, while an email change is awaiting confirmation, `not_confirmed_email`. By default only account metadata is returned.
+
+**Examples:** response values are illustrative, not live account data. The examples show all trading products enabled, with no subaccount consent requirements.
 
 **📖 Related Article:** [Managing Subaccounts](https://docs.deribit.com/articles/managing-subaccounts-api)
 
@@ -72,18 +78,41 @@ paths:
         - Account Management
         - Private
       description: >+
-        Retrieves information about all subaccounts associated with the main
-        account. Returns details such as subaccount IDs, names, and status.
+        Retrieves the main account and its subaccounts, with identifiers, names,
+        email, login and security status. The list always includes the main
+        account itself (`type: main`); removed subaccounts are not listed.
 
 
-        When called from a subaccount, the response includes limited details for
-        the main account and full details for the subaccount initiating the
-        request.
+        **Visibility:**
+
+        - Main account access is available when the authenticated account is the
+        main account, or its token grants access to that main account
+        (`mainaccount` scope or impersonated access). The response lists the
+        main account and its eligible subaccounts.
+
+        - Without main account access, a subaccount caller receives only the
+        main account, with limited details (login, password and security-key
+        related fields and `disabled_trading_products` are omitted), and the
+        calling subaccount with full details.
+
+        - Vault subaccounts are excluded from ordinary public listings.
+        Isolated-margin subaccounts are not listed.
+
+        - Not available for retail brokers (`14021`).
 
 
-        Set the `with_portfolio` parameter to `true` to include portfolio
-        information (balances, positions, etc.) in the response. By default,
-        only subaccount metadata is returned.
+        **Portfolio:** set `with_portfolio` to `true` to include per-currency
+        balance and margin summaries (equity, balance, available funds, margin;
+        no positions or orders). With main account access, each returned account
+        has a `portfolio` object. Without it, only the calling subaccount has
+        `portfolio`; the main account entry omits it. The flag also adds
+        `referrals_count` and, while an email change is awaiting confirmation,
+        `not_confirmed_email`. By default only account metadata is returned.
+
+
+        **Examples:** response values are illustrative, not live account data.
+        The examples show all trading products enabled, with no subaccount
+        consent requirements.
 
 
         **📖 Related Article:** [Managing
@@ -100,11 +129,12 @@ paths:
         - name: with_portfolio
           in: query
           schema:
+            default: false
             example: true
             type: boolean
           description: >-
-            Portfolio flag: `true` for portfolio information, `false` for
-            subaccount information only. `false` by default
+            Portfolio flag: `true` to include per-currency balance and margin
+            summaries (no positions), `false` for account metadata only
           required: false
       requestBody:
         content:
@@ -118,6 +148,14 @@ paths:
                   method: private/get_subaccounts
                   params:
                     with_portfolio: true
+              metadataRequest:
+                summary: Metadata Request
+                value:
+                  jsonrpc: '2.0'
+                  id: 4948
+                  method: private/get_subaccounts
+                  params:
+                    with_portfolio: false
         description: JSON-RPC request body
       responses:
         '200':
@@ -132,11 +170,38 @@ paths:
                     jsonrpc: '2.0'
                     id: 4947
                     result:
-                      - email: user_AAA@email.com
+                      - email: user_AAA@example.com
                         id: 2
                         is_password: true
                         margin_model: segregated_sm
                         login_enabled: true
+                        disabled_trading_products: []
+                        trading_products_details:
+                          - product: perpetual
+                            enabled: true
+                            overwriteable: false
+                            requires_consent: false
+                          - product: futures
+                            enabled: true
+                            overwriteable: false
+                            requires_consent: false
+                          - product: options
+                            enabled: true
+                            overwriteable: false
+                            requires_consent: false
+                          - product: future_combos
+                            enabled: true
+                            overwriteable: false
+                            requires_consent: false
+                          - product: option_combos
+                            enabled: true
+                            overwriteable: false
+                            requires_consent: false
+                          - product: spots
+                            enabled: true
+                            overwriteable: false
+                            requires_consent: false
+                        referrals_count: 0
                         portfolio:
                           eth:
                             additional_reserve: 0
@@ -144,6 +209,7 @@ paths:
                             available_funds: 5
                             available_withdrawal_funds: 5
                             balance: 5
+                            locked_balance: 0
                             currency: eth
                             equity: 5
                             initial_margin: 0
@@ -155,6 +221,7 @@ paths:
                             available_funds: 5.000413075
                             available_withdrawal_funds: 5.000413075
                             balance: 5.000593987
+                            locked_balance: 0
                             currency: btc
                             equity: 5.000571846
                             initial_margin: 0.000158771
@@ -166,11 +233,38 @@ paths:
                         security_keys_assignments: []
                         type: main
                         username: user_1
-                      - email: user_AAA@gmail.com
+                      - email: user_AAA@example.com
                         id: 7
                         is_password: true
                         margin_model: cross_pm
                         login_enabled: false
+                        disabled_trading_products: []
+                        trading_products_details:
+                          - product: perpetual
+                            enabled: true
+                            overwriteable: true
+                            requires_consent: false
+                          - product: futures
+                            enabled: true
+                            overwriteable: true
+                            requires_consent: false
+                          - product: options
+                            enabled: true
+                            overwriteable: true
+                            requires_consent: false
+                          - product: future_combos
+                            enabled: true
+                            overwriteable: true
+                            requires_consent: false
+                          - product: option_combos
+                            enabled: true
+                            overwriteable: true
+                            requires_consent: false
+                          - product: spots
+                            enabled: true
+                            overwriteable: true
+                            requires_consent: false
+                        referrals_count: 0
                         portfolio:
                           eth:
                             additional_reserve: 0
@@ -178,6 +272,7 @@ paths:
                             available_funds: 0
                             available_withdrawal_funds: 0
                             balance: 0
+                            locked_balance: 0
                             currency: eth
                             equity: 0
                             initial_margin: 0
@@ -189,11 +284,92 @@ paths:
                             available_funds: 0
                             available_withdrawal_funds: 0
                             balance: 0
+                            locked_balance: 0
                             currency: btc
                             equity: 0
                             initial_margin: 0
                             maintenance_margin: 0
                             margin_balance: 0
+                        receive_notifications: false
+                        system_name: user_1_1
+                        security_keys_enabled: false
+                        security_keys_assignments: []
+                        type: subaccount
+                        username: user_1_1
+                metadataResponse:
+                  summary: Metadata response example
+                  value:
+                    jsonrpc: '2.0'
+                    id: 4948
+                    result:
+                      - email: user_AAA@example.com
+                        id: 2
+                        is_password: true
+                        margin_model: segregated_sm
+                        login_enabled: true
+                        disabled_trading_products: []
+                        trading_products_details:
+                          - product: perpetual
+                            enabled: true
+                            overwriteable: false
+                            requires_consent: false
+                          - product: futures
+                            enabled: true
+                            overwriteable: false
+                            requires_consent: false
+                          - product: options
+                            enabled: true
+                            overwriteable: false
+                            requires_consent: false
+                          - product: future_combos
+                            enabled: true
+                            overwriteable: false
+                            requires_consent: false
+                          - product: option_combos
+                            enabled: true
+                            overwriteable: false
+                            requires_consent: false
+                          - product: spots
+                            enabled: true
+                            overwriteable: false
+                            requires_consent: false
+                        receive_notifications: false
+                        system_name: user_1
+                        security_keys_enabled: false
+                        security_keys_assignments: []
+                        type: main
+                        username: user_1
+                      - email: user_AAA@example.com
+                        id: 7
+                        is_password: true
+                        margin_model: cross_pm
+                        login_enabled: false
+                        disabled_trading_products: []
+                        trading_products_details:
+                          - product: perpetual
+                            enabled: true
+                            overwriteable: true
+                            requires_consent: false
+                          - product: futures
+                            enabled: true
+                            overwriteable: true
+                            requires_consent: false
+                          - product: options
+                            enabled: true
+                            overwriteable: true
+                            requires_consent: false
+                          - product: future_combos
+                            enabled: true
+                            overwriteable: true
+                            requires_consent: false
+                          - product: option_combos
+                            enabled: true
+                            overwriteable: true
+                            requires_consent: false
+                          - product: spots
+                            enabled: true
+                            overwriteable: true
+                            requires_consent: false
                         receive_notifications: false
                         system_name: user_1_1
                         security_keys_enabled: false
@@ -217,6 +393,21 @@ paths:
               "method": "private/get_subaccounts",
               "params": {
                 "with_portfolio": true
+              }
+            }'
+        - lang: bash
+          label: cURL (Metadata)
+          source: |-
+            curl --request POST \
+              --url https://test.deribit.com/api/v2/private/get_subaccounts \
+              --header 'Authorization: Bearer <ACCESS_TOKEN>' \
+              --header 'Content-Type: application/json' \
+              --data '{
+              "jsonrpc": "2.0",
+              "id": 4948,
+              "method": "private/get_subaccounts",
+              "params": {
+                "with_portfolio": false
               }
             }'
 components:
@@ -256,37 +447,82 @@ components:
                   is only included if `with_portfolio` == `true`.
               security_keys_enabled:
                 type: boolean
-                description: Whether the Security Keys authentication is enabled
+                description: >-
+                  Whether Security Keys authentication is enabled. Omitted from
+                  the main account entry when the caller lacks main account
+                  access
               security_keys_assignments:
                 type: array
-                description: Names of assignments with Security Keys assigned
+                items:
+                  type: string
+                description: >-
+                  Names of assignments with Security Keys assigned. Omitted from
+                  the main account entry when the caller lacks main account
+                  access
               system_name:
                 type: string
                 description: System generated user nickname
               receive_notifications:
                 type: boolean
                 description: >-
-                  When `true` - receive all notification emails on the main
-                  email
+                  Email-forwarding flag reported for the account. It does not
+                  reflect changes made with
+                  `private/toggle_notifications_from_subaccount`; see the known
+                  limitation there
               is_password:
                 type: boolean
-                description: '`true` when password for the subaccount has been configured'
+                description: >-
+                  `true` when password for the subaccount has been configured.
+                  Omitted from the main account entry when the caller lacks main
+                  account access
+              disabled_trading_products:
+                type: array
+                items:
+                  type: string
+                description: >-
+                  List of disabled trading products. Omitted from the main
+                  account entry when the caller lacks main account access
+              trading_products_details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    product:
+                      type: string
+                    enabled:
+                      type: boolean
+                    overwriteable:
+                      type: boolean
+                    requires_consent:
+                      type: boolean
+                description: >-
+                  Per trading product, whether it is enabled and can be
+                  overwritten for the account
+              referrals_count:
+                type: integer
+                description: >-
+                  Number of referrals of the account. Only included if
+                  `with_portfolio` == `true`.
               margin_model:
                 type: string
                 description: Margin model
               login_enabled:
                 type: boolean
-                description: Informs whether login to the subaccount is enabled
+                description: >-
+                  Informs whether login to the subaccount is enabled. Omitted
+                  from the main account entry when the caller lacks main account
+                  access
               portfolio:
                 $ref: '#/components/schemas/portfolio'
-                description: Only if with_portfolio == true
+                description: >-
+                  Present only when `with_portfolio` is true and the caller has
+                  portfolio access to this entry. Without main account access,
+                  omitted from the main account entry
             required:
               - username
               - email
               - type
-              - tfa_enabled
               - receive_notifications
-              - is_password
               - system_name
               - id
       required:
@@ -403,8 +639,8 @@ components:
 
 ## Related topics
 
+- [private/toggle_notifications_from_subaccount](https://docs.deribit.com/api-reference/account-management/private-toggle_notifications_from_subaccount.md)
 - [Managing Subaccounts](https://docs.deribit.com/articles/managing-subaccounts-api.md)
 - [Moving Positions](https://docs.deribit.com/articles/moving-positions-api.md)
-- [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md)
-- [Coinbase International Exchange API Migration](https://docs.deribit.com/articles/intx-api-migration.md)
-- [private/get_subaccounts_details](https://docs.deribit.com/api-reference/account-management/private-get_subaccounts_details.md)
+- [private/remove_subaccount](https://docs.deribit.com/api-reference/account-management/private-remove_subaccount.md)
+- [private/toggle_subaccount_login](https://docs.deribit.com/api-reference/account-management/private-toggle_subaccount_login.md)

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-the-maximum-loan-of-instrument
 anchor_id: trading-account-rest-api-get-the-maximum-loan-of-instrument
 api_type: REST
-updated_at: 2026-11-18 18:57:43.857219
+updated_at: 2026-11-19 19:03:13.354437
 ---
 
 # Get the maximum loan of instrument

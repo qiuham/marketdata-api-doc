@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/earn
 api_type: Earn
-updated_at: 2026-11-18 18:56:22.035991
+updated_at: 2026-11-19 19:01:29.492284
 ---
 
 # Earn
@@ -49,21 +49,32 @@ multiple-溢价由高到低
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» id | integer(int32) | 项目ID  
-» instrument_name | string | 项目名称  
-» type | string | call: 高卖 put: 低买  
-» invest_currency | string | 投资币种  
-» exercise_currency | string | 行权币种  
-» exercise_price | number(double) | 行权价格  
-» delivery_time | integer(int32) | 结算时间  
-» apy_display | string | 年化收益率  
-» min_amount | string | 最小投资金额  
-» start_time | integer(int32) | 开始时间  
-» end_time | integer(int32) | 结束时间  
-» status | string | 状态:  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+DualGetPlans |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int32) | Optional |  | 项目ID  
+instrument_name | string | Optional |  | 项目名称  
+type | string | Optional |  | call: 高卖 put: 低买  
+invest_currency | string | Optional |  | 投资币种  
+exercise_currency | string | Optional |  | 行权币种  
+exercise_price | number(double) | Optional |  | 行权价格  
+delivery_time | integer(int32) | Optional |  | 结算时间  
+apy_display | string | Optional |  | 年化收益率  
+min_amount | string | Optional |  | 最小投资金额  
+start_time | integer(int32) | Optional |  | 开始时间  
+end_time | integer(int32) | Optional |  | 结束时间  
+status | string | Optional |  | 状态:  
   
 `NOTSTARTED`-未开始  
 `ONGOING`-进行中  
@@ -161,31 +172,42 @@ ALL-全部
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» id | integer(int32) | 订单ID  
-» plan_id | integer(int32) | 项目ID  
-» invest_amount | string | 投资数量  
-» settlement_amount | string | 结算数量  
-» create_time | integer(int32) | 创建时间  
-» complete_time | integer(int32) | 完成时间  
-» status | string | 状态:  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+DualGetOrders |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int32) | Optional |  | 订单ID  
+plan_id | integer(int32) | Optional |  | 项目ID  
+invest_amount | string | Optional |  | 投资数量  
+settlement_amount | string | Optional |  | 结算数量  
+create_time | integer(int32) | Optional |  | 创建时间  
+complete_time | integer(int32) | Optional |  | 完成时间  
+status | string | Optional |  | 状态:  
   
 `INIT`-创建  
 `SETTLEMENT_SUCCESS`-结算成功  
 `SETTLEMENT_PROCESSING`-结算中  
 `CANCELED`-取消  
 `FAILED`-失败  
-» invest_currency | string | 投资币种  
-» exercise_currency | string | 行权币种  
-» exercise_price | string | 行权价格  
-» settlement_price | string | 结算价格  
-» settlement_currency | string | 结算币种  
-» apy_display | string | 年化收益率  
-» apy_settlement | string | 结算年化收益率  
-» delivery_time | integer(int32) | 结算时间  
-» text | string | 订单自定义信息  
+invest_currency | string | Optional |  | 投资币种  
+exercise_currency | string | Optional |  | 行权币种  
+exercise_price | string | Optional |  | 行权价格  
+settlement_price | string | Optional |  | 结算价格  
+settlement_currency | string | Optional |  | 结算币种  
+apy_display | string | Optional |  | 年化收益率  
+apy_settlement | string | Optional |  | 结算年化收益率  
+delivery_time | integer(int32) | Optional |  | 结算时间  
+text | string | Optional |  | 订单自定义信息  
   
 WARNING
 
@@ -274,22 +296,43 @@ _双币理财下单_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | PlaceDualInvestmentOrderParams | 是 |   
-» plan_id | body | string | 是 | 项目ID  
-» amount | body | string | 是 | 申购金额  
-» text | body | string | 否 | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+plan_id | body | string | 是 | 项目ID  
+amount | body | string | 是 | 申购金额  
+text | body | string | 否 | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
   
 1\. 必须以 `t-` 开头  
 2\. 不计算 `t-` ，长度不能超过 28 字节  
 3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
   
+  
 ####  详细描述
 
-**» text** : 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+** text**: 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
   
 1\. 必须以 `t-` 开头  
 2\. 不计算 `t-` ，长度不能超过 28 字节  
-3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
 
+####  请求体结构
+
+双币宝订单
+
+请求体结构类型 | 约束  
+---|---  
+PlaceDualInvestmentOrderParams | required: ["plan_id","amount"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+plan_id | string | Required |  | 项目ID  
+amount | string | Required |  | 申购金额  
+text | string | Optional |  | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+  
 ### 返回
 
 返回状态码 | 含义 | 描述 | 格式  
@@ -300,30 +343,36 @@ body | body | PlaceDualInvestmentOrderParams | 是 |
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» id | integer(int32) | 订单ID  
-» plan_id | integer(int32) | 项目ID  
-» invest_amount | string | 投资数量  
-» settlement_amount | string | 结算数量  
-» create_time | integer(int32) | 创建时间  
-» complete_time | integer(int32) | 完成时间  
-» status | string | 状态:  
+类型 | 约束  
+---|---  
+PlaceDualInvestmentOrder |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int32) | Optional |  | 订单ID  
+plan_id | integer(int32) | Optional |  | 项目ID  
+invest_amount | string | Optional |  | 投资数量  
+settlement_amount | string | Optional |  | 结算数量  
+create_time | integer(int32) | Optional |  | 创建时间  
+complete_time | integer(int32) | Optional |  | 完成时间  
+status | string | Optional |  | 状态:  
   
 `INIT`-创建  
 `SETTLEMENT_SUCCESS`-结算成功  
 `SETTLEMENT_PROCESSING`-结算中  
 `CANCELED`-取消  
 `FAILED`-失败  
-» invest_currency | string | 投资币种  
-» exercise_currency | string | 行权币种  
-» exercise_price | string | 行权价格  
-» settlement_price | string | 结算价格  
-» settlement_currency | string | 结算币种  
-» apy_display | string | 年化收益率  
-» apy_settlement | string | 结算年化收益率  
-» delivery_time | integer(int32) | 结算时间  
-» text | string | 订单自定义信息  
+invest_currency | string | Optional |  | 投资币种  
+exercise_currency | string | Optional |  | 行权币种  
+exercise_price | string | Optional |  | 行权价格  
+settlement_price | string | Optional |  | 结算价格  
+settlement_currency | string | Optional |  | 结算币种  
+apy_display | string | Optional |  | 年化收益率  
+apy_settlement | string | Optional |  | 结算年化收益率  
+delivery_time | integer(int32) | Optional |  | 结算时间  
+text | string | Optional |  | 订单自定义信息  
   
 WARNING
 
@@ -426,12 +475,18 @@ _双币理财资产_
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» user_asset_usdt | string | 用户资产折U  
-» user_asset_btc | string | 用户资产折BTC  
-» user_total_interest_usdt | string | 用户总利息折U  
-» user_total_interest_btc | string | 用户总利息折BTC  
+类型 | 约束  
+---|---  
+DualGetBalance |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user_asset_usdt | string | Optional |  | 用户资产折U  
+user_asset_btc | string | Optional |  | 用户资产折BTC  
+user_total_interest_usdt | string | Optional |  | 用户总利息折U  
+user_total_interest_btc | string | Optional |  | 用户总利息折BTC  
   
 WARNING
 
@@ -517,24 +572,30 @@ order_id | 请求参数 | string | 是 | 订单ID
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» create_timest | integer(int64) | 订单创建时间戳  
-» delivery_timest | integer(int64) | 订单交付时间戳  
-» exercise_price | string | 行权价格  
-» invest_amount | string | 投资金额  
-» invest_currency | string | 投资币种  
-» name | string | 订单名称标识  
-» order_id | integer(int64) | 订单ID  
-» req_id | string | 实际赎回使用的请求 ID，由 GET /earn/dual/order-refund-preview 返回；POST /earn/dual/order-refund 的请求必填 order_id 和 req_id。  
-» refund_service_charge | integer(int64) | 退款手续费  
-» settle_price | string | 结算价格  
-» settlement_amount | string | 结算金额  
-» settlement_currency | string | 结算币种  
-» settlement_interest | string | 结算利息  
-» settlement_principle | string | 结算本金  
-» type | string | call: 高卖 put: 低买  
-» money_back_timest | integer(int64) | 赎回时间  
+类型 | 约束  
+---|---  
+DualOrderRefundPreview |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+create_timest | integer(int64) | Optional |  | 订单创建时间戳  
+delivery_timest | integer(int64) | Optional |  | 订单交付时间戳  
+exercise_price | string | Optional |  | 行权价格  
+invest_amount | string | Optional |  | 投资金额  
+invest_currency | string | Optional |  | 投资币种  
+name | string | Optional |  | 订单名称标识  
+order_id | integer(int64) | Optional |  | 订单ID  
+req_id | string | Optional |  | 实际赎回使用的请求 ID，由 GET /earn/dual/order-refund-preview 返回；POST /earn/dual/order-refund 的请求必填 order_id 和 req_id。  
+refund_service_charge | integer(int64) | Optional |  | 退款手续费  
+settle_price | string | Optional |  | 结算价格  
+settlement_amount | string | Optional |  | 结算金额  
+settlement_currency | string | Optional |  | 结算币种  
+settlement_interest | string | Optional |  | 结算利息  
+settlement_principle | string | Optional |  | 结算本金  
+type | string | Optional |  | call: 高卖 put: 低买  
+money_back_timest | integer(int64) | Optional |  | 赎回时间  
   
 WARNING
 
@@ -621,8 +682,23 @@ _双币订单提前赎回_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | DualOrderRefundParams | 是 |   
-» order_id | body | string | 是 | 订单ID  
-» req_id | body | string | 是 | 请求ID，由order-refund-preview返回  
+order_id | body | string | 是 | 订单ID  
+req_id | body | string | 是 | 请求ID，由order-refund-preview返回  
+  
+####  请求体结构
+
+双币订单提前赎回请求
+
+请求体结构类型 | 约束  
+---|---  
+DualOrderRefundParams | required: ["order_id","req_id"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | string | Required |  | 订单ID  
+req_id | string | Required |  | 请求ID，由order-refund-preview返回  
   
 ### 返回
 
@@ -700,9 +776,25 @@ _双币订单复投修改_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | DualModifyOrderReinvestParams | 是 |   
-» order_id | body | integer(int64) | 否 | 订单ID  
-» status | body | integer(int32) | 否 | 0: 关闭 1: 开启  
-» effective_time_duration | body | integer(int64) | 否 | 生效时长(秒)，默认1天(86400)  
+order_id | body | integer(int64) | 否 | 订单ID  
+status | body | integer(int32) | 否 | 0: 关闭 1: 开启  
+effective_time_duration | body | integer(int64) | 否 | 生效时长(秒)，默认1天(86400)  
+  
+####  请求体结构
+
+双币订单复投修改请求
+
+请求体结构类型 | 约束  
+---|---  
+DualModifyOrderReinvestParams |   
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | 订单ID  
+status | integer(int32) | Optional |  | 0: 关闭 1: 开启  
+effective_time_duration | integer(int64) | Optional |  | 生效时长(秒)，默认1天(86400)  
   
 ### 返回
 
@@ -811,23 +903,34 @@ dt_up: 到期时间升序
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» id | integer(int64) | 项目ID  
-» category | integer(int32) | 策略类别  
-» type | string | call: 高卖 put: 低买  
-» invest_currency | string | 投资币种  
-» exercise_currency | string | 行权币种  
-» apy_display | string | 年化收益率  
-» exercise_price | string | 行权价格  
-» delivery_timest | integer(int64) | 结算时间  
-» min_amount | string | 最小投资金额  
-» max_amount | string | 最大投资金额  
-» min_copies | integer(int64) | 最小份数  
-» max_copies | integer(int64) | 最大份数  
-» invest_days | integer(int64) | 锁仓天数  
-» invest_hours | string | 锁仓小时数  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+DualProjectRecommend |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 项目ID  
+category | integer(int32) | Optional |  | 策略类别  
+type | string | Optional |  | call: 高卖 put: 低买  
+invest_currency | string | Optional |  | 投资币种  
+exercise_currency | string | Optional |  | 行权币种  
+apy_display | string | Optional |  | 年化收益率  
+exercise_price | string | Optional |  | 行权价格  
+delivery_timest | integer(int64) | Optional |  | 结算时间  
+min_amount | string | Optional |  | 最小投资金额  
+max_amount | string | Optional |  | 最大投资金额  
+min_copies | integer(int64) | Optional |  | 最小份数  
+max_copies | integer(int64) | Optional |  | 最大份数  
+invest_days | integer(int64) | Optional |  | 锁仓天数  
+invest_hours | string | Optional |  | 锁仓小时数  
   
 WARNING
 
@@ -948,21 +1051,32 @@ type | put
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» id | integer(int32) | 项目ID  
-» instrument_name | string | 项目名称  
-» type | string | call: 高卖 put: 低买  
-» invest_currency | string | 投资币种  
-» exercise_currency | string | 行权币种  
-» exercise_price | number(double) | 行权价格  
-» delivery_time | integer(int32) | 结算时间  
-» apy_display | string | 年化收益率  
-» min_amount | string | 最小投资金额  
-» start_time | integer(int32) | 开始时间  
-» end_time | integer(int32) | 结束时间  
-» status | string | 状态:  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+DualGetPlans |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int32) | Optional |  | 项目ID  
+instrument_name | string | Optional |  | 项目名称  
+type | string | Optional |  | call: 高卖 put: 低买  
+invest_currency | string | Optional |  | 投资币种  
+exercise_currency | string | Optional |  | 行权币种  
+exercise_price | number(double) | Optional |  | 行权价格  
+delivery_time | integer(int32) | Optional |  | 结算时间  
+apy_display | string | Optional |  | 年化收益率  
+min_amount | string | Optional |  | 最小投资金额  
+start_time | integer(int32) | Optional |  | 开始时间  
+end_time | integer(int32) | Optional |  | 结束时间  
+status | string | Optional |  | 状态:  
   
 `NOTSTARTED`-未开始  
 `ONGOING`-进行中  
@@ -1060,23 +1174,34 @@ mode | senior
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» id | integer(int64) | 项目ID  
-» category | integer(int32) | 策略类别  
-» type | string | call: 高卖 put: 低买  
-» invest_currency | string | 投资币种  
-» exercise_currency | string | 行权币种  
-» apy_display | string | 年化收益率  
-» exercise_price | string | 行权价格  
-» delivery_timest | integer(int64) | 结算时间  
-» min_amount | string | 最小投资金额  
-» max_amount | string | 最大投资金额  
-» min_copies | integer(int64) | 最小份数  
-» max_copies | integer(int64) | 最大份数  
-» invest_days | integer(int64) | 锁仓天数  
-» invest_hours | string | 锁仓小时数  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+DualProjectRecommend |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 项目ID  
+category | integer(int32) | Optional |  | 策略类别  
+type | string | Optional |  | call: 高卖 put: 低买  
+invest_currency | string | Optional |  | 投资币种  
+exercise_currency | string | Optional |  | 行权币种  
+apy_display | string | Optional |  | 年化收益率  
+exercise_price | string | Optional |  | 行权价格  
+delivery_timest | integer(int64) | Optional |  | 结算时间  
+min_amount | string | Optional |  | 最小投资金额  
+max_amount | string | Optional |  | 最大投资金额  
+min_copies | integer(int64) | Optional |  | 最小份数  
+max_copies | integer(int64) | Optional |  | 最大份数  
+invest_days | integer(int64) | Optional |  | 锁仓天数  
+invest_hours | string | Optional |  | 锁仓小时数  
   
 该请求不需要认证 
 
@@ -1180,31 +1305,42 @@ type | put
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array |   
-» id | integer(int32) | 订单ID  
-» plan_id | integer(int32) | 项目ID  
-» invest_amount | string | 投资数量  
-» settlement_amount | string | 结算数量  
-» create_time | integer(int32) | 创建时间  
-» complete_time | integer(int32) | 完成时间  
-» status | string | 状态:  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+DualGetOrders |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int32) | Optional |  | 订单ID  
+plan_id | integer(int32) | Optional |  | 项目ID  
+invest_amount | string | Optional |  | 投资数量  
+settlement_amount | string | Optional |  | 结算数量  
+create_time | integer(int32) | Optional |  | 创建时间  
+complete_time | integer(int32) | Optional |  | 完成时间  
+status | string | Optional |  | 状态:  
   
 `INIT`-创建  
 `SETTLEMENT_SUCCESS`-结算成功  
 `SETTLEMENT_PROCESSING`-结算中  
 `CANCELED`-取消  
 `FAILED`-失败  
-» invest_currency | string | 投资币种  
-» exercise_currency | string | 行权币种  
-» exercise_price | string | 行权价格  
-» settlement_price | string | 结算价格  
-» settlement_currency | string | 结算币种  
-» apy_display | string | 年化收益率  
-» apy_settlement | string | 结算年化收益率  
-» delivery_time | integer(int32) | 结算时间  
-» text | string | 订单自定义信息  
+invest_currency | string | Optional |  | 投资币种  
+exercise_currency | string | Optional |  | 行权币种  
+exercise_price | string | Optional |  | 行权价格  
+settlement_price | string | Optional |  | 结算价格  
+settlement_currency | string | Optional |  | 结算币种  
+apy_display | string | Optional |  | 年化收益率  
+apy_settlement | string | Optional |  | 结算年化收益率  
+delivery_time | integer(int32) | Optional |  | 结算时间  
+text | string | Optional |  | 订单自定义信息  
   
 WARNING
 
@@ -1295,35 +1431,59 @@ _双币股票下单_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | PlaceDualStockInvestmentOrderParams | 是 |   
-» plan_id | body | string | 是 | 项目ID  
-» amount | body | string | 是 | 申购金额  
-» text | body | string | 否 | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+plan_id | body | string | 是 | 项目ID  
+amount | body | string | 是 | 申购金额  
+text | body | string | 否 | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
   
 1\. 必须以 `t-` 开头  
 2\. 不计算 `t-` ，长度不能超过 28 字节  
 3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
-» hit_spot | body | integer | 否 | 低买（put）时是否勾选现货账户出资，`1` 为勾选，未传或非 `1` 视为未勾选  
-» hit_stock | body | integer | 否 | 低买（put）时是否勾选股票账户出资，`1` 为勾选，未传或非 `1` 视为未勾选  
-» hit_simple | body | integer | 否 | 低买（put）时是否勾选余币宝（简单赚币）账户出资，`1` 为勾选，未传或非 `1` 视为未勾选  
+  
+hit_spot | body | integer | 否 | 低买（put）时是否勾选现货账户出资，`1` 为勾选，未传或非 `1` 视为未勾选  
+hit_stock | body | integer | 否 | 低买（put）时是否勾选股票账户出资，`1` 为勾选，未传或非 `1` 视为未勾选  
+hit_simple | body | integer | 否 | 低买（put）时是否勾选余币宝（简单赚币）账户出资，`1` 为勾选，未传或非 `1` 视为未勾选  
   
 ####  详细描述
 
-**» text** : 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+** text**: 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
   
 1\. 必须以 `t-` 开头  
 2\. 不计算 `t-` ，长度不能超过 28 字节  
-3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
 
 ####  枚举值列表
 
 枚举值列表参数 | 值  
 ---|---  
-» hit_spot | 0  
-» hit_spot | 1  
-» hit_stock | 0  
-» hit_stock | 1  
-» hit_simple | 0  
-» hit_simple | 1  
+hit_spot | 0  
+hit_spot | 1  
+hit_stock | 0  
+hit_stock | 1  
+hit_simple | 0  
+hit_simple | 1  
+  
+####  请求体结构
+
+双币股票下单请求
+
+请求体结构类型 | 约束  
+---|---  
+PlaceDualStockInvestmentOrderParams | required: ["plan_id","amount"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+plan_id | string | Required |  | 项目ID  
+amount | string | Required |  | 申购金额  
+text | string | Optional |  | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+hit_spot | integer | Optional | enum: [0,1] | 低买（put）时是否勾选现货账户出资，`1` 为勾选，未传或非 `1` 视为未勾选  
+hit_stock | integer | Optional | enum: [0,1] | 低买（put）时是否勾选股票账户出资，`1` 为勾选，未传或非 `1` 视为未勾选  
+hit_simple | integer | Optional | enum: [0,1] | 低买（put）时是否勾选余币宝（简单赚币）账户出资，`1` 为勾选，未传或非 `1` 视为未勾选  
   
 ### 返回
 
@@ -1335,30 +1495,36 @@ body | body | PlaceDualStockInvestmentOrderParams | 是 |
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» id | integer(int32) | 订单ID  
-» plan_id | integer(int32) | 项目ID  
-» invest_amount | string | 投资数量  
-» settlement_amount | string | 结算数量  
-» create_time | integer(int32) | 创建时间  
-» complete_time | integer(int32) | 完成时间  
-» status | string | 状态:  
+类型 | 约束  
+---|---  
+PlaceDualInvestmentOrder |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int32) | Optional |  | 订单ID  
+plan_id | integer(int32) | Optional |  | 项目ID  
+invest_amount | string | Optional |  | 投资数量  
+settlement_amount | string | Optional |  | 结算数量  
+create_time | integer(int32) | Optional |  | 创建时间  
+complete_time | integer(int32) | Optional |  | 完成时间  
+status | string | Optional |  | 状态:  
   
 `INIT`-创建  
 `SETTLEMENT_SUCCESS`-结算成功  
 `SETTLEMENT_PROCESSING`-结算中  
 `CANCELED`-取消  
 `FAILED`-失败  
-» invest_currency | string | 投资币种  
-» exercise_currency | string | 行权币种  
-» exercise_price | string | 行权价格  
-» settlement_price | string | 结算价格  
-» settlement_currency | string | 结算币种  
-» apy_display | string | 年化收益率  
-» apy_settlement | string | 结算年化收益率  
-» delivery_time | integer(int32) | 结算时间  
-» text | string | 订单自定义信息  
+invest_currency | string | Optional |  | 投资币种  
+exercise_currency | string | Optional |  | 行权币种  
+exercise_price | string | Optional |  | 行权价格  
+settlement_price | string | Optional |  | 结算价格  
+settlement_currency | string | Optional |  | 结算币种  
+apy_display | string | Optional |  | 年化收益率  
+apy_settlement | string | Optional |  | 结算年化收益率  
+delivery_time | integer(int32) | Optional |  | 结算时间  
+text | string | Optional |  | 订单自定义信息  
   
 WARNING
 
@@ -1464,12 +1630,18 @@ _双币股票资产统计_
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» user_asset_usdt | string | 用户资产折U  
-» user_asset_btc | string | 用户资产折BTC  
-» user_total_interest_usdt | string | 用户总利息折U  
-» user_total_interest_btc | string | 用户总利息折BTC  
+类型 | 约束  
+---|---  
+DualGetBalance |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user_asset_usdt | string | Optional |  | 用户资产折U  
+user_asset_btc | string | Optional |  | 用户资产折BTC  
+user_total_interest_usdt | string | Optional |  | 用户总利息折U  
+user_total_interest_btc | string | Optional |  | 用户总利息折BTC  
   
 WARNING
 
@@ -1555,24 +1727,30 @@ order_id | 请求参数 | string | 是 | 订单ID
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» create_timest | integer(int64) | 订单创建时间戳  
-» delivery_timest | integer(int64) | 订单交付时间戳  
-» exercise_price | string | 行权价格  
-» invest_amount | string | 投资金额  
-» invest_currency | string | 投资币种  
-» name | string | 订单名称标识  
-» order_id | integer(int64) | 订单ID  
-» req_id | string | 实际赎回使用的请求 ID，由 GET /earn/dual/order-refund-preview 返回；POST /earn/dual/order-refund 的请求必填 order_id 和 req_id。  
-» refund_service_charge | integer(int64) | 退款手续费  
-» settle_price | string | 结算价格  
-» settlement_amount | string | 结算金额  
-» settlement_currency | string | 结算币种  
-» settlement_interest | string | 结算利息  
-» settlement_principle | string | 结算本金  
-» type | string | call: 高卖 put: 低买  
-» money_back_timest | integer(int64) | 赎回时间  
+类型 | 约束  
+---|---  
+DualOrderRefundPreview |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+create_timest | integer(int64) | Optional |  | 订单创建时间戳  
+delivery_timest | integer(int64) | Optional |  | 订单交付时间戳  
+exercise_price | string | Optional |  | 行权价格  
+invest_amount | string | Optional |  | 投资金额  
+invest_currency | string | Optional |  | 投资币种  
+name | string | Optional |  | 订单名称标识  
+order_id | integer(int64) | Optional |  | 订单ID  
+req_id | string | Optional |  | 实际赎回使用的请求 ID，由 GET /earn/dual/order-refund-preview 返回；POST /earn/dual/order-refund 的请求必填 order_id 和 req_id。  
+refund_service_charge | integer(int64) | Optional |  | 退款手续费  
+settle_price | string | Optional |  | 结算价格  
+settlement_amount | string | Optional |  | 结算金额  
+settlement_currency | string | Optional |  | 结算币种  
+settlement_interest | string | Optional |  | 结算利息  
+settlement_principle | string | Optional |  | 结算本金  
+type | string | Optional |  | call: 高卖 put: 低买  
+money_back_timest | integer(int64) | Optional |  | 赎回时间  
   
 WARNING
 
@@ -1659,8 +1837,23 @@ _双币股票订单赎回_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | DualOrderRefundParams | 是 |   
-» order_id | body | string | 是 | 订单ID  
-» req_id | body | string | 是 | 请求ID，由order-refund-preview返回  
+order_id | body | string | 是 | 订单ID  
+req_id | body | string | 是 | 请求ID，由order-refund-preview返回  
+  
+####  请求体结构
+
+双币订单提前赎回请求
+
+请求体结构类型 | 约束  
+---|---  
+DualOrderRefundParams | required: ["order_id","req_id"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | string | Required |  | 订单ID  
+req_id | string | Required |  | 请求ID，由order-refund-preview返回  
   
 ### 返回
 
@@ -1738,9 +1931,25 @@ _双币股票订单复投_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | DualModifyOrderReinvestParams | 是 |   
-» order_id | body | integer(int64) | 否 | 订单ID  
-» status | body | integer(int32) | 否 | 0: 关闭 1: 开启  
-» effective_time_duration | body | integer(int64) | 否 | 生效时长(秒)，默认1天(86400)  
+order_id | body | integer(int64) | 否 | 订单ID  
+status | body | integer(int32) | 否 | 0: 关闭 1: 开启  
+effective_time_duration | body | integer(int64) | 否 | 生效时长(秒)，默认1天(86400)  
+  
+####  请求体结构
+
+双币订单复投修改请求
+
+请求体结构类型 | 约束  
+---|---  
+DualModifyOrderReinvestParams |   
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | 订单ID  
+status | integer(int32) | Optional |  | 0: 关闭 1: 开启  
+effective_time_duration | integer(int64) | Optional |  | 生效时长(秒)，默认1天(86400)  
   
 ### 返回
 
@@ -1830,32 +2039,101 @@ cointype | 请求参数 | string | 否 | 币种类型 swap-凭证 lock-锁仓 de
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» pid | integer | 项目ID  
-» productType | integer | 项目类型 0-凭证 1-锁仓 2-美债  
-» isDefi | integer | 是否DEFI协议 0-否 1-是  
-» currency | string | 质押币种多个逗号分隔  
-» estimateApr | string | 预估收益率  
-» minStakeAmount | string | 最小质押量  
-» maxStakeAmount | string | 最大质押量  
-» protocolName | string | 协议名  
-» redeemPeriod | string | 赎回期(天)  
-» exchangeRate | string | 兑换率  
-» exchangeRateReserve | string | 反向兑换率  
-» extraInterest | array | 额外奖励  
-»» start_time | string | 开始时间戳  
-»» end_time | string | 结束时间戳  
-»» reward_coin | string | 额外奖励币种  
-»» segment_interest | array | 分段奖励信息  
-»»» money_min | string | 分段小值  
-»»» money_max | string | 分段大值  
-»»» money_rate | string | 分段利率  
-»» currencyRewards | array | 奖励币种信息  
-»»» apr | string | 基础利率  
-»»» reward_coin | string | 奖励币种  
-»»» reward_delay_days | string | 派息天 -1表示赎回时派息  
-»»» interest_delay_days | string | 起息天  
+类型 | 约束  
+---|---  
+FindCoinStruct |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+object | required: ["pid","currencyRewards","exchangeRate","redeemPeriod","protocolName","maxStakeAmount","minStakeAmount","estimateApr","currency","isDefi","productType","exchangeRateReserve"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+pid | integer | Required |  | 项目ID  
+productType | integer | Required |  | 项目类型 0-凭证 1-锁仓 2-美债  
+isDefi | integer | Required |  | 是否DEFI协议 0-否 1-是  
+currency | string | Required |  | 质押币种多个逗号分隔  
+estimateApr | string | Required |  | 预估收益率  
+minStakeAmount | string | Required |  | 最小质押量  
+maxStakeAmount | string | Required |  | 最大质押量  
+protocolName | string | Required |  | 协议名  
+redeemPeriod | string | Required |  | 赎回期(天)  
+exchangeRate | string | Required |  | 兑换率  
+exchangeRateReserve | string | Required |  | 反向兑换率  
+extraInterest | array | Optional |  | 额外奖励  
+currencyRewards | array | Required |  | 奖励币种信息  
+  
+**items / extraInterest**
+
+额外奖励
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items / extraInterest / items**
+
+类型 | 约束  
+---|---  
+object | required: ["start_time","segment_interest","end_time","reward_coin"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+start_time | string | Required |  | 开始时间戳  
+end_time | string | Required |  | 结束时间戳  
+reward_coin | string | Required |  | 额外奖励币种  
+segment_interest | array | Required |  | 分段奖励信息  
+  
+**items / extraInterest / items / segment_interest**
+
+分段奖励信息
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items / extraInterest / items / segment_interest / items**
+
+类型 | 约束  
+---|---  
+object | required: ["money_min","money_rate","money_max"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+money_min | string | Required |  | 分段小值  
+money_max | string | Required |  | 分段大值  
+money_rate | string | Required |  | 分段利率  
+  
+**items / currencyRewards**
+
+奖励币种信息
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items / currencyRewards / items**
+
+类型 | 约束  
+---|---  
+object | required: ["apr","reward_delay_days","reward_coin","interest_delay_days"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+apr | string | Required |  | 基础利率  
+reward_coin | string | Required |  | 奖励币种  
+reward_delay_days | string | Required |  | 派息天 -1表示赎回时派息  
+interest_delay_days | string | Required |  | 起息天  
   
 WARNING
 
@@ -1971,10 +2249,27 @@ _链上赚币兑换_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | SwapCoin | 是 |   
-» coin | body | string | 是 | 币种  
-» side | body | integer | 是 | 0-质押, 1-赎回  
-» amount | body | string | 是 | 数量  
-» pid | body | integer | 否 | DEFI类挖矿协议ID  
+coin | body | string | 是 | 币种  
+side | body | integer | 是 | 0-质押, 1-赎回  
+amount | body | string | 是 | 数量  
+pid | body | integer | 否 | DEFI类挖矿协议ID  
+  
+####  请求体结构
+
+链上挖矿
+
+请求体结构类型 | 约束  
+---|---  
+SwapCoin | required: ["coin","side","amount"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+coin | string | Required |  | 币种  
+side | integer | Required |  | 0-质押, 1-赎回  
+amount | string | Required |  | 数量  
+pid | integer | Optional |  | DEFI类挖矿协议ID  
   
 ### 返回
 
@@ -1986,23 +2281,29 @@ body | body | SwapCoin | 是 |
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» id | integer | 订单ID  
-» pid | integer | 项目ID  
-» uid | integer | 用户ID  
-» coin | string | 币种  
-» type | integer | 类型 0-质押 1-赎回  
-» subtype | string | 子类型  
-» amount | string | 金额  
-» exchange_rate | string | 兑换比例  
-» exchange_amount | string | 兑换金额  
-» updateStamp | integer | 更新时间戳  
-» createStamp | integer | 交易时间戳  
-» status | integer | 状态 1-成功  
-» protocol_type | integer | DEFI协议类型  
-» client_order_id | string | 参考ID  
-» source | string | 订单来源  
+类型 | 约束  
+---|---  
+SwapCoinStruct |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer | Optional |  | 订单ID  
+pid | integer | Optional |  | 项目ID  
+uid | integer | Optional |  | 用户ID  
+coin | string | Optional |  | 币种  
+type | integer | Optional |  | 类型 0-质押 1-赎回  
+subtype | string | Optional |  | 子类型  
+amount | string | Optional |  | 金额  
+exchange_rate | string | Optional |  | 兑换比例  
+exchange_amount | string | Optional |  | 兑换金额  
+updateStamp | integer | Optional |  | 更新时间戳  
+createStamp | integer | Optional |  | 交易时间戳  
+status | integer | Optional |  | 状态 1-成功  
+protocol_type | integer | Optional |  | DEFI协议类型  
+client_order_id | string | Optional |  | 参考ID  
+source | string | Optional |  | 订单来源  
   
 WARNING
 
@@ -2107,22 +2408,45 @@ page | 请求参数 | integer(int32) | 否 | 列表页数
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» page | integer | 页  
-» pageSize | integer | 每页条数  
-» pageCount | integer | 总页数  
-» totalCount | integer | 总条数  
-» list | array |   
-»» pid | integer | 项目ID  
-»» coin | string | 质押赎回币种  
-»» amount | string | 金额  
-»» type | integer | 类型 0-质押 1-赎回  
-»» status | integer | 状态 1-成功 3-延迟赎回中 6-赎回撤销订单  
-»» redeem_stamp | integer | 赎回到账时间  
-»» createStamp | integer | 订单时间  
-»» exchange_amount | string | 兑换汇率  
-»» fee | string | 手续费  
+类型 | 约束  
+---|---  
+OrderListStruct | required: ["page","pageSize","pageCount","totalCount","list"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+page | integer | Required |  | 页  
+pageSize | integer | Required |  | 每页条数  
+pageCount | integer | Required |  | 总页数  
+totalCount | integer | Required |  | 总条数  
+list | array | Required |  |   
+  
+**list**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items**
+
+类型 | 约束  
+---|---  
+object | required: ["pid","coin","amount","type","status","redeem_stamp","createStamp","exchange_amount","fee"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+pid | integer | Required |  | 项目ID  
+coin | string | Required |  | 质押赎回币种  
+amount | string | Required |  | 金额  
+type | integer | Required |  | 类型 0-质押 1-赎回  
+status | integer | Required |  | 状态 1-成功 3-延迟赎回中 6-赎回撤销订单  
+redeem_stamp | integer | Required |  | 赎回到账时间  
+createStamp | integer | Required |  | 订单时间  
+exchange_amount | string | Required |  | 兑换汇率  
+fee | string | Required |  | 手续费  
   
 WARNING
 
@@ -2234,22 +2558,45 @@ page | 请求参数 | integer(int32) | 否 | 列表页数
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» page | integer | 页  
-» pageSize | integer | 每页条数  
-» pageCount | integer | 总页数  
-» totalCount | integer | 总条数  
-» list | array |   
-»» pid | integer | 项目ID  
-»» mortgage_coin | string | 质押币种  
-»» amount | string | 金额  
-»» reward_coin | string | 奖励币种  
-»» interest | string | 利息金额  
-»» fee | string | 手续费  
-»» status | integer | 状态 4-成功  
-»» bonus_date | string | 日期  
-»» should_bonus_stamp | integer | 应派发时间戳  
+类型 | 约束  
+---|---  
+AwardListStruct | required: ["page","pageSize","pageCount","totalCount","list"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+page | integer | Required |  | 页  
+pageSize | integer | Required |  | 每页条数  
+pageCount | integer | Required |  | 总页数  
+totalCount | integer | Required |  | 总条数  
+list | array | Required |  |   
+  
+**list**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items**
+
+类型 | 约束  
+---|---  
+object | required: ["pid","mortgage_coin","amount","reward_coin","interest","fee","status","bonus_date","should_bonus_stamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+pid | integer | Required |  | 项目ID  
+mortgage_coin | string | Required |  | 质押币种  
+amount | string | Required |  | 金额  
+reward_coin | string | Required |  | 奖励币种  
+interest | string | Required |  | 利息金额  
+fee | string | Required |  | 手续费  
+status | integer | Required |  | 状态 4-成功  
+bonus_date | string | Required |  | 日期  
+should_bonus_stamp | integer | Required |  | 应派发时间戳  
   
 WARNING
 
@@ -2359,27 +2706,102 @@ coin | 请求参数 | string | 否 | 币种名称
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» pid | integer | 项目ID  
-» mortgage_coin | string | 质押币种多个逗号分隔  
-» mortgage_amount | string | 持仓金额  
-» createStamp | integer | 首次时间戳  
-» extra_income | string | 额外奖励折U金额  
-» freeze_amount | string | 冻结金额  
-» move_income | string |   
-» type | integer | 类型 0-凭证 1-锁仓 2-美债  
-» status | integer | 状态 1-币种项目上架 2-币种项目已下架  
-» income_total | string | 币种总收益  
-» yesterday_income_multi | array | 昨日收益  
-» reward_coins | array | 币种奖励收益  
-»» reward_coin | string | 奖励币种  
-»» interest_delay_days | integer | 起息天  
-»» reward_delay_days | integer | 派息天 -1表示赎回时派息  
-» defi_income | object | DEIF收益  
-»» total | array |   
-»»» coin | string |   
-»»» amount | string |   
+类型 | 约束  
+---|---  
+AssetListStruct |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+object | required: ["pid","mortgage_coin","mortgage_amount","createStamp","extra_income","freeze_amount","move_income","type","status","income_total","yesterday_income_multi","reward_coins","defi_income"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+pid | integer | Required |  | 项目ID  
+mortgage_coin | string | Required |  | 质押币种多个逗号分隔  
+mortgage_amount | string | Required |  | 持仓金额  
+createStamp | integer | Required |  | 首次时间戳  
+extra_income | string | Required |  | 额外奖励折U金额  
+freeze_amount | string | Required |  | 冻结金额  
+move_income | string | Required |  |   
+type | integer | Required |  | 类型 0-凭证 1-锁仓 2-美债  
+status | integer | Required |  | 状态 1-币种项目上架 2-币种项目已下架  
+income_total | string | Required |  | 币种总收益  
+yesterday_income_multi | array | Required |  | 昨日收益  
+reward_coins | array | Required |  | 币种奖励收益  
+defi_income | object | Required | required: ["total"] | DEIF收益  
+  
+**items / yesterday_income_multi**
+
+昨日收益
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items / yesterday_income_multi / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**items / reward_coins**
+
+币种奖励收益
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items / reward_coins / items**
+
+类型 | 约束  
+---|---  
+object | required: ["reward_coin","interest_delay_days","reward_delay_days"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+reward_coin | string | Required |  | 奖励币种  
+interest_delay_days | integer | Required |  | 起息天  
+reward_delay_days | integer | Required |  | 派息天 -1表示赎回时派息  
+  
+**items / defi_income**
+
+DEIF收益
+
+类型 | 约束  
+---|---  
+object | required: ["total"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | array | Required |  |   
+  
+**items / defi_income / total**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items / defi_income / total / items**
+
+类型 | 约束  
+---|---  
+object | required: ["coin","amount"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+coin | string | Required |  |   
+amount | string | Required |  |   
   
 WARNING
 
@@ -2503,19 +2925,64 @@ _创建定投计划_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | AutoInvestPlanCreate | 是 |   
-» plan_name | body | string | 否 | 计划名称。长度 0~50 字符  
-» plan_des | body | string | 否 | 计划描述  
-» plan_money | body | string | 是 | 计价货币，支持USDT，BTC  
-» plan_amount | body | string | 是 | 每期定投金额，须 > 0，且不超过该计价货币配置的单笔最大金额  
-» plan_period_type | body | string | 是 | 枚举 daily、weekly、biweekly、monthly、hourly、4-hourly  
-» plan_period_day | body | integer(int64) | 是 | 周期日。monthly 时表示每月第几天 1~30；weekly/biweekly 时表示周几 1~7（1=周一）；daily/hourly/4-hourly 时忽略  
-» plan_period_hour | body | integer(int64) | 是 | 几点执行定投 0-23  
-» items | body | array | 是 | 投资组合，不可重复 asset；所有项的 ratio 之和须为 100  
-»» asset | body | string | 是 | 投资币种，如 BTC；需为已启用且市场存在；同一 plan 内不可重复  
-»» ratio | body | string | 是 | 该币种在组合中的占比，所有 items 的 ratio 之和必须为100  
-» fund_source | body | string | 否 | 资金来源 spot 或 earn，默认 spot  
-» fund_flow | body | string | 否 | 资金流向 auto_invest 或 earn，默认 auto_invest  
-» type | body | integer(int64) | 否 | 0 普通创建, 1 快速投资  
+plan_name | body | string | 否 | 计划名称。长度 0~50 字符  
+plan_des | body | string | 否 | 计划描述  
+plan_money | body | string | 是 | 计价货币，支持USDT，BTC  
+plan_amount | body | string | 是 | 每期定投金额，须 > 0，且不超过该计价货币配置的单笔最大金额  
+plan_period_type | body | string | 是 | 枚举 daily、weekly、biweekly、monthly、hourly、4-hourly  
+plan_period_day | body | integer(int64) | 是 | 周期日。monthly 时表示每月第几天 1~30；weekly/biweekly 时表示周几 1~7（1=周一）；daily/hourly/4-hourly 时忽略  
+plan_period_hour | body | integer(int64) | 是 | 几点执行定投 0-23  
+items | body | array | 是 | 投资组合，不可重复 asset；所有项的 ratio 之和须为 100  
+» asset | body | string | 是 | 投资币种，如 BTC；需为已启用且市场存在；同一 plan 内不可重复  
+» ratio | body | string | 是 | 该币种在组合中的占比，所有 items 的 ratio 之和必须为100  
+fund_source | body | string | 否 | 资金来源 spot 或 earn，默认 spot  
+fund_flow | body | string | 否 | 资金流向 auto_invest 或 earn，默认 auto_invest  
+type | body | integer(int64) | 否 | 0 普通创建, 1 快速投资  
+  
+####  请求体结构
+
+创建定投计划请求
+
+请求体结构类型 | 约束  
+---|---  
+AutoInvestPlanCreate | required: ["plan_money","plan_amount","plan_period_type","plan_period_day","plan_period_hour","items"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+plan_name | string | Optional |  | 计划名称。长度 0~50 字符  
+plan_des | string | Optional |  | 计划描述  
+plan_money | string | Required |  | 计价货币，支持USDT，BTC  
+plan_amount | string | Required |  | 每期定投金额，须 > 0，且不超过该计价货币配置的单笔最大金额  
+plan_period_type | string | Required |  | 枚举 daily、weekly、biweekly、monthly、hourly、4-hourly  
+plan_period_day | integer(int64) | Required |  | 周期日。monthly 时表示每月第几天 1~30；weekly/biweekly 时表示周几 1~7（1=周一）；daily/hourly/4-hourly 时忽略  
+plan_period_hour | integer(int64) | Required |  | 几点执行定投 0-23  
+items | array | Required |  | 投资组合，不可重复 asset；所有项的 ratio 之和须为 100  
+fund_source | string | Optional |  | 资金来源 spot 或 earn，默认 spot  
+fund_flow | string | Optional |  | 资金流向 auto_invest 或 earn，默认 auto_invest  
+type | integer(int64) | Optional |  | 0 普通创建, 1 快速投资  
+  
+**items**
+
+投资组合，不可重复 asset；所有项的 ratio 之和须为 100
+
+请求体结构类型 | 约束  
+---|---  
+array |   
+  
+**items / items**
+
+请求体结构类型 | 约束  
+---|---  
+object | required: ["asset","ratio"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+asset | string | Required |  | 投资币种，如 BTC；需为已启用且市场存在；同一 plan 内不可重复  
+ratio | string | Required |  | 该币种在组合中的占比，所有 items 的 ratio 之和必须为100  
   
 ### 返回
 
@@ -2527,19 +2994,25 @@ body | body | AutoInvestPlanCreate | 是 |
 
 状态码 **200**
 
-_创建定投计划响应_
+创建定投计划响应
 
-名称 | 类型 | 描述  
----|---|---  
-» id | integer(int64) | 计划ID  
-» amount | string | 每期定投金额  
-» money | string | 计价货币  
-» next_time | integer(int64) | 下次执行时间  
-» period_type | string | 周期类型  
-» period_day | integer(int64) | 周期日  
-» period_hour | integer(int64) | 周期小时  
-» fund_flow | string | 资金流向  
-» fund_source | string | 资金来源  
+类型 | 约束  
+---|---  
+AutoInvestPlanCreateResp | required: ["id"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Required |  | 计划ID  
+amount | string | Optional |  | 每期定投金额  
+money | string | Optional |  | 计价货币  
+next_time | integer(int64) | Optional |  | 下次执行时间  
+period_type | string | Optional |  | 周期类型  
+period_day | integer(int64) | Optional |  | 周期日  
+period_hour | integer(int64) | Optional |  | 周期小时  
+fund_flow | string | Optional |  | 资金流向  
+fund_source | string | Optional |  | 资金来源  
   
 WARNING
 
@@ -2651,9 +3124,25 @@ _更新定投计划_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | AutoInvestPlanUpdate | 是 |   
-» plan_id | body | integer(int64) | 是 | 计划ID  
-» fund_source | body | string | 否 | 资金来源 现货spot 或 余币宝earn，默认 spot  
-» fund_flow | body | string | 否 | 资金流向 现货auto_invest 或 余币宝earn，默认 auto_invest  
+plan_id | body | integer(int64) | 是 | 计划ID  
+fund_source | body | string | 否 | 资金来源 现货spot 或 余币宝earn，默认 spot  
+fund_flow | body | string | 否 | 资金流向 现货auto_invest 或 余币宝earn，默认 auto_invest  
+  
+####  请求体结构
+
+定投计划更新请求，当前模型包含 plan_id、fund_source 和 fund_flow 字段。
+
+请求体结构类型 | 约束  
+---|---  
+AutoInvestPlanUpdate | required: ["plan_id"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+plan_id | integer(int64) | Required |  | 计划ID  
+fund_source | string | Optional |  | 资金来源 现货spot 或 余币宝earn，默认 spot  
+fund_flow | string | Optional |  | 资金流向 现货auto_invest 或 余币宝earn，默认 auto_invest  
   
 ### 返回
 
@@ -2732,7 +3221,21 @@ _停止定投计划_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | AutoInvestPlanStop | 是 |   
-» plan_id | body | integer(int64) | 是 | 计划ID  
+plan_id | body | integer(int64) | 是 | 计划ID  
+  
+####  请求体结构
+
+停止定投计划请求
+
+请求体结构类型 | 约束  
+---|---  
+AutoInvestPlanStop | required: ["plan_id"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+plan_id | integer(int64) | Required |  | 计划ID  
   
 ### 返回
 
@@ -2809,8 +3312,23 @@ _立即加仓_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | AutoInvestPlanAddPosition | 是 |   
-» plan_id | body | integer(int64) | 是 | 计划ID  
-» amount | body | string | 是 | 金额  
+plan_id | body | integer(int64) | 是 | 计划ID  
+amount | body | string | 是 | 金额  
+  
+####  请求体结构
+
+立即加仓请求
+
+请求体结构类型 | 约束  
+---|---  
+AutoInvestPlanAddPosition | required: ["plan_id","amount"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+plan_id | integer(int64) | Required |  | 计划ID  
+amount | string | Required |  | 金额  
   
 ### 返回
 
@@ -2899,14 +3417,26 @@ plan_money | 请求参数 | string | 否 | 计价货币，可选 USDT 或 BTC，
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array | [支持定投的币种项]  
-» _None_ | AutoInvestCoinsItem | 支持定投的币种项  
-»» key | string | 币种代码  
-»» value | string | 币种名称  
-»» asset_icon_url | string | 币种图标URL  
-»» sort | integer(int64) | 排序  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+支持定投的币种项
+
+类型 | 约束  
+---|---  
+AutoInvestCoinsItem | required: ["key","value","asset_icon_url"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+key | string | Required |  | 币种代码  
+value | string | Required |  | 币种名称  
+asset_icon_url | string | Required |  | 币种图标URL  
+sort | integer(int64) | Optional |  | 排序  
   
 WARNING
 
@@ -2989,18 +3519,53 @@ _查询可投资的最小金额_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | AutoInvestMinInvestAmount | 是 |   
-» money | body | string | 是 | 币种，可选USDT或BTC  
-» asset_type | body | integer(int32) | 是 | 资产类型：1=加密货币，2=TradFi 股票，必须显式传入  
-» items | body | array | 是 |   
-»» asset | body | string | 是 | 币种  
-»» ratio | body | string | 是 | 比例，如100  
+money | body | string | 是 | 币种，可选USDT或BTC  
+asset_type | body | integer(int32) | 是 | 资产类型：1=加密货币，2=TradFi 股票，必须显式传入  
+items | body | array | 是 |   
+» asset | body | string | 是 | 币种  
+» ratio | body | string | 是 | 比例，如100  
   
 ####  枚举值列表
 
 枚举值列表参数 | 值  
 ---|---  
-» asset_type | 1  
-» asset_type | 2  
+asset_type | 1  
+asset_type | 2  
+  
+####  请求体结构
+
+查询可投资最小金额请求
+
+请求体结构类型 | 约束  
+---|---  
+AutoInvestMinInvestAmount | required: ["money","asset_type","items"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+money | string | Required |  | 币种，可选USDT或BTC  
+asset_type | integer(int32) | Required | enum: [1,2] | 资产类型：1=加密货币，2=TradFi 股票，必须显式传入  
+items | array | Required |  |   
+  
+**items**
+
+请求体结构类型 | 约束  
+---|---  
+array |   
+  
+**items / items**
+
+请求体结构类型 | 约束  
+---|---  
+object | required: ["asset","ratio"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+asset | string | Required |  | 币种  
+ratio | string | Required |  | 比例，如100  
   
 ### 返回
 
@@ -3012,11 +3577,17 @@ body | body | AutoInvestMinInvestAmount | 是 |
 
 状态码 **200**
 
-_可投资最小金额响应_
+可投资最小金额响应
 
-名称 | 类型 | 描述  
----|---|---  
-» min_amount | string | 最小金额  
+类型 | 约束  
+---|---  
+AutoInvestMinInvestAmountResp | required: ["min_amount"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+min_amount | string | Required |  | 最小金额  
   
 WARNING
 
@@ -3125,31 +3696,55 @@ page_size | 请求参数 | integer(int64) | 否 | 每页条数，上限 100
 
 状态码 **200**
 
-_计划执行记录分页响应_
+计划执行记录分页响应
 
-名称 | 类型 | 描述  
----|---|---  
-» page | integer(int64) | 页码  
-» page_size | integer(int64) | 每页条数  
-» total_page | integer(int64) | 总页码  
-» total | integer(int64) | 总条数  
-» list | array |   
-»» _None_ | object | 计划执行记录项  
-»»» id | integer(int64) | 记录ID  
-»»» type | string | 类型  
-»»» money | string | 来源币种  
-»»» user_id | integer(int64) | 用户ID  
-»»» plan_id | integer(int64) | 计划ID  
-»»» plan_version | integer(int64) | 计划版本  
-»»» amount | string | 投资金额  
-»»» create_time | integer(int64) | 投资时间  
-»»» update_time | integer(int64) | 更新时间  
-»»» status | string | 状态  
-»»» status_type | integer(int64) | 状态枚举  
-»»» side | integer(int64) | 2 买入，其它 卖出  
-»»» status_message | string | 状态描述  
-»»» detail | string | 详情  
-»»» asset | string | 币种  
+类型 | 约束  
+---|---  
+AutoInvestPlanRecordsResp | required: ["page","page_size","total_page","total","list"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+page | integer(int64) | Required |  | 页码  
+page_size | integer(int64) | Required |  | 每页条数  
+total_page | integer(int64) | Required |  | 总页码  
+total | integer(int64) | Required |  | 总条数  
+list | array | Required |  |   
+  
+**list**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items**
+
+计划执行记录项
+
+类型 | 约束  
+---|---  
+object | required: ["id","type","money","user_id","plan_id","plan_version","amount","create_time","update_time","status","status_type","side","status_message"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Required |  | 记录ID  
+type | string | Required |  | 类型  
+money | string | Required |  | 来源币种  
+user_id | integer(int64) | Required |  | 用户ID  
+plan_id | integer(int64) | Required |  | 计划ID  
+plan_version | integer(int64) | Required |  | 计划版本  
+amount | string | Required |  | 投资金额  
+create_time | integer(int64) | Required |  | 投资时间  
+update_time | integer(int64) | Required |  | 更新时间  
+status | string | Required |  | 状态  
+status_type | integer(int64) | Required |  | 状态枚举  
+side | integer(int64) | Required |  | 2 买入，其它 卖出  
+status_message | string | Required |  | 状态描述  
+detail | string | Optional |  | 详情  
+asset | string | Optional |  | 币种  
   
 WARNING
 
@@ -3255,26 +3850,38 @@ record_id | 请求参数 | integer(int64) | 是 | 记录ID
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array | [定投订单项]  
-» _None_ | AutoInvestOrderItem | 定投订单项  
-»» id | integer(int64) | 订单ID  
-»» type | string | 类型  
-»» amount | string | 数量  
-»» plan_id | integer(int64) | 计划ID  
-»» side | integer(int64) | 方向  
-»» asset | string | 币种  
-»» record_id | integer(int64) | 记录ID  
-»» total_money | string | 总金额  
-»» market | string | 交易对  
-»» price | string | 价格  
-»» create_time | integer(int64) | 创建时间（Unix 时间戳）  
-»» total | string | 合计  
-»» fund_flow | string | 资金流向  
-»» error_code | integer(int64) | 错误码  
-»» error_msg | string | 错误信息  
-»» status | integer(int64) | 状态  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+定投订单项
+
+类型 | 约束  
+---|---  
+AutoInvestOrderItem | required: ["id","type","amount","plan_id","side","asset","record_id","total_money","market","price","create_time","total","fund_flow","error_code","error_msg","status"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Required |  | 订单ID  
+type | string | Required |  | 类型  
+amount | string | Required |  | 数量  
+plan_id | integer(int64) | Required |  | 计划ID  
+side | integer(int64) | Required |  | 方向  
+asset | string | Required |  | 币种  
+record_id | integer(int64) | Required |  | 记录ID  
+total_money | string | Required |  | 总金额  
+market | string | Required |  | 交易对  
+price | string | Required |  | 价格  
+create_time | integer(int64) | Required |  | 创建时间（Unix 时间戳）  
+total | string | Required |  | 合计  
+fund_flow | string | Required |  | 资金流向  
+error_code | integer(int64) | Required |  | 错误码  
+error_msg | string | Required |  | 错误信息  
+status | integer(int64) | Required |  | 状态  
   
 WARNING
 
@@ -3386,12 +3993,24 @@ _查询投资币种配置_
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array | [投资币种配置项]  
-» _None_ | AutoInvestConfigItem | 投资币种配置项  
-»» coin | string | 币种  
-»» max_limit | string | 投资上限  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+投资币种配置项
+
+类型 | 约束  
+---|---  
+AutoInvestConfigItem | required: ["coin","max_limit"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+coin | string | Required |  | 币种  
+max_limit | string | Required |  | 投资上限  
   
 WARNING
 
@@ -3481,35 +4100,61 @@ plan_id | 请求参数 | integer(int64) | 是 | 计划ID
 
 状态码 **200**
 
-_定投计划详情_
+定投计划详情
 
-名称 | 类型 | 描述  
----|---|---  
-» id | integer(int64) | 计划ID  
-» version | integer(int64) | 计划版本  
-» name | string | 计划名称  
-» create_time | integer(int64) | 创建时间（Unix 时间戳）  
-» update_time | integer(int64) | 更新时间（Unix 时间戳）  
-» user_id | integer(int64) | 用户ID  
-» money | string | 计价币种  
-» amount | string | 每期投资金额  
-» period_type | string | 周期类型（如 monthly）  
-» period_day | integer(int64) | 周期日  
-» period_hour | integer(int64) | 周期小时  
-» portfolio | array | 投资组合  
-»» _None_ | AutoInvestPlanDetail/properties/portfolio/items | 定投计划投资组合项  
-»»» asset | string | 币种  
-»»» ratio | string | 占比  
-»»» cum_invest | string | 累计投入  
-»»» cum_hold | string | 累计持仓  
-»»» cum_redeem | string | 累计赎回  
-»»» avg_price | string | 平均成本价  
-»»» redeem_status | integer(int64) | 赎回状态  
-»»» lend_amount | string | 出借数量  
-»» next_time | integer(int64) | 下次执行时间（Unix 时间戳）  
-»» period | integer(int64) | 已执行期数  
-»» fund_source | string | 资金来源（spot/earn）  
-»» fund_flow | string | 资金流向（auto_invest/earn）  
+类型 | 约束  
+---|---  
+AutoInvestPlanDetail | required: ["id","name","create_time","update_time","user_id","money","amount","period_type","period_day","period_hour","portfolio","next_time","period","fund_source","fund_flow"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Required |  | 计划ID  
+version | integer(int64) | Optional |  | 计划版本  
+name | string | Required |  | 计划名称  
+create_time | integer(int64) | Required |  | 创建时间（Unix 时间戳）  
+update_time | integer(int64) | Required |  | 更新时间（Unix 时间戳）  
+user_id | integer(int64) | Required |  | 用户ID  
+money | string | Required |  | 计价币种  
+amount | string | Required |  | 每期投资金额  
+period_type | string | Required |  | 周期类型（如 monthly）  
+period_day | integer(int64) | Required |  | 周期日  
+period_hour | integer(int64) | Required |  | 周期小时  
+portfolio | array | Required |  | 投资组合  
+next_time | integer(int64) | Required |  | 下次执行时间（Unix 时间戳）  
+period | integer(int64) | Required |  | 已执行期数  
+fund_source | string | Required |  | 资金来源（spot/earn）  
+fund_flow | string | Required |  | 资金流向（auto_invest/earn）  
+  
+**portfolio**
+
+投资组合
+
+类型 | 约束  
+---|---  
+array |   
+  
+**portfolio / items**
+
+定投计划投资组合项
+
+类型 | 约束  
+---|---  
+object | required: ["asset","ratio","cum_invest","cum_hold","cum_redeem","avg_price","redeem_status","lend_amount"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+asset | string | Required |  | 币种  
+ratio | string | Required |  | 占比  
+cum_invest | string | Required |  | 累计投入  
+cum_hold | string | Required |  | 累计持仓  
+cum_redeem | string | Required |  | 累计赎回  
+avg_price | string | Required |  | 平均成本价  
+redeem_status | integer(int64) | Required |  | 赎回状态  
+lend_amount | string | Required |  | 出借数量  
   
 WARNING
 
@@ -3640,41 +4285,87 @@ page_size | 请求参数 | integer(int64) | 否 | 每页条数，最大 100
 
 状态码 **200**
 
-_定投计划列表分页响应_
+定投计划列表分页响应
 
-名称 | 类型 | 描述  
----|---|---  
-» page | integer(int64) | 页码  
-» page_size | integer(int64) | 每页条数  
-» page_count | integer(int64) | 总页数  
-» total_count | integer(int64) | 总条数  
-» list | array | 计划列表  
-»» _None_ | object | 定投计划详情  
-»»» id | integer(int64) | 计划ID  
-»»» version | integer(int64) | 计划版本  
-»»» name | string | 计划名称  
-»»» create_time | integer(int64) | 创建时间（Unix 时间戳）  
-»»» update_time | integer(int64) | 更新时间（Unix 时间戳）  
-»»» user_id | integer(int64) | 用户ID  
-»»» money | string | 计价币种  
-»»» amount | string | 每期投资金额  
-»»» period_type | string | 周期类型（如 monthly）  
-»»» period_day | integer(int64) | 周期日  
-»»» period_hour | integer(int64) | 周期小时  
-»»» portfolio | array | 投资组合  
-»»»» _None_ | AutoInvestPlanDetail/properties/portfolio/items | 定投计划投资组合项  
-»»»»» asset | string | 币种  
-»»»»» ratio | string | 占比  
-»»»»» cum_invest | string | 累计投入  
-»»»»» cum_hold | string | 累计持仓  
-»»»»» cum_redeem | string | 累计赎回  
-»»»»» avg_price | string | 平均成本价  
-»»»»» redeem_status | integer(int64) | 赎回状态  
-»»»»» lend_amount | string | 出借数量  
-»»»» next_time | integer(int64) | 下次执行时间（Unix 时间戳）  
-»»»» period | integer(int64) | 已执行期数  
-»»»» fund_source | string | 资金来源（spot/earn）  
-»»»» fund_flow | string | 资金流向（auto_invest/earn）  
+类型 | 约束  
+---|---  
+AutoInvestPlanListInfoResp | required: ["page","page_size","page_count","total_count","list"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+page | integer(int64) | Required |  | 页码  
+page_size | integer(int64) | Required |  | 每页条数  
+page_count | integer(int64) | Required |  | 总页数  
+total_count | integer(int64) | Required |  | 总条数  
+list | array | Required |  | 计划列表  
+  
+**list**
+
+计划列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items**
+
+定投计划详情
+
+类型 | 约束  
+---|---  
+object | required: ["id","name","create_time","update_time","user_id","money","amount","period_type","period_day","period_hour","portfolio","next_time","period","fund_source","fund_flow"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Required |  | 计划ID  
+version | integer(int64) | Optional |  | 计划版本  
+name | string | Required |  | 计划名称  
+create_time | integer(int64) | Required |  | 创建时间（Unix 时间戳）  
+update_time | integer(int64) | Required |  | 更新时间（Unix 时间戳）  
+user_id | integer(int64) | Required |  | 用户ID  
+money | string | Required |  | 计价币种  
+amount | string | Required |  | 每期投资金额  
+period_type | string | Required |  | 周期类型（如 monthly）  
+period_day | integer(int64) | Required |  | 周期日  
+period_hour | integer(int64) | Required |  | 周期小时  
+portfolio | array | Required |  | 投资组合  
+next_time | integer(int64) | Required |  | 下次执行时间（Unix 时间戳）  
+period | integer(int64) | Required |  | 已执行期数  
+fund_source | string | Required |  | 资金来源（spot/earn）  
+fund_flow | string | Required |  | 资金流向（auto_invest/earn）  
+  
+**list / items / portfolio**
+
+投资组合
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items / portfolio / items**
+
+定投计划投资组合项
+
+类型 | 约束  
+---|---  
+object | required: ["asset","ratio","cum_invest","cum_hold","cum_redeem","avg_price","redeem_status","lend_amount"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+asset | string | Required |  | 币种  
+ratio | string | Required |  | 占比  
+cum_invest | string | Required |  | 累计投入  
+cum_hold | string | Required |  | 累计持仓  
+cum_redeem | string | Required |  | 累计赎回  
+avg_price | string | Required |  | 平均成本价  
+redeem_status | integer(int64) | Required |  | 赎回状态  
+lend_amount | string | Required |  | 出借数量  
   
 WARNING
 
@@ -3818,34 +4509,73 @@ limit | 请求参数 | integer | 是 | 每页大小
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer | 返回码，0 表示成功  
-» message | string | 返回信息  
-» data | object | 产品列表数据  
-»» list | array | 产品列表  
-»»» _None_ | FixedTermProduct | 定期理财产品  
-»»»» id | integer | 产品ID  
-»»»» name | string | 产品名称  
-»»»» asset | string | 币种  
-»»»» lock_up_period | integer | 锁仓期限（天）  
-»»»» min_lend_amount | string | 最小理财限额  
-»»»» user_max_lend_amount | string | 用户最大理财限额  
-»»»» total_lend_amount | string | 平台理财限额  
-»»»» year_rate | string | 年利率  
-»»»» type | integer | 产品类型，1 普通 2 vip  
-»»»» pre_redeem | integer | 是否支持提前赎回，0 不支持 1 支持  
-»»»» reinvest | integer | 是否支持复投，0 不支持 1 支持  
-»»»» redeem_account | integer | 是否支持定转活，0 不支持 1 支持  
-»»»» min_vip | integer | 最低VIP等级要求，0-16，0 表示无限制  
-»»»» max_vip | integer | 最高VIP等级要求，0-16，0 表示无限制  
-»»»» status | integer | 产品状态，1 未上架 2 已上架 3 已下架  
-»»»» create_time | string | 创建时间  
-»»»» user_max_lend_volume | string | 用户最大理财量  
-»»»» user_total_amount | string | 用户已理财总量  
-»»»» sale_status | integer | 售卖状态，1 售卖中 2 已售罄  
-»»» total | integer | 总记录数  
-»» timestamp | integer | 响应时间戳（秒）  
+类型 | 约束  
+---|---  
+ListEarnFixedTermProductsResponse | required: ["code","message","data","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  | 返回码，0 表示成功  
+message | string | Required |  | 返回信息  
+data | object | Required | required: ["list","total"] | 产品列表数据  
+timestamp | integer | Required |  | 响应时间戳（秒）  
+  
+**data**
+
+产品列表数据
+
+类型 | 约束  
+---|---  
+object | required: ["list","total"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Required |  | 产品列表  
+total | integer | Required |  | 总记录数  
+  
+**data / list**
+
+产品列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+定期理财产品
+
+类型 | 约束  
+---|---  
+FixedTermProduct |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer | Optional |  | 产品ID  
+name | string | Optional |  | 产品名称  
+asset | string | Optional |  | 币种  
+lock_up_period | integer | Optional |  | 锁仓期限（天）  
+min_lend_amount | string | Optional |  | 最小理财限额  
+user_max_lend_amount | string | Optional |  | 用户最大理财限额  
+total_lend_amount | string | Optional |  | 平台理财限额  
+year_rate | string | Optional |  | 年利率  
+type | integer | Optional |  | 产品类型，1 普通 2 vip  
+pre_redeem | integer | Optional |  | 是否支持提前赎回，0 不支持 1 支持  
+reinvest | integer | Optional |  | 是否支持复投，0 不支持 1 支持  
+redeem_account | integer | Optional |  | 是否支持定转活，0 不支持 1 支持  
+min_vip | integer | Optional |  | 最低VIP等级要求，0-16，0 表示无限制  
+max_vip | integer | Optional |  | 最高VIP等级要求，0-16，0 表示无限制  
+status | integer | Optional |  | 产品状态，1 未上架 2 已上架 3 已下架  
+create_time | string | Optional |  | 创建时间  
+user_max_lend_volume | string | Optional |  | 用户最大理财量  
+user_total_amount | string | Optional |  | 用户已理财总量  
+sale_status | integer | Optional |  | 售卖状态，1 售卖中 2 已售罄  
   
 该请求不需要认证 
 
@@ -3942,25 +4672,64 @@ type | 请求参数 | string | 否 | 产品类型：""或 1:普通产品列表 2
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer | 返回码，0 表示成功  
-» message | string | 返回信息  
-» data | object | 产品列表数据  
-»» list | array | 产品列表  
-»»» _None_ | FixedTermProductSimple | 定期理财产品（精简）  
-»»»» id | integer | 产品ID  
-»»»» asset | string | 币种  
-»»»» lock_up_period | integer | 锁仓期限（天）  
-»»»» year_rate | string | 年利率  
-»»»» type | integer | 产品类型，1 普通 2 vip  
-»»»» pre_redeem | integer | 是否支持提前赎回，0 不支持 1 支持  
-»»»» reinvest | integer | 是否支持复投，0 不支持 1 支持  
-»»»» simple_earn | integer | 是否支持定转活，0 不支持 1 支持  
-»»»» min_vip | integer | 最低VIP等级要求，0 表示无限制  
-»»»» max_vip | integer | 最高VIP等级要求，0 表示无限制  
-»»»» sale_status | integer | 售卖状态，1 售卖中 2 已售罄  
-»»» timestamp | integer | 响应时间戳（秒）  
+类型 | 约束  
+---|---  
+ListEarnFixedTermProductsByAssetResponse | required: ["code","message","data","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  | 返回码，0 表示成功  
+message | string | Required |  | 返回信息  
+data | object | Required | required: ["list"] | 产品列表数据  
+timestamp | integer | Required |  | 响应时间戳（秒）  
+  
+**data**
+
+产品列表数据
+
+类型 | 约束  
+---|---  
+object | required: ["list"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Required |  | 产品列表  
+  
+**data / list**
+
+产品列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+定期理财产品（精简）
+
+类型 | 约束  
+---|---  
+FixedTermProductSimple |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer | Optional |  | 产品ID  
+asset | string | Optional |  | 币种  
+lock_up_period | integer | Optional |  | 锁仓期限（天）  
+year_rate | string | Optional |  | 年利率  
+type | integer | Optional |  | 产品类型，1 普通 2 vip  
+pre_redeem | integer | Optional |  | 是否支持提前赎回，0 不支持 1 支持  
+reinvest | integer | Optional |  | 是否支持复投，0 不支持 1 支持  
+simple_earn | integer | Optional |  | 是否支持定转活，0 不支持 1 支持  
+min_vip | integer | Optional |  | 最低VIP等级要求，0 表示无限制  
+max_vip | integer | Optional |  | 最高VIP等级要求，0 表示无限制  
+sale_status | integer | Optional |  | 售卖状态，1 售卖中 2 已售罄  
   
 该请求不需要认证 
 
@@ -4069,88 +4838,185 @@ business_filter | 请求参数 | string | 否 | 业务过滤条件，JSON 数组
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer | 返回码，0 表示成功  
-» message | string | 返回信息  
-» data | object | 申购订单列表数据  
-»» list | array | 申购订单列表  
-»»» _None_ | FixedTermLendOrder | 定期理财申购订单  
-»»»» id | integer | 申购记录ID  
-»»»» business | integer | 业务类型，1 普通 2 vip  
-»»»» order_id | integer(int64) | 订单ID  
-»»»» user_id | integer(int64) | 用户ID  
-»»»» asset | string | 币种  
-»»»» product_id | integer | 产品ID  
-»»»» lock_up_period | integer | 锁仓期限（天）  
-»»»» principal | string | 申购本金  
-»»»» year_rate | string | 年利率  
-»»»» product_type | integer | 产品类型，1 普通 2 vip  
-»»»» interest | string | 已产生利息  
-»»»» status | integer | 订单状态，1 持有中 2 已赎回 3 已到期 4 已结算  
-»»»» reinvest_status | integer | 复投状态，0 不复投 1 复投  
-»»»» redeem_account_type | integer | 赎回到账账户类型，1 现货账户  
-»»»» origin_order | string | 原始订单ID，复投场景下为前序订单ID链  
-»»»» redeem_type | integer | 赎回类型，1 提前赎回 2 到期赎回  
-»»»» redeem_time | string | 赎回时间  
-»»»» finish_time | string | 到期时间  
-»»»» create_time | string | 创建时间  
-»»»» year_rate_perent | string | 年利率百分比展示值  
-»»»» total_year_rate_percent | string | 综合年化收益率百分比（含加息、奖励等）  
-»»»» total_interest | string | 总收益（含利息和额外奖励）  
-»»»» product_info | FixedTermProductInfo | 产品配置信息  
-»»»»» pre_redeem | integer | 是否支持提前赎回，0 不支持 1 支持  
-»»»»» reinvest | integer | 是否支持复投，0 不支持 1 支持  
-»»»»» redeem_account | integer | 赎回到账账户类型  
-»»»»» min_vip | integer | 最低VIP等级要求，0 表示无限制  
-»»»»» max_vip | integer | 最高VIP等级要求，0 表示无限制  
-»»»» bonus_info | FixedTermBonusInfo | 额外奖励活动信息  
-»»»»» id | integer | 活动ID  
-»»»»» product_id | integer | 关联产品ID  
-»»»»» asset | string | 产品币种  
-»»»»» bonus_asset | string | 奖励币种  
-»»»»» kyc_limit | string | KYC等级限制，逗号分隔  
-»»»»» ladder_apr | array | 阶梯年化利率  
-»»»»»» apr | string | 年化利率  
-»»»»»» left | string | 区间下限  
-»»»»»» right | string | 区间上限  
-»»»»» total_bonus_amount | string | 奖励总量  
-»»»»» user_total_bonus_amount | string | 单用户奖励上限  
-»»»»» status | integer | 活动状态，1 未上架 2 已上架 3 已下架  
-»»»»» start_time | string | 活动开始时间  
-»»»»» end_time | string | 活动结束时间  
-»»»»» create_time | string | 创建时间  
-»»»»» start_at | integer | 活动开始时间戳（秒）  
-»»»»» end_at | integer | 活动结束时间戳（秒）  
-»»»»» total_issued_amount | string | 已发放奖励总量  
-»»»»» user_total_issued_amount | string | 该用户已发放奖励总量  
-»»»»» bonus_asset_price | string | 奖励币种价格（USDT 计价）  
-»»»»» product_asset_price | string | 产品币种价格（USDT 计价）  
-»»»»» product_year_rate | string | 产品基础年利率  
-»»»» coupon_info | FixedTermCouponInfo | 加息券信息  
-»»»»» id | integer | 加息券记录ID  
-»»»»» business | integer | 业务类型  
-»»»»» user_id | integer(int64) | 用户ID  
-»»»»» asset | string | 币种  
-»»»»» order_id | integer(int64) | 关联订单ID  
-»»»»» financial_rate_id | integer | 加息券ID  
-»»»»» buy_limit_low | string | 加息券适用最低申购金额  
-»»»»» buy_limit_high | string | 加息券适用最高申购金额  
-»»»»» rate_day | integer | 加息天数  
-»»»»» rate_ratio | string | 加息利率百分比  
-»»»»» coupon_days | integer | 实际加息天数  
-»»»»» coupon_principal | string | 加息计算本金  
-»»»»» coupon_year_rate | string | 加息年化利率  
-»»»»» coupon_interest | string | 加息产生的利息  
-»»»»» status | integer | 状态，1 生效中 2 已结算  
-»»»»» finish_time | string | 结算时间  
-»»»»» create_time | string | 创建时间  
-»»»» redeem_at | integer | 赎回时间戳（秒）  
-»»»» finish_at | integer | 到期时间戳（秒）  
-»»»» create_at | integer | 创建时间戳（秒）  
-»»»» icon | string | 币种图标URL  
-»»» total | integer | 总记录数  
-»» timestamp | integer | 响应时间戳（秒）  
+类型 | 约束  
+---|---  
+ListEarnFixedTermLendsResponse | required: ["code","message","data","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  | 返回码，0 表示成功  
+message | string | Required |  | 返回信息  
+data | object | Required | required: ["list","total"] | 申购订单列表数据  
+timestamp | integer | Required |  | 响应时间戳（秒）  
+  
+**data**
+
+申购订单列表数据
+
+类型 | 约束  
+---|---  
+object | required: ["list","total"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Required |  | 申购订单列表  
+total | integer | Required |  | 总记录数  
+  
+**data / list**
+
+申购订单列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+定期理财申购订单
+
+类型 | 约束  
+---|---  
+FixedTermLendOrder |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer | Optional |  | 申购记录ID  
+business | integer | Optional |  | 业务类型，1 普通 2 vip  
+order_id | integer(int64) | Optional |  | 订单ID  
+user_id | integer(int64) | Optional |  | 用户ID  
+asset | string | Optional |  | 币种  
+product_id | integer | Optional |  | 产品ID  
+lock_up_period | integer | Optional |  | 锁仓期限（天）  
+principal | string | Optional |  | 申购本金  
+year_rate | string | Optional |  | 年利率  
+product_type | integer | Optional |  | 产品类型，1 普通 2 vip  
+interest | string | Optional |  | 已产生利息  
+status | integer | Optional |  | 订单状态，1 持有中 2 已赎回 3 已到期 4 已结算  
+reinvest_status | integer | Optional |  | 复投状态，0 不复投 1 复投  
+redeem_account_type | integer | Optional |  | 赎回到账账户类型，1 现货账户  
+origin_order | string | Optional |  | 原始订单ID，复投场景下为前序订单ID链  
+redeem_type | integer | Optional |  | 赎回类型，1 提前赎回 2 到期赎回  
+redeem_time | string | Optional |  | 赎回时间  
+finish_time | string | Optional |  | 到期时间  
+create_time | string | Optional |  | 创建时间  
+year_rate_perent | string | Optional |  | 年利率百分比展示值  
+total_year_rate_percent | string | Optional |  | 综合年化收益率百分比（含加息、奖励等）  
+total_interest | string | Optional |  | 总收益（含利息和额外奖励）  
+product_info | FixedTermProductInfo | Optional | required: ["pre_redeem","reinvest","redeem_account","min_vip","max_vip"] | 产品配置信息  
+bonus_info | FixedTermBonusInfo | Optional |  | 额外奖励活动信息  
+coupon_info | FixedTermCouponInfo | Optional | required: ["id","business","user_id","asset","order_id","financial_rate_id","buy_limit_low","buy_limit_high","rate_day","rate_ratio","coupon_days","coupon_principal","coupon_year_rate","coupon_interest","status","finish_time","create_time"] | 加息券信息  
+redeem_at | integer | Optional |  | 赎回时间戳（秒）  
+finish_at | integer | Optional |  | 到期时间戳（秒）  
+create_at | integer | Optional |  | 创建时间戳（秒）  
+icon | string | Optional |  | 币种图标URL  
+  
+**data / list / items / product_info**
+
+产品配置信息
+
+类型 | 约束  
+---|---  
+FixedTermProductInfo | required: ["pre_redeem","reinvest","redeem_account","min_vip","max_vip"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+pre_redeem | integer | Required |  | 是否支持提前赎回，0 不支持 1 支持  
+reinvest | integer | Required |  | 是否支持复投，0 不支持 1 支持  
+redeem_account | integer | Required |  | 赎回到账账户类型  
+min_vip | integer | Required |  | 最低VIP等级要求，0 表示无限制  
+max_vip | integer | Required |  | 最高VIP等级要求，0 表示无限制  
+  
+**data / list / items / bonus_info**
+
+额外奖励活动信息
+
+类型 | 约束  
+---|---  
+FixedTermBonusInfo |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer | Optional |  | 活动ID  
+product_id | integer | Optional |  | 关联产品ID  
+asset | string | Optional |  | 产品币种  
+bonus_asset | string | Optional |  | 奖励币种  
+kyc_limit | string | Optional |  | KYC等级限制，逗号分隔  
+ladder_apr | array | Optional |  | 阶梯年化利率  
+total_bonus_amount | string | Optional |  | 奖励总量  
+user_total_bonus_amount | string | Optional |  | 单用户奖励上限  
+status | integer | Optional |  | 活动状态，1 未上架 2 已上架 3 已下架  
+start_time | string | Optional |  | 活动开始时间  
+end_time | string | Optional |  | 活动结束时间  
+create_time | string | Optional |  | 创建时间  
+start_at | integer | Optional |  | 活动开始时间戳（秒）  
+end_at | integer | Optional |  | 活动结束时间戳（秒）  
+total_issued_amount | string | Optional |  | 已发放奖励总量  
+user_total_issued_amount | string | Optional |  | 该用户已发放奖励总量  
+bonus_asset_price | string | Optional |  | 奖励币种价格（USDT 计价）  
+product_asset_price | string | Optional |  | 产品币种价格（USDT 计价）  
+product_year_rate | string | Optional |  | 产品基础年利率  
+  
+**data / list / items / bonus_info / ladder_apr**
+
+阶梯年化利率
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items / bonus_info / ladder_apr / items**
+
+类型 | 约束  
+---|---  
+LadderApr | required: ["apr","left","right"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+apr | string | Required |  | 年化利率  
+left | string | Required |  | 区间下限  
+right | string | Required |  | 区间上限  
+  
+**data / list / items / coupon_info**
+
+加息券信息
+
+类型 | 约束  
+---|---  
+FixedTermCouponInfo | required: ["id","business","user_id","asset","order_id","financial_rate_id","buy_limit_low","buy_limit_high","rate_day","rate_ratio","coupon_days","coupon_principal","coupon_year_rate","coupon_interest","status","finish_time","create_time"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer | Required |  | 加息券记录ID  
+business | integer | Required |  | 业务类型  
+user_id | integer(int64) | Required |  | 用户ID  
+asset | string | Required |  | 币种  
+order_id | integer(int64) | Required |  | 关联订单ID  
+financial_rate_id | integer | Required |  | 加息券ID  
+buy_limit_low | string | Required |  | 加息券适用最低申购金额  
+buy_limit_high | string | Required |  | 加息券适用最高申购金额  
+rate_day | integer | Required |  | 加息天数  
+rate_ratio | string | Required |  | 加息利率百分比  
+coupon_days | integer | Required |  | 实际加息天数  
+coupon_principal | string | Required |  | 加息计算本金  
+coupon_year_rate | string | Required |  | 加息年化利率  
+coupon_interest | string | Required |  | 加息产生的利息  
+status | integer | Required |  | 状态，1 生效中 2 已结算  
+finish_time | string | Required |  | 结算时间  
+create_time | string | Required |  | 创建时间  
   
 WARNING
 
@@ -4367,13 +5233,33 @@ _申购_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | FixedTermLendRequest | 否 |   
-» product_id | body | integer | 是 | 产品ID  
-» amount | body | string | 是 | 申购金额  
-» year_rate | body | string | 否 | 年利率  
-» reinvest_status | body | integer | 否 | 复投状态，0 不复投 1 复投  
-» redeem_account_type | body | integer | 否 | 赎回到账账户类型，1 现货账户  
-» financial_rate_id | body | integer | 否 | 加息券ID，0 表示不使用  
-» sub_business | body | integer | 否 | 子业务类型  
+product_id | body | integer | 是 | 产品ID  
+amount | body | string | 是 | 申购金额  
+year_rate | body | string | 否 | 年利率  
+reinvest_status | body | integer | 否 | 复投状态，0 不复投 1 复投  
+redeem_account_type | body | integer | 否 | 赎回到账账户类型，1 现货账户  
+financial_rate_id | body | integer | 否 | 加息券ID，0 表示不使用  
+sub_business | body | integer | 否 | 子业务类型  
+  
+####  请求体结构
+
+申购请求
+
+请求体结构类型 | 约束  
+---|---  
+FixedTermLendRequest | required: ["product_id","amount"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+product_id | integer | Required |  | 产品ID  
+amount | string | Required |  | 申购金额  
+year_rate | string | Optional |  | 年利率  
+reinvest_status | integer | Optional |  | 复投状态，0 不复投 1 复投  
+redeem_account_type | integer | Optional |  | 赎回到账账户类型，1 现货账户  
+financial_rate_id | integer | Optional |  | 加息券ID，0 表示不使用  
+sub_business | integer | Optional |  | 子业务类型  
   
 ### 返回
 
@@ -4385,13 +5271,32 @@ body | body | FixedTermLendRequest | 否 |
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer | 返回码，0 表示成功  
-» message | string | 返回信息  
-» data | object | 申购结果  
-»» order_id | integer(int64) | 申购订单ID  
-» timestamp | integer | 响应时间戳（秒）  
+类型 | 约束  
+---|---  
+CreateEarnFixedTermLendResponse |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Optional |  | 返回码，0 表示成功  
+message | string | Optional |  | 返回信息  
+data | object | Optional |  | 申购结果  
+timestamp | integer | Optional |  | 响应时间戳（秒）  
+  
+**data**
+
+申购结果
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | 申购订单ID  
   
 WARNING
 
@@ -4485,7 +5390,19 @@ _赎回_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | EarnFixedTermPreRedeemRequest | 否 |   
-» order_id | body | string | 是 | 订单ID  
+order_id | body | string | 是 | 订单ID  
+  
+####  请求体结构
+
+请求体结构类型 | 约束  
+---|---  
+EarnFixedTermPreRedeemRequest | required: ["order_id"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | string | Required |  | 订单ID  
   
 ### 返回
 
@@ -4497,12 +5414,18 @@ body | body | EarnFixedTermPreRedeemRequest | 否 |
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer | 返回码，0 表示成功  
-» message | string | 返回信息  
-» data | object | 赎回结果（成功时为空对象）  
-» timestamp | integer | 响应时间戳（秒）  
+类型 | 约束  
+---|---  
+CreateEarnFixedTermPreRedeemResponse |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Optional |  | 返回码，0 表示成功  
+message | string | Optional |  | 返回信息  
+data | object | Optional |  | 赎回结果（成功时为空对象）  
+timestamp | integer | Optional |  | 响应时间戳（秒）  
   
 WARNING
 
@@ -4608,31 +5531,66 @@ business_filter | 请求参数 | string | 否 | 业务过滤条件，JSON 数组
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer | 返回码，0 表示成功  
-» message | string | 返回信息  
-» data | object |   
-»» list | array | [定期理财历史记录]  
-»»» _None_ | FixedTermHistoryRecord | 定期理财历史记录  
-»»»» id | integer | 记录ID  
-»»»» order_id | integer(int64) | 订单ID  
-»»»» user_id | integer(int64) | 用户ID  
-»»»» asset | string | 币种  
-»»»» uniq_time | string | 唯一时间标识（日期）  
-»»»» bonus_id | integer | 奖励活动ID  
-»»»» product_id | integer | 产品ID  
-»»»» bonus_asset | string | 奖励币种  
-»»»» total_principal | string | 总本金  
-»»»» amount | string | 金额  
-»»»» asset_price | string | 币种价格  
-»»»» status | integer | 状态  
-»»»» detail | string | 详情说明  
-»»»» create_time | string | 创建时间  
-»»»» create_at | integer | 创建时间戳（秒）  
-»»»» lock_up_period | integer | 期限  
-»»» total | integer | 总记录数  
-»» timestamp | integer | 响应时间戳（秒）  
+类型 | 约束  
+---|---  
+ListEarnFixedTermHistoryResponse |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Optional |  | 返回码，0 表示成功  
+message | string | Optional |  | 返回信息  
+data | object | Optional |  |   
+timestamp | integer | Optional |  | 响应时间戳（秒）  
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Optional |  |   
+total | integer | Optional |  | 总记录数  
+  
+**data / list**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+定期理财历史记录
+
+类型 | 约束  
+---|---  
+FixedTermHistoryRecord | required: ["id","user_id","asset","product_id","status","create_time","create_at"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer | Required |  | 记录ID  
+order_id | integer(int64) | Optional |  | 订单ID  
+user_id | integer(int64) | Required |  | 用户ID  
+asset | string | Required |  | 币种  
+uniq_time | string | Optional |  | 唯一时间标识（日期）  
+bonus_id | integer | Optional |  | 奖励活动ID  
+product_id | integer | Required |  | 产品ID  
+bonus_asset | string | Optional |  | 奖励币种  
+total_principal | string | Optional |  | 总本金  
+amount | string | Optional |  | 金额  
+asset_price | string | Optional |  | 币种价格  
+status | integer | Required |  | 状态  
+detail | string | Optional |  | 详情说明  
+create_time | string | Required |  | 创建时间  
+create_at | integer | Required |  | 创建时间戳（秒）  
+lock_up_period | integer | Optional |  | 期限  
   
 WARNING
 
@@ -4701,92 +5659,274 @@ WARNING
 
 #  模型
 
-##  AssetListStruct
+##  PlaceDualStockInvestmentOrderParams
 
-###  属性
+双币股票下单请求
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+类型 | 约束  
+---|---  
+object | required: ["plan_id","amount"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-pid | integer | true | none | 项目ID  
-mortgage_coin | string | true | none | 质押币种多个逗号分隔  
-mortgage_amount | string | true | none | 持仓金额  
-createStamp | integer | true | none | 首次时间戳  
-extra_income | string | true | none | 额外奖励折U金额  
-freeze_amount | string | true | none | 冻结金额  
-move_income | string | true | none | none  
-type | integer | true | none | 类型 0-凭证 1-锁仓 2-美债  
-status | integer | true | none | 状态 1-币种项目上架 2-币种项目已下架  
-income_total | string | true | none | 币种总收益  
-yesterday_income_multi | array | true | none | 昨日收益  
-reward_coins | array | true | none | 币种奖励收益  
-» reward_coin | string | true | none | 奖励币种  
-» interest_delay_days | integer | true | none | 起息天  
-» reward_delay_days | integer | true | none | 派息天 -1表示赎回时派息  
-defi_income | object | true | none | DEIF收益  
-» total | array | true | none | none  
-»» coin | string | true | none | none  
-»» amount | string | true | none | none  
+plan_id | string | Required |  | 项目ID  
+amount | string | Required |  | 申购金额  
+text | string | Optional |  | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+hit_spot | integer | Optional | enum: [0,1] | 低买（put）时是否勾选现货账户出资，`1` 为勾选，未传或非 `1` 视为未勾选  
+hit_stock | integer | Optional | enum: [0,1] | 低买（put）时是否勾选股票账户出资，`1` 为勾选，未传或非 `1` 视为未勾选  
+hit_simple | integer | Optional | enum: [0,1] | 低买（put）时是否勾选余币宝（简单赚币）账户出资，`1` 为勾选，未传或非 `1` 视为未勾选  
       
     
-    [
-      {
-        "pid": 0,
-        "mortgage_coin": "string",
-        "mortgage_amount": "string",
-        "createStamp": 0,
-        "extra_income": "string",
-        "freeze_amount": "string",
-        "move_income": "string",
-        "type": 0,
-        "status": 0,
-        "income_total": "string",
-        "yesterday_income_multi": [
-          {}
-        ],
-        "reward_coins": [
-          {}
-        ],
-        "defi_income": {
-          "total": []
+    {
+      "plan_id": "string",
+      "amount": "string",
+      "text": "string",
+      "hit_spot": 1,
+      "hit_stock": 0,
+      "hit_simple": 0
+    }
+    
+    
+
+##  OrderListStruct
+
+类型 | 约束  
+---|---  
+object | required: ["page","pageSize","pageCount","totalCount","list"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+page | integer | Required |  | 页  
+pageSize | integer | Required |  | 每页条数  
+pageCount | integer | Required |  | 总页数  
+totalCount | integer | Required |  | 总条数  
+list | array | Required |  |   
+  
+**list**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items**
+
+类型 | 约束  
+---|---  
+object | required: ["pid","coin","amount","type","status","redeem_stamp","createStamp","exchange_amount","fee"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+pid | integer | Required |  | 项目ID  
+coin | string | Required |  | 质押赎回币种  
+amount | string | Required |  | 金额  
+type | integer | Required |  | 类型 0-质押 1-赎回  
+status | integer | Required |  | 状态 1-成功 3-延迟赎回中 6-赎回撤销订单  
+redeem_stamp | integer | Required |  | 赎回到账时间  
+createStamp | integer | Required |  | 订单时间  
+exchange_amount | string | Required |  | 兑换汇率  
+fee | string | Required |  | 手续费  
+      
+    
+    {
+      "page": 0,
+      "pageSize": 0,
+      "pageCount": 0,
+      "totalCount": 0,
+      "list": [
+        {
+          "pid": 0,
+          "coin": "string",
+          "amount": "string",
+          "type": 0,
+          "status": 0,
+          "redeem_stamp": 0,
+          "createStamp": 0,
+          "exchange_amount": "string",
+          "fee": "string"
         }
-      }
-    ]
+      ]
+    }
+    
+    
+
+##  AutoInvestOrderItem
+
+定投订单项
+
+类型 | 约束  
+---|---  
+object | required: ["id","type","amount","plan_id","side","asset","record_id","total_money","market","price","create_time","total","fund_flow","error_code","error_msg","status"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Required |  | 订单ID  
+type | string | Required |  | 类型  
+amount | string | Required |  | 数量  
+plan_id | integer(int64) | Required |  | 计划ID  
+side | integer(int64) | Required |  | 方向  
+asset | string | Required |  | 币种  
+record_id | integer(int64) | Required |  | 记录ID  
+total_money | string | Required |  | 总金额  
+market | string | Required |  | 交易对  
+price | string | Required |  | 价格  
+create_time | integer(int64) | Required |  | 创建时间（Unix 时间戳）  
+total | string | Required |  | 合计  
+fund_flow | string | Required |  | 资金流向  
+error_code | integer(int64) | Required |  | 错误码  
+error_msg | string | Required |  | 错误信息  
+status | integer(int64) | Required |  | 状态  
+      
+    
+    {
+      "id": 0,
+      "type": "string",
+      "amount": "string",
+      "plan_id": 0,
+      "side": 0,
+      "asset": "string",
+      "record_id": 0,
+      "total_money": "string",
+      "market": "string",
+      "price": "string",
+      "create_time": 0,
+      "total": "string",
+      "fund_flow": "string",
+      "error_code": 0,
+      "error_msg": "string",
+      "status": 0
+    }
+    
+    
+
+##  CreateEarnFixedTermLendResponse
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Optional |  | 返回码，0 表示成功  
+message | string | Optional |  | 返回信息  
+data | object | Optional |  | 申购结果  
+timestamp | integer | Optional |  | 响应时间戳（秒）  
+  
+**data**
+
+申购结果
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | 申购订单ID  
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "order_id": 0
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  EarnFixedTermPreRedeemRequest
+
+类型 | 约束  
+---|---  
+object | required: ["order_id"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | string | Required |  | 订单ID  
+      
+    
+    {
+      "order_id": "5862476630"
+    }
     
     
 
 ##  AutoInvestPlanDetail
 
-_定投计划详情_
+定投计划详情
 
-###  属性
+类型 | 约束  
+---|---  
+object | required: ["id","name","create_time","update_time","user_id","money","amount","period_type","period_day","period_hour","portfolio","next_time","period","fund_source","fund_flow"]  
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-id | integer(int64) | true | none | 计划ID  
-version | integer(int64) | false | none | 计划版本  
-name | string | true | none | 计划名称  
-create_time | integer(int64) | true | none | 创建时间（Unix 时间戳）  
-update_time | integer(int64) | true | none | 更新时间（Unix 时间戳）  
-user_id | integer(int64) | true | none | 用户ID  
-money | string | true | none | 计价币种  
-amount | string | true | none | 每期投资金额  
-period_type | string | true | none | 周期类型（如 monthly）  
-period_day | integer(int64) | true | none | 周期日  
-period_hour | integer(int64) | true | none | 周期小时  
-portfolio | array | true | none | 投资组合  
-» _None_ | object | false | none | 定投计划投资组合项  
-»» asset | string | true | none | 币种  
-»» ratio | string | true | none | 占比  
-»» cum_invest | string | true | none | 累计投入  
-»» cum_hold | string | true | none | 累计持仓  
-»» cum_redeem | string | true | none | 累计赎回  
-»» avg_price | string | true | none | 平均成本价  
-»» redeem_status | integer(int64) | true | none | 赎回状态  
-»» lend_amount | string | true | none | 出借数量  
-» next_time | integer(int64) | true | none | 下次执行时间（Unix 时间戳）  
-» period | integer(int64) | true | none | 已执行期数  
-» fund_source | string | true | none | 资金来源（spot/earn）  
-» fund_flow | string | true | none | 资金流向（auto_invest/earn）  
+id | integer(int64) | Required |  | 计划ID  
+version | integer(int64) | Optional |  | 计划版本  
+name | string | Required |  | 计划名称  
+create_time | integer(int64) | Required |  | 创建时间（Unix 时间戳）  
+update_time | integer(int64) | Required |  | 更新时间（Unix 时间戳）  
+user_id | integer(int64) | Required |  | 用户ID  
+money | string | Required |  | 计价币种  
+amount | string | Required |  | 每期投资金额  
+period_type | string | Required |  | 周期类型（如 monthly）  
+period_day | integer(int64) | Required |  | 周期日  
+period_hour | integer(int64) | Required |  | 周期小时  
+portfolio | array | Required |  | 投资组合  
+next_time | integer(int64) | Required |  | 下次执行时间（Unix 时间戳）  
+period | integer(int64) | Required |  | 已执行期数  
+fund_source | string | Required |  | 资金来源（spot/earn）  
+fund_flow | string | Required |  | 资金流向（auto_invest/earn）  
+  
+**portfolio**
+
+投资组合
+
+类型 | 约束  
+---|---  
+array |   
+  
+**portfolio / items**
+
+定投计划投资组合项
+
+类型 | 约束  
+---|---  
+object | required: ["asset","ratio","cum_invest","cum_hold","cum_redeem","avg_price","redeem_status","lend_amount"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+asset | string | Required |  | 币种  
+ratio | string | Required |  | 占比  
+cum_invest | string | Required |  | 累计投入  
+cum_hold | string | Required |  | 累计持仓  
+cum_redeem | string | Required |  | 累计赎回  
+avg_price | string | Required |  | 平均成本价  
+redeem_status | integer(int64) | Required |  | 赎回状态  
+lend_amount | string | Required |  | 出借数量  
       
     
     {
@@ -4821,1107 +5961,76 @@ portfolio | array | true | none | 投资组合
     
     
 
-##  AutoInvestPlanUpdate
-
-_定投计划更新请求，当前模型包含 plan_id、fund_source 和 fund_flow 字段。_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-plan_id | integer(int64) | true | none | 计划ID  
-fund_source | string | false | none | 资金来源 现货spot 或 余币宝earn，默认 spot  
-fund_flow | string | false | none | 资金流向 现货auto_invest 或 余币宝earn，默认 auto_invest  
-      
-    
-    {
-      "plan_id": 0,
-      "fund_source": "string",
-      "fund_flow": "string"
-    }
-    
-    
-
-##  SwapCoinStruct
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | integer | false | none | 订单ID  
-pid | integer | false | none | 项目ID  
-uid | integer | false | none | 用户ID  
-coin | string | false | none | 币种  
-type | integer | false | none | 类型 0-质押 1-赎回  
-subtype | string | false | none | 子类型  
-amount | string | false | none | 金额  
-exchange_rate | string | false | none | 兑换比例  
-exchange_amount | string | false | none | 兑换金额  
-updateStamp | integer | false | none | 更新时间戳  
-createStamp | integer | false | none | 交易时间戳  
-status | integer | false | none | 状态 1-成功  
-protocol_type | integer | false | none | DEFI协议类型  
-client_order_id | string | false | none | 参考ID  
-source | string | false | none | 订单来源  
-      
-    
-    {
-      "id": 0,
-      "pid": 0,
-      "uid": 0,
-      "coin": "string",
-      "type": 0,
-      "subtype": "string",
-      "amount": "string",
-      "exchange_rate": "string",
-      "exchange_amount": "string",
-      "updateStamp": 0,
-      "createStamp": 0,
-      "status": 0,
-      "protocol_type": 0,
-      "client_order_id": "string",
-      "source": "string"
-    }
-    
-    
-
-##  DualModifyOrderReinvestParams
-
-_双币订单复投修改请求_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-order_id | integer(int64) | false | none | 订单ID  
-status | integer(int32) | false | none | 0: 关闭 1: 开启  
-effective_time_duration | integer(int64) | false | none | 生效时长(秒)，默认1天(86400)  
-      
-    
-    {
-      "order_id": 0,
-      "status": 0,
-      "effective_time_duration": 0
-    }
-    
-    
-
-##  DualGetBalance
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-user_asset_usdt | string | false | none | 用户资产折U  
-user_asset_btc | string | false | none | 用户资产折BTC  
-user_total_interest_usdt | string | false | none | 用户总利息折U  
-user_total_interest_btc | string | false | none | 用户总利息折BTC  
-      
-    
-    {
-      "user_asset_usdt": "string",
-      "user_asset_btc": "string",
-      "user_total_interest_usdt": "string",
-      "user_total_interest_btc": "string"
-    }
-    
-    
-
-##  AutoInvestPlanStop
-
-_停止定投计划请求_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-plan_id | integer(int64) | true | none | 计划ID  
-      
-    
-    {
-      "plan_id": 0
-    }
-    
-    
-
-##  SwapCoin
-
-_链上挖矿_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-coin | string | true | none | 币种  
-side | integer | true | none | 0-质押, 1-赎回  
-amount | string | true | none | 数量  
-pid | integer | false | none | DEFI类挖矿协议ID  
-      
-    
-    {
-      "coin": "string",
-      "side": 0,
-      "amount": "string",
-      "pid": 0
-    }
-    
-    
-
-##  FindCoinStruct
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-pid | integer | true | none | 项目ID  
-productType | integer | true | none | 项目类型 0-凭证 1-锁仓 2-美债  
-isDefi | integer | true | none | 是否DEFI协议 0-否 1-是  
-currency | string | true | none | 质押币种多个逗号分隔  
-estimateApr | string | true | none | 预估收益率  
-minStakeAmount | string | true | none | 最小质押量  
-maxStakeAmount | string | true | none | 最大质押量  
-protocolName | string | true | none | 协议名  
-redeemPeriod | string | true | none | 赎回期(天)  
-exchangeRate | string | true | none | 兑换率  
-exchangeRateReserve | string | true | none | 反向兑换率  
-extraInterest | array | false | none | 额外奖励  
-» start_time | string | true | none | 开始时间戳  
-» end_time | string | true | none | 结束时间戳  
-» reward_coin | string | true | none | 额外奖励币种  
-» segment_interest | array | true | none | 分段奖励信息  
-»» money_min | string | true | none | 分段小值  
-»» money_max | string | true | none | 分段大值  
-»» money_rate | string | true | none | 分段利率  
-» currencyRewards | array | true | none | 奖励币种信息  
-»» apr | string | true | none | 基础利率  
-»» reward_coin | string | true | none | 奖励币种  
-»» reward_delay_days | string | true | none | 派息天 -1表示赎回时派息  
-»» interest_delay_days | string | true | none | 起息天  
-      
-    
-    [
-      {
-        "pid": 0,
-        "productType": 0,
-        "isDefi": 0,
-        "currency": "string",
-        "estimateApr": "string",
-        "minStakeAmount": "string",
-        "maxStakeAmount": "string",
-        "protocolName": "string",
-        "redeemPeriod": "string",
-        "exchangeRate": "string",
-        "exchangeRateReserve": "string",
-        "extraInterest": [
-          {}
-        ],
-        "currencyRewards": [
-          {}
-        ]
-      }
-    ]
-    
-    
-
-##  AutoInvestMinInvestAmount
-
-_查询可投资最小金额请求_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-money | string | true | none | 币种，可选USDT或BTC  
-asset_type | integer(int32) | true | none | 资产类型：1=加密货币，2=TradFi 股票，必须显式传入  
-items | array | true | none | none  
-» asset | string | true | none | 币种  
-» ratio | string | true | none | 比例，如100  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-asset_type | 1  
-asset_type | 2  
-      
-    
-    {
-      "money": "string",
-      "asset_type": 1,
-      "items": [
-        {
-          "asset": "string",
-          "ratio": "string"
-        }
-      ]
-    }
-    
-    
-
-##  ListEarnFixedTermProductsByAssetResponse
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-code | integer | true | none | 返回码，0 表示成功  
-message | string | true | none | 返回信息  
-data | object | true | none | 产品列表数据  
-» list | [FixedTermProductSimple] | true | none | 产品列表  
-timestamp | integer | true | none | 响应时间戳（秒）  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  FixedTermProductSimple
-
-_定期理财产品（精简）_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | integer | false | none | 产品ID  
-asset | string | false | none | 币种  
-lock_up_period | integer | false | none | 锁仓期限（天）  
-year_rate | string | false | none | 年利率  
-type | integer | false | none | 产品类型，1 普通 2 vip  
-pre_redeem | integer | false | none | 是否支持提前赎回，0 不支持 1 支持  
-reinvest | integer | false | none | 是否支持复投，0 不支持 1 支持  
-simple_earn | integer | false | none | 是否支持定转活，0 不支持 1 支持  
-min_vip | integer | false | none | 最低VIP等级要求，0 表示无限制  
-max_vip | integer | false | none | 最高VIP等级要求，0 表示无限制  
-sale_status | integer | false | none | 售卖状态，1 售卖中 2 已售罄  
-      
-    
-    {
-      "id": 0,
-      "asset": "string",
-      "lock_up_period": 0,
-      "year_rate": "string",
-      "type": 0,
-      "pre_redeem": 0,
-      "reinvest": 0,
-      "simple_earn": 0,
-      "min_vip": 0,
-      "max_vip": 0,
-      "sale_status": 0
-    }
-    
-    
-
-##  AutoInvestCoinsItem
-
-_支持定投的币种项_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-key | string | true | none | 币种代码  
-value | string | true | none | 币种名称  
-asset_icon_url | string | true | none | 币种图标URL  
-sort | integer(int64) | false | none | 排序  
-      
-    
-    {
-      "key": "string",
-      "value": "string",
-      "asset_icon_url": "string",
-      "sort": 0
-    }
-    
-    
-
-##  AutoInvestConfigItem
-
-_投资币种配置项_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-coin | string | true | none | 币种  
-max_limit | string | true | none | 投资上限  
-      
-    
-    {
-      "coin": "string",
-      "max_limit": "string"
-    }
-    
-    
-
-##  ListEarnFixedTermHistoryResponse
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-code | integer | false | none | 返回码，0 表示成功  
-message | string | false | none | 返回信息  
-data | object | false | none | none  
-» list | [FixedTermHistoryRecord] | false | none | [定期理财历史记录]  
-» total | integer | false | none | 总记录数  
-timestamp | integer | false | none | 响应时间戳（秒）  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "list": [
-          {}
-        ],
-        "total": 0
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  FixedTermHistoryRecord
-
-_定期理财历史记录_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | integer | true | none | 记录ID  
-order_id | integer(int64) | false | none | 订单ID  
-user_id | integer(int64) | true | none | 用户ID  
-asset | string | true | none | 币种  
-uniq_time | string | false | none | 唯一时间标识（日期）  
-bonus_id | integer | false | none | 奖励活动ID  
-product_id | integer | true | none | 产品ID  
-bonus_asset | string | false | none | 奖励币种  
-total_principal | string | false | none | 总本金  
-amount | string | false | none | 金额  
-asset_price | string | false | none | 币种价格  
-status | integer | true | none | 状态  
-detail | string | false | none | 详情说明  
-create_time | string | true | none | 创建时间  
-create_at | integer | true | none | 创建时间戳（秒）  
-lock_up_period | integer | false | none | 期限  
-      
-    
-    {
-      "id": 0,
-      "order_id": 0,
-      "user_id": 0,
-      "asset": "string",
-      "uniq_time": "string",
-      "bonus_id": 0,
-      "product_id": 0,
-      "bonus_asset": "string",
-      "total_principal": "string",
-      "amount": "string",
-      "asset_price": "string",
-      "status": 0,
-      "detail": "string",
-      "create_time": "string",
-      "create_at": 0,
-      "lock_up_period": 0
-    }
-    
-    
-
-##  FixedTermLendRequest
-
-_申购请求_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-product_id | integer | true | none | 产品ID  
-amount | string | true | none | 申购金额  
-year_rate | string | false | none | 年利率  
-reinvest_status | integer | false | none | 复投状态，0 不复投 1 复投  
-redeem_account_type | integer | false | none | 赎回到账账户类型，1 现货账户  
-financial_rate_id | integer | false | none | 加息券ID，0 表示不使用  
-sub_business | integer | false | none | 子业务类型  
-      
-    
-    {
-      "product_id": 0,
-      "amount": "string",
-      "year_rate": "string",
-      "reinvest_status": 0,
-      "redeem_account_type": 0,
-      "financial_rate_id": 0,
-      "sub_business": 0
-    }
-    
-    
-
-##  CreateEarnFixedTermPreRedeemResponse
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-code | integer | false | none | 返回码，0 表示成功  
-message | string | false | none | 返回信息  
-data | object | false | none | 赎回结果（成功时为空对象）  
-timestamp | integer | false | none | 响应时间戳（秒）  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {},
-      "timestamp": 0
-    }
-    
-    
-
-##  AutoInvestPlanAddPosition
-
-_立即加仓请求_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-plan_id | integer(int64) | true | none | 计划ID  
-amount | string | true | none | 金额  
-      
-    
-    {
-      "plan_id": 0,
-      "amount": "string"
-    }
-    
-    
-
-##  AutoInvestMinInvestAmountResp
-
-_可投资最小金额响应_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-min_amount | string | true | none | 最小金额  
-      
-    
-    {
-      "min_amount": "string"
-    }
-    
-    
-
-##  AutoInvestPlanCreate
-
-_创建定投计划请求_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-plan_name | string | false | none | 计划名称。长度 0~50 字符  
-plan_des | string | false | none | 计划描述  
-plan_money | string | true | none | 计价货币，支持USDT，BTC  
-plan_amount | string | true | none | 每期定投金额，须 > 0，且不超过该计价货币配置的单笔最大金额  
-plan_period_type | string | true | none | 枚举 daily、weekly、biweekly、monthly、hourly、4-hourly  
-plan_period_day | integer(int64) | true | none | 周期日。monthly 时表示每月第几天 1~30；weekly/biweekly 时表示周几 1~7（1=周一）；daily/hourly/4-hourly 时忽略  
-plan_period_hour | integer(int64) | true | none | 几点执行定投 0-23  
-items | array | true | none | 投资组合，不可重复 asset；所有项的 ratio 之和须为 100  
-» asset | string | true | none | 投资币种，如 BTC；需为已启用且市场存在；同一 plan 内不可重复  
-» ratio | string | true | none | 该币种在组合中的占比，所有 items 的 ratio 之和必须为100  
-fund_source | string | false | none | 资金来源 spot 或 earn，默认 spot  
-fund_flow | string | false | none | 资金流向 auto_invest 或 earn，默认 auto_invest  
-type | integer(int64) | false | none | 0 普通创建, 1 快速投资  
-      
-    
-    {
-      "plan_name": "string",
-      "plan_des": "string",
-      "plan_money": "string",
-      "plan_amount": "string",
-      "plan_period_type": "string",
-      "plan_period_day": 0,
-      "plan_period_hour": 0,
-      "items": [
-        {
-          "asset": "string",
-          "ratio": "string"
-        }
-      ],
-      "fund_source": "string",
-      "fund_flow": "string",
-      "type": 0
-    }
-    
-    
-
-##  EarnFixedTermPreRedeemRequest
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-order_id | string | true | none | 订单ID  
-      
-    
-    {
-      "order_id": "5862476630"
-    }
-    
-    
-
-##  DualProjectRecommend
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | integer(int64) | false | none | 项目ID  
-category | integer(int32) | false | none | 策略类别  
-type | string | false | none | call: 高卖 put: 低买  
-invest_currency | string | false | none | 投资币种  
-exercise_currency | string | false | none | 行权币种  
-apy_display | string | false | none | 年化收益率  
-exercise_price | string | false | none | 行权价格  
-delivery_timest | integer(int64) | false | none | 结算时间  
-min_amount | string | false | none | 最小投资金额  
-max_amount | string | false | none | 最大投资金额  
-min_copies | integer(int64) | false | none | 最小份数  
-max_copies | integer(int64) | false | none | 最大份数  
-invest_days | integer(int64) | false | none | 锁仓天数  
-invest_hours | string | false | none | 锁仓小时数  
-      
-    
-    {
-      "id": 0,
-      "category": 0,
-      "type": "string",
-      "invest_currency": "string",
-      "exercise_currency": "string",
-      "apy_display": "string",
-      "exercise_price": "string",
-      "delivery_timest": 0,
-      "min_amount": "string",
-      "max_amount": "string",
-      "min_copies": 0,
-      "max_copies": 0,
-      "invest_days": 0,
-      "invest_hours": "string"
-    }
-    
-    
-
-##  AutoInvestPlanRecordsResp
-
-_计划执行记录分页响应_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-page | integer(int64) | true | none | 页码  
-page_size | integer(int64) | true | none | 每页条数  
-total_page | integer(int64) | true | none | 总页码  
-total | integer(int64) | true | none | 总条数  
-list | array | true | none | none  
-» _None_ | object | false | none | 计划执行记录项  
-»» id | integer(int64) | true | none | 记录ID  
-»» type | string | true | none | 类型  
-»» money | string | true | none | 来源币种  
-»» user_id | integer(int64) | true | none | 用户ID  
-»» plan_id | integer(int64) | true | none | 计划ID  
-»» plan_version | integer(int64) | true | none | 计划版本  
-»» amount | string | true | none | 投资金额  
-»» create_time | integer(int64) | true | none | 投资时间  
-»» update_time | integer(int64) | true | none | 更新时间  
-»» status | string | true | none | 状态  
-»» status_type | integer(int64) | true | none | 状态枚举  
-»» side | integer(int64) | true | none | 2 买入，其它 卖出  
-»» status_message | string | true | none | 状态描述  
-»» detail | string | false | none | 详情  
-»» asset | string | false | none | 币种  
-      
-    
-    {
-      "page": 0,
-      "page_size": 0,
-      "total_page": 0,
-      "total": 0,
-      "list": [
-        {
-          "id": 0,
-          "type": "string",
-          "money": "string",
-          "user_id": 0,
-          "plan_id": 0,
-          "plan_version": 0,
-          "amount": "string",
-          "create_time": 0,
-          "update_time": 0,
-          "status": "string",
-          "status_type": 0,
-          "side": 0,
-          "status_message": "string",
-          "detail": "string",
-          "asset": "string"
-        }
-      ]
-    }
-    
-    
-
-##  PlaceDualInvestmentOrder
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | integer(int32) | false | none | 订单ID  
-plan_id | integer(int32) | false | none | 项目ID  
-invest_amount | string | false | none | 投资数量  
-settlement_amount | string | false | none | 结算数量  
-create_time | integer(int32) | false | none | 创建时间  
-complete_time | integer(int32) | false | none | 完成时间  
-status | string | false | none | 状态:  
-  
-`INIT`-创建  
-`SETTLEMENT_SUCCESS`-结算成功  
-`SETTLEMENT_PROCESSING`-结算中  
-`CANCELED`-取消  
-`FAILED`-失败  
-invest_currency | string | false | none | 投资币种  
-exercise_currency | string | false | none | 行权币种  
-exercise_price | string | false | none | 行权价格  
-settlement_price | string | false | none | 结算价格  
-settlement_currency | string | false | none | 结算币种  
-apy_display | string | false | none | 年化收益率  
-apy_settlement | string | false | none | 结算年化收益率  
-delivery_time | integer(int32) | false | none | 结算时间  
-text | string | false | none | 订单自定义信息  
-      
-    
-    {
-      "id": 0,
-      "plan_id": 0,
-      "invest_amount": "string",
-      "settlement_amount": "string",
-      "create_time": 0,
-      "complete_time": 0,
-      "status": "string",
-      "invest_currency": "string",
-      "exercise_currency": "string",
-      "exercise_price": "string",
-      "settlement_price": "string",
-      "settlement_currency": "string",
-      "apy_display": "string",
-      "apy_settlement": "string",
-      "delivery_time": 0,
-      "text": "string"
-    }
-    
-    
-
-##  AutoInvestOrderItem
-
-_定投订单项_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | integer(int64) | true | none | 订单ID  
-type | string | true | none | 类型  
-amount | string | true | none | 数量  
-plan_id | integer(int64) | true | none | 计划ID  
-side | integer(int64) | true | none | 方向  
-asset | string | true | none | 币种  
-record_id | integer(int64) | true | none | 记录ID  
-total_money | string | true | none | 总金额  
-market | string | true | none | 交易对  
-price | string | true | none | 价格  
-create_time | integer(int64) | true | none | 创建时间（Unix 时间戳）  
-total | string | true | none | 合计  
-fund_flow | string | true | none | 资金流向  
-error_code | integer(int64) | true | none | 错误码  
-error_msg | string | true | none | 错误信息  
-status | integer(int64) | true | none | 状态  
-      
-    
-    {
-      "id": 0,
-      "type": "string",
-      "amount": "string",
-      "plan_id": 0,
-      "side": 0,
-      "asset": "string",
-      "record_id": 0,
-      "total_money": "string",
-      "market": "string",
-      "price": "string",
-      "create_time": 0,
-      "total": "string",
-      "fund_flow": "string",
-      "error_code": 0,
-      "error_msg": "string",
-      "status": 0
-    }
-    
-    
-
-##  DualOrderRefundPreview
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-create_timest | integer(int64) | false | none | 订单创建时间戳  
-delivery_timest | integer(int64) | false | none | 订单交付时间戳  
-exercise_price | string | false | none | 行权价格  
-invest_amount | string | false | none | 投资金额  
-invest_currency | string | false | none | 投资币种  
-name | string | false | none | 订单名称标识  
-order_id | integer(int64) | false | none | 订单ID  
-req_id | string | false | none | 实际赎回使用的请求 ID，由 GET /earn/dual/order-refund-preview 返回；POST /earn/dual/order-refund 的请求必填 order_id 和 req_id。  
-refund_service_charge | integer(int64) | false | none | 退款手续费  
-settle_price | string | false | none | 结算价格  
-settlement_amount | string | false | none | 结算金额  
-settlement_currency | string | false | none | 结算币种  
-settlement_interest | string | false | none | 结算利息  
-settlement_principle | string | false | none | 结算本金  
-type | string | false | none | call: 高卖 put: 低买  
-money_back_timest | integer(int64) | false | none | 赎回时间  
-      
-    
-    {
-      "create_timest": 0,
-      "delivery_timest": 0,
-      "exercise_price": "string",
-      "invest_amount": "string",
-      "invest_currency": "string",
-      "name": "string",
-      "order_id": 0,
-      "req_id": "string",
-      "refund_service_charge": 0,
-      "settle_price": "string",
-      "settlement_amount": "string",
-      "settlement_currency": "string",
-      "settlement_interest": "string",
-      "settlement_principle": "string",
-      "type": "string",
-      "money_back_timest": 0
-    }
-    
-    
-
-##  PlaceDualStockInvestmentOrderParams
-
-_双币股票下单请求_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-plan_id | string | true | none | 项目ID  
-amount | string | true | none | 申购金额  
-text | string | false | none | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
-  
-1\. 必须以 `t-` 开头  
-2\. 不计算 `t-` ，长度不能超过 28 字节  
-3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
-hit_spot | integer | false | none | 低买（put）时是否勾选现货账户出资，`1` 为勾选，未传或非 `1` 视为未勾选  
-hit_stock | integer | false | none | 低买（put）时是否勾选股票账户出资，`1` 为勾选，未传或非 `1` 视为未勾选  
-hit_simple | integer | false | none | 低买（put）时是否勾选余币宝（简单赚币）账户出资，`1` 为勾选，未传或非 `1` 视为未勾选  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-hit_spot | 0  
-hit_spot | 1  
-hit_stock | 0  
-hit_stock | 1  
-hit_simple | 0  
-hit_simple | 1  
-      
-    
-    {
-      "plan_id": "string",
-      "amount": "string",
-      "text": "string",
-      "hit_spot": 1,
-      "hit_stock": 0,
-      "hit_simple": 0
-    }
-    
-    
-
-##  AwardListStruct
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-page | integer | true | none | 页  
-pageSize | integer | true | none | 每页条数  
-pageCount | integer | true | none | 总页数  
-totalCount | integer | true | none | 总条数  
-list | array | true | none | none  
-» pid | integer | true | none | 项目ID  
-» mortgage_coin | string | true | none | 质押币种  
-» amount | string | true | none | 金额  
-» reward_coin | string | true | none | 奖励币种  
-» interest | string | true | none | 利息金额  
-» fee | string | true | none | 手续费  
-» status | integer | true | none | 状态 4-成功  
-» bonus_date | string | true | none | 日期  
-» should_bonus_stamp | integer | true | none | 应派发时间戳  
-      
-    
-    {
-      "page": 0,
-      "pageSize": 0,
-      "pageCount": 0,
-      "totalCount": 0,
-      "list": [
-        {
-          "pid": 0,
-          "mortgage_coin": "string",
-          "amount": "string",
-          "reward_coin": "string",
-          "interest": "string",
-          "fee": "string",
-          "status": 0,
-          "bonus_date": "string",
-          "should_bonus_stamp": 0
-        }
-      ]
-    }
-    
-    
-
-##  OrderListStruct
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-page | integer | true | none | 页  
-pageSize | integer | true | none | 每页条数  
-pageCount | integer | true | none | 总页数  
-totalCount | integer | true | none | 总条数  
-list | array | true | none | none  
-» pid | integer | true | none | 项目ID  
-» coin | string | true | none | 质押赎回币种  
-» amount | string | true | none | 金额  
-» type | integer | true | none | 类型 0-质押 1-赎回  
-» status | integer | true | none | 状态 1-成功 3-延迟赎回中 6-赎回撤销订单  
-» redeem_stamp | integer | true | none | 赎回到账时间  
-» createStamp | integer | true | none | 订单时间  
-» exchange_amount | string | true | none | 兑换汇率  
-» fee | string | true | none | 手续费  
-      
-    
-    {
-      "page": 0,
-      "pageSize": 0,
-      "pageCount": 0,
-      "totalCount": 0,
-      "list": [
-        {
-          "pid": 0,
-          "coin": "string",
-          "amount": "string",
-          "type": 0,
-          "status": 0,
-          "redeem_stamp": 0,
-          "createStamp": 0,
-          "exchange_amount": "string",
-          "fee": "string"
-        }
-      ]
-    }
-    
-    
-
-##  ListEarnFixedTermProductsResponse
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-code | integer | true | none | 返回码，0 表示成功  
-message | string | true | none | 返回信息  
-data | object | true | none | 产品列表数据  
-» list | [FixedTermProduct] | true | none | 产品列表  
-» total | integer | true | none | 总记录数  
-timestamp | integer | true | none | 响应时间戳（秒）  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "list": [
-          {}
-        ],
-        "total": 0
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  DualGetOrders
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | integer(int32) | false | none | 订单ID  
-plan_id | integer(int32) | false | none | 项目ID  
-invest_amount | string | false | none | 投资数量  
-settlement_amount | string | false | none | 结算数量  
-create_time | integer(int32) | false | none | 创建时间  
-complete_time | integer(int32) | false | none | 完成时间  
-status | string | false | none | 状态:  
-  
-`INIT`-创建  
-`SETTLEMENT_SUCCESS`-结算成功  
-`SETTLEMENT_PROCESSING`-结算中  
-`CANCELED`-取消  
-`FAILED`-失败  
-invest_currency | string | false | none | 投资币种  
-exercise_currency | string | false | none | 行权币种  
-exercise_price | string | false | none | 行权价格  
-settlement_price | string | false | none | 结算价格  
-settlement_currency | string | false | none | 结算币种  
-apy_display | string | false | none | 年化收益率  
-apy_settlement | string | false | none | 结算年化收益率  
-delivery_time | integer(int32) | false | none | 结算时间  
-text | string | false | none | 订单自定义信息  
-      
-    
-    {
-      "id": 0,
-      "plan_id": 0,
-      "invest_amount": "string",
-      "settlement_amount": "string",
-      "create_time": 0,
-      "complete_time": 0,
-      "status": "string",
-      "invest_currency": "string",
-      "exercise_currency": "string",
-      "exercise_price": "string",
-      "settlement_price": "string",
-      "settlement_currency": "string",
-      "apy_display": "string",
-      "apy_settlement": "string",
-      "delivery_time": 0,
-      "text": "string"
-    }
-    
-    
-
-##  CreateEarnFixedTermLendResponse
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-code | integer | false | none | 返回码，0 表示成功  
-message | string | false | none | 返回信息  
-data | object | false | none | 申购结果  
-» order_id | integer(int64) | false | none | 申购订单ID  
-timestamp | integer | false | none | 响应时间戳（秒）  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "order_id": 0
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  AutoInvestPlanCreateResp
-
-_创建定投计划响应_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | integer(int64) | true | none | 计划ID  
-amount | string | false | none | 每期定投金额  
-money | string | false | none | 计价货币  
-next_time | integer(int64) | false | none | 下次执行时间  
-period_type | string | false | none | 周期类型  
-period_day | integer(int64) | false | none | 周期日  
-period_hour | integer(int64) | false | none | 周期小时  
-fund_flow | string | false | none | 资金流向  
-fund_source | string | false | none | 资金来源  
-      
-    
-    {
-      "id": 0,
-      "amount": "string",
-      "money": "string",
-      "next_time": 0,
-      "period_type": "string",
-      "period_day": 0,
-      "period_hour": 0,
-      "fund_flow": "string",
-      "fund_source": "string"
-    }
-    
-    
-
 ##  AutoInvestPlanListInfoResp
 
-_定投计划列表分页响应_
+定投计划列表分页响应
 
-###  属性
+类型 | 约束  
+---|---  
+object | required: ["page","page_size","page_count","total_count","list"]  
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-page | integer(int64) | true | none | 页码  
-page_size | integer(int64) | true | none | 每页条数  
-page_count | integer(int64) | true | none | 总页数  
-total_count | integer(int64) | true | none | 总条数  
-list | array | true | none | 计划列表  
-» _None_ | object | false | none | 定投计划详情  
-»» id | integer(int64) | true | none | 计划ID  
-»» version | integer(int64) | false | none | 计划版本  
-»» name | string | true | none | 计划名称  
-»» create_time | integer(int64) | true | none | 创建时间（Unix 时间戳）  
-»» update_time | integer(int64) | true | none | 更新时间（Unix 时间戳）  
-»» user_id | integer(int64) | true | none | 用户ID  
-»» money | string | true | none | 计价币种  
-»» amount | string | true | none | 每期投资金额  
-»» period_type | string | true | none | 周期类型（如 monthly）  
-»» period_day | integer(int64) | true | none | 周期日  
-»» period_hour | integer(int64) | true | none | 周期小时  
-»» portfolio | [AutoInvestPlanDetail/properties/portfolio/items] | true | none | 投资组合  
-»» next_time | integer(int64) | true | none | 下次执行时间（Unix 时间戳）  
-»» period | integer(int64) | true | none | 已执行期数  
-»» fund_source | string | true | none | 资金来源（spot/earn）  
-»» fund_flow | string | true | none | 资金流向（auto_invest/earn）  
+page | integer(int64) | Required |  | 页码  
+page_size | integer(int64) | Required |  | 每页条数  
+page_count | integer(int64) | Required |  | 总页数  
+total_count | integer(int64) | Required |  | 总条数  
+list | array | Required |  | 计划列表  
+  
+**list**
+
+计划列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items**
+
+定投计划详情
+
+类型 | 约束  
+---|---  
+object | required: ["id","name","create_time","update_time","user_id","money","amount","period_type","period_day","period_hour","portfolio","next_time","period","fund_source","fund_flow"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Required |  | 计划ID  
+version | integer(int64) | Optional |  | 计划版本  
+name | string | Required |  | 计划名称  
+create_time | integer(int64) | Required |  | 创建时间（Unix 时间戳）  
+update_time | integer(int64) | Required |  | 更新时间（Unix 时间戳）  
+user_id | integer(int64) | Required |  | 用户ID  
+money | string | Required |  | 计价币种  
+amount | string | Required |  | 每期投资金额  
+period_type | string | Required |  | 周期类型（如 monthly）  
+period_day | integer(int64) | Required |  | 周期日  
+period_hour | integer(int64) | Required |  | 周期小时  
+portfolio | array | Required |  | 投资组合  
+next_time | integer(int64) | Required |  | 下次执行时间（Unix 时间戳）  
+period | integer(int64) | Required |  | 已执行期数  
+fund_source | string | Required |  | 资金来源（spot/earn）  
+fund_flow | string | Required |  | 资金流向（auto_invest/earn）  
+  
+**list / items / portfolio**
+
+投资组合
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items / portfolio / items**
+
+定投计划投资组合项
+
+类型 | 约束  
+---|---  
+object | required: ["asset","ratio","cum_invest","cum_hold","cum_redeem","avg_price","redeem_status","lend_amount"]  
       
     
     {
@@ -5953,43 +6062,96 @@ list | array | true | none | 计划列表
     
     
 
-##  PlaceDualInvestmentOrderParams
+##  DualOrderRefundPreview
 
-_双币宝订单_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-plan_id | string | true | none | 项目ID  
-amount | string | true | none | 申购金额  
-text | string | false | none | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+类型 | 约束  
+---|---  
+object |   
   
-1\. 必须以 `t-` 开头  
-2\. 不计算 `t-` ，长度不能超过 28 字节  
-3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+create_timest | integer(int64) | Optional |  | 订单创建时间戳  
+delivery_timest | integer(int64) | Optional |  | 订单交付时间戳  
+exercise_price | string | Optional |  | 行权价格  
+invest_amount | string | Optional |  | 投资金额  
+invest_currency | string | Optional |  | 投资币种  
+name | string | Optional |  | 订单名称标识  
+order_id | integer(int64) | Optional |  | 订单ID  
+req_id | string | Optional |  | 实际赎回使用的请求 ID，由 GET /earn/dual/order-refund-preview 返回；POST /earn/dual/order-refund 的请求必填 order_id 和 req_id。  
+refund_service_charge | integer(int64) | Optional |  | 退款手续费  
+settle_price | string | Optional |  | 结算价格  
+settlement_amount | string | Optional |  | 结算金额  
+settlement_currency | string | Optional |  | 结算币种  
+settlement_interest | string | Optional |  | 结算利息  
+settlement_principle | string | Optional |  | 结算本金  
+type | string | Optional |  | call: 高卖 put: 低买  
+money_back_timest | integer(int64) | Optional |  | 赎回时间  
       
     
     {
-      "plan_id": "string",
-      "amount": "string",
-      "text": "string"
+      "create_timest": 0,
+      "delivery_timest": 0,
+      "exercise_price": "string",
+      "invest_amount": "string",
+      "invest_currency": "string",
+      "name": "string",
+      "order_id": 0,
+      "req_id": "string",
+      "refund_service_charge": 0,
+      "settle_price": "string",
+      "settlement_amount": "string",
+      "settlement_currency": "string",
+      "settlement_interest": "string",
+      "settlement_principle": "string",
+      "type": "string",
+      "money_back_timest": 0
     }
     
     
 
-##  ListEarnFixedTermLendsResponse
+##  ListEarnFixedTermHistoryResponse
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-code | integer | true | none | 返回码，0 表示成功  
-message | string | true | none | 返回信息  
-data | object | true | none | 申购订单列表数据  
-» list | [FixedTermLendOrder] | true | none | 申购订单列表  
-» total | integer | true | none | 总记录数  
-timestamp | integer | true | none | 响应时间戳（秒）  
+code | integer | Optional |  | 返回码，0 表示成功  
+message | string | Optional |  | 返回信息  
+data | object | Optional |  |   
+timestamp | integer | Optional |  | 响应时间戳（秒）  
+  
+**data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Optional |  |   
+total | integer | Optional |  | 总记录数  
+  
+**data / list**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+定期理财历史记录
+
+类型 | 约束  
+---|---  
+FixedTermHistoryRecord | required: ["id","user_id","asset","product_id","status","create_time","create_at"]  
       
     
     {
@@ -6006,24 +6168,55 @@ timestamp | integer | true | none | 响应时间戳（秒）
     
     
 
+##  SwapCoin
+
+链上挖矿
+
+类型 | 约束  
+---|---  
+object | required: ["coin","side","amount"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+coin | string | Required |  | 币种  
+side | integer | Required |  | 0-质押, 1-赎回  
+amount | string | Required |  | 数量  
+pid | integer | Optional |  | DEFI类挖矿协议ID  
+      
+    
+    {
+      "coin": "string",
+      "side": 0,
+      "amount": "string",
+      "pid": 0
+    }
+    
+    
+
 ##  DualGetPlans
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-id | integer(int32) | false | none | 项目ID  
-instrument_name | string | false | none | 项目名称  
-type | string | false | none | call: 高卖 put: 低买  
-invest_currency | string | false | none | 投资币种  
-exercise_currency | string | false | none | 行权币种  
-exercise_price | number(double) | false | none | 行权价格  
-delivery_time | integer(int32) | false | none | 结算时间  
-apy_display | string | false | none | 年化收益率  
-min_amount | string | false | none | 最小投资金额  
-start_time | integer(int32) | false | none | 开始时间  
-end_time | integer(int32) | false | none | 结束时间  
-status | string | false | none | 状态:  
+id | integer(int32) | Optional |  | 项目ID  
+instrument_name | string | Optional |  | 项目名称  
+type | string | Optional |  | call: 高卖 put: 低买  
+invest_currency | string | Optional |  | 投资币种  
+exercise_currency | string | Optional |  | 行权币种  
+exercise_price | number(double) | Optional |  | 行权价格  
+delivery_time | integer(int32) | Optional |  | 结算时间  
+apy_display | string | Optional |  | 年化收益率  
+min_amount | string | Optional |  | 最小投资金额  
+start_time | integer(int32) | Optional |  | 开始时间  
+end_time | integer(int32) | Optional |  | 结束时间  
+status | string | Optional |  | 状态:  
   
 `NOTSTARTED`-未开始  
 `ONGOING`-进行中  
@@ -6047,16 +6240,244 @@ status | string | false | none | 状态:
     
     
 
+##  AutoInvestMinInvestAmount
+
+查询可投资最小金额请求
+
+类型 | 约束  
+---|---  
+object | required: ["money","asset_type","items"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+money | string | Required |  | 币种，可选USDT或BTC  
+asset_type | integer(int32) | Required | enum: [1,2] | 资产类型：1=加密货币，2=TradFi 股票，必须显式传入  
+items | array | Required |  |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items / items**
+
+类型 | 约束  
+---|---  
+object | required: ["asset","ratio"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+asset | string | Required |  | 币种  
+ratio | string | Required |  | 比例，如100  
+      
+    
+    {
+      "money": "string",
+      "asset_type": 1,
+      "items": [
+        {
+          "asset": "string",
+          "ratio": "string"
+        }
+      ]
+    }
+    
+    
+
+##  AutoInvestPlanStop
+
+停止定投计划请求
+
+类型 | 约束  
+---|---  
+object | required: ["plan_id"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+plan_id | integer(int64) | Required |  | 计划ID  
+      
+    
+    {
+      "plan_id": 0
+    }
+    
+    
+
+##  CreateEarnFixedTermPreRedeemResponse
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Optional |  | 返回码，0 表示成功  
+message | string | Optional |  | 返回信息  
+data | object | Optional |  | 赎回结果（成功时为空对象）  
+timestamp | integer | Optional |  | 响应时间戳（秒）  
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {},
+      "timestamp": 0
+    }
+    
+    
+
+##  ListEarnFixedTermProductsByAssetResponse
+
+类型 | 约束  
+---|---  
+object | required: ["code","message","data","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  | 返回码，0 表示成功  
+message | string | Required |  | 返回信息  
+data | object | Required | required: ["list"] | 产品列表数据  
+timestamp | integer | Required |  | 响应时间戳（秒）  
+  
+**data**
+
+产品列表数据
+
+类型 | 约束  
+---|---  
+object | required: ["list"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Required |  | 产品列表  
+  
+**data / list**
+
+产品列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+定期理财产品（精简）
+
+类型 | 约束  
+---|---  
+FixedTermProductSimple |   
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  AutoInvestPlanUpdate
+
+定投计划更新请求，当前模型包含 plan_id、fund_source 和 fund_flow 字段。
+
+类型 | 约束  
+---|---  
+object | required: ["plan_id"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+plan_id | integer(int64) | Required |  | 计划ID  
+fund_source | string | Optional |  | 资金来源 现货spot 或 余币宝earn，默认 spot  
+fund_flow | string | Optional |  | 资金流向 现货auto_invest 或 余币宝earn，默认 auto_invest  
+      
+    
+    {
+      "plan_id": 0,
+      "fund_source": "string",
+      "fund_flow": "string"
+    }
+    
+    
+
+##  DualProjectRecommend
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 项目ID  
+category | integer(int32) | Optional |  | 策略类别  
+type | string | Optional |  | call: 高卖 put: 低买  
+invest_currency | string | Optional |  | 投资币种  
+exercise_currency | string | Optional |  | 行权币种  
+apy_display | string | Optional |  | 年化收益率  
+exercise_price | string | Optional |  | 行权价格  
+delivery_timest | integer(int64) | Optional |  | 结算时间  
+min_amount | string | Optional |  | 最小投资金额  
+max_amount | string | Optional |  | 最大投资金额  
+min_copies | integer(int64) | Optional |  | 最小份数  
+max_copies | integer(int64) | Optional |  | 最大份数  
+invest_days | integer(int64) | Optional |  | 锁仓天数  
+invest_hours | string | Optional |  | 锁仓小时数  
+      
+    
+    {
+      "id": 0,
+      "category": 0,
+      "type": "string",
+      "invest_currency": "string",
+      "exercise_currency": "string",
+      "apy_display": "string",
+      "exercise_price": "string",
+      "delivery_timest": 0,
+      "min_amount": "string",
+      "max_amount": "string",
+      "min_copies": 0,
+      "max_copies": 0,
+      "invest_days": 0,
+      "invest_hours": "string"
+    }
+    
+    
+
 ##  DualOrderRefundParams
 
-_双币订单提前赎回请求_
+双币订单提前赎回请求
 
-###  属性
+类型 | 约束  
+---|---  
+object | required: ["order_id","req_id"]  
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-order_id | string | true | none | 订单ID  
-req_id | string | true | none | 请求ID，由order-refund-preview返回  
+order_id | string | Required |  | 订单ID  
+req_id | string | Required |  | 请求ID，由order-refund-preview返回  
       
     
     {
@@ -6066,96 +6487,800 @@ req_id | string | true | none | 请求ID，由order-refund-preview返回
     
     
 
-##  FixedTermProduct
+##  FindCoinStruct
 
-_定期理财产品_
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
 
-###  属性
+类型 | 约束  
+---|---  
+object | required: ["pid","currencyRewards","exchangeRate","redeemPeriod","protocolName","maxStakeAmount","minStakeAmount","estimateApr","currency","isDefi","productType","exchangeRateReserve"]  
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-id | integer | false | none | 产品ID  
-name | string | false | none | 产品名称  
-asset | string | false | none | 币种  
-lock_up_period | integer | false | none | 锁仓期限（天）  
-min_lend_amount | string | false | none | 最小理财限额  
-user_max_lend_amount | string | false | none | 用户最大理财限额  
-total_lend_amount | string | false | none | 平台理财限额  
-year_rate | string | false | none | 年利率  
-type | integer | false | none | 产品类型，1 普通 2 vip  
-pre_redeem | integer | false | none | 是否支持提前赎回，0 不支持 1 支持  
-reinvest | integer | false | none | 是否支持复投，0 不支持 1 支持  
-redeem_account | integer | false | none | 是否支持定转活，0 不支持 1 支持  
-min_vip | integer | false | none | 最低VIP等级要求，0-16，0 表示无限制  
-max_vip | integer | false | none | 最高VIP等级要求，0-16，0 表示无限制  
-status | integer | false | none | 产品状态，1 未上架 2 已上架 3 已下架  
-create_time | string | false | none | 创建时间  
-user_max_lend_volume | string | false | none | 用户最大理财量  
-user_total_amount | string | false | none | 用户已理财总量  
-sale_status | integer | false | none | 售卖状态，1 售卖中 2 已售罄  
+pid | integer | Required |  | 项目ID  
+productType | integer | Required |  | 项目类型 0-凭证 1-锁仓 2-美债  
+isDefi | integer | Required |  | 是否DEFI协议 0-否 1-是  
+currency | string | Required |  | 质押币种多个逗号分隔  
+estimateApr | string | Required |  | 预估收益率  
+minStakeAmount | string | Required |  | 最小质押量  
+maxStakeAmount | string | Required |  | 最大质押量  
+protocolName | string | Required |  | 协议名  
+redeemPeriod | string | Required |  | 赎回期(天)  
+exchangeRate | string | Required |  | 兑换率  
+exchangeRateReserve | string | Required |  | 反向兑换率  
+extraInterest | array | Optional |  | 额外奖励  
+currencyRewards | array | Required |  | 奖励币种信息  
+  
+**items / extraInterest**
+
+额外奖励
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items / extraInterest / items**
+
+类型 | 约束  
+---|---  
+object | required: ["start_time","segment_interest","end_time","reward_coin"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+start_time | string | Required |  | 开始时间戳  
+end_time | string | Required |  | 结束时间戳  
+reward_coin | string | Required |  | 额外奖励币种  
+segment_interest | array | Required |  | 分段奖励信息  
+  
+**items / extraInterest / items / segment_interest**
+
+分段奖励信息
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items / extraInterest / items / segment_interest / items**
+
+类型 | 约束  
+---|---  
+object | required: ["money_min","money_rate","money_max"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+money_min | string | Required |  | 分段小值  
+money_max | string | Required |  | 分段大值  
+money_rate | string | Required |  | 分段利率  
+  
+**items / currencyRewards**
+
+奖励币种信息
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items / currencyRewards / items**
+
+类型 | 约束  
+---|---  
+object | required: ["apr","reward_delay_days","reward_coin","interest_delay_days"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+apr | string | Required |  | 基础利率  
+reward_coin | string | Required |  | 奖励币种  
+reward_delay_days | string | Required |  | 派息天 -1表示赎回时派息  
+interest_delay_days | string | Required |  | 起息天  
+      
+    
+    [
+      {
+        "pid": 0,
+        "productType": 0,
+        "isDefi": 0,
+        "currency": "string",
+        "estimateApr": "string",
+        "minStakeAmount": "string",
+        "maxStakeAmount": "string",
+        "protocolName": "string",
+        "redeemPeriod": "string",
+        "exchangeRate": "string",
+        "exchangeRateReserve": "string",
+        "extraInterest": [
+          {}
+        ],
+        "currencyRewards": [
+          {}
+        ]
+      }
+    ]
+    
+    
+
+##  AutoInvestPlanRecordsResp
+
+计划执行记录分页响应
+
+类型 | 约束  
+---|---  
+object | required: ["page","page_size","total_page","total","list"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+page | integer(int64) | Required |  | 页码  
+page_size | integer(int64) | Required |  | 每页条数  
+total_page | integer(int64) | Required |  | 总页码  
+total | integer(int64) | Required |  | 总条数  
+list | array | Required |  |   
+  
+**list**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items**
+
+计划执行记录项
+
+类型 | 约束  
+---|---  
+object | required: ["id","type","money","user_id","plan_id","plan_version","amount","create_time","update_time","status","status_type","side","status_message"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Required |  | 记录ID  
+type | string | Required |  | 类型  
+money | string | Required |  | 来源币种  
+user_id | integer(int64) | Required |  | 用户ID  
+plan_id | integer(int64) | Required |  | 计划ID  
+plan_version | integer(int64) | Required |  | 计划版本  
+amount | string | Required |  | 投资金额  
+create_time | integer(int64) | Required |  | 投资时间  
+update_time | integer(int64) | Required |  | 更新时间  
+status | string | Required |  | 状态  
+status_type | integer(int64) | Required |  | 状态枚举  
+side | integer(int64) | Required |  | 2 买入，其它 卖出  
+status_message | string | Required |  | 状态描述  
+detail | string | Optional |  | 详情  
+asset | string | Optional |  | 币种  
+      
+    
+    {
+      "page": 0,
+      "page_size": 0,
+      "total_page": 0,
+      "total": 0,
+      "list": [
+        {
+          "id": 0,
+          "type": "string",
+          "money": "string",
+          "user_id": 0,
+          "plan_id": 0,
+          "plan_version": 0,
+          "amount": "string",
+          "create_time": 0,
+          "update_time": 0,
+          "status": "string",
+          "status_type": 0,
+          "side": 0,
+          "status_message": "string",
+          "detail": "string",
+          "asset": "string"
+        }
+      ]
+    }
+    
+    
+
+##  ListEarnFixedTermLendsResponse
+
+类型 | 约束  
+---|---  
+object | required: ["code","message","data","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  | 返回码，0 表示成功  
+message | string | Required |  | 返回信息  
+data | object | Required | required: ["list","total"] | 申购订单列表数据  
+timestamp | integer | Required |  | 响应时间戳（秒）  
+  
+**data**
+
+申购订单列表数据
+
+类型 | 约束  
+---|---  
+object | required: ["list","total"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Required |  | 申购订单列表  
+total | integer | Required |  | 总记录数  
+  
+**data / list**
+
+申购订单列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+定期理财申购订单
+
+类型 | 约束  
+---|---  
+FixedTermLendOrder |   
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "list": [
+          {}
+        ],
+        "total": 0
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  AutoInvestMinInvestAmountResp
+
+可投资最小金额响应
+
+类型 | 约束  
+---|---  
+object | required: ["min_amount"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+min_amount | string | Required |  | 最小金额  
+      
+    
+    {
+      "min_amount": "string"
+    }
+    
+    
+
+##  PlaceDualInvestmentOrderParams
+
+双币宝订单
+
+类型 | 约束  
+---|---  
+object | required: ["plan_id","amount"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+plan_id | string | Required |  | 项目ID  
+amount | string | Required |  | 申购金额  
+text | string | Optional |  | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+      
+    
+    {
+      "plan_id": "string",
+      "amount": "string",
+      "text": "string"
+    }
+    
+    
+
+##  AutoInvestPlanAddPosition
+
+立即加仓请求
+
+类型 | 约束  
+---|---  
+object | required: ["plan_id","amount"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+plan_id | integer(int64) | Required |  | 计划ID  
+amount | string | Required |  | 金额  
+      
+    
+    {
+      "plan_id": 0,
+      "amount": "string"
+    }
+    
+    
+
+##  AutoInvestConfigItem
+
+投资币种配置项
+
+类型 | 约束  
+---|---  
+object | required: ["coin","max_limit"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+coin | string | Required |  | 币种  
+max_limit | string | Required |  | 投资上限  
+      
+    
+    {
+      "coin": "string",
+      "max_limit": "string"
+    }
+    
+    
+
+##  ListEarnFixedTermProductsResponse
+
+类型 | 约束  
+---|---  
+object | required: ["code","message","data","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  | 返回码，0 表示成功  
+message | string | Required |  | 返回信息  
+data | object | Required | required: ["list","total"] | 产品列表数据  
+timestamp | integer | Required |  | 响应时间戳（秒）  
+  
+**data**
+
+产品列表数据
+
+类型 | 约束  
+---|---  
+object | required: ["list","total"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Required |  | 产品列表  
+total | integer | Required |  | 总记录数  
+  
+**data / list**
+
+产品列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+定期理财产品
+
+类型 | 约束  
+---|---  
+FixedTermProduct |   
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "list": [
+          {}
+        ],
+        "total": 0
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  DualModifyOrderReinvestParams
+
+双币订单复投修改请求
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | 订单ID  
+status | integer(int32) | Optional |  | 0: 关闭 1: 开启  
+effective_time_duration | integer(int64) | Optional |  | 生效时长(秒)，默认1天(86400)  
+      
+    
+    {
+      "order_id": 0,
+      "status": 0,
+      "effective_time_duration": 0
+    }
+    
+    
+
+##  AssetListStruct
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+object | required: ["pid","mortgage_coin","mortgage_amount","createStamp","extra_income","freeze_amount","move_income","type","status","income_total","yesterday_income_multi","reward_coins","defi_income"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+pid | integer | Required |  | 项目ID  
+mortgage_coin | string | Required |  | 质押币种多个逗号分隔  
+mortgage_amount | string | Required |  | 持仓金额  
+createStamp | integer | Required |  | 首次时间戳  
+extra_income | string | Required |  | 额外奖励折U金额  
+freeze_amount | string | Required |  | 冻结金额  
+move_income | string | Required |  |   
+type | integer | Required |  | 类型 0-凭证 1-锁仓 2-美债  
+status | integer | Required |  | 状态 1-币种项目上架 2-币种项目已下架  
+income_total | string | Required |  | 币种总收益  
+yesterday_income_multi | array | Required |  | 昨日收益  
+reward_coins | array | Required |  | 币种奖励收益  
+defi_income | object | Required | required: ["total"] | DEIF收益  
+  
+**items / yesterday_income_multi**
+
+昨日收益
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items / yesterday_income_multi / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**items / reward_coins**
+
+币种奖励收益
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items / reward_coins / items**
+
+类型 | 约束  
+---|---  
+object | required: ["reward_coin","interest_delay_days","reward_delay_days"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+reward_coin | string | Required |  | 奖励币种  
+interest_delay_days | integer | Required |  | 起息天  
+reward_delay_days | integer | Required |  | 派息天 -1表示赎回时派息  
+  
+**items / defi_income**
+
+DEIF收益
+
+类型 | 约束  
+---|---  
+object | required: ["total"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | array | Required |  |   
+  
+**items / defi_income / total**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items / defi_income / total / items**
+
+类型 | 约束  
+---|---  
+object | required: ["coin","amount"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+coin | string | Required |  |   
+amount | string | Required |  |   
+      
+    
+    [
+      {
+        "pid": 0,
+        "mortgage_coin": "string",
+        "mortgage_amount": "string",
+        "createStamp": 0,
+        "extra_income": "string",
+        "freeze_amount": "string",
+        "move_income": "string",
+        "type": 0,
+        "status": 0,
+        "income_total": "string",
+        "yesterday_income_multi": [
+          {}
+        ],
+        "reward_coins": [
+          {}
+        ],
+        "defi_income": {
+          "total": []
+        }
+      }
+    ]
+    
+    
+
+##  AutoInvestPlanCreate
+
+创建定投计划请求
+
+类型 | 约束  
+---|---  
+object | required: ["plan_money","plan_amount","plan_period_type","plan_period_day","plan_period_hour","items"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+plan_name | string | Optional |  | 计划名称。长度 0~50 字符  
+plan_des | string | Optional |  | 计划描述  
+plan_money | string | Required |  | 计价货币，支持USDT，BTC  
+plan_amount | string | Required |  | 每期定投金额，须 > 0，且不超过该计价货币配置的单笔最大金额  
+plan_period_type | string | Required |  | 枚举 daily、weekly、biweekly、monthly、hourly、4-hourly  
+plan_period_day | integer(int64) | Required |  | 周期日。monthly 时表示每月第几天 1~30；weekly/biweekly 时表示周几 1~7（1=周一）；daily/hourly/4-hourly 时忽略  
+plan_period_hour | integer(int64) | Required |  | 几点执行定投 0-23  
+items | array | Required |  | 投资组合，不可重复 asset；所有项的 ratio 之和须为 100  
+fund_source | string | Optional |  | 资金来源 spot 或 earn，默认 spot  
+fund_flow | string | Optional |  | 资金流向 auto_invest 或 earn，默认 auto_invest  
+type | integer(int64) | Optional |  | 0 普通创建, 1 快速投资  
+  
+**items**
+
+投资组合，不可重复 asset；所有项的 ratio 之和须为 100
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items / items**
+
+类型 | 约束  
+---|---  
+object | required: ["asset","ratio"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+asset | string | Required |  | 投资币种，如 BTC；需为已启用且市场存在；同一 plan 内不可重复  
+ratio | string | Required |  | 该币种在组合中的占比，所有 items 的 ratio 之和必须为100  
+      
+    
+    {
+      "plan_name": "string",
+      "plan_des": "string",
+      "plan_money": "string",
+      "plan_amount": "string",
+      "plan_period_type": "string",
+      "plan_period_day": 0,
+      "plan_period_hour": 0,
+      "items": [
+        {
+          "asset": "string",
+          "ratio": "string"
+        }
+      ],
+      "fund_source": "string",
+      "fund_flow": "string",
+      "type": 0
+    }
+    
+    
+
+##  DualGetOrders
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int32) | Optional |  | 订单ID  
+plan_id | integer(int32) | Optional |  | 项目ID  
+invest_amount | string | Optional |  | 投资数量  
+settlement_amount | string | Optional |  | 结算数量  
+create_time | integer(int32) | Optional |  | 创建时间  
+complete_time | integer(int32) | Optional |  | 完成时间  
+status | string | Optional |  | 状态:  
+  
+`INIT`-创建  
+`SETTLEMENT_SUCCESS`-结算成功  
+`SETTLEMENT_PROCESSING`-结算中  
+`CANCELED`-取消  
+`FAILED`-失败  
+invest_currency | string | Optional |  | 投资币种  
+exercise_currency | string | Optional |  | 行权币种  
+exercise_price | string | Optional |  | 行权价格  
+settlement_price | string | Optional |  | 结算价格  
+settlement_currency | string | Optional |  | 结算币种  
+apy_display | string | Optional |  | 年化收益率  
+apy_settlement | string | Optional |  | 结算年化收益率  
+delivery_time | integer(int32) | Optional |  | 结算时间  
+text | string | Optional |  | 订单自定义信息  
       
     
     {
       "id": 0,
-      "name": "string",
-      "asset": "string",
-      "lock_up_period": 0,
-      "min_lend_amount": "string",
-      "user_max_lend_amount": "string",
-      "total_lend_amount": "string",
+      "plan_id": 0,
+      "invest_amount": "string",
+      "settlement_amount": "string",
+      "create_time": 0,
+      "complete_time": 0,
+      "status": "string",
+      "invest_currency": "string",
+      "exercise_currency": "string",
+      "exercise_price": "string",
+      "settlement_price": "string",
+      "settlement_currency": "string",
+      "apy_display": "string",
+      "apy_settlement": "string",
+      "delivery_time": 0,
+      "text": "string"
+    }
+    
+    
+
+##  DualGetBalance
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user_asset_usdt | string | Optional |  | 用户资产折U  
+user_asset_btc | string | Optional |  | 用户资产折BTC  
+user_total_interest_usdt | string | Optional |  | 用户总利息折U  
+user_total_interest_btc | string | Optional |  | 用户总利息折BTC  
+      
+    
+    {
+      "user_asset_usdt": "string",
+      "user_asset_btc": "string",
+      "user_total_interest_usdt": "string",
+      "user_total_interest_btc": "string"
+    }
+    
+    
+
+##  FixedTermLendRequest
+
+申购请求
+
+类型 | 约束  
+---|---  
+object | required: ["product_id","amount"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+product_id | integer | Required |  | 产品ID  
+amount | string | Required |  | 申购金额  
+year_rate | string | Optional |  | 年利率  
+reinvest_status | integer | Optional |  | 复投状态，0 不复投 1 复投  
+redeem_account_type | integer | Optional |  | 赎回到账账户类型，1 现货账户  
+financial_rate_id | integer | Optional |  | 加息券ID，0 表示不使用  
+sub_business | integer | Optional |  | 子业务类型  
+      
+    
+    {
+      "product_id": 0,
+      "amount": "string",
       "year_rate": "string",
-      "type": 0,
-      "pre_redeem": 0,
-      "reinvest": 0,
-      "redeem_account": 0,
-      "min_vip": 0,
-      "max_vip": 0,
-      "status": 0,
-      "create_time": "string",
-      "user_max_lend_volume": "string",
-      "user_total_amount": "string",
-      "sale_status": 0
+      "reinvest_status": 0,
+      "redeem_account_type": 0,
+      "financial_rate_id": 0,
+      "sub_business": 0
     }
     
     
 
 ##  FixedTermLendOrder
 
-_定期理财申购订单_
+定期理财申购订单
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-id | integer | false | none | 申购记录ID  
-business | integer | false | none | 业务类型，1 普通 2 vip  
-order_id | integer(int64) | false | none | 订单ID  
-user_id | integer(int64) | false | none | 用户ID  
-asset | string | false | none | 币种  
-product_id | integer | false | none | 产品ID  
-lock_up_period | integer | false | none | 锁仓期限（天）  
-principal | string | false | none | 申购本金  
-year_rate | string | false | none | 年利率  
-product_type | integer | false | none | 产品类型，1 普通 2 vip  
-interest | string | false | none | 已产生利息  
-status | integer | false | none | 订单状态，1 持有中 2 已赎回 3 已到期 4 已结算  
-reinvest_status | integer | false | none | 复投状态，0 不复投 1 复投  
-redeem_account_type | integer | false | none | 赎回到账账户类型，1 现货账户  
-origin_order | string | false | none | 原始订单ID，复投场景下为前序订单ID链  
-redeem_type | integer | false | none | 赎回类型，1 提前赎回 2 到期赎回  
-redeem_time | string | false | none | 赎回时间  
-finish_time | string | false | none | 到期时间  
-create_time | string | false | none | 创建时间  
-year_rate_perent | string | false | none | 年利率百分比展示值  
-total_year_rate_percent | string | false | none | 综合年化收益率百分比（含加息、奖励等）  
-total_interest | string | false | none | 总收益（含利息和额外奖励）  
-product_info | FixedTermProductInfo | false | none | 产品配置信息  
-bonus_info | FixedTermBonusInfo | false | none | 额外奖励活动信息  
-coupon_info | FixedTermCouponInfo | false | none | 加息券信息  
-redeem_at | integer | false | none | 赎回时间戳（秒）  
-finish_at | integer | false | none | 到期时间戳（秒）  
-create_at | integer | false | none | 创建时间戳（秒）  
-icon | string | false | none | 币种图标URL  
+id | integer | Optional |  | 申购记录ID  
+business | integer | Optional |  | 业务类型，1 普通 2 vip  
+order_id | integer(int64) | Optional |  | 订单ID  
+user_id | integer(int64) | Optional |  | 用户ID  
+asset | string | Optional |  | 币种  
+product_id | integer | Optional |  | 产品ID  
+lock_up_period | integer | Optional |  | 锁仓期限（天）  
+principal | string | Optional |  | 申购本金  
+year_rate | string | Optional |  | 年利率  
+product_type | integer | Optional |  | 产品类型，1 普通 2 vip  
+interest | string | Optional |  | 已产生利息  
+status | integer | Optional |  | 订单状态，1 持有中 2 已赎回 3 已到期 4 已结算  
+reinvest_status | integer | Optional |  | 复投状态，0 不复投 1 复投  
+redeem_account_type | integer | Optional |  | 赎回到账账户类型，1 现货账户  
+origin_order | string | Optional |  | 原始订单ID，复投场景下为前序订单ID链  
+redeem_type | integer | Optional |  | 赎回类型，1 提前赎回 2 到期赎回  
+redeem_time | string | Optional |  | 赎回时间  
+finish_time | string | Optional |  | 到期时间  
+create_time | string | Optional |  | 创建时间  
+year_rate_perent | string | Optional |  | 年利率百分比展示值  
+total_year_rate_percent | string | Optional |  | 综合年化收益率百分比（含加息、奖励等）  
+total_interest | string | Optional |  | 总收益（含利息和额外奖励）  
+product_info | FixedTermProductInfo | Optional | required: ["pre_redeem","reinvest","redeem_account","min_vip","max_vip"] | 产品配置信息  
+bonus_info | FixedTermBonusInfo | Optional |  | 额外奖励活动信息  
+coupon_info | FixedTermCouponInfo | Optional | required: ["id","business","user_id","asset","order_id","financial_rate_id","buy_limit_low","buy_limit_high","rate_day","rate_ratio","coupon_days","coupon_principal","coupon_year_rate","coupon_interest","status","finish_time","create_time"] | 加息券信息  
+redeem_at | integer | Optional |  | 赎回时间戳（秒）  
+finish_at | integer | Optional |  | 到期时间戳（秒）  
+create_at | integer | Optional |  | 创建时间戳（秒）  
+icon | string | Optional |  | 币种图标URL  
       
     
     {
@@ -6238,31 +7363,444 @@ icon | string | false | none | 币种图标URL
     
     
 
+##  AutoInvestCoinsItem
+
+支持定投的币种项
+
+类型 | 约束  
+---|---  
+object | required: ["key","value","asset_icon_url"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+key | string | Required |  | 币种代码  
+value | string | Required |  | 币种名称  
+asset_icon_url | string | Required |  | 币种图标URL  
+sort | integer(int64) | Optional |  | 排序  
+      
+    
+    {
+      "key": "string",
+      "value": "string",
+      "asset_icon_url": "string",
+      "sort": 0
+    }
+    
+    
+
+##  AwardListStruct
+
+类型 | 约束  
+---|---  
+object | required: ["page","pageSize","pageCount","totalCount","list"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+page | integer | Required |  | 页  
+pageSize | integer | Required |  | 每页条数  
+pageCount | integer | Required |  | 总页数  
+totalCount | integer | Required |  | 总条数  
+list | array | Required |  |   
+  
+**list**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items**
+
+类型 | 约束  
+---|---  
+object | required: ["pid","mortgage_coin","amount","reward_coin","interest","fee","status","bonus_date","should_bonus_stamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+pid | integer | Required |  | 项目ID  
+mortgage_coin | string | Required |  | 质押币种  
+amount | string | Required |  | 金额  
+reward_coin | string | Required |  | 奖励币种  
+interest | string | Required |  | 利息金额  
+fee | string | Required |  | 手续费  
+status | integer | Required |  | 状态 4-成功  
+bonus_date | string | Required |  | 日期  
+should_bonus_stamp | integer | Required |  | 应派发时间戳  
+      
+    
+    {
+      "page": 0,
+      "pageSize": 0,
+      "pageCount": 0,
+      "totalCount": 0,
+      "list": [
+        {
+          "pid": 0,
+          "mortgage_coin": "string",
+          "amount": "string",
+          "reward_coin": "string",
+          "interest": "string",
+          "fee": "string",
+          "status": 0,
+          "bonus_date": "string",
+          "should_bonus_stamp": 0
+        }
+      ]
+    }
+    
+    
+
+##  AutoInvestPlanCreateResp
+
+创建定投计划响应
+
+类型 | 约束  
+---|---  
+object | required: ["id"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Required |  | 计划ID  
+amount | string | Optional |  | 每期定投金额  
+money | string | Optional |  | 计价货币  
+next_time | integer(int64) | Optional |  | 下次执行时间  
+period_type | string | Optional |  | 周期类型  
+period_day | integer(int64) | Optional |  | 周期日  
+period_hour | integer(int64) | Optional |  | 周期小时  
+fund_flow | string | Optional |  | 资金流向  
+fund_source | string | Optional |  | 资金来源  
+      
+    
+    {
+      "id": 0,
+      "amount": "string",
+      "money": "string",
+      "next_time": 0,
+      "period_type": "string",
+      "period_day": 0,
+      "period_hour": 0,
+      "fund_flow": "string",
+      "fund_source": "string"
+    }
+    
+    
+
+##  PlaceDualInvestmentOrder
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int32) | Optional |  | 订单ID  
+plan_id | integer(int32) | Optional |  | 项目ID  
+invest_amount | string | Optional |  | 投资数量  
+settlement_amount | string | Optional |  | 结算数量  
+create_time | integer(int32) | Optional |  | 创建时间  
+complete_time | integer(int32) | Optional |  | 完成时间  
+status | string | Optional |  | 状态:  
+  
+`INIT`-创建  
+`SETTLEMENT_SUCCESS`-结算成功  
+`SETTLEMENT_PROCESSING`-结算中  
+`CANCELED`-取消  
+`FAILED`-失败  
+invest_currency | string | Optional |  | 投资币种  
+exercise_currency | string | Optional |  | 行权币种  
+exercise_price | string | Optional |  | 行权价格  
+settlement_price | string | Optional |  | 结算价格  
+settlement_currency | string | Optional |  | 结算币种  
+apy_display | string | Optional |  | 年化收益率  
+apy_settlement | string | Optional |  | 结算年化收益率  
+delivery_time | integer(int32) | Optional |  | 结算时间  
+text | string | Optional |  | 订单自定义信息  
+      
+    
+    {
+      "id": 0,
+      "plan_id": 0,
+      "invest_amount": "string",
+      "settlement_amount": "string",
+      "create_time": 0,
+      "complete_time": 0,
+      "status": "string",
+      "invest_currency": "string",
+      "exercise_currency": "string",
+      "exercise_price": "string",
+      "settlement_price": "string",
+      "settlement_currency": "string",
+      "apy_display": "string",
+      "apy_settlement": "string",
+      "delivery_time": 0,
+      "text": "string"
+    }
+    
+    
+
+##  SwapCoinStruct
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer | Optional |  | 订单ID  
+pid | integer | Optional |  | 项目ID  
+uid | integer | Optional |  | 用户ID  
+coin | string | Optional |  | 币种  
+type | integer | Optional |  | 类型 0-质押 1-赎回  
+subtype | string | Optional |  | 子类型  
+amount | string | Optional |  | 金额  
+exchange_rate | string | Optional |  | 兑换比例  
+exchange_amount | string | Optional |  | 兑换金额  
+updateStamp | integer | Optional |  | 更新时间戳  
+createStamp | integer | Optional |  | 交易时间戳  
+status | integer | Optional |  | 状态 1-成功  
+protocol_type | integer | Optional |  | DEFI协议类型  
+client_order_id | string | Optional |  | 参考ID  
+source | string | Optional |  | 订单来源  
+      
+    
+    {
+      "id": 0,
+      "pid": 0,
+      "uid": 0,
+      "coin": "string",
+      "type": 0,
+      "subtype": "string",
+      "amount": "string",
+      "exchange_rate": "string",
+      "exchange_amount": "string",
+      "updateStamp": 0,
+      "createStamp": 0,
+      "status": 0,
+      "protocol_type": 0,
+      "client_order_id": "string",
+      "source": "string"
+    }
+    
+    
+
+##  FixedTermHistoryRecord
+
+定期理财历史记录
+
+类型 | 约束  
+---|---  
+object | required: ["id","user_id","asset","product_id","status","create_time","create_at"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer | Required |  | 记录ID  
+order_id | integer(int64) | Optional |  | 订单ID  
+user_id | integer(int64) | Required |  | 用户ID  
+asset | string | Required |  | 币种  
+uniq_time | string | Optional |  | 唯一时间标识（日期）  
+bonus_id | integer | Optional |  | 奖励活动ID  
+product_id | integer | Required |  | 产品ID  
+bonus_asset | string | Optional |  | 奖励币种  
+total_principal | string | Optional |  | 总本金  
+amount | string | Optional |  | 金额  
+asset_price | string | Optional |  | 币种价格  
+status | integer | Required |  | 状态  
+detail | string | Optional |  | 详情说明  
+create_time | string | Required |  | 创建时间  
+create_at | integer | Required |  | 创建时间戳（秒）  
+lock_up_period | integer | Optional |  | 期限  
+      
+    
+    {
+      "id": 0,
+      "order_id": 0,
+      "user_id": 0,
+      "asset": "string",
+      "uniq_time": "string",
+      "bonus_id": 0,
+      "product_id": 0,
+      "bonus_asset": "string",
+      "total_principal": "string",
+      "amount": "string",
+      "asset_price": "string",
+      "status": 0,
+      "detail": "string",
+      "create_time": "string",
+      "create_at": 0,
+      "lock_up_period": 0
+    }
+    
+    
+
+##  FixedTermProductSimple
+
+定期理财产品（精简）
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer | Optional |  | 产品ID  
+asset | string | Optional |  | 币种  
+lock_up_period | integer | Optional |  | 锁仓期限（天）  
+year_rate | string | Optional |  | 年利率  
+type | integer | Optional |  | 产品类型，1 普通 2 vip  
+pre_redeem | integer | Optional |  | 是否支持提前赎回，0 不支持 1 支持  
+reinvest | integer | Optional |  | 是否支持复投，0 不支持 1 支持  
+simple_earn | integer | Optional |  | 是否支持定转活，0 不支持 1 支持  
+min_vip | integer | Optional |  | 最低VIP等级要求，0 表示无限制  
+max_vip | integer | Optional |  | 最高VIP等级要求，0 表示无限制  
+sale_status | integer | Optional |  | 售卖状态，1 售卖中 2 已售罄  
+      
+    
+    {
+      "id": 0,
+      "asset": "string",
+      "lock_up_period": 0,
+      "year_rate": "string",
+      "type": 0,
+      "pre_redeem": 0,
+      "reinvest": 0,
+      "simple_earn": 0,
+      "min_vip": 0,
+      "max_vip": 0,
+      "sale_status": 0
+    }
+    
+    
+
+##  FixedTermProductInfo
+
+产品配置信息
+
+类型 | 约束  
+---|---  
+object | required: ["pre_redeem","reinvest","redeem_account","min_vip","max_vip"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+pre_redeem | integer | Required |  | 是否支持提前赎回，0 不支持 1 支持  
+reinvest | integer | Required |  | 是否支持复投，0 不支持 1 支持  
+redeem_account | integer | Required |  | 赎回到账账户类型  
+min_vip | integer | Required |  | 最低VIP等级要求，0 表示无限制  
+max_vip | integer | Required |  | 最高VIP等级要求，0 表示无限制  
+      
+    
+    {
+      "pre_redeem": 0,
+      "reinvest": 0,
+      "redeem_account": 0,
+      "min_vip": 0,
+      "max_vip": 0
+    }
+    
+    
+
+##  FixedTermProduct
+
+定期理财产品
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer | Optional |  | 产品ID  
+name | string | Optional |  | 产品名称  
+asset | string | Optional |  | 币种  
+lock_up_period | integer | Optional |  | 锁仓期限（天）  
+min_lend_amount | string | Optional |  | 最小理财限额  
+user_max_lend_amount | string | Optional |  | 用户最大理财限额  
+total_lend_amount | string | Optional |  | 平台理财限额  
+year_rate | string | Optional |  | 年利率  
+type | integer | Optional |  | 产品类型，1 普通 2 vip  
+pre_redeem | integer | Optional |  | 是否支持提前赎回，0 不支持 1 支持  
+reinvest | integer | Optional |  | 是否支持复投，0 不支持 1 支持  
+redeem_account | integer | Optional |  | 是否支持定转活，0 不支持 1 支持  
+min_vip | integer | Optional |  | 最低VIP等级要求，0-16，0 表示无限制  
+max_vip | integer | Optional |  | 最高VIP等级要求，0-16，0 表示无限制  
+status | integer | Optional |  | 产品状态，1 未上架 2 已上架 3 已下架  
+create_time | string | Optional |  | 创建时间  
+user_max_lend_volume | string | Optional |  | 用户最大理财量  
+user_total_amount | string | Optional |  | 用户已理财总量  
+sale_status | integer | Optional |  | 售卖状态，1 售卖中 2 已售罄  
+      
+    
+    {
+      "id": 0,
+      "name": "string",
+      "asset": "string",
+      "lock_up_period": 0,
+      "min_lend_amount": "string",
+      "user_max_lend_amount": "string",
+      "total_lend_amount": "string",
+      "year_rate": "string",
+      "type": 0,
+      "pre_redeem": 0,
+      "reinvest": 0,
+      "redeem_account": 0,
+      "min_vip": 0,
+      "max_vip": 0,
+      "status": 0,
+      "create_time": "string",
+      "user_max_lend_volume": "string",
+      "user_total_amount": "string",
+      "sale_status": 0
+    }
+    
+    
+
 ##  FixedTermCouponInfo
 
-_加息券信息_
+加息券信息
 
-###  属性
+类型 | 约束  
+---|---  
+object | required: ["id","business","user_id","asset","order_id","financial_rate_id","buy_limit_low","buy_limit_high","rate_day","rate_ratio","coupon_days","coupon_principal","coupon_year_rate","coupon_interest","status","finish_time","create_time"]  
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-id | integer | true | none | 加息券记录ID  
-business | integer | true | none | 业务类型  
-user_id | integer(int64) | true | none | 用户ID  
-asset | string | true | none | 币种  
-order_id | integer(int64) | true | none | 关联订单ID  
-financial_rate_id | integer | true | none | 加息券ID  
-buy_limit_low | string | true | none | 加息券适用最低申购金额  
-buy_limit_high | string | true | none | 加息券适用最高申购金额  
-rate_day | integer | true | none | 加息天数  
-rate_ratio | string | true | none | 加息利率百分比  
-coupon_days | integer | true | none | 实际加息天数  
-coupon_principal | string | true | none | 加息计算本金  
-coupon_year_rate | string | true | none | 加息年化利率  
-coupon_interest | string | true | none | 加息产生的利息  
-status | integer | true | none | 状态，1 生效中 2 已结算  
-finish_time | string | true | none | 结算时间  
-create_time | string | true | none | 创建时间  
+id | integer | Required |  | 加息券记录ID  
+business | integer | Required |  | 业务类型  
+user_id | integer(int64) | Required |  | 用户ID  
+asset | string | Required |  | 币种  
+order_id | integer(int64) | Required |  | 关联订单ID  
+financial_rate_id | integer | Required |  | 加息券ID  
+buy_limit_low | string | Required |  | 加息券适用最低申购金额  
+buy_limit_high | string | Required |  | 加息券适用最高申购金额  
+rate_day | integer | Required |  | 加息天数  
+rate_ratio | string | Required |  | 加息利率百分比  
+coupon_days | integer | Required |  | 实际加息天数  
+coupon_principal | string | Required |  | 加息计算本金  
+coupon_year_rate | string | Required |  | 加息年化利率  
+coupon_interest | string | Required |  | 加息产生的利息  
+status | integer | Required |  | 状态，1 生效中 2 已结算  
+finish_time | string | Required |  | 结算时间  
+create_time | string | Required |  | 创建时间  
       
     
     {
@@ -6289,31 +7827,49 @@ create_time | string | true | none | 创建时间
 
 ##  FixedTermBonusInfo
 
-_额外奖励活动信息_
+额外奖励活动信息
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-id | integer | false | none | 活动ID  
-product_id | integer | false | none | 关联产品ID  
-asset | string | false | none | 产品币种  
-bonus_asset | string | false | none | 奖励币种  
-kyc_limit | string | false | none | KYC等级限制，逗号分隔  
-ladder_apr | [LadderApr] | false | none | 阶梯年化利率  
-total_bonus_amount | string | false | none | 奖励总量  
-user_total_bonus_amount | string | false | none | 单用户奖励上限  
-status | integer | false | none | 活动状态，1 未上架 2 已上架 3 已下架  
-start_time | string | false | none | 活动开始时间  
-end_time | string | false | none | 活动结束时间  
-create_time | string | false | none | 创建时间  
-start_at | integer | false | none | 活动开始时间戳（秒）  
-end_at | integer | false | none | 活动结束时间戳（秒）  
-total_issued_amount | string | false | none | 已发放奖励总量  
-user_total_issued_amount | string | false | none | 该用户已发放奖励总量  
-bonus_asset_price | string | false | none | 奖励币种价格（USDT 计价）  
-product_asset_price | string | false | none | 产品币种价格（USDT 计价）  
-product_year_rate | string | false | none | 产品基础年利率  
+id | integer | Optional |  | 活动ID  
+product_id | integer | Optional |  | 关联产品ID  
+asset | string | Optional |  | 产品币种  
+bonus_asset | string | Optional |  | 奖励币种  
+kyc_limit | string | Optional |  | KYC等级限制，逗号分隔  
+ladder_apr | array | Optional |  | 阶梯年化利率  
+total_bonus_amount | string | Optional |  | 奖励总量  
+user_total_bonus_amount | string | Optional |  | 单用户奖励上限  
+status | integer | Optional |  | 活动状态，1 未上架 2 已上架 3 已下架  
+start_time | string | Optional |  | 活动开始时间  
+end_time | string | Optional |  | 活动结束时间  
+create_time | string | Optional |  | 创建时间  
+start_at | integer | Optional |  | 活动开始时间戳（秒）  
+end_at | integer | Optional |  | 活动结束时间戳（秒）  
+total_issued_amount | string | Optional |  | 已发放奖励总量  
+user_total_issued_amount | string | Optional |  | 该用户已发放奖励总量  
+bonus_asset_price | string | Optional |  | 奖励币种价格（USDT 计价）  
+product_asset_price | string | Optional |  | 产品币种价格（USDT 计价）  
+product_year_rate | string | Optional |  | 产品基础年利率  
+  
+**ladder_apr**
+
+阶梯年化利率
+
+类型 | 约束  
+---|---  
+array |   
+  
+**ladder_apr / items**
+
+类型 | 约束  
+---|---  
+LadderApr | required: ["apr","left","right"]  
       
     
     {
@@ -6348,42 +7904,21 @@ product_year_rate | string | false | none | 产品基础年利率
 
 ##  LadderApr
 
-###  属性
+类型 | 约束  
+---|---  
+object | required: ["apr","left","right"]  
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-apr | string | true | none | 年化利率  
-left | string | true | none | 区间下限  
-right | string | true | none | 区间上限  
+apr | string | Required |  | 年化利率  
+left | string | Required |  | 区间下限  
+right | string | Required |  | 区间上限  
       
     
     {
       "apr": "string",
       "left": "string",
       "right": "string"
-    }
-    
-    
-
-##  FixedTermProductInfo
-
-_产品配置信息_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-pre_redeem | integer | true | none | 是否支持提前赎回，0 不支持 1 支持  
-reinvest | integer | true | none | 是否支持复投，0 不支持 1 支持  
-redeem_account | integer | true | none | 赎回到账账户类型  
-min_vip | integer | true | none | 最低VIP等级要求，0 表示无限制  
-max_vip | integer | true | none | 最高VIP等级要求，0 表示无限制  
-      
-    
-    {
-      "pre_redeem": 0,
-      "reinvest": 0,
-      "redeem_account": 0,
-      "min_vip": 0,
-      "max_vip": 0
     }

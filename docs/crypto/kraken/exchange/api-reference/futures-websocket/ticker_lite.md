@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/api-reference/futures-websocket/ticker_lite'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Ticker Lite
@@ -24,7 +24,7 @@ ticker\_lite
 > [!WARNING]
 >
 > **Derivatives WebSocket is being deprecated.** For new integrations, use the
-> [Unified WebSocket](https://docs.kraken.com/exchange/api-reference/unified-websocket), which streams
+> [Unified WebSocket](https://docs.kraken.com/exchange/api-reference/unified-websocket.md), which streams
 > Spot and Derivatives over a single connection. Existing integrations continue
 > to work until **1 March 2027**, when the Derivatives WebSocket will no
 > longer be available. Migrate to the Unified WebSocket before then.
@@ -32,7 +32,7 @@ ticker\_lite
 > To use private channels or trade on the Unified WebSocket, you need a
 > Kraken API key, not a Derivatives API key. Use it to get a token from
 > [`GetWebSocketsToken`](https://docs.kraken.com/api-reference/trading/get-websockets-token). See
-> [Unified WebSocket authentication](https://docs.kraken.com/exchange/api-reference/unified-websocket#authentication).
+> [Unified WebSocket authentication](https://docs.kraken.com/exchange/api-reference/unified-websocket.md#authentication).
 
 The `ticker_lite` feed returns ticker information about listed products. Delta messages are throttled such that they are published every 1s.
 

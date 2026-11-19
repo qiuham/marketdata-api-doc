@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-get_current_deposit_address
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:21.589474
+updated_at: 2026-11-19 19:05:59.684371
 ---
 
 # private/get_current_deposit_address

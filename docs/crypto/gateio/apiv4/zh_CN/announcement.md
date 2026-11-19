@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/announcement
 api_type: REST
-updated_at: 2026-11-18 18:56:13.701045
+updated_at: 2026-11-19 19:01:18.977009
 ---
 
 # Announcement
@@ -24,18 +24,45 @@ _查询公告文章列表_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | AnnouncementArticleListRequest | 是 |   
-» title_query | body | string | 否 | 用于查询公告文章的标题。  
-» page | body | string | 否 | 页码，可选，以字符串传递，例如 "1"。  
-» size | body | string | 否 | 每页返回的文章数量，可选，以字符串传递，例如 "5"。  
-» tags | body | string | 否 | 文章标签  
-» timer | body | string | 否 | 查询最近 N 天的公告，N 以字符串传递。例如，今天为 10 号时，传入 "10" 查询 1 号至 10 号的公告。  
-» cate_name | body | string | 否 | 公告分类名称。  
-» cate_level | body | string | 否 | 分类等级，以字符串传递："1" 或 "2"。  
-» sub_website_id | body | string | 否 | 分站 ID，以字符串传递："0" 为主站，"177" 为土耳其站。默认 "0"。  
-» pinned | body | integer | 否 | 是否展示置顶文章：1 为展示，0 为不展示。默认 1。  
-» update_after | body | integer | 否 | 查询此时间戳之后更新的公告文章。  
-» lang | body | string | 否 | 语言代码，例如 "cn"。  
-» filter_empty_content | body | integer | 否 | 是否排除当前语言内容为空的文章：0 为不排除，1 为排除。默认 1。  
+title_query | body | string | 否 | 用于查询公告文章的标题。  
+page | body | string | 否 | 页码，可选，以字符串传递，例如 "1"。  
+size | body | string | 否 | 每页返回的文章数量，可选，以字符串传递，例如 "5"。  
+tags | body | string | 否 | 文章标签  
+timer | body | string | 否 | 查询最近 N 天的公告，N 以字符串传递。例如，今天为 10 号时，传入 "10" 查询 1 号至 10 号的公告。  
+cate_name | body | string | 否 | 公告分类名称。  
+cate_level | body | string | 否 | 分类等级，以字符串传递："1" 或 "2"。  
+sub_website_id | body | string | 否 | 分站 ID，以字符串传递："0" 为主站，"177" 为土耳其站。默认 "0"。  
+pinned | body | integer | 否 | 是否展示置顶文章：1 为展示，0 为不展示。默认 1。  
+update_after | body | integer | 否 | 查询此时间戳之后更新的公告文章。  
+lang | body | string | 否 | 语言代码，例如 "cn"。  
+filter_empty_content | body | integer | 否 | 是否排除当前语言内容为空的文章：0 为不排除，1 为排除。默认 1。  
+  
+####  请求体结构
+
+AnnouncementArticleListRequest
+
+公告文章列表查询条件
+
+请求体结构类型 | 约束  
+---|---  
+AnnouncementArticleListRequest |   
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+title_query | string | Optional |  | 用于查询公告文章的标题。  
+page | string | Optional |  | 页码，可选，以字符串传递，例如 "1"。  
+size | string | Optional |  | 每页返回的文章数量，可选，以字符串传递，例如 "5"。  
+tags | string | Optional |  | 文章标签  
+timer | string | Optional |  | 查询最近 N 天的公告，N 以字符串传递。例如，今天为 10 号时，传入 "10" 查询 1 号至 10 号的公告。  
+cate_name | string | Optional |  | 公告分类名称。  
+cate_level | string | Optional |  | 分类等级，以字符串传递："1" 或 "2"。  
+sub_website_id | string | Optional | default: "0" | 分站 ID，以字符串传递："0" 为主站，"177" 为土耳其站。默认 "0"。  
+pinned | integer | Optional | default: 1 | 是否展示置顶文章：1 为展示，0 为不展示。默认 1。  
+update_after | integer | Optional |  | 查询此时间戳之后更新的公告文章。  
+lang | string | Optional |  | 语言代码，例如 "cn"。  
+filter_empty_content | integer | Optional | default: 1 | 是否排除当前语言内容为空的文章：0 为不排除，1 为排除。默认 1。  
   
 ### 返回
 
@@ -47,35 +74,102 @@ body | body | AnnouncementArticleListRequest | 是 |
 
 状态码 **200**
 
-_AnnouncementArticleListResponse_
+AnnouncementArticleListResponse
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer | 业务状态码  
-» data | AnnouncementArticleListData | 公告文章列表及总数  
-»» list | array | 公告文章列表  
-»»» AnnouncementArticle | AnnouncementArticle | 公告文章  
-»»»» id | integer | 公告文章的 ID。  
-»»»» title | string | 文章标题  
-»»»» brief | string | 文章摘要  
-»»»» created | string | 文章创建时间，以字符串返回。  
-»»»» updated | string | 文章更新时间，以字符串返回。  
-»»»» release_time | string | 文章发布时间，以字符串返回。  
-»»»» views | integer | 浏览量  
-»»»» author | string | 作者  
-»»»» author_id | integer | 文章作者的 ID。  
-»»»» tags | string | 文章标签  
-»»»» cate | string | 文章所属分类。  
-»»»» is_top | integer | 文章的置顶标记。  
-»»»» cate_id | integer | 文章所属分类的 ID。  
-»»»» source | string | 文章来源  
-»»»» content_lang_list | array | 文章支持的语言列表，包含每种语言的代码和名称。  
-»»»»» AnnouncementArticleLanguage | AnnouncementArticleLanguage | 公告文章语言  
-»»»»»» code | string | 语言代码，例如 "cn"。  
-»»»»»» name | string | 语言名称  
-»»»»» total | integer | 公告文章总数。  
-»»»» message | string | 响应消息  
-»»»» version | string | 响应版本  
+公告文章列表响应
+
+类型 | 约束  
+---|---  
+AnnouncementArticleListResponse | required: ["code","data","message","version"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  | 业务状态码  
+data | AnnouncementArticleListData | Required | required: ["list","total"] | 公告文章列表及总数  
+message | string | Required |  | 响应消息  
+version | string | Required |  | 响应版本  
+  
+**data**
+
+AnnouncementArticleListData
+
+公告文章列表及总数
+
+类型 | 约束  
+---|---  
+AnnouncementArticleListData | required: ["list","total"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Required |  | 公告文章列表  
+total | integer | Required |  | 公告文章总数。  
+  
+**data / list**
+
+公告文章列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items**
+
+AnnouncementArticle
+
+公告文章
+
+类型 | 约束  
+---|---  
+AnnouncementArticle | required: ["id","title","brief","created","updated","release_time","views","author","author_id","tags","cate","is_top","cate_id","source","content_lang_list"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer | Required |  | 公告文章的 ID。  
+title | string | Required |  | 文章标题  
+brief | string | Required |  | 文章摘要  
+created | string | Required |  | 文章创建时间，以字符串返回。  
+updated | string | Required |  | 文章更新时间，以字符串返回。  
+release_time | string | Required |  | 文章发布时间，以字符串返回。  
+views | integer | Required |  | 浏览量  
+author | string | Required |  | 作者  
+author_id | integer | Required |  | 文章作者的 ID。  
+tags | string | Required |  | 文章标签  
+cate | string | Required |  | 文章所属分类。  
+is_top | integer | Required |  | 文章的置顶标记。  
+cate_id | integer | Required |  | 文章所属分类的 ID。  
+source | string | Required |  | 文章来源  
+content_lang_list | array | Required |  | 文章支持的语言列表，包含每种语言的代码和名称。  
+  
+**data / list / items / content_lang_list**
+
+文章支持的语言列表，包含每种语言的代码和名称。
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / list / items / content_lang_list / items**
+
+AnnouncementArticleLanguage
+
+公告文章语言
+
+类型 | 约束  
+---|---  
+AnnouncementArticleLanguage | required: ["code","name"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | string | Required |  | 语言代码，例如 "cn"。  
+name | string | Required |  | 语言名称  
   
 该请求不需要认证 
 
@@ -136,24 +230,30 @@ _AnnouncementArticleListResponse_
 
 ##  AnnouncementArticleListRequest
 
-_AnnouncementArticleListRequest_
+AnnouncementArticleListRequest
 
-###  属性
+公告文章列表查询条件
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-title_query | string | false | none | 用于查询公告文章的标题。  
-page | string | false | none | 页码，可选，以字符串传递，例如 "1"。  
-size | string | false | none | 每页返回的文章数量，可选，以字符串传递，例如 "5"。  
-tags | string | false | none | 文章标签  
-timer | string | false | none | 查询最近 N 天的公告，N 以字符串传递。例如，今天为 10 号时，传入 "10" 查询 1 号至 10 号的公告。  
-cate_name | string | false | none | 公告分类名称。  
-cate_level | string | false | none | 分类等级，以字符串传递："1" 或 "2"。  
-sub_website_id | string | false | none | 分站 ID，以字符串传递："0" 为主站，"177" 为土耳其站。默认 "0"。  
-pinned | integer | false | none | 是否展示置顶文章：1 为展示，0 为不展示。默认 1。  
-update_after | integer | false | none | 查询此时间戳之后更新的公告文章。  
-lang | string | false | none | 语言代码，例如 "cn"。  
-filter_empty_content | integer | false | none | 是否排除当前语言内容为空的文章：0 为不排除，1 为排除。默认 1。  
+title_query | string | Optional |  | 用于查询公告文章的标题。  
+page | string | Optional |  | 页码，可选，以字符串传递，例如 "1"。  
+size | string | Optional |  | 每页返回的文章数量，可选，以字符串传递，例如 "5"。  
+tags | string | Optional |  | 文章标签  
+timer | string | Optional |  | 查询最近 N 天的公告，N 以字符串传递。例如，今天为 10 号时，传入 "10" 查询 1 号至 10 号的公告。  
+cate_name | string | Optional |  | 公告分类名称。  
+cate_level | string | Optional |  | 分类等级，以字符串传递："1" 或 "2"。  
+sub_website_id | string | Optional | default: "0" | 分站 ID，以字符串传递："0" 为主站，"177" 为土耳其站。默认 "0"。  
+pinned | integer | Optional | default: 1 | 是否展示置顶文章：1 为展示，0 为不展示。默认 1。  
+update_after | integer | Optional |  | 查询此时间戳之后更新的公告文章。  
+lang | string | Optional |  | 语言代码，例如 "cn"。  
+filter_empty_content | integer | Optional | default: 1 | 是否排除当前语言内容为空的文章：0 为不排除，1 为排除。默认 1。  
       
     
     {
@@ -175,16 +275,32 @@ filter_empty_content | integer | false | none | 是否排除当前语言内容�
 
 ##  AnnouncementArticleListResponse
 
-_AnnouncementArticleListResponse_
+AnnouncementArticleListResponse
 
-###  属性
+公告文章列表响应
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+类型 | 约束  
+---|---  
+object | required: ["code","data","message","version"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-code | integer | true | none | 业务状态码  
-data | AnnouncementArticleListData | true | none | 公告文章列表及总数  
-message | string | true | none | 响应消息  
-version | string | true | none | 响应版本  
+code | integer | Required |  | 业务状态码  
+data | AnnouncementArticleListData | Required | required: ["list","total"] | 公告文章列表及总数  
+message | string | Required |  | 响应消息  
+version | string | Required |  | 响应版本  
+  
+**data**
+
+AnnouncementArticleListData
+
+公告文章列表及总数
+
+类型 | 约束  
+---|---  
+AnnouncementArticleListData | required: ["list","total"]  
       
     
     {
@@ -203,14 +319,38 @@ version | string | true | none | 响应版本
 
 ##  AnnouncementArticleListData
 
-_AnnouncementArticleListData_
+AnnouncementArticleListData
 
-###  属性
+公告文章列表及总数
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+类型 | 约束  
+---|---  
+object | required: ["list","total"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-list | [AnnouncementArticle] | true | none | 公告文章列表  
-total | integer | true | none | 公告文章总数。  
+list | array | Required |  | 公告文章列表  
+total | integer | Required |  | 公告文章总数。  
+  
+**list**
+
+公告文章列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items**
+
+AnnouncementArticle
+
+公告文章
+
+类型 | 约束  
+---|---  
+AnnouncementArticle | required: ["id","title","brief","created","updated","release_time","views","author","author_id","tags","cate","is_top","cate_id","source","content_lang_list"]  
       
     
     {
@@ -240,27 +380,51 @@ total | integer | true | none | 公告文章总数。
 
 ##  AnnouncementArticle
 
-_AnnouncementArticle_
+AnnouncementArticle
 
-###  属性
+公告文章
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+类型 | 约束  
+---|---  
+object | required: ["id","title","brief","created","updated","release_time","views","author","author_id","tags","cate","is_top","cate_id","source","content_lang_list"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-id | integer | true | none | 公告文章的 ID。  
-title | string | true | none | 文章标题  
-brief | string | true | none | 文章摘要  
-created | string | true | none | 文章创建时间，以字符串返回。  
-updated | string | true | none | 文章更新时间，以字符串返回。  
-release_time | string | true | none | 文章发布时间，以字符串返回。  
-views | integer | true | none | 浏览量  
-author | string | true | none | 作者  
-author_id | integer | true | none | 文章作者的 ID。  
-tags | string | true | none | 文章标签  
-cate | string | true | none | 文章所属分类。  
-is_top | integer | true | none | 文章的置顶标记。  
-cate_id | integer | true | none | 文章所属分类的 ID。  
-source | string | true | none | 文章来源  
-content_lang_list | [AnnouncementArticleLanguage] | true | none | 文章支持的语言列表，包含每种语言的代码和名称。  
+id | integer | Required |  | 公告文章的 ID。  
+title | string | Required |  | 文章标题  
+brief | string | Required |  | 文章摘要  
+created | string | Required |  | 文章创建时间，以字符串返回。  
+updated | string | Required |  | 文章更新时间，以字符串返回。  
+release_time | string | Required |  | 文章发布时间，以字符串返回。  
+views | integer | Required |  | 浏览量  
+author | string | Required |  | 作者  
+author_id | integer | Required |  | 文章作者的 ID。  
+tags | string | Required |  | 文章标签  
+cate | string | Required |  | 文章所属分类。  
+is_top | integer | Required |  | 文章的置顶标记。  
+cate_id | integer | Required |  | 文章所属分类的 ID。  
+source | string | Required |  | 文章来源  
+content_lang_list | array | Required |  | 文章支持的语言列表，包含每种语言的代码和名称。  
+  
+**content_lang_list**
+
+文章支持的语言列表，包含每种语言的代码和名称。
+
+类型 | 约束  
+---|---  
+array |   
+  
+**content_lang_list / items**
+
+AnnouncementArticleLanguage
+
+公告文章语言
+
+类型 | 约束  
+---|---  
+AnnouncementArticleLanguage | required: ["code","name"]  
       
     
     {
@@ -290,14 +454,20 @@ content_lang_list | [AnnouncementArticleLanguage] | true | none | 文章支持�
 
 ##  AnnouncementArticleLanguage
 
-_AnnouncementArticleLanguage_
+AnnouncementArticleLanguage
 
-###  属性
+公告文章语言
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+类型 | 约束  
+---|---  
+object | required: ["code","name"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-code | string | true | none | 语言代码，例如 "cn"。  
-name | string | true | none | 语言名称  
+code | string | Required |  | 语言代码，例如 "cn"。  
+name | string | Required |  | 语言名称  
       
     
     {

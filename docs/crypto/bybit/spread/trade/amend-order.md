@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/trade/amend-order
 api_type: Trading
-updated_at: 2026-11-18 18:51:24.160523
+updated_at: 2026-11-19 18:55:26.176822
 ---
 
 # Amend Order

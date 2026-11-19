@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/reality
 api_type: REST
-updated_at: 2026-11-18 19:01:32.809802
+updated_at: 2026-11-19 19:08:07.414242
 ---
 
 # Reality

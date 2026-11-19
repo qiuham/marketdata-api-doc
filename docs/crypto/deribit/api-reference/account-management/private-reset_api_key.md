@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-reset_api_key
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:14.319916
+updated_at: 2026-11-19 19:05:51.243250
 ---
 
 # private/reset_api_key

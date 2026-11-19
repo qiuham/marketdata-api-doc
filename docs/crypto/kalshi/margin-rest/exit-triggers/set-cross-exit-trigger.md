@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-rest/exit-triggers/set-cross-exit-trigger'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Set Cross Exit Trigger

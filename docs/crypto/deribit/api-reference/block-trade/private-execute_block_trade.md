@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/block-trade/private-execute_block_trade
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:15.664281
+updated_at: 2026-11-19 19:05:52.540807
 ---
 
 # private/execute_block_trade

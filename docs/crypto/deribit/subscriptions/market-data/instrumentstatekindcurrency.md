@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/market-data/instrumentstatekindcurrency
 api_type: WebSocket
-updated_at: 2026-11-18 18:59:00.471498
+updated_at: 2026-11-19 19:05:35.393748
 ---
 
 # instrument.state.(kind).(currency)

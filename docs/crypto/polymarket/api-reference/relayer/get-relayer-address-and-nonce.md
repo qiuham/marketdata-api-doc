@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/relayer/get-relayer-address-and-nonce'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Get relayer address and nonce

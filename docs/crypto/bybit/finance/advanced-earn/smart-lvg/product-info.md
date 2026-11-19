@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/smart-lvg/product-info
 api_type: REST
-updated_at: 2026-11-18 18:49:59.976385
+updated_at: 2026-11-19 18:53:44.837905
 ---
 
 # Get Product Info

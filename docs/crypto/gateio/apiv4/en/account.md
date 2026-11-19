@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/account
 api_type: Account
-updated_at: 2026-11-18 18:55:30.405603
+updated_at: 2026-11-19 19:00:30.342275
 ---
 
 # Account
@@ -27,17 +27,66 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_AccountDetail_
+AccountDetail
 
-Name | Type | Description  
----|---|---  
-» ip_whitelist | array | IP Whitelist  
-» currency_pairs | array | Trading pair whitelist  
-» user_id | integer(int64) | User ID  
-» tier | integer(int64) | User VIP level  
-» key | object | API Key details  
-»» mode | integer(int32) | Mode: 1 - Classic mode, 2 - Legacy unified mode  
-» copy_trading_role | integer(int32) | User role: 0 - Normal user 1 - Copy trading leader 2 - Copy trading follower 3 - Both leader and follower  
+Account details
+
+Type | Constraints  
+---|---  
+AccountDetail |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+ip_whitelist | array | Optional |  | IP Whitelist  
+currency_pairs | array | Optional |  | Trading pair whitelist  
+user_id | integer(int64) | Optional |  | User ID  
+tier | integer(int64) | Optional |  | User VIP level  
+key | object | Optional |  | API Key details  
+copy_trading_role | integer(int32) | Optional |  | User role: 0 - Normal user 1 - Copy trading leader 2 - Copy trading follower 3 - Both leader and follower  
+  
+**ip_whitelist**
+
+IP Whitelist
+
+Type | Constraints  
+---|---  
+array |   
+  
+**ip_whitelist / items**
+
+Type | Constraints  
+---|---  
+string |   
+  
+**currency_pairs**
+
+Trading pair whitelist
+
+Type | Constraints  
+---|---  
+array |   
+  
+**currency_pairs / items**
+
+Type | Constraints  
+---|---  
+string |   
+  
+**key**
+
+API Key details
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+mode | integer(int32) | Optional |  | Mode: 1 - Classic mode, 2 - Legacy unified mode  
   
 WARNING
 
@@ -125,18 +174,75 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_AccountKeyInfo_
+AccountKeyInfo
 
-Name | Type | Description  
----|---|---  
-» state | integer(int32) | API key status: 1 - Normal, 2 - Locked, 3 - Frozen (can only be modified, default is 1 when creating)API Key Status: 1 - Normal, 2 - Locked, 3 - Frozen (can only be modified; default is 1 upon creation)  
-» mode | integer(int32) | User mode: 1 - Classic mode, 2 - Legacy unified mode (can only be specified when creating, cannot be modified)  
-» name | string | API Key Remark  
-» currency_pairs | array | Trading Pair Whitelist, Maximum 30 Pairs  
-» user_id | integer(int64) | User ID  
-» ip_whitelist | array | IP Whitelist  
-» perms | array | none  
-»» name | string | Permission function name (cleared if no value is provided)  
+Main Account API Key Information
+
+Type | Constraints  
+---|---  
+AccountKeyInfo |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+state | integer(int32) | Optional |  | API key status: 1 - Normal, 2 - Locked, 3 - Frozen (can only be modified, default is 1 when creating)API Key Status: 1 - Normal, 2 - Locked, 3 - Frozen (can only be modified; default is 1 upon creation)  
+mode | integer(int32) | Optional |  | User mode: 1 - Classic mode, 2 - Legacy unified mode (can only be specified when creating, cannot be modified)  
+name | string | Optional |  | API Key Remark  
+currency_pairs | array | Optional |  | Trading Pair Whitelist, Maximum 30 Pairs  
+user_id | integer(int64) | Optional |  | User ID  
+ip_whitelist | array | Optional |  | IP Whitelist  
+perms | array | Optional |  |   
+key | object | Optional |  | API Key details  
+created_at | string | Optional | readOnly: true | Created time  
+updated_at | string | Optional | readOnly: true | Last Update Time  
+last_access | string | Optional | readOnly: true | Last Access Time  
+  
+**currency_pairs**
+
+Trading Pair Whitelist, Maximum 30 Pairs
+
+Type | Constraints  
+---|---  
+array |   
+  
+**currency_pairs / items**
+
+Type | Constraints  
+---|---  
+string |   
+  
+**ip_whitelist**
+
+IP Whitelist
+
+Type | Constraints  
+---|---  
+array |   
+  
+**ip_whitelist / items**
+
+Type | Constraints  
+---|---  
+string |   
+  
+**perms**
+
+Type | Constraints  
+---|---  
+array |   
+  
+**perms / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+name | string | Optional |  | Permission function name (cleared if no value is provided)  
   
 \- `wallet`: wallet  
 \- `spot`: spot/margin  
@@ -159,12 +265,21 @@ Name | Type | Description
 \- `cfd_copy`: CFD lead trading  
 \- `stock_copy`: stock lead trading  
 \- `sub_accounts`: sub-accounts  
-»» read_only | boolean | Read Only  
-» key | object | API Key details  
-»» mode | integer(int32) | Mode: 1 - Classic mode, 2 - Legacy unified mode  
-» created_at | string | Created time  
-» updated_at | string | Last Update Time  
-» last_access | string | Last Access Time  
+read_only | boolean | Optional |  | Read Only  
+  
+**key**
+
+API Key details
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+mode | integer(int32) | Optional |  | Mode: 1 - Classic mode, 2 - Legacy unified mode  
   
 WARNING
 
@@ -292,15 +407,28 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_AccountRateLimit_
+AccountRateLimit
 
-Name | Type | Description  
----|---|---  
-AccountRateLimit | array | Account rate limit  
-» tier | string | Frequency limit level (For detailed frequency limit rules, see Transaction ratio frequency limit)  
-» ratio | string | Fill rate  
-» main_ratio | string | Total fill ratio of main account  
-» updated_at | string | Update time  
+Account rate limit
+
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+AccountRateLimit |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+tier | string | Optional | readOnly: true | Frequency limit level (For detailed frequency limit rules, see Transaction ratio frequency limit)  
+ratio | string | Optional |  | Fill rate  
+main_ratio | string | Optional | readOnly: true | Total fill ratio of main account  
+updated_at | string | Optional | readOnly: true | Update time  
   
 WARNING
 
@@ -398,13 +526,24 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | none  
-» id | integer(int64) | STP Group ID  
-» name | string | STP Group name  
-» creator_id | integer(int64) | Creator ID  
-» create_time | integer(int64) | Created time  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+StpGroup | required: ["name"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | STP Group ID  
+name | string | Required |  | STP Group name  
+creator_id | integer(int64) | Optional | readOnly: true | Creator ID  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
   
 WARNING
 
@@ -483,7 +622,25 @@ Only the main account is allowed to create a new STP user group
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | StpGroup | Required | none  
-» name | body | string | Required | STP Group name  
+id | body | integer(int64) | Optional | STP Group ID  
+name | body | string | Required | STP Group name  
+creator_id | body | integer(int64) | Optional | Creator ID  
+create_time | body | integer(int64) | Optional | Created time  
+  
+####  Request Body Schema
+
+Request Body SchemaType | Constraints  
+---|---  
+StpGroup | required: ["name"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | STP Group ID  
+name | string | Required |  | STP Group name  
+creator_id | integer(int64) | Optional | readOnly: true | Creator ID  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
   
 ### Responses
 
@@ -495,12 +652,18 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» id | integer(int64) | STP Group ID  
-» name | string | STP Group name  
-» creator_id | integer(int64) | Creator ID  
-» create_time | integer(int64) | Created time  
+Type | Constraints  
+---|---  
+StpGroup | required: ["name"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | STP Group ID  
+name | string | Required |  | STP Group name  
+creator_id | integer(int64) | Optional | readOnly: true | Creator ID  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
   
 WARNING
 
@@ -597,12 +760,23 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | none  
-» user_id | integer(int64) | User ID  
-» stp_id | integer(int64) | STP Group ID  
-» create_time | integer(int64) | Created time  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+StpGroupUser |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | User ID  
+stp_id | integer(int64) | Optional | readOnly: true | STP Group ID  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
   
 WARNING
 
@@ -683,6 +857,18 @@ ParametersName | In | Type | Required | Description
 stp_id | path | integer(int64) | Required | STP Group ID  
 body | body | AddSTPGroupUsersRequest | Required | User ID  
   
+####  Request Body Schema
+
+Request Body SchemaType | Constraints  
+---|---  
+AddSTPGroupUsersRequest |   
+  
+**items**
+
+Request Body SchemaType | Constraints  
+---|---  
+integer(int64) |   
+  
 ### Responses
 
 ResponsesStatus | Meaning | Description | Schema  
@@ -693,12 +879,23 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | none  
-» user_id | integer(int64) | User ID  
-» stp_id | integer(int64) | STP Group ID  
-» create_time | integer(int64) | Created time  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+StpGroupUser |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | User ID  
+stp_id | integer(int64) | Optional | readOnly: true | STP Group ID  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
   
 WARNING
 
@@ -800,12 +997,23 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | none  
-» user_id | integer(int64) | User ID  
-» stp_id | integer(int64) | STP Group ID  
-» create_time | integer(int64) | Created time  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+StpGroupUser |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | User ID  
+stp_id | integer(int64) | Optional | readOnly: true | STP Group ID  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
   
 WARNING
 
@@ -888,9 +1096,15 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» enabled | boolean | Whether GT fee deduction is enabled  
+Type | Constraints  
+---|---  
+DebitFee | required: ["enabled"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+enabled | boolean | Required |  | Whether GT fee deduction is enabled  
   
 WARNING
 
@@ -964,7 +1178,19 @@ Enable or disable GT fee deduction for the current account
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | DebitFee | Required | none  
-» enabled | body | boolean | Required | Whether GT fee deduction is enabled  
+enabled | body | boolean | Required | Whether GT fee deduction is enabled  
+  
+####  Request Body Schema
+
+Request Body SchemaType | Constraints  
+---|---  
+DebitFee | required: ["enabled"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+enabled | boolean | Required |  | Whether GT fee deduction is enabled  
   
 ### Responses
 
@@ -1032,20 +1258,75 @@ Code samples
 
 ##  AccountKeyInfo
 
-_AccountKeyInfo_
+AccountKeyInfo
 
-###  Properties
+Main Account API Key Information
 
-PropertiesName | Type | Required | Restrictions | Description  
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-state | integer(int32) | Optional | none | API key status: 1 - Normal, 2 - Locked, 3 - Frozen (can only be modified, default is 1 when creating)API Key Status: 1 - Normal, 2 - Locked, 3 - Frozen (can only be modified; default is 1 upon creation)  
-mode | integer(int32) | Optional | none | User mode: 1 - Classic mode, 2 - Legacy unified mode (can only be specified when creating, cannot be modified)  
-name | string | Optional | none | API Key Remark  
-currency_pairs | array | Optional | none | Trading Pair Whitelist, Maximum 30 Pairs  
-user_id | integer(int64) | Optional | none | User ID  
-ip_whitelist | array | Optional | none | IP Whitelist  
-perms | array | Optional | none | none  
-» name | string | Optional | none | Permission function name (cleared if no value is provided)  
+state | integer(int32) | Optional |  | API key status: 1 - Normal, 2 - Locked, 3 - Frozen (can only be modified, default is 1 when creating)API Key Status: 1 - Normal, 2 - Locked, 3 - Frozen (can only be modified; default is 1 upon creation)  
+mode | integer(int32) | Optional |  | User mode: 1 - Classic mode, 2 - Legacy unified mode (can only be specified when creating, cannot be modified)  
+name | string | Optional |  | API Key Remark  
+currency_pairs | array | Optional |  | Trading Pair Whitelist, Maximum 30 Pairs  
+user_id | integer(int64) | Optional |  | User ID  
+ip_whitelist | array | Optional |  | IP Whitelist  
+perms | array | Optional |  |   
+key | object | Optional |  | API Key details  
+created_at | string | Optional | readOnly: true | Created time  
+updated_at | string | Optional | readOnly: true | Last Update Time  
+last_access | string | Optional | readOnly: true | Last Access Time  
+  
+**currency_pairs**
+
+Trading Pair Whitelist, Maximum 30 Pairs
+
+Type | Constraints  
+---|---  
+array |   
+  
+**currency_pairs / items**
+
+Type | Constraints  
+---|---  
+string |   
+  
+**ip_whitelist**
+
+IP Whitelist
+
+Type | Constraints  
+---|---  
+array |   
+  
+**ip_whitelist / items**
+
+Type | Constraints  
+---|---  
+string |   
+  
+**perms**
+
+Type | Constraints  
+---|---  
+array |   
+  
+**perms / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+name | string | Optional |  | Permission function name (cleared if no value is provided)  
   
 \- `wallet`: wallet  
 \- `spot`: spot/margin  
@@ -1068,12 +1349,21 @@ perms | array | Optional | none | none
 \- `cfd_copy`: CFD lead trading  
 \- `stock_copy`: stock lead trading  
 \- `sub_accounts`: sub-accounts  
-» read_only | boolean | Optional | none | Read Only  
-key | object | Optional | none | API Key details  
-» mode | integer(int32) | Optional | none | Mode: 1 - Classic mode, 2 - Legacy unified mode  
-created_at | string | Optional | read-only | Created time  
-updated_at | string | Optional | read-only | Last Update Time  
-last_access | string | Optional | read-only | Last Access Time  
+read_only | boolean | Optional |  | Read Only  
+  
+**key**
+
+API Key details
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+mode | integer(int32) | Optional |  | Mode: 1 - Classic mode, 2 - Legacy unified mode  
       
     
     {
@@ -1105,19 +1395,66 @@ last_access | string | Optional | read-only | Last Access Time
 
 ##  AccountDetail
 
-_AccountDetail_
+AccountDetail
 
-###  Properties
+Account details
 
-PropertiesName | Type | Required | Restrictions | Description  
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-ip_whitelist | array | Optional | none | IP Whitelist  
-currency_pairs | array | Optional | none | Trading pair whitelist  
-user_id | integer(int64) | Optional | none | User ID  
-tier | integer(int64) | Optional | none | User VIP level  
-key | object | Optional | none | API Key details  
-» mode | integer(int32) | Optional | none | Mode: 1 - Classic mode, 2 - Legacy unified mode  
-copy_trading_role | integer(int32) | Optional | none | User role: 0 - Normal user 1 - Copy trading leader 2 - Copy trading follower 3 - Both leader and follower  
+ip_whitelist | array | Optional |  | IP Whitelist  
+currency_pairs | array | Optional |  | Trading pair whitelist  
+user_id | integer(int64) | Optional |  | User ID  
+tier | integer(int64) | Optional |  | User VIP level  
+key | object | Optional |  | API Key details  
+copy_trading_role | integer(int32) | Optional |  | User role: 0 - Normal user 1 - Copy trading leader 2 - Copy trading follower 3 - Both leader and follower  
+  
+**ip_whitelist**
+
+IP Whitelist
+
+Type | Constraints  
+---|---  
+array |   
+  
+**ip_whitelist / items**
+
+Type | Constraints  
+---|---  
+string |   
+  
+**currency_pairs**
+
+Trading pair whitelist
+
+Type | Constraints  
+---|---  
+array |   
+  
+**currency_pairs / items**
+
+Type | Constraints  
+---|---  
+string |   
+  
+**key**
+
+API Key details
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+mode | integer(int32) | Optional |  | Mode: 1 - Classic mode, 2 - Legacy unified mode  
       
     
     {
@@ -1137,29 +1474,64 @@ copy_trading_role | integer(int32) | Optional | none | User role: 0 - Normal use
     
     
 
-##  AddSTPGroupUsersRequest
+##  StpGroup
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["name"]  
+  
+**Properties**
 
-_None_
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | STP Group ID  
+name | string | Required |  | STP Group name  
+creator_id | integer(int64) | Optional | readOnly: true | Creator ID  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
+      
+    
+    {
+      "id": 0,
+      "name": "string",
+      "creator_id": 0,
+      "create_time": 0
+    }
     
     
-    [
-      0
-    ]
+
+##  DebitFee
+
+Type | Constraints  
+---|---  
+object | required: ["enabled"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+enabled | boolean | Required |  | Whether GT fee deduction is enabled  
+      
+    
+    {
+      "enabled": true
+    }
     
     
 
 ##  AccountRateLimit
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-tier | string | Optional | read-only | Frequency limit level (For detailed frequency limit rules, see Transaction ratio frequency limit)  
-ratio | string | Optional | none | Fill rate  
-main_ratio | string | Optional | read-only | Total fill ratio of main account  
-updated_at | string | Optional | read-only | Update time  
+tier | string | Optional | readOnly: true | Frequency limit level (For detailed frequency limit rules, see Transaction ratio frequency limit)  
+ratio | string | Optional |  | Fill rate  
+main_ratio | string | Optional | readOnly: true | Total fill ratio of main account  
+updated_at | string | Optional | readOnly: true | Update time  
       
     
     {
@@ -1171,55 +1543,42 @@ updated_at | string | Optional | read-only | Update time
     
     
 
-##  DebitFee
+##  AddSTPGroupUsersRequest
 
-###  Properties
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
 
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-enabled | boolean | Required | none | Whether GT fee deduction is enabled  
+Type | Constraints  
+---|---  
+integer(int64) |   
       
     
-    {
-      "enabled": true
-    }
+    [
+      0
+    ]
     
     
 
 ##  StpGroupUser
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-user_id | integer(int64) | Optional | none | User ID  
-stp_id | integer(int64) | Optional | read-only | STP Group ID  
-create_time | integer(int64) | Optional | read-only | Created time  
+user_id | integer(int64) | Optional |  | User ID  
+stp_id | integer(int64) | Optional | readOnly: true | STP Group ID  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
       
     
     {
       "user_id": 0,
       "stp_id": 0,
-      "create_time": 0
-    }
-    
-    
-
-##  StpGroup
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer(int64) | Optional | read-only | STP Group ID  
-name | string | Required | none | STP Group name  
-creator_id | integer(int64) | Optional | read-only | Creator ID  
-create_time | integer(int64) | Optional | read-only | Created time  
-      
-    
-    {
-      "id": 0,
-      "name": "string",
-      "creator_id": 0,
       "create_time": 0
     }

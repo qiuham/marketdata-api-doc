@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/markets/get-a-tokens-price-history'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Get a token's price history

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_order_book
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:17.695070
+updated_at: 2026-11-19 19:05:54.255499
 ---
 
 # public/get_order_book
@@ -662,6 +662,6 @@ components:
 
 - [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md)
 - [Market Data Collection](https://docs.deribit.com/articles/market-data-collection-best-practices.md)
+- [Rate Limits](https://docs.deribit.com/articles/rate-limits.md)
 - [API Usage Policy](https://docs.deribit.com/articles/api-usage-policy.md)
 - [Quickstart Guide](https://docs.deribit.com/articles/deribit-quickstart.md)
-- [public/get_order_book_by_instrument_id](https://docs.deribit.com/api-reference/market-data/public-get_order_book_by_instrument_id.md)

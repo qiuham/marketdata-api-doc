@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en
 api_type: REST
-updated_at: 2026-11-18 18:55:29.979569
+updated_at: 2026-11-19 19:00:30.135111
 ---
 
 # Gate API v4.106.184
@@ -109,6 +109,15 @@ Even if you submit a problem, you should not submit the API key information to c
 
   * Add `POST /p2p/merchant/chat/pre_upload_chat_file` with required request field `content_type`, accepting only `image/jpeg`, `image/jpg`, `image/png`, `image/webp`, and `video/mp4`. The response includes `data.url`, the signed form fields in `data.fields`, and `data.file_key` for sending a file message after a successful direct upload.
   * Deprecate `POST /p2p/merchant/chat/upload_chat_file` in favor of `POST /p2p/merchant/chat/pre_upload_chat_file`.
+
+**v4.106.182**
+
+2026-11-13
+
+  * Add Stock Options market-data APIs: **`GET /stock_options/fee-rate`** , **`GET /stock_options/underlyings`** , **`GET /stock_options/contracts`** , **`GET /stock_options/market/expirations`** , **`GET /stock_options/market/chain`** , and **`GET /stock_options/market/{symbol}/orderbook`**.
+  * Add **`GET /stock_options/positions`** and **`POST /stock_options/positions/close`** to query and close stock option positions.
+  * Add Stock Options order APIs: **`GET /stock_options/orders`** , **`POST /stock_options/orders`** , **`DELETE /stock_options/orders`** , **`GET /stock_options/orders/{order_id}`** , **`PUT /stock_options/orders/{order_id}`** , **`DELETE /stock_options/orders/{order_id}`** , and **`GET /stock_options/orders/history`**. Order prices and quantities use decimal strings.
+  * **Breaking change:** The `trade_mode` response enum for **`GET /stock/symbols`** , **`GET /stock/symbols/detail`** , and **`GET /stock/orders`** removes `6`, `7`, and `8`. The documented values are now `0`, `1`, `2`, `4`, and `5` (`5`: trading suspended). Update clients that reference the removed SDK enum constants.
 
 **v4.106.180**
 
@@ -254,11 +263,20 @@ Even if you submit a problem, you should not submit the API key information to c
 
   * Add **`GET /spot/rpi_order_book`** to query the spot RPI order book, with bids sorted by descending price and asks by ascending price. No API key is required.
 
-**v4.106.152**
+**v4.106.153**
 
 2026-10-13
 
   * Add **`GET /futures/{settle}/rpi_order_book`** to query the futures RPI order book without API key authentication, with price aggregation, depth limits, and optional update IDs.
+
+**v4.106.152**
+
+2026-10-13
+
+  * Add stock and ETF trading for US, Hong Kong, South Korean, and Japanese markets to CrossEx. Symbols use `{market}_{STOCK_or_ETF}_{security_code}_USDT`; orders require cross-exchange account mode, `GTC`, and `qty`, do not support `quote_qty`, and have an additional per-user limit of one request per second. Order prices and security position values use the listing market currency (`USD`, `HKD`, `KRW`, or `JPY`).
+  * Add **`GET /crossex/security_positions`** (`listCrossexSecurityPositions`) to query stock and ETF positions, with optional `symbol` and `exchange_type` filters.
+  * Add the required `tag` response field to **`GET /crossex/rule/symbols`** (`Symbol`) for security descriptions and Hyperliquid DEX information. Callers parsing this response must support the new field.
+  * Add `SECURITY_DIVIDEND` and `SECURITY_CORPORATE_ACTION` to the documented account book types returned by **`GET /crossex/account_book`**.
 
 **v4.106.150**
 

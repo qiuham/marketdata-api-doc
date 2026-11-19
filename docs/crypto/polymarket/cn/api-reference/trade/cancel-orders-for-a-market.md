@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/trade/cancel-orders-for-a-market'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # 取消市场订单

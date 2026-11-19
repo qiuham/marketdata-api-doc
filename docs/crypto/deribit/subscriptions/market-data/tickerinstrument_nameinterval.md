@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/market-data/tickerinstrument_nameinterval
 api_type: WebSocket
-updated_at: 2026-11-18 18:58:58.816557
+updated_at: 2026-11-19 19:05:33.406680
 ---
 
 # ticker.(instrument_name).(interval)

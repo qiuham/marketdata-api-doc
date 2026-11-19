@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/Introduction
 api_type: Guide
-updated_at: 2026-11-18 19:00:14.192768
+updated_at: 2026-11-19 19:06:52.750414
 ---
 
 # Introduction

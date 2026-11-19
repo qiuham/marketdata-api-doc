@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/reference/rest-auth-alert-del'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Alert Delete

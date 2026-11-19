@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/c2c/error-code
 api_type: Guide
-updated_at: 2026-11-18 18:32:07.775761
+updated_at: 2026-11-19 18:34:51.464442
 ---
 
 # Error Codes

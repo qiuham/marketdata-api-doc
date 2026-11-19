@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/guides/general/l3-data'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Spot Level 3 Market Data

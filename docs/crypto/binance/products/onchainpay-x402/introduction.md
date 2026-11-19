@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/onchainpay-x402/introduction
 api_type: Guide
-updated_at: 2026-11-18 18:28:53.647656
+updated_at: 2026-11-19 18:31:29.483318
 ---
 
 # Agentic Payments

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/options
 api_type: Trading
-updated_at: 2026-11-18 18:55:50.587947
+updated_at: 2026-11-19 19:00:53.115465
 ---
 
 # Options
@@ -27,11 +27,22 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | none  
-» name | string | Underlying name  
-» index_price | string | Spot index price (quote currency)  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+OptionsUnderlying |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+name | string | Optional |  | Underlying name  
+index_price | string | Optional |  | Spot index price (quote currency)  
   
 This operation does not require authentication 
 
@@ -95,9 +106,17 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» _None_ | integer(int64) | Unix timestamp of expiration date  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Unix timestamp of expiration date
+
+Type | Constraints  
+---|---  
+integer(int64) |   
   
 This operation does not require authentication 
 
@@ -159,35 +178,47 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Options contract details]  
-» _None_ | OptionsContract | Options contract details  
-»» name | string | Options contract name  
-»» tag | string | Expiry periods include day, week, and month.  
-»» create_time | number(double) | Created time  
-»» expiration_time | number(double) | Expiration time  
-»» is_call | boolean | `true` means call options, `false` means put options  
-»» multiplier | string | The option contract multiplier indicates how many units of the underlying asset the face value of one contract represents.  
-»» underlying | string | Underlying  
-»» underlying_price | string | The forward futures price corresponding to the delivery date  
-»» last_price | string | Last trading price  
-»» mark_price | string | Current mark price (quote currency)  
-»» index_price | string | Current index price (quote currency)  
-»» maker_fee_rate | string | Maker fee rate, negative values indicate rebates  
-»» taker_fee_rate | string | Taker fee rate  
-»» order_price_round | string | Minimum order price increment  
-»» mark_price_round | string | Minimum mark price increment  
-»» order_size_min | integer(int64) | Minimum order quantity  
-»» order_size_max | integer(int64) | Maximum order quantity  
-»» order_price_deviate | string | Deprecated  
-»» ref_discount_rate | string | Trading fee discount for referred users  
-»» ref_rebate_rate | string | Commission rate for referrers  
-»» orderbook_id | integer(int64) | Orderbook update ID  
-»» trade_id | integer(int64) | Deprecated  
-»» trade_size | integer(int64) | Historical cumulative trading volume  
-»» position_size | integer(int64) | Current total long position size  
-»» orders_limit | integer | The maximum number of open orders each user can place in this order book.  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Options contract details
+
+Type | Constraints  
+---|---  
+OptionsContract |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+name | string | Optional |  | Options contract name  
+tag | string | Optional |  | Expiry periods include day, week, and month.  
+create_time | number(double) | Optional |  | Created time  
+expiration_time | number(double) | Optional |  | Expiration time  
+is_call | boolean | Optional |  | `true` means call options, `false` means put options  
+multiplier | string | Optional |  | The option contract multiplier indicates how many units of the underlying asset the face value of one contract represents.  
+underlying | string | Optional |  | Underlying  
+underlying_price | string | Optional |  | The forward futures price corresponding to the delivery date  
+last_price | string | Optional |  | Last trading price  
+mark_price | string | Optional |  | Current mark price (quote currency)  
+index_price | string | Optional |  | Current index price (quote currency)  
+maker_fee_rate | string | Optional |  | Maker fee rate, negative values indicate rebates  
+taker_fee_rate | string | Optional |  | Taker fee rate  
+order_price_round | string | Optional |  | Minimum order price increment  
+mark_price_round | string | Optional |  | Minimum mark price increment  
+order_size_min | integer(int64) | Optional |  | Minimum order quantity  
+order_size_max | integer(int64) | Optional |  | Maximum order quantity  
+order_price_deviate | string | Optional |  | Deprecated  
+ref_discount_rate | string | Optional |  | Trading fee discount for referred users  
+ref_rebate_rate | string | Optional |  | Commission rate for referrers  
+orderbook_id | integer(int64) | Optional |  | Orderbook update ID  
+trade_id | integer(int64) | Optional |  | Deprecated  
+trade_size | integer(int64) | Optional |  | Historical cumulative trading volume  
+position_size | integer(int64) | Optional |  | Current total long position size  
+orders_limit | integer | Optional |  | The maximum number of open orders each user can place in this order book.  
   
 This operation does not require authentication 
 
@@ -275,35 +306,41 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Options contract details_
+Options contract details
 
-Name | Type | Description  
----|---|---  
-» name | string | Options contract name  
-» tag | string | Expiry periods include day, week, and month.  
-» create_time | number(double) | Created time  
-» expiration_time | number(double) | Expiration time  
-» is_call | boolean | `true` means call options, `false` means put options  
-» multiplier | string | The option contract multiplier indicates how many units of the underlying asset the face value of one contract represents.  
-» underlying | string | Underlying  
-» underlying_price | string | The forward futures price corresponding to the delivery date  
-» last_price | string | Last trading price  
-» mark_price | string | Current mark price (quote currency)  
-» index_price | string | Current index price (quote currency)  
-» maker_fee_rate | string | Maker fee rate, negative values indicate rebates  
-» taker_fee_rate | string | Taker fee rate  
-» order_price_round | string | Minimum order price increment  
-» mark_price_round | string | Minimum mark price increment  
-» order_size_min | integer(int64) | Minimum order quantity  
-» order_size_max | integer(int64) | Maximum order quantity  
-» order_price_deviate | string | Deprecated  
-» ref_discount_rate | string | Trading fee discount for referred users  
-» ref_rebate_rate | string | Commission rate for referrers  
-» orderbook_id | integer(int64) | Orderbook update ID  
-» trade_id | integer(int64) | Deprecated  
-» trade_size | integer(int64) | Historical cumulative trading volume  
-» position_size | integer(int64) | Current total long position size  
-» orders_limit | integer | The maximum number of open orders each user can place in this order book.  
+Type | Constraints  
+---|---  
+OptionsContract |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+name | string | Optional |  | Options contract name  
+tag | string | Optional |  | Expiry periods include day, week, and month.  
+create_time | number(double) | Optional |  | Created time  
+expiration_time | number(double) | Optional |  | Expiration time  
+is_call | boolean | Optional |  | `true` means call options, `false` means put options  
+multiplier | string | Optional |  | The option contract multiplier indicates how many units of the underlying asset the face value of one contract represents.  
+underlying | string | Optional |  | Underlying  
+underlying_price | string | Optional |  | The forward futures price corresponding to the delivery date  
+last_price | string | Optional |  | Last trading price  
+mark_price | string | Optional |  | Current mark price (quote currency)  
+index_price | string | Optional |  | Current index price (quote currency)  
+maker_fee_rate | string | Optional |  | Maker fee rate, negative values indicate rebates  
+taker_fee_rate | string | Optional |  | Taker fee rate  
+order_price_round | string | Optional |  | Minimum order price increment  
+mark_price_round | string | Optional |  | Minimum mark price increment  
+order_size_min | integer(int64) | Optional |  | Minimum order quantity  
+order_size_max | integer(int64) | Optional |  | Maximum order quantity  
+order_price_deviate | string | Optional |  | Deprecated  
+ref_discount_rate | string | Optional |  | Trading fee discount for referred users  
+ref_rebate_rate | string | Optional |  | Commission rate for referrers  
+orderbook_id | integer(int64) | Optional |  | Orderbook update ID  
+trade_id | integer(int64) | Optional |  | Deprecated  
+trade_size | integer(int64) | Optional |  | Historical cumulative trading volume  
+position_size | integer(int64) | Optional |  | Current total long position size  
+orders_limit | integer | Optional |  | The maximum number of open orders each user can place in this order book.  
   
 This operation does not require authentication 
 
@@ -407,15 +444,26 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | none  
-» time | number(double) | Last configuration update time  
-» contract | string | Options contract name  
-» profit | string | Settlement profit per contract (quote currency)  
-» fee | string | Settlement fee per contract (quote currency)  
-» strike_price | string | Strike price (quote currency)  
-» settle_price | string | Settlement price (quote currency)  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+OptionsSettlement |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+time | number(double) | Optional |  | Last configuration update time  
+contract | string | Optional |  | Options contract name  
+profit | string | Optional |  | Settlement profit per contract (quote currency)  
+fee | string | Optional |  | Settlement fee per contract (quote currency)  
+strike_price | string | Optional |  | Strike price (quote currency)  
+settle_price | string | Optional |  | Settlement price (quote currency)  
   
 This operation does not require authentication 
 
@@ -485,14 +533,20 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» time | number(double) | Last configuration update time  
-» contract | string | Options contract name  
-» profit | string | Settlement profit per contract (quote currency)  
-» fee | string | Settlement fee per contract (quote currency)  
-» strike_price | string | Strike price (quote currency)  
-» settle_price | string | Settlement price (quote currency)  
+Type | Constraints  
+---|---  
+OptionsSettlement |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+time | number(double) | Optional |  | Last configuration update time  
+contract | string | Optional |  | Options contract name  
+profit | string | Optional |  | Settlement profit per contract (quote currency)  
+fee | string | Optional |  | Settlement fee per contract (quote currency)  
+strike_price | string | Optional |  | Strike price (quote currency)  
+settle_price | string | Optional |  | Settlement price (quote currency)  
   
 This operation does not require authentication 
 
@@ -577,18 +631,29 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | none  
-» time | number(double) | Settlement time  
-» underlying | string | Underlying  
-» contract | string | Options contract name  
-» strike_price | string | Strike price (quote currency)  
-» settle_price | string | Settlement price (quote currency)  
-» size | integer(int64) | Settlement size  
-» settle_profit | string | Settlement profit (quote currency)  
-» fee | string | Settlement fee (quote currency)  
-» realised_pnl | string | Accumulated profit and loss from opening positions, including premium, fees, settlement profit, etc. (quote currency)  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+OptionsMySettlements |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+time | number(double) | Optional |  | Settlement time  
+underlying | string | Optional |  | Underlying  
+contract | string | Optional |  | Options contract name  
+strike_price | string | Optional |  | Strike price (quote currency)  
+settle_price | string | Optional |  | Settlement price (quote currency)  
+size | integer(int64) | Optional |  | Settlement size  
+settle_profit | string | Optional |  | Settlement profit (quote currency)  
+fee | string | Optional |  | Settlement fee (quote currency)  
+realised_pnl | string | Optional |  | Accumulated profit and loss from opening positions, including premium, fees, settlement profit, etc. (quote currency)  
   
 WARNING
 
@@ -694,19 +759,65 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» id | integer(int64) | Order Book ID. Increases by 1 on every order book change. Set `with_id=true` to include this field in response  
-» current | number(double) | Response data generation timestamp  
-» update | number(double) | Order book changed timestamp  
-» asks | array | Ask Depth  
-»» options_order_book_item | object | none  
-»»» p | string | Price (quote currency)  
-»»» s | integer(int64) | Size  
-»» bids | array | Bid Depth  
-»»» options_order_book_item | object | none  
-»»»» p | string | Price (quote currency)  
-»»»» s | integer(int64) | Size  
+Type | Constraints  
+---|---  
+OptionsOrderBook | required: ["asks","bids"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | Order Book ID. Increases by 1 on every order book change. Set `with_id=true` to include this field in response  
+current | number(double) | Optional |  | Response data generation timestamp  
+update | number(double) | Optional |  | Order book changed timestamp  
+asks | array | Required |  | Ask Depth  
+bids | array | Required |  | Bid Depth  
+  
+**asks**
+
+Ask Depth
+
+Type | Constraints  
+---|---  
+array |   
+  
+**asks / items**
+
+options_order_book_item
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+p | string | Optional |  | Price (quote currency)  
+s | integer(int64) | Optional |  | Size  
+  
+**bids**
+
+Bid Depth
+
+Type | Constraints  
+---|---  
+array |   
+  
+**bids / items**
+
+options_order_book_item
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+p | string | Optional |  | Price (quote currency)  
+s | integer(int64) | Optional |  | Size  
   
 This operation does not require authentication 
 
@@ -789,28 +900,40 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Options contract details]  
-» _None_ | OptionsTicker | Options contract details  
-»» name | string | Options contract name  
-»» last_price | string | Last trade price (quote currency)  
-»» mark_price | string | Current mark price (quote currency)  
-»» index_price | string | Current index price (quote currency)  
-»» ask1_size | integer(int64) | Best ask size  
-»» ask1_price | string | Best ask price  
-»» bid1_size | integer(int64) | Best bid size  
-»» bid1_price | string | Best bid price  
-»» position_size | integer(int64) | Current total long position size  
-»» mark_iv | string | Implied volatility  
-»» bid_iv | string | Bid side implied volatility  
-»» ask_iv | string | Ask side implied volatility  
-»» leverage | string | Leverage = underlying_price / (mark_price * delta). This value is for reference only.  
-»» delta | string | Greek letter delta  
-»» gamma | string | Greek letter gamma  
-»» vega | string | Greek letter vega  
-»» theta | string | Greek letter theta  
-»» rho | string | Rho  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Options contract details
+
+Type | Constraints  
+---|---  
+OptionsTicker |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+name | string | Optional |  | Options contract name  
+last_price | string | Optional |  | Last trade price (quote currency)  
+mark_price | string | Optional |  | Current mark price (quote currency)  
+index_price | string | Optional |  | Current index price (quote currency)  
+ask1_size | integer(int64) | Optional |  | Best ask size  
+ask1_price | string | Optional |  | Best ask price  
+bid1_size | integer(int64) | Optional |  | Best bid size  
+bid1_price | string | Optional |  | Best bid price  
+position_size | integer(int64) | Optional |  | Current total long position size  
+mark_iv | string | Optional |  | Implied volatility  
+bid_iv | string | Optional |  | Bid side implied volatility  
+ask_iv | string | Optional |  | Ask side implied volatility  
+leverage | string | Optional |  | Leverage = underlying_price / (mark_price * delta). This value is for reference only.  
+delta | string | Optional |  | Greek letter delta  
+gamma | string | Optional |  | Greek letter gamma  
+vega | string | Optional |  | Greek letter vega  
+theta | string | Optional |  | Greek letter theta  
+rho | string | Optional |  | Rho  
   
 This operation does not require authentication 
 
@@ -889,13 +1012,19 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Options underlying detail_
+Options underlying detail
 
-Name | Type | Description  
----|---|---  
-» trade_put | integer(int64) | Total put options trades amount in last 24h  
-» trade_call | integer(int64) | Total call options trades amount in last 24h  
-» index_price | string | Index price (quote currency)  
+Type | Constraints  
+---|---  
+OptionsUnderlyingTicker |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+trade_put | integer(int64) | Optional |  | Total put options trades amount in last 24h  
+trade_call | integer(int64) | Optional |  | Total call options trades amount in last 24h  
+index_price | string | Optional |  | Index price (quote currency)  
   
 This operation does not require authentication 
 
@@ -986,16 +1115,28 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [data point in every timestamp]  
-» _None_ | OptionsCandlestick | data point in every timestamp  
-»» t | number(double) | Unix timestamp in seconds  
-»» v | integer(int64) | size volume (contract size). Only returned if `contract` is not prefixed  
-»» c | string | Close price (quote currency, unit: underlying corresponding option price)  
-»» h | string | Highest price (quote currency, unit: underlying corresponding option price)  
-»» l | string | Lowest price (quote currency, unit: underlying corresponding option price)  
-»» o | string | Open price (quote currency, unit: underlying corresponding option price)  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+data point in every timestamp
+
+Type | Constraints  
+---|---  
+OptionsCandlestick |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+t | number(double) | Optional |  | Unix timestamp in seconds  
+v | integer(int64) | Optional |  | size volume (contract size). Only returned if `contract` is not prefixed  
+c | string | Optional |  | Close price (quote currency, unit: underlying corresponding option price)  
+h | string | Optional |  | Highest price (quote currency, unit: underlying corresponding option price)  
+l | string | Optional |  | Lowest price (quote currency, unit: underlying corresponding option price)  
+o | string | Optional |  | Open price (quote currency, unit: underlying corresponding option price)  
   
 This operation does not require authentication 
 
@@ -1091,16 +1232,28 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [data point in every timestamp]  
-» _None_ | OptionsCandlestick | data point in every timestamp  
-»» t | number(double) | Unix timestamp in seconds  
-»» v | integer(int64) | size volume (contract size). Only returned if `contract` is not prefixed  
-»» c | string | Close price (quote currency, unit: underlying corresponding option price)  
-»» h | string | Highest price (quote currency, unit: underlying corresponding option price)  
-»» l | string | Lowest price (quote currency, unit: underlying corresponding option price)  
-»» o | string | Open price (quote currency, unit: underlying corresponding option price)  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+data point in every timestamp
+
+Type | Constraints  
+---|---  
+OptionsCandlestick |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+t | number(double) | Optional |  | Unix timestamp in seconds  
+v | integer(int64) | Optional |  | size volume (contract size). Only returned if `contract` is not prefixed  
+c | string | Optional |  | Close price (quote currency, unit: underlying corresponding option price)  
+h | string | Optional |  | Highest price (quote currency, unit: underlying corresponding option price)  
+l | string | Optional |  | Lowest price (quote currency, unit: underlying corresponding option price)  
+o | string | Optional |  | Open price (quote currency, unit: underlying corresponding option price)  
   
 This operation does not require authentication 
 
@@ -1187,14 +1340,25 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | none  
-» id | integer(int64) | Fill ID  
-» create_time | integer(int64) | Fill Time  
-» contract | string | Options contract name  
-» size | integer(int64) | Trading size  
-» price | string | Transaction Price (Quoted Currency, Unit: Underlying Option Price)  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+OptionsTrade |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | Fill ID  
+create_time | integer(int64) | Optional |  | Fill Time  
+contract | string | Optional |  | Options contract name  
+size | integer(int64) | Optional |  | Trading size  
+price | string | Optional |  | Transaction Price (Quoted Currency, Unit: Underlying Option Price)  
   
 This operation does not require authentication 
 
@@ -1257,41 +1421,38 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» user | integer(int64) | User ID  
-» total | string | Account balance, invalid for unified account  
-» position_value | string | Position value, long position value is positive, short position value is negative  
-» equity | string | Account equity = balance + option position value, invalid for unified account  
-» short_enabled | boolean | If the account is allowed to short  
-» mmp_enabled | boolean | Whether to enable MMP  
-» liq_triggered | boolean | Whether the account is in a liquidation state  
-» margin_mode | integer(int32) | This field indicates the margin mode used by the unified account:  
+Type | Constraints  
+---|---  
+OptionsAccount |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user | integer(int64) | Optional |  | User ID  
+total | string | Optional |  | Account balance, invalid for unified account  
+position_value | string | Optional |  | Position value, long position value is positive, short position value is negative  
+equity | string | Optional |  | Account equity = balance + option position value, invalid for unified account  
+short_enabled | boolean | Optional |  | If the account is allowed to short  
+mmp_enabled | boolean | Optional |  | Whether to enable MMP  
+liq_triggered | boolean | Optional |  | Whether the account is in a liquidation state  
+margin_mode | integer(int32) | Optional | enum: [0,1,2,3] | This field indicates the margin mode used by the unified account:  
   
 \- 0: Classic Spot Margin Mode  
 \- 1: Cross-Currency Margin Mode  
 \- 2: Portfolio Margin Mode  
 \- 3: Single-Currency Margin Mode  
-» unrealised_pnl | string | Unrealized PnL, for reference only. Position unrealized PnL = (mark price - average entry price) × position quantity. Position quantity is measured in currency units, negative for shorts and positive for longs.  
-» init_margin | string | Initial position margin  
-» maint_margin | string | Position maintenance margin  
-» order_margin | string | Order margin of unfinished orders  
-» ask_order_margin | string | Margin for outstanding sell orders  
-» bid_order_margin | string | Margin for outstanding buy orders  
-» available | string | Available balance to transfer out or trade  
-» point | string | Point card amount  
-» currency | string | Settlement currency  
-» orders_limit | integer(int32) | Maximum number of outstanding orders  
-» position_notional_limit | string | Notional value upper limit, including the nominal value of positions and outstanding orders  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-margin_mode | 0  
-margin_mode | 1  
-margin_mode | 2  
-margin_mode | 3  
+unrealised_pnl | string | Optional |  | Unrealized PnL, for reference only. Position unrealized PnL = (mark price - average entry price) × position quantity. Position quantity is measured in currency units, negative for shorts and positive for longs.  
+init_margin | string | Optional |  | Initial position margin  
+maint_margin | string | Optional |  | Position maintenance margin  
+order_margin | string | Optional |  | Order margin of unfinished orders  
+ask_order_margin | string | Optional |  | Margin for outstanding sell orders  
+bid_order_margin | string | Optional |  | Margin for outstanding buy orders  
+available | string | Optional |  | Available balance to transfer out or trade  
+point | string | Optional |  | Point card amount  
+currency | string | Optional |  | Settlement currency  
+orders_limit | integer(int32) | Optional |  | Maximum number of outstanding orders  
+position_notional_limit | string | Optional |  | Notional value upper limit, including the nominal value of positions and outstanding orders  
   
 WARNING
 
@@ -1432,13 +1593,24 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | none  
-» time | number(double) | Change time  
-» change | string | Amount changed (USDT)  
-» balance | string | Account total balance after change (USDT)  
-» type | string | Changing Type:  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+OptionsAccountBook |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+time | number(double) | Optional |  | Change time  
+change | string | Optional |  | Amount changed (USDT)  
+balance | string | Optional |  | Account total balance after change (USDT)  
+type | string | Optional |  | Changing Type:  
 \- dnw: Deposit & Withdraw  
 \- prem: Trading premium  
 \- fee: Trading fee  
@@ -1446,7 +1618,7 @@ _None_ | array | none
 \- refr: Referrer rebate  
 \- point_dnw: point_fee: POINT Trading fee  
 \- point_refr: POINT Referrer rebate  
-» text | string | Remark  
+text | string | Optional |  | Remark  
   
 WARNING
 
@@ -1535,29 +1707,56 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Options contract position details]  
-» _None_ | OptionsPosition | Options contract position details  
-»» user | integer | User ID  
-»» underlying | string | Underlying  
-»» underlying_price | string | The forward futures price corresponding to the delivery date  
-»» contract | string | Options contract name  
-»» size | integer(int64) | Position size (contract quantity)  
-»» entry_price | string | Entry size (quote currency)  
-»» mark_price | string | Current mark price (quote currency)  
-»» mark_iv | string | Implied volatility  
-»» realised_pnl | string | Realized PnL  
-»» unrealised_pnl | string | Unrealised PnL = (mark price - entry price) * position size. For long postion, size is positive; for short positon, size is negative.This value is for reference only.  
-»» pending_orders | integer | Current pending order quantity  
-»» close_order | object|null | Current close order information, or `null` if no close order  
-»»» id | integer(int64) | Order ID  
-»»» price | string | Order price (quote currency)  
-»»» is_liq | boolean | Whether the close order is from liquidation  
-»» delta | string | Greek letter delta  
-»» gamma | string | Greek letter gamma  
-»» vega | string | Greek letter vega  
-»» theta | string | Greek letter theta  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Options contract position details
+
+Type | Constraints  
+---|---  
+OptionsPosition |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user | integer | Optional | readOnly: true | User ID  
+underlying | string | Optional | readOnly: true | Underlying  
+underlying_price | string | Optional | readOnly: true | The forward futures price corresponding to the delivery date  
+contract | string | Optional | readOnly: true | Options contract name  
+size | integer(int64) | Optional | readOnly: true | Position size (contract quantity)  
+entry_price | string | Optional | readOnly: true | Entry size (quote currency)  
+mark_price | string | Optional | readOnly: true | Current mark price (quote currency)  
+mark_iv | string | Optional | readOnly: true | Implied volatility  
+realised_pnl | string | Optional | readOnly: true | Realized PnL  
+unrealised_pnl | string | Optional | readOnly: true | Unrealised PnL = (mark price - entry price) * position size. For long postion, size is positive; for short positon, size is negative.This value is for reference only.  
+pending_orders | integer | Optional | readOnly: true | Current pending order quantity  
+close_order | object|null | Optional | nullable: true  
+readOnly: true | Current close order information, or `null` if no close order  
+delta | string | Optional | readOnly: true | Greek letter delta  
+gamma | string | Optional | readOnly: true | Greek letter gamma  
+vega | string | Optional | readOnly: true | Greek letter vega  
+theta | string | Optional | readOnly: true | Greek letter theta  
+  
+**items / close_order**
+
+Current close order information, or `null` if no close order
+
+Type | Constraints  
+---|---  
+object|null | nullable: true  
+readOnly: true  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | Order ID  
+price | string | Optional |  | Order price (quote currency)  
+is_liq | boolean | Optional |  | Whether the close order is from liquidation  
   
 WARNING
 
@@ -1661,29 +1860,50 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Options contract position details_
+Options contract position details
 
-Name | Type | Description  
----|---|---  
-» user | integer | User ID  
-» underlying | string | Underlying  
-» underlying_price | string | The forward futures price corresponding to the delivery date  
-» contract | string | Options contract name  
-» size | integer(int64) | Position size (contract quantity)  
-» entry_price | string | Entry size (quote currency)  
-» mark_price | string | Current mark price (quote currency)  
-» mark_iv | string | Implied volatility  
-» realised_pnl | string | Realized PnL  
-» unrealised_pnl | string | Unrealised PnL = (mark price - entry price) * position size. For long postion, size is positive; for short positon, size is negative.This value is for reference only.  
-» pending_orders | integer | Current pending order quantity  
-» close_order | object|null | Current close order information, or `null` if no close order  
-»» id | integer(int64) | Order ID  
-»» price | string | Order price (quote currency)  
-»» is_liq | boolean | Whether the close order is from liquidation  
-» delta | string | Greek letter delta  
-» gamma | string | Greek letter gamma  
-» vega | string | Greek letter vega  
-» theta | string | Greek letter theta  
+Type | Constraints  
+---|---  
+OptionsPosition |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user | integer | Optional | readOnly: true | User ID  
+underlying | string | Optional | readOnly: true | Underlying  
+underlying_price | string | Optional | readOnly: true | The forward futures price corresponding to the delivery date  
+contract | string | Optional | readOnly: true | Options contract name  
+size | integer(int64) | Optional | readOnly: true | Position size (contract quantity)  
+entry_price | string | Optional | readOnly: true | Entry size (quote currency)  
+mark_price | string | Optional | readOnly: true | Current mark price (quote currency)  
+mark_iv | string | Optional | readOnly: true | Implied volatility  
+realised_pnl | string | Optional | readOnly: true | Realized PnL  
+unrealised_pnl | string | Optional | readOnly: true | Unrealised PnL = (mark price - entry price) * position size. For long postion, size is positive; for short positon, size is negative.This value is for reference only.  
+pending_orders | integer | Optional | readOnly: true | Current pending order quantity  
+close_order | object|null | Optional | nullable: true  
+readOnly: true | Current close order information, or `null` if no close order  
+delta | string | Optional | readOnly: true | Greek letter delta  
+gamma | string | Optional | readOnly: true | Greek letter gamma  
+vega | string | Optional | readOnly: true | Greek letter vega  
+theta | string | Optional | readOnly: true | Greek letter theta  
+  
+**close_order**
+
+Current close order information, or `null` if no close order
+
+Type | Constraints  
+---|---  
+object|null | nullable: true  
+readOnly: true  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | Order ID  
+price | string | Optional |  | Order price (quote currency)  
+is_liq | boolean | Optional |  | Whether the close order is from liquidation  
   
 WARNING
 
@@ -1786,25 +2006,30 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | none  
-» time | number(double) | Position close time  
-» contract | string | Options contract name  
-» side | string | Position side  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+OptionsPositionClose |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+time | number(double) | Optional | readOnly: true | Position close time  
+contract | string | Optional | readOnly: true | Options contract name  
+side | string | Optional | enum: ["long","short"]  
+readOnly: true | Position side  
   
 \- `long`: Long position  
 \- `short`: Short position  
-» pnl | string | PnL  
-» text | string | Source of close order. See `order.text` field for specific values  
-» settle_size | string | Settlement size  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-side | long  
-side | short  
+pnl | string | Optional | readOnly: true | PnL  
+text | string | Optional | readOnly: true | Source of close order. See `order.text` field for specific values  
+settle_size | string | Optional | readOnly: true | Settlement size  
   
 WARNING
 
@@ -1921,15 +2146,28 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Options order details]  
-» _None_ | OptionsOrder | Options order details  
-»» id | integer(int64) | Options order ID  
-»» user | integer | User ID  
-»» create_time | number(double) | Creation time of order  
-»» finish_time | number(double) | Order finished time. Not returned if order is open  
-»» finish_as | string | Order finish reason:  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Options order details
+
+Type | Constraints  
+---|---  
+OptionsOrder | required: ["contract","size"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | Options order ID  
+user | integer | Optional | readOnly: true | User ID  
+create_time | number(double) | Optional | readOnly: true | Creation time of order  
+finish_time | number(double) | Optional | readOnly: true | Order finished time. Not returned if order is open  
+finish_as | string | Optional | enum: ["filled","cancelled","liquidated","ioc","auto_deleveraged","reduce_only","position_closed","reduce_out","mmp_cancelled"]  
+readOnly: true | Order finish reason:  
   
 \- filled: Fully filled  
 \- cancelled: User cancelled  
@@ -1940,26 +2178,34 @@ _None_ | array | [Options order details]
 \- position_closed: Cancelled because the position was closed  
 \- reduce_out: Only reduce positions by excluding hard-to-fill orders  
 \- mmp_cancelled: Cancelled by MMP  
-»» status | string | Order status  
+status | string | Optional | enum: ["open","finished"]  
+readOnly: true | Order status  
   
 \- `open`: Pending  
 \- `finished`: Completed  
-»» contract | string | Options identifier  
-»» size | integer(int64) | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
-»» iceberg | integer(int64) | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
-»» price | string | Order price. Price of 0 with `tif` set as `ioc` represents market order (quote currency)  
-»» is_close | boolean | Is the order to close position  
-»» is_reduce_only | boolean | Is the order reduce-only  
-»» is_liq | boolean | Is the order for liquidation  
-»» is_mmp | boolean | Whether it is an MMP order. Corresponds to `mmp` in the request  
-»» tif | string | Time in force strategy. Market orders currently only support IOC mode  
+contract | string | Required |  | Options identifier  
+size | integer(int64) | Required |  | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
+iceberg | integer(int64) | Optional |  | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
+price | string | Optional |  | Order price. Price of 0 with `tif` set as `ioc` represents market order (quote currency)  
+close | boolean | Optional | default: false  
+writeOnly: true | Set as `true` to close the position, with `size` set to 0  
+is_close | boolean | Optional | readOnly: true | Is the order to close position  
+reduce_only | boolean | Optional | default: false  
+writeOnly: true | Set as `true` to be reduce-only order  
+is_reduce_only | boolean | Optional | readOnly: true | Is the order reduce-only  
+is_liq | boolean | Optional | readOnly: true | Is the order for liquidation  
+mmp | boolean | Optional | default: false  
+writeOnly: true | When set to true, it is an MMP order  
+is_mmp | boolean | Optional | readOnly: true | Whether it is an MMP order. Corresponds to `mmp` in the request  
+tif | string | Optional | enum: ["gtc","ioc","poc"]  
+default: "gtc" | Time in force strategy. Market orders currently only support IOC mode  
   
 \- gtc: Good Till Cancelled  
 \- ioc: Immediate Or Cancelled, execute immediately or cancel, taker only  
 \- poc: Pending Or Cancelled, passive order, maker only  
-»» left | integer(int64) | Unfilled quantity  
-»» fill_price | string | Fill price  
-»» text | string | User defined information. If not empty, must follow the rules below:  
+left | integer(int64) | Optional | readOnly: true | Unfilled quantity  
+fill_price | string | Optional | readOnly: true | Fill price  
+text | string | Optional |  | User defined information. If not empty, must follow the rules below:  
   
 1\. prefixed with `t-`  
 2\. no longer than 28 bytes without `t-` prefix  
@@ -1972,29 +2218,10 @@ Besides user defined information, reserved contents are listed below, denoting h
 \- auto_deleveraging: from ADL  
 \- liquidation: from liquidation  
 \- insurance: from insurance  
-»» tkfr | string | Taker fee  
-»» mkfr | string | Maker fee  
-»» refu | integer | Referrer user ID  
-»» refr | string | Referrer rebate  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-finish_as | filled  
-finish_as | cancelled  
-finish_as | liquidated  
-finish_as | ioc  
-finish_as | auto_deleveraged  
-finish_as | reduce_only  
-finish_as | position_closed  
-finish_as | reduce_out  
-finish_as | mmp_cancelled  
-status | open  
-status | finished  
-tif | gtc  
-tif | ioc  
-tif | poc  
+tkfr | string | Optional | readOnly: true | Taker fee  
+mkfr | string | Optional | readOnly: true | Maker fee  
+refu | integer | Optional | readOnly: true | Referrer user ID  
+refr | string | Optional | readOnly: true | Referrer rebate  
   
 WARNING
 
@@ -2084,81 +2311,11 @@ _Create an options order_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | OptionsOrder | Required | none  
-» contract | body | string | Required | Options identifier  
-» size | body | integer(int64) | Required | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
-» iceberg | body | integer(int64) | Optional | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
-» price | body | string | Optional | Order price. Price of 0 with `tif` set as `ioc` represents market order (quote currency)  
-» close | body | boolean | Optional | Set as `true` to close the position, with `size` set to 0  
-» reduce_only | body | boolean | Optional | Set as `true` to be reduce-only order  
-» mmp | body | boolean | Optional | When set to true, it is an MMP order  
-» tif | body | string | Optional | Time in force strategy. Market orders currently only support IOC mode  
-  
-\- gtc: Good Till Cancelled  
-\- ioc: Immediate Or Cancelled, execute immediately or cancel, taker only  
-\- poc: Pending Or Cancelled, passive order, maker only  
-» text | body | string | Optional | User defined information. If not empty, must follow the rules below:  
-  
-1\. prefixed with `t-`  
-2\. no longer than 28 bytes without `t-` prefix  
-3\. can only include 0-9, A-Z, a-z, underscore(_), hyphen(-) or dot(.)  
-Besides user defined information, reserved contents are listed below, denoting how the order is created:  
-  
-\- web: from web  
-\- api: from API  
-\- app: from mobile phones  
-\- auto_deleveraging: from ADL  
-\- liquidation: from liquidation  
-\- insurance: from insurance  
-  
-####  Detailed descriptions
-
-**» tif** : Time in force strategy. Market orders currently only support IOC mode  
-  
-\- gtc: Good Till Cancelled  
-\- ioc: Immediate Or Cancelled, execute immediately or cancel, taker only  
-\- poc: Pending Or Cancelled, passive order, maker only
-
-**» text** : User defined information. If not empty, must follow the rules below:  
-  
-1\. prefixed with `t-`  
-2\. no longer than 28 bytes without `t-` prefix  
-3\. can only include 0-9, A-Z, a-z, underscore(_), hyphen(-) or dot(.)  
-Besides user defined information, reserved contents are listed below, denoting how the order is created:  
-  
-\- web: from web  
-\- api: from API  
-\- app: from mobile phones  
-\- auto_deleveraging: from ADL  
-\- liquidation: from liquidation  
-\- insurance: from insurance
-
-####  Enumerated Values
-
-Enumerated ValuesParameter | Value  
----|---  
-» tif | gtc  
-» tif | ioc  
-» tif | poc  
-  
-### Responses
-
-ResponsesStatus | Meaning | Description | Schema  
----|---|---|---  
-201 | [Created ](https://tools.ietf.org/html/rfc7231#section-6.3.2) | Order detail | OptionsOrder  
-  
-### Response Schema
-
-Status Code **201**
-
-_Options order details_
-
-Name | Type | Description  
----|---|---  
-» id | integer(int64) | Options order ID  
-» user | integer | User ID  
-» create_time | number(double) | Creation time of order  
-» finish_time | number(double) | Order finished time. Not returned if order is open  
-» finish_as | string | Order finish reason:  
+id | body | integer(int64) | Optional | Options order ID  
+user | body | integer | Optional | User ID  
+create_time | body | number(double) | Optional | Creation time of order  
+finish_time | body | number(double) | Optional | Order finished time. Not returned if order is open  
+finish_as | body | string | Optional | Order finish reason:  
   
 \- filled: Fully filled  
 \- cancelled: User cancelled  
@@ -2169,26 +2326,29 @@ Name | Type | Description
 \- position_closed: Cancelled because the position was closed  
 \- reduce_out: Only reduce positions by excluding hard-to-fill orders  
 \- mmp_cancelled: Cancelled by MMP  
-» status | string | Order status  
+status | body | string | Optional | Order status  
   
 \- `open`: Pending  
 \- `finished`: Completed  
-» contract | string | Options identifier  
-» size | integer(int64) | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
-» iceberg | integer(int64) | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
-» price | string | Order price. Price of 0 with `tif` set as `ioc` represents market order (quote currency)  
-» is_close | boolean | Is the order to close position  
-» is_reduce_only | boolean | Is the order reduce-only  
-» is_liq | boolean | Is the order for liquidation  
-» is_mmp | boolean | Whether it is an MMP order. Corresponds to `mmp` in the request  
-» tif | string | Time in force strategy. Market orders currently only support IOC mode  
+contract | body | string | Required | Options identifier  
+size | body | integer(int64) | Required | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
+iceberg | body | integer(int64) | Optional | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
+price | body | string | Optional | Order price. Price of 0 with `tif` set as `ioc` represents market order (quote currency)  
+close | body | boolean | Optional | Set as `true` to close the position, with `size` set to 0  
+is_close | body | boolean | Optional | Is the order to close position  
+reduce_only | body | boolean | Optional | Set as `true` to be reduce-only order  
+is_reduce_only | body | boolean | Optional | Is the order reduce-only  
+is_liq | body | boolean | Optional | Is the order for liquidation  
+mmp | body | boolean | Optional | When set to true, it is an MMP order  
+is_mmp | body | boolean | Optional | Whether it is an MMP order. Corresponds to `mmp` in the request  
+tif | body | string | Optional | Time in force strategy. Market orders currently only support IOC mode  
   
 \- gtc: Good Till Cancelled  
 \- ioc: Immediate Or Cancelled, execute immediately or cancel, taker only  
 \- poc: Pending Or Cancelled, passive order, maker only  
-» left | integer(int64) | Unfilled quantity  
-» fill_price | string | Fill price  
-» text | string | User defined information. If not empty, must follow the rules below:  
+left | body | integer(int64) | Optional | Unfilled quantity  
+fill_price | body | string | Optional | Fill price  
+text | body | string | Optional | User defined information. If not empty, must follow the rules below:  
   
 1\. prefixed with `t-`  
 2\. no longer than 28 bytes without `t-` prefix  
@@ -2201,14 +2361,54 @@ Besides user defined information, reserved contents are listed below, denoting h
 \- auto_deleveraging: from ADL  
 \- liquidation: from liquidation  
 \- insurance: from insurance  
-» tkfr | string | Taker fee  
-» mkfr | string | Maker fee  
-» refu | integer | Referrer user ID  
-» refr | string | Referrer rebate  
   
+tkfr | body | string | Optional | Taker fee  
+mkfr | body | string | Optional | Maker fee  
+refu | body | integer | Optional | Referrer user ID  
+refr | body | string | Optional | Referrer rebate  
+  
+####  Detailed descriptions
+
+** finish_as**: Order finish reason:  
+  
+\- filled: Fully filled  
+\- cancelled: User cancelled  
+\- liquidated: Cancelled due to liquidation  
+\- ioc: Not immediately fully filled due to IOC time-in-force setting  
+\- auto_deleveraged: Cancelled due to auto-deleveraging  
+\- reduce_only: Cancelled due to position increase while reduce-only is set  
+\- position_closed: Cancelled because the position was closed  
+\- reduce_out: Only reduce positions by excluding hard-to-fill orders  
+\- mmp_cancelled: Cancelled by MMP
+
+** status**: Order status  
+  
+\- `open`: Pending  
+\- `finished`: Completed
+
+** tif**: Time in force strategy. Market orders currently only support IOC mode  
+  
+\- gtc: Good Till Cancelled  
+\- ioc: Immediate Or Cancelled, execute immediately or cancel, taker only  
+\- poc: Pending Or Cancelled, passive order, maker only
+
+** text**: User defined information. If not empty, must follow the rules below:  
+  
+1\. prefixed with `t-`  
+2\. no longer than 28 bytes without `t-` prefix  
+3\. can only include 0-9, A-Z, a-z, underscore(_), hyphen(-) or dot(.)  
+Besides user defined information, reserved contents are listed below, denoting how the order is created:  
+  
+\- web: from web  
+\- api: from API  
+\- app: from mobile phones  
+\- auto_deleveraging: from ADL  
+\- liquidation: from liquidation  
+\- insurance: from insurance  
+
 ####  Enumerated Values
 
-Enumerated ValuesProperty | Value  
+Enumerated ValuesParameter | Value  
 ---|---  
 finish_as | filled  
 finish_as | cancelled  
@@ -2224,6 +2424,160 @@ status | finished
 tif | gtc  
 tif | ioc  
 tif | poc  
+  
+####  Request Body Schema
+
+Options order details
+
+Request Body SchemaType | Constraints  
+---|---  
+OptionsOrder | required: ["contract","size"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | Options order ID  
+user | integer | Optional | readOnly: true | User ID  
+create_time | number(double) | Optional | readOnly: true | Creation time of order  
+finish_time | number(double) | Optional | readOnly: true | Order finished time. Not returned if order is open  
+finish_as | string | Optional | enum: ["filled","cancelled","liquidated","ioc","auto_deleveraged","reduce_only","position_closed","reduce_out","mmp_cancelled"]  
+readOnly: true | Order finish reason:  
+  
+\- filled: Fully filled  
+\- cancelled: User cancelled  
+\- liquidated: Cancelled due to liquidation  
+\- ioc: Not immediately fully filled due to IOC time-in-force setting  
+\- auto_deleveraged: Cancelled due to auto-deleveraging  
+\- reduce_only: Cancelled due to position increase while reduce-only is set  
+\- position_closed: Cancelled because the position was closed  
+\- reduce_out: Only reduce positions by excluding hard-to-fill orders  
+\- mmp_cancelled: Cancelled by MMP  
+status | string | Optional | enum: ["open","finished"]  
+readOnly: true | Order status  
+  
+\- `open`: Pending  
+\- `finished`: Completed  
+contract | string | Required |  | Options identifier  
+size | integer(int64) | Required |  | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
+iceberg | integer(int64) | Optional |  | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
+price | string | Optional |  | Order price. Price of 0 with `tif` set as `ioc` represents market order (quote currency)  
+close | boolean | Optional | default: false  
+writeOnly: true | Set as `true` to close the position, with `size` set to 0  
+is_close | boolean | Optional | readOnly: true | Is the order to close position  
+reduce_only | boolean | Optional | default: false  
+writeOnly: true | Set as `true` to be reduce-only order  
+is_reduce_only | boolean | Optional | readOnly: true | Is the order reduce-only  
+is_liq | boolean | Optional | readOnly: true | Is the order for liquidation  
+mmp | boolean | Optional | default: false  
+writeOnly: true | When set to true, it is an MMP order  
+is_mmp | boolean | Optional | readOnly: true | Whether it is an MMP order. Corresponds to `mmp` in the request  
+tif | string | Optional | enum: ["gtc","ioc","poc"]  
+default: "gtc" | Time in force strategy. Market orders currently only support IOC mode  
+  
+\- gtc: Good Till Cancelled  
+\- ioc: Immediate Or Cancelled, execute immediately or cancel, taker only  
+\- poc: Pending Or Cancelled, passive order, maker only  
+left | integer(int64) | Optional | readOnly: true | Unfilled quantity  
+fill_price | string | Optional | readOnly: true | Fill price  
+text | string | Optional |  | User defined information. If not empty, must follow the rules below:  
+  
+1\. prefixed with `t-`  
+2\. no longer than 28 bytes without `t-` prefix  
+3\. can only include 0-9, A-Z, a-z, underscore(_), hyphen(-) or dot(.)  
+Besides user defined information, reserved contents are listed below, denoting how the order is created:  
+  
+\- web: from web  
+\- api: from API  
+\- app: from mobile phones  
+\- auto_deleveraging: from ADL  
+\- liquidation: from liquidation  
+\- insurance: from insurance  
+tkfr | string | Optional | readOnly: true | Taker fee  
+mkfr | string | Optional | readOnly: true | Maker fee  
+refu | integer | Optional | readOnly: true | Referrer user ID  
+refr | string | Optional | readOnly: true | Referrer rebate  
+  
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+201 | [Created ](https://tools.ietf.org/html/rfc7231#section-6.3.2) | Order detail | OptionsOrder  
+  
+### Response Schema
+
+Status Code **201**
+
+Options order details
+
+Type | Constraints  
+---|---  
+OptionsOrder | required: ["contract","size"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | Options order ID  
+user | integer | Optional | readOnly: true | User ID  
+create_time | number(double) | Optional | readOnly: true | Creation time of order  
+finish_time | number(double) | Optional | readOnly: true | Order finished time. Not returned if order is open  
+finish_as | string | Optional | enum: ["filled","cancelled","liquidated","ioc","auto_deleveraged","reduce_only","position_closed","reduce_out","mmp_cancelled"]  
+readOnly: true | Order finish reason:  
+  
+\- filled: Fully filled  
+\- cancelled: User cancelled  
+\- liquidated: Cancelled due to liquidation  
+\- ioc: Not immediately fully filled due to IOC time-in-force setting  
+\- auto_deleveraged: Cancelled due to auto-deleveraging  
+\- reduce_only: Cancelled due to position increase while reduce-only is set  
+\- position_closed: Cancelled because the position was closed  
+\- reduce_out: Only reduce positions by excluding hard-to-fill orders  
+\- mmp_cancelled: Cancelled by MMP  
+status | string | Optional | enum: ["open","finished"]  
+readOnly: true | Order status  
+  
+\- `open`: Pending  
+\- `finished`: Completed  
+contract | string | Required |  | Options identifier  
+size | integer(int64) | Required |  | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
+iceberg | integer(int64) | Optional |  | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
+price | string | Optional |  | Order price. Price of 0 with `tif` set as `ioc` represents market order (quote currency)  
+close | boolean | Optional | default: false  
+writeOnly: true | Set as `true` to close the position, with `size` set to 0  
+is_close | boolean | Optional | readOnly: true | Is the order to close position  
+reduce_only | boolean | Optional | default: false  
+writeOnly: true | Set as `true` to be reduce-only order  
+is_reduce_only | boolean | Optional | readOnly: true | Is the order reduce-only  
+is_liq | boolean | Optional | readOnly: true | Is the order for liquidation  
+mmp | boolean | Optional | default: false  
+writeOnly: true | When set to true, it is an MMP order  
+is_mmp | boolean | Optional | readOnly: true | Whether it is an MMP order. Corresponds to `mmp` in the request  
+tif | string | Optional | enum: ["gtc","ioc","poc"]  
+default: "gtc" | Time in force strategy. Market orders currently only support IOC mode  
+  
+\- gtc: Good Till Cancelled  
+\- ioc: Immediate Or Cancelled, execute immediately or cancel, taker only  
+\- poc: Pending Or Cancelled, passive order, maker only  
+left | integer(int64) | Optional | readOnly: true | Unfilled quantity  
+fill_price | string | Optional | readOnly: true | Fill price  
+text | string | Optional |  | User defined information. If not empty, must follow the rules below:  
+  
+1\. prefixed with `t-`  
+2\. no longer than 28 bytes without `t-` prefix  
+3\. can only include 0-9, A-Z, a-z, underscore(_), hyphen(-) or dot(.)  
+Besides user defined information, reserved contents are listed below, denoting how the order is created:  
+  
+\- web: from web  
+\- api: from API  
+\- app: from mobile phones  
+\- auto_deleveraging: from ADL  
+\- liquidation: from liquidation  
+\- insurance: from insurance  
+tkfr | string | Optional | readOnly: true | Taker fee  
+mkfr | string | Optional | readOnly: true | Maker fee  
+refu | integer | Optional | readOnly: true | Referrer user ID  
+refr | string | Optional | readOnly: true | Referrer rebate  
   
 WARNING
 
@@ -2345,15 +2699,28 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Options order details]  
-» _None_ | OptionsOrder | Options order details  
-»» id | integer(int64) | Options order ID  
-»» user | integer | User ID  
-»» create_time | number(double) | Creation time of order  
-»» finish_time | number(double) | Order finished time. Not returned if order is open  
-»» finish_as | string | Order finish reason:  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Options order details
+
+Type | Constraints  
+---|---  
+OptionsOrder | required: ["contract","size"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | Options order ID  
+user | integer | Optional | readOnly: true | User ID  
+create_time | number(double) | Optional | readOnly: true | Creation time of order  
+finish_time | number(double) | Optional | readOnly: true | Order finished time. Not returned if order is open  
+finish_as | string | Optional | enum: ["filled","cancelled","liquidated","ioc","auto_deleveraged","reduce_only","position_closed","reduce_out","mmp_cancelled"]  
+readOnly: true | Order finish reason:  
   
 \- filled: Fully filled  
 \- cancelled: User cancelled  
@@ -2364,26 +2731,34 @@ _None_ | array | [Options order details]
 \- position_closed: Cancelled because the position was closed  
 \- reduce_out: Only reduce positions by excluding hard-to-fill orders  
 \- mmp_cancelled: Cancelled by MMP  
-»» status | string | Order status  
+status | string | Optional | enum: ["open","finished"]  
+readOnly: true | Order status  
   
 \- `open`: Pending  
 \- `finished`: Completed  
-»» contract | string | Options identifier  
-»» size | integer(int64) | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
-»» iceberg | integer(int64) | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
-»» price | string | Order price. Price of 0 with `tif` set as `ioc` represents market order (quote currency)  
-»» is_close | boolean | Is the order to close position  
-»» is_reduce_only | boolean | Is the order reduce-only  
-»» is_liq | boolean | Is the order for liquidation  
-»» is_mmp | boolean | Whether it is an MMP order. Corresponds to `mmp` in the request  
-»» tif | string | Time in force strategy. Market orders currently only support IOC mode  
+contract | string | Required |  | Options identifier  
+size | integer(int64) | Required |  | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
+iceberg | integer(int64) | Optional |  | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
+price | string | Optional |  | Order price. Price of 0 with `tif` set as `ioc` represents market order (quote currency)  
+close | boolean | Optional | default: false  
+writeOnly: true | Set as `true` to close the position, with `size` set to 0  
+is_close | boolean | Optional | readOnly: true | Is the order to close position  
+reduce_only | boolean | Optional | default: false  
+writeOnly: true | Set as `true` to be reduce-only order  
+is_reduce_only | boolean | Optional | readOnly: true | Is the order reduce-only  
+is_liq | boolean | Optional | readOnly: true | Is the order for liquidation  
+mmp | boolean | Optional | default: false  
+writeOnly: true | When set to true, it is an MMP order  
+is_mmp | boolean | Optional | readOnly: true | Whether it is an MMP order. Corresponds to `mmp` in the request  
+tif | string | Optional | enum: ["gtc","ioc","poc"]  
+default: "gtc" | Time in force strategy. Market orders currently only support IOC mode  
   
 \- gtc: Good Till Cancelled  
 \- ioc: Immediate Or Cancelled, execute immediately or cancel, taker only  
 \- poc: Pending Or Cancelled, passive order, maker only  
-»» left | integer(int64) | Unfilled quantity  
-»» fill_price | string | Fill price  
-»» text | string | User defined information. If not empty, must follow the rules below:  
+left | integer(int64) | Optional | readOnly: true | Unfilled quantity  
+fill_price | string | Optional | readOnly: true | Fill price  
+text | string | Optional |  | User defined information. If not empty, must follow the rules below:  
   
 1\. prefixed with `t-`  
 2\. no longer than 28 bytes without `t-` prefix  
@@ -2396,29 +2771,10 @@ Besides user defined information, reserved contents are listed below, denoting h
 \- auto_deleveraging: from ADL  
 \- liquidation: from liquidation  
 \- insurance: from insurance  
-»» tkfr | string | Taker fee  
-»» mkfr | string | Maker fee  
-»» refu | integer | Referrer user ID  
-»» refr | string | Referrer rebate  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-finish_as | filled  
-finish_as | cancelled  
-finish_as | liquidated  
-finish_as | ioc  
-finish_as | auto_deleveraged  
-finish_as | reduce_only  
-finish_as | position_closed  
-finish_as | reduce_out  
-finish_as | mmp_cancelled  
-status | open  
-status | finished  
-tif | gtc  
-tif | ioc  
-tif | poc  
+tkfr | string | Optional | readOnly: true | Taker fee  
+mkfr | string | Optional | readOnly: true | Maker fee  
+refu | integer | Optional | readOnly: true | Referrer user ID  
+refr | string | Optional | readOnly: true | Referrer rebate  
   
 WARNING
 
@@ -2519,15 +2875,22 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Options order details_
+Options order details
 
-Name | Type | Description  
----|---|---  
-» id | integer(int64) | Options order ID  
-» user | integer | User ID  
-» create_time | number(double) | Creation time of order  
-» finish_time | number(double) | Order finished time. Not returned if order is open  
-» finish_as | string | Order finish reason:  
+Type | Constraints  
+---|---  
+OptionsOrder | required: ["contract","size"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | Options order ID  
+user | integer | Optional | readOnly: true | User ID  
+create_time | number(double) | Optional | readOnly: true | Creation time of order  
+finish_time | number(double) | Optional | readOnly: true | Order finished time. Not returned if order is open  
+finish_as | string | Optional | enum: ["filled","cancelled","liquidated","ioc","auto_deleveraged","reduce_only","position_closed","reduce_out","mmp_cancelled"]  
+readOnly: true | Order finish reason:  
   
 \- filled: Fully filled  
 \- cancelled: User cancelled  
@@ -2538,26 +2901,34 @@ Name | Type | Description
 \- position_closed: Cancelled because the position was closed  
 \- reduce_out: Only reduce positions by excluding hard-to-fill orders  
 \- mmp_cancelled: Cancelled by MMP  
-» status | string | Order status  
+status | string | Optional | enum: ["open","finished"]  
+readOnly: true | Order status  
   
 \- `open`: Pending  
 \- `finished`: Completed  
-» contract | string | Options identifier  
-» size | integer(int64) | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
-» iceberg | integer(int64) | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
-» price | string | Order price. Price of 0 with `tif` set as `ioc` represents market order (quote currency)  
-» is_close | boolean | Is the order to close position  
-» is_reduce_only | boolean | Is the order reduce-only  
-» is_liq | boolean | Is the order for liquidation  
-» is_mmp | boolean | Whether it is an MMP order. Corresponds to `mmp` in the request  
-» tif | string | Time in force strategy. Market orders currently only support IOC mode  
+contract | string | Required |  | Options identifier  
+size | integer(int64) | Required |  | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
+iceberg | integer(int64) | Optional |  | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
+price | string | Optional |  | Order price. Price of 0 with `tif` set as `ioc` represents market order (quote currency)  
+close | boolean | Optional | default: false  
+writeOnly: true | Set as `true` to close the position, with `size` set to 0  
+is_close | boolean | Optional | readOnly: true | Is the order to close position  
+reduce_only | boolean | Optional | default: false  
+writeOnly: true | Set as `true` to be reduce-only order  
+is_reduce_only | boolean | Optional | readOnly: true | Is the order reduce-only  
+is_liq | boolean | Optional | readOnly: true | Is the order for liquidation  
+mmp | boolean | Optional | default: false  
+writeOnly: true | When set to true, it is an MMP order  
+is_mmp | boolean | Optional | readOnly: true | Whether it is an MMP order. Corresponds to `mmp` in the request  
+tif | string | Optional | enum: ["gtc","ioc","poc"]  
+default: "gtc" | Time in force strategy. Market orders currently only support IOC mode  
   
 \- gtc: Good Till Cancelled  
 \- ioc: Immediate Or Cancelled, execute immediately or cancel, taker only  
 \- poc: Pending Or Cancelled, passive order, maker only  
-» left | integer(int64) | Unfilled quantity  
-» fill_price | string | Fill price  
-» text | string | User defined information. If not empty, must follow the rules below:  
+left | integer(int64) | Optional | readOnly: true | Unfilled quantity  
+fill_price | string | Optional | readOnly: true | Fill price  
+text | string | Optional |  | User defined information. If not empty, must follow the rules below:  
   
 1\. prefixed with `t-`  
 2\. no longer than 28 bytes without `t-` prefix  
@@ -2570,29 +2941,10 @@ Besides user defined information, reserved contents are listed below, denoting h
 \- auto_deleveraging: from ADL  
 \- liquidation: from liquidation  
 \- insurance: from insurance  
-» tkfr | string | Taker fee  
-» mkfr | string | Maker fee  
-» refu | integer | Referrer user ID  
-» refr | string | Referrer rebate  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-finish_as | filled  
-finish_as | cancelled  
-finish_as | liquidated  
-finish_as | ioc  
-finish_as | auto_deleveraged  
-finish_as | reduce_only  
-finish_as | position_closed  
-finish_as | reduce_out  
-finish_as | mmp_cancelled  
-status | open  
-status | finished  
-tif | gtc  
-tif | ioc  
-tif | poc  
+tkfr | string | Optional | readOnly: true | Taker fee  
+mkfr | string | Optional | readOnly: true | Maker fee  
+refu | integer | Optional | readOnly: true | Referrer user ID  
+refr | string | Optional | readOnly: true | Referrer rebate  
   
 WARNING
 
@@ -2682,10 +3034,28 @@ Modify the order price and/or quantity of a specified order; only orders with st
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | AmendOptionsOrderRequest | Required | none  
-» contract | body | string | Required | Options contract name  
-» price | body | string | Required | Order Price  
-» size | body | integer(int64) | Required | Trade amount  
+contract | body | string | Required | Options contract name  
+price | body | string | Required | Order Price  
+size | body | integer(int64) | Required | Trade amount  
 order_id | path | integer(int64) | Required | Order ID returned when order is successfully created  
+  
+####  Request Body Schema
+
+AmendOptionsOrderRequest
+
+Order Modification Request Body
+
+Request Body SchemaType | Constraints  
+---|---  
+AmendOptionsOrderRequest | required: ["contract","price","size"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+contract | string | Required |  | Options contract name  
+price | string | Required |  | Order Price  
+size | integer(int64) | Required |  | Trade amount  
   
 ### Responses
 
@@ -2697,15 +3067,22 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Options order details_
+Options order details
 
-Name | Type | Description  
----|---|---  
-» id | integer(int64) | Options order ID  
-» user | integer | User ID  
-» create_time | number(double) | Creation time of order  
-» finish_time | number(double) | Order finished time. Not returned if order is open  
-» finish_as | string | Order finish reason:  
+Type | Constraints  
+---|---  
+OptionsOrder | required: ["contract","size"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | Options order ID  
+user | integer | Optional | readOnly: true | User ID  
+create_time | number(double) | Optional | readOnly: true | Creation time of order  
+finish_time | number(double) | Optional | readOnly: true | Order finished time. Not returned if order is open  
+finish_as | string | Optional | enum: ["filled","cancelled","liquidated","ioc","auto_deleveraged","reduce_only","position_closed","reduce_out","mmp_cancelled"]  
+readOnly: true | Order finish reason:  
   
 \- filled: Fully filled  
 \- cancelled: User cancelled  
@@ -2716,26 +3093,34 @@ Name | Type | Description
 \- position_closed: Cancelled because the position was closed  
 \- reduce_out: Only reduce positions by excluding hard-to-fill orders  
 \- mmp_cancelled: Cancelled by MMP  
-» status | string | Order status  
+status | string | Optional | enum: ["open","finished"]  
+readOnly: true | Order status  
   
 \- `open`: Pending  
 \- `finished`: Completed  
-» contract | string | Options identifier  
-» size | integer(int64) | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
-» iceberg | integer(int64) | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
-» price | string | Order price. Price of 0 with `tif` set as `ioc` represents market order (quote currency)  
-» is_close | boolean | Is the order to close position  
-» is_reduce_only | boolean | Is the order reduce-only  
-» is_liq | boolean | Is the order for liquidation  
-» is_mmp | boolean | Whether it is an MMP order. Corresponds to `mmp` in the request  
-» tif | string | Time in force strategy. Market orders currently only support IOC mode  
+contract | string | Required |  | Options identifier  
+size | integer(int64) | Required |  | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
+iceberg | integer(int64) | Optional |  | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
+price | string | Optional |  | Order price. Price of 0 with `tif` set as `ioc` represents market order (quote currency)  
+close | boolean | Optional | default: false  
+writeOnly: true | Set as `true` to close the position, with `size` set to 0  
+is_close | boolean | Optional | readOnly: true | Is the order to close position  
+reduce_only | boolean | Optional | default: false  
+writeOnly: true | Set as `true` to be reduce-only order  
+is_reduce_only | boolean | Optional | readOnly: true | Is the order reduce-only  
+is_liq | boolean | Optional | readOnly: true | Is the order for liquidation  
+mmp | boolean | Optional | default: false  
+writeOnly: true | When set to true, it is an MMP order  
+is_mmp | boolean | Optional | readOnly: true | Whether it is an MMP order. Corresponds to `mmp` in the request  
+tif | string | Optional | enum: ["gtc","ioc","poc"]  
+default: "gtc" | Time in force strategy. Market orders currently only support IOC mode  
   
 \- gtc: Good Till Cancelled  
 \- ioc: Immediate Or Cancelled, execute immediately or cancel, taker only  
 \- poc: Pending Or Cancelled, passive order, maker only  
-» left | integer(int64) | Unfilled quantity  
-» fill_price | string | Fill price  
-» text | string | User defined information. If not empty, must follow the rules below:  
+left | integer(int64) | Optional | readOnly: true | Unfilled quantity  
+fill_price | string | Optional | readOnly: true | Fill price  
+text | string | Optional |  | User defined information. If not empty, must follow the rules below:  
   
 1\. prefixed with `t-`  
 2\. no longer than 28 bytes without `t-` prefix  
@@ -2748,29 +3133,10 @@ Besides user defined information, reserved contents are listed below, denoting h
 \- auto_deleveraging: from ADL  
 \- liquidation: from liquidation  
 \- insurance: from insurance  
-» tkfr | string | Taker fee  
-» mkfr | string | Maker fee  
-» refu | integer | Referrer user ID  
-» refr | string | Referrer rebate  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-finish_as | filled  
-finish_as | cancelled  
-finish_as | liquidated  
-finish_as | ioc  
-finish_as | auto_deleveraged  
-finish_as | reduce_only  
-finish_as | position_closed  
-finish_as | reduce_out  
-finish_as | mmp_cancelled  
-status | open  
-status | finished  
-tif | gtc  
-tif | ioc  
-tif | poc  
+tkfr | string | Optional | readOnly: true | Taker fee  
+mkfr | string | Optional | readOnly: true | Maker fee  
+refu | integer | Optional | readOnly: true | Referrer user ID  
+refr | string | Optional | readOnly: true | Referrer rebate  
   
 WARNING
 
@@ -2880,15 +3246,22 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Options order details_
+Options order details
 
-Name | Type | Description  
----|---|---  
-» id | integer(int64) | Options order ID  
-» user | integer | User ID  
-» create_time | number(double) | Creation time of order  
-» finish_time | number(double) | Order finished time. Not returned if order is open  
-» finish_as | string | Order finish reason:  
+Type | Constraints  
+---|---  
+OptionsOrder | required: ["contract","size"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | Options order ID  
+user | integer | Optional | readOnly: true | User ID  
+create_time | number(double) | Optional | readOnly: true | Creation time of order  
+finish_time | number(double) | Optional | readOnly: true | Order finished time. Not returned if order is open  
+finish_as | string | Optional | enum: ["filled","cancelled","liquidated","ioc","auto_deleveraged","reduce_only","position_closed","reduce_out","mmp_cancelled"]  
+readOnly: true | Order finish reason:  
   
 \- filled: Fully filled  
 \- cancelled: User cancelled  
@@ -2899,26 +3272,34 @@ Name | Type | Description
 \- position_closed: Cancelled because the position was closed  
 \- reduce_out: Only reduce positions by excluding hard-to-fill orders  
 \- mmp_cancelled: Cancelled by MMP  
-» status | string | Order status  
+status | string | Optional | enum: ["open","finished"]  
+readOnly: true | Order status  
   
 \- `open`: Pending  
 \- `finished`: Completed  
-» contract | string | Options identifier  
-» size | integer(int64) | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
-» iceberg | integer(int64) | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
-» price | string | Order price. Price of 0 with `tif` set as `ioc` represents market order (quote currency)  
-» is_close | boolean | Is the order to close position  
-» is_reduce_only | boolean | Is the order reduce-only  
-» is_liq | boolean | Is the order for liquidation  
-» is_mmp | boolean | Whether it is an MMP order. Corresponds to `mmp` in the request  
-» tif | string | Time in force strategy. Market orders currently only support IOC mode  
+contract | string | Required |  | Options identifier  
+size | integer(int64) | Required |  | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
+iceberg | integer(int64) | Optional |  | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
+price | string | Optional |  | Order price. Price of 0 with `tif` set as `ioc` represents market order (quote currency)  
+close | boolean | Optional | default: false  
+writeOnly: true | Set as `true` to close the position, with `size` set to 0  
+is_close | boolean | Optional | readOnly: true | Is the order to close position  
+reduce_only | boolean | Optional | default: false  
+writeOnly: true | Set as `true` to be reduce-only order  
+is_reduce_only | boolean | Optional | readOnly: true | Is the order reduce-only  
+is_liq | boolean | Optional | readOnly: true | Is the order for liquidation  
+mmp | boolean | Optional | default: false  
+writeOnly: true | When set to true, it is an MMP order  
+is_mmp | boolean | Optional | readOnly: true | Whether it is an MMP order. Corresponds to `mmp` in the request  
+tif | string | Optional | enum: ["gtc","ioc","poc"]  
+default: "gtc" | Time in force strategy. Market orders currently only support IOC mode  
   
 \- gtc: Good Till Cancelled  
 \- ioc: Immediate Or Cancelled, execute immediately or cancel, taker only  
 \- poc: Pending Or Cancelled, passive order, maker only  
-» left | integer(int64) | Unfilled quantity  
-» fill_price | string | Fill price  
-» text | string | User defined information. If not empty, must follow the rules below:  
+left | integer(int64) | Optional | readOnly: true | Unfilled quantity  
+fill_price | string | Optional | readOnly: true | Fill price  
+text | string | Optional |  | User defined information. If not empty, must follow the rules below:  
   
 1\. prefixed with `t-`  
 2\. no longer than 28 bytes without `t-` prefix  
@@ -2931,29 +3312,10 @@ Besides user defined information, reserved contents are listed below, denoting h
 \- auto_deleveraging: from ADL  
 \- liquidation: from liquidation  
 \- insurance: from insurance  
-» tkfr | string | Taker fee  
-» mkfr | string | Maker fee  
-» refu | integer | Referrer user ID  
-» refr | string | Referrer rebate  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-finish_as | filled  
-finish_as | cancelled  
-finish_as | liquidated  
-finish_as | ioc  
-finish_as | auto_deleveraged  
-finish_as | reduce_only  
-finish_as | position_closed  
-finish_as | reduce_out  
-finish_as | mmp_cancelled  
-status | open  
-status | finished  
-tif | gtc  
-tif | ioc  
-tif | poc  
+tkfr | string | Optional | readOnly: true | Taker fee  
+mkfr | string | Optional | readOnly: true | Maker fee  
+refu | integer | Optional | readOnly: true | Referrer user ID  
+refr | string | Optional | readOnly: true | Referrer rebate  
   
 WARNING
 
@@ -3043,16 +3405,35 @@ Option order heartbeat detection, when the `timeout` time set by the user is rea
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | CountdownCancelAllOptionsTask | Required | none  
-» timeout | body | integer(int32) | Required | Countdown time in seconds  
+timeout | body | integer(int32) | Required | Countdown time in seconds  
 At least 5 seconds, 0 means cancel countdown  
-» contract | body | string | Optional | Options contract name  
-» underlying | body | string | Optional | Underlying  
+contract | body | string | Optional | Options contract name  
+underlying | body | string | Optional | Underlying  
   
 ####  Detailed descriptions
 
-**» timeout** : Countdown time in seconds  
+** timeout**: Countdown time in seconds  
 At least 5 seconds, 0 means cancel countdown
 
+####  Request Body Schema
+
+CountdownCancelAllOptionsTask
+
+Countdown cancel task details
+
+Request Body SchemaType | Constraints  
+---|---  
+CountdownCancelAllOptionsTask | required: ["timeout"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+timeout | integer(int32) | Required |  | Countdown time in seconds  
+At least 5 seconds, 0 means cancel countdown  
+contract | string | Optional |  | Options contract name  
+underlying | string | Optional |  | Underlying  
+  
 ### Responses
 
 ResponsesStatus | Meaning | Description | Schema  
@@ -3063,11 +3444,17 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_triggerTime_
+triggerTime
 
-Name | Type | Description  
----|---|---  
-» triggerTime | integer(int64) | Timestamp when countdown ends, in milliseconds  
+Type | Constraints  
+---|---  
+TriggerTime |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+triggerTime | integer(int64) | Optional |  | Timestamp when countdown ends, in milliseconds  
   
 WARNING
 
@@ -3180,24 +3567,28 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | none  
-» id | integer(int64) | Fill ID  
-» create_time | number(double) | Fill Time  
-» contract | string | Options contract name  
-» order_id | integer(int64) | Related order ID  
-» size | integer(int64) | Trading size  
-» price | string | Trade price (quote currency)  
-» underlying_price | string | The forward futures price corresponding to the delivery date  
-» role | string | Trade role. taker - taker, maker - maker  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
+Type | Constraints  
 ---|---  
-role | taker  
-role | maker  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+OptionsMyTrade |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | Fill ID  
+create_time | number(double) | Optional |  | Fill Time  
+contract | string | Optional |  | Options contract name  
+order_id | integer(int64) | Optional |  | Related order ID  
+size | integer(int64) | Optional |  | Trading size  
+price | string | Optional |  | Trade price (quote currency)  
+underlying_price | string | Optional |  | The forward futures price corresponding to the delivery date  
+role | string | Optional | enum: ["taker","maker"] | Trade role. taker - taker, maker - maker  
   
 WARNING
 
@@ -3289,17 +3680,29 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [MMP Settings]  
-» _None_ | OptionsMMP | MMP Settings  
-»» underlying | string | Underlying  
-»» window | integer(int32) | Time window (milliseconds), between 1-5000, 0 means disable MMP  
-»» frozen_period | integer(int32) | Freeze duration (milliseconds), 0 means always frozen, need to call reset API to unfreeze  
-»» qty_limit | string | Trading volume upper limit (positive number, up to 2 decimal places)  
-»» delta_limit | string | Upper limit of net delta value (positive number, up to 2 decimal places)  
-»» trigger_time_ms | integer(int64) | Trigger freeze time (milliseconds), 0 means no freeze is triggered  
-»» frozen_until_ms | integer(int64) | Unfreeze time (milliseconds). If the freeze duration is not configured, there will be no unfreeze time after the freeze is triggered  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+MMP Settings
+
+Type | Constraints  
+---|---  
+OptionsMMP | required: ["underlying","window","frozen_period","qty_limit","delta_limit"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+underlying | string | Required |  | Underlying  
+window | integer(int32) | Required |  | Time window (milliseconds), between 1-5000, 0 means disable MMP  
+frozen_period | integer(int32) | Required |  | Freeze duration (milliseconds), 0 means always frozen, need to call reset API to unfreeze  
+qty_limit | string | Required |  | Trading volume upper limit (positive number, up to 2 decimal places)  
+delta_limit | string | Required |  | Upper limit of net delta value (positive number, up to 2 decimal places)  
+trigger_time_ms | integer(int64) | Optional | readOnly: true | Trigger freeze time (milliseconds), 0 means no freeze is triggered  
+frozen_until_ms | integer(int64) | Optional | readOnly: true | Unfreeze time (milliseconds). If the freeze duration is not configured, there will be no unfreeze time after the freeze is triggered  
   
 WARNING
 
@@ -3379,11 +3782,33 @@ _MMP Settings_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | OptionsMMP | Required | none  
-» underlying | body | string | Required | Underlying  
-» window | body | integer(int32) | Required | Time window (milliseconds), between 1-5000, 0 means disable MMP  
-» frozen_period | body | integer(int32) | Required | Freeze duration (milliseconds), 0 means always frozen, need to call reset API to unfreeze  
-» qty_limit | body | string | Required | Trading volume upper limit (positive number, up to 2 decimal places)  
-» delta_limit | body | string | Required | Upper limit of net delta value (positive number, up to 2 decimal places)  
+underlying | body | string | Required | Underlying  
+window | body | integer(int32) | Required | Time window (milliseconds), between 1-5000, 0 means disable MMP  
+frozen_period | body | integer(int32) | Required | Freeze duration (milliseconds), 0 means always frozen, need to call reset API to unfreeze  
+qty_limit | body | string | Required | Trading volume upper limit (positive number, up to 2 decimal places)  
+delta_limit | body | string | Required | Upper limit of net delta value (positive number, up to 2 decimal places)  
+trigger_time_ms | body | integer(int64) | Optional | Trigger freeze time (milliseconds), 0 means no freeze is triggered  
+frozen_until_ms | body | integer(int64) | Optional | Unfreeze time (milliseconds). If the freeze duration is not configured, there will be no unfreeze time after the freeze is triggered  
+  
+####  Request Body Schema
+
+MMP Settings
+
+Request Body SchemaType | Constraints  
+---|---  
+OptionsMMP | required: ["underlying","window","frozen_period","qty_limit","delta_limit"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+underlying | string | Required |  | Underlying  
+window | integer(int32) | Required |  | Time window (milliseconds), between 1-5000, 0 means disable MMP  
+frozen_period | integer(int32) | Required |  | Freeze duration (milliseconds), 0 means always frozen, need to call reset API to unfreeze  
+qty_limit | string | Required |  | Trading volume upper limit (positive number, up to 2 decimal places)  
+delta_limit | string | Required |  | Upper limit of net delta value (positive number, up to 2 decimal places)  
+trigger_time_ms | integer(int64) | Optional | readOnly: true | Trigger freeze time (milliseconds), 0 means no freeze is triggered  
+frozen_until_ms | integer(int64) | Optional | readOnly: true | Unfreeze time (milliseconds). If the freeze duration is not configured, there will be no unfreeze time after the freeze is triggered  
   
 ### Responses
 
@@ -3395,17 +3820,23 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_MMP Settings_
+MMP Settings
 
-Name | Type | Description  
----|---|---  
-» underlying | string | Underlying  
-» window | integer(int32) | Time window (milliseconds), between 1-5000, 0 means disable MMP  
-» frozen_period | integer(int32) | Freeze duration (milliseconds), 0 means always frozen, need to call reset API to unfreeze  
-» qty_limit | string | Trading volume upper limit (positive number, up to 2 decimal places)  
-» delta_limit | string | Upper limit of net delta value (positive number, up to 2 decimal places)  
-» trigger_time_ms | integer(int64) | Trigger freeze time (milliseconds), 0 means no freeze is triggered  
-» frozen_until_ms | integer(int64) | Unfreeze time (milliseconds). If the freeze duration is not configured, there will be no unfreeze time after the freeze is triggered  
+Type | Constraints  
+---|---  
+OptionsMMP | required: ["underlying","window","frozen_period","qty_limit","delta_limit"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+underlying | string | Required |  | Underlying  
+window | integer(int32) | Required |  | Time window (milliseconds), between 1-5000, 0 means disable MMP  
+frozen_period | integer(int32) | Required |  | Freeze duration (milliseconds), 0 means always frozen, need to call reset API to unfreeze  
+qty_limit | string | Required |  | Trading volume upper limit (positive number, up to 2 decimal places)  
+delta_limit | string | Required |  | Upper limit of net delta value (positive number, up to 2 decimal places)  
+trigger_time_ms | integer(int64) | Optional | readOnly: true | Trigger freeze time (milliseconds), 0 means no freeze is triggered  
+frozen_until_ms | integer(int64) | Optional | readOnly: true | Unfreeze time (milliseconds). If the freeze duration is not configured, there will be no unfreeze time after the freeze is triggered  
   
 WARNING
 
@@ -3496,7 +3927,33 @@ _Reset MMP for the specified underlying._
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | OptionsMMPReset | Required | none  
-» underlying | body | string | Required | Underlying  
+underlying | body | string | Required | Underlying  
+window | body | integer(int32) | Optional | Time window (milliseconds), between 1-5000, 0 means disable MMP  
+frozen_period | body | integer(int32) | Optional | Freeze duration (milliseconds), 0 means always frozen, need to call reset API to unfreeze  
+qty_limit | body | string | Optional | Trading volume upper limit (positive number, up to 2 decimal places)  
+delta_limit | body | string | Optional | Upper limit of net delta value (positive number, up to 2 decimal places)  
+trigger_time_ms | body | integer(int64) | Optional | Trigger freeze time (milliseconds), 0 means no freeze is triggered  
+frozen_until_ms | body | integer(int64) | Optional | Unfreeze time (milliseconds). If the freeze duration is not configured, there will be no unfreeze time after the freeze is triggered  
+  
+####  Request Body Schema
+
+MMP Reset
+
+Request Body SchemaType | Constraints  
+---|---  
+OptionsMMPReset | required: ["underlying"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+underlying | string | Required |  | Underlying  
+window | integer(int32) | Optional | readOnly: true | Time window (milliseconds), between 1-5000, 0 means disable MMP  
+frozen_period | integer(int32) | Optional | readOnly: true | Freeze duration (milliseconds), 0 means always frozen, need to call reset API to unfreeze  
+qty_limit | string | Optional | readOnly: true | Trading volume upper limit (positive number, up to 2 decimal places)  
+delta_limit | string | Optional | readOnly: true | Upper limit of net delta value (positive number, up to 2 decimal places)  
+trigger_time_ms | integer(int64) | Optional | readOnly: true | Trigger freeze time (milliseconds), 0 means no freeze is triggered  
+frozen_until_ms | integer(int64) | Optional | readOnly: true | Unfreeze time (milliseconds). If the freeze duration is not configured, there will be no unfreeze time after the freeze is triggered  
   
 ### Responses
 
@@ -3508,17 +3965,23 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_MMP Settings_
+MMP Settings
 
-Name | Type | Description  
----|---|---  
-» underlying | string | Underlying  
-» window | integer(int32) | Time window (milliseconds), between 1-5000, 0 means disable MMP  
-» frozen_period | integer(int32) | Freeze duration (milliseconds), 0 means always frozen, need to call reset API to unfreeze  
-» qty_limit | string | Trading volume upper limit (positive number, up to 2 decimal places)  
-» delta_limit | string | Upper limit of net delta value (positive number, up to 2 decimal places)  
-» trigger_time_ms | integer(int64) | Trigger freeze time (milliseconds), 0 means no freeze is triggered  
-» frozen_until_ms | integer(int64) | Unfreeze time (milliseconds). If the freeze duration is not configured, there will be no unfreeze time after the freeze is triggered  
+Type | Constraints  
+---|---  
+OptionsMMP | required: ["underlying","window","frozen_period","qty_limit","delta_limit"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+underlying | string | Required |  | Underlying  
+window | integer(int32) | Required |  | Time window (milliseconds), between 1-5000, 0 means disable MMP  
+frozen_period | integer(int32) | Required |  | Freeze duration (milliseconds), 0 means always frozen, need to call reset API to unfreeze  
+qty_limit | string | Required |  | Trading volume upper limit (positive number, up to 2 decimal places)  
+delta_limit | string | Required |  | Upper limit of net delta value (positive number, up to 2 decimal places)  
+trigger_time_ms | integer(int64) | Optional | readOnly: true | Trigger freeze time (milliseconds), 0 means no freeze is triggered  
+frozen_until_ms | integer(int64) | Optional | readOnly: true | Unfreeze time (milliseconds). If the freeze duration is not configured, there will be no unfreeze time after the freeze is triggered  
   
 WARNING
 
@@ -3594,183 +4057,115 @@ Code samples
 
 #  Schemas
 
-##  AmendOptionsOrderRequest
+##  OptionsTrade
 
-_AmendOptionsOrderRequest_
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-contract | string | Required | none | Options contract name  
-price | string | Required | none | Order Price  
-size | integer(int64) | Required | none | Trade amount  
-      
-    
-    {
-      "contract": "string",
-      "price": "string",
-      "size": 0
-    }
-    
-    
-
-##  OptionsOrderBook
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer(int64) | Optional | none | Order Book ID. Increases by 1 on every order book change. Set `with_id=true` to include this field in response  
-current | number(double) | Optional | none | Response data generation timestamp  
-update | number(double) | Optional | none | Order book changed timestamp  
-asks | array | Required | none | Ask Depth  
-» options_order_book_item | object | Optional | none | none  
-»» p | string | Optional | none | Price (quote currency)  
-»» s | integer(int64) | Optional | none | Size  
-» bids | array | Required | none | Bid Depth  
-»» options_order_book_item | object | Optional | none | none  
-»»» p | string | Optional | none | Price (quote currency)  
-»»» s | integer(int64) | Optional | none | Size  
+id | integer(int64) | Optional |  | Fill ID  
+create_time | integer(int64) | Optional |  | Fill Time  
+contract | string | Optional |  | Options contract name  
+size | integer(int64) | Optional |  | Trading size  
+price | string | Optional |  | Transaction Price (Quoted Currency, Unit: Underlying Option Price)  
       
     
     {
       "id": 0,
-      "current": 0,
-      "update": 0,
-      "asks": [
-        {
-          "p": "string",
-          "s": 0
-        }
-      ],
-      "bids": [
-        {
-          "p": "string",
-          "s": 0
-        }
-      ]
-    }
-    
-    
-
-##  OptionsMySettlements
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-time | number(double) | Optional | none | Settlement time  
-underlying | string | Optional | none | Underlying  
-contract | string | Optional | none | Options contract name  
-strike_price | string | Optional | none | Strike price (quote currency)  
-settle_price | string | Optional | none | Settlement price (quote currency)  
-size | integer(int64) | Optional | none | Settlement size  
-settle_profit | string | Optional | none | Settlement profit (quote currency)  
-fee | string | Optional | none | Settlement fee (quote currency)  
-realised_pnl | string | Optional | none | Accumulated profit and loss from opening positions, including premium, fees, settlement profit, etc. (quote currency)  
-      
-    
-    {
-      "time": 0,
-      "underlying": "string",
+      "create_time": 0,
       "contract": "string",
-      "strike_price": "string",
-      "settle_price": "string",
       "size": 0,
-      "settle_profit": "string",
-      "fee": "string",
-      "realised_pnl": "string"
+      "price": "string"
     }
     
     
 
-##  OptionsAccount
+##  OptionsMMP
 
-###  Properties
+MMP Settings
 
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-user | integer(int64) | Optional | none | User ID  
-total | string | Optional | none | Account balance, invalid for unified account  
-position_value | string | Optional | none | Position value, long position value is positive, short position value is negative  
-equity | string | Optional | none | Account equity = balance + option position value, invalid for unified account  
-short_enabled | boolean | Optional | none | If the account is allowed to short  
-mmp_enabled | boolean | Optional | none | Whether to enable MMP  
-liq_triggered | boolean | Optional | none | Whether the account is in a liquidation state  
-margin_mode | integer(int32) | Optional | none | This field indicates the margin mode used by the unified account:  
-  
-\- 0: Classic Spot Margin Mode  
-\- 1: Cross-Currency Margin Mode  
-\- 2: Portfolio Margin Mode  
-\- 3: Single-Currency Margin Mode  
-unrealised_pnl | string | Optional | none | Unrealized PnL, for reference only. Position unrealized PnL = (mark price - average entry price) × position quantity. Position quantity is measured in currency units, negative for shorts and positive for longs.  
-init_margin | string | Optional | none | Initial position margin  
-maint_margin | string | Optional | none | Position maintenance margin  
-order_margin | string | Optional | none | Order margin of unfinished orders  
-ask_order_margin | string | Optional | none | Margin for outstanding sell orders  
-bid_order_margin | string | Optional | none | Margin for outstanding buy orders  
-available | string | Optional | none | Available balance to transfer out or trade  
-point | string | Optional | none | Point card amount  
-currency | string | Optional | none | Settlement currency  
-orders_limit | integer(int32) | Optional | none | Maximum number of outstanding orders  
-position_notional_limit | string | Optional | none | Notional value upper limit, including the nominal value of positions and outstanding orders  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
+Type | Constraints  
 ---|---  
-margin_mode | 0  
-margin_mode | 1  
-margin_mode | 2  
-margin_mode | 3  
+object | required: ["underlying","window","frozen_period","qty_limit","delta_limit"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+underlying | string | Required |  | Underlying  
+window | integer(int32) | Required |  | Time window (milliseconds), between 1-5000, 0 means disable MMP  
+frozen_period | integer(int32) | Required |  | Freeze duration (milliseconds), 0 means always frozen, need to call reset API to unfreeze  
+qty_limit | string | Required |  | Trading volume upper limit (positive number, up to 2 decimal places)  
+delta_limit | string | Required |  | Upper limit of net delta value (positive number, up to 2 decimal places)  
+trigger_time_ms | integer(int64) | Optional | readOnly: true | Trigger freeze time (milliseconds), 0 means no freeze is triggered  
+frozen_until_ms | integer(int64) | Optional | readOnly: true | Unfreeze time (milliseconds). If the freeze duration is not configured, there will be no unfreeze time after the freeze is triggered  
       
     
     {
-      "user": 0,
-      "total": "string",
-      "position_value": "string",
-      "equity": "string",
-      "short_enabled": true,
-      "mmp_enabled": true,
-      "liq_triggered": true,
-      "margin_mode": 0,
-      "unrealised_pnl": "string",
-      "init_margin": "string",
-      "maint_margin": "string",
-      "order_margin": "string",
-      "ask_order_margin": "string",
-      "bid_order_margin": "string",
-      "available": "string",
-      "point": "string",
-      "currency": "string",
-      "orders_limit": 0,
-      "position_notional_limit": "string"
+      "underlying": "string",
+      "window": 0,
+      "frozen_period": 0,
+      "qty_limit": "string",
+      "delta_limit": "string",
+      "trigger_time_ms": 0,
+      "frozen_until_ms": 0
+    }
+    
+    
+
+##  OptionsCandlestick
+
+data point in every timestamp
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+t | number(double) | Optional |  | Unix timestamp in seconds  
+v | integer(int64) | Optional |  | size volume (contract size). Only returned if `contract` is not prefixed  
+c | string | Optional |  | Close price (quote currency, unit: underlying corresponding option price)  
+h | string | Optional |  | Highest price (quote currency, unit: underlying corresponding option price)  
+l | string | Optional |  | Lowest price (quote currency, unit: underlying corresponding option price)  
+o | string | Optional |  | Open price (quote currency, unit: underlying corresponding option price)  
+      
+    
+    {
+      "t": 0,
+      "v": 0,
+      "c": "string",
+      "h": "string",
+      "l": "string",
+      "o": "string"
     }
     
     
 
 ##  OptionsMyTrade
 
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer(int64) | Optional | none | Fill ID  
-create_time | number(double) | Optional | none | Fill Time  
-contract | string | Optional | none | Options contract name  
-order_id | integer(int64) | Optional | none | Related order ID  
-size | integer(int64) | Optional | none | Trading size  
-price | string | Optional | none | Trade price (quote currency)  
-underlying_price | string | Optional | none | The forward futures price corresponding to the delivery date  
-role | string | Optional | none | Trade role. taker - taker, maker - maker  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
+Type | Constraints  
 ---|---  
-role | taker  
-role | maker  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | Fill ID  
+create_time | number(double) | Optional |  | Fill Time  
+contract | string | Optional |  | Options contract name  
+order_id | integer(int64) | Optional |  | Related order ID  
+size | integer(int64) | Optional |  | Trading size  
+price | string | Optional |  | Trade price (quote currency)  
+underlying_price | string | Optional |  | The forward futures price corresponding to the delivery date  
+role | string | Optional | enum: ["taker","maker"] | Trade role. taker - taker, maker - maker  
       
     
     {
@@ -3788,26 +4183,24 @@ role | maker
 
 ##  OptionsPositionClose
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-time | number(double) | Optional | read-only | Position close time  
-contract | string | Optional | read-only | Options contract name  
-side | string | Optional | read-only | Position side  
+time | number(double) | Optional | readOnly: true | Position close time  
+contract | string | Optional | readOnly: true | Options contract name  
+side | string | Optional | enum: ["long","short"]  
+readOnly: true | Position side  
   
 \- `long`: Long position  
 \- `short`: Short position  
-pnl | string | Optional | read-only | PnL  
-text | string | Optional | read-only | Source of close order. See `order.text` field for specific values  
-settle_size | string | Optional | read-only | Settlement size  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-side | long  
-side | short  
+pnl | string | Optional | readOnly: true | PnL  
+text | string | Optional | readOnly: true | Source of close order. See `order.text` field for specific values  
+settle_size | string | Optional | readOnly: true | Settlement size  
       
     
     {
@@ -3821,400 +4214,96 @@ side | short
     
     
 
-##  OptionsUnderlying
+##  CountdownCancelAllOptionsTask
 
-###  Properties
+CountdownCancelAllOptionsTask
 
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-name | string | Optional | none | Underlying name  
-index_price | string | Optional | none | Spot index price (quote currency)  
-      
-    
-    {
-      "name": "string",
-      "index_price": "string"
-    }
-    
-    
+Countdown cancel task details
 
-##  OptionsOrder
-
-_Options order details_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer(int64) | Optional | read-only | Options order ID  
-user | integer | Optional | read-only | User ID  
-create_time | number(double) | Optional | read-only | Creation time of order  
-finish_time | number(double) | Optional | read-only | Order finished time. Not returned if order is open  
-finish_as | string | Optional | read-only | Order finish reason:  
-  
-\- filled: Fully filled  
-\- cancelled: User cancelled  
-\- liquidated: Cancelled due to liquidation  
-\- ioc: Not immediately fully filled due to IOC time-in-force setting  
-\- auto_deleveraged: Cancelled due to auto-deleveraging  
-\- reduce_only: Cancelled due to position increase while reduce-only is set  
-\- position_closed: Cancelled because the position was closed  
-\- reduce_out: Only reduce positions by excluding hard-to-fill orders  
-\- mmp_cancelled: Cancelled by MMP  
-status | string | Optional | read-only | Order status  
-  
-\- `open`: Pending  
-\- `finished`: Completed  
-contract | string | Required | none | Options identifier  
-size | integer(int64) | Required | none | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
-iceberg | integer(int64) | Optional | none | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
-price | string | Optional | none | Order price. Price of 0 with `tif` set as `ioc` represents market order (quote currency)  
-close | boolean | Optional | write-only | Set as `true` to close the position, with `size` set to 0  
-is_close | boolean | Optional | read-only | Is the order to close position  
-reduce_only | boolean | Optional | write-only | Set as `true` to be reduce-only order  
-is_reduce_only | boolean | Optional | read-only | Is the order reduce-only  
-is_liq | boolean | Optional | read-only | Is the order for liquidation  
-mmp | boolean | Optional | write-only | When set to true, it is an MMP order  
-is_mmp | boolean | Optional | read-only | Whether it is an MMP order. Corresponds to `mmp` in the request  
-tif | string | Optional | none | Time in force strategy. Market orders currently only support IOC mode  
-  
-\- gtc: Good Till Cancelled  
-\- ioc: Immediate Or Cancelled, execute immediately or cancel, taker only  
-\- poc: Pending Or Cancelled, passive order, maker only  
-left | integer(int64) | Optional | read-only | Unfilled quantity  
-fill_price | string | Optional | read-only | Fill price  
-text | string | Optional | none | User defined information. If not empty, must follow the rules below:  
-  
-1\. prefixed with `t-`  
-2\. no longer than 28 bytes without `t-` prefix  
-3\. can only include 0-9, A-Z, a-z, underscore(_), hyphen(-) or dot(.)  
-Besides user defined information, reserved contents are listed below, denoting how the order is created:  
-  
-\- web: from web  
-\- api: from API  
-\- app: from mobile phones  
-\- auto_deleveraging: from ADL  
-\- liquidation: from liquidation  
-\- insurance: from insurance  
-tkfr | string | Optional | read-only | Taker fee  
-mkfr | string | Optional | read-only | Maker fee  
-refu | integer | Optional | read-only | Referrer user ID  
-refr | string | Optional | read-only | Referrer rebate  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
+Type | Constraints  
 ---|---  
-finish_as | filled  
-finish_as | cancelled  
-finish_as | liquidated  
-finish_as | ioc  
-finish_as | auto_deleveraged  
-finish_as | reduce_only  
-finish_as | position_closed  
-finish_as | reduce_out  
-finish_as | mmp_cancelled  
-status | open  
-status | finished  
-tif | gtc  
-tif | ioc  
-tif | poc  
+object | required: ["timeout"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+timeout | integer(int32) | Required |  | Countdown time in seconds  
+At least 5 seconds, 0 means cancel countdown  
+contract | string | Optional |  | Options contract name  
+underlying | string | Optional |  | Underlying  
       
     
     {
-      "id": 0,
-      "user": 0,
-      "create_time": 0,
-      "finish_time": 0,
-      "finish_as": "filled",
-      "status": "open",
+      "timeout": 0,
       "contract": "string",
-      "size": 0,
-      "iceberg": 0,
-      "price": "string",
-      "close": false,
-      "is_close": true,
-      "reduce_only": false,
-      "is_reduce_only": true,
-      "is_liq": true,
-      "mmp": false,
-      "is_mmp": true,
-      "tif": "gtc",
-      "left": 0,
-      "fill_price": "string",
-      "text": "string",
-      "tkfr": "string",
-      "mkfr": "string",
-      "refu": 0,
-      "refr": "string"
+      "underlying": "string"
     }
     
     
 
-##  OptionsTrade
+##  OptionsUnderlyingTicker
 
-###  Properties
+Options underlying detail
 
-PropertiesName | Type | Required | Restrictions | Description  
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-id | integer(int64) | Optional | none | Fill ID  
-create_time | integer(int64) | Optional | none | Fill Time  
-contract | string | Optional | none | Options contract name  
-size | integer(int64) | Optional | none | Trading size  
-price | string | Optional | none | Transaction Price (Quoted Currency, Unit: Underlying Option Price)  
+trade_put | integer(int64) | Optional |  | Total put options trades amount in last 24h  
+trade_call | integer(int64) | Optional |  | Total call options trades amount in last 24h  
+index_price | string | Optional |  | Index price (quote currency)  
       
     
     {
-      "id": 0,
-      "create_time": 0,
-      "contract": "string",
-      "size": 0,
-      "price": "string"
-    }
-    
-    
-
-##  OptionsCandlestick
-
-_data point in every timestamp_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-t | number(double) | Optional | none | Unix timestamp in seconds  
-v | integer(int64) | Optional | none | size volume (contract size). Only returned if `contract` is not prefixed  
-c | string | Optional | none | Close price (quote currency, unit: underlying corresponding option price)  
-h | string | Optional | none | Highest price (quote currency, unit: underlying corresponding option price)  
-l | string | Optional | none | Lowest price (quote currency, unit: underlying corresponding option price)  
-o | string | Optional | none | Open price (quote currency, unit: underlying corresponding option price)  
-      
-    
-    {
-      "t": 0,
-      "v": 0,
-      "c": "string",
-      "h": "string",
-      "l": "string",
-      "o": "string"
-    }
-    
-    
-
-##  OptionsTicker
-
-_Options contract details_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-name | string | Optional | none | Options contract name  
-last_price | string | Optional | none | Last trade price (quote currency)  
-mark_price | string | Optional | none | Current mark price (quote currency)  
-index_price | string | Optional | none | Current index price (quote currency)  
-ask1_size | integer(int64) | Optional | none | Best ask size  
-ask1_price | string | Optional | none | Best ask price  
-bid1_size | integer(int64) | Optional | none | Best bid size  
-bid1_price | string | Optional | none | Best bid price  
-position_size | integer(int64) | Optional | none | Current total long position size  
-mark_iv | string | Optional | none | Implied volatility  
-bid_iv | string | Optional | none | Bid side implied volatility  
-ask_iv | string | Optional | none | Ask side implied volatility  
-leverage | string | Optional | none | Leverage = underlying_price / (mark_price * delta). This value is for reference only.  
-delta | string | Optional | none | Greek letter delta  
-gamma | string | Optional | none | Greek letter gamma  
-vega | string | Optional | none | Greek letter vega  
-theta | string | Optional | none | Greek letter theta  
-rho | string | Optional | none | Rho  
-      
-    
-    {
-      "name": "string",
-      "last_price": "string",
-      "mark_price": "string",
-      "index_price": "string",
-      "ask1_size": 0,
-      "ask1_price": "string",
-      "bid1_size": 0,
-      "bid1_price": "string",
-      "position_size": 0,
-      "mark_iv": "string",
-      "bid_iv": "string",
-      "ask_iv": "string",
-      "leverage": "string",
-      "delta": "string",
-      "gamma": "string",
-      "vega": "string",
-      "theta": "string",
-      "rho": "string"
-    }
-    
-    
-
-##  OptionsMMP
-
-_MMP Settings_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-underlying | string | Required | none | Underlying  
-window | integer(int32) | Required | none | Time window (milliseconds), between 1-5000, 0 means disable MMP  
-frozen_period | integer(int32) | Required | none | Freeze duration (milliseconds), 0 means always frozen, need to call reset API to unfreeze  
-qty_limit | string | Required | none | Trading volume upper limit (positive number, up to 2 decimal places)  
-delta_limit | string | Required | none | Upper limit of net delta value (positive number, up to 2 decimal places)  
-trigger_time_ms | integer(int64) | Optional | read-only | Trigger freeze time (milliseconds), 0 means no freeze is triggered  
-frozen_until_ms | integer(int64) | Optional | read-only | Unfreeze time (milliseconds). If the freeze duration is not configured, there will be no unfreeze time after the freeze is triggered  
-      
-    
-    {
-      "underlying": "string",
-      "window": 0,
-      "frozen_period": 0,
-      "qty_limit": "string",
-      "delta_limit": "string",
-      "trigger_time_ms": 0,
-      "frozen_until_ms": 0
-    }
-    
-    
-
-##  OptionsAccountBook
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-time | number(double) | Optional | none | Change time  
-change | string | Optional | none | Amount changed (USDT)  
-balance | string | Optional | none | Account total balance after change (USDT)  
-type | string | Optional | none | Changing Type:  
-\- dnw: Deposit & Withdraw  
-\- prem: Trading premium  
-\- fee: Trading fee  
-\- set: settlement  
-\- refr: Referrer rebate  
-\- point_dnw: point_fee: POINT Trading fee  
-\- point_refr: POINT Referrer rebate  
-text | string | Optional | none | Remark  
-      
-    
-    {
-      "time": 0,
-      "change": "string",
-      "balance": "string",
-      "type": "string",
-      "text": "string"
-    }
-    
-    
-
-##  TriggerTime
-
-_triggerTime_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-triggerTime | integer(int64) | Optional | none | Timestamp when countdown ends, in milliseconds  
-      
-    
-    {
-      "triggerTime": "1660039145000"
-    }
-    
-    
-
-##  OptionsPosition
-
-_Options contract position details_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-user | integer | Optional | read-only | User ID  
-underlying | string | Optional | read-only | Underlying  
-underlying_price | string | Optional | read-only | The forward futures price corresponding to the delivery date  
-contract | string | Optional | read-only | Options contract name  
-size | integer(int64) | Optional | read-only | Position size (contract quantity)  
-entry_price | string | Optional | read-only | Entry size (quote currency)  
-mark_price | string | Optional | read-only | Current mark price (quote currency)  
-mark_iv | string | Optional | read-only | Implied volatility  
-realised_pnl | string | Optional | read-only | Realized PnL  
-unrealised_pnl | string | Optional | read-only | Unrealised PnL = (mark price - entry price) * position size. For long postion, size is positive; for short positon, size is negative.This value is for reference only.  
-pending_orders | integer | Optional | read-only | Current pending order quantity  
-close_order | object|null | Optional | read-only | Current close order information, or `null` if no close order  
-» id | integer(int64) | Optional | none | Order ID  
-» price | string | Optional | none | Order price (quote currency)  
-» is_liq | boolean | Optional | none | Whether the close order is from liquidation  
-delta | string | Optional | read-only | Greek letter delta  
-gamma | string | Optional | read-only | Greek letter gamma  
-vega | string | Optional | read-only | Greek letter vega  
-theta | string | Optional | read-only | Greek letter theta  
-      
-    
-    {
-      "user": 0,
-      "underlying": "string",
-      "underlying_price": "string",
-      "contract": "string",
-      "size": 0,
-      "entry_price": "string",
-      "mark_price": "string",
-      "mark_iv": "string",
-      "realised_pnl": "string",
-      "unrealised_pnl": "string",
-      "pending_orders": 0,
-      "close_order": {
-        "id": 0,
-        "price": "string",
-        "is_liq": true
-      },
-      "delta": "string",
-      "gamma": "string",
-      "vega": "string",
-      "theta": "string"
+      "trade_put": 0,
+      "trade_call": 0,
+      "index_price": "string"
     }
     
     
 
 ##  OptionsContract
 
-_Options contract details_
+Options contract details
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-name | string | Optional | none | Options contract name  
-tag | string | Optional | none | Expiry periods include day, week, and month.  
-create_time | number(double) | Optional | none | Created time  
-expiration_time | number(double) | Optional | none | Expiration time  
-is_call | boolean | Optional | none | `true` means call options, `false` means put options  
-multiplier | string | Optional | none | The option contract multiplier indicates how many units of the underlying asset the face value of one contract represents.  
-underlying | string | Optional | none | Underlying  
-underlying_price | string | Optional | none | The forward futures price corresponding to the delivery date  
-last_price | string | Optional | none | Last trading price  
-mark_price | string | Optional | none | Current mark price (quote currency)  
-index_price | string | Optional | none | Current index price (quote currency)  
-maker_fee_rate | string | Optional | none | Maker fee rate, negative values indicate rebates  
-taker_fee_rate | string | Optional | none | Taker fee rate  
-order_price_round | string | Optional | none | Minimum order price increment  
-mark_price_round | string | Optional | none | Minimum mark price increment  
-order_size_min | integer(int64) | Optional | none | Minimum order quantity  
-order_size_max | integer(int64) | Optional | none | Maximum order quantity  
-order_price_deviate | string | Optional | none | Deprecated  
-ref_discount_rate | string | Optional | none | Trading fee discount for referred users  
-ref_rebate_rate | string | Optional | none | Commission rate for referrers  
-orderbook_id | integer(int64) | Optional | none | Orderbook update ID  
-trade_id | integer(int64) | Optional | none | Deprecated  
-trade_size | integer(int64) | Optional | none | Historical cumulative trading volume  
-position_size | integer(int64) | Optional | none | Current total long position size  
-orders_limit | integer | Optional | none | The maximum number of open orders each user can place in this order book.  
+name | string | Optional |  | Options contract name  
+tag | string | Optional |  | Expiry periods include day, week, and month.  
+create_time | number(double) | Optional |  | Created time  
+expiration_time | number(double) | Optional |  | Expiration time  
+is_call | boolean | Optional |  | `true` means call options, `false` means put options  
+multiplier | string | Optional |  | The option contract multiplier indicates how many units of the underlying asset the face value of one contract represents.  
+underlying | string | Optional |  | Underlying  
+underlying_price | string | Optional |  | The forward futures price corresponding to the delivery date  
+last_price | string | Optional |  | Last trading price  
+mark_price | string | Optional |  | Current mark price (quote currency)  
+index_price | string | Optional |  | Current index price (quote currency)  
+maker_fee_rate | string | Optional |  | Maker fee rate, negative values indicate rebates  
+taker_fee_rate | string | Optional |  | Taker fee rate  
+order_price_round | string | Optional |  | Minimum order price increment  
+mark_price_round | string | Optional |  | Minimum mark price increment  
+order_size_min | integer(int64) | Optional |  | Minimum order quantity  
+order_size_max | integer(int64) | Optional |  | Maximum order quantity  
+order_price_deviate | string | Optional |  | Deprecated  
+ref_discount_rate | string | Optional |  | Trading fee discount for referred users  
+ref_rebate_rate | string | Optional |  | Commission rate for referrers  
+orderbook_id | integer(int64) | Optional |  | Orderbook update ID  
+trade_id | integer(int64) | Optional |  | Deprecated  
+trade_size | integer(int64) | Optional |  | Historical cumulative trading volume  
+position_size | integer(int64) | Optional |  | Current total long position size  
+orders_limit | integer | Optional |  | The maximum number of open orders each user can place in this order book.  
       
     
     {
@@ -4247,18 +4336,105 @@ orders_limit | integer | Optional | none | The maximum number of open orders eac
     
     
 
+##  OptionsOrderBook
+
+Type | Constraints  
+---|---  
+object | required: ["asks","bids"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | Order Book ID. Increases by 1 on every order book change. Set `with_id=true` to include this field in response  
+current | number(double) | Optional |  | Response data generation timestamp  
+update | number(double) | Optional |  | Order book changed timestamp  
+asks | array | Required |  | Ask Depth  
+bids | array | Required |  | Bid Depth  
+  
+**asks**
+
+Ask Depth
+
+Type | Constraints  
+---|---  
+array |   
+  
+**asks / items**
+
+options_order_book_item
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+p | string | Optional |  | Price (quote currency)  
+s | integer(int64) | Optional |  | Size  
+  
+**bids**
+
+Bid Depth
+
+Type | Constraints  
+---|---  
+array |   
+  
+**bids / items**
+
+options_order_book_item
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+p | string | Optional |  | Price (quote currency)  
+s | integer(int64) | Optional |  | Size  
+      
+    
+    {
+      "id": 0,
+      "current": 0,
+      "update": 0,
+      "asks": [
+        {
+          "p": "string",
+          "s": 0
+        }
+      ],
+      "bids": [
+        {
+          "p": "string",
+          "s": 0
+        }
+      ]
+    }
+    
+    
+
 ##  OptionsSettlement
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-time | number(double) | Optional | none | Last configuration update time  
-contract | string | Optional | none | Options contract name  
-profit | string | Optional | none | Settlement profit per contract (quote currency)  
-fee | string | Optional | none | Settlement fee per contract (quote currency)  
-strike_price | string | Optional | none | Strike price (quote currency)  
-settle_price | string | Optional | none | Settlement price (quote currency)  
+time | number(double) | Optional |  | Last configuration update time  
+contract | string | Optional |  | Options contract name  
+profit | string | Optional |  | Settlement profit per contract (quote currency)  
+fee | string | Optional |  | Settlement fee per contract (quote currency)  
+strike_price | string | Optional |  | Strike price (quote currency)  
+settle_price | string | Optional |  | Settlement price (quote currency)  
       
     
     {
@@ -4272,64 +4448,170 @@ settle_price | string | Optional | none | Settlement price (quote currency)
     
     
 
-##  CountdownCancelAllOptionsTask
+##  OptionsMySettlements
 
-_CountdownCancelAllOptionsTask_
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-timeout | integer(int32) | Required | none | Countdown time in seconds  
-At least 5 seconds, 0 means cancel countdown  
-contract | string | Optional | none | Options contract name  
-underlying | string | Optional | none | Underlying  
+time | number(double) | Optional |  | Settlement time  
+underlying | string | Optional |  | Underlying  
+contract | string | Optional |  | Options contract name  
+strike_price | string | Optional |  | Strike price (quote currency)  
+settle_price | string | Optional |  | Settlement price (quote currency)  
+size | integer(int64) | Optional |  | Settlement size  
+settle_profit | string | Optional |  | Settlement profit (quote currency)  
+fee | string | Optional |  | Settlement fee (quote currency)  
+realised_pnl | string | Optional |  | Accumulated profit and loss from opening positions, including premium, fees, settlement profit, etc. (quote currency)  
       
     
     {
-      "timeout": 0,
+      "time": 0,
+      "underlying": "string",
       "contract": "string",
-      "underlying": "string"
+      "strike_price": "string",
+      "settle_price": "string",
+      "size": 0,
+      "settle_profit": "string",
+      "fee": "string",
+      "realised_pnl": "string"
     }
     
     
 
-##  OptionsUnderlyingTicker
+##  OptionsTicker
 
-_Options underlying detail_
+Options contract details
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-trade_put | integer(int64) | Optional | none | Total put options trades amount in last 24h  
-trade_call | integer(int64) | Optional | none | Total call options trades amount in last 24h  
-index_price | string | Optional | none | Index price (quote currency)  
+name | string | Optional |  | Options contract name  
+last_price | string | Optional |  | Last trade price (quote currency)  
+mark_price | string | Optional |  | Current mark price (quote currency)  
+index_price | string | Optional |  | Current index price (quote currency)  
+ask1_size | integer(int64) | Optional |  | Best ask size  
+ask1_price | string | Optional |  | Best ask price  
+bid1_size | integer(int64) | Optional |  | Best bid size  
+bid1_price | string | Optional |  | Best bid price  
+position_size | integer(int64) | Optional |  | Current total long position size  
+mark_iv | string | Optional |  | Implied volatility  
+bid_iv | string | Optional |  | Bid side implied volatility  
+ask_iv | string | Optional |  | Ask side implied volatility  
+leverage | string | Optional |  | Leverage = underlying_price / (mark_price * delta). This value is for reference only.  
+delta | string | Optional |  | Greek letter delta  
+gamma | string | Optional |  | Greek letter gamma  
+vega | string | Optional |  | Greek letter vega  
+theta | string | Optional |  | Greek letter theta  
+rho | string | Optional |  | Rho  
       
     
     {
-      "trade_put": 0,
-      "trade_call": 0,
+      "name": "string",
+      "last_price": "string",
+      "mark_price": "string",
+      "index_price": "string",
+      "ask1_size": 0,
+      "ask1_price": "string",
+      "bid1_size": 0,
+      "bid1_price": "string",
+      "position_size": 0,
+      "mark_iv": "string",
+      "bid_iv": "string",
+      "ask_iv": "string",
+      "leverage": "string",
+      "delta": "string",
+      "gamma": "string",
+      "vega": "string",
+      "theta": "string",
+      "rho": "string"
+    }
+    
+    
+
+##  OptionsUnderlying
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+name | string | Optional |  | Underlying name  
+index_price | string | Optional |  | Spot index price (quote currency)  
+      
+    
+    {
+      "name": "string",
       "index_price": "string"
+    }
+    
+    
+
+##  OptionsAccountBook
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+time | number(double) | Optional |  | Change time  
+change | string | Optional |  | Amount changed (USDT)  
+balance | string | Optional |  | Account total balance after change (USDT)  
+type | string | Optional |  | Changing Type:  
+\- dnw: Deposit & Withdraw  
+\- prem: Trading premium  
+\- fee: Trading fee  
+\- set: settlement  
+\- refr: Referrer rebate  
+\- point_dnw: point_fee: POINT Trading fee  
+\- point_refr: POINT Referrer rebate  
+text | string | Optional |  | Remark  
+      
+    
+    {
+      "time": 0,
+      "change": "string",
+      "balance": "string",
+      "type": "string",
+      "text": "string"
     }
     
     
 
 ##  OptionsMMPReset
 
-_MMP Reset_
+MMP Reset
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["underlying"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-underlying | string | Required | none | Underlying  
-window | integer(int32) | Optional | read-only | Time window (milliseconds), between 1-5000, 0 means disable MMP  
-frozen_period | integer(int32) | Optional | read-only | Freeze duration (milliseconds), 0 means always frozen, need to call reset API to unfreeze  
-qty_limit | string | Optional | read-only | Trading volume upper limit (positive number, up to 2 decimal places)  
-delta_limit | string | Optional | read-only | Upper limit of net delta value (positive number, up to 2 decimal places)  
-trigger_time_ms | integer(int64) | Optional | read-only | Trigger freeze time (milliseconds), 0 means no freeze is triggered  
-frozen_until_ms | integer(int64) | Optional | read-only | Unfreeze time (milliseconds). If the freeze duration is not configured, there will be no unfreeze time after the freeze is triggered  
+underlying | string | Required |  | Underlying  
+window | integer(int32) | Optional | readOnly: true | Time window (milliseconds), between 1-5000, 0 means disable MMP  
+frozen_period | integer(int32) | Optional | readOnly: true | Freeze duration (milliseconds), 0 means always frozen, need to call reset API to unfreeze  
+qty_limit | string | Optional | readOnly: true | Trading volume upper limit (positive number, up to 2 decimal places)  
+delta_limit | string | Optional | readOnly: true | Upper limit of net delta value (positive number, up to 2 decimal places)  
+trigger_time_ms | integer(int64) | Optional | readOnly: true | Trigger freeze time (milliseconds), 0 means no freeze is triggered  
+frozen_until_ms | integer(int64) | Optional | readOnly: true | Unfreeze time (milliseconds). If the freeze duration is not configured, there will be no unfreeze time after the freeze is triggered  
       
     
     {
@@ -4340,4 +4622,289 @@ frozen_until_ms | integer(int64) | Optional | read-only | Unfreeze time (millise
       "delta_limit": "string",
       "trigger_time_ms": 0,
       "frozen_until_ms": 0
+    }
+    
+    
+
+##  AmendOptionsOrderRequest
+
+AmendOptionsOrderRequest
+
+Order Modification Request Body
+
+Type | Constraints  
+---|---  
+object | required: ["contract","price","size"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+contract | string | Required |  | Options contract name  
+price | string | Required |  | Order Price  
+size | integer(int64) | Required |  | Trade amount  
+      
+    
+    {
+      "contract": "string",
+      "price": "string",
+      "size": 0
+    }
+    
+    
+
+##  OptionsPosition
+
+Options contract position details
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user | integer | Optional | readOnly: true | User ID  
+underlying | string | Optional | readOnly: true | Underlying  
+underlying_price | string | Optional | readOnly: true | The forward futures price corresponding to the delivery date  
+contract | string | Optional | readOnly: true | Options contract name  
+size | integer(int64) | Optional | readOnly: true | Position size (contract quantity)  
+entry_price | string | Optional | readOnly: true | Entry size (quote currency)  
+mark_price | string | Optional | readOnly: true | Current mark price (quote currency)  
+mark_iv | string | Optional | readOnly: true | Implied volatility  
+realised_pnl | string | Optional | readOnly: true | Realized PnL  
+unrealised_pnl | string | Optional | readOnly: true | Unrealised PnL = (mark price - entry price) * position size. For long postion, size is positive; for short positon, size is negative.This value is for reference only.  
+pending_orders | integer | Optional | readOnly: true | Current pending order quantity  
+close_order | object|null | Optional | nullable: true  
+readOnly: true | Current close order information, or `null` if no close order  
+delta | string | Optional | readOnly: true | Greek letter delta  
+gamma | string | Optional | readOnly: true | Greek letter gamma  
+vega | string | Optional | readOnly: true | Greek letter vega  
+theta | string | Optional | readOnly: true | Greek letter theta  
+  
+**close_order**
+
+Current close order information, or `null` if no close order
+
+Type | Constraints  
+---|---  
+object|null | nullable: true  
+readOnly: true  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | Order ID  
+price | string | Optional |  | Order price (quote currency)  
+is_liq | boolean | Optional |  | Whether the close order is from liquidation  
+      
+    
+    {
+      "user": 0,
+      "underlying": "string",
+      "underlying_price": "string",
+      "contract": "string",
+      "size": 0,
+      "entry_price": "string",
+      "mark_price": "string",
+      "mark_iv": "string",
+      "realised_pnl": "string",
+      "unrealised_pnl": "string",
+      "pending_orders": 0,
+      "close_order": {
+        "id": 0,
+        "price": "string",
+        "is_liq": true
+      },
+      "delta": "string",
+      "gamma": "string",
+      "vega": "string",
+      "theta": "string"
+    }
+    
+    
+
+##  OptionsAccount
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user | integer(int64) | Optional |  | User ID  
+total | string | Optional |  | Account balance, invalid for unified account  
+position_value | string | Optional |  | Position value, long position value is positive, short position value is negative  
+equity | string | Optional |  | Account equity = balance + option position value, invalid for unified account  
+short_enabled | boolean | Optional |  | If the account is allowed to short  
+mmp_enabled | boolean | Optional |  | Whether to enable MMP  
+liq_triggered | boolean | Optional |  | Whether the account is in a liquidation state  
+margin_mode | integer(int32) | Optional | enum: [0,1,2,3] | This field indicates the margin mode used by the unified account:  
+  
+\- 0: Classic Spot Margin Mode  
+\- 1: Cross-Currency Margin Mode  
+\- 2: Portfolio Margin Mode  
+\- 3: Single-Currency Margin Mode  
+unrealised_pnl | string | Optional |  | Unrealized PnL, for reference only. Position unrealized PnL = (mark price - average entry price) × position quantity. Position quantity is measured in currency units, negative for shorts and positive for longs.  
+init_margin | string | Optional |  | Initial position margin  
+maint_margin | string | Optional |  | Position maintenance margin  
+order_margin | string | Optional |  | Order margin of unfinished orders  
+ask_order_margin | string | Optional |  | Margin for outstanding sell orders  
+bid_order_margin | string | Optional |  | Margin for outstanding buy orders  
+available | string | Optional |  | Available balance to transfer out or trade  
+point | string | Optional |  | Point card amount  
+currency | string | Optional |  | Settlement currency  
+orders_limit | integer(int32) | Optional |  | Maximum number of outstanding orders  
+position_notional_limit | string | Optional |  | Notional value upper limit, including the nominal value of positions and outstanding orders  
+      
+    
+    {
+      "user": 0,
+      "total": "string",
+      "position_value": "string",
+      "equity": "string",
+      "short_enabled": true,
+      "mmp_enabled": true,
+      "liq_triggered": true,
+      "margin_mode": 0,
+      "unrealised_pnl": "string",
+      "init_margin": "string",
+      "maint_margin": "string",
+      "order_margin": "string",
+      "ask_order_margin": "string",
+      "bid_order_margin": "string",
+      "available": "string",
+      "point": "string",
+      "currency": "string",
+      "orders_limit": 0,
+      "position_notional_limit": "string"
+    }
+    
+    
+
+##  OptionsOrder
+
+Options order details
+
+Type | Constraints  
+---|---  
+object | required: ["contract","size"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | Options order ID  
+user | integer | Optional | readOnly: true | User ID  
+create_time | number(double) | Optional | readOnly: true | Creation time of order  
+finish_time | number(double) | Optional | readOnly: true | Order finished time. Not returned if order is open  
+finish_as | string | Optional | enum: ["filled","cancelled","liquidated","ioc","auto_deleveraged","reduce_only","position_closed","reduce_out","mmp_cancelled"]  
+readOnly: true | Order finish reason:  
+  
+\- filled: Fully filled  
+\- cancelled: User cancelled  
+\- liquidated: Cancelled due to liquidation  
+\- ioc: Not immediately fully filled due to IOC time-in-force setting  
+\- auto_deleveraged: Cancelled due to auto-deleveraging  
+\- reduce_only: Cancelled due to position increase while reduce-only is set  
+\- position_closed: Cancelled because the position was closed  
+\- reduce_out: Only reduce positions by excluding hard-to-fill orders  
+\- mmp_cancelled: Cancelled by MMP  
+status | string | Optional | enum: ["open","finished"]  
+readOnly: true | Order status  
+  
+\- `open`: Pending  
+\- `finished`: Completed  
+contract | string | Required |  | Options identifier  
+size | integer(int64) | Required |  | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
+iceberg | integer(int64) | Optional |  | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
+price | string | Optional |  | Order price. Price of 0 with `tif` set as `ioc` represents market order (quote currency)  
+close | boolean | Optional | default: false  
+writeOnly: true | Set as `true` to close the position, with `size` set to 0  
+is_close | boolean | Optional | readOnly: true | Is the order to close position  
+reduce_only | boolean | Optional | default: false  
+writeOnly: true | Set as `true` to be reduce-only order  
+is_reduce_only | boolean | Optional | readOnly: true | Is the order reduce-only  
+is_liq | boolean | Optional | readOnly: true | Is the order for liquidation  
+mmp | boolean | Optional | default: false  
+writeOnly: true | When set to true, it is an MMP order  
+is_mmp | boolean | Optional | readOnly: true | Whether it is an MMP order. Corresponds to `mmp` in the request  
+tif | string | Optional | enum: ["gtc","ioc","poc"]  
+default: "gtc" | Time in force strategy. Market orders currently only support IOC mode  
+  
+\- gtc: Good Till Cancelled  
+\- ioc: Immediate Or Cancelled, execute immediately or cancel, taker only  
+\- poc: Pending Or Cancelled, passive order, maker only  
+left | integer(int64) | Optional | readOnly: true | Unfilled quantity  
+fill_price | string | Optional | readOnly: true | Fill price  
+text | string | Optional |  | User defined information. If not empty, must follow the rules below:  
+  
+1\. prefixed with `t-`  
+2\. no longer than 28 bytes without `t-` prefix  
+3\. can only include 0-9, A-Z, a-z, underscore(_), hyphen(-) or dot(.)  
+Besides user defined information, reserved contents are listed below, denoting how the order is created:  
+  
+\- web: from web  
+\- api: from API  
+\- app: from mobile phones  
+\- auto_deleveraging: from ADL  
+\- liquidation: from liquidation  
+\- insurance: from insurance  
+tkfr | string | Optional | readOnly: true | Taker fee  
+mkfr | string | Optional | readOnly: true | Maker fee  
+refu | integer | Optional | readOnly: true | Referrer user ID  
+refr | string | Optional | readOnly: true | Referrer rebate  
+      
+    
+    {
+      "id": 0,
+      "user": 0,
+      "create_time": 0,
+      "finish_time": 0,
+      "finish_as": "filled",
+      "status": "open",
+      "contract": "string",
+      "size": 0,
+      "iceberg": 0,
+      "price": "string",
+      "close": false,
+      "is_close": true,
+      "reduce_only": false,
+      "is_reduce_only": true,
+      "is_liq": true,
+      "mmp": false,
+      "is_mmp": true,
+      "tif": "gtc",
+      "left": 0,
+      "fill_price": "string",
+      "text": "string",
+      "tkfr": "string",
+      "mkfr": "string",
+      "refu": 0,
+      "refr": "string"
+    }
+    
+    
+
+##  TriggerTime
+
+triggerTime
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+triggerTime | integer(int64) | Optional |  | Timestamp when countdown ends, in milliseconds  
+      
+    
+    {
+      "triggerTime": "1660039145000"
     }

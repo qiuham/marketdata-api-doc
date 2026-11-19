@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-list_custody_accounts
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:14.046245
+updated_at: 2026-11-19 19:05:51.022739
 ---
 
 # private/list_custody_accounts
@@ -248,5 +248,5 @@ components:
 - [Using the currency Parameter](https://docs.deribit.com/articles/currency-parameter.md)
 - [private/list_api_keys](https://docs.deribit.com/api-reference/account-management/private-list_api_keys.md)
 - [private/set_member](https://docs.deribit.com/api-reference/account-management/private-set_member.md)
-- [private/get_account_summaries](https://docs.deribit.com/api-reference/account-management/private-get_account_summaries.md)
 - [Account Model](https://docs.deribit.com/starbase/account-model.md)
+- [private/get_account_summaries](https://docs.deribit.com/api-reference/account-management/private-get_account_summaries.md)

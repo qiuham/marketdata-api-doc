@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/rate-limits
 api_type: Guide
-updated_at: 2026-11-18 18:58:57.663370
+updated_at: 2026-11-19 19:05:32.084359
 ---
 
 # Rate Limits
@@ -99,7 +99,25 @@ This is the **upper bound** of your available credit pool. You cannot accumulate
 > Sustained Rate1 request/second
 > Burst Capacity8 requests
 >
+> [`public/ticker`](https://docs.deribit.com/api-reference/market-data/public-ticker),&#x20;
+> [`public/get_order_book`](https://docs.deribit.com/api-reference/market-data/public-get_order_book)
+>
+> &#x20;and&#x20;
+>
+> [`public/get_order_book_by_instrument_id`](https://docs.deribit.com/api-reference/market-data/public-get_order_book_by_instrument_id)
+>
+> &#x20;(shared limit)
+>
+> Cost2,000
+> Credits50,000
+> Sustained Rate5 requests/second
+> Burst Capacity25 requests
+>
 > These limits are enforced using the same credit-based system as other methods, but with different cost and credit pool configurations.
+>
+> > [!NOTE]
+> >
+> > **Shared Limit for Ticker and Order Book Methods**: [`public/ticker`](https://docs.deribit.com/api-reference/market-data/public-ticker), [`public/get_order_book`](https://docs.deribit.com/api-reference/market-data/public-get_order_book) and [`public/get_order_book_by_instrument_id`](https://docs.deribit.com/api-reference/market-data/public-get_order_book_by_instrument_id) draw from one shared credit pool: **5 requests/second sustained, with a burst of 25 requests**, across all three methods combined. This limit is applied **in addition to** the default non-matching engine limit (20 requests/second, burst of 100), so each call counts against both. Authenticated requests are counted per sub-account, and non-authorized requests per IP. For real-time ticker and order book data, subscribe to the `ticker.{instrument_name}.{interval}` or `book.{instrument_name}.{interval}` channels instead of polling.
 >
 > > [!NOTE]
 > >

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-get_withdrawals
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:21.780620
+updated_at: 2026-11-19 19:05:58.731739
 ---
 
 # private/get_withdrawals

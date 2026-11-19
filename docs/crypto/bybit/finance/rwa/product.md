@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/rwa/product
 api_type: REST
-updated_at: 2026-11-18 18:50:20.050309
+updated_at: 2026-11-19 18:54:08.196226
 ---
 
 # Get Product List

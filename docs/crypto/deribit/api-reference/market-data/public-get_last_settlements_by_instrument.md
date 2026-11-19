@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_last_settlements_by_instrument
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:17.407404
+updated_at: 2026-11-19 19:05:54.082511
 ---
 
 # public/get_last_settlements_by_instrument

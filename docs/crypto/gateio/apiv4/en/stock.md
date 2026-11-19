@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/stock
 api_type: REST
-updated_at: 2026-11-18 18:55:59.048068
+updated_at: 2026-11-19 19:01:02.150020
 ---
 
 # Stock
@@ -50,40 +50,63 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | none  
-»» equity | string | Account equity  
-»» balance | string | Account Balance  
-»» available | string | Available Balance  
-»» loan_amount | string | Loan amount. Non-negative: the absolute value of the original available balance when it is negative, otherwise 0.  
-»» buy_power | string | Buying power  
-»» leverage | string | Leverage  
-»» leave_liquidity | string | Excess liquidity  
-»» leave_liquidity_rate | string | Excess liquidity ratio  
-»» aee | string | Available Excess Equity (AEE)  
-»» options_margin | string | Options margin  
-»» position_market_value | string | Position market value  
-»» position_pnl | string | Position P&L  
-»» today_pnl | string | Today's P&L  
-»» option_position_market_value | string | Option position market value  
-»» option_position_pnl | string | Option position PnL  
-»» option_today_pnl | string | Option today's PnL  
-»» user_exists | boolean | Whether the user has activated the service  
-»» margin_enabled | boolean | Whether margin financing is enabled  
-»» long_borrowing_rate | string | Annual margin financing interest rate. An empty string indicates that no valid rate is currently available.  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradfiSpotUserAssetResp |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+equity | string | Optional |  | Account equity  
+balance | string | Optional |  | Account Balance  
+available | string | Optional |  | Available Balance  
+loan_amount | string | Optional |  | Loan amount. Non-negative: the absolute value of the original available balance when it is negative, otherwise 0.  
+buy_power | string | Optional |  | Buying power  
+leverage | string | Optional |  | Leverage  
+leave_liquidity | string | Optional |  | Excess liquidity  
+leave_liquidity_rate | string | Optional |  | Excess liquidity ratio  
+aee | string | Optional |  | Available Excess Equity (AEE)  
+options_margin | string | Optional |  | Options margin  
+position_market_value | string | Optional |  | Position market value  
+position_pnl | string | Optional |  | Position P&L  
+today_pnl | string | Optional |  | Today's P&L  
+option_position_market_value | string | Optional |  | Option position market value  
+option_position_pnl | string | Optional |  | Option position PnL  
+option_today_pnl | string | Optional |  | Option today's PnL  
+user_exists | boolean | Optional |  | Whether the user has activated the service  
+margin_enabled | boolean | Optional |  | Whether margin financing is enabled  
+long_borrowing_rate | string | Optional |  | Annual margin financing interest rate. An empty string indicates that no valid rate is currently available.  
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 WARNING
 
@@ -189,7 +212,21 @@ Rate limit: 5 requests per second. Enable or disable margin financing for the us
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | TradFiSpotSetMarginFeatureRequest | Required | none  
-» margin_feature | body | boolean | Required | Whether to enable margin financing. true enables it; false disables it.  
+margin_feature | body | boolean | Required | Whether to enable margin financing. true enables it; false disables it.  
+  
+####  Request Body Schema
+
+Request parameters for enabling or disabling margin financing
+
+Request Body SchemaType | Constraints  
+---|---  
+TradFiSpotSetMarginFeatureRequest | required: ["margin_feature"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+margin_feature | boolean | Required |  | Whether to enable margin financing. true enables it; false disables it.  
   
 ### Responses
 
@@ -202,21 +239,33 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | Returns empty object on success  
-» timestamp | integer(int64) | none  
+Type | Constraints  
+---|---  
+SetMarginFeature |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional | additionalProperties: false | Returns empty object on success  
+timestamp | integer(int64) | Optional |  |   
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 WARNING
 
@@ -348,24 +397,61 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | none  
-»» total | integer(int64) | Total quantity  
-»» total_page | integer | Total pages  
-»» list | array | Symbol list  
-»»» symbol | string | Symbol  
-»»» exchange | string | Exchange.  
+Type | Constraints  
+---|---  
+TradfiSpotSymbols |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total quantity  
+total_page | integer | Optional |  | Total pages  
+list | array | Optional |  | Symbol list  
+  
+**data / list**
+
+Symbol list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Optional |  | Symbol  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | Exchange.  
 \- us: US stocks.  
 \- hk: Hong Kong stocks.  
 \- kr: Korean stocks.  
 \- jp: Japanese stocks.  
-»»» exchange_desc | string | Exchange description  
-»»» quote_currency | string | Quote currency  
-»»» quote_currency_precision | integer | Quote currency precision  
-»»» fx_rate | string | Quote currency to USD exchange rate  
-»»» symbol_desc | string | Symbol description  
-»»» category | string | Symbol category.  
+exchange_desc | string | Optional |  | Exchange description  
+quote_currency | string | Optional |  | Quote currency  
+quote_currency_precision | integer | Optional |  | Quote currency precision  
+fx_rate | string | Optional |  | Quote currency to USD exchange rate  
+symbol_desc | string | Optional |  | Symbol description  
+category | string | Optional | enum: ["CS","ETF","ADRC","ADR","ETV","PFD","ETS","ETN","FUND"] | Symbol category.  
 \- CS: Common stock.  
 \- ETF: Exchange-traded funds.  
 \- ADRC, ADR: Depositary receipts for foreign companies listed in the U.S.  
@@ -374,95 +460,78 @@ Name | Type | Description
 \- ETS: Exchange-traded securities.  
 \- ETN: Exchange-traded notes.  
 \- FUND: Funds.  
-»»» asset_type | string | Asset type.  
+asset_type | string | Optional | enum: ["STOCK","ETF"] | Asset type.  
 \- STOCK: Stock.  
 \- ETF: Exchange-traded fund.  
-»»» trade_status | string | Trading status.  
+trade_status | string | Optional | enum: ["pre_market","open","post_market"] | Trading status.  
 \- pre_market: Pre-market.  
 \- open: Regular trading session.  
 \- post_market: Post-market.  
-»»» trade_mode | integer | Current session trading mode.  
+trade_mode | integer | Optional | enum: [0,1,2,4,5] | Current session trading mode.  
 \- 0: Trading disabled.  
 \- 1: Buy only.  
 \- 2: Sell only.  
 \- 4: Buy and sell supported.  
 \- 5: Trading suspended.  
-\- 6: Trading suspended.  
-\- 7: Trading suspended.  
-\- 8: Trading suspended.  
-»»» order_fill_timing | integer | Order fill timing (1=immediate, 2=after pre-market opens, 3=after regular session opens)  
-»»» icon_link | string | Icon URL  
-»»» quote_currency_symbol | string | Quote currency symbol  
-»»» price_precision | integer | Price precision  
-»»» volume_precision | integer | Quantity precision  
-»»» is_ipo | boolean | Whether it is an IPO symbol  
-»»» ipo_price | string | IPO price  
-»»» sell_price_protection | string | Sell price protection rate  
-»»» buy_price_protection | string | Buy price protection rate  
-»»» symbol_descs | array | Multilingual symbol description  
-»»»» lang | string | Language  
-»»»» value | string | Localized description  
-»»» margin_mode | integer | Margin trading mode.  
+order_fill_timing | integer | Optional | enum: [1,2,3] | Order fill timing (1=immediate, 2=after pre-market opens, 3=after regular session opens)  
+icon_link | string | Optional |  | Icon URL  
+quote_currency_symbol | string | Optional |  | Quote currency symbol  
+price_precision | integer | Optional |  | Price precision  
+volume_precision | integer | Optional |  | Quantity precision  
+is_ipo | boolean | Optional |  | Whether it is an IPO symbol  
+ipo_price | string | Optional |  | IPO price  
+sell_price_protection | string | Optional |  | Sell price protection rate  
+buy_price_protection | string | Optional |  | Buy price protection rate  
+symbol_descs | array | Optional |  | Multilingual symbol description  
+margin_mode | integer | Optional | enum: [0,1,2,3] | Margin trading mode.  
 \- 0: Neither margin financing nor securities borrowing is supported.  
 \- 1: Margin financing is supported.  
 \- 2: Securities borrowing is supported.  
 \- 3: Both margin financing and securities borrowing are supported.  
-»»» long_im | string | Initial margin ratio for long positions  
-»»» long_mm | string | Maintenance margin ratio for long positions  
-»»» short_im | string | Initial margin ratio for short positions  
-»»» short_mm | string | Maintenance margin ratio for short positions  
-»»» long_borrowing_rate | string | Annual margin financing interest rate. An empty string indicates that no valid rate is currently available.  
-»»» short_borrowing_rate | string | Annual securities borrowing interest rate. An empty string indicates that no valid rate is currently available.  
-»» timestamp | integer(int64) | none  
+long_im | string | Optional |  | Initial margin ratio for long positions  
+long_mm | string | Optional |  | Maintenance margin ratio for long positions  
+short_im | string | Optional |  | Initial margin ratio for short positions  
+short_mm | string | Optional |  | Maintenance margin ratio for short positions  
+long_borrowing_rate | string | Optional |  | Annual margin financing interest rate. An empty string indicates that no valid rate is currently available.  
+short_borrowing_rate | string | Optional |  | Annual securities borrowing interest rate. An empty string indicates that no valid rate is currently available.  
   
-####  Enumerated Values
+**data / list / items / symbol_descs**
 
-Enumerated ValuesProperty | Value  
+Multilingual symbol description
+
+Type | Constraints  
 ---|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-category | CS  
-category | ETF  
-category | ADRC  
-category | ADR  
-category | ETV  
-category | PFD  
-category | ETS  
-category | ETN  
-category | FUND  
-asset_type | STOCK  
-asset_type | ETF  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
-trade_mode | 0  
-trade_mode | 1  
-trade_mode | 2  
-trade_mode | 4  
-trade_mode | 5  
-trade_mode | 6  
-trade_mode | 7  
-trade_mode | 8  
-order_fill_timing | 1  
-order_fill_timing | 2  
-order_fill_timing | 3  
-margin_mode | 0  
-margin_mode | 1  
-margin_mode | 2  
-margin_mode | 3  
+array |   
+  
+**data / list / items / symbol_descs / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+lang | string | Optional |  | Language  
+value | string | Optional |  | Localized description  
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 This operation does not require authentication 
 
@@ -601,24 +670,59 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | none  
-»» total | integer(int64) | Total quantity  
-»» total_page | integer | Total pages  
-»» list | array | none  
-»»» symbol | string | Symbol  
-»»» exchange | string | Exchange.  
+Type | Constraints  
+---|---  
+SymbolDetail |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total quantity  
+total_page | integer | Optional |  | Total pages  
+list | array | Optional |  |   
+  
+**data / list**
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Optional |  | Symbol  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | Exchange.  
 \- us: US stocks.  
 \- hk: Hong Kong stocks.  
 \- kr: Korean stocks.  
 \- jp: Japanese stocks.  
-»»» exchange_desc | string | Exchange description  
-»»» quote_currency | string | Quote currency  
-»»» quote_currency_precision | integer | Quote currency precision  
-»»» fx_rate | string | Quote currency to USD exchange rate  
-»»» symbol_desc | string | Symbol description  
-»»» category | string | Symbol category.  
+exchange_desc | string | Optional |  | Exchange description  
+quote_currency | string | Optional |  | Quote currency  
+quote_currency_precision | integer | Optional |  | Quote currency precision  
+fx_rate | string | Optional |  | Quote currency to USD exchange rate  
+symbol_desc | string | Optional |  | Symbol description  
+category | string | Optional | enum: ["CS","ETF","ADRC","ADR","ETV","PFD","ETS","ETN","FUND"] | Symbol category.  
 \- CS: Common stock.  
 \- ETF: Exchange-traded funds.  
 \- ADRC, ADR: Depositary receipts for foreign companies listed in the U.S.  
@@ -627,101 +731,84 @@ Name | Type | Description
 \- ETS: Exchange-traded securities.  
 \- ETN: Exchange-traded notes.  
 \- FUND: Funds.  
-»»» asset_type | string | Asset type.  
+asset_type | string | Optional | enum: ["STOCK","ETF"] | Asset type.  
 \- STOCK: Stock.  
 \- ETF: Exchange-traded fund.  
-»»» settlement_currency | string | Settlement currency  
-»»» max_order_volume | string | Maximum order quantity  
-»»» step_order_volume | string | Order step size  
-»»» min_order_volume | string | Minimum order quantity  
-»»» price_precision | integer | Price precision  
-»»» volume_precision | integer | Quantity precision  
-»»» is_ipo | boolean | Whether it is an IPO symbol  
-»»» ipo_price | string | IPO price  
-»»» price_protection | string | Price protection range  
-»»» sell_price_protection | string | Sell price protection rate  
-»»» buy_price_protection | string | Buy price protection rate  
-»»» slippage_rate | string | Slippage  
-»»» commission_rate | string | Fee Rate  
-»»» trade_status | string | Trading status.  
+settlement_currency | string | Optional |  | Settlement currency  
+max_order_volume | string | Optional |  | Maximum order quantity  
+step_order_volume | string | Optional |  | Order step size  
+min_order_volume | string | Optional |  | Minimum order quantity  
+price_precision | integer | Optional |  | Price precision  
+volume_precision | integer | Optional |  | Quantity precision  
+is_ipo | boolean | Optional |  | Whether it is an IPO symbol  
+ipo_price | string | Optional |  | IPO price  
+price_protection | string | Optional |  | Price protection range  
+sell_price_protection | string | Optional |  | Sell price protection rate  
+buy_price_protection | string | Optional |  | Buy price protection rate  
+slippage_rate | string | Optional |  | Slippage  
+commission_rate | string | Optional |  | Fee Rate  
+trade_status | string | Optional | enum: ["pre_market","open","post_market"] | Trading status.  
 \- pre_market: Pre-market.  
 \- open: Regular trading session.  
 \- post_market: Post-market.  
-»»» trade_mode | integer | Current session trading mode.  
+trade_mode | integer | Optional | enum: [0,1,2,4,5] | Current session trading mode.  
 \- 0: Trading disabled.  
 \- 1: Buy only.  
 \- 2: Sell only.  
 \- 4: Buy and sell supported.  
 \- 5: Trading suspended.  
-\- 6: Trading suspended.  
-\- 7: Trading suspended.  
-\- 8: Trading suspended.  
-»»» order_fill_timing | integer | Order fill timing (1=immediate, 2=after pre-market opens, 3=after regular session opens)  
-»»» symbol_descs | array | Multilingual symbol description  
-»»»» lang | string | Language  
-»»»» value | string | Localized description  
-»»» icon_link | string | Icon URL  
-»»» margin_mode | integer | Margin trading mode.  
+order_fill_timing | integer | Optional | enum: [1,2,3] | Order fill timing (1=immediate, 2=after pre-market opens, 3=after regular session opens)  
+symbol_descs | array | Optional |  | Multilingual symbol description  
+icon_link | string | Optional |  | Icon URL  
+margin_mode | integer | Optional | enum: [0,1,2,3] | Margin trading mode.  
 \- 0: Neither margin financing nor securities borrowing is supported.  
 \- 1: Margin financing is supported.  
 \- 2: Securities borrowing is supported.  
 \- 3: Both margin financing and securities borrowing are supported.  
-»»» long_im | string | Initial margin ratio for long positions  
-»»» long_mm | string | Maintenance margin ratio for long positions  
-»»» short_im | string | Initial margin ratio for short positions  
-»»» short_mm | string | Maintenance margin ratio for short positions  
-»»» long_borrowing_rate | string | Annual margin financing interest rate. An empty string indicates that no valid rate is currently available.  
-»»» short_borrowing_rate | string | Annual securities borrowing interest rate. An empty string indicates that no valid rate is currently available.  
-»» timestamp | integer(int64) | none  
+long_im | string | Optional |  | Initial margin ratio for long positions  
+long_mm | string | Optional |  | Maintenance margin ratio for long positions  
+short_im | string | Optional |  | Initial margin ratio for short positions  
+short_mm | string | Optional |  | Maintenance margin ratio for short positions  
+long_borrowing_rate | string | Optional |  | Annual margin financing interest rate. An empty string indicates that no valid rate is currently available.  
+short_borrowing_rate | string | Optional |  | Annual securities borrowing interest rate. An empty string indicates that no valid rate is currently available.  
   
-####  Enumerated Values
+**data / list / items / symbol_descs**
 
-Enumerated ValuesProperty | Value  
+Multilingual symbol description
+
+Type | Constraints  
 ---|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-category | CS  
-category | ETF  
-category | ADRC  
-category | ADR  
-category | ETV  
-category | PFD  
-category | ETS  
-category | ETN  
-category | FUND  
-asset_type | STOCK  
-asset_type | ETF  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
-trade_mode | 0  
-trade_mode | 1  
-trade_mode | 2  
-trade_mode | 4  
-trade_mode | 5  
-trade_mode | 6  
-trade_mode | 7  
-trade_mode | 8  
-order_fill_timing | 1  
-order_fill_timing | 2  
-order_fill_timing | 3  
-margin_mode | 0  
-margin_mode | 1  
-margin_mode | 2  
-margin_mode | 3  
+array |   
+  
+**data / list / items / symbol_descs / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+lang | string | Optional |  | Language  
+value | string | Optional |  | Localized description  
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 This operation does not require authentication 
 
@@ -843,28 +930,89 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | none  
-»» symbol | string | Symbol  
-»» bids | array | Bid orders  
-»»» p | string | Price  
-»»» user_order | boolean | Whether it is the user's own order  
-»» asks | array | Ask orders  
-»»» p | string | Price  
-»»» user_order | boolean | Whether it is the user's own order  
-»» timestamp | integer(int64) | none  
+Type | Constraints  
+---|---  
+TradfiSpotOrderBook |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Optional |  | Symbol  
+bids | array | Optional |  | Bid orders  
+asks | array | Optional |  | Ask orders  
+  
+**data / bids**
+
+Bid orders
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / bids / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+p | string | Optional |  | Price  
+user_order | boolean | Optional |  | Whether it is the user's own order  
+  
+**data / asks**
+
+Ask orders
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / asks / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+p | string | Optional |  | Price  
+user_order | boolean | Optional |  | Whether it is the user's own order  
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 This operation does not require authentication 
 
@@ -954,36 +1102,70 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | none  
-»» list | array | Query active order list  
-»»» order_id | string | Order ID  
-»»» symbol | string | Symbol  
-»»» exchange | string | Exchange.  
+Type | Constraints  
+---|---  
+TradfiSpotOrderList |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+list | array | Optional |  | Query active order list  
+  
+**data / list**
+
+Query active order list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Optional |  | Order ID  
+symbol | string | Optional |  | Symbol  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | Exchange.  
 \- us: US stocks.  
 \- hk: Hong Kong stocks.  
 \- kr: Korean stocks.  
 \- jp: Japanese stocks.  
-»»» quote_currency | string | Quote currency  
-»»» fx_rate | string | Quote currency to USD exchange rate  
-»»» symbol_desc | string | Symbol description  
-»»» trade_status | string | Trading status.  
+quote_currency | string | Optional |  | Quote currency  
+fx_rate | string | Optional |  | Quote currency to USD exchange rate  
+symbol_desc | string | Optional |  | Symbol description  
+trade_status | string | Optional | enum: ["pre_market","open","post_market"] | Trading status.  
 \- pre_market: Pre-market.  
 \- open: Regular trading session.  
 \- post_market: Post-market.  
-»»» trade_mode | integer | Current session trading mode.  
+trade_mode | integer | Optional | enum: [0,1,2,4,5] | Current session trading mode.  
 \- 0: Trading disabled.  
 \- 1: Buy only.  
 \- 2: Sell only.  
 \- 4: Buy and sell supported.  
 \- 5: Trading suspended.  
-\- 6: Trading suspended.  
-\- 7: Trading suspended.  
-\- 8: Trading suspended.  
-»»» price_type | string | Price type (market = market order, limit = limit order)  
-»»» side | integer | Side (1=sell, 2=buy)  
-»»» status | integer | Order status.  
+price_type | string | Optional | enum: ["market","limit"] | Price type (market = market order, limit = limit order)  
+side | integer | Optional | enum: [1,2] | Side (1=sell, 2=buy)  
+status | integer | Optional | enum: [0,1,2,3,4,5,6,7,8] | Order status.  
 \- 0: Unknown.  
 \- 1: New order; the order has been validated and is waiting to be processed.  
 \- 2: Partially filled.  
@@ -993,65 +1175,37 @@ Name | Type | Description
 \- 6: Cancellation rejected.  
 \- 7: Order update succeeded.  
 \- 8: Order update rejected.  
-»»» volume | string | Order quantity  
-»»» fill_volume | string | Trading size  
-»»» price | string | Order price  
-»»» time_setup | integer(int64) | Order creation time (Unix timestamp, seconds)  
-»»» time_update | integer(int64) | Order update time (Unix timestamp, seconds)  
-»»» max_order_volume | string | Maximum order quantity  
-»»» step_order_volume | string | Order step size  
-»»» min_order_volume | string | Minimum order quantity  
-»»» price_precision | integer | Price precision  
-»»» price_protection | string | Price protection range  
-»»» sell_price_protection | string | Sell price protection rate  
-»»» buy_price_protection | string | Buy price protection rate  
-»»» commission_rate | string | Fee Rate  
-»»» slippage_rate | string | Slippage  
-»» timestamp | integer(int64) | none  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
-trade_mode | 0  
-trade_mode | 1  
-trade_mode | 2  
-trade_mode | 4  
-trade_mode | 5  
-trade_mode | 6  
-trade_mode | 7  
-trade_mode | 8  
-price_type | market  
-price_type | limit  
-side | 1  
-side | 2  
-status | 0  
-status | 1  
-status | 2  
-status | 3  
-status | 4  
-status | 5  
-status | 6  
-status | 7  
-status | 8  
+volume | string | Optional |  | Order quantity  
+fill_volume | string | Optional |  | Trading size  
+price | string | Optional |  | Order price  
+time_setup | integer(int64) | Optional |  | Order creation time (Unix timestamp, seconds)  
+time_update | integer(int64) | Optional |  | Order update time (Unix timestamp, seconds)  
+max_order_volume | string | Optional |  | Maximum order quantity  
+step_order_volume | string | Optional |  | Order step size  
+min_order_volume | string | Optional |  | Minimum order quantity  
+price_precision | integer | Optional |  | Price precision  
+price_protection | string | Optional |  | Price protection range  
+sell_price_protection | string | Optional |  | Sell price protection rate  
+buy_price_protection | string | Optional |  | Buy price protection rate  
+commission_rate | string | Optional |  | Fee Rate  
+slippage_rate | string | Optional |  | Slippage  
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 WARNING
 
@@ -1167,36 +1321,59 @@ Rate limit: 5 qps.
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | TradFiSpotOrderRequest | Required | none  
-» volume | body | string | Required | Order quantity  
-» symbol | body | string | Required | Symbol  
-» side | body | integer | Required | Side (1=sell, 2=buy)  
-» price_type | body | string | Required | Price type (market = market order, limit = limit order)  
-» trading_session | body | string | Required | Trading session.  
+volume | body | string | Required | Order quantity  
+symbol | body | string | Required | Symbol  
+side | body | integer | Required | Side (1=sell, 2=buy)  
+price_type | body | string | Required | Price type (market = market order, limit = limit order)  
+trading_session | body | string | Required | Trading session.  
 Limit orders support only all, while market orders support only regular.  
-» time_in_force | body | string | Required | Time in force.  
+time_in_force | body | string | Required | Time in force.  
 \- day: Day order.  
-» price | body | string | Optional | Order price, used for limit orders  
-» client_order_id | body | string | Optional | Client-defined order ID  
+price | body | string | Optional | Order price, used for limit orders  
+client_order_id | body | string | Optional | Client-defined order ID  
   
 ####  Detailed descriptions
 
-**» trading_session** : Trading session.  
+** trading_session**: Trading session.  
 Limit orders support only all, while market orders support only regular.
 
-**» time_in_force** : Time in force.  
+** time_in_force**: Time in force.  
 \- day: Day order.
 
 ####  Enumerated Values
 
 Enumerated ValuesParameter | Value  
 ---|---  
-» side | 1  
-» side | 2  
-» price_type | market  
-» price_type | limit  
-» trading_session | regular  
-» trading_session | all  
-» time_in_force | day  
+side | 1  
+side | 2  
+price_type | market  
+price_type | limit  
+trading_session | regular  
+trading_session | all  
+time_in_force | day  
+  
+####  Request Body Schema
+
+Place order request parameters
+
+Request Body SchemaType | Constraints  
+---|---  
+TradFiSpotOrderRequest | required: ["volume","symbol","side","price_type","trading_session","time_in_force"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+volume | string | Required |  | Order quantity  
+symbol | string | Required |  | Symbol  
+side | integer | Required | enum: [1,2] | Side (1=sell, 2=buy)  
+price_type | string | Required | enum: ["market","limit"] | Price type (market = market order, limit = limit order)  
+trading_session | string | Required | enum: ["regular","all"] | Trading session.  
+Limit orders support only all, while market orders support only regular.  
+time_in_force | string | Required | enum: ["day"] | Time in force.  
+\- day: Day order.  
+price | string | Optional |  | Order price, used for limit orders  
+client_order_id | string | Optional |  | Client-defined order ID  
   
 ### Responses
 
@@ -1209,22 +1386,45 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | none  
-»» id | string | Order ID  
-» timestamp | integer(int64) | none  
+Type | Constraints  
+---|---  
+TradfiSpotCreateOrder |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | string | Optional |  | Order ID  
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 WARNING
 
@@ -1334,21 +1534,33 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | Returns empty object on success  
-» timestamp | integer(int64) | none  
+Type | Constraints  
+---|---  
+DeleteOrder |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional | additionalProperties: false | Returns empty object on success  
+timestamp | integer(int64) | Optional |  |   
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 WARNING
 
@@ -1459,24 +1671,61 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | none  
-»» total | integer(int64) | Total quantity  
-»» total_page | integer | Total pages  
-»» list | array | Query historical order list  
-»»» order_id | string | Order ID  
-»»» symbol | string | Symbol  
-»»» exchange | string | Exchange.  
+Type | Constraints  
+---|---  
+TradfiSpotOrderHistoryList |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total quantity  
+total_page | integer | Optional |  | Total pages  
+list | array | Optional |  | Query historical order list  
+  
+**data / list**
+
+Query historical order list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Optional |  | Order ID  
+symbol | string | Optional |  | Symbol  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | Exchange.  
 \- us: US stocks.  
 \- hk: Hong Kong stocks.  
 \- kr: Korean stocks.  
 \- jp: Japanese stocks.  
-»»» quote_currency | string | Quote currency  
-»»» fx_rate | string | Quote currency to USD exchange rate  
-»»» symbol_desc | string | Symbol description  
-»»» price_type | string | Price type (market = market order, limit = limit order)  
-»»» status | integer | Order status.  
+quote_currency | string | Optional |  | Quote currency  
+fx_rate | string | Optional |  | Quote currency to USD exchange rate  
+symbol_desc | string | Optional |  | Symbol description  
+price_type | string | Optional | enum: ["market","limit"] | Price type (market = market order, limit = limit order)  
+status | integer | Optional | enum: [0,1,2,3,4,5,6,7,8] | Order status.  
 \- 0: Unknown.  
 \- 1: New order; the order has been validated and is waiting to be processed.  
 \- 2: Partially filled.  
@@ -1486,11 +1735,9 @@ Name | Type | Description
 \- 6: Cancellation rejected.  
 \- 7: Order update succeeded.  
 \- 8: Order update rejected.  
-»»» status_desc | string | Order status description  
-»»» status_detail | object|null | Order status details  
-»»»» title | string | Status title  
-»»»» message | string | Status message  
-»»» finish_as | integer | Order completion reason.  
+status_desc | string | Optional |  | Order status description  
+status_detail | object|null | Optional | nullable: true | Order status details  
+finish_as | integer | Optional | enum: [0,1,2,3,4,5,6,7,8,9,13] | Order completion reason.  
 \- 0: Unknown.  
 \- 1: No quote found.  
 \- 2: No match found.  
@@ -1502,62 +1749,48 @@ Name | Type | Description
 \- 8: Canceled after the order time in force expired.  
 \- 9: Trading is not supported in the current session.  
 \- 13: Canceled due to corporate action.  
-»»» side | integer | Side (1=sell, 2=buy)  
-»»» time_in_force | string | Time in force.  
+side | integer | Optional | enum: [1,2] | Side (1=sell, 2=buy)  
+time_in_force | string | Optional | enum: ["day"] | Time in force.  
 \- day: Day order.  
-»»» volume | string | Order quantity  
-»»» fill_volume | string | Trading size  
-»»» price | string | Order price  
-»»» avg_fill_price | string|null | Average fill price  
-»»» commission | string | fee  
-»»» time_setup | integer(int64) | Order creation time (Unix timestamp, seconds)  
-»»» time_done | integer(int64) | Order completion time (Unix timestamp in seconds)  
-»» timestamp | integer(int64) | none  
+volume | string | Optional |  | Order quantity  
+fill_volume | string | Optional |  | Trading size  
+price | string | Optional |  | Order price  
+avg_fill_price | string|null | Optional | nullable: true | Average fill price  
+commission | string | Optional |  | fee  
+time_setup | integer(int64) | Optional |  | Order creation time (Unix timestamp, seconds)  
+time_done | integer(int64) | Optional |  | Order completion time (Unix timestamp in seconds)  
   
-####  Enumerated Values
+**data / list / items / status_detail**
 
-Enumerated ValuesProperty | Value  
+Order status details
+
+Type | Constraints  
 ---|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-price_type | market  
-price_type | limit  
-status | 0  
-status | 1  
-status | 2  
-status | 3  
-status | 4  
-status | 5  
-status | 6  
-status | 7  
-status | 8  
-finish_as | 0  
-finish_as | 1  
-finish_as | 2  
-finish_as | 3  
-finish_as | 4  
-finish_as | 5  
-finish_as | 6  
-finish_as | 7  
-finish_as | 8  
-finish_as | 9  
-finish_as | 13  
-side | 1  
-side | 2  
-time_in_force | day  
+object|null | nullable: true  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+title | string | Optional |  | Status title  
+message | string | Optional |  | Status message  
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 WARNING
 
@@ -1687,59 +1920,88 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | none  
-»» total | integer(int64) | Total quantity  
-»» total_page | integer(int64) | Total pages  
-»» list | array | Trade records  
-»»» id | integer(int64) | Trade record primary key ID  
-»»» deal_id | integer(int64) | Trade ID  
-»»» order_id | integer(int64) | Order ID  
-»»» client_order_id | string | Client-defined order ID  
-»»» user_id | integer | User ID  
-»»» symbol | string | Symbol  
-»»» exchange | string | Exchange.  
+Type | Constraints  
+---|---  
+OrderDealList |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total quantity  
+total_page | integer(int64) | Optional |  | Total pages  
+list | array | Optional |  | Trade records  
+  
+**data / list**
+
+Trade records
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | Trade record primary key ID  
+deal_id | integer(int64) | Optional |  | Trade ID  
+order_id | integer(int64) | Optional |  | Order ID  
+client_order_id | string | Optional |  | Client-defined order ID  
+user_id | integer | Optional |  | User ID  
+symbol | string | Optional |  | Symbol  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | Exchange.  
 \- us: US stocks.  
 \- hk: Hong Kong stocks.  
 \- kr: Korean stocks.  
 \- jp: Japanese stocks.  
-»»» side | integer | Side (1=sell, 2=buy)  
-»»» role | string | Liquidity role.  
+side | integer | Optional | enum: [1,2] | Side (1=sell, 2=buy)  
+role | string | Optional | enum: ["maker","taker"] | Liquidity role.  
 \- maker: Maker.  
 \- taker: Taker.  
-»»» price | string | Trade price in the instrument trading currency  
-»»» quantity | string | Trading size  
-»»» position_qty | string | Position quantity after the trade  
-»»» avg_entry_price | string | Average entry price  
-»»» value | string | Trade value in the instrument trading currency  
-»»» fx_rate | string | Quote currency to USD exchange rate  
-»»» fee | string | Fee in the instrument trading currency  
-»» timestamp | integer(int64) | none  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-side | 1  
-side | 2  
-role | maker  
-role | taker  
+price | string | Optional |  | Trade price in the instrument trading currency  
+quantity | string | Optional |  | Trading size  
+position_qty | string | Optional |  | Position quantity after the trade  
+avg_entry_price | string | Optional |  | Average entry price  
+value | string | Optional |  | Trade value in the instrument trading currency  
+fx_rate | string | Optional |  | Quote currency to USD exchange rate  
+fee | string | Optional |  | Fee in the instrument trading currency  
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 WARNING
 
@@ -1848,9 +2110,24 @@ Rate limit: 5 qps.
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | TradFiSpotOrderUpdateRequest | Required | none  
-» volume | body | string | Required | Modified order quantity  
-» price | body | string | Required | Modified order price  
+volume | body | string | Required | Modified order quantity  
+price | body | string | Required | Modified order price  
 order_id | path | integer(int64) | Required | Order ID  
+  
+####  Request Body Schema
+
+Modify order request parameters
+
+Request Body SchemaType | Constraints  
+---|---  
+TradFiSpotOrderUpdateRequest | required: ["volume","price"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+volume | string | Required |  | Modified order quantity  
+price | string | Required |  | Modified order price  
   
 ### Responses
 
@@ -1863,22 +2140,45 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | none  
-»» order_id | integer(int64) | Order ID  
-» timestamp | integer(int64) | none  
+Type | Constraints  
+---|---  
+TradfiSpotUpdateOrder |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | Order ID  
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 WARNING
 
@@ -1988,21 +2288,33 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | Returns empty object on success  
-» timestamp | integer(int64) | none  
+Type | Constraints  
+---|---  
+DeleteOrder |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional | additionalProperties: false | Returns empty object on success  
+timestamp | integer(int64) | Optional |  |   
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 WARNING
 
@@ -2128,72 +2440,102 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | none  
-»» list | array | Query active position list  
-»»» symbol | string | Symbol  
-»»» exchange | string | Exchange.  
+Type | Constraints  
+---|---  
+TradfiSpotPositionList |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+list | array | Optional |  | Query active position list  
+  
+**data / list**
+
+Query active position list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Optional |  | Symbol  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | Exchange.  
 \- us: US stocks.  
 \- hk: Hong Kong stocks.  
 \- kr: Korean stocks.  
 \- jp: Japanese stocks.  
-»»» quote_currency | string | Quote currency  
-»»» quote_currency_precision | integer | Quote currency precision  
-»»» fx_rate | string | Quote currency to USD exchange rate  
-»»» trade_status | string | Trading status.  
+quote_currency | string | Optional |  | Quote currency  
+quote_currency_precision | integer | Optional |  | Quote currency precision  
+fx_rate | string | Optional |  | Quote currency to USD exchange rate  
+trade_status | string | Optional | enum: ["pre_market","open","post_market"] | Trading status.  
 \- pre_market: Pre-market.  
 \- open: Regular trading session.  
 \- post_market: Post-market.  
-»»» symbol_desc | string | Symbol description  
-»»» position_pnl | string | Position P&L  
-»»» today_pnl | string | Today's P&L  
-»»» pnl_rate | string | Yield  
-»»» today_sell_amount | string | Today's sales amount  
-»»» today_buy_amount | string | Today's purchase amount  
-»»» today_sell_volume | string | Today's sell volume  
-»»» today_buy_volume | string | Today's buy volume  
-»»» yesterday_volume | string | Previous close position quantity  
-»»» volume | string | Position quantity  
-»»» available | string | Available position quantity  
-»»» transfer_out_pending_qty | string | Stock transfer in progress quantity  
-»»» avg_cost_price | string | Cost price  
-»»» diluted_cost_price | string | Diluted cost price  
-»»» last_price | string | Latest price  
-»»» extended_last_price | string|null | Extended hours latest price  
-»»» max_order_volume | string | Maximum order quantity  
-»»» step_order_volume | string | Order step size  
-»»» min_order_volume | string | Minimum order quantity  
-»»» price_precision | integer | Price precision  
-»»» price_protection | string | Price protection range  
-»»» sell_price_protection | string | Sell price protection rate  
-»»» buy_price_protection | string | Buy price protection rate  
-»»» commission_rate | string | Fee Rate  
-»»» slippage_rate | string | Slippage  
-»» timestamp | integer(int64) | none  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
+symbol_desc | string | Optional |  | Symbol description  
+position_pnl | string | Optional |  | Position P&L  
+today_pnl | string | Optional |  | Today's P&L  
+pnl_rate | string | Optional |  | Yield  
+today_sell_amount | string | Optional |  | Today's sales amount  
+today_buy_amount | string | Optional |  | Today's purchase amount  
+today_sell_volume | string | Optional |  | Today's sell volume  
+today_buy_volume | string | Optional |  | Today's buy volume  
+yesterday_volume | string | Optional |  | Previous close position quantity  
+volume | string | Optional |  | Position quantity  
+available | string | Optional |  | Available position quantity  
+transfer_out_pending_qty | string | Optional |  | Stock transfer in progress quantity  
+avg_cost_price | string | Optional |  | Cost price  
+diluted_cost_price | string | Optional |  | Diluted cost price  
+last_price | string | Optional |  | Latest price  
+extended_last_price | string|null | Optional | nullable: true | Extended hours latest price  
+max_order_volume | string | Optional |  | Maximum order quantity  
+step_order_volume | string | Optional |  | Order step size  
+min_order_volume | string | Optional |  | Minimum order quantity  
+price_precision | integer | Optional |  | Price precision  
+price_protection | string | Optional |  | Price protection range  
+sell_price_protection | string | Optional |  | Sell price protection rate  
+buy_price_protection | string | Optional |  | Buy price protection rate  
+commission_rate | string | Optional |  | Fee Rate  
+slippage_rate | string | Optional |  | Slippage  
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 WARNING
 
@@ -2315,16 +2657,32 @@ Rate limit: 5 qps.
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | TradFiSpotClosePositionRequest | Required | none  
-» symbol | body | string | Required | Symbol  
-» close_volume | body | string | Optional | Close quantity; required for partial close  
-» close_type | body | integer | Required | Close type (1=partial close, 2=close all)  
+symbol | body | string | Required | Symbol  
+close_volume | body | string | Optional | Close quantity; required for partial close  
+close_type | body | integer | Required | Close type (1=partial close, 2=close all)  
   
 ####  Enumerated Values
 
 Enumerated ValuesParameter | Value  
 ---|---  
-» close_type | 1  
-» close_type | 2  
+close_type | 1  
+close_type | 2  
+  
+####  Request Body Schema
+
+Close position request parameters
+
+Request Body SchemaType | Constraints  
+---|---  
+TradFiSpotClosePositionRequest | required: ["symbol","close_type"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Symbol  
+close_volume | string | Optional |  | Close quantity; required for partial close  
+close_type | integer | Required | enum: [1,2] | Close type (1=partial close, 2=close all)  
   
 ### Responses
 
@@ -2337,22 +2695,45 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | none  
-»» order_id | integer(int64) | Close order ID  
-» timestamp | integer(int64) | none  
+Type | Constraints  
+---|---  
+ClosePosition |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | Close order ID  
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 WARNING
 
@@ -2482,16 +2863,53 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | none  
-»» total | integer(int64) | none  
-»» total_page | integer(int64) | none  
-»» list | array | Transaction record list  
-»»» asset | string | Asset  
-»»» symbol | string | Symbol  
-»»» symbol_display | string | Symbol display name  
-»»» type | string | Transaction type.  
+Type | Constraints  
+---|---  
+TradfiSpotTransactionList |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  |   
+total_page | integer(int64) | Optional |  |   
+list | array | Optional |  | Transaction record list  
+  
+**data / list**
+
+Transaction record list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+asset | string | Optional |  | Asset  
+symbol | string | Optional |  | Symbol  
+symbol_display | string | Optional |  | Symbol display name  
+type | string | Optional | enum: ["deposit","withdraw","fee","dividend","sell","buy","award","stock_transfer_in","stock_transfer_out"] | Transaction type.  
 \- deposit: Funds transfer in.  
 \- withdraw: Funds transfer out.  
 \- fee: Trading fee.  
@@ -2501,39 +2919,30 @@ Name | Type | Description
 \- award: Airdrop reward.  
 \- stock_transfer_in: Stock transfer in.  
 \- stock_transfer_out: Stock transfer out.  
-»»» type_desc | string | Transaction type description  
-»»» change | string | Change amount. A positive value means a credit, and a negative value means a debit.  
-»»» balance | string | Balance after change  
-»»» ref_id | string | Business idempotent ID  
-»»» time | integer(int64) | Unix timestamp (seconds)  
-»»» unit_text | string | Unit display text  
-»»» detail | object | Business details  
-»» timestamp | integer(int64) | none  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-type | deposit  
-type | withdraw  
-type | fee  
-type | dividend  
-type | sell  
-type | buy  
-type | award  
-type | stock_transfer_in  
-type | stock_transfer_out  
+type_desc | string | Optional |  | Transaction type description  
+change | string | Optional |  | Change amount. A positive value means a credit, and a negative value means a debit.  
+balance | string | Optional |  | Balance after change  
+ref_id | string | Optional |  | Business idempotent ID  
+time | integer(int64) | Optional |  | Unix timestamp (seconds)  
+unit_text | string | Optional |  | Unit display text  
+detail | object | Optional | additionalProperties: true | Business details  
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 WARNING
 
@@ -2642,18 +3051,35 @@ Rate limit: 5 qps. Fund transfer moves USDT between the spot account and the sto
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | TradFiSpotTransactionRequest | Required | none  
-» asset | body | string | Required | Asset, USDT only  
-» change | body | string | Required | Change amount, must be greater than 0  
-» type | body | string | Required | Transaction type. deposit transfers funds from the spot account to the stock account; withdraw transfers funds from the stock account to the spot account.  
-» ref_id | body | string | Required | Business idempotent ID  
+asset | body | string | Required | Asset, USDT only  
+change | body | string | Required | Change amount, must be greater than 0  
+type | body | string | Required | Transaction type. deposit transfers funds from the spot account to the stock account; withdraw transfers funds from the stock account to the spot account.  
+ref_id | body | string | Required | Business idempotent ID  
   
 ####  Enumerated Values
 
 Enumerated ValuesParameter | Value  
 ---|---  
-» asset | USDT  
-» type | deposit  
-» type | withdraw  
+asset | USDT  
+type | deposit  
+type | withdraw  
+  
+####  Request Body Schema
+
+Fund transfer request parameters. Transfer in means moving funds from the spot account to the stock account; transfer out means moving funds from the stock account to the spot account.
+
+Request Body SchemaType | Constraints  
+---|---  
+TradFiSpotTransactionRequest | required: ["asset","change","type","ref_id"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+asset | string | Required | enum: ["USDT"] | Asset, USDT only  
+change | string | Required |  | Change amount, must be greater than 0  
+type | string | Required | enum: ["deposit","withdraw"] | Transaction type. deposit transfers funds from the spot account to the stock account; withdraw transfers funds from the stock account to the spot account.  
+ref_id | string | Required |  | Business idempotent ID  
   
 ### Responses
 
@@ -2666,21 +3092,33 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | Returns empty object on success  
-» timestamp | integer(int64) | none  
+Type | Constraints  
+---|---  
+TradfiSpotCreateTransaction |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional | additionalProperties: false | Returns empty object on success  
+timestamp | integer(int64) | Optional |  |   
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 WARNING
 
@@ -2822,18 +3260,55 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | none  
-»» total | integer(int64) | Total quantity  
-»» total_page | integer(int64) | Total pages  
-»» list | array | Balance record details  
-»»» id | integer(int64) | Balance record primary key ID  
-»»» user_id | integer | User ID  
-»»» change | string | Cash amount change. Positive values are credits; negative values are debits.  
-»»» balance | string | Cash balance snapshot after the change  
-»»» stock_change | string | Stock quantity change, parsed from detail.amount for stock quantity records; may be an empty string for other records  
-»»» type | string | Raw record type. Common values include:  
+Type | Constraints  
+---|---  
+BalanceRecordList |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total quantity  
+total_page | integer(int64) | Optional |  | Total pages  
+list | array | Optional |  | Balance record details  
+  
+**data / list**
+
+Balance record details
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | Balance record primary key ID  
+user_id | integer | Optional |  | User ID  
+change | string | Optional |  | Cash amount change. Positive values are credits; negative values are debits.  
+balance | string | Optional |  | Cash balance snapshot after the change  
+stock_change | string | Optional |  | Stock quantity change, parsed from detail.amount for stock quantity records; may be an empty string for other records  
+type | string | Optional |  | Raw record type. Common values include:  
 \- deposit: Funds transferred in.  
 \- withdraw: Funds transferred out.  
 \- fee: Trading fee.  
@@ -2843,25 +3318,30 @@ Name | Type | Description
 \- award: Airdrop reward.  
 \- stock_transfer_in: Stocks transferred in.  
 \- stock_transfer_out: Stocks transferred out.  
-»»» business | string | Business identifier  
-»»» business_id | integer(int64) | Related business ID  
-»»» symbol | string | Symbol  
-»»» detail | string | Raw business details as a JSON string; returned only when include_detail=true is requested  
-»»» version | integer | Record version  
-»»» time_create | integer(int64) | Business event time (Unix timestamp in seconds)  
-»»» create_time | integer(int64) | Record creation time (Unix timestamp in seconds)  
-»» timestamp | integer(int64) | none  
+business | string | Optional |  | Business identifier  
+business_id | integer(int64) | Optional |  | Related business ID  
+symbol | string | Optional |  | Symbol  
+detail | string | Optional |  | Raw business details as a JSON string; returned only when include_detail=true is requested  
+version | integer | Optional |  | Record version  
+time_create | integer(int64) | Optional |  | Business event time (Unix timestamp in seconds)  
+create_time | integer(int64) | Optional |  | Record creation time (Unix timestamp in seconds)  
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 WARNING
 
@@ -2973,39 +3453,70 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | none  
-»» list | array | none  
-»»» exchange | string | Trading market.  
+Type | Constraints  
+---|---  
+Exchanges |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+list | array | Optional |  |   
+  
+**data / list**
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | Trading market.  
 \- us: US stocks.  
 \- hk: Hong Kong stocks.  
 \- kr: Korean stocks.  
 \- jp: Japanese stocks.  
-»»» exchange_desc | string | Market display name  
-»»» icon_link | string | Market icon  
-»»» support_transfer | boolean | Whether stock transfer is supported  
-»» timestamp | integer(int64) | none  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
+exchange_desc | string | Optional |  | Market display name  
+icon_link | string | Optional |  | Market icon  
+support_transfer | boolean | Optional |  | Whether stock transfer is supported  
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 This operation does not require authentication 
 
@@ -3084,25 +3595,65 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» data | object | none  
-»» list | array | none  
-»»» vip_level | integer | VIP level  
-»»» maker_fee | string | Maker fee rate for Japanese and Korean stocks  
-»»» taker_fee | string | Taker fee rate for Japanese and Korean stocks  
-»» timestamp | integer(int64) | none  
+Type | Constraints  
+---|---  
+FeeRate |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+list | array | Optional |  |   
+  
+**data / list**
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+vip_level | integer | Optional |  | VIP level  
+maker_fee | string | Optional |  | Maker fee rate for Japanese and Korean stocks  
+taker_fee | string | Optional |  | Taker fee rate for Japanese and Korean stocks  
   
 Status Code **400**
 
-_TradFiSpotError_
+TradFiSpotError
 
-Name | Type | Description  
----|---|---  
-» label | string | Business error label  
-» message | string | Error message  
-» data | object|null | Error additional data  
-» timestamp | integer(int64) | Server timestamp (milliseconds)  
+Type | Constraints  
+---|---  
+TradFiSpotError |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 This operation does not require authentication 
 
@@ -3161,277 +3712,19 @@ Code samples
 
 #  Schemas
 
-##  TradfiSpotTransactionList
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-data | object | Optional | none | none  
-» total | integer(int64) | Optional | none | none  
-» total_page | integer(int64) | Optional | none | none  
-» list | array | Optional | none | Transaction record list  
-»» asset | string | Optional | none | Asset  
-»» symbol | string | Optional | none | Symbol  
-»» symbol_display | string | Optional | none | Symbol display name  
-»» type | string | Optional | none | Transaction type.  
-\- deposit: Funds transfer in.  
-\- withdraw: Funds transfer out.  
-\- fee: Trading fee.  
-\- dividend: Dividend payout.  
-\- sell: Stock sale credit.  
-\- buy: Stock purchase debit.  
-\- award: Airdrop reward.  
-\- stock_transfer_in: Stock transfer in.  
-\- stock_transfer_out: Stock transfer out.  
-»» type_desc | string | Optional | none | Transaction type description  
-»» change | string | Optional | none | Change amount. A positive value means a credit, and a negative value means a debit.  
-»» balance | string | Optional | none | Balance after change  
-»» ref_id | string | Optional | none | Business idempotent ID  
-»» time | integer(int64) | Optional | none | Unix timestamp (seconds)  
-»» unit_text | string | Optional | none | Unit display text  
-»» detail | object | Optional | none | Business details  
-» timestamp | integer(int64) | Optional | none | none  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-type | deposit  
-type | withdraw  
-type | fee  
-type | dividend  
-type | sell  
-type | buy  
-type | award  
-type | stock_transfer_in  
-type | stock_transfer_out  
-      
-    
-    {
-      "data": {
-        "total": 0,
-        "total_page": 0,
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  TradFiSpotOrderRequest
-
-_Place order request parameters_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-volume | string | Required | none | Order quantity  
-symbol | string | Required | none | Symbol  
-side | integer | Required | none | Side (1=sell, 2=buy)  
-price_type | string | Required | none | Price type (market = market order, limit = limit order)  
-trading_session | string | Required | none | Trading session.  
-Limit orders support only all, while market orders support only regular.  
-time_in_force | string | Required | none | Time in force.  
-\- day: Day order.  
-price | string | Optional | none | Order price, used for limit orders  
-client_order_id | string | Optional | none | Client-defined order ID  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-side | 1  
-side | 2  
-price_type | market  
-price_type | limit  
-trading_session | regular  
-trading_session | all  
-time_in_force | day  
-      
-    
-    {
-      "volume": "10",
-      "symbol": "AAPL",
-      "side": 2,
-      "price_type": "limit",
-      "trading_session": "all",
-      "time_in_force": "day",
-      "price": "200.12",
-      "client_order_id": "client-202607070001"
-    }
-    
-    
-
-##  TradfiSpotUpdateOrder
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-data | object | Optional | none | none  
-» order_id | integer(int64) | Optional | none | Order ID  
-timestamp | integer(int64) | Optional | none | none  
-      
-    
-    {
-      "data": {
-        "order_id": 123456
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  TradfiSpotCreateTransaction
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-data | object | Optional | none | Returns empty object on success  
-timestamp | integer(int64) | Optional | none | none  
-      
-    
-    {
-      "data": {},
-      "timestamp": 0
-    }
-    
-    
-
-##  TradfiSpotPositionList
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-data | object | Optional | none | none  
-» list | array | Optional | none | Query active position list  
-»» symbol | string | Optional | none | Symbol  
-»» exchange | string | Optional | none | Exchange.  
-\- us: US stocks.  
-\- hk: Hong Kong stocks.  
-\- kr: Korean stocks.  
-\- jp: Japanese stocks.  
-»» quote_currency | string | Optional | none | Quote currency  
-»» quote_currency_precision | integer | Optional | none | Quote currency precision  
-»» fx_rate | string | Optional | none | Quote currency to USD exchange rate  
-»» trade_status | string | Optional | none | Trading status.  
-\- pre_market: Pre-market.  
-\- open: Regular trading session.  
-\- post_market: Post-market.  
-»» symbol_desc | string | Optional | none | Symbol description  
-»» position_pnl | string | Optional | none | Position P&L  
-»» today_pnl | string | Optional | none | Today's P&L  
-»» pnl_rate | string | Optional | none | Yield  
-»» today_sell_amount | string | Optional | none | Today's sales amount  
-»» today_buy_amount | string | Optional | none | Today's purchase amount  
-»» today_sell_volume | string | Optional | none | Today's sell volume  
-»» today_buy_volume | string | Optional | none | Today's buy volume  
-»» yesterday_volume | string | Optional | none | Previous close position quantity  
-»» volume | string | Optional | none | Position quantity  
-»» available | string | Optional | none | Available position quantity  
-»» transfer_out_pending_qty | string | Optional | none | Stock transfer in progress quantity  
-»» avg_cost_price | string | Optional | none | Cost price  
-»» diluted_cost_price | string | Optional | none | Diluted cost price  
-»» last_price | string | Optional | none | Latest price  
-»» extended_last_price | string|null | Optional | none | Extended hours latest price  
-»» max_order_volume | string | Optional | none | Maximum order quantity  
-»» step_order_volume | string | Optional | none | Order step size  
-»» min_order_volume | string | Optional | none | Minimum order quantity  
-»» price_precision | integer | Optional | none | Price precision  
-»» price_protection | string | Optional | none | Price protection range  
-»» sell_price_protection | string | Optional | none | Sell price protection rate  
-»» buy_price_protection | string | Optional | none | Buy price protection rate  
-»» commission_rate | string | Optional | none | Fee Rate  
-»» slippage_rate | string | Optional | none | Slippage  
-» timestamp | integer(int64) | Optional | none | none  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
-      
-    
-    {
-      "data": {
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  BalanceRecordList
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-data | object | Optional | none | none  
-» total | integer(int64) | Optional | none | Total quantity  
-» total_page | integer(int64) | Optional | none | Total pages  
-» list | array | Optional | none | Balance record details  
-»» id | integer(int64) | Optional | none | Balance record primary key ID  
-»» user_id | integer | Optional | none | User ID  
-»» change | string | Optional | none | Cash amount change. Positive values are credits; negative values are debits.  
-»» balance | string | Optional | none | Cash balance snapshot after the change  
-»» stock_change | string | Optional | none | Stock quantity change, parsed from detail.amount for stock quantity records; may be an empty string for other records  
-»» type | string | Optional | none | Raw record type. Common values include:  
-\- deposit: Funds transferred in.  
-\- withdraw: Funds transferred out.  
-\- fee: Trading fee.  
-\- dividend: Dividend payment.  
-\- sell: Proceeds from selling stocks.  
-\- buy: Payment for buying stocks.  
-\- award: Airdrop reward.  
-\- stock_transfer_in: Stocks transferred in.  
-\- stock_transfer_out: Stocks transferred out.  
-»» business | string | Optional | none | Business identifier  
-»» business_id | integer(int64) | Optional | none | Related business ID  
-»» symbol | string | Optional | none | Symbol  
-»» detail | string | Optional | none | Raw business details as a JSON string; returned only when include_detail=true is requested  
-»» version | integer | Optional | none | Record version  
-»» time_create | integer(int64) | Optional | none | Business event time (Unix timestamp in seconds)  
-»» create_time | integer(int64) | Optional | none | Record creation time (Unix timestamp in seconds)  
-» timestamp | integer(int64) | Optional | none | none  
-      
-    
-    {
-      "data": {
-        "total": 0,
-        "total_page": 0,
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
 ##  TradFiSpotSetMarginFeatureRequest
 
-_Request parameters for enabling or disabling margin financing_
+Request parameters for enabling or disabling margin financing
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["margin_feature"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-margin_feature | boolean | Required | none | Whether to enable margin financing. true enables it; false disables it.  
+margin_feature | boolean | Required |  | Whether to enable margin financing. true enables it; false disables it.  
       
     
     {
@@ -3442,13 +3735,28 @@ margin_feature | boolean | Required | none | Whether to enable margin financing.
 
 ##  ClosePosition
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-data | object | Optional | none | none  
-» order_id | integer(int64) | Optional | none | Close order ID  
-timestamp | integer(int64) | Optional | none | none  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | Close order ID  
       
     
     {
@@ -3460,120 +3768,73 @@ timestamp | integer(int64) | Optional | none | none
     
     
 
-##  SymbolDetail
+##  OrderDealList
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-data | object | Optional | none | none  
-» total | integer(int64) | Optional | none | Total quantity  
-» total_page | integer | Optional | none | Total pages  
-» list | array | Optional | none | none  
-»» symbol | string | Optional | none | Symbol  
-»» exchange | string | Optional | none | Exchange.  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total quantity  
+total_page | integer(int64) | Optional |  | Total pages  
+list | array | Optional |  | Trade records  
+  
+**data / list**
+
+Trade records
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | Trade record primary key ID  
+deal_id | integer(int64) | Optional |  | Trade ID  
+order_id | integer(int64) | Optional |  | Order ID  
+client_order_id | string | Optional |  | Client-defined order ID  
+user_id | integer | Optional |  | User ID  
+symbol | string | Optional |  | Symbol  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | Exchange.  
 \- us: US stocks.  
 \- hk: Hong Kong stocks.  
 \- kr: Korean stocks.  
 \- jp: Japanese stocks.  
-»» exchange_desc | string | Optional | none | Exchange description  
-»» quote_currency | string | Optional | none | Quote currency  
-»» quote_currency_precision | integer | Optional | none | Quote currency precision  
-»» fx_rate | string | Optional | none | Quote currency to USD exchange rate  
-»» symbol_desc | string | Optional | none | Symbol description  
-»» category | string | Optional | none | Symbol category.  
-\- CS: Common stock.  
-\- ETF: Exchange-traded funds.  
-\- ADRC, ADR: Depositary receipts for foreign companies listed in the U.S.  
-\- ETV: Exchange-traded products.  
-\- PFD: Preferred stock.  
-\- ETS: Exchange-traded securities.  
-\- ETN: Exchange-traded notes.  
-\- FUND: Funds.  
-»» asset_type | string | Optional | none | Asset type.  
-\- STOCK: Stock.  
-\- ETF: Exchange-traded fund.  
-»» settlement_currency | string | Optional | none | Settlement currency  
-»» max_order_volume | string | Optional | none | Maximum order quantity  
-»» step_order_volume | string | Optional | none | Order step size  
-»» min_order_volume | string | Optional | none | Minimum order quantity  
-»» price_precision | integer | Optional | none | Price precision  
-»» volume_precision | integer | Optional | none | Quantity precision  
-»» is_ipo | boolean | Optional | none | Whether it is an IPO symbol  
-»» ipo_price | string | Optional | none | IPO price  
-»» price_protection | string | Optional | none | Price protection range  
-»» sell_price_protection | string | Optional | none | Sell price protection rate  
-»» buy_price_protection | string | Optional | none | Buy price protection rate  
-»» slippage_rate | string | Optional | none | Slippage  
-»» commission_rate | string | Optional | none | Fee Rate  
-»» trade_status | string | Optional | none | Trading status.  
-\- pre_market: Pre-market.  
-\- open: Regular trading session.  
-\- post_market: Post-market.  
-»» trade_mode | integer | Optional | none | Current session trading mode.  
-\- 0: Trading disabled.  
-\- 1: Buy only.  
-\- 2: Sell only.  
-\- 4: Buy and sell supported.  
-\- 5: Trading suspended.  
-\- 6: Trading suspended.  
-\- 7: Trading suspended.  
-\- 8: Trading suspended.  
-»» order_fill_timing | integer | Optional | none | Order fill timing (1=immediate, 2=after pre-market opens, 3=after regular session opens)  
-»» symbol_descs | array | Optional | none | Multilingual symbol description  
-»»» lang | string | Optional | none | Language  
-»»» value | string | Optional | none | Localized description  
-»» icon_link | string | Optional | none | Icon URL  
-»» margin_mode | integer | Optional | none | Margin trading mode.  
-\- 0: Neither margin financing nor securities borrowing is supported.  
-\- 1: Margin financing is supported.  
-\- 2: Securities borrowing is supported.  
-\- 3: Both margin financing and securities borrowing are supported.  
-»» long_im | string | Optional | none | Initial margin ratio for long positions  
-»» long_mm | string | Optional | none | Maintenance margin ratio for long positions  
-»» short_im | string | Optional | none | Initial margin ratio for short positions  
-»» short_mm | string | Optional | none | Maintenance margin ratio for short positions  
-»» long_borrowing_rate | string | Optional | none | Annual margin financing interest rate. An empty string indicates that no valid rate is currently available.  
-»» short_borrowing_rate | string | Optional | none | Annual securities borrowing interest rate. An empty string indicates that no valid rate is currently available.  
-» timestamp | integer(int64) | Optional | none | none  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-category | CS  
-category | ETF  
-category | ADRC  
-category | ADR  
-category | ETV  
-category | PFD  
-category | ETS  
-category | ETN  
-category | FUND  
-asset_type | STOCK  
-asset_type | ETF  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
-trade_mode | 0  
-trade_mode | 1  
-trade_mode | 2  
-trade_mode | 4  
-trade_mode | 5  
-trade_mode | 6  
-trade_mode | 7  
-trade_mode | 8  
-order_fill_timing | 1  
-order_fill_timing | 2  
-order_fill_timing | 3  
-margin_mode | 0  
-margin_mode | 1  
-margin_mode | 2  
-margin_mode | 3  
+side | integer | Optional | enum: [1,2] | Side (1=sell, 2=buy)  
+role | string | Optional | enum: ["maker","taker"] | Liquidity role.  
+\- maker: Maker.  
+\- taker: Taker.  
+price | string | Optional |  | Trade price in the instrument trading currency  
+quantity | string | Optional |  | Trading size  
+position_qty | string | Optional |  | Position quantity after the trade  
+avg_entry_price | string | Optional |  | Average entry price  
+value | string | Optional |  | Trade value in the instrument trading currency  
+fx_rate | string | Optional |  | Quote currency to USD exchange rate  
+fee | string | Optional |  | Fee in the instrument trading currency  
       
     
     {
@@ -3591,16 +3852,48 @@ margin_mode | 3
 
 ##  FeeRate
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-data | object | Optional | none | none  
-» list | array | Optional | none | none  
-»» vip_level | integer | Optional | none | VIP level  
-»» maker_fee | string | Optional | none | Maker fee rate for Japanese and Korean stocks  
-»» taker_fee | string | Optional | none | Taker fee rate for Japanese and Korean stocks  
-» timestamp | integer(int64) | Optional | none | none  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+list | array | Optional |  |   
+  
+**data / list**
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+vip_level | integer | Optional |  | VIP level  
+maker_fee | string | Optional |  | Maker fee rate for Japanese and Korean stocks  
+taker_fee | string | Optional |  | Taker fee rate for Japanese and Korean stocks  
       
     
     {
@@ -3614,14 +3907,152 @@ data | object | Optional | none | none
     
     
 
+##  Exchanges
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+list | array | Optional |  |   
+  
+**data / list**
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | Trading market.  
+\- us: US stocks.  
+\- hk: Hong Kong stocks.  
+\- kr: Korean stocks.  
+\- jp: Japanese stocks.  
+exchange_desc | string | Optional |  | Market display name  
+icon_link | string | Optional |  | Market icon  
+support_transfer | boolean | Optional |  | Whether stock transfer is supported  
+      
+    
+    {
+      "data": {
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradfiSpotUpdateOrder
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | Order ID  
+      
+    
+    {
+      "data": {
+        "order_id": 123456
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradFiSpotOrderRequest
+
+Place order request parameters
+
+Type | Constraints  
+---|---  
+object | required: ["volume","symbol","side","price_type","trading_session","time_in_force"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+volume | string | Required |  | Order quantity  
+symbol | string | Required |  | Symbol  
+side | integer | Required | enum: [1,2] | Side (1=sell, 2=buy)  
+price_type | string | Required | enum: ["market","limit"] | Price type (market = market order, limit = limit order)  
+trading_session | string | Required | enum: ["regular","all"] | Trading session.  
+Limit orders support only all, while market orders support only regular.  
+time_in_force | string | Required | enum: ["day"] | Time in force.  
+\- day: Day order.  
+price | string | Optional |  | Order price, used for limit orders  
+client_order_id | string | Optional |  | Client-defined order ID  
+      
+    
+    {
+      "volume": "10",
+      "symbol": "AAPL",
+      "side": 2,
+      "price_type": "limit",
+      "trading_session": "all",
+      "time_in_force": "day",
+      "price": "200.12",
+      "client_order_id": "client-202607070001"
+    }
+    
+    
+
 ##  SetMarginFeature
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-data | object | Optional | none | Returns empty object on success  
-timestamp | integer(int64) | Optional | none | none  
+data | object | Optional | additionalProperties: false | Returns empty object on success  
+timestamp | integer(int64) | Optional |  |   
       
     
     {
@@ -3631,52 +4062,151 @@ timestamp | integer(int64) | Optional | none | none
     
     
 
-##  OrderDealList
+##  DeleteOrder
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-data | object | Optional | none | none  
-» total | integer(int64) | Optional | none | Total quantity  
-» total_page | integer(int64) | Optional | none | Total pages  
-» list | array | Optional | none | Trade records  
-»» id | integer(int64) | Optional | none | Trade record primary key ID  
-»» deal_id | integer(int64) | Optional | none | Trade ID  
-»» order_id | integer(int64) | Optional | none | Order ID  
-»» client_order_id | string | Optional | none | Client-defined order ID  
-»» user_id | integer | Optional | none | User ID  
-»» symbol | string | Optional | none | Symbol  
-»» exchange | string | Optional | none | Exchange.  
+data | object | Optional | additionalProperties: false | Returns empty object on success  
+timestamp | integer(int64) | Optional |  |   
+      
+    
+    {
+      "data": {},
+      "timestamp": 0
+    }
+    
+    
+
+##  SymbolDetail
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total quantity  
+total_page | integer | Optional |  | Total pages  
+list | array | Optional |  |   
+  
+**data / list**
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Optional |  | Symbol  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | Exchange.  
 \- us: US stocks.  
 \- hk: Hong Kong stocks.  
 \- kr: Korean stocks.  
 \- jp: Japanese stocks.  
-»» side | integer | Optional | none | Side (1=sell, 2=buy)  
-»» role | string | Optional | none | Liquidity role.  
-\- maker: Maker.  
-\- taker: Taker.  
-»» price | string | Optional | none | Trade price in the instrument trading currency  
-»» quantity | string | Optional | none | Trading size  
-»» position_qty | string | Optional | none | Position quantity after the trade  
-»» avg_entry_price | string | Optional | none | Average entry price  
-»» value | string | Optional | none | Trade value in the instrument trading currency  
-»» fx_rate | string | Optional | none | Quote currency to USD exchange rate  
-»» fee | string | Optional | none | Fee in the instrument trading currency  
-» timestamp | integer(int64) | Optional | none | none  
+exchange_desc | string | Optional |  | Exchange description  
+quote_currency | string | Optional |  | Quote currency  
+quote_currency_precision | integer | Optional |  | Quote currency precision  
+fx_rate | string | Optional |  | Quote currency to USD exchange rate  
+symbol_desc | string | Optional |  | Symbol description  
+category | string | Optional | enum: ["CS","ETF","ADRC","ADR","ETV","PFD","ETS","ETN","FUND"] | Symbol category.  
+\- CS: Common stock.  
+\- ETF: Exchange-traded funds.  
+\- ADRC, ADR: Depositary receipts for foreign companies listed in the U.S.  
+\- ETV: Exchange-traded products.  
+\- PFD: Preferred stock.  
+\- ETS: Exchange-traded securities.  
+\- ETN: Exchange-traded notes.  
+\- FUND: Funds.  
+asset_type | string | Optional | enum: ["STOCK","ETF"] | Asset type.  
+\- STOCK: Stock.  
+\- ETF: Exchange-traded fund.  
+settlement_currency | string | Optional |  | Settlement currency  
+max_order_volume | string | Optional |  | Maximum order quantity  
+step_order_volume | string | Optional |  | Order step size  
+min_order_volume | string | Optional |  | Minimum order quantity  
+price_precision | integer | Optional |  | Price precision  
+volume_precision | integer | Optional |  | Quantity precision  
+is_ipo | boolean | Optional |  | Whether it is an IPO symbol  
+ipo_price | string | Optional |  | IPO price  
+price_protection | string | Optional |  | Price protection range  
+sell_price_protection | string | Optional |  | Sell price protection rate  
+buy_price_protection | string | Optional |  | Buy price protection rate  
+slippage_rate | string | Optional |  | Slippage  
+commission_rate | string | Optional |  | Fee Rate  
+trade_status | string | Optional | enum: ["pre_market","open","post_market"] | Trading status.  
+\- pre_market: Pre-market.  
+\- open: Regular trading session.  
+\- post_market: Post-market.  
+trade_mode | integer | Optional | enum: [0,1,2,4,5] | Current session trading mode.  
+\- 0: Trading disabled.  
+\- 1: Buy only.  
+\- 2: Sell only.  
+\- 4: Buy and sell supported.  
+\- 5: Trading suspended.  
+order_fill_timing | integer | Optional | enum: [1,2,3] | Order fill timing (1=immediate, 2=after pre-market opens, 3=after regular session opens)  
+symbol_descs | array | Optional |  | Multilingual symbol description  
+icon_link | string | Optional |  | Icon URL  
+margin_mode | integer | Optional | enum: [0,1,2,3] | Margin trading mode.  
+\- 0: Neither margin financing nor securities borrowing is supported.  
+\- 1: Margin financing is supported.  
+\- 2: Securities borrowing is supported.  
+\- 3: Both margin financing and securities borrowing are supported.  
+long_im | string | Optional |  | Initial margin ratio for long positions  
+long_mm | string | Optional |  | Maintenance margin ratio for long positions  
+short_im | string | Optional |  | Initial margin ratio for short positions  
+short_mm | string | Optional |  | Maintenance margin ratio for short positions  
+long_borrowing_rate | string | Optional |  | Annual margin financing interest rate. An empty string indicates that no valid rate is currently available.  
+short_borrowing_rate | string | Optional |  | Annual securities borrowing interest rate. An empty string indicates that no valid rate is currently available.  
   
-####  Enumerated Values
+**data / list / items / symbol_descs**
 
-Enumerated ValuesProperty | Value  
+Multilingual symbol description
+
+Type | Constraints  
 ---|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-side | 1  
-side | 2  
-role | maker  
-role | taker  
+array |   
+  
+**data / list / items / symbol_descs / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+lang | string | Optional |  | Language  
+value | string | Optional |  | Localized description  
       
     
     {
@@ -3692,63 +4222,72 @@ role | taker
     
     
 
-##  TradFiSpotError
-
-_TradFiSpotError_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-label | string | Optional | none | Business error label  
-message | string | Optional | none | Error message  
-data | object|null | Optional | none | Error additional data  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-      
-    
-    {
-      "label": "INVALID_ARGUMENT",
-      "message": "invalid argument",
-      "data": {},
-      "timestamp": 1783411200000
-    }
-    
-    
-
 ##  TradfiSpotOrderList
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-data | object | Optional | none | none  
-» list | array | Optional | none | Query active order list  
-»» order_id | string | Optional | none | Order ID  
-»» symbol | string | Optional | none | Symbol  
-»» exchange | string | Optional | none | Exchange.  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+list | array | Optional |  | Query active order list  
+  
+**data / list**
+
+Query active order list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Optional |  | Order ID  
+symbol | string | Optional |  | Symbol  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | Exchange.  
 \- us: US stocks.  
 \- hk: Hong Kong stocks.  
 \- kr: Korean stocks.  
 \- jp: Japanese stocks.  
-»» quote_currency | string | Optional | none | Quote currency  
-»» fx_rate | string | Optional | none | Quote currency to USD exchange rate  
-»» symbol_desc | string | Optional | none | Symbol description  
-»» trade_status | string | Optional | none | Trading status.  
+quote_currency | string | Optional |  | Quote currency  
+fx_rate | string | Optional |  | Quote currency to USD exchange rate  
+symbol_desc | string | Optional |  | Symbol description  
+trade_status | string | Optional | enum: ["pre_market","open","post_market"] | Trading status.  
 \- pre_market: Pre-market.  
 \- open: Regular trading session.  
 \- post_market: Post-market.  
-»» trade_mode | integer | Optional | none | Current session trading mode.  
+trade_mode | integer | Optional | enum: [0,1,2,4,5] | Current session trading mode.  
 \- 0: Trading disabled.  
 \- 1: Buy only.  
 \- 2: Sell only.  
 \- 4: Buy and sell supported.  
 \- 5: Trading suspended.  
-\- 6: Trading suspended.  
-\- 7: Trading suspended.  
-\- 8: Trading suspended.  
-»» price_type | string | Optional | none | Price type (market = market order, limit = limit order)  
-»» side | integer | Optional | none | Side (1=sell, 2=buy)  
-»» status | integer | Optional | none | Order status.  
+price_type | string | Optional | enum: ["market","limit"] | Price type (market = market order, limit = limit order)  
+side | integer | Optional | enum: [1,2] | Side (1=sell, 2=buy)  
+status | integer | Optional | enum: [0,1,2,3,4,5,6,7,8] | Order status.  
 \- 0: Unknown.  
 \- 1: New order; the order has been validated and is waiting to be processed.  
 \- 2: Partially filled.  
@@ -3758,54 +4297,20 @@ data | object | Optional | none | none
 \- 6: Cancellation rejected.  
 \- 7: Order update succeeded.  
 \- 8: Order update rejected.  
-»» volume | string | Optional | none | Order quantity  
-»» fill_volume | string | Optional | none | Trading size  
-»» price | string | Optional | none | Order price  
-»» time_setup | integer(int64) | Optional | none | Order creation time (Unix timestamp, seconds)  
-»» time_update | integer(int64) | Optional | none | Order update time (Unix timestamp, seconds)  
-»» max_order_volume | string | Optional | none | Maximum order quantity  
-»» step_order_volume | string | Optional | none | Order step size  
-»» min_order_volume | string | Optional | none | Minimum order quantity  
-»» price_precision | integer | Optional | none | Price precision  
-»» price_protection | string | Optional | none | Price protection range  
-»» sell_price_protection | string | Optional | none | Sell price protection rate  
-»» buy_price_protection | string | Optional | none | Buy price protection rate  
-»» commission_rate | string | Optional | none | Fee Rate  
-»» slippage_rate | string | Optional | none | Slippage  
-» timestamp | integer(int64) | Optional | none | none  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
-trade_mode | 0  
-trade_mode | 1  
-trade_mode | 2  
-trade_mode | 4  
-trade_mode | 5  
-trade_mode | 6  
-trade_mode | 7  
-trade_mode | 8  
-price_type | market  
-price_type | limit  
-side | 1  
-side | 2  
-status | 0  
-status | 1  
-status | 2  
-status | 3  
-status | 4  
-status | 5  
-status | 6  
-status | 7  
-status | 8  
+volume | string | Optional |  | Order quantity  
+fill_volume | string | Optional |  | Trading size  
+price | string | Optional |  | Order price  
+time_setup | integer(int64) | Optional |  | Order creation time (Unix timestamp, seconds)  
+time_update | integer(int64) | Optional |  | Order update time (Unix timestamp, seconds)  
+max_order_volume | string | Optional |  | Maximum order quantity  
+step_order_volume | string | Optional |  | Order step size  
+min_order_volume | string | Optional |  | Minimum order quantity  
+price_precision | integer | Optional |  | Price precision  
+price_protection | string | Optional |  | Price protection range  
+sell_price_protection | string | Optional |  | Sell price protection rate  
+buy_price_protection | string | Optional |  | Buy price protection rate  
+commission_rate | string | Optional |  | Fee Rate  
+slippage_rate | string | Optional |  | Slippage  
       
     
     {
@@ -3819,39 +4324,280 @@ status | 8
     
     
 
-##  TradFiSpotOrderUpdateRequest
+##  TradfiSpotOrderBook
 
-_Modify order request parameters_
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-volume | string | Required | none | Modified order quantity  
-price | string | Required | none | Modified order price  
-      
-    
-    {
-      "volume": "8",
-      "price": "201.23"
-    }
-    
-    
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
 
-##  TradfiSpotCreateOrder
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-data | object | Optional | none | none  
-» id | string | Optional | none | Order ID  
-timestamp | integer(int64) | Optional | none | none  
+symbol | string | Optional |  | Symbol  
+bids | array | Optional |  | Bid orders  
+asks | array | Optional |  | Ask orders  
+  
+**data / bids**
+
+Bid orders
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / bids / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+p | string | Optional |  | Price  
+user_order | boolean | Optional |  | Whether it is the user's own order  
+  
+**data / asks**
+
+Ask orders
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / asks / items**
+
+Type | Constraints  
+---|---  
+object |   
       
     
     {
       "data": {
-        "id": "123456"
+        "symbol": "AAPL",
+        "bids": [
+          {}
+        ],
+        "asks": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  BalanceRecordList
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total quantity  
+total_page | integer(int64) | Optional |  | Total pages  
+list | array | Optional |  | Balance record details  
+  
+**data / list**
+
+Balance record details
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | Balance record primary key ID  
+user_id | integer | Optional |  | User ID  
+change | string | Optional |  | Cash amount change. Positive values are credits; negative values are debits.  
+balance | string | Optional |  | Cash balance snapshot after the change  
+stock_change | string | Optional |  | Stock quantity change, parsed from detail.amount for stock quantity records; may be an empty string for other records  
+type | string | Optional |  | Raw record type. Common values include:  
+\- deposit: Funds transferred in.  
+\- withdraw: Funds transferred out.  
+\- fee: Trading fee.  
+\- dividend: Dividend payment.  
+\- sell: Proceeds from selling stocks.  
+\- buy: Payment for buying stocks.  
+\- award: Airdrop reward.  
+\- stock_transfer_in: Stocks transferred in.  
+\- stock_transfer_out: Stocks transferred out.  
+business | string | Optional |  | Business identifier  
+business_id | integer(int64) | Optional |  | Related business ID  
+symbol | string | Optional |  | Symbol  
+detail | string | Optional |  | Raw business details as a JSON string; returned only when include_detail=true is requested  
+version | integer | Optional |  | Record version  
+time_create | integer(int64) | Optional |  | Business event time (Unix timestamp in seconds)  
+create_time | integer(int64) | Optional |  | Record creation time (Unix timestamp in seconds)  
+      
+    
+    {
+      "data": {
+        "total": 0,
+        "total_page": 0,
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradfiSpotOrderHistoryList
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total quantity  
+total_page | integer | Optional |  | Total pages  
+list | array | Optional |  | Query historical order list  
+  
+**data / list**
+
+Query historical order list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Optional |  | Order ID  
+symbol | string | Optional |  | Symbol  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | Exchange.  
+\- us: US stocks.  
+\- hk: Hong Kong stocks.  
+\- kr: Korean stocks.  
+\- jp: Japanese stocks.  
+quote_currency | string | Optional |  | Quote currency  
+fx_rate | string | Optional |  | Quote currency to USD exchange rate  
+symbol_desc | string | Optional |  | Symbol description  
+price_type | string | Optional | enum: ["market","limit"] | Price type (market = market order, limit = limit order)  
+status | integer | Optional | enum: [0,1,2,3,4,5,6,7,8] | Order status.  
+\- 0: Unknown.  
+\- 1: New order; the order has been validated and is waiting to be processed.  
+\- 2: Partially filled.  
+\- 3: Filled.  
+\- 4: Canceled.  
+\- 5: Order rejected.  
+\- 6: Cancellation rejected.  
+\- 7: Order update succeeded.  
+\- 8: Order update rejected.  
+status_desc | string | Optional |  | Order status description  
+status_detail | object|null | Optional | nullable: true | Order status details  
+finish_as | integer | Optional | enum: [0,1,2,3,4,5,6,7,8,9,13] | Order completion reason.  
+\- 0: Unknown.  
+\- 1: No quote found.  
+\- 2: No match found.  
+\- 3: Trigger price exceeded.  
+\- 4: Order value exceeds the limit.  
+\- 5: Unknown rejection.  
+\- 6: Unknown cancellation.  
+\- 7: Canceled by user.  
+\- 8: Canceled after the order time in force expired.  
+\- 9: Trading is not supported in the current session.  
+\- 13: Canceled due to corporate action.  
+side | integer | Optional | enum: [1,2] | Side (1=sell, 2=buy)  
+time_in_force | string | Optional | enum: ["day"] | Time in force.  
+\- day: Day order.  
+volume | string | Optional |  | Order quantity  
+fill_volume | string | Optional |  | Trading size  
+price | string | Optional |  | Order price  
+avg_fill_price | string|null | Optional | nullable: true | Average fill price  
+commission | string | Optional |  | fee  
+time_setup | integer(int64) | Optional |  | Order creation time (Unix timestamp, seconds)  
+time_done | integer(int64) | Optional |  | Order completion time (Unix timestamp in seconds)  
+  
+**data / list / items / status_detail**
+
+Order status details
+
+Type | Constraints  
+---|---  
+object|null | nullable: true  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+title | string | Optional |  | Status title  
+message | string | Optional |  | Status message  
+      
+    
+    {
+      "data": {
+        "total": 0,
+        "total_page": 0,
+        "list": [
+          {}
+        ]
       },
       "timestamp": 0
     }
@@ -3860,31 +4606,46 @@ timestamp | integer(int64) | Optional | none | none
 
 ##  TradfiSpotUserAssetResp
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-data | object | Optional | none | none  
-» equity | string | Optional | none | Account equity  
-» balance | string | Optional | none | Account Balance  
-» available | string | Optional | none | Available Balance  
-» loan_amount | string | Optional | none | Loan amount. Non-negative: the absolute value of the original available balance when it is negative, otherwise 0.  
-» buy_power | string | Optional | none | Buying power  
-» leverage | string | Optional | none | Leverage  
-» leave_liquidity | string | Optional | none | Excess liquidity  
-» leave_liquidity_rate | string | Optional | none | Excess liquidity ratio  
-» aee | string | Optional | none | Available Excess Equity (AEE)  
-» options_margin | string | Optional | none | Options margin  
-» position_market_value | string | Optional | none | Position market value  
-» position_pnl | string | Optional | none | Position P&L  
-» today_pnl | string | Optional | none | Today's P&L  
-» option_position_market_value | string | Optional | none | Option position market value  
-» option_position_pnl | string | Optional | none | Option position PnL  
-» option_today_pnl | string | Optional | none | Option today's PnL  
-» user_exists | boolean | Optional | none | Whether the user has activated the service  
-» margin_enabled | boolean | Optional | none | Whether margin financing is enabled  
-» long_borrowing_rate | string | Optional | none | Annual margin financing interest rate. An empty string indicates that no valid rate is currently available.  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+equity | string | Optional |  | Account equity  
+balance | string | Optional |  | Account Balance  
+available | string | Optional |  | Available Balance  
+loan_amount | string | Optional |  | Loan amount. Non-negative: the absolute value of the original available balance when it is negative, otherwise 0.  
+buy_power | string | Optional |  | Buying power  
+leverage | string | Optional |  | Leverage  
+leave_liquidity | string | Optional |  | Excess liquidity  
+leave_liquidity_rate | string | Optional |  | Excess liquidity ratio  
+aee | string | Optional |  | Available Excess Equity (AEE)  
+options_margin | string | Optional |  | Options margin  
+position_market_value | string | Optional |  | Position market value  
+position_pnl | string | Optional |  | Position P&L  
+today_pnl | string | Optional |  | Today's P&L  
+option_position_market_value | string | Optional |  | Option position market value  
+option_position_pnl | string | Optional |  | Option position PnL  
+option_today_pnl | string | Optional |  | Option today's PnL  
+user_exists | boolean | Optional |  | Whether the user has activated the service  
+margin_enabled | boolean | Optional |  | Whether margin financing is enabled  
+long_borrowing_rate | string | Optional |  | Annual margin financing interest rate. An empty string indicates that no valid rate is currently available.  
       
     
     {
@@ -3914,143 +4675,71 @@ timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)
     
     
 
-##  TradFiSpotTransactionRequest
+##  TradfiSpotTransactionList
 
-_Fund transfer request parameters. Transfer in means moving funds from the spot account to the stock account; transfer out means moving funds from the stock account to the spot account._
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-asset | string | Required | none | Asset, USDT only  
-change | string | Required | none | Change amount, must be greater than 0  
-type | string | Required | none | Transaction type. deposit transfers funds from the spot account to the stock account; withdraw transfers funds from the stock account to the spot account.  
-ref_id | string | Required | none | Business idempotent ID  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
+Type | Constraints  
 ---|---  
-asset | USDT  
-type | deposit  
-type | withdraw  
-      
-    
-    {
-      "asset": "USDT",
-      "change": "100",
-      "type": "deposit",
-      "ref_id": "transfer-202607070001"
-    }
-    
-    
-
-##  TradfiSpotSymbols
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-data | object | Optional | none | none  
-» total | integer(int64) | Optional | none | Total quantity  
-» total_page | integer | Optional | none | Total pages  
-» list | array | Optional | none | Symbol list  
-»» symbol | string | Optional | none | Symbol  
-»» exchange | string | Optional | none | Exchange.  
-\- us: US stocks.  
-\- hk: Hong Kong stocks.  
-\- kr: Korean stocks.  
-\- jp: Japanese stocks.  
-»» exchange_desc | string | Optional | none | Exchange description  
-»» quote_currency | string | Optional | none | Quote currency  
-»» quote_currency_precision | integer | Optional | none | Quote currency precision  
-»» fx_rate | string | Optional | none | Quote currency to USD exchange rate  
-»» symbol_desc | string | Optional | none | Symbol description  
-»» category | string | Optional | none | Symbol category.  
-\- CS: Common stock.  
-\- ETF: Exchange-traded funds.  
-\- ADRC, ADR: Depositary receipts for foreign companies listed in the U.S.  
-\- ETV: Exchange-traded products.  
-\- PFD: Preferred stock.  
-\- ETS: Exchange-traded securities.  
-\- ETN: Exchange-traded notes.  
-\- FUND: Funds.  
-»» asset_type | string | Optional | none | Asset type.  
-\- STOCK: Stock.  
-\- ETF: Exchange-traded fund.  
-»» trade_status | string | Optional | none | Trading status.  
-\- pre_market: Pre-market.  
-\- open: Regular trading session.  
-\- post_market: Post-market.  
-»» trade_mode | integer | Optional | none | Current session trading mode.  
-\- 0: Trading disabled.  
-\- 1: Buy only.  
-\- 2: Sell only.  
-\- 4: Buy and sell supported.  
-\- 5: Trading suspended.  
-\- 6: Trading suspended.  
-\- 7: Trading suspended.  
-\- 8: Trading suspended.  
-»» order_fill_timing | integer | Optional | none | Order fill timing (1=immediate, 2=after pre-market opens, 3=after regular session opens)  
-»» icon_link | string | Optional | none | Icon URL  
-»» quote_currency_symbol | string | Optional | none | Quote currency symbol  
-»» price_precision | integer | Optional | none | Price precision  
-»» volume_precision | integer | Optional | none | Quantity precision  
-»» is_ipo | boolean | Optional | none | Whether it is an IPO symbol  
-»» ipo_price | string | Optional | none | IPO price  
-»» sell_price_protection | string | Optional | none | Sell price protection rate  
-»» buy_price_protection | string | Optional | none | Buy price protection rate  
-»» symbol_descs | [TradfiSpotSymbols/definitions/SymbolListItem/properties/symbol_descs/items] | Optional | none | Multilingual symbol description  
-»» margin_mode | integer | Optional | none | Margin trading mode.  
-\- 0: Neither margin financing nor securities borrowing is supported.  
-\- 1: Margin financing is supported.  
-\- 2: Securities borrowing is supported.  
-\- 3: Both margin financing and securities borrowing are supported.  
-»» long_im | string | Optional | none | Initial margin ratio for long positions  
-»» long_mm | string | Optional | none | Maintenance margin ratio for long positions  
-»» short_im | string | Optional | none | Initial margin ratio for short positions  
-»» short_mm | string | Optional | none | Maintenance margin ratio for short positions  
-»» long_borrowing_rate | string | Optional | none | Annual margin financing interest rate. An empty string indicates that no valid rate is currently available.  
-»» short_borrowing_rate | string | Optional | none | Annual securities borrowing interest rate. An empty string indicates that no valid rate is currently available.  
-» timestamp | integer(int64) | Optional | none | none  
+object |   
   
-####  Enumerated Values
+**Properties**
 
-Enumerated ValuesProperty | Value  
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
 ---|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-category | CS  
-category | ETF  
-category | ADRC  
-category | ADR  
-category | ETV  
-category | PFD  
-category | ETS  
-category | ETN  
-category | FUND  
-asset_type | STOCK  
-asset_type | ETF  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
-trade_mode | 0  
-trade_mode | 1  
-trade_mode | 2  
-trade_mode | 4  
-trade_mode | 5  
-trade_mode | 6  
-trade_mode | 7  
-trade_mode | 8  
-order_fill_timing | 1  
-order_fill_timing | 2  
-order_fill_timing | 3  
-margin_mode | 0  
-margin_mode | 1  
-margin_mode | 2  
-margin_mode | 3  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  |   
+total_page | integer(int64) | Optional |  |   
+list | array | Optional |  | Transaction record list  
+  
+**data / list**
+
+Transaction record list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+asset | string | Optional |  | Asset  
+symbol | string | Optional |  | Symbol  
+symbol_display | string | Optional |  | Symbol display name  
+type | string | Optional | enum: ["deposit","withdraw","fee","dividend","sell","buy","award","stock_transfer_in","stock_transfer_out"] | Transaction type.  
+\- deposit: Funds transfer in.  
+\- withdraw: Funds transfer out.  
+\- fee: Trading fee.  
+\- dividend: Dividend payout.  
+\- sell: Stock sale credit.  
+\- buy: Stock purchase debit.  
+\- award: Airdrop reward.  
+\- stock_transfer_in: Stock transfer in.  
+\- stock_transfer_out: Stock transfer out.  
+type_desc | string | Optional |  | Transaction type description  
+change | string | Optional |  | Change amount. A positive value means a credit, and a negative value means a debit.  
+balance | string | Optional |  | Balance after change  
+ref_id | string | Optional |  | Business idempotent ID  
+time | integer(int64) | Optional |  | Unix timestamp (seconds)  
+unit_text | string | Optional |  | Unit display text  
+detail | object | Optional | additionalProperties: true | Business details  
       
     
     {
@@ -4066,14 +4755,18 @@ margin_mode | 3
     
     
 
-##  DeleteOrder
+##  TradfiSpotCreateTransaction
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-data | object | Optional | none | Returns empty object on success  
-timestamp | integer(int64) | Optional | none | none  
+data | object | Optional | additionalProperties: false | Returns empty object on success  
+timestamp | integer(int64) | Optional |  |   
       
     
     {
@@ -4083,128 +4776,146 @@ timestamp | integer(int64) | Optional | none | none
     
     
 
-##  TradfiSpotOrderBook
+##  TradFiSpotError
 
-###  Properties
+TradFiSpotError
 
-PropertiesName | Type | Required | Restrictions | Description  
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-data | object | Optional | none | none  
-» symbol | string | Optional | none | Symbol  
-» bids | array | Optional | none | Bid orders  
-»» p | string | Optional | none | Price  
-»» user_order | boolean | Optional | none | Whether it is the user's own order  
-» asks | [TradfiSpotOrderBook/properties/data/properties/bids/items] | Optional | none | Ask orders  
-timestamp | integer(int64) | Optional | none | none  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
       
     
     {
-      "data": {
-        "symbol": "AAPL",
-        "bids": [
-          {}
-        ],
-        "asks": [
-          {}
-        ]
-      },
-      "timestamp": 0
+      "label": "INVALID_ARGUMENT",
+      "message": "invalid argument",
+      "data": {},
+      "timestamp": 1783411200000
     }
     
     
 
-##  TradfiSpotOrderHistoryList
+##  TradfiSpotSymbols
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-data | object | Optional | none | none  
-» total | integer(int64) | Optional | none | Total quantity  
-» total_page | integer | Optional | none | Total pages  
-» list | array | Optional | none | Query historical order list  
-»» order_id | string | Optional | none | Order ID  
-»» symbol | string | Optional | none | Symbol  
-»» exchange | string | Optional | none | Exchange.  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total quantity  
+total_page | integer | Optional |  | Total pages  
+list | array | Optional |  | Symbol list  
+  
+**data / list**
+
+Symbol list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Optional |  | Symbol  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | Exchange.  
 \- us: US stocks.  
 \- hk: Hong Kong stocks.  
 \- kr: Korean stocks.  
 \- jp: Japanese stocks.  
-»» quote_currency | string | Optional | none | Quote currency  
-»» fx_rate | string | Optional | none | Quote currency to USD exchange rate  
-»» symbol_desc | string | Optional | none | Symbol description  
-»» price_type | string | Optional | none | Price type (market = market order, limit = limit order)  
-»» status | integer | Optional | none | Order status.  
-\- 0: Unknown.  
-\- 1: New order; the order has been validated and is waiting to be processed.  
-\- 2: Partially filled.  
-\- 3: Filled.  
-\- 4: Canceled.  
-\- 5: Order rejected.  
-\- 6: Cancellation rejected.  
-\- 7: Order update succeeded.  
-\- 8: Order update rejected.  
-»» status_desc | string | Optional | none | Order status description  
-»» status_detail | object|null | Optional | none | Order status details  
-»»» title | string | Optional | none | Status title  
-»»» message | string | Optional | none | Status message  
-»» finish_as | integer | Optional | none | Order completion reason.  
-\- 0: Unknown.  
-\- 1: No quote found.  
-\- 2: No match found.  
-\- 3: Trigger price exceeded.  
-\- 4: Order value exceeds the limit.  
-\- 5: Unknown rejection.  
-\- 6: Unknown cancellation.  
-\- 7: Canceled by user.  
-\- 8: Canceled after the order time in force expired.  
-\- 9: Trading is not supported in the current session.  
-\- 13: Canceled due to corporate action.  
-»» side | integer | Optional | none | Side (1=sell, 2=buy)  
-»» time_in_force | string | Optional | none | Time in force.  
-\- day: Day order.  
-»» volume | string | Optional | none | Order quantity  
-»» fill_volume | string | Optional | none | Trading size  
-»» price | string | Optional | none | Order price  
-»» avg_fill_price | string|null | Optional | none | Average fill price  
-»» commission | string | Optional | none | fee  
-»» time_setup | integer(int64) | Optional | none | Order creation time (Unix timestamp, seconds)  
-»» time_done | integer(int64) | Optional | none | Order completion time (Unix timestamp in seconds)  
-» timestamp | integer(int64) | Optional | none | none  
+exchange_desc | string | Optional |  | Exchange description  
+quote_currency | string | Optional |  | Quote currency  
+quote_currency_precision | integer | Optional |  | Quote currency precision  
+fx_rate | string | Optional |  | Quote currency to USD exchange rate  
+symbol_desc | string | Optional |  | Symbol description  
+category | string | Optional | enum: ["CS","ETF","ADRC","ADR","ETV","PFD","ETS","ETN","FUND"] | Symbol category.  
+\- CS: Common stock.  
+\- ETF: Exchange-traded funds.  
+\- ADRC, ADR: Depositary receipts for foreign companies listed in the U.S.  
+\- ETV: Exchange-traded products.  
+\- PFD: Preferred stock.  
+\- ETS: Exchange-traded securities.  
+\- ETN: Exchange-traded notes.  
+\- FUND: Funds.  
+asset_type | string | Optional | enum: ["STOCK","ETF"] | Asset type.  
+\- STOCK: Stock.  
+\- ETF: Exchange-traded fund.  
+trade_status | string | Optional | enum: ["pre_market","open","post_market"] | Trading status.  
+\- pre_market: Pre-market.  
+\- open: Regular trading session.  
+\- post_market: Post-market.  
+trade_mode | integer | Optional | enum: [0,1,2,4,5] | Current session trading mode.  
+\- 0: Trading disabled.  
+\- 1: Buy only.  
+\- 2: Sell only.  
+\- 4: Buy and sell supported.  
+\- 5: Trading suspended.  
+order_fill_timing | integer | Optional | enum: [1,2,3] | Order fill timing (1=immediate, 2=after pre-market opens, 3=after regular session opens)  
+icon_link | string | Optional |  | Icon URL  
+quote_currency_symbol | string | Optional |  | Quote currency symbol  
+price_precision | integer | Optional |  | Price precision  
+volume_precision | integer | Optional |  | Quantity precision  
+is_ipo | boolean | Optional |  | Whether it is an IPO symbol  
+ipo_price | string | Optional |  | IPO price  
+sell_price_protection | string | Optional |  | Sell price protection rate  
+buy_price_protection | string | Optional |  | Buy price protection rate  
+symbol_descs | array | Optional |  | Multilingual symbol description  
+margin_mode | integer | Optional | enum: [0,1,2,3] | Margin trading mode.  
+\- 0: Neither margin financing nor securities borrowing is supported.  
+\- 1: Margin financing is supported.  
+\- 2: Securities borrowing is supported.  
+\- 3: Both margin financing and securities borrowing are supported.  
+long_im | string | Optional |  | Initial margin ratio for long positions  
+long_mm | string | Optional |  | Maintenance margin ratio for long positions  
+short_im | string | Optional |  | Initial margin ratio for short positions  
+short_mm | string | Optional |  | Maintenance margin ratio for short positions  
+long_borrowing_rate | string | Optional |  | Annual margin financing interest rate. An empty string indicates that no valid rate is currently available.  
+short_borrowing_rate | string | Optional |  | Annual securities borrowing interest rate. An empty string indicates that no valid rate is currently available.  
   
-####  Enumerated Values
+**data / list / items / symbol_descs**
 
-Enumerated ValuesProperty | Value  
+Multilingual symbol description
+
+Type | Constraints  
 ---|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-price_type | market  
-price_type | limit  
-status | 0  
-status | 1  
-status | 2  
-status | 3  
-status | 4  
-status | 5  
-status | 6  
-status | 7  
-status | 8  
-finish_as | 0  
-finish_as | 1  
-finish_as | 2  
-finish_as | 3  
-finish_as | 4  
-finish_as | 5  
-finish_as | 6  
-finish_as | 7  
-finish_as | 8  
-finish_as | 9  
-finish_as | 13  
-side | 1  
-side | 2  
-time_in_force | day  
+array |   
+  
+**data / list / items / symbol_descs / items**
+
+Type | Constraints  
+---|---  
+object |   
       
     
     {
@@ -4222,22 +4933,19 @@ time_in_force | day
 
 ##  TradFiSpotClosePositionRequest
 
-_Close position request parameters_
+Close position request parameters
 
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-symbol | string | Required | none | Symbol  
-close_volume | string | Optional | none | Close quantity; required for partial close  
-close_type | integer | Required | none | Close type (1=partial close, 2=close all)  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
+Type | Constraints  
 ---|---  
-close_type | 1  
-close_type | 2  
+object | required: ["symbol","close_type"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Symbol  
+close_volume | string | Optional |  | Close quantity; required for partial close  
+close_type | integer | Required | enum: [1,2] | Close type (1=partial close, 2=close all)  
       
     
     {
@@ -4248,32 +4956,149 @@ close_type | 2
     
     
 
-##  Exchanges
+##  TradFiSpotTransactionRequest
 
-###  Properties
+Fund transfer request parameters. Transfer in means moving funds from the spot account to the stock account; transfer out means moving funds from the stock account to the spot account.
 
-PropertiesName | Type | Required | Restrictions | Description  
+Type | Constraints  
+---|---  
+object | required: ["asset","change","type","ref_id"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-data | object | Optional | none | none  
-» list | array | Optional | none | none  
-»» exchange | string | Optional | none | Trading market.  
+asset | string | Required | enum: ["USDT"] | Asset, USDT only  
+change | string | Required |  | Change amount, must be greater than 0  
+type | string | Required | enum: ["deposit","withdraw"] | Transaction type. deposit transfers funds from the spot account to the stock account; withdraw transfers funds from the stock account to the spot account.  
+ref_id | string | Required |  | Business idempotent ID  
+      
+    
+    {
+      "asset": "USDT",
+      "change": "100",
+      "type": "deposit",
+      "ref_id": "transfer-202607070001"
+    }
+    
+    
+
+##  TradfiSpotCreateOrder
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | string | Optional |  | Order ID  
+      
+    
+    {
+      "data": {
+        "id": "123456"
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradfiSpotPositionList
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+list | array | Optional |  | Query active position list  
+  
+**data / list**
+
+Query active position list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Optional |  | Symbol  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | Exchange.  
 \- us: US stocks.  
 \- hk: Hong Kong stocks.  
 \- kr: Korean stocks.  
 \- jp: Japanese stocks.  
-»» exchange_desc | string | Optional | none | Market display name  
-»» icon_link | string | Optional | none | Market icon  
-»» support_transfer | boolean | Optional | none | Whether stock transfer is supported  
-» timestamp | integer(int64) | Optional | none | none  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
+quote_currency | string | Optional |  | Quote currency  
+quote_currency_precision | integer | Optional |  | Quote currency precision  
+fx_rate | string | Optional |  | Quote currency to USD exchange rate  
+trade_status | string | Optional | enum: ["pre_market","open","post_market"] | Trading status.  
+\- pre_market: Pre-market.  
+\- open: Regular trading session.  
+\- post_market: Post-market.  
+symbol_desc | string | Optional |  | Symbol description  
+position_pnl | string | Optional |  | Position P&L  
+today_pnl | string | Optional |  | Today's P&L  
+pnl_rate | string | Optional |  | Yield  
+today_sell_amount | string | Optional |  | Today's sales amount  
+today_buy_amount | string | Optional |  | Today's purchase amount  
+today_sell_volume | string | Optional |  | Today's sell volume  
+today_buy_volume | string | Optional |  | Today's buy volume  
+yesterday_volume | string | Optional |  | Previous close position quantity  
+volume | string | Optional |  | Position quantity  
+available | string | Optional |  | Available position quantity  
+transfer_out_pending_qty | string | Optional |  | Stock transfer in progress quantity  
+avg_cost_price | string | Optional |  | Cost price  
+diluted_cost_price | string | Optional |  | Diluted cost price  
+last_price | string | Optional |  | Latest price  
+extended_last_price | string|null | Optional | nullable: true | Extended hours latest price  
+max_order_volume | string | Optional |  | Maximum order quantity  
+step_order_volume | string | Optional |  | Order step size  
+min_order_volume | string | Optional |  | Minimum order quantity  
+price_precision | integer | Optional |  | Price precision  
+price_protection | string | Optional |  | Price protection range  
+sell_price_protection | string | Optional |  | Sell price protection rate  
+buy_price_protection | string | Optional |  | Buy price protection rate  
+commission_rate | string | Optional |  | Fee Rate  
+slippage_rate | string | Optional |  | Slippage  
       
     
     {
@@ -4283,4 +5108,27 @@ exchange | jp
         ]
       },
       "timestamp": 0
+    }
+    
+    
+
+##  TradFiSpotOrderUpdateRequest
+
+Modify order request parameters
+
+Type | Constraints  
+---|---  
+object | required: ["volume","price"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+volume | string | Required |  | Modified order quantity  
+price | string | Required |  | Modified order price  
+      
+    
+    {
+      "volume": "8",
+      "price": "201.23"
     }

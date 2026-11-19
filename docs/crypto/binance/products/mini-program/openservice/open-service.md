@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/openservice/open-service
 api_type: Guide
-updated_at: 2026-11-18 18:36:29.734772
+updated_at: 2026-11-19 18:39:19.605562
 ---
 
 # Open Service

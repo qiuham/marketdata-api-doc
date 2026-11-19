@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/copy-trading
 api_type: REST
-updated_at: 2026-11-18 19:01:26.097649
+updated_at: 2026-11-19 19:08:01.474579
 ---
 
 # Copy Trading
@@ -209,14 +209,14 @@ Transfer funds into or out of a copy-trading lead account. Only transfers betwee
 
 Operation ID: `copyTradingPublicPrivateTransfer`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| type | string | 是 | Transfer direction<br><br>`in` Transfer in (spot/funding account -> lead account)<br><br>`out` Transfer out (lead account -> spot/funding account) |
-| inAccountType | string |  | Source account type for transfer-in. Multiple types supported, separated by commas (`,`).<br><br>`funding` Spot/funding account<br><br>`uta` Unified account<br><br>`otc` OTC account<br><br>If not specified, all account types are selected by default.<br><br>Deduction order: funding account -> OTC account -> unified account.<br><br>Classic account mode only supports `funding` (spot account) as the source. |
-| coin | string | 是 | Transfer coin |
-| amount | string | 是 | Transfer amount |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| type | query | string | 是 | Transfer direction<br><br>`in` Transfer in (spot/funding account -> lead account)<br><br>`out` Transfer out (lead account -> spot/funding account) |
+| inAccountType | query | string |  | Source account type for transfer-in. Multiple types supported, separated by commas (`,`).<br><br>`funding` Spot/funding account<br><br>`uta` Unified account<br><br>`otc` OTC account<br><br>If not specified, all account types are selected by default.<br><br>Deduction order: funding account -> OTC account -> unified account.<br><br>Classic account mode only supports `funding` (spot account) as the source. |
+| coin | query | string | 是 | Transfer coin |
+| amount | query | string | 是 | Transfer amount |
 
 ### 响应 200：Successful response
 
@@ -581,21 +581,21 @@ Create a copy trading subscription for a lead trading project.
 
 Operation ID: `copyTradingFollowerCreateCopy`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | Project ID |
-| accountType | string |  | Account type for auto fund transfer. Multiple values separated by commas (`,`).<br><br>`funding` Spot/funding account<br><br>`uta` Unified account<br><br>`otc` OTC account<br><br>If not specified, all account types are selected by default.<br><br>Deduction order: funding account → OTC account → unified account. |
-| type | string | 是 | Copy type<br><br>`fixed_ratio` Fixed ratio: each order is placed proportionally based on the ratio of the lead trader's order margin to their account equity.<br><br>`fixed_margin` Fixed margin: each order uses a fixed margin amount. |
-| amount | string | 是 | Copy amount in USDT. Minimum: 50. |
-| tradingPairList | string |  | List of trading pairs to copy. If not specified, all pairs are copied. If the lead trader trades a pair outside your selected list, no order will be placed. |
-| marginPerOrder | string |  | Margin per order in USDT. Required when `type` is `fixed_margin`. |
-| autoCopy | string |  | Auto-follow new trading pairs.<br><br>`on` Auto-follow (default)<br><br>`off` Do not auto-follow |
-| leverage | string |  | Leverage multiplier. If not specified, follows the lead trader's leverage. Range: [1, 10]. |
-| maxEntrySlippage | string |  | Maximum entry slippage. If not specified, the system default applies. Range: [0.1, 3]. For example, 0.1 represents 0.1%. |
-| maxMarginRatio | string |  | Maximum single-order margin ratio. Range: [5, 95]. For example, 5 represents 5%. When the margin for a single futures order exceeds this percentage of total assets, the order is placed using the maximum ratio. |
-| maxPostionValue | string |  | Maximum total position value in USDT. Default and maximum: 2,000,000. When the total position value reaches this limit, no new copy orders will be placed. |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | Project ID |
+| accountType | query | string |  | Account type for auto fund transfer. Multiple values separated by commas (`,`).<br><br>`funding` Spot/funding account<br><br>`uta` Unified account<br><br>`otc` OTC account<br><br>If not specified, all account types are selected by default.<br><br>Deduction order: funding account → OTC account → unified account. |
+| type | query | string | 是 | Copy type<br><br>`fixed_ratio` Fixed ratio: each order is placed proportionally based on the ratio of the lead trader's order margin to their account equity.<br><br>`fixed_margin` Fixed margin: each order uses a fixed margin amount. |
+| amount | query | string | 是 | Copy amount in USDT. Minimum: 50. |
+| tradingPairList | query | string |  | List of trading pairs to copy. If not specified, all pairs are copied. If the lead trader trades a pair outside your selected list, no order will be placed. |
+| marginPerOrder | query | string |  | Margin per order in USDT. Required when `type` is `fixed_margin`. |
+| autoCopy | query | string |  | Auto-follow new trading pairs.<br><br>`on` Auto-follow (default)<br><br>`off` Do not auto-follow |
+| leverage | query | string |  | Leverage multiplier. If not specified, follows the lead trader's leverage. Range: [1, 10]. |
+| maxEntrySlippage | query | string |  | Maximum entry slippage. If not specified, the system default applies. Range: [0.1, 3]. For example, 0.1 represents 0.1%. |
+| maxMarginRatio | query | string |  | Maximum single-order margin ratio. Range: [5, 95]. For example, 5 represents 5%. When the margin for a single futures order exceeds this percentage of total assets, the order is placed using the maximum ratio. |
+| maxPostionValue | query | string |  | Maximum total position value in USDT. Default and maximum: 2,000,000. When the total position value reaches this limit, no new copy orders will be placed. |
 
 ### 响应 200：Successful response
 
@@ -627,18 +627,18 @@ Modify the settings for an existing copy trading subscription.
 
 Operation ID: `copyTradingFollowerModifySettings`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | Project ID |
-| tradingPairList | string |  | List of trading pairs. Pass `all` to follow all pairs. |
-| marginPerOrder | string |  | Margin per order in USDT. |
-| autoCopy | string |  | Auto-follow new trading pairs.<br><br>`on` Auto-follow<br><br>`off` Do not auto-follow |
-| leverage | string |  | Leverage multiplier. Range: [1, 10]. Can only be modified when there are no open positions. |
-| maxEntrySlippage | string |  | Maximum entry slippage. Range: [0.1, 3]. 0.1 represents 0.1%. |
-| maxMarginRatio | string |  | Maximum single-order margin ratio. Range: [5, 95]. |
-| maxPostionValue | string |  | Maximum total position value in USDT. Maximum: 2,000,000. |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | Project ID |
+| tradingPairList | query | string |  | List of trading pairs. Pass `all` to follow all pairs. |
+| marginPerOrder | query | string |  | Margin per order in USDT. |
+| autoCopy | query | string |  | Auto-follow new trading pairs.<br><br>`on` Auto-follow<br><br>`off` Do not auto-follow |
+| leverage | query | string |  | Leverage multiplier. Range: [1, 10]. Can only be modified when there are no open positions. |
+| maxEntrySlippage | query | string |  | Maximum entry slippage. Range: [0.1, 3]. 0.1 represents 0.1%. |
+| maxMarginRatio | query | string |  | Maximum single-order margin ratio. Range: [5, 95]. |
+| maxPostionValue | query | string |  | Maximum total position value in USDT. Maximum: 2,000,000. |
 
 ### 响应 200：Successful response
 
@@ -670,12 +670,12 @@ Cancel a copy trading subscription.
 
 Operation ID: `copyTradingFollowerUnfollow`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | Project ID |
-| closeType | string |  | Close type when unfollowing.<br><br>`follow_close` Follow the lead trader to close positions<br><br>`instant_close` Close positions immediately |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | Project ID |
+| closeType | query | string |  | Close type when unfollowing.<br><br>`follow_close` Follow the lead trader to close positions<br><br>`instant_close` Close positions immediately |
 
 ### 响应 200：Successful response
 
@@ -805,15 +805,15 @@ Transfer funds into or out of the copy trading account.
 
 Operation ID: `copyTradingFollowerCopyTransfer`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | Project ID |
-| type | string | 是 | Transfer direction<br><br>`in` Transfer in<br><br>`out` Transfer out. Only transfers to the spot/funding account are supported. |
-| inAccountType | string |  | Source account type for transfer-in. Multiple values separated by commas.<br><br>`funding` Spot/funding account<br><br>`uta` Unified account<br><br>`otc` OTC account<br><br>If not specified, all account types are selected. Deduction order: funding account → OTC account → unified account. |
-| coin | string | 是 | Transfer coin |
-| amount | string | 是 | Transfer amount |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | Project ID |
+| type | query | string | 是 | Transfer direction<br><br>`in` Transfer in<br><br>`out` Transfer out. Only transfers to the spot/funding account are supported. |
+| inAccountType | query | string |  | Source account type for transfer-in. Multiple values separated by commas.<br><br>`funding` Spot/funding account<br><br>`uta` Unified account<br><br>`otc` OTC account<br><br>If not specified, all account types are selected. Deduction order: funding account → OTC account → unified account. |
+| coin | query | string | 是 | Transfer coin |
+| amount | query | string | 是 | Transfer amount |
 
 ### 响应 200：Successful response
 
@@ -1012,14 +1012,14 @@ Manually close a position in the copy trading account.
 
 Operation ID: `copyTradingFollowerClosePositions`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | Project ID |
-| symbol | string | 是 | Trading pair name |
-| qty | string | 是 | Quantity to close |
-| holdSide | string | 是 | Position side<br><br>`long` Long position<br><br>`short` Short position<br><br>Required in hedge mode. |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | Project ID |
+| symbol | query | string | 是 | Trading pair name |
+| qty | query | string | 是 | Quantity to close |
+| holdSide | query | string | 是 | Position side<br><br>`long` Long position<br><br>`short` Short position<br><br>Required in hedge mode. |
 
 ### 响应 200：Successful response
 
@@ -1051,11 +1051,11 @@ Close all positions in the copy trading account with one click.
 
 Operation ID: `copyTradingFollowerCloseAll`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | Project ID |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | Project ID |
 
 ### 响应 200：Successful response
 
@@ -1151,16 +1151,16 @@ Set take-profit and stop-loss for a position in the copy trading account.
 
 Operation ID: `copyTradingFollowerPlaceTpsl`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | Project ID |
-| positionId | string | 是 | Position ID |
-| tpTriggerBy | string | 是 | Take-profit trigger type<br><br>`market` Market price (default)<br><br>`mark` Mark price |
-| slTriggerBy | string | 是 | Stop-loss trigger type<br><br>`market` Market price (default)<br><br>`mark` Mark price |
-| takeProfit | string | 是 | Take-profit trigger price |
-| stopLoss | string | 是 | Stop-loss trigger price |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | Project ID |
+| positionId | query | string | 是 | Position ID |
+| tpTriggerBy | query | string | 是 | Take-profit trigger type<br><br>`market` Market price (default)<br><br>`mark` Mark price |
+| slTriggerBy | query | string | 是 | Stop-loss trigger type<br><br>`market` Market price (default)<br><br>`mark` Mark price |
+| takeProfit | query | string | 是 | Take-profit trigger price |
+| stopLoss | query | string | 是 | Stop-loss trigger price |
 
 ### 响应 200：Successful response
 
@@ -1195,16 +1195,16 @@ Modify the take-profit and stop-loss for a copy trading position.
 
 Operation ID: `copyTradingFollowerModifyTpsl`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | Project ID |
-| strategyId | string | 是 | Strategy ID |
-| tpTriggerBy | string | 是 | Take-profit trigger type<br><br>`market` Market price<br><br>`mark` Mark price |
-| slTriggerBy | string | 是 | Stop-loss trigger type<br><br>`market` Market price<br><br>`mark` Mark price |
-| takeProfit | string | 是 | Take-profit trigger price |
-| stopLoss | string | 是 | Stop-loss trigger price |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | Project ID |
+| strategyId | query | string | 是 | Strategy ID |
+| tpTriggerBy | query | string | 是 | Take-profit trigger type<br><br>`market` Market price<br><br>`mark` Mark price |
+| slTriggerBy | query | string | 是 | Stop-loss trigger type<br><br>`market` Market price<br><br>`mark` Mark price |
+| takeProfit | query | string | 是 | Take-profit trigger price |
+| stopLoss | query | string | 是 | Stop-loss trigger price |
 
 ### 响应 200：Successful response
 
@@ -1239,12 +1239,12 @@ Cancel a take-profit/stop-loss strategy for a copy trading position.
 
 Operation ID: `copyTradingFollowerCancelTpsl`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | Project ID |
-| strategyId | string | 是 | Strategy ID |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | Project ID |
+| strategyId | query | string | 是 | Strategy ID |
 
 ### 响应 200：Successful response
 
@@ -1607,14 +1607,14 @@ Operation ID: `copyTradingPublicPrivateGetMaxTransferable`
 
 Operation ID: `copyTradingPublicPrivateTransfer`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| type | string | 是 | 划转类型<br><br>`in` 转入（现货/资金账户 → 带单账户）<br><br>`out` 转出（带单账户 → 现货/资金账户） |
-| inAccountType | string |  | 转入账户类型，支持多选，多个账户类型用英文逗号 `,` 分隔<br><br>`funding` 现货/资金账户<br><br>`uta` 统一账户<br><br>`otc` OTC账户<br><br>如不选，默认选择全部账户<br><br>扣款顺序：资金账户 → OTC账户 → 统一账户<br><br>经典账户模式仅支持 `funding` 现货账户转入 |
-| coin | string | 是 | 划转币种 |
-| amount | string | 是 | 划转数量 |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| type | query | string | 是 | 划转类型<br><br>`in` 转入（现货/资金账户 → 带单账户）<br><br>`out` 转出（带单账户 → 现货/资金账户） |
+| inAccountType | query | string |  | 转入账户类型，支持多选，多个账户类型用英文逗号 `,` 分隔<br><br>`funding` 现货/资金账户<br><br>`uta` 统一账户<br><br>`otc` OTC账户<br><br>如不选，默认选择全部账户<br><br>扣款顺序：资金账户 → OTC账户 → 统一账户<br><br>经典账户模式仅支持 `funding` 现货账户转入 |
+| coin | query | string | 是 | 划转币种 |
+| amount | query | string | 是 | 划转数量 |
 
 ### 响应 200：Successful response
 
@@ -1979,21 +1979,21 @@ Operation ID: `copyTradingPublicPrivateGetPortfolioOverview`
 
 Operation ID: `copyTradingFollowerCreateCopy`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | 项目ID |
-| accountType | string |  | 自动划转的账户类型，多个账户类型用英文逗号`,`分隔。<br><br>`funding` 资金账户<br><br>`uta` 统一账户<br><br>`otc` OTC账户<br><br>如不选，默认选择全部账户。<br><br>扣款顺序：资金账户 → OTC账户 → 统一账户。 |
-| type | string | 是 | 跟单类型<br><br>`fixed_ratio` 固定比例：每笔订单将根据交易专家的下单保证金与其账户净值的比例进行等比例下单。<br><br>`fixed_margin` 固定保证金：每笔订单均使用固定保证金开仓。 |
-| amount | string | 是 | 跟单金额，单位USDT，最小值为50。 |
-| tradingPairList | string |  | 跟单币对列表。如不传，则默认跟随全部币对。如果交易专家交易的币对超出您选择的范围，系统将不会为您执行任何交易。 |
-| marginPerOrder | string |  | 每笔保证金，单位USDT。`type=fixed_margin`时必填。 |
-| autoCopy | string |  | 自动跟随新带单币对。<br><br>`on` 自动跟随（默认）<br><br>`off` 不自动跟随 |
-| leverage | string |  | 杠杆倍数。如不填，则默认跟随带单专家的杠杆倍数。范围为[1, 10]。 |
-| maxEntrySlippage | string |  | 最大开仓滑点。如不填，则为系统默认值。范围为[0.1, 3]，0.1代表0.1%。 |
-| maxMarginRatio | string |  | 单笔最大保证金比例，范围为[5, 95]，5代表5%。当合约单笔开仓保证金占总资产比例达到设置值时，系统会以最大比例计算的开仓保证金下单。 |
-| maxPostionValue | string |  | 最大持仓价值，单位USDT，默认值和最大值均为2000000。当持有的全部仓位价值超过设置值时，系统将不再进行跟单开仓。 |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | 项目ID |
+| accountType | query | string |  | 自动划转的账户类型，多个账户类型用英文逗号`,`分隔。<br><br>`funding` 资金账户<br><br>`uta` 统一账户<br><br>`otc` OTC账户<br><br>如不选，默认选择全部账户。<br><br>扣款顺序：资金账户 → OTC账户 → 统一账户。 |
+| type | query | string | 是 | 跟单类型<br><br>`fixed_ratio` 固定比例：每笔订单将根据交易专家的下单保证金与其账户净值的比例进行等比例下单。<br><br>`fixed_margin` 固定保证金：每笔订单均使用固定保证金开仓。 |
+| amount | query | string | 是 | 跟单金额，单位USDT，最小值为50。 |
+| tradingPairList | query | string |  | 跟单币对列表。如不传，则默认跟随全部币对。如果交易专家交易的币对超出您选择的范围，系统将不会为您执行任何交易。 |
+| marginPerOrder | query | string |  | 每笔保证金，单位USDT。`type=fixed_margin`时必填。 |
+| autoCopy | query | string |  | 自动跟随新带单币对。<br><br>`on` 自动跟随（默认）<br><br>`off` 不自动跟随 |
+| leverage | query | string |  | 杠杆倍数。如不填，则默认跟随带单专家的杠杆倍数。范围为[1, 10]。 |
+| maxEntrySlippage | query | string |  | 最大开仓滑点。如不填，则为系统默认值。范围为[0.1, 3]，0.1代表0.1%。 |
+| maxMarginRatio | query | string |  | 单笔最大保证金比例，范围为[5, 95]，5代表5%。当合约单笔开仓保证金占总资产比例达到设置值时，系统会以最大比例计算的开仓保证金下单。 |
+| maxPostionValue | query | string |  | 最大持仓价值，单位USDT，默认值和最大值均为2000000。当持有的全部仓位价值超过设置值时，系统将不再进行跟单开仓。 |
 
 ### 响应 200：Successful response
 
@@ -2025,18 +2025,18 @@ Operation ID: `copyTradingFollowerCreateCopy`
 
 Operation ID: `copyTradingFollowerModifySettings`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | 项目ID |
-| tradingPairList | string |  | 跟单币对列表。如传`all`，则代表全部币对。 |
-| marginPerOrder | string |  | 每笔保证金，单位USDT。 |
-| autoCopy | string |  | 自动跟随新带单币对。<br><br>`on` 自动跟随<br><br>`off` 不自动跟随 |
-| leverage | string |  | 杠杆倍数，范围为[1, 10]。在无仓位情况下可修改该字段。 |
-| maxEntrySlippage | string |  | 最大开仓滑点，范围为[0.1, 3]，0.1代表0.1%。 |
-| maxMarginRatio | string |  | 单笔最大保证金比例，范围为[5, 95]。 |
-| maxPostionValue | string |  | 最大持仓价值，单位USDT，最大值为2000000。 |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | 项目ID |
+| tradingPairList | query | string |  | 跟单币对列表。如传`all`，则代表全部币对。 |
+| marginPerOrder | query | string |  | 每笔保证金，单位USDT。 |
+| autoCopy | query | string |  | 自动跟随新带单币对。<br><br>`on` 自动跟随<br><br>`off` 不自动跟随 |
+| leverage | query | string |  | 杠杆倍数，范围为[1, 10]。在无仓位情况下可修改该字段。 |
+| maxEntrySlippage | query | string |  | 最大开仓滑点，范围为[0.1, 3]，0.1代表0.1%。 |
+| maxMarginRatio | query | string |  | 单笔最大保证金比例，范围为[5, 95]。 |
+| maxPostionValue | query | string |  | 最大持仓价值，单位USDT，最大值为2000000。 |
 
 ### 响应 200：Successful response
 
@@ -2068,12 +2068,12 @@ Operation ID: `copyTradingFollowerModifySettings`
 
 Operation ID: `copyTradingFollowerUnfollow`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | 项目ID |
-| closeType | string |  | 取消跟单时的平仓类型。<br><br>`follow_close` 跟随交易专家平仓<br><br>`instant_close` 立即平仓 |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | 项目ID |
+| closeType | query | string |  | 取消跟单时的平仓类型。<br><br>`follow_close` 跟随交易专家平仓<br><br>`instant_close` 立即平仓 |
 
 ### 响应 200：Successful response
 
@@ -2203,15 +2203,15 @@ Operation ID: `copyTradingFollowerGetCopyMaxTransferable`
 
 Operation ID: `copyTradingFollowerCopyTransfer`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | 项目ID |
-| type | string | 是 | 划转类型<br><br>`in` 转入<br><br>`out` 转出，仅支持转出至现货/资金账户 |
-| inAccountType | string |  | 转入账户类型，多个账户类型用英文逗号分隔。<br><br>`funding` 资金账户<br><br>`uta` 统一账户<br><br>`otc` OTC账户<br><br>如不选，默认选择全部账户。扣款顺序：资金账户 → OTC账户 → 统一账户。 |
-| coin | string | 是 | 划转币种 |
-| amount | string | 是 | 划转数量 |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | 项目ID |
+| type | query | string | 是 | 划转类型<br><br>`in` 转入<br><br>`out` 转出，仅支持转出至现货/资金账户 |
+| inAccountType | query | string |  | 转入账户类型，多个账户类型用英文逗号分隔。<br><br>`funding` 资金账户<br><br>`uta` 统一账户<br><br>`otc` OTC账户<br><br>如不选，默认选择全部账户。扣款顺序：资金账户 → OTC账户 → 统一账户。 |
+| coin | query | string | 是 | 划转币种 |
+| amount | query | string | 是 | 划转数量 |
 
 ### 响应 200：Successful response
 
@@ -2410,14 +2410,14 @@ Operation ID: `copyTradingFollowerGetCopyProfitDetails`
 
 Operation ID: `copyTradingFollowerClosePositions`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | 项目ID |
-| symbol | string | 是 | 交易对名称 |
-| qty | string | 是 | 平仓数量 |
-| holdSide | string | 是 | 持仓方向<br><br>`long` 多仓<br><br>`short` 空仓<br><br>双向持仓模式，该字段必填。 |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | 项目ID |
+| symbol | query | string | 是 | 交易对名称 |
+| qty | query | string | 是 | 平仓数量 |
+| holdSide | query | string | 是 | 持仓方向<br><br>`long` 多仓<br><br>`short` 空仓<br><br>双向持仓模式，该字段必填。 |
 
 ### 响应 200：Successful response
 
@@ -2449,11 +2449,11 @@ Operation ID: `copyTradingFollowerClosePositions`
 
 Operation ID: `copyTradingFollowerCloseAll`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | 项目ID |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | 项目ID |
 
 ### 响应 200：Successful response
 
@@ -2549,16 +2549,16 @@ Operation ID: `copyTradingFollowerGetCurrentPositions`
 
 Operation ID: `copyTradingFollowerPlaceTpsl`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | 项目ID |
-| positionId | string | 是 | 仓位ID |
-| tpTriggerBy | string | 是 | 止盈触发类型<br><br>`market` 市场价格（默认）<br><br>`mark` 标记价格 |
-| slTriggerBy | string | 是 | 止损触发类型<br><br>`market` 市场价格（默认）<br><br>`mark` 标记价格 |
-| takeProfit | string | 是 | 止盈触发价格 |
-| stopLoss | string | 是 | 止损触发价格 |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | 项目ID |
+| positionId | query | string | 是 | 仓位ID |
+| tpTriggerBy | query | string | 是 | 止盈触发类型<br><br>`market` 市场价格（默认）<br><br>`mark` 标记价格 |
+| slTriggerBy | query | string | 是 | 止损触发类型<br><br>`market` 市场价格（默认）<br><br>`mark` 标记价格 |
+| takeProfit | query | string | 是 | 止盈触发价格 |
+| stopLoss | query | string | 是 | 止损触发价格 |
 
 ### 响应 200：Successful response
 
@@ -2593,16 +2593,16 @@ Operation ID: `copyTradingFollowerPlaceTpsl`
 
 Operation ID: `copyTradingFollowerModifyTpsl`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | 项目ID |
-| strategyId | string | 是 | 策略ID |
-| tpTriggerBy | string | 是 | 止盈触发类型<br><br>`market` 市场价格<br><br>`mark` 标记价格 |
-| slTriggerBy | string | 是 | 止损触发类型<br><br>`market` 市场价格<br><br>`mark` 标记价格 |
-| takeProfit | string | 是 | 止盈触发价格 |
-| stopLoss | string | 是 | 止损触发价格 |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | 项目ID |
+| strategyId | query | string | 是 | 策略ID |
+| tpTriggerBy | query | string | 是 | 止盈触发类型<br><br>`market` 市场价格<br><br>`mark` 标记价格 |
+| slTriggerBy | query | string | 是 | 止损触发类型<br><br>`market` 市场价格<br><br>`mark` 标记价格 |
+| takeProfit | query | string | 是 | 止盈触发价格 |
+| stopLoss | query | string | 是 | 止损触发价格 |
 
 ### 响应 200：Successful response
 
@@ -2637,12 +2637,12 @@ Operation ID: `copyTradingFollowerModifyTpsl`
 
 Operation ID: `copyTradingFollowerCancelTpsl`
 
-### 请求体（application/json）
+### 参数
 
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| projectId | string | 是 | 项目ID |
-| strategyId | string | 是 | 策略ID |
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| projectId | query | string | 是 | 项目ID |
+| strategyId | query | string | 是 | 策略ID |
 
 ### 响应 200：Successful response
 

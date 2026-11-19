@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/common/advanced-earn/change-log
 api_type: Changelog
-updated_at: 2026-11-18 18:40:44.750342
+updated_at: 2026-11-19 18:43:44.889367
 ---
 
 # Change Log

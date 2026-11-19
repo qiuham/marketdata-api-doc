@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-get_new_announcements
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:13.319905
+updated_at: 2026-11-19 19:05:50.754487
 ---
 
 # private/get_new_announcements
@@ -195,5 +195,5 @@ components:
 - [private/set_announcement_as_read](https://docs.deribit.com/api-reference/account-management/private-set_announcement_as_read.md)
 - [public/get_announcements](https://docs.deribit.com/api-reference/account-management/public-get_announcements.md)
 - [private/get_deposits](https://docs.deribit.com/api-reference/wallet/private-get_deposits.md)
-- [private/get_subaccounts](https://docs.deribit.com/api-reference/account-management/private-get_subaccounts.md)
 - [private/get_access_log](https://docs.deribit.com/api-reference/account-management/private-get_access_log.md)
+- [private/get_subaccounts](https://docs.deribit.com/api-reference/account-management/private-get_subaccounts.md)

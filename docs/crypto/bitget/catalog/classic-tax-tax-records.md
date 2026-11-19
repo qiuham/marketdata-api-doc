@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-tax-tax-records
 api_type: REST
-updated_at: 2026-11-18 19:01:25.430784
+updated_at: 2026-11-19 19:08:00.761549
 ---
 
 # Classic Tax API

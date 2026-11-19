@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/sbe-market-data-streams
 api_type: WebSocket
-updated_at: 2026-11-18 18:28:18.416355
+updated_at: 2026-11-19 18:30:51.839961
 ---
 
 # SBE Market Data Streams

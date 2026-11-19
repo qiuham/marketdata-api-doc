@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/docs/rest-reading-the-api-documentation'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Reading the Documentation (REST)

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/SwiperItem
 api_type: Guide
-updated_at: 2026-11-18 18:41:29.891327
+updated_at: 2026-11-19 18:44:32.306214
 ---
 
 # SwiperSlide

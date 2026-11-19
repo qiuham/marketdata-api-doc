@@ -2,14 +2,24 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-get_subaccounts_details
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:14.238217
+updated_at: 2026-11-19 19:05:50.971133
 ---
 
 # private/get_subaccounts_details
 
-> Retrieves position details for all subaccounts for a specific currency. Returns positions aggregated across all subaccounts, including size, average entry price, mark price, and P&L information.
+> Retrieves the positions in a given currency for the accounts visible to the caller. The result has one entry per account (`uid`) with that account's own positions (size, average entry price, mark price, margin and P&L); positions are not aggregated across accounts.
 
-Optionally include open orders for each subaccount by setting the `with_open_orders` parameter to `true`.
+**Visibility:**
+- Main account access is available when the authenticated account is the main account, or its token grants access to that main account (`mainaccount` scope or impersonated access). The result covers the main account and its eligible subaccounts.
+- Without main account access, only the calling subaccount is returned.
+- Vault subaccounts are excluded from ordinary public listings. Isolated-margin subaccounts are not listed.
+- Not available for retail brokers (`14021`).
+
+**Open orders:** set `with_open_orders` to `true` to add an `open_orders` list to each entry. It is omitted by default.
+
+**Notes:**
+- `currency` must be available for the account's wallet type, otherwise `-32602` (`Invalid params`, "not supported for wallet type").
+- Results are cached for 1 second. When the data cannot be collected in time the call fails with `13028` (`temporarily_unavailable`); retry the request.
 
 **📖 Related Article:** [Managing Subaccounts](https://docs.deribit.com/articles/managing-subaccounts-api)
 
@@ -70,13 +80,39 @@ paths:
         - Account Management
         - Private
       description: >+
-        Retrieves position details for all subaccounts for a specific currency.
-        Returns positions aggregated across all subaccounts, including size,
-        average entry price, mark price, and P&L information.
+        Retrieves the positions in a given currency for the accounts visible to
+        the caller. The result has one entry per account (`uid`) with that
+        account's own positions (size, average entry price, mark price, margin
+        and P&L); positions are not aggregated across accounts.
 
 
-        Optionally include open orders for each subaccount by setting the
-        `with_open_orders` parameter to `true`.
+        **Visibility:**
+
+        - Main account access is available when the authenticated account is the
+        main account, or its token grants access to that main account
+        (`mainaccount` scope or impersonated access). The result covers the main
+        account and its eligible subaccounts.
+
+        - Without main account access, only the calling subaccount is returned.
+
+        - Vault subaccounts are excluded from ordinary public listings.
+        Isolated-margin subaccounts are not listed.
+
+        - Not available for retail brokers (`14021`).
+
+
+        **Open orders:** set `with_open_orders` to `true` to add an
+        `open_orders` list to each entry. It is omitted by default.
+
+
+        **Notes:**
+
+        - `currency` must be available for the account's wallet type, otherwise
+        `-32602` (`Invalid params`, "not supported for wallet type").
+
+        - Results are cached for 1 second. When the data cannot be collected in
+        time the call fails with `13028` (`temporarily_unavailable`); retry the
+        request.
 
 
         **📖 Related Article:** [Managing
@@ -94,7 +130,7 @@ paths:
           required: true
           in: query
           schema:
-            $ref: '#/components/schemas/currency'
+            $ref: '#/components/schemas/wallet_currency'
           description: >
             The currency symbol.
 
@@ -105,6 +141,7 @@ paths:
           in: query
           schema:
             type: boolean
+            default: false
           description: 'Optional parameter to ask for open orders list, default: `false`'
           required: false
       requestBody:
@@ -115,10 +152,19 @@ paths:
                 summary: JSON-RPC Request Example
                 value:
                   jsonrpc: '2.0'
-                  id: 1
+                  id: 1604
                   method: private/get_subaccounts_details
                   params:
                     currency: BTC
+              with_open_ordersRequest:
+                summary: With open orders Request
+                value:
+                  jsonrpc: '2.0'
+                  id: 1605
+                  method: private/get_subaccounts_details
+                  params:
+                    currency: BTC
+                    with_open_orders: true
         description: JSON-RPC request body
       responses:
         '200':
@@ -131,21 +177,24 @@ paths:
                   summary: Response example
                   value:
                     jsonrpc: '2.0'
+                    id: 1604
                     result:
                       - uid: 3
                         positions:
-                          - total_profit_loss: -0.000118183
+                          - instrument_name: BTC-PERPETUAL
+                            kind: future
+                            user_id: 3
+                            total_profit_loss: -0.000118183
                             size_currency: 0.004152776
                             size: 200
                             settlement_price: 48150.36
                             realized_profit_loss: -8.79e-7
                             realized_funding: -8.8e-7
+                            interest_value: 0
                             open_orders_margin: 0
                             mark_price: 48160.55
                             maintenance_margin: 0.000089286
                             leverage: 34
-                            kind: future
-                            instrument_name: BTC-PERPETUAL
                             initial_margin: 0.000122508
                             index_price: 47897.12
                             floating_profit_loss: -0.00003451
@@ -155,7 +204,10 @@ paths:
                             average_price: 49571.3
                       - uid: 10
                         positions:
-                          - total_profit_loss: 0.000037333
+                          - instrument_name: BTC-3SEP21
+                            kind: future
+                            user_id: 10
+                            total_profit_loss: 0.000037333
                             size_currency: -0.001308984
                             size: -60
                             settlement_price: 47886.98
@@ -164,8 +216,6 @@ paths:
                             mark_price: 45837.07
                             maintenance_margin: 0.000028143
                             leverage: 34
-                            kind: future
-                            instrument_name: BTC-3SEP21
                             initial_margin: 0.000038615
                             index_price: 47897.12
                             floating_profit_loss: 0.000037333
@@ -173,6 +223,80 @@ paths:
                             estimated_liquidation_price: null
                             delta: -0.001308984
                             average_price: 47182.76
+                with_open_ordersResponse:
+                  summary: With_open_orders response example
+                  value:
+                    jsonrpc: '2.0'
+                    id: 1605
+                    result:
+                      - uid: 3
+                        positions:
+                          - instrument_name: BTC-PERPETUAL
+                            kind: future
+                            user_id: 3
+                            total_profit_loss: -0.000118183
+                            size_currency: 0.004152776
+                            size: 200
+                            settlement_price: 48150.36
+                            realized_profit_loss: -8.79e-7
+                            realized_funding: -8.8e-7
+                            interest_value: 0
+                            open_orders_margin: 0
+                            mark_price: 48160.55
+                            maintenance_margin: 0.000089286
+                            leverage: 34
+                            initial_margin: 0.000122508
+                            index_price: 47897.12
+                            floating_profit_loss: -0.00003451
+                            direction: buy
+                            estimated_liquidation_price: null
+                            delta: 0.004152776
+                            average_price: 49571.3
+                        open_orders:
+                          - time_in_force: good_til_cancelled
+                            reduce_only: false
+                            price: 45000
+                            post_only: false
+                            order_type: limit
+                            order_state: open
+                            order_id: BTC-584849853
+                            user_id: 3
+                            mmp: false
+                            risk_reducing: false
+                            replaced: false
+                            web: false
+                            last_update_timestamp: 1550050597036
+                            label: ''
+                            is_liquidation: false
+                            instrument_name: BTC-PERPETUAL
+                            filled_amount: 0
+                            direction: buy
+                            creation_timestamp: 1550050597036
+                            average_price: 0
+                            api: true
+                            amount: 40
+                      - uid: 10
+                        positions:
+                          - instrument_name: BTC-3SEP21
+                            kind: future
+                            user_id: 10
+                            total_profit_loss: 0.000037333
+                            size_currency: -0.001308984
+                            size: -60
+                            settlement_price: 47886.98
+                            realized_profit_loss: 0
+                            open_orders_margin: 0
+                            mark_price: 45837.07
+                            maintenance_margin: 0.000028143
+                            leverage: 34
+                            initial_margin: 0.000038615
+                            index_price: 47897.12
+                            floating_profit_loss: 0.000037333
+                            direction: sell
+                            estimated_liquidation_price: null
+                            delta: -0.001308984
+                            average_price: 47182.76
+                        open_orders: []
           description: Success response
         '401':
           $ref: '#/components/responses/ErrorMessageResponse'
@@ -186,21 +310,45 @@ paths:
               --header 'Content-Type: application/json' \
               --data '{
               "jsonrpc": "2.0",
-              "id": 1,
+              "id": 1604,
               "method": "private/get_subaccounts_details",
               "params": {
                 "currency": "BTC"
               }
             }'
+        - lang: bash
+          label: cURL (With open orders)
+          source: |-
+            curl --request POST \
+              --url https://test.deribit.com/api/v2/private/get_subaccounts_details \
+              --header 'Authorization: Bearer <ACCESS_TOKEN>' \
+              --header 'Content-Type: application/json' \
+              --data '{
+              "jsonrpc": "2.0",
+              "id": 1605,
+              "method": "private/get_subaccounts_details",
+              "params": {
+                "currency": "BTC",
+                "with_open_orders": true
+              }
+            }'
 components:
   schemas:
-    currency:
+    wallet_currency:
       enum:
         - BTC
         - ETH
+        - STETH
+        - ETHW
         - USDC
         - USDT
         - EURR
+        - SOL
+        - XRP
+        - USYC
+        - PAXG
+        - BNB
+        - USDE
       type: string
       description: Currency, i.e `"BTC"`, `"ETH"`, `"USDC"`
     PrivateGetSubaccountsDetailsResponse:
@@ -224,11 +372,26 @@ components:
               positions:
                 type: array
                 items:
-                  $ref: '#/components/schemas/position'
+                  $ref: '#/components/schemas/position_with_open_orders_margin'
+                description: >-
+                  Open positions of the account in the requested currency (not
+                  aggregated with other accounts)
               open_orders:
-                items:
-                  $ref: '#/components/schemas/order'
                 type: array
+                items:
+                  allOf:
+                    - $ref: '#/components/schemas/order'
+                    - type: object
+                      properties:
+                        user_id:
+                          type: integer
+                          example: 3
+                          description: >-
+                            ID of the account (main or subaccount) that owns the
+                            order
+                description: >-
+                  Open orders of the account in the requested currency. Present
+                  only when `with_open_orders` = `true`
             required:
               - uid
               - positions
@@ -236,104 +399,21 @@ components:
         - result
         - jsonrpc
       type: object
-    position:
-      properties:
-        instrument_name:
-          $ref: '#/components/schemas/instrument_name'
-        kind:
-          $ref: '#/components/schemas/kind'
-        user_id:
-          $ref: '#/components/schemas/user_id'
-        average_price:
-          type: number
-          description: Average price of trades that built this position
-        direction:
-          $ref: '#/components/schemas/position_direction'
-        mark_price:
-          type: number
-          description: Current mark price for position's instrument
-        delta:
-          type: number
-          description: Delta parameter
-        gamma:
-          type: number
-          description: Only for options, Gamma parameter
-        vega:
-          type: number
-          description: Only for options, Vega parameter
-        theta:
-          type: number
-          description: Only for options, Theta parameter
-        index_price:
-          type: number
-          description: Current index price
-        initial_margin:
-          type: number
-          description: Initial margin
-        maintenance_margin:
-          type: number
-          description: Maintenance margin
-        settlement_price:
-          type: number
-          description: >-
-            Optional (not added for spot). Last settlement price for position's
-            instrument 0 if instrument wasn't settled yet
-        total_profit_loss:
-          type: number
-          description: Profit or loss from position
-        floating_profit_loss:
-          type: number
-          description: Floating profit or loss
-        realized_profit_loss:
-          type: number
-          description: Realized profit or loss
-        size:
-          type: number
-          description: >-
-            Position size for futures size in quote currency (e.g. USD), for
-            options size is in base currency (e.g. BTC)
-        size_currency:
-          type: number
-          description: Only for futures, position size in base currency
-        average_price_usd:
-          type: number
-          description: Only for options, average price in USD
-        floating_profit_loss_usd:
-          type: number
-          description: Only for options, floating profit or loss in USD
-        leverage:
-          type: number
-          description: >
-            Current available leverage for a future position. A JSON number, not
-            an integer: at the instrument cap this is typically a whole value
-            such as `50.0`; for large positions the initial-margin curve can
-            taper it to a fractional value (rounded to 6 decimal places), for
-            example `35.639422`.
-        realized_funding:
-          type: number
-          description: >-
-            Realized Funding in current session included in session realized
-            profit or loss, only for positions of perpetual instruments
-        interest_value:
-          type: number
-          description: Value used to calculate `realized_funding` (perpetual only)
-      required:
-        - instrument_name
-        - kind
-        - user_id
-        - average_price
-        - direction
-        - mark_price
-        - delta
-        - index_price
-        - initial_margin
-        - maintenance_margin
-        - settlement_price
-        - total_profit_loss
-        - floating_profit_loss
-        - realized_profit_loss
-        - size
-      type: object
+    position_with_open_orders_margin:
+      allOf:
+        - $ref: '#/components/schemas/position'
+        - properties:
+            estimated_liquidation_price:
+              type: number
+              nullable: true
+              description: >-
+                [DEPRECATED] Estimated liquidation price, present only for
+                futures positions and always `null` — the value is no longer
+                computed. The Estimated Liquidation Price (ELP) remains
+                available via the Position Builder API.
+            open_orders_margin:
+              type: number
+              description: Open orders margin, present only for future positions
     order:
       properties:
         order_id:
@@ -547,32 +627,104 @@ components:
         - error
         - jsonrpc
       type: object
-    instrument_name:
-      example: BTC-PERPETUAL
-      type: string
-      description: Unique instrument identifier
-    kind:
-      enum:
-        - future
-        - option
-        - spot
-        - future_combo
-        - option_combo
-      type: string
-      description: >-
-        Instrument kind: `"future"`, `"option"`, `"spot"`, `"future_combo"`,
-        `"option_combo"`
-    user_id:
-      example: 57874
-      type: integer
-      description: Unique user identifier
-    position_direction:
-      enum:
-        - buy
-        - sell
-        - zero
-      type: string
-      description: 'Direction: `buy`, `sell` or `zero`'
+    position:
+      properties:
+        instrument_name:
+          $ref: '#/components/schemas/instrument_name'
+        kind:
+          $ref: '#/components/schemas/kind'
+        user_id:
+          $ref: '#/components/schemas/user_id'
+        average_price:
+          type: number
+          description: Average price of trades that built this position
+        direction:
+          $ref: '#/components/schemas/position_direction'
+        mark_price:
+          type: number
+          description: Current mark price for position's instrument
+        delta:
+          type: number
+          description: Delta parameter
+        gamma:
+          type: number
+          description: Only for options, Gamma parameter
+        vega:
+          type: number
+          description: Only for options, Vega parameter
+        theta:
+          type: number
+          description: Only for options, Theta parameter
+        index_price:
+          type: number
+          description: Current index price
+        initial_margin:
+          type: number
+          description: Initial margin
+        maintenance_margin:
+          type: number
+          description: Maintenance margin
+        settlement_price:
+          type: number
+          description: >-
+            Optional (not added for spot). Last settlement price for position's
+            instrument 0 if instrument wasn't settled yet
+        total_profit_loss:
+          type: number
+          description: Profit or loss from position
+        floating_profit_loss:
+          type: number
+          description: Floating profit or loss
+        realized_profit_loss:
+          type: number
+          description: Realized profit or loss
+        size:
+          type: number
+          description: >-
+            Position size for futures size in quote currency (e.g. USD), for
+            options size is in base currency (e.g. BTC)
+        size_currency:
+          type: number
+          description: Only for futures, position size in base currency
+        average_price_usd:
+          type: number
+          description: Only for options, average price in USD
+        floating_profit_loss_usd:
+          type: number
+          description: Only for options, floating profit or loss in USD
+        leverage:
+          type: number
+          description: >
+            Current available leverage for a future position. A JSON number, not
+            an integer: at the instrument cap this is typically a whole value
+            such as `50.0`; for large positions the initial-margin curve can
+            taper it to a fractional value (rounded to 6 decimal places), for
+            example `35.639422`.
+        realized_funding:
+          type: number
+          description: >-
+            Realized Funding in current session included in session realized
+            profit or loss, only for positions of perpetual instruments
+        interest_value:
+          type: number
+          description: Value used to calculate `realized_funding` (perpetual only)
+      required:
+        - instrument_name
+        - kind
+        - user_id
+        - average_price
+        - direction
+        - mark_price
+        - delta
+        - index_price
+        - initial_margin
+        - maintenance_margin
+        - settlement_price
+        - total_profit_loss
+        - floating_profit_loss
+        - realized_profit_loss
+        - size
+      type: object
     order_id:
       example: ETH-100234
       type: string
@@ -621,6 +773,10 @@ components:
       description: >-
         Order time in force: `"good_til_cancelled"`, `"good_til_day"`,
         `"fill_or_kill"` or `"immediate_or_cancel"`
+    instrument_name:
+      example: BTC-PERPETUAL
+      type: string
+      description: Unique instrument identifier
     timestamp:
       example: 1536569522277
       type: integer
@@ -802,6 +958,28 @@ components:
       description: >-
         `true` if the order is an order that can be triggered by another order,
         otherwise not present.
+    kind:
+      enum:
+        - future
+        - option
+        - spot
+        - future_combo
+        - option_combo
+      type: string
+      description: >-
+        Instrument kind: `"future"`, `"option"`, `"spot"`, `"future_combo"`,
+        `"option_combo"`
+    user_id:
+      example: 57874
+      type: integer
+      description: Unique user identifier
+    position_direction:
+      enum:
+        - buy
+        - sell
+        - zero
+      type: string
+      description: 'Direction: `buy`, `sell` or `zero`'
   responses:
     ErrorMessageResponse:
       content:

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-reset_mmp
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:21.048502
+updated_at: 2026-11-19 19:05:56.962862
 ---
 
 # private/reset_mmp

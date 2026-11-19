@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/markets/create-weather-point-market'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Create Weather Point Market
@@ -29,11 +29,33 @@ decimal places; requests that agree to three decimal places share a
 market. A rounded location exactly on the boundary between two NOAA
 MRMS grid cells is moved 0.001° north or east, into one of them. The
 response carries the market's coordinates. Markets are only offered
-where `GET /weather_point_markets/availability` says so, and not over
-open water.
+where `GET /weather_point_markets/availability` says so, and only
+where the market's grid cell touches land in a US state or territory:
+a cell entirely over open water or outside the US is refused, while
+any point in a coastal cell that touches land is accepted.
 
-The window is whole local hours on one calendar day. A new market's
-window must start at least 15 minutes from now and within 365 days.
+The window is whole local hours, on one calendar day or, with
+`end_date` set to the day after `date`, from one day into the next.
+A window that crosses midnight is at most 24 hours long, and only
+offered where `GET /weather_point_markets/availability` returns
+`max_window_days: 2`. A new market's window must start at least 15
+minutes from now and within 365 days.
+
+`timezone` only says which span of time `date` and the hours mean. The
+market is described in the IANA time zone of its location, which
+Kalshi determines from the coordinates: its title and `rules_primary`
+give the window there, with the weekday and the zone abbreviation in
+force (`on Thu, Nov 19, 2026, 8pm–12am PST`), whatever zone the
+request used. The limits on a window's dates go by the location's
+zone as well: where `max_window_days` is 1, a new market whose window
+crosses midnight at the location is refused even when the request
+names one date in another zone, and one within one date at the
+location is accepted even with `end_date`; and a window that crosses
+midnight at the location is at most 24 hours long there. A market
+that already exists is returned either way. An event created before
+this applied keeps its description and its dates, in the time zone of
+its first request, and so do thresholds added to it later: for those,
+the `max_window_days` limit goes by the dates the event stores.
 
 A market is traded through RFQs: pass the returned `market_ticker` to
 `POST /communications/rfqs`. These markets are in series starting with
@@ -48,8 +70,8 @@ Errors carry the specific reason in `details`:
 | --- | --- | --- |
 | 400 | `bad_request` | The body isn't valid JSON, or a field has the wrong type. |
 | 400 | `missing_parameters` | A required field is missing or empty. |
-| 400 | `invalid_parameters` | A field is present but unusable, or the request can't define a market: a latitude or hour out of range, an `end_hour` not after `start_hour`, an unknown variable or strike type, thresholds that don't fit the strike type or the variable's range, a location outside NOAA MRMS coverage, an unknown time zone, a window that doesn't start and end on whole UTC hours, has already ended or starts more than 365 days out, or an hour that a clock change skips or repeats. |
-| 409 | `weather_point_market_unavailable` | The request is valid but the market isn't offered: the variable isn't offered at that location, the location is over open water, or the window starts in less than 15 minutes. |
+| 400 | `invalid_parameters` | A field is present but unusable, or the request can't define a market: a latitude or hour out of range, an `end_hour` not after `start_hour` on one day, an `end_date` other than `date` or the day after it, a window across midnight, in `timezone` or at the location, longer than 24 hours, an unknown variable or strike type, thresholds that don't fit the strike type or the variable's range, a location outside NOAA MRMS coverage, an unknown time zone, a window that doesn't start and end on whole UTC hours, has already ended or starts more than 365 days out, or an hour that a clock change skips or repeats in `timezone`. |
+| 409 | `weather_point_market_unavailable` | The request is valid but the market isn't offered: the variable isn't offered at that location, the market's grid cell is entirely over open water or outside US land, the window starts in less than 15 minutes, the market's window crosses midnight in the location's time zone where `max_window_days` is 1, or the location's time zone can't be determined. |
 | 429 | `weather_point_market_limit_exceeded` | A creation limit was reached: the daily limit on new weather markets across all users, or 40 markets for one variable, location and window. Retrying at once doesn't help. |
 | 429 | `too_many_requests` | Your API rate limit. This endpoint is charged against your write budget. |
 
@@ -141,14 +163,57 @@ paths:
 
         response carries the market's coordinates. Markets are only offered
 
-        where `GET /weather_point_markets/availability` says so, and not over
+        where `GET /weather_point_markets/availability` says so, and only
 
-        open water.
+        where the market's grid cell touches land in a US state or territory:
+
+        a cell entirely over open water or outside the US is refused, while
+
+        any point in a coastal cell that touches land is accepted.
 
 
-        The window is whole local hours on one calendar day. A new market's
+        The window is whole local hours, on one calendar day or, with
 
-        window must start at least 15 minutes from now and within 365 days.
+        `end_date` set to the day after `date`, from one day into the next.
+
+        A window that crosses midnight is at most 24 hours long, and only
+
+        offered where `GET /weather_point_markets/availability` returns
+
+        `max_window_days: 2`. A new market's window must start at least 15
+
+        minutes from now and within 365 days.
+
+
+        `timezone` only says which span of time `date` and the hours mean. The
+
+        market is described in the IANA time zone of its location, which
+
+        Kalshi determines from the coordinates: its title and `rules_primary`
+
+        give the window there, with the weekday and the zone abbreviation in
+
+        force (`on Thu, Nov 19, 2026, 8pm–12am PST`), whatever zone the
+
+        request used. The limits on a window's dates go by the location's
+
+        zone as well: where `max_window_days` is 1, a new market whose window
+
+        crosses midnight at the location is refused even when the request
+
+        names one date in another zone, and one within one date at the
+
+        location is accepted even with `end_date`; and a window that crosses
+
+        midnight at the location is at most 24 hours long there. A market
+
+        that already exists is returned either way. An event created before
+
+        this applied keeps its description and its dates, in the time zone of
+
+        its first request, and so do thresholds added to it later: for those,
+
+        the `max_window_days` limit goes by the dates the event stores.
 
 
         A market is traded through RFQs: pass the returned `market_ticker` to
@@ -177,17 +242,21 @@ paths:
 
         | 400 | `invalid_parameters` | A field is present but unusable, or the
         request can't define a market: a latitude or hour out of range, an
-        `end_hour` not after `start_hour`, an unknown variable or strike type,
-        thresholds that don't fit the strike type or the variable's range, a
-        location outside NOAA MRMS coverage, an unknown time zone, a window that
-        doesn't start and end on whole UTC hours, has already ended or starts
-        more than 365 days out, or an hour that a clock change skips or repeats.
-        |
+        `end_hour` not after `start_hour` on one day, an `end_date` other than
+        `date` or the day after it, a window across midnight, in `timezone` or
+        at the location, longer than 24 hours, an unknown variable or strike
+        type, thresholds that don't fit the strike type or the variable's range,
+        a location outside NOAA MRMS coverage, an unknown time zone, a window
+        that doesn't start and end on whole UTC hours, has already ended or
+        starts more than 365 days out, or an hour that a clock change skips or
+        repeats in `timezone`. |
 
         | 409 | `weather_point_market_unavailable` | The request is valid but
         the market isn't offered: the variable isn't offered at that location,
-        the location is over open water, or the window starts in less than 15
-        minutes. |
+        the market's grid cell is entirely over open water or outside US land,
+        the window starts in less than 15 minutes, the market's window crosses
+        midnight in the location's time zone where `max_window_days` is 1, or
+        the location's time zone can't be determined. |
 
         | 429 | `weather_point_market_limit_exceeded` | A creation limit was
         reached: the daily limit on new weather markets across all users, or 40
@@ -298,6 +367,25 @@ components:
           example: '2026-11-11'
           x-oapi-codegen-extra-tags:
             validate: required,datetime=2006-01-02
+        end_date:
+          type: string
+          description: >-
+            Local calendar date the window ends on, as YYYY-MM-DD in `timezone`.
+            Leave it out, or repeat `date`, for a window within one day. Set it
+            to the day after `date` for a window that crosses midnight in
+            `timezone`; `end_hour` is then read on this date, and the window is
+            at most 24 hours long. Any other date is refused. Whether a window
+            across midnight is offered (`max_window_days` 2 in availability)
+            doesn't go by this field. For a market that starts a new event it
+            goes by the dates at the market's location; where `max_window_days`
+            is 1, a request with `end_date` is accepted when the window lies
+            within one date at the location, and one without it is refused when
+            the window crosses midnight there. A threshold added to an event
+            that already exists goes by the dates that event stores, which on an
+            older event are those of its first request.
+          example: '2026-11-12'
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,datetime=2006-01-02
         start_hour:
           type: integer
           format: int32
@@ -313,17 +401,23 @@ components:
           minimum: 1
           maximum: 24
           description: >-
-            Local hour the window ends at, exclusive (1-24, after `start_hour`).
-            24 is the following midnight, so 0 to 24 is the whole day.
+            Local hour the window ends at, exclusive (1-24). Within one day it
+            must be after `start_hour`; 24 is the following midnight, so 0 to 24
+            is the whole day. With `end_date` the day after `date` it is an hour
+            of that day and must not be after `start_hour`, so 23 to 3 is 11pm
+            to 3am and 8 to 8 is 24 hours.
           x-go-type: '*int32'
           x-oapi-codegen-extra-tags:
-            validate: required,gte=1,lte=24,gtfield=StartHour
+            validate: required,gte=1,lte=24
         timezone:
           type: string
           description: >-
-            IANA time zone of the location, which the date and hours are read
-            in. The window must start and end on whole UTC hours, so zones
-            offset by a fraction of an hour are refused.
+            IANA time zone that `date`, `end_date` and the hours are read in. It
+            only says which span of time they mean, and needn't be the
+            location's; the market's title and rules are written in the
+            location's own time zone, whatever is sent here. The window must
+            start and end on whole UTC hours, so zones offset by a fraction of
+            an hour are refused.
           example: America/New_York
           x-oapi-codegen-extra-tags:
             validate: required

@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/wss/rfq-trades'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # 交易状态流

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/multi-collateral-loan
 api_type: REST
-updated_at: 2026-11-18 18:55:49.603644
+updated_at: 2026-11-19 19:00:51.620037
 ---
 
 # Multi-collateral-loan
@@ -36,19 +36,31 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Multi-Collateral Order]  
-» _None_ | MultiCollateralOrder | Multi-Collateral Order  
-»» order_id | string | Order ID  
-»» order_type | string | current - current, fixed - fixed  
-»» fixed_type | string | Fixed interest rate loan periods: 7d - 7 days, 30d - 30 days  
-»» fixed_rate | string | Fixed interest rate  
-»» expire_time | integer(int64) | Expiration time, timestamp, unit in seconds  
-»» auto_renew | boolean | Fixed interest rate, auto-renewal  
-»» auto_repay | boolean | Fixed interest rate, auto-repayment  
-»» current_ltv | string | Current collateralization rate  
-»» status | string | Order status:  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Multi-Collateral Order
+
+Type | Constraints  
+---|---  
+MultiCollateralOrder |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Optional |  | Order ID  
+order_type | string | Optional |  | current - current, fixed - fixed  
+fixed_type | string | Optional |  | Fixed interest rate loan periods: 7d - 7 days, 30d - 30 days  
+fixed_rate | string | Optional |  | Fixed interest rate  
+expire_time | integer(int64) | Optional |  | Expiration time, timestamp, unit in seconds  
+auto_renew | boolean | Optional |  | Fixed interest rate, auto-renewal  
+auto_repay | boolean | Optional |  | Fixed interest rate, auto-repayment  
+current_ltv | string | Optional |  | Current collateralization rate  
+status | string | Optional |  | Order status:  
 \- initial: Initial state after placing the order  
 \- collateral_deducted: Collateral deduction successful  
 \- collateral_returning: Loan failed - Collateral return pending  
@@ -57,22 +69,62 @@ _None_ | array | [Multi-Collateral Order]
 \- liquidating: Liquidation in progress  
 \- finished: Order completed  
 \- closed_liquidated: Liquidation and repayment completed  
-»» borrow_time | integer(int64) | Borrowing time, timestamp in seconds  
-»» total_left_repay_usdt | string | Total outstanding value converted to USDT  
-»» total_left_collateral_usdt | string | Total collateral value converted to USDT  
-»» borrow_currencies | array | Borrowing Currency List  
-»»» BorrowCurrencyInfo | object | none  
-»»»» currency | string | Currency  
-»»»» index_price | string | Currency Index Price  
-»»»» left_repay_principal | string | Outstanding principal  
-»»»» left_repay_interest | string | Outstanding interest  
-»»»» left_repay_usdt | string | Remaining total outstanding value converted to USDT  
-»»» collateral_currencies | array | Collateral Currency List  
-»»»» CollateralCurrencyInfo | object | none  
-»»»»» currency | string | Currency  
-»»»»» index_price | string | Currency Index Price  
-»»»»» left_collateral | string | Remaining collateral amount  
-»»»»» left_collateral_usdt | string | Remaining collateral value converted to USDT  
+borrow_time | integer(int64) | Optional |  | Borrowing time, timestamp in seconds  
+total_left_repay_usdt | string | Optional |  | Total outstanding value converted to USDT  
+total_left_collateral_usdt | string | Optional |  | Total collateral value converted to USDT  
+borrow_currencies | array | Optional |  | Borrowing Currency List  
+collateral_currencies | array | Optional |  | Collateral Currency List  
+  
+**items / borrow_currencies**
+
+Borrowing Currency List
+
+Type | Constraints  
+---|---  
+array |   
+  
+**items / borrow_currencies / items**
+
+BorrowCurrencyInfo
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+left_repay_principal | string | Optional |  | Outstanding principal  
+left_repay_interest | string | Optional |  | Outstanding interest  
+left_repay_usdt | string | Optional |  | Remaining total outstanding value converted to USDT  
+  
+**items / collateral_currencies**
+
+Collateral Currency List
+
+Type | Constraints  
+---|---  
+array |   
+  
+**items / collateral_currencies / items**
+
+CollateralCurrencyInfo
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+left_collateral | string | Optional |  | Remaining collateral amount  
+left_collateral_usdt | string | Optional |  | Remaining collateral value converted to USDT  
   
 WARNING
 
@@ -180,18 +232,60 @@ _Place multi-currency collateral order_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | CreateMultiCollateralOrder | Required | none  
-» order_id | body | string | Optional | Order ID  
-» order_type | body | string | Optional | current - current rate, fixed - fixed rate, defaults to current if not specified  
-» fixed_type | body | string | Optional | Fixed interest rate lending period: 7d - 7 days, 30d - 30 days. Required for fixed rate  
-» fixed_rate | body | string | Optional | Fixed interest rate, required for fixed rate  
-» auto_renew | body | boolean | Optional | Fixed interest rate, auto-renewal  
-» auto_repay | body | boolean | Optional | Fixed interest rate, auto-repayment  
-» borrow_currency | body | string | Required | Borrowed currency  
-» borrow_amount | body | string | Required | Borrowed amount  
-» collateral_currencies | body | array | Optional | Collateral currency and amount  
-»» CollateralCurrency | body | object | Optional | none  
-»»» currency | body | string | Optional | Currency  
-»»» amount | body | string | Optional | Size  
+order_id | body | string | Optional | Order ID  
+order_type | body | string | Optional | current - current rate, fixed - fixed rate, defaults to current if not specified  
+fixed_type | body | string | Optional | Fixed interest rate lending period: 7d - 7 days, 30d - 30 days. Required for fixed rate  
+fixed_rate | body | string | Optional | Fixed interest rate, required for fixed rate  
+auto_renew | body | boolean | Optional | Fixed interest rate, auto-renewal  
+auto_repay | body | boolean | Optional | Fixed interest rate, auto-repayment  
+borrow_currency | body | string | Required | Borrowed currency  
+borrow_amount | body | string | Required | Borrowed amount  
+collateral_currencies | body | array | Optional | Collateral currency and amount  
+» currency | body | string | Optional | Currency  
+» amount | body | string | Optional | Size  
+  
+####  Request Body Schema
+
+Request Body SchemaType | Constraints  
+---|---  
+CreateMultiCollateralOrder | required: ["borrow_currency","borrow_amount","currency","amount"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Optional |  | Order ID  
+order_type | string | Optional |  | current - current rate, fixed - fixed rate, defaults to current if not specified  
+fixed_type | string | Optional |  | Fixed interest rate lending period: 7d - 7 days, 30d - 30 days. Required for fixed rate  
+fixed_rate | string | Optional |  | Fixed interest rate, required for fixed rate  
+auto_renew | boolean | Optional |  | Fixed interest rate, auto-renewal  
+auto_repay | boolean | Optional |  | Fixed interest rate, auto-repayment  
+borrow_currency | string | Required |  | Borrowed currency  
+borrow_amount | string | Required |  | Borrowed amount  
+collateral_currencies | array | Optional |  | Collateral currency and amount  
+  
+**collateral_currencies**
+
+Collateral currency and amount
+
+Request Body SchemaType | Constraints  
+---|---  
+array |   
+  
+**collateral_currencies / items**
+
+CollateralCurrency
+
+Request Body SchemaType | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+amount | string | Optional |  | Size  
   
 ### Responses
 
@@ -203,9 +297,15 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» order_id | integer(int64) | Order ID  
+Type | Constraints  
+---|---  
+OrderResp |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | Order ID  
   
 WARNING
 
@@ -310,19 +410,25 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Multi-Collateral Order_
+Multi-Collateral Order
 
-Name | Type | Description  
----|---|---  
-» order_id | string | Order ID  
-» order_type | string | current - current, fixed - fixed  
-» fixed_type | string | Fixed interest rate loan periods: 7d - 7 days, 30d - 30 days  
-» fixed_rate | string | Fixed interest rate  
-» expire_time | integer(int64) | Expiration time, timestamp, unit in seconds  
-» auto_renew | boolean | Fixed interest rate, auto-renewal  
-» auto_repay | boolean | Fixed interest rate, auto-repayment  
-» current_ltv | string | Current collateralization rate  
-» status | string | Order status:  
+Type | Constraints  
+---|---  
+MultiCollateralOrder |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Optional |  | Order ID  
+order_type | string | Optional |  | current - current, fixed - fixed  
+fixed_type | string | Optional |  | Fixed interest rate loan periods: 7d - 7 days, 30d - 30 days  
+fixed_rate | string | Optional |  | Fixed interest rate  
+expire_time | integer(int64) | Optional |  | Expiration time, timestamp, unit in seconds  
+auto_renew | boolean | Optional |  | Fixed interest rate, auto-renewal  
+auto_repay | boolean | Optional |  | Fixed interest rate, auto-repayment  
+current_ltv | string | Optional |  | Current collateralization rate  
+status | string | Optional |  | Order status:  
 \- initial: Initial state after placing the order  
 \- collateral_deducted: Collateral deduction successful  
 \- collateral_returning: Loan failed - Collateral return pending  
@@ -331,22 +437,62 @@ Name | Type | Description
 \- liquidating: Liquidation in progress  
 \- finished: Order completed  
 \- closed_liquidated: Liquidation and repayment completed  
-» borrow_time | integer(int64) | Borrowing time, timestamp in seconds  
-» total_left_repay_usdt | string | Total outstanding value converted to USDT  
-» total_left_collateral_usdt | string | Total collateral value converted to USDT  
-» borrow_currencies | array | Borrowing Currency List  
-»» BorrowCurrencyInfo | object | none  
-»»» currency | string | Currency  
-»»» index_price | string | Currency Index Price  
-»»» left_repay_principal | string | Outstanding principal  
-»»» left_repay_interest | string | Outstanding interest  
-»»» left_repay_usdt | string | Remaining total outstanding value converted to USDT  
-»» collateral_currencies | array | Collateral Currency List  
-»»» CollateralCurrencyInfo | object | none  
-»»»» currency | string | Currency  
-»»»» index_price | string | Currency Index Price  
-»»»» left_collateral | string | Remaining collateral amount  
-»»»» left_collateral_usdt | string | Remaining collateral value converted to USDT  
+borrow_time | integer(int64) | Optional |  | Borrowing time, timestamp in seconds  
+total_left_repay_usdt | string | Optional |  | Total outstanding value converted to USDT  
+total_left_collateral_usdt | string | Optional |  | Total collateral value converted to USDT  
+borrow_currencies | array | Optional |  | Borrowing Currency List  
+collateral_currencies | array | Optional |  | Collateral Currency List  
+  
+**borrow_currencies**
+
+Borrowing Currency List
+
+Type | Constraints  
+---|---  
+array |   
+  
+**borrow_currencies / items**
+
+BorrowCurrencyInfo
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+left_repay_principal | string | Optional |  | Outstanding principal  
+left_repay_interest | string | Optional |  | Outstanding interest  
+left_repay_usdt | string | Optional |  | Remaining total outstanding value converted to USDT  
+  
+**collateral_currencies**
+
+Collateral Currency List
+
+Type | Constraints  
+---|---  
+array |   
+  
+**collateral_currencies / items**
+
+CollateralCurrencyInfo
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+left_collateral | string | Optional |  | Remaining collateral amount  
+left_collateral_usdt | string | Optional |  | Remaining collateral value converted to USDT  
   
 WARNING
 
@@ -468,53 +614,163 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Multi-Collateral Repayment Record]  
-» _None_ | MultiRepayRecord | Multi-Collateral Repayment Record  
-»» order_id | integer(int64) | Order ID  
-»» record_id | integer(int64) | Repayment record ID  
-»» init_ltv | string | Initial collateralization rate  
-»» before_ltv | string | Ltv before the operation  
-»» after_ltv | string | Ltv after the operation  
-»» borrow_time | integer(int64) | Borrowing time, timestamp in seconds  
-»» repay_time | integer(int64) | Repayment time, timestamp in seconds  
-»» borrow_currencies | array | List of borrowing information  
-»»» currency | string | Currency  
-»»» index_price | string | Currency Index Price  
-»»» before_amount | string | Amount before the operation  
-»»» before_amount_usdt | string | USDT Amount before the operation  
-»»» after_amount | string | Amount after the operation  
-»»» after_amount_usdt | string | USDT Amount after the operation  
-»» collateral_currencies | array | List of collateral information  
-»»» currency | string | Currency  
-»»» index_price | string | Currency Index Price  
-»»» before_amount | string | Amount before the operation  
-»»» before_amount_usdt | string | USDT Amount before the operation  
-»»» after_amount | string | Amount after the operation  
-»»» after_amount_usdt | string | USDT Amount after the operation  
-»» repaid_currencies | array | Repay Currency List  
-»»» RepayRecordRepaidCurrency | object | none  
-»»»» currency | string | Repayment currency  
-»»»» index_price | string | Currency Index Price  
-»»»» repaid_amount | string | Repayment amount  
-»»»» repaid_principal | string | Principal  
-»»»» repaid_interest | string | Interest  
-»»»» repaid_amount_usdt | string | Repayment amount converted to USDT  
-»»» total_interest_list | array | Total Interest List  
-»»»» RepayRecordTotalInterest | object | none  
-»»»»» currency | string | Currency  
-»»»»» index_price | string | Currency Index Price  
-»»»»» amount | string | Interest Amount  
-»»»»» amount_usdt | string | Interest amount converted to USDT  
-»»»» left_repay_interest_list | array | List of remaining interest to be repaid  
-»»»»» RepayRecordLeftInterest | object | none  
-»»»»»» currency | string | Currency  
-»»»»»» index_price | string | Currency Index Price  
-»»»»»» before_amount | string | Interest amount before repayment  
-»»»»»» before_amount_usdt | string | Converted value of interest before repayment in USDT  
-»»»»»» after_amount | string | Interest amount after repayment  
-»»»»»» after_amount_usdt | string | Converted value of interest after repayment in USDT  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Multi-Collateral Repayment Record
+
+Type | Constraints  
+---|---  
+MultiRepayRecord |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | Order ID  
+record_id | integer(int64) | Optional |  | Repayment record ID  
+init_ltv | string | Optional |  | Initial collateralization rate  
+before_ltv | string | Optional |  | Ltv before the operation  
+after_ltv | string | Optional |  | Ltv after the operation  
+borrow_time | integer(int64) | Optional |  | Borrowing time, timestamp in seconds  
+repay_time | integer(int64) | Optional |  | Repayment time, timestamp in seconds  
+borrow_currencies | array | Optional |  | List of borrowing information  
+collateral_currencies | array | Optional |  | List of collateral information  
+repaid_currencies | array | Optional |  | Repay Currency List  
+total_interest_list | array | Optional |  | Total Interest List  
+left_repay_interest_list | array | Optional |  | List of remaining interest to be repaid  
+  
+**items / borrow_currencies**
+
+List of borrowing information
+
+Type | Constraints  
+---|---  
+array |   
+  
+**items / borrow_currencies / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+before_amount | string | Optional |  | Amount before the operation  
+before_amount_usdt | string | Optional |  | USDT Amount before the operation  
+after_amount | string | Optional |  | Amount after the operation  
+after_amount_usdt | string | Optional |  | USDT Amount after the operation  
+  
+**items / collateral_currencies**
+
+List of collateral information
+
+Type | Constraints  
+---|---  
+array |   
+  
+**items / collateral_currencies / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+before_amount | string | Optional |  | Amount before the operation  
+before_amount_usdt | string | Optional |  | USDT Amount before the operation  
+after_amount | string | Optional |  | Amount after the operation  
+after_amount_usdt | string | Optional |  | USDT Amount after the operation  
+  
+**items / repaid_currencies**
+
+Repay Currency List
+
+Type | Constraints  
+---|---  
+array |   
+  
+**items / repaid_currencies / items**
+
+RepayRecordRepaidCurrency
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Repayment currency  
+index_price | string | Optional |  | Currency Index Price  
+repaid_amount | string | Optional |  | Repayment amount  
+repaid_principal | string | Optional |  | Principal  
+repaid_interest | string | Optional |  | Interest  
+repaid_amount_usdt | string | Optional |  | Repayment amount converted to USDT  
+  
+**items / total_interest_list**
+
+Total Interest List
+
+Type | Constraints  
+---|---  
+array |   
+  
+**items / total_interest_list / items**
+
+RepayRecordTotalInterest
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+amount | string | Optional |  | Interest Amount  
+amount_usdt | string | Optional |  | Interest amount converted to USDT  
+  
+**items / left_repay_interest_list**
+
+List of remaining interest to be repaid
+
+Type | Constraints  
+---|---  
+array |   
+  
+**items / left_repay_interest_list / items**
+
+RepayRecordLeftInterest
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+before_amount | string | Optional |  | Interest amount before repayment  
+before_amount_usdt | string | Optional |  | Converted value of interest before repayment in USDT  
+after_amount | string | Optional |  | Interest amount after repayment  
+after_amount_usdt | string | Optional |  | Converted value of interest after repayment in USDT  
   
 WARNING
 
@@ -642,12 +898,50 @@ _Multi-currency collateral repayment_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | RepayMultiLoan | Required | none  
-» order_id | body | integer(int64) | Required | Order ID  
-» repay_items | body | array | Required | Repay Currency Item  
-»» MultiLoanRepayItem | body | object | Optional | none  
-»»» currency | body | string | Optional | Repayment currency  
-»»» amount | body | string | Optional | Size  
-»»» repaid_all | body | boolean | Required | Repayment method, set to true for full repayment, false for partial repayment  
+order_id | body | integer(int64) | Required | Order ID  
+repay_items | body | array | Required | Repay Currency Item  
+» currency | body | string | Optional | Repayment currency  
+» amount | body | string | Optional | Size  
+» repaid_all | body | boolean | Required | Repayment method, set to true for full repayment, false for partial repayment  
+  
+####  Request Body Schema
+
+Multi-currency collateral repayment
+
+Request Body SchemaType | Constraints  
+---|---  
+RepayMultiLoan | required: ["order_id","repay_items","currency","amount"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | integer(int64) | Required |  | Order ID  
+repay_items | array | Required |  | Repay Currency Item  
+  
+**repay_items**
+
+Repay Currency Item
+
+Request Body SchemaType | Constraints  
+---|---  
+array |   
+  
+**repay_items / items**
+
+MultiLoanRepayItem
+
+Request Body SchemaType | Constraints  
+---|---  
+object | required: ["repaid_all"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Repayment currency  
+amount | string | Optional |  | Size  
+repaid_all | boolean | Required |  | Repayment method, set to true for full repayment, false for partial repayment  
   
 ### Responses
 
@@ -659,19 +953,45 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Multi-currency collateral repayment_
+Multi-currency collateral repayment
 
-Name | Type | Description  
----|---|---  
-» order_id | integer(int64) | Order ID  
-» repaid_currencies | array | Repay Currency List  
-»» RepayCurrencyRes | object | none  
-»»» succeeded | boolean | Whether the repayment was successful  
-»»» label | string | Error identifier for failed operations; empty when successful  
-»»» message | string | Error description for failed operations; empty when successful  
-»»» currency | string | Repayment currency  
-»»» repaid_principal | string | Principal  
-»»» repaid_interest | string | Principal  
+Type | Constraints  
+---|---  
+MultiRepayResp |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | Order ID  
+repaid_currencies | array | Optional |  | Repay Currency List  
+  
+**repaid_currencies**
+
+Repay Currency List
+
+Type | Constraints  
+---|---  
+array |   
+  
+**repaid_currencies / items**
+
+RepayCurrencyRes
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+succeeded | boolean | Optional |  | Whether the repayment was successful  
+label | string | Optional |  | Error identifier for failed operations; empty when successful  
+message | string | Optional |  | Error description for failed operations; empty when successful  
+currency | string | Optional |  | Repayment currency  
+repaid_principal | string | Optional |  | Principal  
+repaid_interest | string | Optional |  | Principal  
   
 WARNING
 
@@ -790,29 +1110,79 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Multi-Collateral adjustment record]  
-» _None_ | MultiCollateralRecord | Multi-Collateral adjustment record  
-»» order_id | integer(int64) | Order ID  
-»» record_id | integer(int64) | Collateral record ID  
-»» before_ltv | string | Collateral ratio before adjustment  
-»» after_ltv | string | Collateral ratio before adjustment  
-»» operate_time | integer(int64) | Operation time, timestamp in seconds  
-»» borrow_currencies | array | Borrowing Currency List  
-»»» currency | string | Currency  
-»»» index_price | string | Currency Index Price  
-»»» before_amount | string | Amount before the operation  
-»»» before_amount_usdt | string | USDT Amount before the operation  
-»»» after_amount | string | Amount after the operation  
-»»» after_amount_usdt | string | USDT Amount after the operation  
-»» collateral_currencies | array | Collateral Currency List  
-»»» currency | string | Currency  
-»»» index_price | string | Currency Index Price  
-»»» before_amount | string | Amount before the operation  
-»»» before_amount_usdt | string | USDT Amount before the operation  
-»»» after_amount | string | Amount after the operation  
-»»» after_amount_usdt | string | USDT Amount after the operation  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Multi-Collateral adjustment record
+
+Type | Constraints  
+---|---  
+MultiCollateralRecord |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | Order ID  
+record_id | integer(int64) | Optional |  | Collateral record ID  
+before_ltv | string | Optional |  | Collateral ratio before adjustment  
+after_ltv | string | Optional |  | Collateral ratio before adjustment  
+operate_time | integer(int64) | Optional |  | Operation time, timestamp in seconds  
+borrow_currencies | array | Optional |  | Borrowing Currency List  
+collateral_currencies | array | Optional |  | Collateral Currency List  
+  
+**items / borrow_currencies**
+
+Borrowing Currency List
+
+Type | Constraints  
+---|---  
+array |   
+  
+**items / borrow_currencies / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+before_amount | string | Optional |  | Amount before the operation  
+before_amount_usdt | string | Optional |  | USDT Amount before the operation  
+after_amount | string | Optional |  | Amount after the operation  
+after_amount_usdt | string | Optional |  | USDT Amount after the operation  
+  
+**items / collateral_currencies**
+
+Collateral Currency List
+
+Type | Constraints  
+---|---  
+array |   
+  
+**items / collateral_currencies / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+before_amount | string | Optional |  | Amount before the operation  
+before_amount_usdt | string | Optional |  | USDT Amount before the operation  
+after_amount | string | Optional |  | Amount after the operation  
+after_amount_usdt | string | Optional |  | USDT Amount after the operation  
   
 WARNING
 
@@ -910,11 +1280,46 @@ _Add or withdraw collateral_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | CollateralAdjust | Required | none  
-» order_id | body | integer(int64) | Required | Order ID  
-» type | body | string | Required | Operation type: append - add collateral, redeem - withdraw collateral  
-» collaterals | body | array | Optional | Collateral currency list  
-»» currency | body | string | Optional | Currency  
-»» amount | body | string | Optional | Size  
+order_id | body | integer(int64) | Required | Order ID  
+type | body | string | Required | Operation type: append - add collateral, redeem - withdraw collateral  
+collaterals | body | array | Optional | Collateral currency list  
+» currency | body | string | Optional | Currency  
+» amount | body | string | Optional | Size  
+  
+####  Request Body Schema
+
+Request Body SchemaType | Constraints  
+---|---  
+CollateralAdjust | required: ["order_id","type","collateral_currencies","currency","amount"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | integer(int64) | Required |  | Order ID  
+type | string | Required |  | Operation type: append - add collateral, redeem - withdraw collateral  
+collaterals | array | Optional |  | Collateral currency list  
+  
+**collaterals**
+
+Collateral currency list
+
+Request Body SchemaType | Constraints  
+---|---  
+array |   
+  
+**collaterals / items**
+
+Request Body SchemaType | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+amount | string | Optional |  | Size  
   
 ### Responses
 
@@ -926,18 +1331,44 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Multi-collateral adjustment result_
+Multi-collateral adjustment result
 
-Name | Type | Description  
----|---|---  
-» order_id | integer(int64) | Order ID  
-» collateral_currencies | array | Collateral currency information  
-»» CollateralCurrencyRes | object | none  
-»»» succeeded | boolean | Update success status  
-»»» label | string | Error identifier for failed operations; empty when successful  
-»»» message | string | Error description for failed operations; empty when successful  
-»»» currency | string | Currency  
-»»» amount | string | Successfully operated collateral quantity; 0 if operation fails  
+Type | Constraints  
+---|---  
+CollateralAdjustRes |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | Order ID  
+collateral_currencies | array | Optional |  | Collateral currency information  
+  
+**collateral_currencies**
+
+Collateral currency information
+
+Type | Constraints  
+---|---  
+array |   
+  
+**collateral_currencies / items**
+
+CollateralCurrencyRes
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+succeeded | boolean | Optional |  | Update success status  
+label | string | Optional |  | Error identifier for failed operations; empty when successful  
+message | string | Optional |  | Error description for failed operations; empty when successful  
+currency | string | Optional |  | Currency  
+amount | string | Optional |  | Successfully operated collateral quantity; 0 if operation fails  
   
 WARNING
 
@@ -1044,17 +1475,29 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Currency Quota]  
-» _None_ | CurrencyQuota | Currency Quota  
-»» currency | string | Currency  
-»» index_price | string | Currency Index Price  
-»» min_quota | string | Minimum borrowing/collateral limit for the currency  
-»» left_quota | string | Remaining currency limit for `borrow/collateral` (when input parameter `type` is `borrow`, represents current currency)  
-»» left_quote_usdt | string | Remaining currency limit converted to USDT (when input parameter `type` is `borrow`, represents current currency)  
-»» left_quota_fixed | string | Remaining `borrow/collateral` limit for fixed-term currency  
-»» left_quote_usdt_fixed | string | Remaining currency limit for fixed-term currency converted to USDT  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Currency Quota
+
+Type | Constraints  
+---|---  
+CurrencyQuota |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+min_quota | string | Optional |  | Minimum borrowing/collateral limit for the currency  
+left_quota | string | Optional |  | Remaining currency limit for `borrow/collateral` (when input parameter `type` is `borrow`, represents current currency)  
+left_quote_usdt | string | Optional |  | Remaining currency limit converted to USDT (when input parameter `type` is `borrow`, represents current currency)  
+left_quota_fixed | string | Optional |  | Remaining `borrow/collateral` limit for fixed-term currency  
+left_quote_usdt_fixed | string | Optional |  | Remaining currency limit for fixed-term currency converted to USDT  
   
 WARNING
 
@@ -1137,19 +1580,65 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Borrowing and collateral currencies supported for Multi-Collateral_
+Borrowing and collateral currencies supported for Multi-Collateral
 
-Name | Type | Description  
----|---|---  
-» loan_currencies | array | List of supported borrowing currencies  
-»» MultiLoanItem | object | none  
-»»» currency | string | Currency  
-»»» price | string | Latest price of the currency  
-»» collateral_currencies | array | List of supported collateral currencies  
-»»» MultiCollateralItem | object | none  
-»»»» currency | string | Currency  
-»»»» index_price | string | Currency Index Price  
-»»»» discount | string | Discount  
+Type | Constraints  
+---|---  
+MultiCollateralCurrency |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+loan_currencies | array | Optional |  | List of supported borrowing currencies  
+collateral_currencies | array | Optional |  | List of supported collateral currencies  
+  
+**loan_currencies**
+
+List of supported borrowing currencies
+
+Type | Constraints  
+---|---  
+array |   
+  
+**loan_currencies / items**
+
+MultiLoanItem
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+price | string | Optional |  | Latest price of the currency  
+  
+**collateral_currencies**
+
+List of supported collateral currencies
+
+Type | Constraints  
+---|---  
+array |   
+  
+**collateral_currencies / items**
+
+MultiCollateralItem
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+discount | string | Optional |  | Discount  
   
 This operation does not require authentication 
 
@@ -1222,13 +1711,19 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Multi-collateral ratio_
+Multi-collateral ratio
 
-Name | Type | Description  
----|---|---  
-» init_ltv | string | Initial collateralization rate  
-» alert_ltv | string | Warning collateralization rate  
-» liquidate_ltv | string | Liquidation collateralization rate  
+Type | Constraints  
+---|---  
+CollateralLtv |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+init_ltv | string | Optional |  | Initial collateralization rate  
+alert_ltv | string | Optional |  | Warning collateralization rate  
+liquidate_ltv | string | Optional |  | Liquidation collateralization rate  
   
 This operation does not require authentication 
 
@@ -1285,14 +1780,26 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Multi-collateral fixed interest rate]  
-» _None_ | CollateralFixRate | Multi-collateral fixed interest rate  
-»» currency | string | Currency  
-»» rate_7d | string | Fixed interest rate for 7-day lending period  
-»» rate_30d | string | Fixed interest rate for 30-day lending period  
-»» update_time | integer(int64) | Update time, timestamp in seconds  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Multi-collateral fixed interest rate
+
+Type | Constraints  
+---|---  
+CollateralFixRate |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+rate_7d | string | Optional |  | Fixed interest rate for 7-day lending period  
+rate_30d | string | Optional |  | Fixed interest rate for 30-day lending period  
+update_time | integer(int64) | Optional |  | Update time, timestamp in seconds  
   
 This operation does not require authentication 
 
@@ -1361,12 +1868,24 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Multi-collateral current interest rate]  
-» _None_ | CollateralCurrentRate | Multi-collateral current interest rate  
-»» currency | string | Currency  
-»» current_rate | string | Currency current interest rate  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Multi-collateral current interest rate
+
+Type | Constraints  
+---|---  
+CollateralCurrentRate |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+current_rate | string | Optional |  | Currency current interest rate  
   
 This operation does not require authentication 
 
@@ -1408,65 +1927,242 @@ Code samples
 
 #  Schemas
 
-##  CollateralFixRate
+##  OrderResp
 
-_Multi-collateral fixed interest rate_
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-currency | string | Optional | none | Currency  
-rate_7d | string | Optional | none | Fixed interest rate for 7-day lending period  
-rate_30d | string | Optional | none | Fixed interest rate for 30-day lending period  
-update_time | integer(int64) | Optional | none | Update time, timestamp in seconds  
+order_id | integer(int64) | Optional |  | Order ID  
       
     
     {
-      "currency": "string",
-      "rate_7d": "string",
-      "rate_30d": "string",
-      "update_time": 0
+      "order_id": 0
     }
     
     
 
-##  CollateralCurrentRate
+##  MultiCollateralCurrency
 
-_Multi-collateral current interest rate_
+Borrowing and collateral currencies supported for Multi-Collateral
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-currency | string | Optional | none | Currency  
-current_rate | string | Optional | none | Currency current interest rate  
+loan_currencies | array | Optional |  | List of supported borrowing currencies  
+collateral_currencies | array | Optional |  | List of supported collateral currencies  
+  
+**loan_currencies**
+
+List of supported borrowing currencies
+
+Type | Constraints  
+---|---  
+array |   
+  
+**loan_currencies / items**
+
+MultiLoanItem
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+price | string | Optional |  | Latest price of the currency  
+  
+**collateral_currencies**
+
+List of supported collateral currencies
+
+Type | Constraints  
+---|---  
+array |   
+  
+**collateral_currencies / items**
+
+MultiCollateralItem
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+discount | string | Optional |  | Discount  
       
     
     {
-      "currency": "string",
-      "current_rate": "string"
+      "loan_currencies": [
+        {
+          "currency": "string",
+          "price": "string"
+        }
+      ],
+      "collateral_currencies": [
+        {
+          "currency": "string",
+          "index_price": "string",
+          "discount": "string"
+        }
+      ]
+    }
+    
+    
+
+##  CollateralLtv
+
+Multi-collateral ratio
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+init_ltv | string | Optional |  | Initial collateralization rate  
+alert_ltv | string | Optional |  | Warning collateralization rate  
+liquidate_ltv | string | Optional |  | Liquidation collateralization rate  
+      
+    
+    {
+      "init_ltv": "string",
+      "alert_ltv": "string",
+      "liquidate_ltv": "string"
+    }
+    
+    
+
+##  MultiCollateralRecord
+
+Multi-Collateral adjustment record
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | Order ID  
+record_id | integer(int64) | Optional |  | Collateral record ID  
+before_ltv | string | Optional |  | Collateral ratio before adjustment  
+after_ltv | string | Optional |  | Collateral ratio before adjustment  
+operate_time | integer(int64) | Optional |  | Operation time, timestamp in seconds  
+borrow_currencies | array | Optional |  | Borrowing Currency List  
+collateral_currencies | array | Optional |  | Collateral Currency List  
+  
+**borrow_currencies**
+
+Borrowing Currency List
+
+Type | Constraints  
+---|---  
+array |   
+  
+**borrow_currencies / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+before_amount | string | Optional |  | Amount before the operation  
+before_amount_usdt | string | Optional |  | USDT Amount before the operation  
+after_amount | string | Optional |  | Amount after the operation  
+after_amount_usdt | string | Optional |  | USDT Amount after the operation  
+  
+**collateral_currencies**
+
+Collateral Currency List
+
+Type | Constraints  
+---|---  
+array |   
+  
+**collateral_currencies / items**
+
+Type | Constraints  
+---|---  
+object |   
+      
+    
+    {
+      "order_id": 0,
+      "record_id": 0,
+      "before_ltv": "string",
+      "after_ltv": "string",
+      "operate_time": 0,
+      "borrow_currencies": [
+        {
+          "currency": "string",
+          "index_price": "string",
+          "before_amount": "string",
+          "before_amount_usdt": "string",
+          "after_amount": "string",
+          "after_amount_usdt": "string"
+        }
+      ],
+      "collateral_currencies": [
+        {
+          "currency": "string",
+          "index_price": "string",
+          "before_amount": "string",
+          "before_amount_usdt": "string",
+          "after_amount": "string",
+          "after_amount_usdt": "string"
+        }
+      ]
     }
     
     
 
 ##  MultiCollateralOrder
 
-_Multi-Collateral Order_
+Multi-Collateral Order
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-order_id | string | Optional | none | Order ID  
-order_type | string | Optional | none | current - current, fixed - fixed  
-fixed_type | string | Optional | none | Fixed interest rate loan periods: 7d - 7 days, 30d - 30 days  
-fixed_rate | string | Optional | none | Fixed interest rate  
-expire_time | integer(int64) | Optional | none | Expiration time, timestamp, unit in seconds  
-auto_renew | boolean | Optional | none | Fixed interest rate, auto-renewal  
-auto_repay | boolean | Optional | none | Fixed interest rate, auto-repayment  
-current_ltv | string | Optional | none | Current collateralization rate  
-status | string | Optional | none | Order status:  
+order_id | string | Optional |  | Order ID  
+order_type | string | Optional |  | current - current, fixed - fixed  
+fixed_type | string | Optional |  | Fixed interest rate loan periods: 7d - 7 days, 30d - 30 days  
+fixed_rate | string | Optional |  | Fixed interest rate  
+expire_time | integer(int64) | Optional |  | Expiration time, timestamp, unit in seconds  
+auto_renew | boolean | Optional |  | Fixed interest rate, auto-renewal  
+auto_repay | boolean | Optional |  | Fixed interest rate, auto-repayment  
+current_ltv | string | Optional |  | Current collateralization rate  
+status | string | Optional |  | Order status:  
 \- initial: Initial state after placing the order  
 \- collateral_deducted: Collateral deduction successful  
 \- collateral_returning: Loan failed - Collateral return pending  
@@ -1475,22 +2171,62 @@ status | string | Optional | none | Order status:
 \- liquidating: Liquidation in progress  
 \- finished: Order completed  
 \- closed_liquidated: Liquidation and repayment completed  
-borrow_time | integer(int64) | Optional | none | Borrowing time, timestamp in seconds  
-total_left_repay_usdt | string | Optional | none | Total outstanding value converted to USDT  
-total_left_collateral_usdt | string | Optional | none | Total collateral value converted to USDT  
-borrow_currencies | array | Optional | none | Borrowing Currency List  
-» BorrowCurrencyInfo | object | Optional | none | none  
-»» currency | string | Optional | none | Currency  
-»» index_price | string | Optional | none | Currency Index Price  
-»» left_repay_principal | string | Optional | none | Outstanding principal  
-»» left_repay_interest | string | Optional | none | Outstanding interest  
-»» left_repay_usdt | string | Optional | none | Remaining total outstanding value converted to USDT  
-» collateral_currencies | array | Optional | none | Collateral Currency List  
-»» CollateralCurrencyInfo | object | Optional | none | none  
-»»» currency | string | Optional | none | Currency  
-»»» index_price | string | Optional | none | Currency Index Price  
-»»» left_collateral | string | Optional | none | Remaining collateral amount  
-»»» left_collateral_usdt | string | Optional | none | Remaining collateral value converted to USDT  
+borrow_time | integer(int64) | Optional |  | Borrowing time, timestamp in seconds  
+total_left_repay_usdt | string | Optional |  | Total outstanding value converted to USDT  
+total_left_collateral_usdt | string | Optional |  | Total collateral value converted to USDT  
+borrow_currencies | array | Optional |  | Borrowing Currency List  
+collateral_currencies | array | Optional |  | Collateral Currency List  
+  
+**borrow_currencies**
+
+Borrowing Currency List
+
+Type | Constraints  
+---|---  
+array |   
+  
+**borrow_currencies / items**
+
+BorrowCurrencyInfo
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+left_repay_principal | string | Optional |  | Outstanding principal  
+left_repay_interest | string | Optional |  | Outstanding interest  
+left_repay_usdt | string | Optional |  | Remaining total outstanding value converted to USDT  
+  
+**collateral_currencies**
+
+Collateral Currency List
+
+Type | Constraints  
+---|---  
+array |   
+  
+**collateral_currencies / items**
+
+CollateralCurrencyInfo
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+left_collateral | string | Optional |  | Remaining collateral amount  
+left_collateral_usdt | string | Optional |  | Remaining collateral value converted to USDT  
       
     
     {
@@ -1527,88 +2263,512 @@ borrow_currencies | array | Optional | none | Borrowing Currency List
     
     
 
-##  MultiCollateralCurrency
+##  CollateralAdjustRes
 
-_Borrowing and collateral currencies supported for Multi-Collateral_
+Multi-collateral adjustment result
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-loan_currencies | array | Optional | none | List of supported borrowing currencies  
-» MultiLoanItem | object | Optional | none | none  
-»» currency | string | Optional | none | Currency  
-»» price | string | Optional | none | Latest price of the currency  
-» collateral_currencies | array | Optional | none | List of supported collateral currencies  
-»» MultiCollateralItem | object | Optional | none | none  
-»»» currency | string | Optional | none | Currency  
-»»» index_price | string | Optional | none | Currency Index Price  
-»»» discount | string | Optional | none | Discount  
+order_id | integer(int64) | Optional |  | Order ID  
+collateral_currencies | array | Optional |  | Collateral currency information  
+  
+**collateral_currencies**
+
+Collateral currency information
+
+Type | Constraints  
+---|---  
+array |   
+  
+**collateral_currencies / items**
+
+CollateralCurrencyRes
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+succeeded | boolean | Optional |  | Update success status  
+label | string | Optional |  | Error identifier for failed operations; empty when successful  
+message | string | Optional |  | Error description for failed operations; empty when successful  
+currency | string | Optional |  | Currency  
+amount | string | Optional |  | Successfully operated collateral quantity; 0 if operation fails  
       
     
     {
-      "loan_currencies": [
-        {
-          "currency": "string",
-          "price": "string"
-        }
-      ],
+      "order_id": 0,
       "collateral_currencies": [
         {
+          "succeeded": true,
+          "label": "string",
+          "message": "string",
           "currency": "string",
-          "index_price": "string",
-          "discount": "string"
+          "amount": "string"
         }
       ]
     }
     
     
 
+##  RepayMultiLoan
+
+Multi-currency collateral repayment
+
+Type | Constraints  
+---|---  
+object | required: ["order_id","repay_items","currency","amount"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | integer(int64) | Required |  | Order ID  
+repay_items | array | Required |  | Repay Currency Item  
+  
+**repay_items**
+
+Repay Currency Item
+
+Type | Constraints  
+---|---  
+array |   
+  
+**repay_items / items**
+
+MultiLoanRepayItem
+
+Type | Constraints  
+---|---  
+object | required: ["repaid_all"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Repayment currency  
+amount | string | Optional |  | Size  
+repaid_all | boolean | Required |  | Repayment method, set to true for full repayment, false for partial repayment  
+      
+    
+    {
+      "order_id": 0,
+      "repay_items": [
+        {
+          "currency": "string",
+          "amount": "string",
+          "repaid_all": true
+        }
+      ]
+    }
+    
+    
+
+##  CollateralFixRate
+
+Multi-collateral fixed interest rate
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+rate_7d | string | Optional |  | Fixed interest rate for 7-day lending period  
+rate_30d | string | Optional |  | Fixed interest rate for 30-day lending period  
+update_time | integer(int64) | Optional |  | Update time, timestamp in seconds  
+      
+    
+    {
+      "currency": "string",
+      "rate_7d": "string",
+      "rate_30d": "string",
+      "update_time": 0
+    }
+    
+    
+
+##  CollateralAdjust
+
+Type | Constraints  
+---|---  
+object | required: ["order_id","type","collateral_currencies","currency","amount"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | integer(int64) | Required |  | Order ID  
+type | string | Required |  | Operation type: append - add collateral, redeem - withdraw collateral  
+collaterals | array | Optional |  | Collateral currency list  
+  
+**collaterals**
+
+Collateral currency list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**collaterals / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+amount | string | Optional |  | Size  
+      
+    
+    {
+      "order_id": 0,
+      "type": "string",
+      "collaterals": [
+        {
+          "currency": "string",
+          "amount": "string"
+        }
+      ]
+    }
+    
+    
+
+##  CreateMultiCollateralOrder
+
+Type | Constraints  
+---|---  
+object | required: ["borrow_currency","borrow_amount","currency","amount"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Optional |  | Order ID  
+order_type | string | Optional |  | current - current rate, fixed - fixed rate, defaults to current if not specified  
+fixed_type | string | Optional |  | Fixed interest rate lending period: 7d - 7 days, 30d - 30 days. Required for fixed rate  
+fixed_rate | string | Optional |  | Fixed interest rate, required for fixed rate  
+auto_renew | boolean | Optional |  | Fixed interest rate, auto-renewal  
+auto_repay | boolean | Optional |  | Fixed interest rate, auto-repayment  
+borrow_currency | string | Required |  | Borrowed currency  
+borrow_amount | string | Required |  | Borrowed amount  
+collateral_currencies | array | Optional |  | Collateral currency and amount  
+  
+**collateral_currencies**
+
+Collateral currency and amount
+
+Type | Constraints  
+---|---  
+array |   
+  
+**collateral_currencies / items**
+
+CollateralCurrency
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+amount | string | Optional |  | Size  
+      
+    
+    {
+      "order_id": "string",
+      "order_type": "string",
+      "fixed_type": "string",
+      "fixed_rate": "string",
+      "auto_renew": true,
+      "auto_repay": true,
+      "borrow_currency": "string",
+      "borrow_amount": "string",
+      "collateral_currencies": [
+        {
+          "currency": "string",
+          "amount": "string"
+        }
+      ]
+    }
+    
+    
+
+##  MultiRepayResp
+
+Multi-currency collateral repayment
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | Order ID  
+repaid_currencies | array | Optional |  | Repay Currency List  
+  
+**repaid_currencies**
+
+Repay Currency List
+
+Type | Constraints  
+---|---  
+array |   
+  
+**repaid_currencies / items**
+
+RepayCurrencyRes
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+succeeded | boolean | Optional |  | Whether the repayment was successful  
+label | string | Optional |  | Error identifier for failed operations; empty when successful  
+message | string | Optional |  | Error description for failed operations; empty when successful  
+currency | string | Optional |  | Repayment currency  
+repaid_principal | string | Optional |  | Principal  
+repaid_interest | string | Optional |  | Principal  
+      
+    
+    {
+      "order_id": 0,
+      "repaid_currencies": [
+        {
+          "succeeded": true,
+          "label": "string",
+          "message": "string",
+          "currency": "string",
+          "repaid_principal": "string",
+          "repaid_interest": "string"
+        }
+      ]
+    }
+    
+    
+
+##  CurrencyQuota
+
+Currency Quota
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+min_quota | string | Optional |  | Minimum borrowing/collateral limit for the currency  
+left_quota | string | Optional |  | Remaining currency limit for `borrow/collateral` (when input parameter `type` is `borrow`, represents current currency)  
+left_quote_usdt | string | Optional |  | Remaining currency limit converted to USDT (when input parameter `type` is `borrow`, represents current currency)  
+left_quota_fixed | string | Optional |  | Remaining `borrow/collateral` limit for fixed-term currency  
+left_quote_usdt_fixed | string | Optional |  | Remaining currency limit for fixed-term currency converted to USDT  
+      
+    
+    {
+      "currency": "string",
+      "index_price": "string",
+      "min_quota": "string",
+      "left_quota": "string",
+      "left_quote_usdt": "string",
+      "left_quota_fixed": "string",
+      "left_quote_usdt_fixed": "string"
+    }
+    
+    
+
+##  CollateralCurrentRate
+
+Multi-collateral current interest rate
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+current_rate | string | Optional |  | Currency current interest rate  
+      
+    
+    {
+      "currency": "string",
+      "current_rate": "string"
+    }
+    
+    
+
 ##  MultiRepayRecord
 
-_Multi-Collateral Repayment Record_
+Multi-Collateral Repayment Record
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-order_id | integer(int64) | Optional | none | Order ID  
-record_id | integer(int64) | Optional | none | Repayment record ID  
-init_ltv | string | Optional | none | Initial collateralization rate  
-before_ltv | string | Optional | none | Ltv before the operation  
-after_ltv | string | Optional | none | Ltv after the operation  
-borrow_time | integer(int64) | Optional | none | Borrowing time, timestamp in seconds  
-repay_time | integer(int64) | Optional | none | Repayment time, timestamp in seconds  
-borrow_currencies | array | Optional | none | List of borrowing information  
-» currency | string | Optional | none | Currency  
-» index_price | string | Optional | none | Currency Index Price  
-» before_amount | string | Optional | none | Amount before the operation  
-» before_amount_usdt | string | Optional | none | USDT Amount before the operation  
-» after_amount | string | Optional | none | Amount after the operation  
-» after_amount_usdt | string | Optional | none | USDT Amount after the operation  
-collateral_currencies | [MultiRepayRecord/properties/borrow_currencies/items] | Optional | none | List of collateral information  
-repaid_currencies | array | Optional | none | Repay Currency List  
-» RepayRecordRepaidCurrency | object | Optional | none | none  
-»» currency | string | Optional | none | Repayment currency  
-»» index_price | string | Optional | none | Currency Index Price  
-»» repaid_amount | string | Optional | none | Repayment amount  
-»» repaid_principal | string | Optional | none | Principal  
-»» repaid_interest | string | Optional | none | Interest  
-»» repaid_amount_usdt | string | Optional | none | Repayment amount converted to USDT  
-» total_interest_list | array | Optional | none | Total Interest List  
-»» RepayRecordTotalInterest | object | Optional | none | none  
-»»» currency | string | Optional | none | Currency  
-»»» index_price | string | Optional | none | Currency Index Price  
-»»» amount | string | Optional | none | Interest Amount  
-»»» amount_usdt | string | Optional | none | Interest amount converted to USDT  
-»» left_repay_interest_list | array | Optional | none | List of remaining interest to be repaid  
-»»» RepayRecordLeftInterest | object | Optional | none | none  
-»»»» currency | string | Optional | none | Currency  
-»»»» index_price | string | Optional | none | Currency Index Price  
-»»»» before_amount | string | Optional | none | Interest amount before repayment  
-»»»» before_amount_usdt | string | Optional | none | Converted value of interest before repayment in USDT  
-»»»» after_amount | string | Optional | none | Interest amount after repayment  
-»»»» after_amount_usdt | string | Optional | none | Converted value of interest after repayment in USDT  
+order_id | integer(int64) | Optional |  | Order ID  
+record_id | integer(int64) | Optional |  | Repayment record ID  
+init_ltv | string | Optional |  | Initial collateralization rate  
+before_ltv | string | Optional |  | Ltv before the operation  
+after_ltv | string | Optional |  | Ltv after the operation  
+borrow_time | integer(int64) | Optional |  | Borrowing time, timestamp in seconds  
+repay_time | integer(int64) | Optional |  | Repayment time, timestamp in seconds  
+borrow_currencies | array | Optional |  | List of borrowing information  
+collateral_currencies | array | Optional |  | List of collateral information  
+repaid_currencies | array | Optional |  | Repay Currency List  
+total_interest_list | array | Optional |  | Total Interest List  
+left_repay_interest_list | array | Optional |  | List of remaining interest to be repaid  
+  
+**borrow_currencies**
+
+List of borrowing information
+
+Type | Constraints  
+---|---  
+array |   
+  
+**borrow_currencies / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+before_amount | string | Optional |  | Amount before the operation  
+before_amount_usdt | string | Optional |  | USDT Amount before the operation  
+after_amount | string | Optional |  | Amount after the operation  
+after_amount_usdt | string | Optional |  | USDT Amount after the operation  
+  
+**collateral_currencies**
+
+List of collateral information
+
+Type | Constraints  
+---|---  
+array |   
+  
+**collateral_currencies / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**repaid_currencies**
+
+Repay Currency List
+
+Type | Constraints  
+---|---  
+array |   
+  
+**repaid_currencies / items**
+
+RepayRecordRepaidCurrency
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Repayment currency  
+index_price | string | Optional |  | Currency Index Price  
+repaid_amount | string | Optional |  | Repayment amount  
+repaid_principal | string | Optional |  | Principal  
+repaid_interest | string | Optional |  | Interest  
+repaid_amount_usdt | string | Optional |  | Repayment amount converted to USDT  
+  
+**total_interest_list**
+
+Total Interest List
+
+Type | Constraints  
+---|---  
+array |   
+  
+**total_interest_list / items**
+
+RepayRecordTotalInterest
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+amount | string | Optional |  | Interest Amount  
+amount_usdt | string | Optional |  | Interest amount converted to USDT  
+  
+**left_repay_interest_list**
+
+List of remaining interest to be repaid
+
+Type | Constraints  
+---|---  
+array |   
+  
+**left_repay_interest_list / items**
+
+RepayRecordLeftInterest
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency  
+index_price | string | Optional |  | Currency Index Price  
+before_amount | string | Optional |  | Interest amount before repayment  
+before_amount_usdt | string | Optional |  | Converted value of interest before repayment in USDT  
+after_amount | string | Optional |  | Interest amount after repayment  
+after_amount_usdt | string | Optional |  | Converted value of interest after repayment in USDT  
       
     
     {
@@ -1665,286 +2825,6 @@ repaid_currencies | array | Optional | none | Repay Currency List
           "before_amount_usdt": "string",
           "after_amount": "string",
           "after_amount_usdt": "string"
-        }
-      ]
-    }
-    
-    
-
-##  OrderResp
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-order_id | integer(int64) | Optional | none | Order ID  
-      
-    
-    {
-      "order_id": 0
-    }
-    
-    
-
-##  CreateMultiCollateralOrder
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-order_id | string | Optional | none | Order ID  
-order_type | string | Optional | none | current - current rate, fixed - fixed rate, defaults to current if not specified  
-fixed_type | string | Optional | none | Fixed interest rate lending period: 7d - 7 days, 30d - 30 days. Required for fixed rate  
-fixed_rate | string | Optional | none | Fixed interest rate, required for fixed rate  
-auto_renew | boolean | Optional | none | Fixed interest rate, auto-renewal  
-auto_repay | boolean | Optional | none | Fixed interest rate, auto-repayment  
-borrow_currency | string | Required | none | Borrowed currency  
-borrow_amount | string | Required | none | Borrowed amount  
-collateral_currencies | array | Optional | none | Collateral currency and amount  
-» CollateralCurrency | object | Optional | none | none  
-»» currency | string | Optional | none | Currency  
-»» amount | string | Optional | none | Size  
-      
-    
-    {
-      "order_id": "string",
-      "order_type": "string",
-      "fixed_type": "string",
-      "fixed_rate": "string",
-      "auto_renew": true,
-      "auto_repay": true,
-      "borrow_currency": "string",
-      "borrow_amount": "string",
-      "collateral_currencies": [
-        {
-          "currency": "string",
-          "amount": "string"
-        }
-      ]
-    }
-    
-    
-
-##  CurrencyQuota
-
-_Currency Quota_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Optional | none | Currency  
-index_price | string | Optional | none | Currency Index Price  
-min_quota | string | Optional | none | Minimum borrowing/collateral limit for the currency  
-left_quota | string | Optional | none | Remaining currency limit for `borrow/collateral` (when input parameter `type` is `borrow`, represents current currency)  
-left_quote_usdt | string | Optional | none | Remaining currency limit converted to USDT (when input parameter `type` is `borrow`, represents current currency)  
-left_quota_fixed | string | Optional | none | Remaining `borrow/collateral` limit for fixed-term currency  
-left_quote_usdt_fixed | string | Optional | none | Remaining currency limit for fixed-term currency converted to USDT  
-      
-    
-    {
-      "currency": "string",
-      "index_price": "string",
-      "min_quota": "string",
-      "left_quota": "string",
-      "left_quote_usdt": "string",
-      "left_quota_fixed": "string",
-      "left_quote_usdt_fixed": "string"
-    }
-    
-    
-
-##  MultiCollateralRecord
-
-_Multi-Collateral adjustment record_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-order_id | integer(int64) | Optional | none | Order ID  
-record_id | integer(int64) | Optional | none | Collateral record ID  
-before_ltv | string | Optional | none | Collateral ratio before adjustment  
-after_ltv | string | Optional | none | Collateral ratio before adjustment  
-operate_time | integer(int64) | Optional | none | Operation time, timestamp in seconds  
-borrow_currencies | array | Optional | none | Borrowing Currency List  
-» currency | string | Optional | none | Currency  
-» index_price | string | Optional | none | Currency Index Price  
-» before_amount | string | Optional | none | Amount before the operation  
-» before_amount_usdt | string | Optional | none | USDT Amount before the operation  
-» after_amount | string | Optional | none | Amount after the operation  
-» after_amount_usdt | string | Optional | none | USDT Amount after the operation  
-collateral_currencies | [MultiCollateralRecord/properties/borrow_currencies/items] | Optional | none | Collateral Currency List  
-      
-    
-    {
-      "order_id": 0,
-      "record_id": 0,
-      "before_ltv": "string",
-      "after_ltv": "string",
-      "operate_time": 0,
-      "borrow_currencies": [
-        {
-          "currency": "string",
-          "index_price": "string",
-          "before_amount": "string",
-          "before_amount_usdt": "string",
-          "after_amount": "string",
-          "after_amount_usdt": "string"
-        }
-      ],
-      "collateral_currencies": [
-        {
-          "currency": "string",
-          "index_price": "string",
-          "before_amount": "string",
-          "before_amount_usdt": "string",
-          "after_amount": "string",
-          "after_amount_usdt": "string"
-        }
-      ]
-    }
-    
-    
-
-##  RepayMultiLoan
-
-_Multi-currency collateral repayment_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-order_id | integer(int64) | Required | none | Order ID  
-repay_items | array | Required | none | Repay Currency Item  
-» MultiLoanRepayItem | object | Optional | none | none  
-»» currency | string | Optional | none | Repayment currency  
-»» amount | string | Optional | none | Size  
-»» repaid_all | boolean | Required | none | Repayment method, set to true for full repayment, false for partial repayment  
-      
-    
-    {
-      "order_id": 0,
-      "repay_items": [
-        {
-          "currency": "string",
-          "amount": "string",
-          "repaid_all": true
-        }
-      ]
-    }
-    
-    
-
-##  CollateralLtv
-
-_Multi-collateral ratio_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-init_ltv | string | Optional | none | Initial collateralization rate  
-alert_ltv | string | Optional | none | Warning collateralization rate  
-liquidate_ltv | string | Optional | none | Liquidation collateralization rate  
-      
-    
-    {
-      "init_ltv": "string",
-      "alert_ltv": "string",
-      "liquidate_ltv": "string"
-    }
-    
-    
-
-##  CollateralAdjustRes
-
-_Multi-collateral adjustment result_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-order_id | integer(int64) | Optional | none | Order ID  
-collateral_currencies | array | Optional | none | Collateral currency information  
-» CollateralCurrencyRes | object | Optional | none | none  
-»» succeeded | boolean | Optional | none | Update success status  
-»» label | string | Optional | none | Error identifier for failed operations; empty when successful  
-»» message | string | Optional | none | Error description for failed operations; empty when successful  
-»» currency | string | Optional | none | Currency  
-»» amount | string | Optional | none | Successfully operated collateral quantity; 0 if operation fails  
-      
-    
-    {
-      "order_id": 0,
-      "collateral_currencies": [
-        {
-          "succeeded": true,
-          "label": "string",
-          "message": "string",
-          "currency": "string",
-          "amount": "string"
-        }
-      ]
-    }
-    
-    
-
-##  CollateralAdjust
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-order_id | integer(int64) | Required | none | Order ID  
-type | string | Required | none | Operation type: append - add collateral, redeem - withdraw collateral  
-collaterals | array | Optional | none | Collateral currency list  
-» currency | string | Optional | none | Currency  
-» amount | string | Optional | none | Size  
-      
-    
-    {
-      "order_id": 0,
-      "type": "string",
-      "collaterals": [
-        {
-          "currency": "string",
-          "amount": "string"
-        }
-      ]
-    }
-    
-    
-
-##  MultiRepayResp
-
-_Multi-currency collateral repayment_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-order_id | integer(int64) | Optional | none | Order ID  
-repaid_currencies | array | Optional | none | Repay Currency List  
-» RepayCurrencyRes | object | Optional | none | none  
-»» succeeded | boolean | Optional | none | Whether the repayment was successful  
-»» label | string | Optional | none | Error identifier for failed operations; empty when successful  
-»» message | string | Optional | none | Error description for failed operations; empty when successful  
-»» currency | string | Optional | none | Repayment currency  
-»» repaid_principal | string | Optional | none | Principal  
-»» repaid_interest | string | Optional | none | Principal  
-      
-    
-    {
-      "order_id": 0,
-      "repaid_currencies": [
-        {
-          "succeeded": true,
-          "label": "string",
-          "message": "string",
-          "currency": "string",
-          "repaid_principal": "string",
-          "repaid_interest": "string"
         }
       ]
     }

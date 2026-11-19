@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/api_key_types
 api_type: Guide
-updated_at: 2026-11-18 18:35:40.177800
+updated_at: 2026-11-19 18:38:28.530001
 ---
 
 # API Key Types

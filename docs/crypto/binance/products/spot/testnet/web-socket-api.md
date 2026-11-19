@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/web-socket-api
 api_type: WebSocket
-updated_at: 2026-11-18 18:34:54.432992
+updated_at: 2026-11-19 18:37:41.731332
 ---
 
 # Public WebSocket API for Binance SPOT Testnet

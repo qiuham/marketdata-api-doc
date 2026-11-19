@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/device/offGyroscopeChange
 api_type: Guide
-updated_at: 2026-11-18 18:46:45.084413
+updated_at: 2026-11-19 18:49:57.715933
 ---
 
 # bn.offGyroscopeChange

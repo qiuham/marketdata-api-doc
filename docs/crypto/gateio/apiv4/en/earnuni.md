@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/earnuni
 api_type: Earn
-updated_at: 2026-11-18 18:55:42.497640
+updated_at: 2026-11-19 19:00:43.465630
 ---
 
 # EarnUni
@@ -27,15 +27,27 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Currency detail]  
-» _None_ | UniCurrency | Currency detail  
-»» currency | string | Currency name  
-»» min_lend_amount | string | The minimum lending amount, in the unit of the currency  
-»» max_lend_amount | string | The total maximum lending amount, in USDT  
-»» max_rate | string | Maximum rate (Hourly)  
-»» min_rate | string | Minimum rate (Hourly)  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Currency detail
+
+Type | Constraints  
+---|---  
+UniCurrency |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | Currency name  
+min_lend_amount | string | Optional | readOnly: true | The minimum lending amount, in the unit of the currency  
+max_lend_amount | string | Optional | readOnly: true | The total maximum lending amount, in USDT  
+max_rate | string | Optional | readOnly: true | Maximum rate (Hourly)  
+min_rate | string | Optional | readOnly: true | Minimum rate (Hourly)  
   
 This operation does not require authentication 
 
@@ -102,15 +114,21 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Currency detail_
+Currency detail
 
-Name | Type | Description  
----|---|---  
-» currency | string | Currency name  
-» min_lend_amount | string | The minimum lending amount, in the unit of the currency  
-» max_lend_amount | string | The total maximum lending amount, in USDT  
-» max_rate | string | Maximum rate (Hourly)  
-» min_rate | string | Minimum rate (Hourly)  
+Type | Constraints  
+---|---  
+UniCurrency |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | Currency name  
+min_lend_amount | string | Optional | readOnly: true | The minimum lending amount, in the unit of the currency  
+max_lend_amount | string | Optional | readOnly: true | The total maximum lending amount, in USDT  
+max_rate | string | Optional | readOnly: true | Maximum rate (Hourly)  
+min_rate | string | Optional | readOnly: true | Minimum rate (Hourly)  
   
 This operation does not require authentication 
 
@@ -177,20 +195,32 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Loan record]  
-» _None_ | UniLend | Loan record  
-»» currency | string | Currency  
-»» current_amount | string | Current amount  
-»» amount | string | Total Lending Amount  
-»» lent_amount | string | Lent Amount  
-»» frozen_amount | string | Pending Redemption Amount  
-»» min_rate | string | Minimum interest rate  
-»» interest_status | string | Interest status: interest_dividend - Normal dividend, interest_reinvest - Interest reinvestment  
-»» reinvest_left_amount | string | Non-reinvested Amount  
-»» create_time | integer(int64) | Lending Order Creation Time  
-»» update_time | integer(int64) | Lending Order Last Update Time  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Loan record
+
+Type | Constraints  
+---|---  
+UniLend |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | Currency  
+current_amount | string | Optional | readOnly: true | Current amount  
+amount | string | Optional | readOnly: true | Total Lending Amount  
+lent_amount | string | Optional | readOnly: true | Lent Amount  
+frozen_amount | string | Optional | readOnly: true | Pending Redemption Amount  
+min_rate | string | Optional | readOnly: true | Minimum interest rate  
+interest_status | string | Optional | readOnly: true | Interest status: interest_dividend - Normal dividend, interest_reinvest - Interest reinvestment  
+reinvest_left_amount | string | Optional | readOnly: true | Non-reinvested Amount  
+create_time | integer(int64) | Optional | readOnly: true | Lending Order Creation Time  
+update_time | integer(int64) | Optional | readOnly: true | Lending Order Last Update Time  
   
 WARNING
 
@@ -275,17 +305,39 @@ Set a minimum lending rate when lending. Once lending is determined to be succes
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | CreateUniLend | Required | none  
-» currency | body | string | Required | Currency name  
-» amount | body | string | Required | Amount to deposit into lending pool  
-» type | body | string | Required | Operation type: lend - Lend, redeem - Redeem  
-» min_rate | body | string | Optional | Minimum interest rate. If set too high, lending may fail and no interest will be earned. Required for lending operations.  
+currency | body | string | Required | Currency name  
+amount | body | string | Required | Amount to deposit into lending pool  
+type | body | string | Required | Operation type: lend - Lend, redeem - Redeem  
+min_rate | body | string | Optional | Minimum interest rate. If set too high, lending may fail and no interest will be earned. Required for lending operations.  
   
+  
+####  Detailed descriptions
+
+** min_rate**: Minimum interest rate. If set too high, lending may fail and no interest will be earned. Required for lending operations.  
+
 ####  Enumerated Values
 
 Enumerated ValuesParameter | Value  
 ---|---  
-» type | lend  
-» type | redeem  
+type | lend  
+type | redeem  
+  
+####  Request Body Schema
+
+Create lending or redemption
+
+Request Body SchemaType | Constraints  
+---|---  
+CreateUniLend | required: ["currency","amount","type"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Required |  | Currency name  
+amount | string | Required |  | Amount to deposit into lending pool  
+type | string | Required | enum: ["lend","redeem"] | Operation type: lend - Lend, redeem - Redeem  
+min_rate | string | Optional |  | Minimum interest rate. If set too high, lending may fail and no interest will be earned. Required for lending operations.  
   
 ### Responses
 
@@ -367,8 +419,23 @@ Currently only supports amending minimum interest rate (hourly)
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | PatchUniLend | Required | none  
-» currency | body | string | Optional | Currency name  
-» min_rate | body | string | Optional | Minimum hourly interest rate.  
+currency | body | string | Optional | Currency name  
+min_rate | body | string | Optional | Minimum hourly interest rate.  
+  
+####  Request Body Schema
+
+PatchUniLend
+
+Request Body SchemaType | Constraints  
+---|---  
+PatchUniLend |   
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency name  
+min_rate | string | Optional |  | Minimum hourly interest rate.  
   
 ### Responses
 
@@ -483,17 +550,29 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Lending Record]  
-» _None_ | UniLendRecord | Lending Record  
-»» currency | string | Currency name  
-»» amount | string | Current Amount  
-»» last_wallet_amount | string | Previous Available Amount  
-»» last_lent_amount | string | Previous Lent Amount  
-»» last_frozen_amount | string | Previous Frozen Amount  
-»» type | string | Record Type: lend - Lend, redeem - Redeem  
-»» create_time | integer(int64) | Created time  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Lending Record
+
+Type | Constraints  
+---|---  
+UniLendRecord |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | Currency name  
+amount | string | Optional | readOnly: true | Current Amount  
+last_wallet_amount | string | Optional | readOnly: true | Previous Available Amount  
+last_lent_amount | string | Optional | readOnly: true | Previous Lent Amount  
+last_frozen_amount | string | Optional | readOnly: true | Previous Frozen Amount  
+type | string | Optional | readOnly: true | Record Type: lend - Lend, redeem - Redeem  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
   
 WARNING
 
@@ -584,12 +663,18 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_UniLendInterest_
+UniLendInterest
 
-Name | Type | Description  
----|---|---  
-» currency | string | Currency  
-» interest | string | Interest income  
+Type | Constraints  
+---|---  
+UniLendInterest |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | Currency  
+interest | string | Optional | readOnly: true | Interest income  
   
 WARNING
 
@@ -691,16 +776,28 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Interest Record]  
-» _None_ | UniInterestRecord | Interest Record  
-»» status | integer | Status: 0 - fail, 1 - success  
-»» currency | string | Currency  
-»» actual_rate | string | Actual Rate  
-»» interest | string | Interest  
-»» interest_status | string | Interest status: interest_dividend - Normal dividend, interest_reinvest - Interest reinvestment  
-»» create_time | integer(int64) | Created time  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Interest Record
+
+Type | Constraints  
+---|---  
+UniInterestRecord |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+status | integer | Optional | readOnly: true | Status: 0 - fail, 1 - success  
+currency | string | Optional | readOnly: true | Currency  
+actual_rate | string | Optional | readOnly: true | Actual Rate  
+interest | string | Optional | readOnly: true | Interest  
+interest_status | string | Optional | readOnly: true | Interest status: interest_dividend - Normal dividend, interest_reinvest - Interest reinvestment  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
   
 WARNING
 
@@ -790,12 +887,18 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_UniCurrencyInterest_
+UniCurrencyInterest
 
-Name | Type | Description  
----|---|---  
-» currency | string | Currency  
-» interest_status | string | Interest status: interest_dividend - Normal dividend, interest_reinvest - Interest reinvestment  
+Type | Constraints  
+---|---  
+UniCurrencyInterest |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | Currency  
+interest_status | string | Optional | readOnly: true | Interest status: interest_dividend - Normal dividend, interest_reinvest - Interest reinvestment  
   
 WARNING
 
@@ -881,11 +984,40 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» UniChartPoint | object | none  
-»» time | integer(int64) | none  
-»» value | string | none  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+UniChartPoint
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+time | integer(int64) | Optional |  |   
+value | string | Optional |  |   
+  
+**items / time**
+
+Timestamp
+
+Type | Constraints  
+---|---  
+integer(int64) |   
+  
+**items / value**
+
+Percentage Annual Rate
+
+Type | Constraints  
+---|---  
+string |   
   
 WARNING
 
@@ -965,11 +1097,42 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» UniEstimatedRate | object | none  
-»» currency | string | none  
-»» est_rate | string | Estimated Annualized Rate, e.g., `est_rate`: `0.8014` represents an annualized rate of 80.14%  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+UniEstimatedRate
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  |   
+est_rate | string | Optional |  | Estimated Annualized Rate, e.g., `est_rate`: `0.8014` represents an annualized rate of 80.14%  
+  
+**items / currency**
+
+Currency name
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / est_rate**
+
+Estimated Annual Rate
+
+Estimated Annualized Rate, e.g., `est_rate`: `0.8014` represents an annualized rate of 80.14%
+
+Type | Constraints  
+---|---  
+string |   
   
 WARNING
 
@@ -1033,51 +1196,103 @@ Code samples
 
 #  Schemas
 
-##  UniInterestRecord
+##  UniCurrencyInterest
 
-_Interest Record_
+UniCurrencyInterest
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-status | integer | Optional | read-only | Status: 0 - fail, 1 - success  
-currency | string | Optional | read-only | Currency  
-actual_rate | string | Optional | read-only | Actual Rate  
-interest | string | Optional | read-only | Interest  
-interest_status | string | Optional | read-only | Interest status: interest_dividend - Normal dividend, interest_reinvest - Interest reinvestment  
-create_time | integer(int64) | Optional | read-only | Created time  
+currency | string | Optional | readOnly: true | Currency  
+interest_status | string | Optional | readOnly: true | Interest status: interest_dividend - Normal dividend, interest_reinvest - Interest reinvestment  
       
     
     {
-      "status": 0,
       "currency": "string",
-      "actual_rate": "string",
-      "interest": "string",
-      "interest_status": "string",
-      "create_time": 0
+      "interest_status": "string"
+    }
+    
+    
+
+##  UniCurrency
+
+Currency detail
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | Currency name  
+min_lend_amount | string | Optional | readOnly: true | The minimum lending amount, in the unit of the currency  
+max_lend_amount | string | Optional | readOnly: true | The total maximum lending amount, in USDT  
+max_rate | string | Optional | readOnly: true | Maximum rate (Hourly)  
+min_rate | string | Optional | readOnly: true | Minimum rate (Hourly)  
+      
+    
+    {
+      "currency": "string",
+      "min_lend_amount": "string",
+      "max_lend_amount": "string",
+      "max_rate": "string",
+      "min_rate": "string"
+    }
+    
+    
+
+##  PatchUniLend
+
+PatchUniLend
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency name  
+min_rate | string | Optional |  | Minimum hourly interest rate.  
+      
+    
+    {
+      "currency": "string",
+      "min_rate": "string"
     }
     
     
 
 ##  UniLend
 
-_Loan record_
+Loan record
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-currency | string | Optional | read-only | Currency  
-current_amount | string | Optional | read-only | Current amount  
-amount | string | Optional | read-only | Total Lending Amount  
-lent_amount | string | Optional | read-only | Lent Amount  
-frozen_amount | string | Optional | read-only | Pending Redemption Amount  
-min_rate | string | Optional | read-only | Minimum interest rate  
-interest_status | string | Optional | read-only | Interest status: interest_dividend - Normal dividend, interest_reinvest - Interest reinvestment  
-reinvest_left_amount | string | Optional | read-only | Non-reinvested Amount  
-create_time | integer(int64) | Optional | read-only | Lending Order Creation Time  
-update_time | integer(int64) | Optional | read-only | Lending Order Last Update Time  
+currency | string | Optional | readOnly: true | Currency  
+current_amount | string | Optional | readOnly: true | Current amount  
+amount | string | Optional | readOnly: true | Total Lending Amount  
+lent_amount | string | Optional | readOnly: true | Lent Amount  
+frozen_amount | string | Optional | readOnly: true | Pending Redemption Amount  
+min_rate | string | Optional | readOnly: true | Minimum interest rate  
+interest_status | string | Optional | readOnly: true | Interest status: interest_dividend - Normal dividend, interest_reinvest - Interest reinvestment  
+reinvest_left_amount | string | Optional | readOnly: true | Non-reinvested Amount  
+create_time | integer(int64) | Optional | readOnly: true | Lending Order Creation Time  
+update_time | integer(int64) | Optional | readOnly: true | Lending Order Last Update Time  
       
     
     {
@@ -1095,40 +1310,25 @@ update_time | integer(int64) | Optional | read-only | Lending Order Last Update 
     
     
 
-##  UniCurrencyInterest
-
-_UniCurrencyInterest_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Optional | read-only | Currency  
-interest_status | string | Optional | read-only | Interest status: interest_dividend - Normal dividend, interest_reinvest - Interest reinvestment  
-      
-    
-    {
-      "currency": "string",
-      "interest_status": "string"
-    }
-    
-    
-
 ##  UniLendRecord
 
-_Lending Record_
+Lending Record
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-currency | string | Optional | read-only | Currency name  
-amount | string | Optional | read-only | Current Amount  
-last_wallet_amount | string | Optional | read-only | Previous Available Amount  
-last_lent_amount | string | Optional | read-only | Previous Lent Amount  
-last_frozen_amount | string | Optional | read-only | Previous Frozen Amount  
-type | string | Optional | read-only | Record Type: lend - Lend, redeem - Redeem  
-create_time | integer(int64) | Optional | read-only | Created time  
+currency | string | Optional | readOnly: true | Currency name  
+amount | string | Optional | readOnly: true | Current Amount  
+last_wallet_amount | string | Optional | readOnly: true | Previous Available Amount  
+last_lent_amount | string | Optional | readOnly: true | Previous Lent Amount  
+last_frozen_amount | string | Optional | readOnly: true | Previous Frozen Amount  
+type | string | Optional | readOnly: true | Record Type: lend - Lend, redeem - Redeem  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
       
     
     {
@@ -1143,41 +1343,20 @@ create_time | integer(int64) | Optional | read-only | Created time
     
     
 
-##  UniCurrency
-
-_Currency detail_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Optional | read-only | Currency name  
-min_lend_amount | string | Optional | read-only | The minimum lending amount, in the unit of the currency  
-max_lend_amount | string | Optional | read-only | The total maximum lending amount, in USDT  
-max_rate | string | Optional | read-only | Maximum rate (Hourly)  
-min_rate | string | Optional | read-only | Minimum rate (Hourly)  
-      
-    
-    {
-      "currency": "string",
-      "min_lend_amount": "string",
-      "max_lend_amount": "string",
-      "max_rate": "string",
-      "min_rate": "string"
-    }
-    
-    
-
 ##  UniLendInterest
 
-_UniLendInterest_
+UniLendInterest
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-currency | string | Optional | read-only | Currency  
-interest | string | Optional | read-only | Interest income  
+currency | string | Optional | readOnly: true | Currency  
+interest | string | Optional | readOnly: true | Interest income  
       
     
     {
@@ -1187,49 +1366,58 @@ interest | string | Optional | read-only | Interest income
     
     
 
+##  UniInterestRecord
+
+Interest Record
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+status | integer | Optional | readOnly: true | Status: 0 - fail, 1 - success  
+currency | string | Optional | readOnly: true | Currency  
+actual_rate | string | Optional | readOnly: true | Actual Rate  
+interest | string | Optional | readOnly: true | Interest  
+interest_status | string | Optional | readOnly: true | Interest status: interest_dividend - Normal dividend, interest_reinvest - Interest reinvestment  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
+      
+    
+    {
+      "status": 0,
+      "currency": "string",
+      "actual_rate": "string",
+      "interest": "string",
+      "interest_status": "string",
+      "create_time": 0
+    }
+    
+    
+
 ##  CreateUniLend
 
-_Create lending or redemption_
+Create lending or redemption
 
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Required | none | Currency name  
-amount | string | Required | none | Amount to deposit into lending pool  
-type | string | Required | none | Operation type: lend - Lend, redeem - Redeem  
-min_rate | string | Optional | none | Minimum interest rate. If set too high, lending may fail and no interest will be earned. Required for lending operations.  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
+Type | Constraints  
 ---|---  
-type | lend  
-type | redeem  
+object | required: ["currency","amount","type"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Required |  | Currency name  
+amount | string | Required |  | Amount to deposit into lending pool  
+type | string | Required | enum: ["lend","redeem"] | Operation type: lend - Lend, redeem - Redeem  
+min_rate | string | Optional |  | Minimum interest rate. If set too high, lending may fail and no interest will be earned. Required for lending operations.  
       
     
     {
       "currency": "string",
       "amount": "string",
       "type": "lend",
-      "min_rate": "string"
-    }
-    
-    
-
-##  PatchUniLend
-
-_PatchUniLend_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Optional | none | Currency name  
-min_rate | string | Optional | none | Minimum hourly interest rate.  
-      
-    
-    {
-      "currency": "string",
       "min_rate": "string"
     }

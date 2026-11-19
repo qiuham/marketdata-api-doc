@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-simulate
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:13.871784
+updated_at: 2026-11-19 19:05:51.159327
 ---
 
 # private/pme/simulate
@@ -176,6 +176,7 @@ paths:
                             equity_side_impact: none
                             pnl_offset: 0
                             correlation_set: false
+                            delta_shock_pooling_factor: 0.75
                           btc:
                             max_offsetable_pnl: 0
                             annualised_move_risk: 0.075
@@ -185,6 +186,7 @@ paths:
                             equity_side_impact: both
                             pnl_offset: 0
                             correlation_set: false
+                            delta_shock_pooling_factor: 0.75
                         general:
                           mm_factor: 0.8
                           buckets_count: 4

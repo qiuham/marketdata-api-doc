@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/transfer/create-inter-transfer
 api_type: REST
-updated_at: 2026-11-18 18:49:21.891890
+updated_at: 2026-11-19 18:52:57.633225
 ---
 
 # Create Internal Transfer

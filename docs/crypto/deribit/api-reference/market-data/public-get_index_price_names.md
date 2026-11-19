@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_index_price_names
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:17.163979
+updated_at: 2026-11-19 19:05:53.867219
 ---
 
 # public/get_index_price_names
@@ -84,9 +84,9 @@ paths:
           in: query
           required: false
           schema:
-            type: boolean
             default: false
             example: true
+            type: boolean
           description: >-
             When set to `true`, returns additional information including
             `future_combo_creation_enabled` and `option_combo_creation_enabled`

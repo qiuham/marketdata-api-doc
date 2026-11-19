@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/fix/common-components'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Common Components
@@ -78,7 +78,7 @@ Every FIX message ends with:
 | F | OrderCancelRequest | KalshiNR, KalshiRT | Client -> Server |
 | G | OrderCancelReplaceRequest | KalshiNR, KalshiRT | Client -> Server |
 | q | OrderMassCancelRequest | KalshiNR | Client -> Server |
-| 8 | ExecutionReport | KalshiNR, KalshiRT, KalshiDC | Server -> Client |
+| 8 | ExecutionReport | KalshiNR, KalshiRT, KalshiDC, KalshiRFQ ([listener](https://docs.kalshi.com/fix/listener-sessions.md)) | Server -> Client |
 | 9 | OrderCancelReject | KalshiNR, KalshiRT | Server -> Client |
 | r | OrderMassCancelReport | KalshiNR | Server -> Client |
 | j | BusinessMessageReject | All | Server -> Client |

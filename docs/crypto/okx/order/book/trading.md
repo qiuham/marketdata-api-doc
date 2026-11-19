@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading
 anchor_id: order-book-trading
 api_type: API
-updated_at: 2026-11-18 18:57:45.241044
+updated_at: 2026-11-19 19:03:15.412519
 ---
 
 # Order Book Trading
@@ -678,7 +678,7 @@ msg | String | The error message, empty if the code is 0
 data | Array of objects | Array of objects contains the response results  
 > ordId | String | Order ID  
 > clOrdId | String | Client Order ID as assigned by the client  
-> ts | String | Order creation time. Unix timestamp format in milliseconds, e.g. `1597026383085`. Equivalent to `cTime` in the order channel.  
+> ts | String | Cancellation time. Unix timestamp format in milliseconds, e.g. `1597026383085`.  
 > sCode | String | The code of the event execution result, `0` means success.  
 > sMsg | String | Rejection message if the request is unsuccessful.  
 inTime | String | Timestamp at REST gateway when the request is received, Unix timestamp format in microseconds, e.g. `1597026383085123`   
@@ -786,7 +786,7 @@ msg | String | The error message, empty if the code is 0
 data | Array of objects | Array of objects contains the response results  
 > ordId | String | Order ID  
 > clOrdId | String | Client Order ID as assigned by the client  
-> ts | String | Order creation time. Unix timestamp format in milliseconds, e.g. `1597026383085`. Equivalent to `cTime` in the order channel.  
+> ts | String | Cancellation time. Unix timestamp format in milliseconds, e.g. `1597026383085`.  
 > sCode | String | The code of the event execution result, `0` means success.  
 > sMsg | String | Rejection message if the request is unsuccessful.  
 inTime | String | Timestamp at REST gateway when the request is received, Unix timestamp format in microseconds, e.g. `1597026383085123`   
@@ -958,7 +958,7 @@ msg | String | The error message, empty if the code is 0
 data | Array of objects | Array of objects contains the response results  
 > ordId | String | Order ID  
 > clOrdId | String | Client Order ID as assigned by the client  
-> ts | String | Order creation time. Unix timestamp format in milliseconds, e.g. `1597026383085`. Equivalent to `cTime` in the order channel.  
+> ts | String | Amendment time. Unix timestamp format in milliseconds, e.g. `1597026383085`.  
 > reqId | String | Client Request ID as assigned by the client for order amendment.  
 > sCode | String | The code of the event execution result, `0` means success.  
 > sMsg | String | Rejection message if the request is unsuccessful.  
@@ -1156,7 +1156,7 @@ msg | String | The error message, empty if the code is 0
 data | Array of objects | Array of objects contains the response results  
 > ordId | String | Order ID  
 > clOrdId | String | Client Order ID as assigned by the client  
-> ts | String | Order creation time. Unix timestamp format in milliseconds, e.g. `1597026383085`. Equivalent to `cTime` in the order channel.  
+> ts | String | Amendment time. Unix timestamp format in milliseconds, e.g. `1597026383085`.  
 > reqId | String | Client Request ID as assigned by the client for order amendment.  
 > sCode | String | The code of the event execution result, `0` means success.  
 > sMsg | String | Rejection message if the request is unsuccessful.  
@@ -5450,7 +5450,7 @@ msg | String | Error message
 data | Array of objects | Data  
 > ordId | String | Order ID  
 > clOrdId | String | Client Order ID as assigned by the client  
-> ts | String | Order creation time. Unix timestamp format in milliseconds, e.g. `1597026383085`. Equivalent to `cTime` in the order channel.  
+> ts | String | Cancellation time. Unix timestamp format in milliseconds, e.g. `1597026383085`.  
 > sCode | String | Order status code, `0` means success  
 > sMsg | String | Order status message  
 inTime | String | Timestamp at Websocket gateway when the request is received, Unix timestamp format in microseconds, e.g. `1597026383085123`  
@@ -5620,7 +5620,7 @@ msg | String | Error message
 data | Array of objects | Data  
 > ordId | String | Order ID  
 > clOrdId | String | Client Order ID as assigned by the client  
-> ts | String | Order creation time. Unix timestamp format in milliseconds, e.g. `1597026383085`. Equivalent to `cTime` in the order channel.  
+> ts | String | Cancellation time. Unix timestamp format in milliseconds, e.g. `1597026383085`.  
 > sCode | String | Order status code, `0` means success  
 > sMsg | String | Order status message  
 inTime | String | Timestamp at Websocket gateway when the request is received, Unix timestamp format in microseconds, e.g. `1597026383085123`  
@@ -5774,7 +5774,7 @@ msg | String | Error message
 data | Array of objects | Data  
 > ordId | String | Order ID  
 > clOrdId | String | Client Order ID as assigned by the client  
-> ts | String | Order creation time. Unix timestamp format in milliseconds, e.g. `1597026383085`. Equivalent to `cTime` in the order channel.  
+> ts | String | Amendment time. Unix timestamp format in milliseconds, e.g. `1597026383085`.  
 > reqId | String | Client Request ID as assigned by the client for order amendment  
 > sCode | String | Order status code, `0` means success  
 > sMsg | String | Order status message  
@@ -5988,7 +5988,7 @@ msg | String | Error message
 data | Array of objects | Data  
 > ordId | String | Order ID  
 > clOrdId | String | Client Order ID as assigned by the client  
-> ts | String | Order creation time. Unix timestamp format in milliseconds, e.g. `1597026383085`. Equivalent to `cTime` in the order channel.  
+> ts | String | Amendment time. Unix timestamp format in milliseconds, e.g. `1597026383085`.  
 > reqId | String | Client Request ID as assigned by the client for order amendment   
 If the user provides reqId in the request, the corresponding reqId will be returned  
 > sCode | String | Order status code, `0` means success  
@@ -21016,7 +21016,7 @@ msg | String | 错误信息，代码为0时，该字段为空
 data | Array of objects | 包含结果的对象数组  
 > ordId | String | 订单ID  
 > clOrdId | String | 客户自定义订单ID  
-> ts | String | 订单创建时间，Unix时间戳的毫秒数格式，如 `1597026383085`。与订单频道中的 `cTime` 相同。  
+> ts | String | 撤单时间，Unix时间戳的毫秒数格式，如 `1597026383085`。  
 > sCode | String | 事件执行结果的code，0代表成功  
 > sMsg | String | 事件执行失败时的msg  
 inTime | String | REST网关接收请求时的时间戳，Unix时间戳的微秒数格式，如 `1597026383085123`   
@@ -21124,7 +21124,7 @@ msg | String | 错误信息，代码为0时，该字段为空
 data | Array of objects | 包含结果的对象数组  
 > ordId | String | 订单ID  
 > clOrdId | String | 客户自定义订单ID  
-> ts | String | 订单创建时间，Unix时间戳的毫秒数格式，如 `1597026383085`。与订单频道中的 `cTime` 相同。  
+> ts | String | 撤单时间，Unix时间戳的毫秒数格式，如 `1597026383085`。  
 > sCode | String | 事件执行结果的code，0代表成功  
 > sMsg | String | 事件执行失败时的msg  
 inTime | String | REST网关接收请求时的时间戳，Unix时间戳的微秒数格式，如 `1597026383085123`   
@@ -21291,7 +21291,7 @@ msg | String | 错误信息，代码为0时，该字段为空
 data | Array of objects | 包含结果的对象数组  
 > ordId | String | 订单ID  
 > clOrdId | String | 用户自定义ID  
-> ts | String | 订单创建时间，Unix时间戳的毫秒数格式，如 `1597026383085`。与订单频道中的 `cTime` 相同。  
+> ts | String | 改单时间，Unix时间戳的毫秒数格式，如 `1597026383085`。  
 > reqId | String | 用户自定义修改事件ID  
 > sCode | String | 事件执行结果的code，0代表成功  
 > sMsg | String | 事件执行失败时的msg  
@@ -21480,7 +21480,7 @@ msg | String | 错误信息，代码为0时，该字段为空
 data | Array of objects | 包含结果的对象数组  
 > ordId | String | 订单ID  
 > clOrdId | String | 用户自定义ID  
-> ts | String | 订单创建时间，Unix时间戳的毫秒数格式，如 `1597026383085`。与订单频道中的 `cTime` 相同。  
+> ts | String | 改单时间，Unix时间戳的毫秒数格式，如 `1597026383085`。  
 > reqId | String | 用户自定义修改事件ID  
 > sCode | String | 事件执行结果的code，0代表成功  
 > sMsg | String | 事件执行失败时的msg  
@@ -25711,7 +25711,7 @@ msg | String | 消息
 data | Array of objects | 请求成功后返回的数据  
 > ordId | String | 订单ID  
 > clOrdId | String | 由用户设置的订单ID  
-> ts | String | 订单创建时间，Unix时间戳的毫秒数格式，如 `1597026383085`。与订单频道中的 `cTime` 相同。  
+> ts | String | 撤单时间，Unix时间戳的毫秒数格式，如 `1597026383085`。  
 > sCode | String | 订单状态码，0 代表成功  
 > sMsg | String | 订单状态消息  
 inTime | String | WebSocket 网关接收请求时的时间戳，Unix时间戳的微秒数格式，如 `1597026383085123`  
@@ -25868,7 +25868,7 @@ msg | String | 消息
 data | Array of objects | 请求成功后返回的数据  
 > ordId | String | 订单ID  
 > clOrdId | String | 由用户设置的订单ID  
-> ts | String | 订单创建时间，Unix时间戳的毫秒数格式，如 `1597026383085`。与订单频道中的 `cTime` 相同。  
+> ts | String | 撤单时间，Unix时间戳的毫秒数格式，如 `1597026383085`。  
 > sCode | String | 订单状态码，0 代表成功  
 > sMsg | String | 订单状态消息  
 inTime | String | WebSocket 网关接收请求时的时间戳，Unix时间戳的微秒数格式，如 `1597026383085123`  
@@ -26016,7 +26016,7 @@ msg | String | 消息
 data | Array of objects | 请求成功后返回的数据  
 > ordId | String | 订单ID  
 > clOrdId | String | 用户提供的订单ID  
-> ts | String | 订单创建时间，Unix时间戳的毫秒数格式，如 `1597026383085`。与订单频道中的 `cTime` 相同。  
+> ts | String | 改单时间，Unix时间戳的毫秒数格式，如 `1597026383085`。  
 > reqId | String | 用户提供的reqId  
 如果用户在请求中提供reqId，则返回相应reqId  
 > sCode | String | 订单状态码，0 代表成功  
@@ -26223,7 +26223,7 @@ msg | String | 消息
 data | Array of objects | 请求成功后返回的数据  
 > ordId | String | 订单ID  
 > clOrdId | String | 由用户设置的订单ID  
-> ts | String | 订单创建时间，Unix时间戳的毫秒数格式，如 `1597026383085`。与订单频道中的 `cTime` 相同。  
+> ts | String | 改单时间，Unix时间戳的毫秒数格式，如 `1597026383085`。  
 > reqId | String | 用户提供的请求ID  
 如果用户在请求中提供reqId，则返回相应reqId  
 > sCode | String | 订单状态码，0 代表成功  

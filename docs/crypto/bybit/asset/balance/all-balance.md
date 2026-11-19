@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/balance/all-balance
 api_type: REST
-updated_at: 2026-11-18 18:49:09.461158
+updated_at: 2026-11-19 18:52:42.772058
 ---
 
 # Get All Coins Balance

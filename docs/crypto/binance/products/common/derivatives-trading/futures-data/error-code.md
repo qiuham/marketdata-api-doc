@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/common/derivatives-trading/futures-data/error-code
 api_type: Guide
-updated_at: 2026-11-18 18:42:48.983747
+updated_at: 2026-11-19 18:45:54.355035
 ---
 
 # Error Codes

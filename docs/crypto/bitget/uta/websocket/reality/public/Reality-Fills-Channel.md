@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/reality/public/Reality-Fills-Channel
 api_type: WebSocket
-updated_at: 2026-11-18 19:00:57.749912
+updated_at: 2026-11-19 19:07:35.483894
 ---
 
 # Reality Fills Channel

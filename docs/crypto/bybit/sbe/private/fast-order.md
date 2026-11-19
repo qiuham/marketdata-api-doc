@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/private/fast-order
 api_type: REST
-updated_at: 2026-11-18 18:51:12.480714
+updated_at: 2026-11-19 18:55:11.409891
 ---
 
 # Fast Order Response SBE

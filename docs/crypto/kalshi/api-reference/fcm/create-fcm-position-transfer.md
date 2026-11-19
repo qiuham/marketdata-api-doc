@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/fcm/create-fcm-position-transfer'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Create FCM Position Transfer

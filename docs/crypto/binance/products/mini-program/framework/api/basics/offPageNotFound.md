@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/offPageNotFound
 api_type: Guide
-updated_at: 2026-11-18 18:47:16.209806
+updated_at: 2026-11-19 18:50:30.474799
 ---
 
 # bn.offPageNotFound

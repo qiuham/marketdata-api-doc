@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/otc
 api_type: REST
-updated_at: 2026-11-18 18:56:34.064391
+updated_at: 2026-11-19 19:01:41.830014
 ---
 
 # OTC
@@ -24,13 +24,33 @@ _法币和稳定币询价_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | OtcQuoteRequest | 是 |   
-» side | body | string | 是 | PAY：输入支付数量（pay_amount 必传）；GET：输入获得数量（get_amount 必传）  
-» pay_coin | body | string | 是 | 支付币种，支持币种从 OTC web 询价页查询  
-» get_coin | body | string | 是 | 获得币种，支持币种从 OTC web 询价页查询  
-» pay_amount | body | string | 否 | 用户支付币种数量  
-» get_amount | body | string | 否 | 用户兑换币种数量  
-» create_quote_token | body | string | 否 | 创建询价token 0:询价预览 1:创建询价token 用于下单  
-» promotion_code | body | string | 否 | 优惠码  
+side | body | string | 是 | PAY：输入支付数量（pay_amount 必传）；GET：输入获得数量（get_amount 必传）  
+pay_coin | body | string | 是 | 支付币种，支持币种从 OTC web 询价页查询  
+get_coin | body | string | 是 | 获得币种，支持币种从 OTC web 询价页查询  
+pay_amount | body | string | 否 | 用户支付币种数量  
+get_amount | body | string | 否 | 用户兑换币种数量  
+create_quote_token | body | string | 否 | 创建询价token 0:询价预览 1:创建询价token 用于下单  
+promotion_code | body | string | 否 | 优惠码  
+  
+####  请求体结构
+
+法币和稳定币询价请求体
+
+请求体结构类型 | 约束  
+---|---  
+OtcQuoteRequest | required: ["side","pay_coin","get_coin"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+side | string | Required |  | PAY：输入支付数量（pay_amount 必传）；GET：输入获得数量（get_amount 必传）  
+pay_coin | string | Required |  | 支付币种，支持币种从 OTC web 询价页查询  
+get_coin | string | Required |  | 获得币种，支持币种从 OTC web 询价页查询  
+pay_amount | string | Optional |  | 用户支付币种数量  
+get_amount | string | Optional |  | 用户兑换币种数量  
+create_quote_token | string | Optional |  | 创建询价token 0:询价预览 1:创建询价token 用于下单  
+promotion_code | string | Optional |  | 优惠码  
   
 ### 返回
 
@@ -42,28 +62,47 @@ body | body | OtcQuoteRequest | 是 |
 
 状态码 **200**
 
-_OtcQuoteResponse_
+OtcQuoteResponse
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer |   
-» message | string |   
-» data | object |   
-»» type | string | BUY 入金 SELL 出金  
-»» pay_coin | string | 支付币种  
-»» get_coin | string | 兑换币种  
-»» pay_amount | string | 支付金额  
-»» get_amount | string | 兑换金额  
-»» rate | string | 汇率  
-»» rate_reci | string | 汇率倒数  
-»» promotion_code | string | 优惠码  
-»» side | string | 询价方式  
-»» order_type | string | 订单类型 FIAT 法币 /STABLE 稳定币  
-»» quote_token | string | 下单时需要用到的询价token  
-»» validity_period | string | 报价有效期（秒）  
-»» refresh_limit | integer | 报价刷新次数限制  
-»» refresh_limit_msg | string | 刷新限制提示文案  
-» timestamp | integer | 服务端秒级时间戳  
+类型 | 约束  
+---|---  
+OtcQuoteResponse | required: ["code","message","data","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["type","pay_coin","get_coin","pay_amount","get_amount","rate","rate_reci","promotion_code","side","order_type","quote_token"] |   
+timestamp | integer | Required |  | 服务端秒级时间戳  
+  
+**data**
+
+OtcQuoteResult
+
+类型 | 约束  
+---|---  
+object | required: ["type","pay_coin","get_coin","pay_amount","get_amount","rate","rate_reci","promotion_code","side","order_type","quote_token"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+type | string | Required |  | BUY 入金 SELL 出金  
+pay_coin | string | Required |  | 支付币种  
+get_coin | string | Required |  | 兑换币种  
+pay_amount | string | Required |  | 支付金额  
+get_amount | string | Required |  | 兑换金额  
+rate | string | Required |  | 汇率  
+rate_reci | string | Required |  | 汇率倒数  
+promotion_code | string | Required |  | 优惠码  
+side | string | Required |  | 询价方式  
+order_type | string | Required |  | 订单类型 FIAT 法币 /STABLE 稳定币  
+quote_token | string | Required |  | 下单时需要用到的询价token  
+validity_period | string | Optional |  | 报价有效期（秒）  
+refresh_limit | integer | Optional |  | 报价刷新次数限制  
+refresh_limit_msg | string | Optional |  | 刷新限制提示文案  
   
 WARNING
 
@@ -170,22 +209,22 @@ _法币下单_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | OtcOrderRequest | 是 |   
-» type | body | string | 是 | BUY 入金 SELL 出金  
-» side | body | string | 是 | 询价接口返回的 side（下单校验用）。兼容历史传参 `FIAT`/`CRYPTO` 或 `PAY`/`GET`；新接入请与询价响应保持一致。  
-» crypto_currency | body | string | 是 | 数字货币币种 支持币种从otc web 法币 询价页面查询  
-» fiat_currency | body | string | 是 | 法币币种 支持币种从otc web 法币询价页面查询  
-» crypto_amount | body | string | 是 | 数字货币数量  
-» fiat_amount | body | string | 是 | 法币数量  
-» promotion_code | body | string | 否 | 优惠码  
-» quote_token | body | string | 是 | 询价接口返回参数  
-» bank_id | body | string | 是 | 下单使用的银行卡 ID；请从 `GET /otc/bank/list`返回列表中选取，默认卡对应 `is_default=1`  
-» receive_type | body | string | 否 | 汇款名义。按用户类型传允许值：  
+type | body | string | 是 | BUY 入金 SELL 出金  
+side | body | string | 是 | 询价接口返回的 side（下单校验用）。兼容历史传参 `FIAT`/`CRYPTO` 或 `PAY`/`GET`；新接入请与询价响应保持一致。  
+crypto_currency | body | string | 是 | 数字货币币种 支持币种从otc web 法币 询价页面查询  
+fiat_currency | body | string | 是 | 法币币种 支持币种从otc web 法币询价页面查询  
+crypto_amount | body | string | 是 | 数字货币数量  
+fiat_amount | body | string | 是 | 法币数量  
+promotion_code | body | string | 否 | 优惠码  
+quote_token | body | string | 是 | 询价接口返回参数  
+bank_id | body | string | 是 | 下单使用的银行卡 ID；请从 `GET /otc/bank/list`返回列表中选取，默认卡对应 `is_default=1`  
+receive_type | body | string | 否 | 汇款名义。按用户类型传允许值：  
 企业用户：YOU（以您本公司名义汇款）、GATE（以 Gate 名义汇款）、RECIPIENT（以收款人名义汇款）；  
 个人用户：GATE（以 Gate 名义汇款）、PERSON（以用户本人汇款）。  
   
 ####  详细描述
 
-**» receive_type** : 汇款名义。按用户类型传允许值：  
+** receive_type**: 汇款名义。按用户类型传允许值：  
 企业用户：YOU（以您本公司名义汇款）、GATE（以 Gate 名义汇款）、RECIPIENT（以收款人名义汇款）；  
 个人用户：GATE（以 Gate 名义汇款）、PERSON（以用户本人汇款）。
 
@@ -193,10 +232,35 @@ body | body | OtcOrderRequest | 是 |
 
 枚举值列表参数 | 值  
 ---|---  
-» receive_type | YOU  
-» receive_type | GATE  
-» receive_type | RECIPIENT  
-» receive_type | PERSON  
+receive_type | YOU  
+receive_type | GATE  
+receive_type | RECIPIENT  
+receive_type | PERSON  
+  
+####  请求体结构
+
+法币下单请求体
+
+请求体结构类型 | 约束  
+---|---  
+OtcOrderRequest | required: ["type","side","crypto_currency","fiat_currency","crypto_amount","fiat_amount","quote_token","bank_id"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+type | string | Required |  | BUY 入金 SELL 出金  
+side | string | Required |  | 询价接口返回的 side（下单校验用）。兼容历史传参 `FIAT`/`CRYPTO` 或 `PAY`/`GET`；新接入请与询价响应保持一致。  
+crypto_currency | string | Required |  | 数字货币币种 支持币种从otc web 法币 询价页面查询  
+fiat_currency | string | Required |  | 法币币种 支持币种从otc web 法币询价页面查询  
+crypto_amount | string | Required |  | 数字货币数量  
+fiat_amount | string | Required |  | 法币数量  
+promotion_code | string | Optional |  | 优惠码  
+quote_token | string | Required |  | 询价接口返回参数  
+bank_id | string | Required |  | 下单使用的银行卡 ID；请从 `GET /otc/bank/list`返回列表中选取，默认卡对应 `is_default=1`  
+receive_type | string | Optional | enum: ["YOU","GATE","RECIPIENT","PERSON"] | 汇款名义。按用户类型传允许值：  
+企业用户：YOU（以您本公司名义汇款）、GATE（以 Gate 名义汇款）、RECIPIENT（以收款人名义汇款）；  
+个人用户：GATE（以 Gate 名义汇款）、PERSON（以用户本人汇款）。  
   
 ### 返回
 
@@ -208,13 +272,19 @@ body | body | OtcOrderRequest | 是 |
 
 状态码 **200**
 
-_OtcActionResponse_
+OtcActionResponse
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer |   
-» message | string |   
-» timestamp | integer |   
+类型 | 约束  
+---|---  
+OtcActionResponse | required: ["code","message","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+timestamp | integer | Required |  |   
   
 WARNING
 
@@ -308,13 +378,33 @@ _稳定币下单_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | OtcStableCoinOrderRequest | 是 |   
-» pay_coin | body | string | 是 | 用户支付币种 支持币种 从otc web 稳定币询价页面查询  
-» get_coin | body | string | 是 | 用户兑换币种 支持币种 从otc web 稳定币询价页面查询  
-» pay_amount | body | string | 是 | 用户支付币种数量  
-» get_amount | body | string | 是 | 用户兑换币种数量  
-» side | body | string | 是 | 询价接口返回的 side（下单校验用）。兼容历史传参 `PAY`/`GET`；新接入请与询价响应保持一致。  
-» promotion_code | body | string | 否 | 优惠码（选填）  
-» quote_token | body | string | 是 | 询价接口返回参数  
+pay_coin | body | string | 是 | 用户支付币种 支持币种 从otc web 稳定币询价页面查询  
+get_coin | body | string | 是 | 用户兑换币种 支持币种 从otc web 稳定币询价页面查询  
+pay_amount | body | string | 是 | 用户支付币种数量  
+get_amount | body | string | 是 | 用户兑换币种数量  
+side | body | string | 是 | 询价接口返回的 side（下单校验用）。兼容历史传参 `PAY`/`GET`；新接入请与询价响应保持一致。  
+promotion_code | body | string | 否 | 优惠码（选填）  
+quote_token | body | string | 是 | 询价接口返回参数  
+  
+####  请求体结构
+
+稳定币下单请求体
+
+请求体结构类型 | 约束  
+---|---  
+OtcStableCoinOrderRequest | required: ["pay_coin","get_coin","pay_amount","get_amount","side","quote_token"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+pay_coin | string | Required |  | 用户支付币种 支持币种 从otc web 稳定币询价页面查询  
+get_coin | string | Required |  | 用户兑换币种 支持币种 从otc web 稳定币询价页面查询  
+pay_amount | string | Required |  | 用户支付币种数量  
+get_amount | string | Required |  | 用户兑换币种数量  
+side | string | Required |  | 询价接口返回的 side（下单校验用）。兼容历史传参 `PAY`/`GET`；新接入请与询价响应保持一致。  
+promotion_code | string | Optional |  | 优惠码（选填）  
+quote_token | string | Required |  | 询价接口返回参数  
   
 ### 返回
 
@@ -326,13 +416,19 @@ body | body | OtcStableCoinOrderRequest | 是 |
 
 状态码 **200**
 
-_OtcStableCoinOrderCreateResponse_
+OtcStableCoinOrderCreateResponse
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer | 业务码，0 成功  
-» message | string | 提示信息  
-» timestamp | integer | 服务端秒级时间戳  
+类型 | 约束  
+---|---  
+OtcStableCoinOrderCreateResponse | required: ["code","message","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  | 业务码，0 成功  
+message | string | Required |  | 提示信息  
+timestamp | integer | Required |  | 服务端秒级时间戳  
   
 WARNING
 
@@ -428,30 +524,69 @@ _获取用户银行卡列表_
 
 状态码 **200**
 
-_OtcBankListResponse_
+OtcBankListResponse
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer |   
-» message | string |   
-» data | object |   
-»» lists | array | 银行卡列表  
-»»» OtcBankListItem | object |   
-»»»» id | string | 银行卡 ID（下单时使用；与 `bank_id` 同义字段已收敛为 `id`）  
-»»»» bank_account_name | string | 银行账户名称  
-»»»» bank_name | string | 银行名称  
-»»»» bank_country | string | 银行所在国家  
-»»»» bank_address | string | 银行地址  
-»»»» iban | string | IBAN号码  
-»»»» swift | string | SWIFT代码  
-»»»» remittance_line_number | string | 汇款路线号  
-»»»» agent_bank_name | string | 代理银行名称  
-»»»» agent_bank_swift | string | 代理银行SWIFT代码  
-»»»» submit_time | string | 提交时间  
-»»»» update_time | string | 更新时间  
-»»»» status | string | 状态  
-»»»» is_default | integer | 是否默认银行卡 1是 0否  
-»»» timestamp | integer |   
+类型 | 约束  
+---|---  
+OtcBankListResponse | required: ["code","message","data","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["lists"] |   
+timestamp | integer | Required |  |   
+  
+**data**
+
+OtcBankListResult
+
+类型 | 约束  
+---|---  
+object | required: ["lists"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+lists | array | Required |  | 银行卡列表  
+  
+**data / lists**
+
+银行卡列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / lists / items**
+
+OtcBankListItem
+
+类型 | 约束  
+---|---  
+object | required: ["id","bank_account_name","bank_name"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | string | Required |  | 银行卡 ID（下单时使用；与 `bank_id` 同义字段已收敛为 `id`）  
+bank_account_name | string | Required |  | 银行账户名称  
+bank_name | string | Required |  | 银行名称  
+bank_country | string | Optional |  | 银行所在国家  
+bank_address | string | Optional |  | 银行地址  
+iban | string | Optional |  | IBAN号码  
+swift | string | Optional |  | SWIFT代码  
+remittance_line_number | string | Optional |  | 汇款路线号  
+agent_bank_name | string | Optional |  | 代理银行名称  
+agent_bank_swift | string | Optional |  | 代理银行SWIFT代码  
+submit_time | string | Optional |  | 提交时间  
+update_time | string | Optional |  | 更新时间  
+status | string | Optional |  | 状态  
+is_default | integer | Optional |  | 是否默认银行卡 1是 0否  
   
 WARNING
 
@@ -539,20 +674,46 @@ _创建银行卡_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | OtcBankCreateMultipartRequest | 是 |   
-» bank_account_name | body | string | 是 |   
-» bank_name | body | string | 是 |   
-» bank_country | body | string | 是 |   
-» bank_address | body | string | 是 |   
-» iban | body | string | 是 |   
-» swift | body | string | 是 |   
-» remittance_line_number | body | string | 否 |   
-» agent_bank_name | body | string | 否 |   
-» agent_bank_swift | body | string | 否 |   
-» documentation_file | body | string | 否 | multipart 直传方式；与 documentation_file_key 二选一  
-» documentation_file_key | body | string | 否 | 预上传方式；pre_upload 返回的 file_key（明文或 base64 均可识别）  
-» file_type | body | string | 否 | 使用 documentation_file_key 时必填；明文 MIME 或其 base64  
-» _None_ | body | object | 否 |   
-» _None_ | body | object | 否 |   
+  
+####  请求体结构
+
+Inner 创建银行卡 `multipart/form-data`。开户证明文件二选一：
+
+  * **预上传** ：`documentation_file_key` \+ `file_type`（先 `POST /otc/upload/pre_upload`，`scene=bank`）；
+  * **multipart 直传** ：`documentation_file` 文件字段。
+
+请求体结构类型 | 约束  
+---|---  
+OtcBankCreateMultipartRequest | required: ["bank_account_name","bank_name","bank_country","bank_address","iban","swift"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 当前对象内必填 | 约束 | 描述  
+---|---|---|---|---  
+bank_account_name | string | 是 |  |   
+bank_name | string | 是 |  |   
+bank_country | string | 是 |  |   
+bank_address | string | 是 |  |   
+iban | string | 是 |  |   
+swift | string | 是 |  |   
+remittance_line_number | string | 否 |  |   
+agent_bank_name | string | 否 |  |   
+agent_bank_swift | string | 否 |  |   
+documentation_file | string | 否 |  | multipart 直传方式；与 documentation_file_key 二选一  
+documentation_file_key | string | 否 |  | 预上传方式；pre_upload 返回的 file_key（明文或 base64 均可识别）  
+file_type | string | 否 |  | 使用 documentation_file_key 时必填；明文 MIME 或其 base64  
+  
+**oneOf[0]**
+
+请求体结构类型 | 约束  
+---|---  
+any | required: ["documentation_file"]  
+  
+**oneOf[1]**
+
+请求体结构类型 | 约束  
+---|---  
+any | required: ["documentation_file_key","file_type"]  
   
 ### 返回
 
@@ -564,16 +725,33 @@ body | body | OtcBankCreateMultipartRequest | 是 |
 
 状态码 **200**
 
-_创建银行卡成功（Inner 返回 bank_id、status）_
+创建银行卡成功（Inner 返回 bank_id、status）
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer |   
-» message | string |   
-» data | object |   
-»» bank_id | integer | otc_rds 银行卡主键  
-»» status | integer | 审核状态（如待审）  
-» timestamp | integer |   
+类型 | 约束  
+---|---  
+OtcBankCreateResponse | required: ["code","message","data"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["bank_id","status"] |   
+timestamp | integer | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object | required: ["bank_id","status"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+bank_id | integer | Required |  | otc_rds 银行卡主键  
+status | integer | Required |  | 审核状态（如待审）  
   
 WARNING
 
@@ -661,7 +839,19 @@ _删除银行卡_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | OtcBankIdRequest | 是 |   
-» bank_id | body | string | 是 | 银行卡 ID  
+bank_id | body | string | 是 | 银行卡 ID  
+  
+####  请求体结构
+
+请求体结构类型 | 约束  
+---|---  
+OtcBankIdRequest | required: ["bank_id"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+bank_id | string | Required |  | 银行卡 ID  
   
 ### 返回
 
@@ -673,13 +863,19 @@ body | body | OtcBankIdRequest | 是 |
 
 状态码 **200**
 
-_OtcActionResponse_
+OtcActionResponse
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer |   
-» message | string |   
-» timestamp | integer |   
+类型 | 约束  
+---|---  
+OtcActionResponse | required: ["code","message","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+timestamp | integer | Required |  |   
   
 WARNING
 
@@ -764,7 +960,19 @@ _设置默认银行卡_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | OtcBankIdRequest | 是 |   
-» bank_id | body | string | 是 | 银行卡 ID  
+bank_id | body | string | 是 | 银行卡 ID  
+  
+####  请求体结构
+
+请求体结构类型 | 约束  
+---|---  
+OtcBankIdRequest | required: ["bank_id"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+bank_id | string | Required |  | 银行卡 ID  
   
 ### 返回
 
@@ -776,13 +984,19 @@ body | body | OtcBankIdRequest | 是 |
 
 状态码 **200**
 
-_OtcActionResponse_
+OtcActionResponse
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer |   
-» message | string |   
-» timestamp | integer |   
+类型 | 约束  
+---|---  
+OtcActionResponse | required: ["code","message","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+timestamp | integer | Required |  |   
   
 WARNING
 
@@ -878,25 +1092,53 @@ bank_id | 请求参数 | string | 是 | 银行卡 ID（otc_rds / 列表返回的
 
 状态码 **200**
 
-_OtcBankSupplementChecklistResponse_
+OtcBankSupplementChecklistResponse
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer |   
-» message | string |   
-» data | object |   
-»» user_type | string | personal 或 enterprise，与提交补件类型一致；`items[].description` 为各资料项提交补件描述  
-»» items | array | [待补充资料项]  
-»»» _None_ | OtcBankSupplementChecklistItem | 待补充资料项  
-»»»» description | string | 提交补件描述  
-»»» timestamp | integer |   
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
+类型 | 约束  
 ---|---  
-user_type | personal  
-user_type | enterprise  
+OtcBankSupplementChecklistResponse | required: ["code","message","data"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["user_type","items"] |   
+timestamp | integer | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object | required: ["user_type","items"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user_type | string | Required | enum: ["personal","enterprise"] | personal 或 enterprise，与提交补件类型一致；`items[].description` 为各资料项提交补件描述  
+items | array | Required |  |   
+  
+**data / items**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / items / items**
+
+待补充资料项
+
+类型 | 约束  
+---|---  
+OtcBankSupplementChecklistItem | required: ["description"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+description | string | Required |  | 提交补件描述  
   
 WARNING
 
@@ -983,13 +1225,36 @@ _提交银行卡补充材料（个人）_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | OtcBankPersonalSupplementMultipartRequest | 是 |   
-» bank_id | body | string | 是 |   
-» id_document_front | body | string | 否 | 身份证明正面文件内容（multipart 文件字段，二进制/Base64）  
-» id_document_back | body | string | 否 | 身份证明背面文件内容（multipart 文件字段，二进制/Base64）  
-» address_proof | body | string | 否 | 地址证明文件内容（multipart 文件字段，二进制/Base64）  
-» relationship_proof | body | string | 否 | 可选，relationship_proof 的 JSON 字符串  
-» _None_ | body | object | 否 |   
-» _None_ | body | object | 否 |   
+  
+####  请求体结构
+
+个人补件 `multipart/form-data`。文件字段名固定为 `id_document_front`、`id_document_back`、`address_proof`（与 checklist `code` 一致）；可额外传字符串字段 `relationship_proof`（JSON 文本）与上传结果合并。
+
+请求体结构类型 | 约束  
+---|---  
+OtcBankPersonalSupplementMultipartRequest | required: ["bank_id"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 当前对象内必填 | 约束 | 描述  
+---|---|---|---|---  
+bank_id | string | 是 |  |   
+id_document_front | string | 否 |  | 身份证明正面文件内容（multipart 文件字段，二进制/Base64）  
+id_document_back | string | 否 |  | 身份证明背面文件内容（multipart 文件字段，二进制/Base64）  
+address_proof | string | 否 |  | 地址证明文件内容（multipart 文件字段，二进制/Base64）  
+relationship_proof | string | 否 |  | 可选，relationship_proof 的 JSON 字符串  
+  
+**anyOf[0]**
+
+请求体结构类型 | 约束  
+---|---  
+any | required: ["relationship_proof"]  
+  
+**anyOf[1]**
+
+请求体结构类型 | 约束  
+---|---  
+any | required: ["id_document_front","id_document_back","address_proof"]  
   
 ### 返回
 
@@ -1001,13 +1266,19 @@ body | body | OtcBankPersonalSupplementMultipartRequest | 是 |
 
 状态码 **200**
 
-_OtcActionResponse_
+OtcActionResponse
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer |   
-» message | string |   
-» timestamp | integer |   
+类型 | 约束  
+---|---  
+OtcActionResponse | required: ["code","message","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+timestamp | integer | Required |  |   
   
 WARNING
 
@@ -1096,17 +1367,40 @@ _提交银行卡补充材料（企业）_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | OtcBankEnterpriseSupplementMultipartRequest | 是 |   
-» uid | body | string | 否 |   
-» bank_id | body | string | 是 |   
-» certificate | body | string | 否 | 营业执照/注册证书文件内容（multipart 文件字段，二进制/Base64）  
-» share_holders | body | string | 否 | 股东名册文件内容（multipart 文件字段，二进制/Base64）  
-» passport | body | string | 否 | 法人/股东护照文件内容（multipart 文件字段，二进制/Base64）  
-» share_holding_structure | body | string | 否 | 股权结构图文件内容（multipart 文件字段，二进制/Base64）  
-» funds_statement | body | string | 否 | 资金证明文件内容（multipart 文件字段，二进制/Base64，可选）  
-» additional | body | string | 否 | 其他补充材料文件内容（multipart 文件字段，二进制/Base64，可选）  
-» relationship_proof | body | string | 否 | 可选，relationship_proof 的 JSON 字符串  
-» _None_ | body | object | 否 |   
-» _None_ | body | object | 否 |   
+  
+####  请求体结构
+
+企业补件 `multipart/form-data`。文件字段名：`certificate`、`share_holders`、`passport`、`share_holding_structure`；可选 `funds_statement`、`additional`。可选字符串 `relationship_proof`（JSON）合并入参。
+
+请求体结构类型 | 约束  
+---|---  
+OtcBankEnterpriseSupplementMultipartRequest | required: ["bank_id"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 当前对象内必填 | 约束 | 描述  
+---|---|---|---|---  
+uid | string | 否 |  |   
+bank_id | string | 是 |  |   
+certificate | string | 否 |  | 营业执照/注册证书文件内容（multipart 文件字段，二进制/Base64）  
+share_holders | string | 否 |  | 股东名册文件内容（multipart 文件字段，二进制/Base64）  
+passport | string | 否 |  | 法人/股东护照文件内容（multipart 文件字段，二进制/Base64）  
+share_holding_structure | string | 否 |  | 股权结构图文件内容（multipart 文件字段，二进制/Base64）  
+funds_statement | string | 否 |  | 资金证明文件内容（multipart 文件字段，二进制/Base64，可选）  
+additional | string | 否 |  | 其他补充材料文件内容（multipart 文件字段，二进制/Base64，可选）  
+relationship_proof | string | 否 |  | 可选，relationship_proof 的 JSON 字符串  
+  
+**anyOf[0]**
+
+请求体结构类型 | 约束  
+---|---  
+any | required: ["relationship_proof"]  
+  
+**anyOf[1]**
+
+请求体结构类型 | 约束  
+---|---  
+any | required: ["certificate","share_holders","passport","share_holding_structure"]  
   
 ### 返回
 
@@ -1118,13 +1412,19 @@ body | body | OtcBankEnterpriseSupplementMultipartRequest | 是 |
 
 状态码 **200**
 
-_OtcActionResponse_
+OtcActionResponse
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer |   
-» message | string |   
-» timestamp | integer |   
+类型 | 约束  
+---|---  
+OtcActionResponse | required: ["code","message","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+timestamp | integer | Required |  |   
   
 WARNING
 
@@ -1236,21 +1536,37 @@ credit | 提额申请材料
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | OtcUploadPreUploadRequest | 是 |   
-» content_type | body | string | 是 | 文件 MIME 类型的 **base64** ，必填。仅支持 image/png、image/jpeg、image/jpg、application/pdf。  
-» scene | body | string | 否 | 业务场景，选填，默认 general；决定临时路径与搬迁后的正式目录  
+content_type | body | string | 是 | 文件 MIME 类型的 **base64** ，必填。仅支持 image/png、image/jpeg、image/jpg、application/pdf。  
+scene | body | string | 否 | 业务场景，选填，默认 general；决定临时路径与搬迁后的正式目录  
   
 ####  枚举值列表
 
 枚举值列表参数 | 值  
 ---|---  
-» content_type | aW1hZ2UvcG5n  
-» content_type | aW1hZ2UvanBlZw==  
-» content_type | aW1hZ2UvanBn  
-» content_type | YXBwbGljYXRpb24vcGRm  
-» scene | general  
-» scene | bank  
-» scene | assessment  
-» scene | credit  
+content_type | aW1hZ2UvcG5n  
+content_type | aW1hZ2UvanBlZw==  
+content_type | aW1hZ2UvanBn  
+content_type | YXBwbGljYXRpb24vcGRm  
+scene | general  
+scene | bank  
+scene | assessment  
+scene | credit  
+  
+####  请求体结构
+
+文件预上传请求体
+
+请求体结构类型 | 约束  
+---|---  
+OtcUploadPreUploadRequest | required: ["content_type"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+content_type | string | Required | enum: ["aW1hZ2UvcG5n","aW1hZ2UvanBlZw==","aW1hZ2UvanBn","YXBwbGljYXRpb24vcGRm"] | 文件 MIME 类型的 **base64** ，必填。仅支持 image/png、image/jpeg、image/jpg、application/pdf。  
+scene | string | Optional | enum: ["general","bank","assessment","credit"]  
+default: "general" | 业务场景，选填，默认 general；决定临时路径与搬迁后的正式目录  
   
 ### 返回
 
@@ -1262,25 +1578,57 @@ body | body | OtcUploadPreUploadRequest | 是 |
 
 状态码 **200**
 
-_OtcUploadPreUploadResponse_
+OtcUploadPreUploadResponse
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer | 0 成功；10010400 参数错误  
-» message | string | 响应消息  
-» data | OtcUploadPreUploadData | 预上传凭证与 S3 直传参数  
-»» file_key | string | 临时 object 路径的 base64；业务提交时**原样回传** ，不要解码  
-»» url | string | S3 直传地址  
-»» fields | OtcUploadPreUploadPolicyFields | S3 POST Policy 签名字段，直传时作为 form-data 原样发送  
-»»» key | string | 临时 object 明文路径，与 base64_decode(file_key) 一致  
-»»» Content-Type | string | 须与预上传请求的 content_type 解码后一致  
-»»» X-Amz-Credential | string | AWS 临时凭证与作用域，直传时原样提交  
-»»» X-Amz-Algorithm | string | AWS 签名算法，直传时原样提交  
-»»» X-Amz-Date | string | AWS 签名时间，直传时原样提交  
-»»» Policy | string | base64 编码的 S3 POST Policy，直传时原样提交  
-»»» X-Amz-Signature | string | S3 POST Policy 签名，直传时原样提交  
-»» expires_in | integer | Policy 有效期（秒），当前为 5400（90 分钟）；与 `fields.Policy` 内 `expiration` 对齐，过期后须重新调用本接口  
-» timestamp | integer | 响应时间戳（秒）  
+类型 | 约束  
+---|---  
+OtcUploadPreUploadResponse | required: ["code","message","data","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  | 0 成功；10010400 参数错误  
+message | string | Required |  | 响应消息  
+data | OtcUploadPreUploadData | Required | required: ["file_key","url","fields","expires_in"] | 预上传凭证与 S3 直传参数  
+timestamp | integer | Required |  | 响应时间戳（秒）  
+  
+**data**
+
+预上传凭证与 S3 直传参数
+
+类型 | 约束  
+---|---  
+OtcUploadPreUploadData | required: ["file_key","url","fields","expires_in"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+file_key | string | Required |  | 临时 object 路径的 base64；业务提交时**原样回传** ，不要解码  
+url | string | Required |  | S3 直传地址  
+fields | OtcUploadPreUploadPolicyFields | Required | required: ["key","Content-Type","X-Amz-Credential","X-Amz-Algorithm","X-Amz-Date","Policy","X-Amz-Signature"] | S3 POST Policy 签名字段，直传时作为 form-data 原样发送  
+expires_in | integer | Required |  | Policy 有效期（秒），当前为 5400（90 分钟）；与 `fields.Policy` 内 `expiration` 对齐，过期后须重新调用本接口  
+  
+**data / fields**
+
+S3 POST Policy 签名字段，直传时作为 form-data 原样发送
+
+类型 | 约束  
+---|---  
+OtcUploadPreUploadPolicyFields | required: ["key","Content-Type","X-Amz-Credential","X-Amz-Algorithm","X-Amz-Date","Policy","X-Amz-Signature"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+key | string | Required |  | 临时 object 明文路径，与 base64_decode(file_key) 一致  
+Content-Type | string | Required |  | 须与预上传请求的 content_type 解码后一致  
+X-Amz-Credential | string | Required |  | AWS 临时凭证与作用域，直传时原样提交  
+X-Amz-Algorithm | string | Required |  | AWS 签名算法，直传时原样提交  
+X-Amz-Date | string | Required |  | AWS 签名时间，直传时原样提交  
+Policy | string | Required |  | base64 编码的 S3 POST Policy，直传时原样提交  
+X-Amz-Signature | string | Required |  | S3 POST Policy 签名，直传时原样提交  
   
 WARNING
 
@@ -1382,10 +1730,27 @@ _法币订单设置已付款（入金确认）_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | OtcMarkOrderPaidRequest | 是 |   
-» order_id | body | string | 是 | 订单 ID  
-» client_order_id | body | string | 否 | 客户端订单号（部分网关/Inner Pay 路径使用，可选）  
-» payment_receipt_file_key | body | string | 是 | 用户付款回执：**必填** 。推荐先 `POST /otc/upload/pre_upload`（`scene=general`）直传临时桶，再传返回的 **base64 file_key 原值** （不要解码）；服务端搬迁至正式桶后落库。仍兼容旧链路直传正式桶的 base64 key。单文件；jpg/jpeg/png/pdf；≤10MB。  
-» payment_receipt | body | string | 否 | 与 `payment_receipt_file_key` 兼容的别名（视网关对外字段名）  
+order_id | body | string | 是 | 订单 ID  
+client_order_id | body | string | 否 | 客户端订单号（部分网关/Inner Pay 路径使用，可选）  
+payment_receipt_file_key | body | string | 是 | 用户付款回执：**必填** 。推荐先 `POST /otc/upload/pre_upload`（`scene=general`）直传临时桶，再传返回的 **base64 file_key 原值** （不要解码）；服务端搬迁至正式桶后落库。仍兼容旧链路直传正式桶的 base64 key。单文件；jpg/jpeg/png/pdf；≤10MB。  
+payment_receipt | body | string | 否 | 与 `payment_receipt_file_key` 兼容的别名（视网关对外字段名）  
+  
+####  请求体结构
+
+法币订单设置已付款（入金确认）请求体。须包含用户付款回执（与 §3.2 一致）。 **`payment_receipt_file_key` 必填**；订单主键在此路径为 `order_id`。经 Pay 网关访问时若使用 `client_order_id`，以网关转写字段为准。
+
+请求体结构类型 | 约束  
+---|---  
+OtcMarkOrderPaidRequest | required: ["order_id","payment_receipt_file_key"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | string | Required |  | 订单 ID  
+client_order_id | string | Optional |  | 客户端订单号（部分网关/Inner Pay 路径使用，可选）  
+payment_receipt_file_key | string | Required |  | 用户付款回执：**必填** 。推荐先 `POST /otc/upload/pre_upload`（`scene=general`）直传临时桶，再传返回的 **base64 file_key 原值** （不要解码）；服务端搬迁至正式桶后落库。仍兼容旧链路直传正式桶的 base64 key。单文件；jpg/jpeg/png/pdf；≤10MB。  
+payment_receipt | string | Optional |  | 与 `payment_receipt_file_key` 兼容的别名（视网关对外字段名）  
   
 ### 返回
 
@@ -1397,13 +1762,19 @@ body | body | OtcMarkOrderPaidRequest | 是 |
 
 状态码 **200**
 
-_OtcActionResponse_
+OtcActionResponse
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer |   
-» message | string |   
-» timestamp | integer |   
+类型 | 约束  
+---|---  
+OtcActionResponse | required: ["code","message","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+timestamp | integer | Required |  |   
   
 WARNING
 
@@ -1502,13 +1873,19 @@ order_id | 请求参数 | string | 是 | 订单ID
 
 状态码 **200**
 
-_OtcActionResponse_
+OtcActionResponse
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer |   
-» message | string |   
-» timestamp | integer |   
+类型 | 约束  
+---|---  
+OtcActionResponse | required: ["code","message","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+timestamp | integer | Required |  |   
   
 WARNING
 
@@ -1612,37 +1989,100 @@ DISBURSED：已出款
 
 状态码 **200**
 
-_OtcOrderListResponse_
+OtcOrderListResponse
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer |   
-» message | string |   
-» data | object |   
-»» pn | integer |   
-»» ps | integer |   
-»» total_pn | integer |   
-»» count | integer |   
-»» lists | array |   
-»»» OtcOrderListItem | object |   
-»»»» time | string | 当前时间  
-»»»» timestamp | integer | 当前时间戳  
-»»»» order_id | string | 订单Id  
-»»»» trade_no | string | 交易号  
-»»»» type | string | BUY 入金 / SELL 出金  
-»»»» status | string | 订单状态  
-»»»» fiat_currency | string | 法币币种  
-»»»» fiat_currency_info | object |   
-»»»»» name | string | 名称  
-»»»»» icon | string | 图片  
-»»»» fiat_amount | string | 法币金额  
-»»»» crypto_currency | string | 数字货币币种  
-»»»» crypto_currency_info | object |   
-»»»»» name | string |   
-»»»»» icon | string |   
-»»»» crypto_amount | string | 数字货币金额  
-»»»» rate | string | 汇率  
-»»»» promotion_code | string | 优惠码  
+类型 | 约束  
+---|---  
+OtcOrderListResponse | required: ["code","message","data"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["pn","ps","total_pn","count","lists"] |   
+  
+**data**
+
+OtcOrderListResult
+
+类型 | 约束  
+---|---  
+object | required: ["pn","ps","total_pn","count","lists"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+pn | integer | Required |  |   
+ps | integer | Required |  |   
+total_pn | integer | Required |  |   
+count | integer | Required |  |   
+lists | array | Required |  |   
+  
+**data / lists**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / lists / items**
+
+OtcOrderListItem
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+time | string | Optional |  | 当前时间  
+timestamp | integer | Optional |  | 当前时间戳  
+order_id | string | Optional |  | 订单Id  
+trade_no | string | Optional |  | 交易号  
+type | string | Optional |  | BUY 入金 / SELL 出金  
+status | string | Optional |  | 订单状态  
+fiat_currency | string | Optional |  | 法币币种  
+fiat_currency_info | object | Optional | required: ["name","icon"] |   
+fiat_amount | string | Optional |  | 法币金额  
+crypto_currency | string | Optional |  | 数字货币币种  
+crypto_currency_info | object | Optional | required: ["name","icon"] |   
+crypto_amount | string | Optional |  | 数字货币金额  
+rate | string | Optional |  | 汇率  
+promotion_code | string | Optional |  | 优惠码  
+  
+**data / lists / items / fiat_currency_info**
+
+OtcOrderListFiatCurrencyInfo
+
+类型 | 约束  
+---|---  
+object | required: ["name","icon"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+name | string | Required |  | 名称  
+icon | string | Required |  | 图片  
+  
+**data / lists / items / crypto_currency_info**
+
+OtcOrderListCryptoCurrencyInfo
+
+类型 | 约束  
+---|---  
+object | required: ["name","icon"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+name | string | Required |  |   
+icon | string | Required |  |   
   
 WARNING
 
@@ -1763,32 +2203,69 @@ status | 请求参数 | string | 否 | 状态 PROCESSING 进行中 / DONE 完成
 
 状态码 **200**
 
-_OtcStableCoinOrderListResponse_
+OtcStableCoinOrderListResponse
 
-名称 | 类型 | 描述  
----|---|---  
-» code | integer |   
-» message | string |   
-» data | object |   
-»» total | integer |   
-»» page_size | integer |   
-»» page_number | integer |   
-»» total_page | integer |   
-»» lists | array |   
-»»» OtcStableCoinOrderListItem | object |   
-»»»» id | integer | 订单ID  
-»»»» trade_no | string | 交易流水号  
-»»»» pay_coin | string | 支付币种  
-»»»» pay_icon | string | 支付币种图标  
-»»»» pay_amount | string | 支付金额  
-»»»» get_coin | string | 获得币种  
-»»»» get_icon | string | 获得币种图标  
-»»»» get_amount | string | 获得金额  
-»»»» rate | string | 汇率  
-»»»» rate_reci | string | 汇率倒数  
-»»»» status | string | PROCESSING 进行中/ DONE 完成 / FAILED失败  
-»»»» create_timest | integer | 创建时间戳  
-»»»» create_time | string | 创建时间  
+类型 | 约束  
+---|---  
+OtcStableCoinOrderListResponse | required: ["code","message","data"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["total","page_size","page_number","total_page","lists"] |   
+  
+**data**
+
+OtcStableCoinOrderListResult
+
+类型 | 约束  
+---|---  
+object | required: ["total","page_size","page_number","total_page","lists"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer | Required |  |   
+page_size | integer | Required |  |   
+page_number | integer | Required |  |   
+total_page | integer | Required |  |   
+lists | array | Required |  |   
+  
+**data / lists**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / lists / items**
+
+OtcStableCoinOrderListItem
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer | Optional |  | 订单ID  
+trade_no | string | Optional |  | 交易流水号  
+pay_coin | string | Optional |  | 支付币种  
+pay_icon | string | Optional |  | 支付币种图标  
+pay_amount | string | Optional |  | 支付金额  
+get_coin | string | Optional |  | 获得币种  
+get_icon | string | Optional |  | 获得币种图标  
+get_amount | string | Optional |  | 获得金额  
+rate | string | Optional |  | 汇率  
+rate_reci | string | Optional |  | 汇率倒数  
+status | string | Optional |  | PROCESSING 进行中/ DONE 完成 / FAILED失败  
+create_timest | integer | Optional |  | 创建时间戳  
+create_time | string | Optional |  | 创建时间  
   
 WARNING
 
@@ -1897,41 +2374,60 @@ order_id | 请求参数 | string | 是 | 订单ID
 
 状态码 **200**
 
-_OtcOrderDetailResponse_
+OtcOrderDetailResponse
 
-名称 | 类型 | 描述  
----|---|---  
-» message | string |   
-» code | integer |   
-» data | object |   
-»» order_id | string | 订单ID  
-»» uid | string | 用户ID  
-»» type | string | 订单类型  
-»» fiat_currency | string | 法币币种  
-»» fiat_amount | string | 法币金额  
-»» crypto_currency | string | 数字货币币种  
-»» crypto_amount | string | 数字货币金额  
-»» rate | string | 汇率  
-»» bank_account_name | string | 用户付款/收款名称  
-»» bank_name | string | 用户付款/收款银行名称  
-»» bank_country | string | 用户付款/收款银行所在国家  
-»» bank_address | string | 用户付款/收款银行地址  
-»» bank_account_number_iban | string | 用户付款/收款银行账户号码/IBAN  
-»» swift_code | string | 用户付款/收款银行 SWIFT  
-»» intermediate_bank_name | string | 用户付款/收款银行中间行名称  
-»» intermediary_bank_swift_code | string | 用户付款/收款银行中间行 SWIFT  
-»» gate_bank_account_name | string | Gate 收款名称，仅 BUY 展示  
-»» gate_bank_name | string | Gate 收款银行名称，仅 BUY 展示  
-»» gate_bank_country | string | Gate 收款银行所在国家，仅 BUY 展示  
-»» gate_bank_address | string | Gate 收款银行地址，仅 BUY 展示  
-»» gate_bank_account_number_iban | string | Gate 收款银行账户号码/IBAN，仅 BUY 展示  
-»» gate_swift_code | string | Gate 收款银行 SWIFT，仅 BUY 展示  
-»» gate_intermediary_bank_name | string | Gate 收款银行中间行名称，仅 BUY 展示  
-»» gate_intermediary_bank_swift_code | string | Gate 收款银行中间行 SWIFT，仅 BUY 展示  
-»» gate_transfer_remark | string | 转账备注（与 gate_reference_code 互斥；入金买单有参考码时为空），仅 BUY 展示  
-»» gate_reference_code | string | 汇款时请务必填写参考代码，以确保您的订单及时处理。（与 gate_transfer_remark 互斥）  
-»» status | string | 状态  
-»» create_time | string | 创建时间  
+类型 | 约束  
+---|---  
+OtcOrderDetailResponse | required: ["message","code","data"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+message | string | Required |  |   
+code | integer | Required |  |   
+data | object | Required | required: ["order_id","uid","type","fiat_currency","fiat_amount","crypto_currency","crypto_amount","rate","status","create_time"] |   
+  
+**data**
+
+OtcOrderDetail
+
+类型 | 约束  
+---|---  
+object | required: ["order_id","uid","type","fiat_currency","fiat_amount","crypto_currency","crypto_amount","rate","status","create_time"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | string | Required |  | 订单ID  
+uid | string | Required |  | 用户ID  
+type | string | Required |  | 订单类型  
+fiat_currency | string | Required |  | 法币币种  
+fiat_amount | string | Required |  | 法币金额  
+crypto_currency | string | Required |  | 数字货币币种  
+crypto_amount | string | Required |  | 数字货币金额  
+rate | string | Required |  | 汇率  
+bank_account_name | string | Optional |  | 用户付款/收款名称  
+bank_name | string | Optional |  | 用户付款/收款银行名称  
+bank_country | string | Optional |  | 用户付款/收款银行所在国家  
+bank_address | string | Optional |  | 用户付款/收款银行地址  
+bank_account_number_iban | string | Optional |  | 用户付款/收款银行账户号码/IBAN  
+swift_code | string | Optional |  | 用户付款/收款银行 SWIFT  
+intermediate_bank_name | string | Optional |  | 用户付款/收款银行中间行名称  
+intermediary_bank_swift_code | string | Optional |  | 用户付款/收款银行中间行 SWIFT  
+gate_bank_account_name | string | Optional |  | Gate 收款名称，仅 BUY 展示  
+gate_bank_name | string | Optional |  | Gate 收款银行名称，仅 BUY 展示  
+gate_bank_country | string | Optional |  | Gate 收款银行所在国家，仅 BUY 展示  
+gate_bank_address | string | Optional |  | Gate 收款银行地址，仅 BUY 展示  
+gate_bank_account_number_iban | string | Optional |  | Gate 收款银行账户号码/IBAN，仅 BUY 展示  
+gate_swift_code | string | Optional |  | Gate 收款银行 SWIFT，仅 BUY 展示  
+gate_intermediary_bank_name | string | Optional |  | Gate 收款银行中间行名称，仅 BUY 展示  
+gate_intermediary_bank_swift_code | string | Optional |  | Gate 收款银行中间行 SWIFT，仅 BUY 展示  
+gate_transfer_remark | string | Optional |  | 转账备注（与 gate_reference_code 互斥；入金买单有参考码时为空），仅 BUY 展示  
+gate_reference_code | string | Optional |  | 汇款时请务必填写参考代码，以确保您的订单及时处理。（与 gate_transfer_remark 互斥）  
+status | string | Required |  | 状态  
+create_time | string | Required |  | 创建时间  
   
 WARNING
 
@@ -2024,188 +2520,25 @@ WARNING
 
 #  模型
 
-##  OtcStableCoinOrderCreateResponse
-
-_OtcStableCoinOrderCreateResponse_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-code | integer | true | none | 业务码，0 成功  
-message | string | true | none | 提示信息  
-timestamp | integer | true | none | 服务端秒级时间戳  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "timestamp": 0
-    }
-    
-    
-
-##  OtcBankEnterpriseSupplementMultipartRequest
-
-_企业补件`multipart/form-data`。文件字段名：`certificate`、`share_holders`、`passport`、`share_holding_structure`；可选 `funds_statement`、`additional`。可选字符串 `relationship_proof`（JSON）合并入参。_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-uid | string | false | none | none  
-bank_id | string | true | none | none  
-certificate | string | false | none | 营业执照/注册证书文件内容（multipart 文件字段，二进制/Base64）  
-share_holders | string | false | none | 股东名册文件内容（multipart 文件字段，二进制/Base64）  
-passport | string | false | none | 法人/股东护照文件内容（multipart 文件字段，二进制/Base64）  
-share_holding_structure | string | false | none | 股权结构图文件内容（multipart 文件字段，二进制/Base64）  
-funds_statement | string | false | none | 资金证明文件内容（multipart 文件字段，二进制/Base64，可选）  
-additional | string | false | none | 其他补充材料文件内容（multipart 文件字段，二进制/Base64，可选）  
-relationship_proof | string | false | none | 可选，relationship_proof 的 JSON 字符串  
-  
-_anyOf_
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-_None_ | object | false | none | none  
-  
-_or_
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-_None_ | object | false | none | none  
-      
-    
-    {}
-    
-    
-
-##  OtcStableCoinOrderRequest
-
-_稳定币下单请求体_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-pay_coin | string | true | none | 用户支付币种 支持币种 从otc web 稳定币询价页面查询  
-get_coin | string | true | none | 用户兑换币种 支持币种 从otc web 稳定币询价页面查询  
-pay_amount | string | true | none | 用户支付币种数量  
-get_amount | string | true | none | 用户兑换币种数量  
-side | string | true | none | 询价接口返回的 side（下单校验用）。兼容历史传参 `PAY`/`GET`；新接入请与询价响应保持一致。  
-promotion_code | string | false | none | 优惠码（选填）  
-quote_token | string | true | none | 询价接口返回参数  
-      
-    
-    {
-      "pay_coin": "USDC",
-      "get_coin": "USDT",
-      "pay_amount": "30000",
-      "get_amount": "20000",
-      "side": "PAY",
-      "promotion_code": "",
-      "quote_token": "dsafjkdshfjdsjkfah"
-    }
-    
-    
-
-##  OtcActionResponse
-
-_OtcActionResponse_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-code | integer | true | none | none  
-message | string | true | none | none  
-timestamp | integer | true | none | none  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "timestamp": 0
-    }
-    
-    
-
-##  OtcOrderRequest
-
-_法币下单请求体_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-type | string | true | none | BUY 入金 SELL 出金  
-side | string | true | none | 询价接口返回的 side（下单校验用）。兼容历史传参 `FIAT`/`CRYPTO` 或 `PAY`/`GET`；新接入请与询价响应保持一致。  
-crypto_currency | string | true | none | 数字货币币种 支持币种从otc web 法币 询价页面查询  
-fiat_currency | string | true | none | 法币币种 支持币种从otc web 法币询价页面查询  
-crypto_amount | string | true | none | 数字货币数量  
-fiat_amount | string | true | none | 法币数量  
-promotion_code | string | false | none | 优惠码  
-quote_token | string | true | none | 询价接口返回参数  
-bank_id | string | true | none | 下单使用的银行卡 ID；请从 `GET /otc/bank/list`返回列表中选取，默认卡对应 `is_default=1`  
-receive_type | string | false | none | 汇款名义。按用户类型传允许值：  
-企业用户：YOU（以您本公司名义汇款）、GATE（以 Gate 名义汇款）、RECIPIENT（以收款人名义汇款）；  
-个人用户：GATE（以 Gate 名义汇款）、PERSON（以用户本人汇款）。  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-receive_type | YOU  
-receive_type | GATE  
-receive_type | RECIPIENT  
-receive_type | PERSON  
-      
-    
-    {
-      "type": "BUY",
-      "side": "FIAT",
-      "crypto_currency": "USDT",
-      "fiat_currency": "USD",
-      "crypto_amount": "30000",
-      "fiat_amount": "30000",
-      "promotion_code": "",
-      "quote_token": "",
-      "bank_id": "2",
-      "receive_type": "GATE"
-    }
-    
-    
-
-##  OtcBankIdRequest
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-bank_id | string | true | none | 银行卡 ID  
-      
-    
-    {
-      "bank_id": "string"
-    }
-    
-    
-
 ##  OtcQuoteRequest
 
-_法币和稳定币询价请求体_
+法币和稳定币询价请求体
 
-###  属性
+类型 | 约束  
+---|---  
+object | required: ["side","pay_coin","get_coin"]  
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-side | string | true | none | PAY：输入支付数量（pay_amount 必传）；GET：输入获得数量（get_amount 必传）  
-pay_coin | string | true | none | 支付币种，支持币种从 OTC web 询价页查询  
-get_coin | string | true | none | 获得币种，支持币种从 OTC web 询价页查询  
-pay_amount | string | false | none | 用户支付币种数量  
-get_amount | string | false | none | 用户兑换币种数量  
-create_quote_token | string | false | none | 创建询价token 0:询价预览 1:创建询价token 用于下单  
-promotion_code | string | false | none | 优惠码  
+side | string | Required |  | PAY：输入支付数量（pay_amount 必传）；GET：输入获得数量（get_amount 必传）  
+pay_coin | string | Required |  | 支付币种，支持币种从 OTC web 询价页查询  
+get_coin | string | Required |  | 获得币种，支持币种从 OTC web 询价页查询  
+pay_amount | string | Optional |  | 用户支付币种数量  
+get_amount | string | Optional |  | 用户兑换币种数量  
+create_quote_token | string | Optional |  | 创建询价token 0:询价预览 1:创建询价token 用于下单  
+promotion_code | string | Optional |  | 优惠码  
       
     
     {
@@ -2220,45 +2553,193 @@ promotion_code | string | false | none | 优惠码
     
     
 
+##  OtcMarkOrderPaidRequest
+
+法币订单设置已付款（入金确认）请求体。须包含用户付款回执（与 §3.2 一致）。 **`payment_receipt_file_key` 必填**；订单主键在此路径为 `order_id`。经 Pay 网关访问时若使用 `client_order_id`，以网关转写字段为准。
+
+类型 | 约束  
+---|---  
+object | required: ["order_id","payment_receipt_file_key"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | string | Required |  | 订单 ID  
+client_order_id | string | Optional |  | 客户端订单号（部分网关/Inner Pay 路径使用，可选）  
+payment_receipt_file_key | string | Required |  | 用户付款回执：**必填** 。推荐先 `POST /otc/upload/pre_upload`（`scene=general`）直传临时桶，再传返回的 **base64 file_key 原值** （不要解码）；服务端搬迁至正式桶后落库。仍兼容旧链路直传正式桶的 base64 key。单文件；jpg/jpeg/png/pdf；≤10MB。  
+payment_receipt | string | Optional |  | 与 `payment_receipt_file_key` 兼容的别名（视网关对外字段名）  
+      
+    
+    {
+      "order_id": "203",
+      "client_order_id": "",
+      "payment_receipt_file_key": "b3RjX3RlbXAvMTIzNDU2Nzg5MC9nZW5lcmFsLzIwMjYwODMxMjEwMDEyMzQ1Njc4LnBuZw==",
+      "payment_receipt": ""
+    }
+    
+    
+
+##  OtcBankSupplementChecklistResponse
+
+OtcBankSupplementChecklistResponse
+
+类型 | 约束  
+---|---  
+object | required: ["code","message","data"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["user_type","items"] |   
+timestamp | integer | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object | required: ["user_type","items"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user_type | string | Required | enum: ["personal","enterprise"] | personal 或 enterprise，与提交补件类型一致；`items[].description` 为各资料项提交补件描述  
+items | array | Required |  |   
+  
+**data / items**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / items / items**
+
+待补充资料项
+
+类型 | 约束  
+---|---  
+OtcBankSupplementChecklistItem | required: ["description"]  
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "user_type": "personal",
+        "items": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  OtcBankCreateMultipartRequest
+
+Inner 创建银行卡 `multipart/form-data`。开户证明文件二选一：
+
+  * **预上传** ：`documentation_file_key` \+ `file_type`（先 `POST /otc/upload/pre_upload`，`scene=bank`）；
+  * **multipart 直传** ：`documentation_file` 文件字段。
+
+类型 | 约束  
+---|---  
+object | required: ["bank_account_name","bank_name","bank_country","bank_address","iban","swift"]  
+  
+**属性**
+
+名称 | 类型 | 当前对象内必填 | 约束 | 描述  
+---|---|---|---|---  
+bank_account_name | string | 是 |  |   
+bank_name | string | 是 |  |   
+bank_country | string | 是 |  |   
+bank_address | string | 是 |  |   
+iban | string | 是 |  |   
+swift | string | 是 |  |   
+remittance_line_number | string | 否 |  |   
+agent_bank_name | string | 否 |  |   
+agent_bank_swift | string | 否 |  |   
+documentation_file | string | 否 |  | multipart 直传方式；与 documentation_file_key 二选一  
+documentation_file_key | string | 否 |  | 预上传方式；pre_upload 返回的 file_key（明文或 base64 均可识别）  
+file_type | string | 否 |  | 使用 documentation_file_key 时必填；明文 MIME 或其 base64  
+  
+**oneOf[0]**
+
+类型 | 约束  
+---|---  
+any | required: ["documentation_file"]  
+  
+**oneOf[1]**
+
+类型 | 约束  
+---|---  
+any | required: ["documentation_file_key","file_type"]  
+      
+    
+    {}
+    
+    
+
 ##  OtcOrderDetailResponse
 
-_OtcOrderDetailResponse_
+OtcOrderDetailResponse
 
-###  属性
+类型 | 约束  
+---|---  
+object | required: ["message","code","data"]  
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-message | string | true | none | none  
-code | integer | true | none | none  
-data | object | true | none | none  
-» order_id | string | true | none | 订单ID  
-» uid | string | true | none | 用户ID  
-» type | string | true | none | 订单类型  
-» fiat_currency | string | true | none | 法币币种  
-» fiat_amount | string | true | none | 法币金额  
-» crypto_currency | string | true | none | 数字货币币种  
-» crypto_amount | string | true | none | 数字货币金额  
-» rate | string | true | none | 汇率  
-» bank_account_name | string | false | none | 用户付款/收款名称  
-» bank_name | string | false | none | 用户付款/收款银行名称  
-» bank_country | string | false | none | 用户付款/收款银行所在国家  
-» bank_address | string | false | none | 用户付款/收款银行地址  
-» bank_account_number_iban | string | false | none | 用户付款/收款银行账户号码/IBAN  
-» swift_code | string | false | none | 用户付款/收款银行 SWIFT  
-» intermediate_bank_name | string | false | none | 用户付款/收款银行中间行名称  
-» intermediary_bank_swift_code | string | false | none | 用户付款/收款银行中间行 SWIFT  
-» gate_bank_account_name | string | false | none | Gate 收款名称，仅 BUY 展示  
-» gate_bank_name | string | false | none | Gate 收款银行名称，仅 BUY 展示  
-» gate_bank_country | string | false | none | Gate 收款银行所在国家，仅 BUY 展示  
-» gate_bank_address | string | false | none | Gate 收款银行地址，仅 BUY 展示  
-» gate_bank_account_number_iban | string | false | none | Gate 收款银行账户号码/IBAN，仅 BUY 展示  
-» gate_swift_code | string | false | none | Gate 收款银行 SWIFT，仅 BUY 展示  
-» gate_intermediary_bank_name | string | false | none | Gate 收款银行中间行名称，仅 BUY 展示  
-» gate_intermediary_bank_swift_code | string | false | none | Gate 收款银行中间行 SWIFT，仅 BUY 展示  
-» gate_transfer_remark | string | false | none | 转账备注（与 gate_reference_code 互斥；入金买单有参考码时为空），仅 BUY 展示  
-» gate_reference_code | string | false | none | 汇款时请务必填写参考代码，以确保您的订单及时处理。（与 gate_transfer_remark 互斥）  
-» status | string | true | none | 状态  
-» create_time | string | true | none | 创建时间  
+message | string | Required |  |   
+code | integer | Required |  |   
+data | object | Required | required: ["order_id","uid","type","fiat_currency","fiat_amount","crypto_currency","crypto_amount","rate","status","create_time"] |   
+  
+**data**
+
+OtcOrderDetail
+
+类型 | 约束  
+---|---  
+object | required: ["order_id","uid","type","fiat_currency","fiat_amount","crypto_currency","crypto_amount","rate","status","create_time"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | string | Required |  | 订单ID  
+uid | string | Required |  | 用户ID  
+type | string | Required |  | 订单类型  
+fiat_currency | string | Required |  | 法币币种  
+fiat_amount | string | Required |  | 法币金额  
+crypto_currency | string | Required |  | 数字货币币种  
+crypto_amount | string | Required |  | 数字货币金额  
+rate | string | Required |  | 汇率  
+bank_account_name | string | Optional |  | 用户付款/收款名称  
+bank_name | string | Optional |  | 用户付款/收款银行名称  
+bank_country | string | Optional |  | 用户付款/收款银行所在国家  
+bank_address | string | Optional |  | 用户付款/收款银行地址  
+bank_account_number_iban | string | Optional |  | 用户付款/收款银行账户号码/IBAN  
+swift_code | string | Optional |  | 用户付款/收款银行 SWIFT  
+intermediate_bank_name | string | Optional |  | 用户付款/收款银行中间行名称  
+intermediary_bank_swift_code | string | Optional |  | 用户付款/收款银行中间行 SWIFT  
+gate_bank_account_name | string | Optional |  | Gate 收款名称，仅 BUY 展示  
+gate_bank_name | string | Optional |  | Gate 收款银行名称，仅 BUY 展示  
+gate_bank_country | string | Optional |  | Gate 收款银行所在国家，仅 BUY 展示  
+gate_bank_address | string | Optional |  | Gate 收款银行地址，仅 BUY 展示  
+gate_bank_account_number_iban | string | Optional |  | Gate 收款银行账户号码/IBAN，仅 BUY 展示  
+gate_swift_code | string | Optional |  | Gate 收款银行 SWIFT，仅 BUY 展示  
+gate_intermediary_bank_name | string | Optional |  | Gate 收款银行中间行名称，仅 BUY 展示  
+gate_intermediary_bank_swift_code | string | Optional |  | Gate 收款银行中间行 SWIFT，仅 BUY 展示  
+gate_transfer_remark | string | Optional |  | 转账备注（与 gate_reference_code 互斥；入金买单有参考码时为空），仅 BUY 展示  
+gate_reference_code | string | Optional |  | 汇款时请务必填写参考代码，以确保您的订单及时处理。（与 gate_transfer_remark 互斥）  
+status | string | Required |  | 状态  
+create_time | string | Required |  | 创建时间  
       
     
     {
@@ -2298,73 +2779,112 @@ data | object | true | none | none
     
     
 
-##  OtcBankSupplementChecklistResponse
+##  OtcOrderRequest
 
-_OtcBankSupplementChecklistResponse_
+法币下单请求体
 
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-code | integer | true | none | none  
-message | string | true | none | none  
-data | object | true | none | none  
-» user_type | string | true | none | personal 或 enterprise，与提交补件类型一致；`items[].description` 为各资料项提交补件描述  
-» items | [OtcBankSupplementChecklistItem] | true | none | [待补充资料项]  
-timestamp | integer | false | none | none  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
+类型 | 约束  
 ---|---  
-user_type | personal  
-user_type | enterprise  
+object | required: ["type","side","crypto_currency","fiat_currency","crypto_amount","fiat_amount","quote_token","bank_id"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+type | string | Required |  | BUY 入金 SELL 出金  
+side | string | Required |  | 询价接口返回的 side（下单校验用）。兼容历史传参 `FIAT`/`CRYPTO` 或 `PAY`/`GET`；新接入请与询价响应保持一致。  
+crypto_currency | string | Required |  | 数字货币币种 支持币种从otc web 法币 询价页面查询  
+fiat_currency | string | Required |  | 法币币种 支持币种从otc web 法币询价页面查询  
+crypto_amount | string | Required |  | 数字货币数量  
+fiat_amount | string | Required |  | 法币数量  
+promotion_code | string | Optional |  | 优惠码  
+quote_token | string | Required |  | 询价接口返回参数  
+bank_id | string | Required |  | 下单使用的银行卡 ID；请从 `GET /otc/bank/list`返回列表中选取，默认卡对应 `is_default=1`  
+receive_type | string | Optional | enum: ["YOU","GATE","RECIPIENT","PERSON"] | 汇款名义。按用户类型传允许值：  
+企业用户：YOU（以您本公司名义汇款）、GATE（以 Gate 名义汇款）、RECIPIENT（以收款人名义汇款）；  
+个人用户：GATE（以 Gate 名义汇款）、PERSON（以用户本人汇款）。  
       
     
     {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "user_type": "personal",
-        "items": [
-          {}
-        ]
-      },
-      "timestamp": 0
+      "type": "BUY",
+      "side": "FIAT",
+      "crypto_currency": "USDT",
+      "fiat_currency": "USD",
+      "crypto_amount": "30000",
+      "fiat_amount": "30000",
+      "promotion_code": "",
+      "quote_token": "",
+      "bank_id": "2",
+      "receive_type": "GATE"
     }
     
     
 
 ##  OtcStableCoinOrderListResponse
 
-_OtcStableCoinOrderListResponse_
+OtcStableCoinOrderListResponse
 
-###  属性
+类型 | 约束  
+---|---  
+object | required: ["code","message","data"]  
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-code | integer | true | none | none  
-message | string | true | none | none  
-data | object | true | none | none  
-» total | integer | true | none | none  
-» page_size | integer | true | none | none  
-» page_number | integer | true | none | none  
-» total_page | integer | true | none | none  
-» lists | array | true | none | none  
-»» OtcStableCoinOrderListItem | object | false | none | none  
-»»» id | integer | false | none | 订单ID  
-»»» trade_no | string | false | none | 交易流水号  
-»»» pay_coin | string | false | none | 支付币种  
-»»» pay_icon | string | false | none | 支付币种图标  
-»»» pay_amount | string | false | none | 支付金额  
-»»» get_coin | string | false | none | 获得币种  
-»»» get_icon | string | false | none | 获得币种图标  
-»»» get_amount | string | false | none | 获得金额  
-»»» rate | string | false | none | 汇率  
-»»» rate_reci | string | false | none | 汇率倒数  
-»»» status | string | false | none | PROCESSING 进行中/ DONE 完成 / FAILED失败  
-»»» create_timest | integer | false | none | 创建时间戳  
-»»» create_time | string | false | none | 创建时间  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["total","page_size","page_number","total_page","lists"] |   
+  
+**data**
+
+OtcStableCoinOrderListResult
+
+类型 | 约束  
+---|---  
+object | required: ["total","page_size","page_number","total_page","lists"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer | Required |  |   
+page_size | integer | Required |  |   
+page_number | integer | Required |  |   
+total_page | integer | Required |  |   
+lists | array | Required |  |   
+  
+**data / lists**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / lists / items**
+
+OtcStableCoinOrderListItem
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer | Optional |  | 订单ID  
+trade_no | string | Optional |  | 交易流水号  
+pay_coin | string | Optional |  | 支付币种  
+pay_icon | string | Optional |  | 支付币种图标  
+pay_amount | string | Optional |  | 支付金额  
+get_coin | string | Optional |  | 获得币种  
+get_icon | string | Optional |  | 获得币种图标  
+get_amount | string | Optional |  | 获得金额  
+rate | string | Optional |  | 汇率  
+rate_reci | string | Optional |  | 汇率倒数  
+status | string | Optional |  | PROCESSING 进行中/ DONE 完成 / FAILED失败  
+create_timest | integer | Optional |  | 创建时间戳  
+create_time | string | Optional |  | 创建时间  
       
     
     {
@@ -2383,32 +2903,340 @@ data | object | true | none | none
     
     
 
+##  OtcBankCreateResponse
+
+创建银行卡成功（Inner 返回 bank_id、status）
+
+类型 | 约束  
+---|---  
+object | required: ["code","message","data"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["bank_id","status"] |   
+timestamp | integer | Optional |  |   
+  
+**data**
+
+类型 | 约束  
+---|---  
+object | required: ["bank_id","status"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+bank_id | integer | Required |  | otc_rds 银行卡主键  
+status | integer | Required |  | 审核状态（如待审）  
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "bank_id": 0,
+        "status": 0
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  OtcBankEnterpriseSupplementMultipartRequest
+
+企业补件 `multipart/form-data`。文件字段名：`certificate`、`share_holders`、`passport`、`share_holding_structure`；可选 `funds_statement`、`additional`。可选字符串 `relationship_proof`（JSON）合并入参。
+
+类型 | 约束  
+---|---  
+object | required: ["bank_id"]  
+  
+**属性**
+
+名称 | 类型 | 当前对象内必填 | 约束 | 描述  
+---|---|---|---|---  
+uid | string | 否 |  |   
+bank_id | string | 是 |  |   
+certificate | string | 否 |  | 营业执照/注册证书文件内容（multipart 文件字段，二进制/Base64）  
+share_holders | string | 否 |  | 股东名册文件内容（multipart 文件字段，二进制/Base64）  
+passport | string | 否 |  | 法人/股东护照文件内容（multipart 文件字段，二进制/Base64）  
+share_holding_structure | string | 否 |  | 股权结构图文件内容（multipart 文件字段，二进制/Base64）  
+funds_statement | string | 否 |  | 资金证明文件内容（multipart 文件字段，二进制/Base64，可选）  
+additional | string | 否 |  | 其他补充材料文件内容（multipart 文件字段，二进制/Base64，可选）  
+relationship_proof | string | 否 |  | 可选，relationship_proof 的 JSON 字符串  
+  
+**anyOf[0]**
+
+类型 | 约束  
+---|---  
+any | required: ["relationship_proof"]  
+  
+**anyOf[1]**
+
+类型 | 约束  
+---|---  
+any | required: ["certificate","share_holders","passport","share_holding_structure"]  
+      
+    
+    {}
+    
+    
+
+##  OtcUploadPreUploadResponse
+
+OtcUploadPreUploadResponse
+
+类型 | 约束  
+---|---  
+object | required: ["code","message","data","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  | 0 成功；10010400 参数错误  
+message | string | Required |  | 响应消息  
+data | OtcUploadPreUploadData | Required | required: ["file_key","url","fields","expires_in"] | 预上传凭证与 S3 直传参数  
+timestamp | integer | Required |  | 响应时间戳（秒）  
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "file_key": "string",
+        "url": "string",
+        "fields": {
+          "key": "string",
+          "Content-Type": "string",
+          "X-Amz-Credential": "string",
+          "X-Amz-Algorithm": "string",
+          "X-Amz-Date": "string",
+          "Policy": "string",
+          "X-Amz-Signature": "string"
+        },
+        "expires_in": 0
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  OtcBankSupplementChecklistItem
+
+待补充资料项
+
+类型 | 约束  
+---|---  
+object | required: ["description"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+description | string | Required |  | 提交补件描述  
+      
+    
+    {
+      "description": "string"
+    }
+    
+    
+
+##  OtcStableCoinOrderCreateResponse
+
+OtcStableCoinOrderCreateResponse
+
+类型 | 约束  
+---|---  
+object | required: ["code","message","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  | 业务码，0 成功  
+message | string | Required |  | 提示信息  
+timestamp | integer | Required |  | 服务端秒级时间戳  
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "timestamp": 0
+    }
+    
+    
+
+##  OtcBankListResponse
+
+OtcBankListResponse
+
+类型 | 约束  
+---|---  
+object | required: ["code","message","data","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["lists"] |   
+timestamp | integer | Required |  |   
+  
+**data**
+
+OtcBankListResult
+
+类型 | 约束  
+---|---  
+object | required: ["lists"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+lists | array | Required |  | 银行卡列表  
+  
+**data / lists**
+
+银行卡列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / lists / items**
+
+OtcBankListItem
+
+类型 | 约束  
+---|---  
+object | required: ["id","bank_account_name","bank_name"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | string | Required |  | 银行卡 ID（下单时使用；与 `bank_id` 同义字段已收敛为 `id`）  
+bank_account_name | string | Required |  | 银行账户名称  
+bank_name | string | Required |  | 银行名称  
+bank_country | string | Optional |  | 银行所在国家  
+bank_address | string | Optional |  | 银行地址  
+iban | string | Optional |  | IBAN号码  
+swift | string | Optional |  | SWIFT代码  
+remittance_line_number | string | Optional |  | 汇款路线号  
+agent_bank_name | string | Optional |  | 代理银行名称  
+agent_bank_swift | string | Optional |  | 代理银行SWIFT代码  
+submit_time | string | Optional |  | 提交时间  
+update_time | string | Optional |  | 更新时间  
+status | string | Optional |  | 状态  
+is_default | integer | Optional |  | 是否默认银行卡 1是 0否  
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "lists": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  OtcBankIdRequest
+
+类型 | 约束  
+---|---  
+object | required: ["bank_id"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+bank_id | string | Required |  | 银行卡 ID  
+      
+    
+    {
+      "bank_id": "string"
+    }
+    
+    
+
+##  OtcUploadPreUploadRequest
+
+文件预上传请求体
+
+类型 | 约束  
+---|---  
+object | required: ["content_type"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+content_type | string | Required | enum: ["aW1hZ2UvcG5n","aW1hZ2UvanBlZw==","aW1hZ2UvanBn","YXBwbGljYXRpb24vcGRm"] | 文件 MIME 类型的 **base64** ，必填。仅支持 image/png、image/jpeg、image/jpg、application/pdf。  
+scene | string | Optional | enum: ["general","bank","assessment","credit"]  
+default: "general" | 业务场景，选填，默认 general；决定临时路径与搬迁后的正式目录  
+      
+    
+    {
+      "content_type": "aW1hZ2UvcG5n",
+      "scene": "bank"
+    }
+    
+    
+
 ##  OtcQuoteResponse
 
-_OtcQuoteResponse_
+OtcQuoteResponse
 
-###  属性
+类型 | 约束  
+---|---  
+object | required: ["code","message","data","timestamp"]  
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-code | integer | true | none | none  
-message | string | true | none | none  
-data | object | true | none | none  
-» type | string | true | none | BUY 入金 SELL 出金  
-» pay_coin | string | true | none | 支付币种  
-» get_coin | string | true | none | 兑换币种  
-» pay_amount | string | true | none | 支付金额  
-» get_amount | string | true | none | 兑换金额  
-» rate | string | true | none | 汇率  
-» rate_reci | string | true | none | 汇率倒数  
-» promotion_code | string | true | none | 优惠码  
-» side | string | true | none | 询价方式  
-» order_type | string | true | none | 订单类型 FIAT 法币 /STABLE 稳定币  
-» quote_token | string | true | none | 下单时需要用到的询价token  
-» validity_period | string | false | none | 报价有效期（秒）  
-» refresh_limit | integer | false | none | 报价刷新次数限制  
-» refresh_limit_msg | string | false | none | 刷新限制提示文案  
-timestamp | integer | true | none | 服务端秒级时间戳  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["type","pay_coin","get_coin","pay_amount","get_amount","rate","rate_reci","promotion_code","side","order_type","quote_token"] |   
+timestamp | integer | Required |  | 服务端秒级时间戳  
+  
+**data**
+
+OtcQuoteResult
+
+类型 | 约束  
+---|---  
+object | required: ["type","pay_coin","get_coin","pay_amount","get_amount","rate","rate_reci","promotion_code","side","order_type","quote_token"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+type | string | Required |  | BUY 入金 SELL 出金  
+pay_coin | string | Required |  | 支付币种  
+get_coin | string | Required |  | 兑换币种  
+pay_amount | string | Required |  | 支付金额  
+get_amount | string | Required |  | 兑换金额  
+rate | string | Required |  | 汇率  
+rate_reci | string | Required |  | 汇率倒数  
+promotion_code | string | Required |  | 优惠码  
+side | string | Required |  | 询价方式  
+order_type | string | Required |  | 订单类型 FIAT 法币 /STABLE 稳定币  
+quote_token | string | Required |  | 下单时需要用到的询价token  
+validity_period | string | Optional |  | 报价有效期（秒）  
+refresh_limit | integer | Optional |  | 报价刷新次数限制  
+refresh_limit_msg | string | Optional |  | 刷新限制提示文案  
       
     
     {
@@ -2435,153 +3263,137 @@ timestamp | integer | true | none | 服务端秒级时间戳
     
     
 
-##  OtcBankCreateResponse
+##  OtcBankPersonalSupplementMultipartRequest
 
-_创建银行卡成功（Inner 返回 bank_id、status）_
+个人补件 `multipart/form-data`。文件字段名固定为 `id_document_front`、`id_document_back`、`address_proof`（与 checklist `code` 一致）；可额外传字符串字段 `relationship_proof`（JSON 文本）与上传结果合并。
 
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-code | integer | true | none | none  
-message | string | true | none | none  
-data | object | true | none | none  
-» bank_id | integer | true | none | otc_rds 银行卡主键  
-» status | integer | true | none | 审核状态（如待审）  
-timestamp | integer | false | none | none  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "bank_id": 0,
-        "status": 0
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  OtcBankCreateMultipartRequest
-
-*Inner 创建银行卡 `multipart/form-data`。开户证明文件二选一：
-
-  * **预上传** ：`documentation_file_key` \+ `file_type`（先 `POST /otc/upload/pre_upload`，`scene=bank`）；
-  * **multipart 直传** ：`documentation_file` 文件字段。*
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-bank_account_name | string | true | none | none  
-bank_name | string | true | none | none  
-bank_country | string | true | none | none  
-bank_address | string | true | none | none  
-iban | string | true | none | none  
-swift | string | true | none | none  
-remittance_line_number | string | false | none | none  
-agent_bank_name | string | false | none | none  
-agent_bank_swift | string | false | none | none  
-documentation_file | string | false | none | multipart 直传方式；与 documentation_file_key 二选一  
-documentation_file_key | string | false | none | 预上传方式；pre_upload 返回的 file_key（明文或 base64 均可识别）  
-file_type | string | false | none | 使用 documentation_file_key 时必填；明文 MIME 或其 base64  
+类型 | 约束  
+---|---  
+object | required: ["bank_id"]  
   
-_oneOf_
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 当前对象内必填 | 约束 | 描述  
 ---|---|---|---|---  
-_None_ | object | false | none | none  
+bank_id | string | 是 |  |   
+id_document_front | string | 否 |  | 身份证明正面文件内容（multipart 文件字段，二进制/Base64）  
+id_document_back | string | 否 |  | 身份证明背面文件内容（multipart 文件字段，二进制/Base64）  
+address_proof | string | 否 |  | 地址证明文件内容（multipart 文件字段，二进制/Base64）  
+relationship_proof | string | 否 |  | 可选，relationship_proof 的 JSON 字符串  
   
-_xor_
+**anyOf[0]**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-_None_ | object | false | none | none  
+类型 | 约束  
+---|---  
+any | required: ["relationship_proof"]  
+  
+**anyOf[1]**
+
+类型 | 约束  
+---|---  
+any | required: ["id_document_front","id_document_back","address_proof"]  
       
     
     {}
     
     
 
-##  OtcBankListResponse
-
-_OtcBankListResponse_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-code | integer | true | none | none  
-message | string | true | none | none  
-data | object | true | none | none  
-» lists | array | true | none | 银行卡列表  
-»» OtcBankListItem | object | false | none | none  
-»»» id | string | true | none | 银行卡 ID（下单时使用；与 `bank_id` 同义字段已收敛为 `id`）  
-»»» bank_account_name | string | true | none | 银行账户名称  
-»»» bank_name | string | true | none | 银行名称  
-»»» bank_country | string | false | none | 银行所在国家  
-»»» bank_address | string | false | none | 银行地址  
-»»» iban | string | false | none | IBAN号码  
-»»» swift | string | false | none | SWIFT代码  
-»»» remittance_line_number | string | false | none | 汇款路线号  
-»»» agent_bank_name | string | false | none | 代理银行名称  
-»»» agent_bank_swift | string | false | none | 代理银行SWIFT代码  
-»»» submit_time | string | false | none | 提交时间  
-»»» update_time | string | false | none | 更新时间  
-»»» status | string | false | none | 状态  
-»»» is_default | integer | false | none | 是否默认银行卡 1是 0否  
-»» timestamp | integer | true | none | none  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "lists": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
 ##  OtcOrderListResponse
 
-_OtcOrderListResponse_
+OtcOrderListResponse
 
-###  属性
+类型 | 约束  
+---|---  
+object | required: ["code","message","data"]  
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-code | integer | true | none | none  
-message | string | true | none | none  
-data | object | true | none | none  
-» pn | integer | true | none | none  
-» ps | integer | true | none | none  
-» total_pn | integer | true | none | none  
-» count | integer | true | none | none  
-» lists | array | true | none | none  
-»» OtcOrderListItem | object | false | none | none  
-»»» time | string | false | none | 当前时间  
-»»» timestamp | integer | false | none | 当前时间戳  
-»»» order_id | string | false | none | 订单Id  
-»»» trade_no | string | false | none | 交易号  
-»»» type | string | false | none | BUY 入金 / SELL 出金  
-»»» status | string | false | none | 订单状态  
-»»» fiat_currency | string | false | none | 法币币种  
-»»» fiat_currency_info | object | false | none | none  
-»»»» name | string | true | none | 名称  
-»»»» icon | string | true | none | 图片  
-»»» fiat_amount | string | false | none | 法币金额  
-»»» crypto_currency | string | false | none | 数字货币币种  
-»»» crypto_currency_info | object | false | none | none  
-»»»» name | string | true | none | none  
-»»»» icon | string | true | none | none  
-»»» crypto_amount | string | false | none | 数字货币金额  
-»»» rate | string | false | none | 汇率  
-»»» promotion_code | string | false | none | 优惠码  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["pn","ps","total_pn","count","lists"] |   
+  
+**data**
+
+OtcOrderListResult
+
+类型 | 约束  
+---|---  
+object | required: ["pn","ps","total_pn","count","lists"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+pn | integer | Required |  |   
+ps | integer | Required |  |   
+total_pn | integer | Required |  |   
+count | integer | Required |  |   
+lists | array | Required |  |   
+  
+**data / lists**
+
+类型 | 约束  
+---|---  
+array |   
+  
+**data / lists / items**
+
+OtcOrderListItem
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+time | string | Optional |  | 当前时间  
+timestamp | integer | Optional |  | 当前时间戳  
+order_id | string | Optional |  | 订单Id  
+trade_no | string | Optional |  | 交易号  
+type | string | Optional |  | BUY 入金 / SELL 出金  
+status | string | Optional |  | 订单状态  
+fiat_currency | string | Optional |  | 法币币种  
+fiat_currency_info | object | Optional | required: ["name","icon"] |   
+fiat_amount | string | Optional |  | 法币金额  
+crypto_currency | string | Optional |  | 数字货币币种  
+crypto_currency_info | object | Optional | required: ["name","icon"] |   
+crypto_amount | string | Optional |  | 数字货币金额  
+rate | string | Optional |  | 汇率  
+promotion_code | string | Optional |  | 优惠码  
+  
+**data / lists / items / fiat_currency_info**
+
+OtcOrderListFiatCurrencyInfo
+
+类型 | 约束  
+---|---  
+object | required: ["name","icon"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+name | string | Required |  | 名称  
+icon | string | Required |  | 图片  
+  
+**data / lists / items / crypto_currency_info**
+
+OtcOrderListCryptoCurrencyInfo
+
+类型 | 约束  
+---|---  
+object | required: ["name","icon"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+name | string | Required |  |   
+icon | string | Required |  |   
       
     
     {
@@ -2600,157 +3412,22 @@ data | object | true | none | none
     
     
 
-##  OtcBankSupplementChecklistItem
-
-_待补充资料项_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-description | string | true | none | 提交补件描述  
-      
-    
-    {
-      "description": "string"
-    }
-    
-    
-
-##  OtcUploadPreUploadRequest
-
-_文件预上传请求体_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-content_type | string | true | none | 文件 MIME 类型的 **base64** ，必填。仅支持 image/png、image/jpeg、image/jpg、application/pdf。  
-scene | string | false | none | 业务场景，选填，默认 general；决定临时路径与搬迁后的正式目录  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-content_type | aW1hZ2UvcG5n  
-content_type | aW1hZ2UvanBlZw==  
-content_type | aW1hZ2UvanBn  
-content_type | YXBwbGljYXRpb24vcGRm  
-scene | general  
-scene | bank  
-scene | assessment  
-scene | credit  
-      
-    
-    {
-      "content_type": "aW1hZ2UvcG5n",
-      "scene": "bank"
-    }
-    
-    
-
-##  OtcUploadPreUploadResponse
-
-_OtcUploadPreUploadResponse_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-code | integer | true | none | 0 成功；10010400 参数错误  
-message | string | true | none | 响应消息  
-data | OtcUploadPreUploadData | true | none | 预上传凭证与 S3 直传参数  
-timestamp | integer | true | none | 响应时间戳（秒）  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "file_key": "string",
-        "url": "string",
-        "fields": {
-          "key": "string",
-          "Content-Type": "string",
-          "X-Amz-Credential": "string",
-          "X-Amz-Algorithm": "string",
-          "X-Amz-Date": "string",
-          "Policy": "string",
-          "X-Amz-Signature": "string"
-        },
-        "expires_in": 0
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  OtcBankPersonalSupplementMultipartRequest
-
-_个人补件`multipart/form-data`。文件字段名固定为 `id_document_front`、`id_document_back`、`address_proof`（与 checklist `code` 一致）；可额外传字符串字段 `relationship_proof`（JSON 文本）与上传结果合并。_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-bank_id | string | true | none | none  
-id_document_front | string | false | none | 身份证明正面文件内容（multipart 文件字段，二进制/Base64）  
-id_document_back | string | false | none | 身份证明背面文件内容（multipart 文件字段，二进制/Base64）  
-address_proof | string | false | none | 地址证明文件内容（multipart 文件字段，二进制/Base64）  
-relationship_proof | string | false | none | 可选，relationship_proof 的 JSON 字符串  
-  
-_anyOf_
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-_None_ | object | false | none | none  
-  
-_or_
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-_None_ | object | false | none | none  
-      
-    
-    {}
-    
-    
-
-##  OtcMarkOrderPaidRequest
-
-_法币订单设置已付款（入金确认）请求体。须包含用户付款回执（与 §3.2 一致）。**`payment_receipt_file_key` 必填**；订单主键在此路径为 `order_id`。经 Pay 网关访问时若使用 `client_order_id`，以网关转写字段为准。_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-order_id | string | true | none | 订单 ID  
-client_order_id | string | false | none | 客户端订单号（部分网关/Inner Pay 路径使用，可选）  
-payment_receipt_file_key | string | true | none | 用户付款回执：**必填** 。推荐先 `POST /otc/upload/pre_upload`（`scene=general`）直传临时桶，再传返回的 **base64 file_key 原值** （不要解码）；服务端搬迁至正式桶后落库。仍兼容旧链路直传正式桶的 base64 key。单文件；jpg/jpeg/png/pdf；≤10MB。  
-payment_receipt | string | false | none | 与 `payment_receipt_file_key` 兼容的别名（视网关对外字段名）  
-      
-    
-    {
-      "order_id": "203",
-      "client_order_id": "",
-      "payment_receipt_file_key": "b3RjX3RlbXAvMTIzNDU2Nzg5MC9nZW5lcmFsLzIwMjYwODMxMjEwMDEyMzQ1Njc4LnBuZw==",
-      "payment_receipt": ""
-    }
-    
-    
-
 ##  OtcUploadPreUploadData
 
-_预上传凭证与 S3 直传参数_
+预上传凭证与 S3 直传参数
 
-###  属性
+类型 | 约束  
+---|---  
+object | required: ["file_key","url","fields","expires_in"]  
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-file_key | string | true | none | 临时 object 路径的 base64；业务提交时**原样回传** ，不要解码  
-url | string | true | none | S3 直传地址  
-fields | OtcUploadPreUploadPolicyFields | true | none | S3 POST Policy 签名字段，直传时作为 form-data 原样发送  
-expires_in | integer | true | none | Policy 有效期（秒），当前为 5400（90 分钟）；与 `fields.Policy` 内 `expiration` 对齐，过期后须重新调用本接口  
+file_key | string | Required |  | 临时 object 路径的 base64；业务提交时**原样回传** ，不要解码  
+url | string | Required |  | S3 直传地址  
+fields | OtcUploadPreUploadPolicyFields | Required | required: ["key","Content-Type","X-Amz-Credential","X-Amz-Algorithm","X-Amz-Date","Policy","X-Amz-Signature"] | S3 POST Policy 签名字段，直传时作为 form-data 原样发送  
+expires_in | integer | Required |  | Policy 有效期（秒），当前为 5400（90 分钟）；与 `fields.Policy` 内 `expiration` 对齐，过期后须重新调用本接口  
       
     
     {
@@ -2770,21 +3447,83 @@ expires_in | integer | true | none | Policy 有效期（秒），当前为 5400�
     
     
 
+##  OtcStableCoinOrderRequest
+
+稳定币下单请求体
+
+类型 | 约束  
+---|---  
+object | required: ["pay_coin","get_coin","pay_amount","get_amount","side","quote_token"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+pay_coin | string | Required |  | 用户支付币种 支持币种 从otc web 稳定币询价页面查询  
+get_coin | string | Required |  | 用户兑换币种 支持币种 从otc web 稳定币询价页面查询  
+pay_amount | string | Required |  | 用户支付币种数量  
+get_amount | string | Required |  | 用户兑换币种数量  
+side | string | Required |  | 询价接口返回的 side（下单校验用）。兼容历史传参 `PAY`/`GET`；新接入请与询价响应保持一致。  
+promotion_code | string | Optional |  | 优惠码（选填）  
+quote_token | string | Required |  | 询价接口返回参数  
+      
+    
+    {
+      "pay_coin": "USDC",
+      "get_coin": "USDT",
+      "pay_amount": "30000",
+      "get_amount": "20000",
+      "side": "PAY",
+      "promotion_code": "",
+      "quote_token": "dsafjkdshfjdsjkfah"
+    }
+    
+    
+
+##  OtcActionResponse
+
+OtcActionResponse
+
+类型 | 约束  
+---|---  
+object | required: ["code","message","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+timestamp | integer | Required |  |   
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "timestamp": 0
+    }
+    
+    
+
 ##  OtcUploadPreUploadPolicyFields
 
-_S3 POST Policy 签名字段，直传时作为 form-data 原样发送_
+S3 POST Policy 签名字段，直传时作为 form-data 原样发送
 
-###  属性
+类型 | 约束  
+---|---  
+object | required: ["key","Content-Type","X-Amz-Credential","X-Amz-Algorithm","X-Amz-Date","Policy","X-Amz-Signature"]  
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-key | string | true | none | 临时 object 明文路径，与 base64_decode(file_key) 一致  
-Content-Type | string | true | none | 须与预上传请求的 content_type 解码后一致  
-X-Amz-Credential | string | true | none | AWS 临时凭证与作用域，直传时原样提交  
-X-Amz-Algorithm | string | true | none | AWS 签名算法，直传时原样提交  
-X-Amz-Date | string | true | none | AWS 签名时间，直传时原样提交  
-Policy | string | true | none | base64 编码的 S3 POST Policy，直传时原样提交  
-X-Amz-Signature | string | true | none | S3 POST Policy 签名，直传时原样提交  
+key | string | Required |  | 临时 object 明文路径，与 base64_decode(file_key) 一致  
+Content-Type | string | Required |  | 须与预上传请求的 content_type 解码后一致  
+X-Amz-Credential | string | Required |  | AWS 临时凭证与作用域，直传时原样提交  
+X-Amz-Algorithm | string | Required |  | AWS 签名算法，直传时原样提交  
+X-Amz-Date | string | Required |  | AWS 签名时间，直传时原样提交  
+Policy | string | Required |  | base64 编码的 S3 POST Policy，直传时原样提交  
+X-Amz-Signature | string | Required |  | S3 POST Policy 签名，直传时原样提交  
       
     
     {

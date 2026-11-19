@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/mass-quotes-specifications
 api_type: Guide
-updated_at: 2026-11-18 18:58:58.330875
+updated_at: 2026-11-19 19:05:32.841188
 ---
 
 # Mass Quotes Specifications

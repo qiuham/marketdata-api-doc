@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/orderbook/bookinstrument_nameinterval
 api_type: WebSocket
-updated_at: 2026-11-18 18:58:58.638594
+updated_at: 2026-11-19 19:05:33.210241
 ---
 
 # book.(instrument_name).(interval)
@@ -433,5 +433,5 @@ securitySchemes: []
 - [Notifications](https://docs.deribit.com/articles/notifications.md)
 - [Options Data Collection](https://docs.deribit.com/articles/options-data-collection-best-practices.md)
 - [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md)
+- [Rate Limits](https://docs.deribit.com/articles/rate-limits.md)
 - [book.(instrument_name).(group).(depth).(interval) ](https://docs.deribit.com/subscriptions/orderbook/bookinstrument_namegroupdepthinterval.md)
-- [ticker.(instrument_name).(interval) ](https://docs.deribit.com/subscriptions/market-data/tickerinstrument_nameinterval.md)

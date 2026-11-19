@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/showToast
 api_type: Guide
-updated_at: 2026-11-18 18:45:24.262774
+updated_at: 2026-11-19 18:48:36.124900
 ---
 
 # bn.showToast

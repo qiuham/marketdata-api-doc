@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/spot-borrow-quota
 api_type: Trading
-updated_at: 2026-11-18 18:50:50.976624
+updated_at: 2026-11-19 18:54:44.697082
 ---
 
 # Get Borrow Quota (Spot)

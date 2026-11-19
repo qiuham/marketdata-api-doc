@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-mass_quote
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:20.746246
+updated_at: 2026-11-19 19:05:56.894978
 ---
 
 # private/mass_quote
@@ -125,8 +125,8 @@ paths:
         - name: detailed
           in: query
           schema:
-            example: true
             type: boolean
+            example: true
           required: false
           description: >-
             Flag to receive a list of all order changes and a list of errors, or

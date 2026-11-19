@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/rendering-cache
 api_type: Guide
-updated_at: 2026-11-18 18:37:03.730316
+updated_at: 2026-11-19 18:39:55.029541
 ---
 
 # Initial Rendering Cache

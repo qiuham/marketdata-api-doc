@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data
 anchor_id: public-data
 api_type: API
-updated_at: 2026-11-18 18:57:49.106383
+updated_at: 2026-11-19 19:03:21.519219
 ---
 
 # Public Data
@@ -472,12 +472,12 @@ before | String | No | Pagination of data to return records with `caEventId` new
         "data": [
             {
                 "caEventId": "CA20261112AAPL001",
-                "eventVersion": "1",
-                "ticker": "AAPL",
+                "eventVersion": 1,
+                "underlying": "AAPL",
                 "bbGlobalId": "BBG000B9XRY4",
                 "exchange": "XNAS",
                 "actionType": "CASH_DIVIDEND",
-                "caClass": "PREDICTABLE",
+                "caClass": "DIVIDEND",
                 "dividendSize": "MEDIUM",
                 "cashDividend": {
                     "gross": "0.25",
@@ -489,7 +489,7 @@ before | String | No | Pagination of data to return records with `caEventId` new
                 },
                 "ratioFrom": "",
                 "ratioTo": "",
-                "status": "upcoming",
+                "status": "UPCOMING",
                 "cutoverTime": "1762992000000",
                 "instruments": [
                     {
@@ -507,8 +507,8 @@ before | String | No | Pagination of data to return records with `caEventId` new
 Parameter | Type | Description  
 ---|---|---  
 caEventId | String | Corporate action event ID  
-eventVersion | String | Event version number, e.g. `"1"`. Incremented when event details are updated.  
-ticker | String | Underlying stock ticker, e.g. `AAPL`  
+eventVersion | Integer | Event version number, e.g. `1`. Incremented when event details are updated.  
+underlying | String | Underlying stock ticker, e.g. `AAPL`  
 bbGlobalId | String | Bloomberg Global Identifier  
 exchange | String | Exchange MIC code where the stock is listed, e.g. `XNAS`  
 actionType | String | Corporate action type.  
@@ -518,8 +518,9 @@ actionType | String | Corporate action type.
 `STOCK_DIVIDEND`: Stock dividend  
 `SPINOFF`: Spinoff  
 caClass | String | Corporate action classification.  
-`PREDICTABLE`  
-`UNPREDICTABLE`  
+`DIVIDEND`  
+`SPLIT`  
+`RENAME`  
 dividendSize | String | Dividend size classification. Only applicable when `actionType` is `CASH_DIVIDEND`.  
 `PENDING`  
 `SMALL`  
@@ -535,12 +536,12 @@ cashDividend | Object | Cash dividend details. Only present when `actionType` is
 ratioFrom | String | Source ratio for stock splits. Only applicable when `actionType` involves splits. Empty string `""` otherwise.  
 ratioTo | String | Target ratio for stock splits. Only applicable when `actionType` involves splits. Empty string `""` otherwise.  
 status | String | Event processing status.  
-`upcoming`  
-`scheduled`  
-`preparing`  
-`pre_pause`  
-`progressing`  
-`completed`  
+`UPCOMING`  
+`SCHEDULED`  
+`PREPARING`  
+`PRE_PAUSE`  
+`PROGRESSING`  
+`COMPLETED`  
 cutoverTime | String | Planned cutover time. Unix timestamp in milliseconds  
 instruments | Array of objects | Affected OKX instruments and their trading states  
 > instId | String | Instrument ID, e.g. `AAPL-USDT-SWAP`  
@@ -6043,12 +6044,12 @@ before | String | 否 | 请求此 `caEventId` 之后（更新）的数据，不�
         "data": [
             {
                 "caEventId": "CA20261112AAPL001",
-                "eventVersion": "1",
-                "ticker": "AAPL",
+                "eventVersion": 1,
+                "underlying": "AAPL",
                 "bbGlobalId": "BBG000B9XRY4",
                 "exchange": "XNAS",
                 "actionType": "CASH_DIVIDEND",
-                "caClass": "PREDICTABLE",
+                "caClass": "DIVIDEND",
                 "dividendSize": "MEDIUM",
                 "cashDividend": {
                     "gross": "0.25",
@@ -6060,7 +6061,7 @@ before | String | 否 | 请求此 `caEventId` 之后（更新）的数据，不�
                 },
                 "ratioFrom": "",
                 "ratioTo": "",
-                "status": "upcoming",
+                "status": "UPCOMING",
                 "cutoverTime": "1762992000000",
                 "instruments": [
                     {
@@ -6078,8 +6079,8 @@ before | String | 否 | 请求此 `caEventId` 之后（更新）的数据，不�
 参数名 | 类型 | 描述  
 ---|---|---  
 caEventId | String | 公司行动事件 ID  
-eventVersion | String | 事件版本号，如 `"1"`。当事件详情更新时递增。  
-ticker | String | 底层股票代码，如 `AAPL`  
+eventVersion | Integer | 事件版本号，如 `1`。当事件详情更新时递增。  
+underlying | String | 底层股票代码，如 `AAPL`  
 bbGlobalId | String | Bloomberg 全球标识符  
 exchange | String | 股票上市交易所的 MIC 代码，如 `XNAS`  
 actionType | String | 公司行动类型。  
@@ -6089,8 +6090,9 @@ actionType | String | 公司行动类型。
 `STOCK_DIVIDEND`：股票分红  
 `SPINOFF`：分拆上市  
 caClass | String | 公司行动分类。  
-`PREDICTABLE`：可预测  
-`UNPREDICTABLE`：不可预测  
+`DIVIDEND`：分红  
+`SPLIT`：拆股  
+`RENAME`：更名  
 dividendSize | String | 分红规模分类。仅当 `actionType` 为 `CASH_DIVIDEND` 时适用。  
 `PENDING`：待定  
 `SMALL`：小额  
@@ -6106,12 +6108,12 @@ cashDividend | Object | 现金分红详情。仅当 `actionType` 为 `CASH_DIVID
 ratioFrom | String | 股票拆分源比例。仅当 `actionType` 涉及拆分时适用。否则返回空字符串 `""`。  
 ratioTo | String | 股票拆分目标比例。仅当 `actionType` 涉及拆分时适用。否则返回空字符串 `""`。  
 status | String | 事件处理状态。  
-`upcoming`：即将发生  
-`scheduled`：已计划  
-`preparing`：准备中  
-`pre_pause`：暂停前  
-`progressing`：进行中  
-`completed`：已完成  
+`UPCOMING`：即将发生  
+`SCHEDULED`：已计划  
+`PREPARING`：准备中  
+`PRE_PAUSE`：暂停前  
+`PROGRESSING`：进行中  
+`COMPLETED`：已完成  
 cutoverTime | String | 计划切换时间。Unix 毫秒时间戳  
 instruments | Array of objects | 受影响的 OKX 产品及其交易状态  
 > instId | String | 产品 ID，如 `AAPL-USDT-SWAP`  

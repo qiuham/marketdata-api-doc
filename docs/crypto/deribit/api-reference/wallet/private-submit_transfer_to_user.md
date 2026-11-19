@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-submit_transfer_to_user
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:22.472949
+updated_at: 2026-11-19 19:06:00.053782
 ---
 
 # private/submit_transfer_to_user

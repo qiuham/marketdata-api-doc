@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/management/workspace-member-management
 api_type: Guide
-updated_at: 2026-11-18 18:36:45.667266
+updated_at: 2026-11-19 18:39:36.643394
 ---
 
 # Workspace Member Management

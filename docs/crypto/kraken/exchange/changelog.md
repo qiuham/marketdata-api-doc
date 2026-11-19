@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/changelog'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Release notes
@@ -34,7 +34,7 @@ updated_at: 2026-11-18
 ### 12 November 2026 — Unified WS for Futures - Derivatives WS v1
 
 * **DEPRECATED** the [Derivatives WebSocket](https://docs.kraken.com/exchange/api-reference/futures-websocket.md) (`wss://futures.kraken.com/ws/v1`). Existing integrations continue to work until 1 March 2027, when the Derivatives WebSocket will no longer be available
-* New integrations should use the [Unified WebSocket](https://docs.kraken.com/exchange/api-reference/unified-websocket), which streams Spot and Derivatives over a single connection. Set `asset_class` to `derivatives` on each subscription or order message to select Derivatives markets. Docs available here [https://docs.kraken.com/exchange/api-reference/unified-ws/ticker](https://docs.kraken.com/exchange/api-reference/unified-ws/ticker.md).
+* New integrations should use the [Unified WebSocket](https://docs.kraken.com/exchange/api-reference/unified-websocket.md), which streams Spot and Derivatives over a single connection. Set `asset_class` to `derivatives` on each subscription or order message to select Derivatives markets. Docs available here [https://docs.kraken.com/exchange/api-reference/unified-ws/ticker](https://docs.kraken.com/exchange/api-reference/unified-ws/ticker.md).
 * The Unified WebSocket also supports order entry (`add_order`, `amend_order`, `cancel_order`, `cancel_all`, `cancel_after`) and authenticates with a token from [`GetWebSocketsToken`](https://docs.kraken.com/api-reference/trading/get-websockets-token), requested with a Kraken API key rather than a Derivatives API key
 * See the [Derivatives WebSocket guide](https://docs.kraken.com/exchange/guides/futures/websockets.md#deprecation-and-unified-websocket) for a comparison and a subscribe example
 * To make the move easier, Kraken's [SDKs](https://github.com/krakenfx/kraken-api-sdk) now support Futures on the Unified WebSocket. The [Rust SDK](https://docs.kraken.com/home/sdks/rust.md) covers Derivatives market data, private streams (executions, positions, margin and balances) and order entry, and handles authentication, token refresh, reconnects and order-book checksums for you ([https://docs.kraken.com/home/sdks/index](https://docs.kraken.com/home/sdks/index.md))

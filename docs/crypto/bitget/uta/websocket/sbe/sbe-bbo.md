@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/sbe/sbe-bbo
 api_type: SBE
-updated_at: 2026-11-18 19:01:00.019459
+updated_at: 2026-11-19 19:07:37.241816
 ---
 
 # SBE BBO Integration Guide

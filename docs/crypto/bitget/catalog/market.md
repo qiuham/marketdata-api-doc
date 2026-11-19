@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/market
 api_type: REST
-updated_at: 2026-11-18 19:01:31.665945
+updated_at: 2026-11-19 19:08:06.430754
 ---
 
 # Market
@@ -133,6 +133,7 @@ Operation ID: `marketGetInstruments`
 | data[].maxIsolatedLeverage | string |  | Maximum leverage for isolated margin<br><br>Only for margin trading |
 | data[].userMinBorrow | string |  | Minimum borrowable amount<br><br>Only for margin trading |
 | data[].areaSymbol | string |  | Area symbol `YES`/`NO`<br><br>Only for spot trading; only returned for pairs where the value is YES |
+| data[].unrealizedProfitLimit | string |  | Unrealized profit limit<br><br>`yes` Restricted: the trading pair restricts increasing positions and withdrawals while there is unrealized profit<br><br>`no` Not restricted |
 
 ```json
 {
@@ -165,7 +166,8 @@ Operation ID: `marketGetInstruments`
       "instrumentType": "crypto",
       "marketRegion": "",
       "isin": "",
-      "launchTime": "1532454360000"
+      "launchTime": "1532454360000",
+      "unrealizedProfitLimit": "yes"
     }
   ]
 }
@@ -436,9 +438,11 @@ Operation ID: `marketGetRpiOrderBook`
 
 Rate limit: 20/sec/IP
 
-Query recent public fill data on Bitget. This endpoint now also returns Bitget-platform fills for rToken pairs
+Query recent public fill data on Bitget.
 
 You can download historical trades data on our <a href="https://www.bitget.com/data-download">web</a>.
+
+This endpoint now also returns Bitget-platform fills for Reality (rtoken) trading pairs. This was not supported previously.
 
 Operation ID: `marketGetFills`
 
@@ -703,7 +707,7 @@ Operation ID: `marketGetCoins`
 | data[].chains[].browserUrl | string |  | Blockchain explorer address |
 | data[].chains[].contractAddress | string |  | Coin contract address |
 | data[].chains[].withdrawStep | string |  | Withdrawal count step<br><br>If non-zero, the withdrawal amount must be a multiple of this value. If `0`, there is no such restriction. |
-| data[].chains[].withdrawPrecision | string |  | Decimal places of the withdrawal amount |
+| data[].chains[].withdrawMinScale | string |  | Decimal places of the withdrawal amount |
 | data[].chains[].congestion | string |  | Chain network congestion status<br><br>`normal`: normal<br><br>`congested`: congested |
 
 ```json
@@ -730,7 +734,7 @@ Operation ID: `marketGetCoins`
           "browserUrl": "https://blockchair.com/bitcoin/testnet/transaction/",
           "contractAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
           "withdrawStep": "0",
-          "withdrawPrecision": "8",
+          "withdrawMinScale": "8",
           "congestion": "normal"
         }
       ]
@@ -2554,6 +2558,7 @@ Operation ID: `marketGetInstruments`
 | data[].maxIsolatedLeverage | string |  | 逐仓最大杠杆倍数<br><br>仅适用于杠杆交易 |
 | data[].userMinBorrow | string |  | 最小可借<br><br>仅适用杠杆交易 |
 | data[].areaSymbol | string |  | 是否区域币对 `YES`/`NO`<br><br>仅适用于现货交易，只有为YES的币对才返回该参数 |
+| data[].unrealizedProfitLimit | string |  | 浮盈限制<br><br>`yes` 限制：该币对在存在浮盈时限制加仓与提币<br><br>`no` 不限制 |
 
 ```json
 {
@@ -2586,7 +2591,8 @@ Operation ID: `marketGetInstruments`
       "instrumentType": "crypto",
       "marketRegion": "",
       "isin": "",
-      "launchTime": "1532454360000"
+      "launchTime": "1532454360000",
+      "unrealizedProfitLimit": "yes"
     }
   ]
 }
@@ -2857,9 +2863,11 @@ Operation ID: `marketGetRpiOrderBook`
 
 限频规则: 20次/秒/IP
 
-查询平台近期公开成交数据，同时支持返回 rToken交易对的 Bitget 平台成交数据
+查询平台近期公开成交数据
 
 成交历史数据可以通过我们官网<a href="https://www.bitget.com/zh-CN/data-download">下载</a>。
+
+该接口现已支持返回 Reality（rtoken）交易对的 Bitget 平台成交数据，此前不支持。
 
 Operation ID: `marketGetFills`
 
@@ -3124,7 +3132,7 @@ Operation ID: `marketGetCoins`
 | data[].chains[].browserUrl | string |  | 区块浏览器地址 |
 | data[].chains[].contractAddress | string |  | 币种合约地址 |
 | data[].chains[].withdrawStep | string |  | 提币步长<br><br>非`0`，代表提币数量需满足该步长的倍数；为`0`，代表没有步长倍数的限制 |
-| data[].chains[].withdrawPrecision | string |  | 提币数量精度 |
+| data[].chains[].withdrawMinScale | string |  | 提币数量精度 |
 | data[].chains[].congestion | string |  | 链网络拥堵情况<br><br>`normal`: 正常<br><br>`congested`: 拥堵 |
 
 ```json
@@ -3151,7 +3159,7 @@ Operation ID: `marketGetCoins`
           "browserUrl": "https://blockchair.com/bitcoin/testnet/transaction/",
           "contractAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
           "withdrawStep": "0",
-          "withdrawPrecision": "8",
+          "withdrawMinScale": "8",
           "congestion": "normal"
         }
       ]

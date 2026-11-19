@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-set_disabled_trading_products
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:14.507293
+updated_at: 2026-11-19 19:05:51.597979
 ---
 
 # private/set_disabled_trading_products
@@ -190,6 +190,6 @@ components:
 
 - [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md)
 - [private/set_self_trading_config](https://docs.deribit.com/api-reference/account-management/private-set_self_trading_config.md)
+- [private/get_subaccounts](https://docs.deribit.com/api-reference/account-management/private-get_subaccounts.md)
 - [private/create_subaccount](https://docs.deribit.com/api-reference/account-management/private-create_subaccount.md)
 - [private/set_member](https://docs.deribit.com/api-reference/account-management/private-set_member.md)
-- [private/set_mmp_config](https://docs.deribit.com/api-reference/trading/private-set_mmp_config.md)

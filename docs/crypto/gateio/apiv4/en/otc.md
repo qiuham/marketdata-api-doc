@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/otc
 api_type: REST
-updated_at: 2026-11-18 18:55:52.841504
+updated_at: 2026-11-19 19:00:54.913677
 ---
 
 # OTC
@@ -24,13 +24,33 @@ Create fiat and stablecoin quotes, supporting both PAY and GET directions
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | OtcQuoteRequest | Required | none  
-» side | body | string | Required | PAY: specify the payment amount (`pay_amount` is required); GET: specify the receive amount (`get_amount` is required).  
-» pay_coin | body | string | Required | Payment currency. Supported currencies are available on the OTC web quote page.  
-» get_coin | body | string | Required | Receive currency. Supported currencies are available on the OTC web quote page.  
-» pay_amount | body | string | Optional | User payment currency amount  
-» get_amount | body | string | Optional | Amount of currency received by the user  
-» create_quote_token | body | string | Optional | Create quote token: 0: quote preview only; 1: generate quote token for order placement.  
-» promotion_code | body | string | Optional | Promotion code  
+side | body | string | Required | PAY: specify the payment amount (`pay_amount` is required); GET: specify the receive amount (`get_amount` is required).  
+pay_coin | body | string | Required | Payment currency. Supported currencies are available on the OTC web quote page.  
+get_coin | body | string | Required | Receive currency. Supported currencies are available on the OTC web quote page.  
+pay_amount | body | string | Optional | User payment currency amount  
+get_amount | body | string | Optional | Amount of currency received by the user  
+create_quote_token | body | string | Optional | Create quote token: 0: quote preview only; 1: generate quote token for order placement.  
+promotion_code | body | string | Optional | Promotion code  
+  
+####  Request Body Schema
+
+Fiat and Stablecoin Quote Request Body
+
+Request Body SchemaType | Constraints  
+---|---  
+OtcQuoteRequest | required: ["side","pay_coin","get_coin"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+side | string | Required |  | PAY: specify the payment amount (`pay_amount` is required); GET: specify the receive amount (`get_amount` is required).  
+pay_coin | string | Required |  | Payment currency. Supported currencies are available on the OTC web quote page.  
+get_coin | string | Required |  | Receive currency. Supported currencies are available on the OTC web quote page.  
+pay_amount | string | Optional |  | User payment currency amount  
+get_amount | string | Optional |  | Amount of currency received by the user  
+create_quote_token | string | Optional |  | Create quote token: 0: quote preview only; 1: generate quote token for order placement.  
+promotion_code | string | Optional |  | Promotion code  
   
 ### Responses
 
@@ -42,28 +62,47 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_OtcQuoteResponse_
+OtcQuoteResponse
 
-Name | Type | Description  
----|---|---  
-» code | integer | none  
-» message | string | none  
-» data | object | none  
-»» type | string | BUY (on-ramp) or SELL (off-ramp)  
-»» pay_coin | string | Payment currency  
-»» get_coin | string | Currency  
-»» pay_amount | string | Payment amount  
-»» get_amount | string | Redemption Amount  
-»» rate | string | Exchange rate  
-»» rate_reci | string | Reciprocal of the exchange rate  
-»» promotion_code | string | Promotion code  
-»» side | string | Quote method  
-»» order_type | string | Order type: FIAT (fiat) / STABLE (stablecoin)  
-»» quote_token | string | Quote token required when placing an order  
-»» validity_period | string | Quote validity period (seconds)  
-»» refresh_limit | integer | Quote refresh limit  
-»» refresh_limit_msg | string | Quote refresh limit message  
-» timestamp | integer | Server Unix timestamp in seconds  
+Type | Constraints  
+---|---  
+OtcQuoteResponse | required: ["code","message","data","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["type","pay_coin","get_coin","pay_amount","get_amount","rate","rate_reci","promotion_code","side","order_type","quote_token"] |   
+timestamp | integer | Required |  | Server Unix timestamp in seconds  
+  
+**data**
+
+OtcQuoteResult
+
+Type | Constraints  
+---|---  
+object | required: ["type","pay_coin","get_coin","pay_amount","get_amount","rate","rate_reci","promotion_code","side","order_type","quote_token"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+type | string | Required |  | BUY (on-ramp) or SELL (off-ramp)  
+pay_coin | string | Required |  | Payment currency  
+get_coin | string | Required |  | Currency  
+pay_amount | string | Required |  | Payment amount  
+get_amount | string | Required |  | Redemption Amount  
+rate | string | Required |  | Exchange rate  
+rate_reci | string | Required |  | Reciprocal of the exchange rate  
+promotion_code | string | Required |  | Promotion code  
+side | string | Required |  | Quote method  
+order_type | string | Required |  | Order type: FIAT (fiat) / STABLE (stablecoin)  
+quote_token | string | Required |  | Quote token required when placing an order  
+validity_period | string | Optional |  | Quote validity period (seconds)  
+refresh_limit | integer | Optional |  | Quote refresh limit  
+refresh_limit_msg | string | Optional |  | Quote refresh limit message  
   
 WARNING
 
@@ -170,22 +209,22 @@ Create a fiat order, supporting BUY for on-ramp and SELL for off-ramp
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | OtcOrderRequest | Required | none  
-» type | body | string | Required | BUY (on-ramp) or SELL (off-ramp)  
-» side | body | string | Required | The side returned by the quote endpoint (used for order validation). For backward compatibility, `FIAT`/`CRYPTO` or `PAY`/`GET` are accepted; new integrations should use the value returned by the quote response.  
-» crypto_currency | body | string | Required | Cryptocurrency (supported currencies can be queried from the OTC web fiat quote page)  
-» fiat_currency | body | string | Required | Fiat currency (supported currencies can be queried from the OTC web fiat quote page)  
-» crypto_amount | body | string | Required | Amount of cryptocurrency  
-» fiat_amount | body | string | Required | Fiat amount  
-» promotion_code | body | string | Optional | Promotion code  
-» quote_token | body | string | Required | Parameter returned by the quote API  
-» bank_id | body | string | Required | Bank card ID used to place the order. Select one from the list returned by `GET /otc/bank/list`; the default card has `is_default=1`.  
-» receive_type | body | string | Optional | Name used for the remittance. Allowed values depend on the user type:  
+type | body | string | Required | BUY (on-ramp) or SELL (off-ramp)  
+side | body | string | Required | The side returned by the quote endpoint (used for order validation). For backward compatibility, `FIAT`/`CRYPTO` or `PAY`/`GET` are accepted; new integrations should use the value returned by the quote response.  
+crypto_currency | body | string | Required | Cryptocurrency (supported currencies can be queried from the OTC web fiat quote page)  
+fiat_currency | body | string | Required | Fiat currency (supported currencies can be queried from the OTC web fiat quote page)  
+crypto_amount | body | string | Required | Amount of cryptocurrency  
+fiat_amount | body | string | Required | Fiat amount  
+promotion_code | body | string | Optional | Promotion code  
+quote_token | body | string | Required | Parameter returned by the quote API  
+bank_id | body | string | Required | Bank card ID used to place the order. Select one from the list returned by `GET /otc/bank/list`; the default card has `is_default=1`.  
+receive_type | body | string | Optional | Name used for the remittance. Allowed values depend on the user type:  
 Corporate users: YOU (remit in your company's name), GATE (remit in Gate's name), RECIPIENT (remit in the recipient's name);  
 Individual users: GATE (remit in Gate's name), PERSON (remit in the user's own name).  
   
 ####  Detailed descriptions
 
-**» receive_type** : Name used for the remittance. Allowed values depend on the user type:  
+** receive_type**: Name used for the remittance. Allowed values depend on the user type:  
 Corporate users: YOU (remit in your company's name), GATE (remit in Gate's name), RECIPIENT (remit in the recipient's name);  
 Individual users: GATE (remit in Gate's name), PERSON (remit in the user's own name).
 
@@ -193,10 +232,35 @@ Individual users: GATE (remit in Gate's name), PERSON (remit in the user's own n
 
 Enumerated ValuesParameter | Value  
 ---|---  
-» receive_type | YOU  
-» receive_type | GATE  
-» receive_type | RECIPIENT  
-» receive_type | PERSON  
+receive_type | YOU  
+receive_type | GATE  
+receive_type | RECIPIENT  
+receive_type | PERSON  
+  
+####  Request Body Schema
+
+Fiat Order Request Body
+
+Request Body SchemaType | Constraints  
+---|---  
+OtcOrderRequest | required: ["type","side","crypto_currency","fiat_currency","crypto_amount","fiat_amount","quote_token","bank_id"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+type | string | Required |  | BUY (on-ramp) or SELL (off-ramp)  
+side | string | Required |  | The side returned by the quote endpoint (used for order validation). For backward compatibility, `FIAT`/`CRYPTO` or `PAY`/`GET` are accepted; new integrations should use the value returned by the quote response.  
+crypto_currency | string | Required |  | Cryptocurrency (supported currencies can be queried from the OTC web fiat quote page)  
+fiat_currency | string | Required |  | Fiat currency (supported currencies can be queried from the OTC web fiat quote page)  
+crypto_amount | string | Required |  | Amount of cryptocurrency  
+fiat_amount | string | Required |  | Fiat amount  
+promotion_code | string | Optional |  | Promotion code  
+quote_token | string | Required |  | Parameter returned by the quote API  
+bank_id | string | Required |  | Bank card ID used to place the order. Select one from the list returned by `GET /otc/bank/list`; the default card has `is_default=1`.  
+receive_type | string | Optional | enum: ["YOU","GATE","RECIPIENT","PERSON"] | Name used for the remittance. Allowed values depend on the user type:  
+Corporate users: YOU (remit in your company's name), GATE (remit in Gate's name), RECIPIENT (remit in the recipient's name);  
+Individual users: GATE (remit in Gate's name), PERSON (remit in the user's own name).  
   
 ### Responses
 
@@ -208,13 +272,19 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_OtcActionResponse_
+OtcActionResponse
 
-Name | Type | Description  
----|---|---  
-» code | integer | none  
-» message | string | none  
-» timestamp | integer | none  
+Type | Constraints  
+---|---  
+OtcActionResponse | required: ["code","message","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+timestamp | integer | Required |  |   
   
 WARNING
 
@@ -308,13 +378,33 @@ Create a stablecoin order. All request body fields except `promotion_code` are r
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | OtcStableCoinOrderRequest | Required | none  
-» pay_coin | body | string | Required | Currency paid by the user. Supported currencies can be queried from the OTC web stablecoin quote page.  
-» get_coin | body | string | Required | Currency to be received by the user. Supported currencies can be queried from the OTC web stablecoin quote page.  
-» pay_amount | body | string | Required | User payment currency amount  
-» get_amount | body | string | Required | Amount of currency received by the user  
-» side | body | string | Required | The side returned by the quote endpoint (used for order validation). For backward compatibility, `PAY`/`GET` are accepted; new integrations should use the value returned by the quote response.  
-» promotion_code | body | string | Optional | Promotion code (optional)  
-» quote_token | body | string | Required | Parameter returned by the quote API  
+pay_coin | body | string | Required | Currency paid by the user. Supported currencies can be queried from the OTC web stablecoin quote page.  
+get_coin | body | string | Required | Currency to be received by the user. Supported currencies can be queried from the OTC web stablecoin quote page.  
+pay_amount | body | string | Required | User payment currency amount  
+get_amount | body | string | Required | Amount of currency received by the user  
+side | body | string | Required | The side returned by the quote endpoint (used for order validation). For backward compatibility, `PAY`/`GET` are accepted; new integrations should use the value returned by the quote response.  
+promotion_code | body | string | Optional | Promotion code (optional)  
+quote_token | body | string | Required | Parameter returned by the quote API  
+  
+####  Request Body Schema
+
+Stablecoin Order Request Body
+
+Request Body SchemaType | Constraints  
+---|---  
+OtcStableCoinOrderRequest | required: ["pay_coin","get_coin","pay_amount","get_amount","side","quote_token"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+pay_coin | string | Required |  | Currency paid by the user. Supported currencies can be queried from the OTC web stablecoin quote page.  
+get_coin | string | Required |  | Currency to be received by the user. Supported currencies can be queried from the OTC web stablecoin quote page.  
+pay_amount | string | Required |  | User payment currency amount  
+get_amount | string | Required |  | Amount of currency received by the user  
+side | string | Required |  | The side returned by the quote endpoint (used for order validation). For backward compatibility, `PAY`/`GET` are accepted; new integrations should use the value returned by the quote response.  
+promotion_code | string | Optional |  | Promotion code (optional)  
+quote_token | string | Required |  | Parameter returned by the quote API  
   
 ### Responses
 
@@ -326,13 +416,19 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_OtcStableCoinOrderCreateResponse_
+OtcStableCoinOrderCreateResponse
 
-Name | Type | Description  
----|---|---  
-» code | integer | Business code; 0 indicates success  
-» message | string | Message  
-» timestamp | integer | Server Unix timestamp in seconds  
+Type | Constraints  
+---|---  
+OtcStableCoinOrderCreateResponse | required: ["code","message","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  | Business code; 0 indicates success  
+message | string | Required |  | Message  
+timestamp | integer | Required |  | Server Unix timestamp in seconds  
   
 WARNING
 
@@ -428,30 +524,69 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_OtcBankListResponse_
+OtcBankListResponse
 
-Name | Type | Description  
----|---|---  
-» code | integer | none  
-» message | string | none  
-» data | object | none  
-»» lists | array | Bank card list  
-»»» OtcBankListItem | object | none  
-»»»» id | string | Bank card ID (used when placing an order; the synonymous `bank_id` field has been consolidated into `id`)  
-»»»» bank_account_name | string | Bank account name  
-»»»» bank_name | string | Bank name  
-»»»» bank_country | string | Bank country  
-»»»» bank_address | string | Bank address  
-»»»» iban | string | IBAN number  
-»»»» swift | string | SWIFT code  
-»»»» remittance_line_number | string | Remittance routing number  
-»»»» agent_bank_name | string | Correspondent bank name  
-»»»» agent_bank_swift | string | Correspondent bank SWIFT code  
-»»»» submit_time | string | Submission time  
-»»»» update_time | string | Update time  
-»»»» status | string | Status  
-»»»» is_default | integer | Whether it is the default bank card. 1 - Yes, 0 - No  
-»»» timestamp | integer | none  
+Type | Constraints  
+---|---  
+OtcBankListResponse | required: ["code","message","data","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["lists"] |   
+timestamp | integer | Required |  |   
+  
+**data**
+
+OtcBankListResult
+
+Type | Constraints  
+---|---  
+object | required: ["lists"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+lists | array | Required |  | Bank card list  
+  
+**data / lists**
+
+Bank card list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / lists / items**
+
+OtcBankListItem
+
+Type | Constraints  
+---|---  
+object | required: ["id","bank_account_name","bank_name"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | string | Required |  | Bank card ID (used when placing an order; the synonymous `bank_id` field has been consolidated into `id`)  
+bank_account_name | string | Required |  | Bank account name  
+bank_name | string | Required |  | Bank name  
+bank_country | string | Optional |  | Bank country  
+bank_address | string | Optional |  | Bank address  
+iban | string | Optional |  | IBAN number  
+swift | string | Optional |  | SWIFT code  
+remittance_line_number | string | Optional |  | Remittance routing number  
+agent_bank_name | string | Optional |  | Correspondent bank name  
+agent_bank_swift | string | Optional |  | Correspondent bank SWIFT code  
+submit_time | string | Optional |  | Submission time  
+update_time | string | Optional |  | Update time  
+status | string | Optional |  | Status  
+is_default | integer | Optional |  | Whether it is the default bank card. 1 - Yes, 0 - No  
   
 WARNING
 
@@ -539,20 +674,46 @@ When using pre-upload, the server validates object existence and that the uid in
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | OtcBankCreateMultipartRequest | Required | none  
-» bank_account_name | body | string | Required | none  
-» bank_name | body | string | Required | none  
-» bank_country | body | string | Required | none  
-» bank_address | body | string | Required | none  
-» iban | body | string | Required | none  
-» swift | body | string | Required | none  
-» remittance_line_number | body | string | Optional | none  
-» agent_bank_name | body | string | Optional | none  
-» agent_bank_swift | body | string | Optional | none  
-» documentation_file | body | string | Optional | Multipart direct upload; mutually exclusive with documentation_file_key  
-» documentation_file_key | body | string | Optional | Pre-upload mode; file_key returned by pre_upload (plaintext or base64 accepted)  
-» file_type | body | string | Optional | Required when using documentation_file_key; plaintext MIME or its base64  
-» _None_ | body | object | Optional | none  
-» _None_ | body | object | Optional | none  
+  
+####  Request Body Schema
+
+Inner create-bank-card `multipart/form-data`. Account-opening proof file (choose one):
+
+  * **Pre-upload** : `documentation_file_key` \+ `file_type` (call `POST /otc/upload/pre_upload` first, `scene=bank`);
+  * **Multipart direct upload** : `documentation_file` file field.
+
+Request Body SchemaType | Constraints  
+---|---  
+OtcBankCreateMultipartRequest | required: ["bank_account_name","bank_name","bank_country","bank_address","iban","swift"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required in this object | Constraints | Description  
+---|---|---|---|---  
+bank_account_name | string | true |  |   
+bank_name | string | true |  |   
+bank_country | string | true |  |   
+bank_address | string | true |  |   
+iban | string | true |  |   
+swift | string | true |  |   
+remittance_line_number | string | false |  |   
+agent_bank_name | string | false |  |   
+agent_bank_swift | string | false |  |   
+documentation_file | string | false |  | Multipart direct upload; mutually exclusive with documentation_file_key  
+documentation_file_key | string | false |  | Pre-upload mode; file_key returned by pre_upload (plaintext or base64 accepted)  
+file_type | string | false |  | Required when using documentation_file_key; plaintext MIME or its base64  
+  
+**oneOf[0]**
+
+Request Body SchemaType | Constraints  
+---|---  
+any | required: ["documentation_file"]  
+  
+**oneOf[1]**
+
+Request Body SchemaType | Constraints  
+---|---  
+any | required: ["documentation_file_key","file_type"]  
   
 ### Responses
 
@@ -564,16 +725,33 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Bank card created successfully (Inner returns bank_id and status)._
+Bank card created successfully (Inner returns bank_id and status).
 
-Name | Type | Description  
----|---|---  
-» code | integer | none  
-» message | string | none  
-» data | object | none  
-»» bank_id | integer | Bank card primary key in otc_rds.  
-»» status | integer | Review status (e.g., pending review).  
-» timestamp | integer | none  
+Type | Constraints  
+---|---  
+OtcBankCreateResponse | required: ["code","message","data"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["bank_id","status"] |   
+timestamp | integer | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object | required: ["bank_id","status"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+bank_id | integer | Required |  | Bank card primary key in otc_rds.  
+status | integer | Required |  | Review status (e.g., pending review).  
   
 WARNING
 
@@ -661,7 +839,19 @@ Delete the specified bank card. Corresponds to Inner: `POST /bank/delete`.
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | OtcBankIdRequest | Required | none  
-» bank_id | body | string | Required | Bank card ID  
+bank_id | body | string | Required | Bank card ID  
+  
+####  Request Body Schema
+
+Request Body SchemaType | Constraints  
+---|---  
+OtcBankIdRequest | required: ["bank_id"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+bank_id | string | Required |  | Bank card ID  
   
 ### Responses
 
@@ -673,13 +863,19 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_OtcActionResponse_
+OtcActionResponse
 
-Name | Type | Description  
----|---|---  
-» code | integer | none  
-» message | string | none  
-» timestamp | integer | none  
+Type | Constraints  
+---|---  
+OtcActionResponse | required: ["code","message","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+timestamp | integer | Required |  |   
   
 WARNING
 
@@ -764,7 +960,19 @@ Set the specified bank card as default. Corresponds to Inner: `POST /bank/set_de
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | OtcBankIdRequest | Required | none  
-» bank_id | body | string | Required | Bank card ID  
+bank_id | body | string | Required | Bank card ID  
+  
+####  Request Body Schema
+
+Request Body SchemaType | Constraints  
+---|---  
+OtcBankIdRequest | required: ["bank_id"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+bank_id | string | Required |  | Bank card ID  
   
 ### Responses
 
@@ -776,13 +984,19 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_OtcActionResponse_
+OtcActionResponse
 
-Name | Type | Description  
----|---|---  
-» code | integer | none  
-» message | string | none  
-» timestamp | integer | none  
+Type | Constraints  
+---|---  
+OtcActionResponse | required: ["code","message","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+timestamp | integer | Required |  |   
   
 WARNING
 
@@ -878,25 +1092,53 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_OtcBankSupplementChecklistResponse_
+OtcBankSupplementChecklistResponse
 
-Name | Type | Description  
----|---|---  
-» code | integer | none  
-» message | string | none  
-» data | object | none  
-»» user_type | string | `personal` or `enterprise`, matching the supplementary document submission type; `items[].description` describes the submission requirements for each item  
-»» items | array | [Supplementary document item]  
-»»» _None_ | OtcBankSupplementChecklistItem | Supplementary document item  
-»»»» description | string | Supplementary document submission description  
-»»» timestamp | integer | none  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
+Type | Constraints  
 ---|---  
-user_type | personal  
-user_type | enterprise  
+OtcBankSupplementChecklistResponse | required: ["code","message","data"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["user_type","items"] |   
+timestamp | integer | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object | required: ["user_type","items"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_type | string | Required | enum: ["personal","enterprise"] | `personal` or `enterprise`, matching the supplementary document submission type; `items[].description` describes the submission requirements for each item  
+items | array | Required |  |   
+  
+**data / items**
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / items / items**
+
+Supplementary document item
+
+Type | Constraints  
+---|---  
+OtcBankSupplementChecklistItem | required: ["description"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+description | string | Required |  | Supplementary document submission description  
   
 WARNING
 
@@ -983,13 +1225,36 @@ Two submission methods (can be mixed):
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | OtcBankPersonalSupplementMultipartRequest | Required | none  
-» bank_id | body | string | Required | none  
-» id_document_front | body | string | Optional | ID document front-side file content (multipart file field, binary/Base64)  
-» id_document_back | body | string | Optional | ID document back-side file content (multipart file field, binary/Base64)  
-» address_proof | body | string | Optional | Proof-of-address file content (multipart file field, binary/Base64)  
-» relationship_proof | body | string | Optional | Optional. JSON string of relationship_proof.  
-» _None_ | body | object | Optional | none  
-» _None_ | body | object | Optional | none  
+  
+####  Request Body Schema
+
+Personal supplement `multipart/form-data`. File field names are fixed: `id_document_front`, `id_document_back`, `address_proof` (aligned with the checklist `code`); the optional string field `relationship_proof` (JSON text) is merged with the upload result.
+
+Request Body SchemaType | Constraints  
+---|---  
+OtcBankPersonalSupplementMultipartRequest | required: ["bank_id"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required in this object | Constraints | Description  
+---|---|---|---|---  
+bank_id | string | true |  |   
+id_document_front | string | false |  | ID document front-side file content (multipart file field, binary/Base64)  
+id_document_back | string | false |  | ID document back-side file content (multipart file field, binary/Base64)  
+address_proof | string | false |  | Proof-of-address file content (multipart file field, binary/Base64)  
+relationship_proof | string | false |  | Optional. JSON string of relationship_proof.  
+  
+**anyOf[0]**
+
+Request Body SchemaType | Constraints  
+---|---  
+any | required: ["relationship_proof"]  
+  
+**anyOf[1]**
+
+Request Body SchemaType | Constraints  
+---|---  
+any | required: ["id_document_front","id_document_back","address_proof"]  
   
 ### Responses
 
@@ -1001,13 +1266,19 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_OtcActionResponse_
+OtcActionResponse
 
-Name | Type | Description  
----|---|---  
-» code | integer | none  
-» message | string | none  
-» timestamp | integer | none  
+Type | Constraints  
+---|---  
+OtcActionResponse | required: ["code","message","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+timestamp | integer | Required |  |   
   
 WARNING
 
@@ -1096,17 +1367,40 @@ Two submission methods (can be mixed):
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | OtcBankEnterpriseSupplementMultipartRequest | Required | none  
-» uid | body | string | Optional | none  
-» bank_id | body | string | Required | none  
-» certificate | body | string | Optional | Business license / registration certificate file content (multipart file field, binary/Base64)  
-» share_holders | body | string | Optional | Register of shareholders file content (multipart file field, binary/Base64)  
-» passport | body | string | Optional | Legal representative / shareholder passport file content (multipart file field, binary/Base64)  
-» share_holding_structure | body | string | Optional | Ownership structure chart file content (multipart file field, binary/Base64)  
-» funds_statement | body | string | Optional | Proof-of-funds file content (multipart file field, binary/Base64, optional)  
-» additional | body | string | Optional | Other supplementary material file content (multipart file field, binary/Base64, optional)  
-» relationship_proof | body | string | Optional | Optional. JSON string of relationship_proof.  
-» _None_ | body | object | Optional | none  
-» _None_ | body | object | Optional | none  
+  
+####  Request Body Schema
+
+Enterprise supplement `multipart/form-data`. File field names: `certificate`, `share_holders`, `passport`, `share_holding_structure`; optional `funds_statement`, `additional`. Optional string field `relationship_proof` (JSON) is merged into the request.
+
+Request Body SchemaType | Constraints  
+---|---  
+OtcBankEnterpriseSupplementMultipartRequest | required: ["bank_id"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required in this object | Constraints | Description  
+---|---|---|---|---  
+uid | string | false |  |   
+bank_id | string | true |  |   
+certificate | string | false |  | Business license / registration certificate file content (multipart file field, binary/Base64)  
+share_holders | string | false |  | Register of shareholders file content (multipart file field, binary/Base64)  
+passport | string | false |  | Legal representative / shareholder passport file content (multipart file field, binary/Base64)  
+share_holding_structure | string | false |  | Ownership structure chart file content (multipart file field, binary/Base64)  
+funds_statement | string | false |  | Proof-of-funds file content (multipart file field, binary/Base64, optional)  
+additional | string | false |  | Other supplementary material file content (multipart file field, binary/Base64, optional)  
+relationship_proof | string | false |  | Optional. JSON string of relationship_proof.  
+  
+**anyOf[0]**
+
+Request Body SchemaType | Constraints  
+---|---  
+any | required: ["relationship_proof"]  
+  
+**anyOf[1]**
+
+Request Body SchemaType | Constraints  
+---|---  
+any | required: ["certificate","share_holders","passport","share_holding_structure"]  
   
 ### Responses
 
@@ -1118,13 +1412,19 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_OtcActionResponse_
+OtcActionResponse
 
-Name | Type | Description  
----|---|---  
-» code | integer | none  
-» message | string | none  
-» timestamp | integer | none  
+Type | Constraints  
+---|---  
+OtcActionResponse | required: ["code","message","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+timestamp | integer | Required |  |   
   
 WARNING
 
@@ -1236,21 +1536,37 @@ This endpoint returns `content type is required.` when `content_type` is missing
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | OtcUploadPreUploadRequest | Required | none  
-» content_type | body | string | Required | **Base64** of the file MIME type, required. Only image/png, image/jpeg, image/jpg, and application/pdf are supported.  
-» scene | body | string | Optional | Business scene, optional, defaults to general; determines temporary path and production directory after relocation  
+content_type | body | string | Required | **Base64** of the file MIME type, required. Only image/png, image/jpeg, image/jpg, and application/pdf are supported.  
+scene | body | string | Optional | Business scene, optional, defaults to general; determines temporary path and production directory after relocation  
   
 ####  Enumerated Values
 
 Enumerated ValuesParameter | Value  
 ---|---  
-» content_type | aW1hZ2UvcG5n  
-» content_type | aW1hZ2UvanBlZw==  
-» content_type | aW1hZ2UvanBn  
-» content_type | YXBwbGljYXRpb24vcGRm  
-» scene | general  
-» scene | bank  
-» scene | assessment  
-» scene | credit  
+content_type | aW1hZ2UvcG5n  
+content_type | aW1hZ2UvanBlZw==  
+content_type | aW1hZ2UvanBn  
+content_type | YXBwbGljYXRpb24vcGRm  
+scene | general  
+scene | bank  
+scene | assessment  
+scene | credit  
+  
+####  Request Body Schema
+
+File pre-upload request body
+
+Request Body SchemaType | Constraints  
+---|---  
+OtcUploadPreUploadRequest | required: ["content_type"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+content_type | string | Required | enum: ["aW1hZ2UvcG5n","aW1hZ2UvanBlZw==","aW1hZ2UvanBn","YXBwbGljYXRpb24vcGRm"] | **Base64** of the file MIME type, required. Only image/png, image/jpeg, image/jpg, and application/pdf are supported.  
+scene | string | Optional | enum: ["general","bank","assessment","credit"]  
+default: "general" | Business scene, optional, defaults to general; determines temporary path and production directory after relocation  
   
 ### Responses
 
@@ -1262,25 +1578,57 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_OtcUploadPreUploadResponse_
+OtcUploadPreUploadResponse
 
-Name | Type | Description  
----|---|---  
-» code | integer | 0 success; 10010400 parameter error  
-» message | string | Response message  
-» data | OtcUploadPreUploadData | Pre-upload credentials and S3 direct-upload parameters  
-»» file_key | string | Base64 temporary object path; pass back **unchanged** on business submit—do not decode  
-»» url | string | S3 direct upload URL  
-»» fields | OtcUploadPreUploadPolicyFields | S3 POST Policy signature fields; send unchanged as form-data during direct upload  
-»»» key | string | Plaintext temporary object path, identical to base64_decode(file_key)  
-»»» Content-Type | string | Must match the decoded content_type from the pre-upload request  
-»»» X-Amz-Credential | string | AWS temporary credential and scope; submit them unchanged during direct upload  
-»»» X-Amz-Algorithm | string | AWS signing algorithm; submit it unchanged during direct upload  
-»»» X-Amz-Date | string | AWS signing timestamp; submit it unchanged during direct upload  
-»»» Policy | string | Base64-encoded S3 POST Policy; submit it unchanged during direct upload  
-»»» X-Amz-Signature | string | S3 POST Policy signature; submit it unchanged during direct upload  
-»» expires_in | integer | Policy validity period in seconds; currently 5400 (90 minutes); aligns with `expiration` in `fields.Policy`; call this endpoint again after expiry  
-» timestamp | integer | Response timestamp (in seconds)  
+Type | Constraints  
+---|---  
+OtcUploadPreUploadResponse | required: ["code","message","data","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  | 0 success; 10010400 parameter error  
+message | string | Required |  | Response message  
+data | OtcUploadPreUploadData | Required | required: ["file_key","url","fields","expires_in"] | Pre-upload credentials and S3 direct-upload parameters  
+timestamp | integer | Required |  | Response timestamp (in seconds)  
+  
+**data**
+
+Pre-upload credentials and S3 direct-upload parameters
+
+Type | Constraints  
+---|---  
+OtcUploadPreUploadData | required: ["file_key","url","fields","expires_in"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+file_key | string | Required |  | Base64 temporary object path; pass back **unchanged** on business submit—do not decode  
+url | string | Required |  | S3 direct upload URL  
+fields | OtcUploadPreUploadPolicyFields | Required | required: ["key","Content-Type","X-Amz-Credential","X-Amz-Algorithm","X-Amz-Date","Policy","X-Amz-Signature"] | S3 POST Policy signature fields; send unchanged as form-data during direct upload  
+expires_in | integer | Required |  | Policy validity period in seconds; currently 5400 (90 minutes); aligns with `expiration` in `fields.Policy`; call this endpoint again after expiry  
+  
+**data / fields**
+
+S3 POST Policy signature fields; send unchanged as form-data during direct upload
+
+Type | Constraints  
+---|---  
+OtcUploadPreUploadPolicyFields | required: ["key","Content-Type","X-Amz-Credential","X-Amz-Algorithm","X-Amz-Date","Policy","X-Amz-Signature"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+key | string | Required |  | Plaintext temporary object path, identical to base64_decode(file_key)  
+Content-Type | string | Required |  | Must match the decoded content_type from the pre-upload request  
+X-Amz-Credential | string | Required |  | AWS temporary credential and scope; submit them unchanged during direct upload  
+X-Amz-Algorithm | string | Required |  | AWS signing algorithm; submit it unchanged during direct upload  
+X-Amz-Date | string | Required |  | AWS signing timestamp; submit it unchanged during direct upload  
+Policy | string | Required |  | Base64-encoded S3 POST Policy; submit it unchanged during direct upload  
+X-Amz-Signature | string | Required |  | S3 POST Policy signature; submit it unchanged during direct upload  
   
 WARNING
 
@@ -1382,10 +1730,28 @@ Mark a fiat buy order as paid (deposit confirmation). **A user payment receipt m
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | OtcMarkOrderPaidRequest | Required | none  
-» order_id | body | string | Required | Order ID  
-» client_order_id | body | string | Optional | Client order ID (used by some gateway/Inner Pay paths, optional)  
-» payment_receipt_file_key | body | string | Required | User payment receipt: **required**. Recommended: call `POST /otc/upload/pre_upload` (`scene=general`) to upload to the temporary bucket, then pass the returned **base64 file_key unchanged** (do not decode); the server moves to the production bucket and persists. Still compatible with legacy production-bucket base64 keys. Single file; jpg/jpeg/png/pdf; ≤10MB.  
-» payment_receipt | body | string | Optional | Alias compatible with `payment_receipt_file_key` (depends on the gateway's external field name)  
+order_id | body | string | Required | Order ID  
+client_order_id | body | string | Optional | Client order ID (used by some gateway/Inner Pay paths, optional)  
+payment_receipt_file_key | body | string | Required | User payment receipt: **required**. Recommended: call `POST /otc/upload/pre_upload` (`scene=general`) to upload to the temporary bucket, then pass the returned **base64 file_key unchanged** (do not decode); the server moves to the production bucket and persists. Still compatible with legacy production-bucket base64 keys. Single file; jpg/jpeg/png/pdf; ≤10MB.  
+payment_receipt | body | string | Optional | Alias compatible with `payment_receipt_file_key` (depends on the gateway's external field name)  
+  
+####  Request Body Schema
+
+Request body for marking a fiat order as paid (deposit confirmation). Must include the user's payment receipt (consistent with §3.2).  
+**`payment_receipt_file_key` is required**; the order primary key on this path is `order_id`. When accessed via the Pay gateway using `client_order_id`, the gateway's rewritten field takes precedence.
+
+Request Body SchemaType | Constraints  
+---|---  
+OtcMarkOrderPaidRequest | required: ["order_id","payment_receipt_file_key"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Required |  | Order ID  
+client_order_id | string | Optional |  | Client order ID (used by some gateway/Inner Pay paths, optional)  
+payment_receipt_file_key | string | Required |  | User payment receipt: **required**. Recommended: call `POST /otc/upload/pre_upload` (`scene=general`) to upload to the temporary bucket, then pass the returned **base64 file_key unchanged** (do not decode); the server moves to the production bucket and persists. Still compatible with legacy production-bucket base64 keys. Single file; jpg/jpeg/png/pdf; ≤10MB.  
+payment_receipt | string | Optional |  | Alias compatible with `payment_receipt_file_key` (depends on the gateway's external field name)  
   
 ### Responses
 
@@ -1397,13 +1763,19 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_OtcActionResponse_
+OtcActionResponse
 
-Name | Type | Description  
----|---|---  
-» code | integer | none  
-» message | string | none  
-» timestamp | integer | none  
+Type | Constraints  
+---|---  
+OtcActionResponse | required: ["code","message","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+timestamp | integer | Required |  |   
   
 WARNING
 
@@ -1502,13 +1874,19 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_OtcActionResponse_
+OtcActionResponse
 
-Name | Type | Description  
----|---|---  
-» code | integer | none  
-» message | string | none  
-» timestamp | integer | none  
+Type | Constraints  
+---|---  
+OtcActionResponse | required: ["code","message","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+timestamp | integer | Required |  |   
   
 WARNING
 
@@ -1612,37 +1990,100 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_OtcOrderListResponse_
+OtcOrderListResponse
 
-Name | Type | Description  
----|---|---  
-» code | integer | none  
-» message | string | none  
-» data | object | none  
-»» pn | integer | none  
-»» ps | integer | none  
-»» total_pn | integer | none  
-»» count | integer | none  
-»» lists | array | none  
-»»» OtcOrderListItem | object | none  
-»»»» time | string | Current time  
-»»»» timestamp | integer | Current timestamp  
-»»»» order_id | string | orderId  
-»»»» trade_no | string | Trade number  
-»»»» type | string | BUY deposit / SELL withdrawal  
-»»»» status | string | Order status  
-»»»» fiat_currency | string | Fiat currency  
-»»»» fiat_currency_info | object | none  
-»»»»» name | string | Name  
-»»»»» icon | string | Image  
-»»»» fiat_amount | string | Fiat amount  
-»»»» crypto_currency | string | Digital currency  
-»»»» crypto_currency_info | object | none  
-»»»»» name | string | none  
-»»»»» icon | string | none  
-»»»» crypto_amount | string | Cryptocurrency amount  
-»»»» rate | string | Exchange rate  
-»»»» promotion_code | string | Promotion code  
+Type | Constraints  
+---|---  
+OtcOrderListResponse | required: ["code","message","data"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["pn","ps","total_pn","count","lists"] |   
+  
+**data**
+
+OtcOrderListResult
+
+Type | Constraints  
+---|---  
+object | required: ["pn","ps","total_pn","count","lists"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+pn | integer | Required |  |   
+ps | integer | Required |  |   
+total_pn | integer | Required |  |   
+count | integer | Required |  |   
+lists | array | Required |  |   
+  
+**data / lists**
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / lists / items**
+
+OtcOrderListItem
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+time | string | Optional |  | Current time  
+timestamp | integer | Optional |  | Current timestamp  
+order_id | string | Optional |  | orderId  
+trade_no | string | Optional |  | Trade number  
+type | string | Optional |  | BUY deposit / SELL withdrawal  
+status | string | Optional |  | Order status  
+fiat_currency | string | Optional |  | Fiat currency  
+fiat_currency_info | object | Optional | required: ["name","icon"] |   
+fiat_amount | string | Optional |  | Fiat amount  
+crypto_currency | string | Optional |  | Digital currency  
+crypto_currency_info | object | Optional | required: ["name","icon"] |   
+crypto_amount | string | Optional |  | Cryptocurrency amount  
+rate | string | Optional |  | Exchange rate  
+promotion_code | string | Optional |  | Promotion code  
+  
+**data / lists / items / fiat_currency_info**
+
+OtcOrderListFiatCurrencyInfo
+
+Type | Constraints  
+---|---  
+object | required: ["name","icon"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+name | string | Required |  | Name  
+icon | string | Required |  | Image  
+  
+**data / lists / items / crypto_currency_info**
+
+OtcOrderListCryptoCurrencyInfo
+
+Type | Constraints  
+---|---  
+object | required: ["name","icon"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+name | string | Required |  |   
+icon | string | Required |  |   
   
 WARNING
 
@@ -1763,32 +2204,69 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_OtcStableCoinOrderListResponse_
+OtcStableCoinOrderListResponse
 
-Name | Type | Description  
----|---|---  
-» code | integer | none  
-» message | string | none  
-» data | object | none  
-»» total | integer | none  
-»» page_size | integer | none  
-»» page_number | integer | none  
-»» total_page | integer | none  
-»» lists | array | none  
-»»» OtcStableCoinOrderListItem | object | none  
-»»»» id | integer | Order ID  
-»»»» trade_no | string | Transaction reference number  
-»»»» pay_coin | string | Payment currency  
-»»»» pay_icon | string | Payment currency icon  
-»»»» pay_amount | string | Payment amount  
-»»»» get_coin | string | Received currency  
-»»»» get_icon | string | Received currency icon  
-»»»» get_amount | string | Received amount  
-»»»» rate | string | Exchange rate  
-»»»» rate_reci | string | Reciprocal of the exchange rate  
-»»»» status | string | PROCESSING: in progress / DONE: completed / FAILED: failed  
-»»»» create_timest | integer | Created time  
-»»»» create_time | string | Created time  
+Type | Constraints  
+---|---  
+OtcStableCoinOrderListResponse | required: ["code","message","data"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["total","page_size","page_number","total_page","lists"] |   
+  
+**data**
+
+OtcStableCoinOrderListResult
+
+Type | Constraints  
+---|---  
+object | required: ["total","page_size","page_number","total_page","lists"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer | Required |  |   
+page_size | integer | Required |  |   
+page_number | integer | Required |  |   
+total_page | integer | Required |  |   
+lists | array | Required |  |   
+  
+**data / lists**
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / lists / items**
+
+OtcStableCoinOrderListItem
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer | Optional |  | Order ID  
+trade_no | string | Optional |  | Transaction reference number  
+pay_coin | string | Optional |  | Payment currency  
+pay_icon | string | Optional |  | Payment currency icon  
+pay_amount | string | Optional |  | Payment amount  
+get_coin | string | Optional |  | Received currency  
+get_icon | string | Optional |  | Received currency icon  
+get_amount | string | Optional |  | Received amount  
+rate | string | Optional |  | Exchange rate  
+rate_reci | string | Optional |  | Reciprocal of the exchange rate  
+status | string | Optional |  | PROCESSING: in progress / DONE: completed / FAILED: failed  
+create_timest | integer | Optional |  | Created time  
+create_time | string | Optional |  | Created time  
   
 WARNING
 
@@ -1897,41 +2375,60 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_OtcOrderDetailResponse_
+OtcOrderDetailResponse
 
-Name | Type | Description  
----|---|---  
-» message | string | none  
-» code | integer | none  
-» data | object | none  
-»» order_id | string | Order ID  
-»» uid | string | User ID  
-»» type | string | Order Type  
-»» fiat_currency | string | Fiat currency  
-»» fiat_amount | string | Fiat amount  
-»» crypto_currency | string | Digital currency  
-»» crypto_amount | string | Cryptocurrency amount  
-»» rate | string | Exchange rate  
-»» bank_account_name | string | User payment/receiving name  
-»» bank_name | string | User payment/receiving bank name  
-»» bank_country | string | User payment/receiving bank country  
-»» bank_address | string | User payment/receiving bank address  
-»» bank_account_number_iban | string | User payment/receiving bank account number/IBAN  
-»» swift_code | string | User payment/receiving bank SWIFT code  
-»» intermediate_bank_name | string | User payment/receiving intermediary bank name  
-»» intermediary_bank_swift_code | string | User payment/receiving intermediary bank SWIFT code  
-»» gate_bank_account_name | string | Gate beneficiary name, shown for BUY only  
-»» gate_bank_name | string | Gate beneficiary bank name, shown for BUY only  
-»» gate_bank_country | string | Gate beneficiary bank country, shown for BUY only  
-»» gate_bank_address | string | Gate beneficiary bank address, shown for BUY only  
-»» gate_bank_account_number_iban | string | Gate beneficiary bank account number/IBAN, shown for BUY only  
-»» gate_swift_code | string | Gate beneficiary bank SWIFT code, shown for BUY only  
-»» gate_intermediary_bank_name | string | Gate beneficiary intermediary bank name, shown for BUY only  
-»» gate_intermediary_bank_swift_code | string | Gate beneficiary intermediary bank SWIFT code, shown for BUY only  
-»» gate_transfer_remark | string | Transfer remark (mutually exclusive with `gate_reference_code`; empty when a BUY deposit order has a reference code), shown for BUY only  
-»» gate_reference_code | string | Be sure to include the reference code when making the transfer so that your order can be processed promptly. (Mutually exclusive with `gate_transfer_remark`.)  
-»» status | string | Status  
-»» create_time | string | Created time  
+Type | Constraints  
+---|---  
+OtcOrderDetailResponse | required: ["message","code","data"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+message | string | Required |  |   
+code | integer | Required |  |   
+data | object | Required | required: ["order_id","uid","type","fiat_currency","fiat_amount","crypto_currency","crypto_amount","rate","status","create_time"] |   
+  
+**data**
+
+OtcOrderDetail
+
+Type | Constraints  
+---|---  
+object | required: ["order_id","uid","type","fiat_currency","fiat_amount","crypto_currency","crypto_amount","rate","status","create_time"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Required |  | Order ID  
+uid | string | Required |  | User ID  
+type | string | Required |  | Order Type  
+fiat_currency | string | Required |  | Fiat currency  
+fiat_amount | string | Required |  | Fiat amount  
+crypto_currency | string | Required |  | Digital currency  
+crypto_amount | string | Required |  | Cryptocurrency amount  
+rate | string | Required |  | Exchange rate  
+bank_account_name | string | Optional |  | User payment/receiving name  
+bank_name | string | Optional |  | User payment/receiving bank name  
+bank_country | string | Optional |  | User payment/receiving bank country  
+bank_address | string | Optional |  | User payment/receiving bank address  
+bank_account_number_iban | string | Optional |  | User payment/receiving bank account number/IBAN  
+swift_code | string | Optional |  | User payment/receiving bank SWIFT code  
+intermediate_bank_name | string | Optional |  | User payment/receiving intermediary bank name  
+intermediary_bank_swift_code | string | Optional |  | User payment/receiving intermediary bank SWIFT code  
+gate_bank_account_name | string | Optional |  | Gate beneficiary name, shown for BUY only  
+gate_bank_name | string | Optional |  | Gate beneficiary bank name, shown for BUY only  
+gate_bank_country | string | Optional |  | Gate beneficiary bank country, shown for BUY only  
+gate_bank_address | string | Optional |  | Gate beneficiary bank address, shown for BUY only  
+gate_bank_account_number_iban | string | Optional |  | Gate beneficiary bank account number/IBAN, shown for BUY only  
+gate_swift_code | string | Optional |  | Gate beneficiary bank SWIFT code, shown for BUY only  
+gate_intermediary_bank_name | string | Optional |  | Gate beneficiary intermediary bank name, shown for BUY only  
+gate_intermediary_bank_swift_code | string | Optional |  | Gate beneficiary intermediary bank SWIFT code, shown for BUY only  
+gate_transfer_remark | string | Optional |  | Transfer remark (mutually exclusive with `gate_reference_code`; empty when a BUY deposit order has a reference code), shown for BUY only  
+gate_reference_code | string | Optional |  | Be sure to include the reference code when making the transfer so that your order can be processed promptly. (Mutually exclusive with `gate_transfer_remark`.)  
+status | string | Required |  | Status  
+create_time | string | Required |  | Created time  
   
 WARNING
 
@@ -2026,43 +2523,60 @@ Code samples
 
 ##  OtcOrderDetailResponse
 
-_OtcOrderDetailResponse_
+OtcOrderDetailResponse
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["message","code","data"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-message | string | Required | none | none  
-code | integer | Required | none | none  
-data | object | Required | none | none  
-» order_id | string | Required | none | Order ID  
-» uid | string | Required | none | User ID  
-» type | string | Required | none | Order Type  
-» fiat_currency | string | Required | none | Fiat currency  
-» fiat_amount | string | Required | none | Fiat amount  
-» crypto_currency | string | Required | none | Digital currency  
-» crypto_amount | string | Required | none | Cryptocurrency amount  
-» rate | string | Required | none | Exchange rate  
-» bank_account_name | string | Optional | none | User payment/receiving name  
-» bank_name | string | Optional | none | User payment/receiving bank name  
-» bank_country | string | Optional | none | User payment/receiving bank country  
-» bank_address | string | Optional | none | User payment/receiving bank address  
-» bank_account_number_iban | string | Optional | none | User payment/receiving bank account number/IBAN  
-» swift_code | string | Optional | none | User payment/receiving bank SWIFT code  
-» intermediate_bank_name | string | Optional | none | User payment/receiving intermediary bank name  
-» intermediary_bank_swift_code | string | Optional | none | User payment/receiving intermediary bank SWIFT code  
-» gate_bank_account_name | string | Optional | none | Gate beneficiary name, shown for BUY only  
-» gate_bank_name | string | Optional | none | Gate beneficiary bank name, shown for BUY only  
-» gate_bank_country | string | Optional | none | Gate beneficiary bank country, shown for BUY only  
-» gate_bank_address | string | Optional | none | Gate beneficiary bank address, shown for BUY only  
-» gate_bank_account_number_iban | string | Optional | none | Gate beneficiary bank account number/IBAN, shown for BUY only  
-» gate_swift_code | string | Optional | none | Gate beneficiary bank SWIFT code, shown for BUY only  
-» gate_intermediary_bank_name | string | Optional | none | Gate beneficiary intermediary bank name, shown for BUY only  
-» gate_intermediary_bank_swift_code | string | Optional | none | Gate beneficiary intermediary bank SWIFT code, shown for BUY only  
-» gate_transfer_remark | string | Optional | none | Transfer remark (mutually exclusive with `gate_reference_code`; empty when a BUY deposit order has a reference code), shown for BUY only  
-» gate_reference_code | string | Optional | none | Be sure to include the reference code when making the transfer so that your order can be processed promptly. (Mutually exclusive with `gate_transfer_remark`.)  
-» status | string | Required | none | Status  
-» create_time | string | Required | none | Created time  
+message | string | Required |  |   
+code | integer | Required |  |   
+data | object | Required | required: ["order_id","uid","type","fiat_currency","fiat_amount","crypto_currency","crypto_amount","rate","status","create_time"] |   
+  
+**data**
+
+OtcOrderDetail
+
+Type | Constraints  
+---|---  
+object | required: ["order_id","uid","type","fiat_currency","fiat_amount","crypto_currency","crypto_amount","rate","status","create_time"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Required |  | Order ID  
+uid | string | Required |  | User ID  
+type | string | Required |  | Order Type  
+fiat_currency | string | Required |  | Fiat currency  
+fiat_amount | string | Required |  | Fiat amount  
+crypto_currency | string | Required |  | Digital currency  
+crypto_amount | string | Required |  | Cryptocurrency amount  
+rate | string | Required |  | Exchange rate  
+bank_account_name | string | Optional |  | User payment/receiving name  
+bank_name | string | Optional |  | User payment/receiving bank name  
+bank_country | string | Optional |  | User payment/receiving bank country  
+bank_address | string | Optional |  | User payment/receiving bank address  
+bank_account_number_iban | string | Optional |  | User payment/receiving bank account number/IBAN  
+swift_code | string | Optional |  | User payment/receiving bank SWIFT code  
+intermediate_bank_name | string | Optional |  | User payment/receiving intermediary bank name  
+intermediary_bank_swift_code | string | Optional |  | User payment/receiving intermediary bank SWIFT code  
+gate_bank_account_name | string | Optional |  | Gate beneficiary name, shown for BUY only  
+gate_bank_name | string | Optional |  | Gate beneficiary bank name, shown for BUY only  
+gate_bank_country | string | Optional |  | Gate beneficiary bank country, shown for BUY only  
+gate_bank_address | string | Optional |  | Gate beneficiary bank address, shown for BUY only  
+gate_bank_account_number_iban | string | Optional |  | Gate beneficiary bank account number/IBAN, shown for BUY only  
+gate_swift_code | string | Optional |  | Gate beneficiary bank SWIFT code, shown for BUY only  
+gate_intermediary_bank_name | string | Optional |  | Gate beneficiary intermediary bank name, shown for BUY only  
+gate_intermediary_bank_swift_code | string | Optional |  | Gate beneficiary intermediary bank SWIFT code, shown for BUY only  
+gate_transfer_remark | string | Optional |  | Transfer remark (mutually exclusive with `gate_reference_code`; empty when a BUY deposit order has a reference code), shown for BUY only  
+gate_reference_code | string | Optional |  | Be sure to include the reference code when making the transfer so that your order can be processed promptly. (Mutually exclusive with `gate_transfer_remark`.)  
+status | string | Required |  | Status  
+create_time | string | Required |  | Created time  
       
     
     {
@@ -2102,97 +2616,102 @@ data | object | Required | none | none
     
     
 
-##  OtcMarkOrderPaidRequest
-
-_Request body for marking a fiat order as paid (deposit confirmation). Must include the user's payment receipt (consistent with §3.2).  
-**`payment_receipt_file_key` is required**; the order primary key on this path is `order_id`. When accessed via the Pay gateway using `client_order_id`, the gateway's rewritten field takes precedence._
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-order_id | string | Required | none | Order ID  
-client_order_id | string | Optional | none | Client order ID (used by some gateway/Inner Pay paths, optional)  
-payment_receipt_file_key | string | Required | none | User payment receipt: **required**. Recommended: call `POST /otc/upload/pre_upload` (`scene=general`) to upload to the temporary bucket, then pass the returned **base64 file_key unchanged** (do not decode); the server moves to the production bucket and persists. Still compatible with legacy production-bucket base64 keys. Single file; jpg/jpeg/png/pdf; ≤10MB.  
-payment_receipt | string | Optional | none | Alias compatible with `payment_receipt_file_key` (depends on the gateway's external field name)  
-      
-    
-    {
-      "order_id": "203",
-      "client_order_id": "",
-      "payment_receipt_file_key": "b3RjX3RlbXAvMTIzNDU2Nzg5MC9nZW5lcmFsLzIwMjYwODMxMjEwMDEyMzQ1Njc4LnBuZw==",
-      "payment_receipt": ""
-    }
-    
-    
-
-##  OtcUploadPreUploadRequest
-
-_File pre-upload request body_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-content_type | string | Required | none | **Base64** of the file MIME type, required. Only image/png, image/jpeg, image/jpg, and application/pdf are supported.  
-scene | string | Optional | none | Business scene, optional, defaults to general; determines temporary path and production directory after relocation  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-content_type | aW1hZ2UvcG5n  
-content_type | aW1hZ2UvanBlZw==  
-content_type | aW1hZ2UvanBn  
-content_type | YXBwbGljYXRpb24vcGRm  
-scene | general  
-scene | bank  
-scene | assessment  
-scene | credit  
-      
-    
-    {
-      "content_type": "aW1hZ2UvcG5n",
-      "scene": "bank"
-    }
-    
-    
-
 ##  OtcOrderListResponse
 
-_OtcOrderListResponse_
+OtcOrderListResponse
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["code","message","data"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-code | integer | Required | none | none  
-message | string | Required | none | none  
-data | object | Required | none | none  
-» pn | integer | Required | none | none  
-» ps | integer | Required | none | none  
-» total_pn | integer | Required | none | none  
-» count | integer | Required | none | none  
-» lists | array | Required | none | none  
-»» OtcOrderListItem | object | Optional | none | none  
-»»» time | string | Optional | none | Current time  
-»»» timestamp | integer | Optional | none | Current timestamp  
-»»» order_id | string | Optional | none | orderId  
-»»» trade_no | string | Optional | none | Trade number  
-»»» type | string | Optional | none | BUY deposit / SELL withdrawal  
-»»» status | string | Optional | none | Order status  
-»»» fiat_currency | string | Optional | none | Fiat currency  
-»»» fiat_currency_info | object | Optional | none | none  
-»»»» name | string | Required | none | Name  
-»»»» icon | string | Required | none | Image  
-»»» fiat_amount | string | Optional | none | Fiat amount  
-»»» crypto_currency | string | Optional | none | Digital currency  
-»»» crypto_currency_info | object | Optional | none | none  
-»»»» name | string | Required | none | none  
-»»»» icon | string | Required | none | none  
-»»» crypto_amount | string | Optional | none | Cryptocurrency amount  
-»»» rate | string | Optional | none | Exchange rate  
-»»» promotion_code | string | Optional | none | Promotion code  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["pn","ps","total_pn","count","lists"] |   
+  
+**data**
+
+OtcOrderListResult
+
+Type | Constraints  
+---|---  
+object | required: ["pn","ps","total_pn","count","lists"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+pn | integer | Required |  |   
+ps | integer | Required |  |   
+total_pn | integer | Required |  |   
+count | integer | Required |  |   
+lists | array | Required |  |   
+  
+**data / lists**
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / lists / items**
+
+OtcOrderListItem
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+time | string | Optional |  | Current time  
+timestamp | integer | Optional |  | Current timestamp  
+order_id | string | Optional |  | orderId  
+trade_no | string | Optional |  | Trade number  
+type | string | Optional |  | BUY deposit / SELL withdrawal  
+status | string | Optional |  | Order status  
+fiat_currency | string | Optional |  | Fiat currency  
+fiat_currency_info | object | Optional | required: ["name","icon"] |   
+fiat_amount | string | Optional |  | Fiat amount  
+crypto_currency | string | Optional |  | Digital currency  
+crypto_currency_info | object | Optional | required: ["name","icon"] |   
+crypto_amount | string | Optional |  | Cryptocurrency amount  
+rate | string | Optional |  | Exchange rate  
+promotion_code | string | Optional |  | Promotion code  
+  
+**data / lists / items / fiat_currency_info**
+
+OtcOrderListFiatCurrencyInfo
+
+Type | Constraints  
+---|---  
+object | required: ["name","icon"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+name | string | Required |  | Name  
+icon | string | Required |  | Image  
+  
+**data / lists / items / crypto_currency_info**
+
+OtcOrderListCryptoCurrencyInfo
+
+Type | Constraints  
+---|---  
+object | required: ["name","icon"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+name | string | Required |  |   
+icon | string | Required |  |   
       
     
     {
@@ -2211,370 +2730,167 @@ data | object | Required | none | none
     
     
 
-##  OtcStableCoinOrderListResponse
-
-_OtcStableCoinOrderListResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-code | integer | Required | none | none  
-message | string | Required | none | none  
-data | object | Required | none | none  
-» total | integer | Required | none | none  
-» page_size | integer | Required | none | none  
-» page_number | integer | Required | none | none  
-» total_page | integer | Required | none | none  
-» lists | array | Required | none | none  
-»» OtcStableCoinOrderListItem | object | Optional | none | none  
-»»» id | integer | Optional | none | Order ID  
-»»» trade_no | string | Optional | none | Transaction reference number  
-»»» pay_coin | string | Optional | none | Payment currency  
-»»» pay_icon | string | Optional | none | Payment currency icon  
-»»» pay_amount | string | Optional | none | Payment amount  
-»»» get_coin | string | Optional | none | Received currency  
-»»» get_icon | string | Optional | none | Received currency icon  
-»»» get_amount | string | Optional | none | Received amount  
-»»» rate | string | Optional | none | Exchange rate  
-»»» rate_reci | string | Optional | none | Reciprocal of the exchange rate  
-»»» status | string | Optional | none | PROCESSING: in progress / DONE: completed / FAILED: failed  
-»»» create_timest | integer | Optional | none | Created time  
-»»» create_time | string | Optional | none | Created time  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "total": 0,
-        "page_size": 0,
-        "page_number": 0,
-        "total_page": 0,
-        "lists": [
-          {}
-        ]
-      }
-    }
-    
-    
-
 ##  OtcBankPersonalSupplementMultipartRequest
 
-_Personal supplement`multipart/form-data`. File field names are fixed: `id_document_front`, `id_document_back`, `address_proof` (aligned with the checklist `code`); the optional string field `relationship_proof` (JSON text) is merged with the upload result._
+Personal supplement `multipart/form-data`. File field names are fixed: `id_document_front`, `id_document_back`, `address_proof` (aligned with the checklist `code`); the optional string field `relationship_proof` (JSON text) is merged with the upload result.
 
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-bank_id | string | Required | none | none  
-id_document_front | string | Optional | none | ID document front-side file content (multipart file field, binary/Base64)  
-id_document_back | string | Optional | none | ID document back-side file content (multipart file field, binary/Base64)  
-address_proof | string | Optional | none | Proof-of-address file content (multipart file field, binary/Base64)  
-relationship_proof | string | Optional | none | Optional. JSON string of relationship_proof.  
+Type | Constraints  
+---|---  
+object | required: ["bank_id"]  
   
-_anyOf_
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required in this object | Constraints | Description  
 ---|---|---|---|---  
-_None_ | object | Optional | none | none  
+bank_id | string | true |  |   
+id_document_front | string | false |  | ID document front-side file content (multipart file field, binary/Base64)  
+id_document_back | string | false |  | ID document back-side file content (multipart file field, binary/Base64)  
+address_proof | string | false |  | Proof-of-address file content (multipart file field, binary/Base64)  
+relationship_proof | string | false |  | Optional. JSON string of relationship_proof.  
   
-_or_
+**anyOf[0]**
 
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-_None_ | object | Optional | none | none  
+Type | Constraints  
+---|---  
+any | required: ["relationship_proof"]  
+  
+**anyOf[1]**
+
+Type | Constraints  
+---|---  
+any | required: ["id_document_front","id_document_back","address_proof"]  
       
     
     {}
-    
-    
-
-##  OtcBankSupplementChecklistResponse
-
-_OtcBankSupplementChecklistResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-code | integer | Required | none | none  
-message | string | Required | none | none  
-data | object | Required | none | none  
-» user_type | string | Required | none | `personal` or `enterprise`, matching the supplementary document submission type; `items[].description` describes the submission requirements for each item  
-» items | [OtcBankSupplementChecklistItem] | Required | none | [Supplementary document item]  
-timestamp | integer | Optional | none | none  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-user_type | personal  
-user_type | enterprise  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "user_type": "personal",
-        "items": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  OtcActionResponse
-
-_OtcActionResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-code | integer | Required | none | none  
-message | string | Required | none | none  
-timestamp | integer | Required | none | none  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "timestamp": 0
-    }
-    
-    
-
-##  OtcStableCoinOrderCreateResponse
-
-_OtcStableCoinOrderCreateResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-code | integer | Required | none | Business code; 0 indicates success  
-message | string | Required | none | Message  
-timestamp | integer | Required | none | Server Unix timestamp in seconds  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "timestamp": 0
-    }
     
     
 
 ##  OtcBankCreateMultipartRequest
 
-*Inner create-bank-card `multipart/form-data`. Account-opening proof file (choose one):
+Inner create-bank-card `multipart/form-data`. Account-opening proof file (choose one):
 
   * **Pre-upload** : `documentation_file_key` \+ `file_type` (call `POST /otc/upload/pre_upload` first, `scene=bank`);
-  * **Multipart direct upload** : `documentation_file` file field.*
+  * **Multipart direct upload** : `documentation_file` file field.
 
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-bank_account_name | string | Required | none | none  
-bank_name | string | Required | none | none  
-bank_country | string | Required | none | none  
-bank_address | string | Required | none | none  
-iban | string | Required | none | none  
-swift | string | Required | none | none  
-remittance_line_number | string | Optional | none | none  
-agent_bank_name | string | Optional | none | none  
-agent_bank_swift | string | Optional | none | none  
-documentation_file | string | Optional | none | Multipart direct upload; mutually exclusive with documentation_file_key  
-documentation_file_key | string | Optional | none | Pre-upload mode; file_key returned by pre_upload (plaintext or base64 accepted)  
-file_type | string | Optional | none | Required when using documentation_file_key; plaintext MIME or its base64  
+Type | Constraints  
+---|---  
+object | required: ["bank_account_name","bank_name","bank_country","bank_address","iban","swift"]  
   
-_oneOf_
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required in this object | Constraints | Description  
 ---|---|---|---|---  
-_None_ | object | Optional | none | none  
+bank_account_name | string | true |  |   
+bank_name | string | true |  |   
+bank_country | string | true |  |   
+bank_address | string | true |  |   
+iban | string | true |  |   
+swift | string | true |  |   
+remittance_line_number | string | false |  |   
+agent_bank_name | string | false |  |   
+agent_bank_swift | string | false |  |   
+documentation_file | string | false |  | Multipart direct upload; mutually exclusive with documentation_file_key  
+documentation_file_key | string | false |  | Pre-upload mode; file_key returned by pre_upload (plaintext or base64 accepted)  
+file_type | string | false |  | Required when using documentation_file_key; plaintext MIME or its base64  
   
-_xor_
+**oneOf[0]**
 
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-_None_ | object | Optional | none | none  
+Type | Constraints  
+---|---  
+any | required: ["documentation_file"]  
+  
+**oneOf[1]**
+
+Type | Constraints  
+---|---  
+any | required: ["documentation_file_key","file_type"]  
       
     
     {}
     
     
 
-##  OtcUploadPreUploadResponse
+##  OtcUploadPreUploadRequest
 
-_OtcUploadPreUploadResponse_
+File pre-upload request body
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["content_type"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-code | integer | Required | none | 0 success; 10010400 parameter error  
-message | string | Required | none | Response message  
-data | OtcUploadPreUploadData | Required | none | Pre-upload credentials and S3 direct-upload parameters  
-timestamp | integer | Required | none | Response timestamp (in seconds)  
+content_type | string | Required | enum: ["aW1hZ2UvcG5n","aW1hZ2UvanBlZw==","aW1hZ2UvanBn","YXBwbGljYXRpb24vcGRm"] | **Base64** of the file MIME type, required. Only image/png, image/jpeg, image/jpg, and application/pdf are supported.  
+scene | string | Optional | enum: ["general","bank","assessment","credit"]  
+default: "general" | Business scene, optional, defaults to general; determines temporary path and production directory after relocation  
       
     
     {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "file_key": "string",
-        "url": "string",
-        "fields": {
-          "key": "string",
-          "Content-Type": "string",
-          "X-Amz-Credential": "string",
-          "X-Amz-Algorithm": "string",
-          "X-Amz-Date": "string",
-          "Policy": "string",
-          "X-Amz-Signature": "string"
-        },
-        "expires_in": 0
-      },
-      "timestamp": 0
+      "content_type": "aW1hZ2UvcG5n",
+      "scene": "bank"
     }
     
     
 
-##  OtcStableCoinOrderRequest
+##  OtcQuoteRequest
 
-_Stablecoin Order Request Body_
+Fiat and Stablecoin Quote Request Body
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["side","pay_coin","get_coin"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-pay_coin | string | Required | none | Currency paid by the user. Supported currencies can be queried from the OTC web stablecoin quote page.  
-get_coin | string | Required | none | Currency to be received by the user. Supported currencies can be queried from the OTC web stablecoin quote page.  
-pay_amount | string | Required | none | User payment currency amount  
-get_amount | string | Required | none | Amount of currency received by the user  
-side | string | Required | none | The side returned by the quote endpoint (used for order validation). For backward compatibility, `PAY`/`GET` are accepted; new integrations should use the value returned by the quote response.  
-promotion_code | string | Optional | none | Promotion code (optional)  
-quote_token | string | Required | none | Parameter returned by the quote API  
+side | string | Required |  | PAY: specify the payment amount (`pay_amount` is required); GET: specify the receive amount (`get_amount` is required).  
+pay_coin | string | Required |  | Payment currency. Supported currencies are available on the OTC web quote page.  
+get_coin | string | Required |  | Receive currency. Supported currencies are available on the OTC web quote page.  
+pay_amount | string | Optional |  | User payment currency amount  
+get_amount | string | Optional |  | Amount of currency received by the user  
+create_quote_token | string | Optional |  | Create quote token: 0: quote preview only; 1: generate quote token for order placement.  
+promotion_code | string | Optional |  | Promotion code  
       
     
     {
-      "pay_coin": "USDC",
-      "get_coin": "USDT",
-      "pay_amount": "30000",
-      "get_amount": "20000",
       "side": "PAY",
-      "promotion_code": "",
-      "quote_token": "dsafjkdshfjdsjkfah"
-    }
-    
-    
-
-##  OtcBankListResponse
-
-_OtcBankListResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-code | integer | Required | none | none  
-message | string | Required | none | none  
-data | object | Required | none | none  
-» lists | array | Required | none | Bank card list  
-»» OtcBankListItem | object | Optional | none | none  
-»»» id | string | Required | none | Bank card ID (used when placing an order; the synonymous `bank_id` field has been consolidated into `id`)  
-»»» bank_account_name | string | Required | none | Bank account name  
-»»» bank_name | string | Required | none | Bank name  
-»»» bank_country | string | Optional | none | Bank country  
-»»» bank_address | string | Optional | none | Bank address  
-»»» iban | string | Optional | none | IBAN number  
-»»» swift | string | Optional | none | SWIFT code  
-»»» remittance_line_number | string | Optional | none | Remittance routing number  
-»»» agent_bank_name | string | Optional | none | Correspondent bank name  
-»»» agent_bank_swift | string | Optional | none | Correspondent bank SWIFT code  
-»»» submit_time | string | Optional | none | Submission time  
-»»» update_time | string | Optional | none | Update time  
-»»» status | string | Optional | none | Status  
-»»» is_default | integer | Optional | none | Whether it is the default bank card. 1 - Yes, 0 - No  
-»» timestamp | integer | Required | none | none  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "lists": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  OtcBankCreateResponse
-
-_Bank card created successfully (Inner returns bank_id and status)._
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-code | integer | Required | none | none  
-message | string | Required | none | none  
-data | object | Required | none | none  
-» bank_id | integer | Required | none | Bank card primary key in otc_rds.  
-» status | integer | Required | none | Review status (e.g., pending review).  
-timestamp | integer | Optional | none | none  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "bank_id": 0,
-        "status": 0
-      },
-      "timestamp": 0
+      "pay_coin": "USDT",
+      "get_coin": "USD",
+      "pay_amount": "30000",
+      "get_amount": "30000",
+      "create_quote_token": "0",
+      "promotion_code": ""
     }
     
     
 
 ##  OtcOrderRequest
 
-_Fiat Order Request Body_
+Fiat Order Request Body
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["type","side","crypto_currency","fiat_currency","crypto_amount","fiat_amount","quote_token","bank_id"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-type | string | Required | none | BUY (on-ramp) or SELL (off-ramp)  
-side | string | Required | none | The side returned by the quote endpoint (used for order validation). For backward compatibility, `FIAT`/`CRYPTO` or `PAY`/`GET` are accepted; new integrations should use the value returned by the quote response.  
-crypto_currency | string | Required | none | Cryptocurrency (supported currencies can be queried from the OTC web fiat quote page)  
-fiat_currency | string | Required | none | Fiat currency (supported currencies can be queried from the OTC web fiat quote page)  
-crypto_amount | string | Required | none | Amount of cryptocurrency  
-fiat_amount | string | Required | none | Fiat amount  
-promotion_code | string | Optional | none | Promotion code  
-quote_token | string | Required | none | Parameter returned by the quote API  
-bank_id | string | Required | none | Bank card ID used to place the order. Select one from the list returned by `GET /otc/bank/list`; the default card has `is_default=1`.  
-receive_type | string | Optional | none | Name used for the remittance. Allowed values depend on the user type:  
+type | string | Required |  | BUY (on-ramp) or SELL (off-ramp)  
+side | string | Required |  | The side returned by the quote endpoint (used for order validation). For backward compatibility, `FIAT`/`CRYPTO` or `PAY`/`GET` are accepted; new integrations should use the value returned by the quote response.  
+crypto_currency | string | Required |  | Cryptocurrency (supported currencies can be queried from the OTC web fiat quote page)  
+fiat_currency | string | Required |  | Fiat currency (supported currencies can be queried from the OTC web fiat quote page)  
+crypto_amount | string | Required |  | Amount of cryptocurrency  
+fiat_amount | string | Required |  | Fiat amount  
+promotion_code | string | Optional |  | Promotion code  
+quote_token | string | Required |  | Parameter returned by the quote API  
+bank_id | string | Required |  | Bank card ID used to place the order. Select one from the list returned by `GET /otc/bank/list`; the default card has `is_default=1`.  
+receive_type | string | Optional | enum: ["YOU","GATE","RECIPIENT","PERSON"] | Name used for the remittance. Allowed values depend on the user type:  
 Corporate users: YOU (remit in your company's name), GATE (remit in Gate's name), RECIPIENT (remit in the recipient's name);  
 Individual users: GATE (remit in Gate's name), PERSON (remit in the user's own name).  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-receive_type | YOU  
-receive_type | GATE  
-receive_type | RECIPIENT  
-receive_type | PERSON  
       
     
     {
@@ -2592,63 +2908,49 @@ receive_type | PERSON
     
     
 
-##  OtcUploadPreUploadData
-
-_Pre-upload credentials and S3 direct-upload parameters_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-file_key | string | Required | none | Base64 temporary object path; pass back **unchanged** on business submit—do not decode  
-url | string | Required | none | S3 direct upload URL  
-fields | OtcUploadPreUploadPolicyFields | Required | none | S3 POST Policy signature fields; send unchanged as form-data during direct upload  
-expires_in | integer | Required | none | Policy validity period in seconds; currently 5400 (90 minutes); aligns with `expiration` in `fields.Policy`; call this endpoint again after expiry  
-      
-    
-    {
-      "file_key": "string",
-      "url": "string",
-      "fields": {
-        "key": "string",
-        "Content-Type": "string",
-        "X-Amz-Credential": "string",
-        "X-Amz-Algorithm": "string",
-        "X-Amz-Date": "string",
-        "Policy": "string",
-        "X-Amz-Signature": "string"
-      },
-      "expires_in": 0
-    }
-    
-    
-
 ##  OtcQuoteResponse
 
-_OtcQuoteResponse_
+OtcQuoteResponse
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["code","message","data","timestamp"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-code | integer | Required | none | none  
-message | string | Required | none | none  
-data | object | Required | none | none  
-» type | string | Required | none | BUY (on-ramp) or SELL (off-ramp)  
-» pay_coin | string | Required | none | Payment currency  
-» get_coin | string | Required | none | Currency  
-» pay_amount | string | Required | none | Payment amount  
-» get_amount | string | Required | none | Redemption Amount  
-» rate | string | Required | none | Exchange rate  
-» rate_reci | string | Required | none | Reciprocal of the exchange rate  
-» promotion_code | string | Required | none | Promotion code  
-» side | string | Required | none | Quote method  
-» order_type | string | Required | none | Order type: FIAT (fiat) / STABLE (stablecoin)  
-» quote_token | string | Required | none | Quote token required when placing an order  
-» validity_period | string | Optional | none | Quote validity period (seconds)  
-» refresh_limit | integer | Optional | none | Quote refresh limit  
-» refresh_limit_msg | string | Optional | none | Quote refresh limit message  
-timestamp | integer | Required | none | Server Unix timestamp in seconds  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["type","pay_coin","get_coin","pay_amount","get_amount","rate","rate_reci","promotion_code","side","order_type","quote_token"] |   
+timestamp | integer | Required |  | Server Unix timestamp in seconds  
+  
+**data**
+
+OtcQuoteResult
+
+Type | Constraints  
+---|---  
+object | required: ["type","pay_coin","get_coin","pay_amount","get_amount","rate","rate_reci","promotion_code","side","order_type","quote_token"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+type | string | Required |  | BUY (on-ramp) or SELL (off-ramp)  
+pay_coin | string | Required |  | Payment currency  
+get_coin | string | Required |  | Currency  
+pay_amount | string | Required |  | Payment amount  
+get_amount | string | Required |  | Redemption Amount  
+rate | string | Required |  | Exchange rate  
+rate_reci | string | Required |  | Reciprocal of the exchange rate  
+promotion_code | string | Required |  | Promotion code  
+side | string | Required |  | Quote method  
+order_type | string | Required |  | Order type: FIAT (fiat) / STABLE (stablecoin)  
+quote_token | string | Required |  | Quote token required when placing an order  
+validity_period | string | Optional |  | Quote validity period (seconds)  
+refresh_limit | integer | Optional |  | Quote refresh limit  
+refresh_limit_msg | string | Optional |  | Quote refresh limit message  
       
     
     {
@@ -2675,42 +2977,413 @@ timestamp | integer | Required | none | Server Unix timestamp in seconds
     
     
 
-##  OtcQuoteRequest
+##  OtcBankListResponse
 
-_Fiat and Stablecoin Quote Request Body_
+OtcBankListResponse
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["code","message","data","timestamp"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-side | string | Required | none | PAY: specify the payment amount (`pay_amount` is required); GET: specify the receive amount (`get_amount` is required).  
-pay_coin | string | Required | none | Payment currency. Supported currencies are available on the OTC web quote page.  
-get_coin | string | Required | none | Receive currency. Supported currencies are available on the OTC web quote page.  
-pay_amount | string | Optional | none | User payment currency amount  
-get_amount | string | Optional | none | Amount of currency received by the user  
-create_quote_token | string | Optional | none | Create quote token: 0: quote preview only; 1: generate quote token for order placement.  
-promotion_code | string | Optional | none | Promotion code  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["lists"] |   
+timestamp | integer | Required |  |   
+  
+**data**
+
+OtcBankListResult
+
+Type | Constraints  
+---|---  
+object | required: ["lists"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+lists | array | Required |  | Bank card list  
+  
+**data / lists**
+
+Bank card list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / lists / items**
+
+OtcBankListItem
+
+Type | Constraints  
+---|---  
+object | required: ["id","bank_account_name","bank_name"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | string | Required |  | Bank card ID (used when placing an order; the synonymous `bank_id` field has been consolidated into `id`)  
+bank_account_name | string | Required |  | Bank account name  
+bank_name | string | Required |  | Bank name  
+bank_country | string | Optional |  | Bank country  
+bank_address | string | Optional |  | Bank address  
+iban | string | Optional |  | IBAN number  
+swift | string | Optional |  | SWIFT code  
+remittance_line_number | string | Optional |  | Remittance routing number  
+agent_bank_name | string | Optional |  | Correspondent bank name  
+agent_bank_swift | string | Optional |  | Correspondent bank SWIFT code  
+submit_time | string | Optional |  | Submission time  
+update_time | string | Optional |  | Update time  
+status | string | Optional |  | Status  
+is_default | integer | Optional |  | Whether it is the default bank card. 1 - Yes, 0 - No  
       
     
     {
-      "side": "PAY",
-      "pay_coin": "USDT",
-      "get_coin": "USD",
+      "code": 0,
+      "message": "string",
+      "data": {
+        "lists": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  OtcUploadPreUploadResponse
+
+OtcUploadPreUploadResponse
+
+Type | Constraints  
+---|---  
+object | required: ["code","message","data","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  | 0 success; 10010400 parameter error  
+message | string | Required |  | Response message  
+data | OtcUploadPreUploadData | Required | required: ["file_key","url","fields","expires_in"] | Pre-upload credentials and S3 direct-upload parameters  
+timestamp | integer | Required |  | Response timestamp (in seconds)  
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "file_key": "string",
+        "url": "string",
+        "fields": {
+          "key": "string",
+          "Content-Type": "string",
+          "X-Amz-Credential": "string",
+          "X-Amz-Algorithm": "string",
+          "X-Amz-Date": "string",
+          "Policy": "string",
+          "X-Amz-Signature": "string"
+        },
+        "expires_in": 0
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  OtcMarkOrderPaidRequest
+
+Request body for marking a fiat order as paid (deposit confirmation). Must include the user's payment receipt (consistent with §3.2).  
+**`payment_receipt_file_key` is required**; the order primary key on this path is `order_id`. When accessed via the Pay gateway using `client_order_id`, the gateway's rewritten field takes precedence.
+
+Type | Constraints  
+---|---  
+object | required: ["order_id","payment_receipt_file_key"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Required |  | Order ID  
+client_order_id | string | Optional |  | Client order ID (used by some gateway/Inner Pay paths, optional)  
+payment_receipt_file_key | string | Required |  | User payment receipt: **required**. Recommended: call `POST /otc/upload/pre_upload` (`scene=general`) to upload to the temporary bucket, then pass the returned **base64 file_key unchanged** (do not decode); the server moves to the production bucket and persists. Still compatible with legacy production-bucket base64 keys. Single file; jpg/jpeg/png/pdf; ≤10MB.  
+payment_receipt | string | Optional |  | Alias compatible with `payment_receipt_file_key` (depends on the gateway's external field name)  
+      
+    
+    {
+      "order_id": "203",
+      "client_order_id": "",
+      "payment_receipt_file_key": "b3RjX3RlbXAvMTIzNDU2Nzg5MC9nZW5lcmFsLzIwMjYwODMxMjEwMDEyMzQ1Njc4LnBuZw==",
+      "payment_receipt": ""
+    }
+    
+    
+
+##  OtcStableCoinOrderListResponse
+
+OtcStableCoinOrderListResponse
+
+Type | Constraints  
+---|---  
+object | required: ["code","message","data"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["total","page_size","page_number","total_page","lists"] |   
+  
+**data**
+
+OtcStableCoinOrderListResult
+
+Type | Constraints  
+---|---  
+object | required: ["total","page_size","page_number","total_page","lists"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer | Required |  |   
+page_size | integer | Required |  |   
+page_number | integer | Required |  |   
+total_page | integer | Required |  |   
+lists | array | Required |  |   
+  
+**data / lists**
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / lists / items**
+
+OtcStableCoinOrderListItem
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer | Optional |  | Order ID  
+trade_no | string | Optional |  | Transaction reference number  
+pay_coin | string | Optional |  | Payment currency  
+pay_icon | string | Optional |  | Payment currency icon  
+pay_amount | string | Optional |  | Payment amount  
+get_coin | string | Optional |  | Received currency  
+get_icon | string | Optional |  | Received currency icon  
+get_amount | string | Optional |  | Received amount  
+rate | string | Optional |  | Exchange rate  
+rate_reci | string | Optional |  | Reciprocal of the exchange rate  
+status | string | Optional |  | PROCESSING: in progress / DONE: completed / FAILED: failed  
+create_timest | integer | Optional |  | Created time  
+create_time | string | Optional |  | Created time  
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "total": 0,
+        "page_size": 0,
+        "page_number": 0,
+        "total_page": 0,
+        "lists": [
+          {}
+        ]
+      }
+    }
+    
+    
+
+##  OtcBankCreateResponse
+
+Bank card created successfully (Inner returns bank_id and status).
+
+Type | Constraints  
+---|---  
+object | required: ["code","message","data"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["bank_id","status"] |   
+timestamp | integer | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object | required: ["bank_id","status"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+bank_id | integer | Required |  | Bank card primary key in otc_rds.  
+status | integer | Required |  | Review status (e.g., pending review).  
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "bank_id": 0,
+        "status": 0
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  OtcStableCoinOrderCreateResponse
+
+OtcStableCoinOrderCreateResponse
+
+Type | Constraints  
+---|---  
+object | required: ["code","message","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  | Business code; 0 indicates success  
+message | string | Required |  | Message  
+timestamp | integer | Required |  | Server Unix timestamp in seconds  
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "timestamp": 0
+    }
+    
+    
+
+##  OtcStableCoinOrderRequest
+
+Stablecoin Order Request Body
+
+Type | Constraints  
+---|---  
+object | required: ["pay_coin","get_coin","pay_amount","get_amount","side","quote_token"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+pay_coin | string | Required |  | Currency paid by the user. Supported currencies can be queried from the OTC web stablecoin quote page.  
+get_coin | string | Required |  | Currency to be received by the user. Supported currencies can be queried from the OTC web stablecoin quote page.  
+pay_amount | string | Required |  | User payment currency amount  
+get_amount | string | Required |  | Amount of currency received by the user  
+side | string | Required |  | The side returned by the quote endpoint (used for order validation). For backward compatibility, `PAY`/`GET` are accepted; new integrations should use the value returned by the quote response.  
+promotion_code | string | Optional |  | Promotion code (optional)  
+quote_token | string | Required |  | Parameter returned by the quote API  
+      
+    
+    {
+      "pay_coin": "USDC",
+      "get_coin": "USDT",
       "pay_amount": "30000",
-      "get_amount": "30000",
-      "create_quote_token": "0",
-      "promotion_code": ""
+      "get_amount": "20000",
+      "side": "PAY",
+      "promotion_code": "",
+      "quote_token": "dsafjkdshfjdsjkfah"
+    }
+    
+    
+
+##  OtcBankEnterpriseSupplementMultipartRequest
+
+Enterprise supplement `multipart/form-data`. File field names: `certificate`, `share_holders`, `passport`, `share_holding_structure`; optional `funds_statement`, `additional`. Optional string field `relationship_proof` (JSON) is merged into the request.
+
+Type | Constraints  
+---|---  
+object | required: ["bank_id"]  
+  
+**Properties**
+
+Name | Type | Required in this object | Constraints | Description  
+---|---|---|---|---  
+uid | string | false |  |   
+bank_id | string | true |  |   
+certificate | string | false |  | Business license / registration certificate file content (multipart file field, binary/Base64)  
+share_holders | string | false |  | Register of shareholders file content (multipart file field, binary/Base64)  
+passport | string | false |  | Legal representative / shareholder passport file content (multipart file field, binary/Base64)  
+share_holding_structure | string | false |  | Ownership structure chart file content (multipart file field, binary/Base64)  
+funds_statement | string | false |  | Proof-of-funds file content (multipart file field, binary/Base64, optional)  
+additional | string | false |  | Other supplementary material file content (multipart file field, binary/Base64, optional)  
+relationship_proof | string | false |  | Optional. JSON string of relationship_proof.  
+  
+**anyOf[0]**
+
+Type | Constraints  
+---|---  
+any | required: ["relationship_proof"]  
+  
+**anyOf[1]**
+
+Type | Constraints  
+---|---  
+any | required: ["certificate","share_holders","passport","share_holding_structure"]  
+      
+    
+    {}
+    
+    
+
+##  OtcActionResponse
+
+OtcActionResponse
+
+Type | Constraints  
+---|---  
+object | required: ["code","message","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  |   
+message | string | Required |  |   
+timestamp | integer | Required |  |   
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "timestamp": 0
     }
     
     
 
 ##  OtcBankIdRequest
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["bank_id"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-bank_id | string | Required | none | Bank card ID  
+bank_id | string | Required |  | Bank card ID  
       
     
     {
@@ -2719,50 +3392,113 @@ bank_id | string | Required | none | Bank card ID
     
     
 
-##  OtcBankEnterpriseSupplementMultipartRequest
+##  OtcBankSupplementChecklistResponse
 
-_Enterprise supplement`multipart/form-data`. File field names: `certificate`, `share_holders`, `passport`, `share_holding_structure`; optional `funds_statement`, `additional`. Optional string field `relationship_proof` (JSON) is merged into the request._
+OtcBankSupplementChecklistResponse
 
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-uid | string | Optional | none | none  
-bank_id | string | Required | none | none  
-certificate | string | Optional | none | Business license / registration certificate file content (multipart file field, binary/Base64)  
-share_holders | string | Optional | none | Register of shareholders file content (multipart file field, binary/Base64)  
-passport | string | Optional | none | Legal representative / shareholder passport file content (multipart file field, binary/Base64)  
-share_holding_structure | string | Optional | none | Ownership structure chart file content (multipart file field, binary/Base64)  
-funds_statement | string | Optional | none | Proof-of-funds file content (multipart file field, binary/Base64, optional)  
-additional | string | Optional | none | Other supplementary material file content (multipart file field, binary/Base64, optional)  
-relationship_proof | string | Optional | none | Optional. JSON string of relationship_proof.  
+Type | Constraints  
+---|---  
+object | required: ["code","message","data"]  
   
-_anyOf_
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-_None_ | object | Optional | none | none  
+code | integer | Required |  |   
+message | string | Required |  |   
+data | object | Required | required: ["user_type","items"] |   
+timestamp | integer | Optional |  |   
   
-_or_
+**data**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Type | Constraints  
+---|---  
+object | required: ["user_type","items"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-_None_ | object | Optional | none | none  
+user_type | string | Required | enum: ["personal","enterprise"] | `personal` or `enterprise`, matching the supplementary document submission type; `items[].description` describes the submission requirements for each item  
+items | array | Required |  |   
+  
+**data / items**
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / items / items**
+
+Supplementary document item
+
+Type | Constraints  
+---|---  
+OtcBankSupplementChecklistItem | required: ["description"]  
       
     
-    {}
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "user_type": "personal",
+        "items": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  OtcUploadPreUploadData
+
+Pre-upload credentials and S3 direct-upload parameters
+
+Type | Constraints  
+---|---  
+object | required: ["file_key","url","fields","expires_in"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+file_key | string | Required |  | Base64 temporary object path; pass back **unchanged** on business submit—do not decode  
+url | string | Required |  | S3 direct upload URL  
+fields | OtcUploadPreUploadPolicyFields | Required | required: ["key","Content-Type","X-Amz-Credential","X-Amz-Algorithm","X-Amz-Date","Policy","X-Amz-Signature"] | S3 POST Policy signature fields; send unchanged as form-data during direct upload  
+expires_in | integer | Required |  | Policy validity period in seconds; currently 5400 (90 minutes); aligns with `expiration` in `fields.Policy`; call this endpoint again after expiry  
+      
+    
+    {
+      "file_key": "string",
+      "url": "string",
+      "fields": {
+        "key": "string",
+        "Content-Type": "string",
+        "X-Amz-Credential": "string",
+        "X-Amz-Algorithm": "string",
+        "X-Amz-Date": "string",
+        "Policy": "string",
+        "X-Amz-Signature": "string"
+      },
+      "expires_in": 0
+    }
     
     
 
 ##  OtcBankSupplementChecklistItem
 
-_Supplementary document item_
+Supplementary document item
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["description"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-description | string | Required | none | Supplementary document submission description  
+description | string | Required |  | Supplementary document submission description  
       
     
     {
@@ -2773,19 +3509,23 @@ description | string | Required | none | Supplementary document submission descr
 
 ##  OtcUploadPreUploadPolicyFields
 
-_S3 POST Policy signature fields; send unchanged as form-data during direct upload_
+S3 POST Policy signature fields; send unchanged as form-data during direct upload
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["key","Content-Type","X-Amz-Credential","X-Amz-Algorithm","X-Amz-Date","Policy","X-Amz-Signature"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-key | string | Required | none | Plaintext temporary object path, identical to base64_decode(file_key)  
-Content-Type | string | Required | none | Must match the decoded content_type from the pre-upload request  
-X-Amz-Credential | string | Required | none | AWS temporary credential and scope; submit them unchanged during direct upload  
-X-Amz-Algorithm | string | Required | none | AWS signing algorithm; submit it unchanged during direct upload  
-X-Amz-Date | string | Required | none | AWS signing timestamp; submit it unchanged during direct upload  
-Policy | string | Required | none | Base64-encoded S3 POST Policy; submit it unchanged during direct upload  
-X-Amz-Signature | string | Required | none | S3 POST Policy signature; submit it unchanged during direct upload  
+key | string | Required |  | Plaintext temporary object path, identical to base64_decode(file_key)  
+Content-Type | string | Required |  | Must match the decoded content_type from the pre-upload request  
+X-Amz-Credential | string | Required |  | AWS temporary credential and scope; submit them unchanged during direct upload  
+X-Amz-Algorithm | string | Required |  | AWS signing algorithm; submit it unchanged during direct upload  
+X-Amz-Date | string | Required |  | AWS signing timestamp; submit it unchanged during direct upload  
+Policy | string | Required |  | Base64-encoded S3 POST Policy; submit it unchanged during direct upload  
+X-Amz-Signature | string | Required |  | S3 POST Policy signature; submit it unchanged during direct upload  
       
     
     {

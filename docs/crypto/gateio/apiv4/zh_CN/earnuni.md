@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/earnuni
 api_type: Earn
-updated_at: 2026-11-18 18:56:23.506366
+updated_at: 2026-11-19 19:01:29.591742
 ---
 
 # EarnUni
@@ -27,15 +27,27 @@ _查询理财币种列表_
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array | [借贷币种]  
-» _None_ | UniCurrency | 借贷币种  
-»» currency | string | 币种名称  
-»» min_lend_amount | string | 最小借出数量,单位该币种  
-»» max_lend_amount | string | 累计最大借出数量，单位USDT  
-»» max_rate | string | 最大利率（小时）  
-»» min_rate | string | 最小利率（小时）  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+借贷币种
+
+类型 | 约束  
+---|---  
+UniCurrency |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | 币种名称  
+min_lend_amount | string | Optional | readOnly: true | 最小借出数量,单位该币种  
+max_lend_amount | string | Optional | readOnly: true | 累计最大借出数量，单位USDT  
+max_rate | string | Optional | readOnly: true | 最大利率（小时）  
+min_rate | string | Optional | readOnly: true | 最小利率（小时）  
   
 该请求不需要认证 
 
@@ -102,15 +114,21 @@ currency | URL | string | 是 | 币种
 
 状态码 **200**
 
-_借贷币种_
+借贷币种
 
-名称 | 类型 | 描述  
----|---|---  
-» currency | string | 币种名称  
-» min_lend_amount | string | 最小借出数量,单位该币种  
-» max_lend_amount | string | 累计最大借出数量，单位USDT  
-» max_rate | string | 最大利率（小时）  
-» min_rate | string | 最小利率（小时）  
+类型 | 约束  
+---|---  
+UniCurrency |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | 币种名称  
+min_lend_amount | string | Optional | readOnly: true | 最小借出数量,单位该币种  
+max_lend_amount | string | Optional | readOnly: true | 累计最大借出数量，单位USDT  
+max_rate | string | Optional | readOnly: true | 最大利率（小时）  
+min_rate | string | Optional | readOnly: true | 最小利率（小时）  
   
 该请求不需要认证 
 
@@ -177,20 +195,32 @@ limit | 请求参数 | integer(int32) | 否 | 列表返回的最大数量。默�
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array | [理财信息]  
-» _None_ | UniLend | 理财信息  
-»» currency | string | 币种  
-»» current_amount | string | 本次理财数量  
-»» amount | string | 理财总数量  
-»» lent_amount | string | 已借出数量  
-»» frozen_amount | string | 已申请赎回未到账数量  
-»» min_rate | string | 最小利率  
-»» interest_status | string | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
-»» reinvest_left_amount | string | 未复投金额  
-»» create_time | integer(int64) | 理财创建时间  
-»» update_time | integer(int64) | 理财最新修改时间  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+理财信息
+
+类型 | 约束  
+---|---  
+UniLend |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | 币种  
+current_amount | string | Optional | readOnly: true | 本次理财数量  
+amount | string | Optional | readOnly: true | 理财总数量  
+lent_amount | string | Optional | readOnly: true | 已借出数量  
+frozen_amount | string | Optional | readOnly: true | 已申请赎回未到账数量  
+min_rate | string | Optional | readOnly: true | 最小利率  
+interest_status | string | Optional | readOnly: true | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
+reinvest_left_amount | string | Optional | readOnly: true | 未复投金额  
+create_time | integer(int64) | Optional | readOnly: true | 理财创建时间  
+update_time | integer(int64) | Optional | readOnly: true | 理财最新修改时间  
   
 WARNING
 
@@ -275,17 +305,34 @@ _创建理财或赎回_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | CreateUniLend | 是 |   
-» currency | body | string | 是 | 币种名称  
-» amount | body | string | 是 | 投入理财池数量  
-» type | body | string | 是 | 操作类型 ; lend - 借出 ， redeem - 赎回  
-» min_rate | body | string | 否 | 最小利率，如设置过高可能导致借出失败则该无法获得利息，借出时必填  
+currency | body | string | 是 | 币种名称  
+amount | body | string | 是 | 投入理财池数量  
+type | body | string | 是 | 操作类型 ; lend - 借出 ， redeem - 赎回  
+min_rate | body | string | 否 | 最小利率，如设置过高可能导致借出失败则该无法获得利息，借出时必填  
   
 ####  枚举值列表
 
 枚举值列表参数 | 值  
 ---|---  
-» type | lend  
-» type | redeem  
+type | lend  
+type | redeem  
+  
+####  请求体结构
+
+创建理财或赎回
+
+请求体结构类型 | 约束  
+---|---  
+CreateUniLend | required: ["currency","amount","type"]  
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Required |  | 币种名称  
+amount | string | Required |  | 投入理财池数量  
+type | string | Required | enum: ["lend","redeem"] | 操作类型 ; lend - 借出 ， redeem - 赎回  
+min_rate | string | Optional |  | 最小利率，如设置过高可能导致借出失败则该无法获得利息，借出时必填  
   
 ### 返回
 
@@ -367,8 +414,23 @@ _修改用户理财信息_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | PatchUniLend | 是 |   
-» currency | body | string | 否 | 币种名称  
-» min_rate | body | string | 否 | 最低小时利率。  
+currency | body | string | 否 | 币种名称  
+min_rate | body | string | 否 | 最低小时利率。  
+  
+####  请求体结构
+
+PatchUniLend
+
+请求体结构类型 | 约束  
+---|---  
+PatchUniLend |   
+  
+**属性**
+
+请求体结构名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional |  | 币种名称  
+min_rate | string | Optional |  | 最低小时利率。  
   
 ### 返回
 
@@ -483,17 +545,29 @@ type | redeem
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array | [理财记录]  
-» _None_ | UniLendRecord | 理财记录  
-»» currency | string | 币种名称  
-»» amount | string | 本次借出或赎回数量  
-»» last_wallet_amount | string | 该记录之前待理财数量  
-»» last_lent_amount | string | 该记录之前已借出数量  
-»» last_frozen_amount | string | 该记录之前已冻结待待赎回数量  
-»» type | string | 记录类型 lend - 借出 , redeem - 赎回  
-»» create_time | integer(int64) | 创建时间戳  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+理财记录
+
+类型 | 约束  
+---|---  
+UniLendRecord |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | 币种名称  
+amount | string | Optional | readOnly: true | 本次借出或赎回数量  
+last_wallet_amount | string | Optional | readOnly: true | 该记录之前待理财数量  
+last_lent_amount | string | Optional | readOnly: true | 该记录之前已借出数量  
+last_frozen_amount | string | Optional | readOnly: true | 该记录之前已冻结待待赎回数量  
+type | string | Optional | readOnly: true | 记录类型 lend - 借出 , redeem - 赎回  
+create_time | integer(int64) | Optional | readOnly: true | 创建时间戳  
   
 WARNING
 
@@ -584,12 +658,18 @@ currency | URL | string | 是 | 币种
 
 状态码 **200**
 
-_UniLendInterest_
+UniLendInterest
 
-名称 | 类型 | 描述  
----|---|---  
-» currency | string | 币种  
-» interest | string | 利息收益  
+类型 | 约束  
+---|---  
+UniLendInterest |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | 币种  
+interest | string | Optional | readOnly: true | 利息收益  
   
 WARNING
 
@@ -691,16 +771,28 @@ to | 请求参数 | integer(int64) | 否 | 终止时间戳
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-_None_ | array | [派息记录]  
-» _None_ | UniInterestRecord | 派息记录  
-»» status | integer | 状态 0 - 失败 , 1 - 成功  
-»» currency | string | 币种  
-»» actual_rate | string | 真实利率  
-»» interest | string | 利息  
-»» interest_status | string | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
-»» create_time | integer(int64) | 创建时间戳  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+派息记录
+
+类型 | 约束  
+---|---  
+UniInterestRecord |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+status | integer | Optional | readOnly: true | 状态 0 - 失败 , 1 - 成功  
+currency | string | Optional | readOnly: true | 币种  
+actual_rate | string | Optional | readOnly: true | 真实利率  
+interest | string | Optional | readOnly: true | 利息  
+interest_status | string | Optional | readOnly: true | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
+create_time | integer(int64) | Optional | readOnly: true | 创建时间戳  
   
 WARNING
 
@@ -790,12 +882,18 @@ currency | URL | string | 是 | 币种
 
 状态码 **200**
 
-_UniCurrencyInterest_
+UniCurrencyInterest
 
-名称 | 类型 | 描述  
----|---|---  
-» currency | string | 币种  
-» interest_status | string | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
+类型 | 约束  
+---|---  
+UniCurrencyInterest |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | 币种  
+interest_status | string | Optional | readOnly: true | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
   
 WARNING
 
@@ -881,11 +979,40 @@ asset | 请求参数 | string | 是 | 币种名称
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» UniChartPoint | object |   
-»» time | integer(int64) |   
-»» value | string |   
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+UniChartPoint
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+time | integer(int64) | Optional |  |   
+value | string | Optional |  |   
+  
+**items / time**
+
+时间戳
+
+类型 | 约束  
+---|---  
+integer(int64) |   
+  
+**items / value**
+
+百分比年化利率
+
+类型 | 约束  
+---|---  
+string |   
   
 WARNING
 
@@ -965,11 +1092,42 @@ _币种预估年化利率_
 
 状态码 **200**
 
-名称 | 类型 | 描述  
----|---|---  
-» UniEstimatedRate | object |   
-»» currency | string |   
-»» est_rate | string | 预估年化利率，例如，`est_rate`: `0.8014` 为 80.14% 的年化利率  
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+UniEstimatedRate
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional |  |   
+est_rate | string | Optional |  | 预估年化利率，例如，`est_rate`: `0.8014` 为 80.14% 的年化利率  
+  
+**items / currency**
+
+币种名称
+
+类型 | 约束  
+---|---  
+string |   
+  
+**items / est_rate**
+
+预估年化利率
+
+预估年化利率，例如，`est_rate`: `0.8014` 为 80.14% 的年化利率
+
+类型 | 约束  
+---|---  
+string |   
   
 WARNING
 
@@ -1035,19 +1193,23 @@ WARNING
 
 ##  UniLendRecord
 
-_理财记录_
+理财记录
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-currency | string | false | 只读 | 币种名称  
-amount | string | false | 只读 | 本次借出或赎回数量  
-last_wallet_amount | string | false | 只读 | 该记录之前待理财数量  
-last_lent_amount | string | false | 只读 | 该记录之前已借出数量  
-last_frozen_amount | string | false | 只读 | 该记录之前已冻结待待赎回数量  
-type | string | false | 只读 | 记录类型 lend - 借出 , redeem - 赎回  
-create_time | integer(int64) | false | 只读 | 创建时间戳  
+currency | string | Optional | readOnly: true | 币种名称  
+amount | string | Optional | readOnly: true | 本次借出或赎回数量  
+last_wallet_amount | string | Optional | readOnly: true | 该记录之前待理财数量  
+last_lent_amount | string | Optional | readOnly: true | 该记录之前已借出数量  
+last_frozen_amount | string | Optional | readOnly: true | 该记录之前已冻结待待赎回数量  
+type | string | Optional | readOnly: true | 记录类型 lend - 借出 , redeem - 赎回  
+create_time | integer(int64) | Optional | readOnly: true | 创建时间戳  
       
     
     {
@@ -1062,114 +1224,51 @@ create_time | integer(int64) | false | 只读 | 创建时间戳
     
     
 
-##  UniInterestRecord
+##  UniLendInterest
 
-_派息记录_
+UniLendInterest
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-status | integer | false | 只读 | 状态 0 - 失败 , 1 - 成功  
-currency | string | false | 只读 | 币种  
-actual_rate | string | false | 只读 | 真实利率  
-interest | string | false | 只读 | 利息  
-interest_status | string | false | 只读 | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
-create_time | integer(int64) | false | 只读 | 创建时间戳  
-      
-    
-    {
-      "status": 0,
-      "currency": "string",
-      "actual_rate": "string",
-      "interest": "string",
-      "interest_status": "string",
-      "create_time": 0
-    }
-    
-    
-
-##  UniCurrencyInterest
-
-_UniCurrencyInterest_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | false | 只读 | 币种  
-interest_status | string | false | 只读 | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
+currency | string | Optional | readOnly: true | 币种  
+interest | string | Optional | readOnly: true | 利息收益  
       
     
     {
       "currency": "string",
-      "interest_status": "string"
-    }
-    
-    
-
-##  PatchUniLend
-
-_PatchUniLend_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | false | none | 币种名称  
-min_rate | string | false | none | 最低小时利率。  
-      
-    
-    {
-      "currency": "string",
-      "min_rate": "string"
-    }
-    
-    
-
-##  UniCurrency
-
-_借贷币种_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | false | 只读 | 币种名称  
-min_lend_amount | string | false | 只读 | 最小借出数量,单位该币种  
-max_lend_amount | string | false | 只读 | 累计最大借出数量，单位USDT  
-max_rate | string | false | 只读 | 最大利率（小时）  
-min_rate | string | false | 只读 | 最小利率（小时）  
-      
-    
-    {
-      "currency": "string",
-      "min_lend_amount": "string",
-      "max_lend_amount": "string",
-      "max_rate": "string",
-      "min_rate": "string"
+      "interest": "string"
     }
     
     
 
 ##  UniLend
 
-_理财信息_
+理财信息
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-currency | string | false | 只读 | 币种  
-current_amount | string | false | 只读 | 本次理财数量  
-amount | string | false | 只读 | 理财总数量  
-lent_amount | string | false | 只读 | 已借出数量  
-frozen_amount | string | false | 只读 | 已申请赎回未到账数量  
-min_rate | string | false | 只读 | 最小利率  
-interest_status | string | false | 只读 | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
-reinvest_left_amount | string | false | 只读 | 未复投金额  
-create_time | integer(int64) | false | 只读 | 理财创建时间  
-update_time | integer(int64) | false | 只读 | 理财最新修改时间  
+currency | string | Optional | readOnly: true | 币种  
+current_amount | string | Optional | readOnly: true | 本次理财数量  
+amount | string | Optional | readOnly: true | 理财总数量  
+lent_amount | string | Optional | readOnly: true | 已借出数量  
+frozen_amount | string | Optional | readOnly: true | 已申请赎回未到账数量  
+min_rate | string | Optional | readOnly: true | 最小利率  
+interest_status | string | Optional | readOnly: true | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
+reinvest_left_amount | string | Optional | readOnly: true | 未复投金额  
+create_time | integer(int64) | Optional | readOnly: true | 理财创建时间  
+update_time | integer(int64) | Optional | readOnly: true | 理财最新修改时间  
       
     
     {
@@ -1187,44 +1286,105 @@ update_time | integer(int64) | false | 只读 | 理财最新修改时间
     
     
 
-##  UniLendInterest
+##  PatchUniLend
 
-_UniLendInterest_
+PatchUniLend
 
-###  属性
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
 
-属性名称 | 类型 | 必选 | 限制 | 描述  
+名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-currency | string | false | 只读 | 币种  
-interest | string | false | 只读 | 利息收益  
+currency | string | Optional |  | 币种名称  
+min_rate | string | Optional |  | 最低小时利率。  
       
     
     {
       "currency": "string",
-      "interest": "string"
+      "min_rate": "string"
+    }
+    
+    
+
+##  UniInterestRecord
+
+派息记录
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+status | integer | Optional | readOnly: true | 状态 0 - 失败 , 1 - 成功  
+currency | string | Optional | readOnly: true | 币种  
+actual_rate | string | Optional | readOnly: true | 真实利率  
+interest | string | Optional | readOnly: true | 利息  
+interest_status | string | Optional | readOnly: true | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
+create_time | integer(int64) | Optional | readOnly: true | 创建时间戳  
+      
+    
+    {
+      "status": 0,
+      "currency": "string",
+      "actual_rate": "string",
+      "interest": "string",
+      "interest_status": "string",
+      "create_time": 0
+    }
+    
+    
+
+##  UniCurrency
+
+借贷币种
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | 币种名称  
+min_lend_amount | string | Optional | readOnly: true | 最小借出数量,单位该币种  
+max_lend_amount | string | Optional | readOnly: true | 累计最大借出数量，单位USDT  
+max_rate | string | Optional | readOnly: true | 最大利率（小时）  
+min_rate | string | Optional | readOnly: true | 最小利率（小时）  
+      
+    
+    {
+      "currency": "string",
+      "min_lend_amount": "string",
+      "max_lend_amount": "string",
+      "max_rate": "string",
+      "min_rate": "string"
     }
     
     
 
 ##  CreateUniLend
 
-_创建理财或赎回_
+创建理财或赎回
 
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | true | none | 币种名称  
-amount | string | true | none | 投入理财池数量  
-type | string | true | none | 操作类型 ; lend - 借出 ， redeem - 赎回  
-min_rate | string | false | none | 最小利率，如设置过高可能导致借出失败则该无法获得利息，借出时必填  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
+类型 | 约束  
 ---|---  
-type | lend  
-type | redeem  
+object | required: ["currency","amount","type"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Required |  | 币种名称  
+amount | string | Required |  | 投入理财池数量  
+type | string | Required | enum: ["lend","redeem"] | 操作类型 ; lend - 借出 ， redeem - 赎回  
+min_rate | string | Optional |  | 最小利率，如设置过高可能导致借出失败则该无法获得利息，借出时必填  
       
     
     {
@@ -1232,4 +1392,27 @@ type | redeem
       "amount": "string",
       "type": "lend",
       "min_rate": "string"
+    }
+    
+    
+
+##  UniCurrencyInterest
+
+UniCurrencyInterest
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | 币种  
+interest_status | string | Optional | readOnly: true | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
+      
+    
+    {
+      "currency": "string",
+      "interest_status": "string"
     }

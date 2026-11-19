@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/order-management/cancel-order'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Cancel order

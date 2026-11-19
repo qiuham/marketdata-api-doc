@@ -2,14 +2,16 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-get_account_summaries
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:12.982348
+updated_at: 2026-11-19 19:05:50.547239
 ---
 
 # private/get_account_summaries
 
-> Retrieves a per-currency list of account summaries for the authenticated user. Each summary includes balance, equity, available funds, and margin information for each currency.
+> Retrieves account summaries for the authenticated user in a single call. The result is an object: account-level fields (such as `id`, `username`, `email`, `type`, present when `extended` is `true`) are on the object itself, and the `summaries` array holds one summary per currency with balance, equity, available funds, and margin information.
 
-To retrieve summaries for a specific subaccount, use the `subaccount_id` parameter. When the `extended` parameter is set to `true`, additional account details such as account ID, username, email, and account type are included. Prefer this method over looping `private/get_account_summary` per currency.
+To retrieve summaries for a specific subaccount, use the `subaccount_id` parameter (a main account token is required to select another account, which must belong to the same main account; otherwise `-32602`, `Not allowed`). Use `currencies` to limit the result to selected currencies. The account's fee tier is returned in `fee_group` (with its rates in `fees`) only when `extended` is `true` and the account is on a non-default tier; when both are absent, standard fees apply. Prefer this method over looping `private/get_account_summary` per currency.
+
+**Examples:** responses are illustrative, not live account data. The extended default example abbreviates account metadata and fee configuration; it is not an exhaustive list of returned fields.
 
 **📖 Related Article:** [Using the currency Parameter](https://docs.deribit.com/articles/currency-parameter)
 
@@ -70,16 +72,26 @@ paths:
         - Account Management
         - Private
       description: >+
-        Retrieves a per-currency list of account summaries for the authenticated
-        user. Each summary includes balance, equity, available funds, and margin
-        information for each currency.
+        Retrieves account summaries for the authenticated user in a single call.
+        The result is an object: account-level fields (such as `id`, `username`,
+        `email`, `type`, present when `extended` is `true`) are on the object
+        itself, and the `summaries` array holds one summary per currency with
+        balance, equity, available funds, and margin information.
 
 
         To retrieve summaries for a specific subaccount, use the `subaccount_id`
-        parameter. When the `extended` parameter is set to `true`, additional
-        account details such as account ID, username, email, and account type
-        are included. Prefer this method over looping
-        `private/get_account_summary` per currency.
+        parameter (a main account token is required to select another account,
+        which must belong to the same main account; otherwise `-32602`, `Not
+        allowed`). Use `currencies` to limit the result to selected currencies.
+        The account's fee tier is returned in `fee_group` (with its rates in
+        `fees`) only when `extended` is `true` and the account is on a
+        non-default tier; when both are absent, standard fees apply. Prefer this
+        method over looping `private/get_account_summary` per currency.
+
+
+        **Examples:** responses are illustrative, not live account data. The
+        extended default example abbreviates account metadata and fee
+        configuration; it is not an exhaustive list of returned fields.
 
 
         **📖 Related Article:** [Using the currency
@@ -98,14 +110,37 @@ paths:
           schema:
             type: integer
           required: false
-          description: The user id for the subaccount
+          description: >-
+            The user id of the subaccount to summarize. Defaults to the
+            authenticated account; another account requires a main account token
+            (`mainaccount` scope) and must belong to the same main account
         - in: query
           name: extended
           required: false
           schema:
+            default: false
             example: true
             type: boolean
-          description: Include additional fields
+          description: >-
+            Include additional account-level fields (`id`, `username`,
+            `system_name`, `email`, `type`, `security_keys_enabled`, ...) and,
+            for accounts on a non-default fee tier, `fee_group` and `fees`.
+            `false` by default
+        - name: currencies
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              example: BTC
+          description: >-
+            Optional list of currencies to return summaries for, e.g. `["BTC",
+            "ETH"]`. By default the summaries of all currencies held by the
+            account's wallet type are returned. A currency that is invalid or
+            not available for the account results in `-32602` (`Invalid params`)
+          style: form
+          explode: true
       requestBody:
         content:
           application/json:
@@ -118,6 +153,15 @@ paths:
                   method: private/get_account_summaries
                   params:
                     extended: true
+              currenciesRequest:
+                summary: Currencies Request
+                value:
+                  jsonrpc: '2.0'
+                  id: 2518
+                  method: private/get_account_summaries
+                  params:
+                    currencies:
+                      - BTC
         description: JSON-RPC request body
       responses:
         '200':
@@ -140,12 +184,12 @@ paths:
                       creation_timestamp: 1687352432143
                       type: main
                       referrer_id: null
-                      login_enabled: false
                       security_keys_enabled: false
                       mmp_enabled: false
                       interuser_transfers_enabled: false
                       self_trading_reject_mode: cancel_maker
                       self_trading_extended_to_subaccounts: false
+                      is_direct_access_allowed: false
                       self_trading_extended_across_members: false
                       summaries:
                         - currency: BTC
@@ -188,6 +232,8 @@ paths:
                               cancel_all:
                                 burst: 250
                                 rate: 200
+                          options_theta_map:
+                            btc_usd: 15.97071
                           projected_maintenance_margin: 0.7543841
                           available_funds: 301.38059622
                           options_delta: -1.01962
@@ -207,6 +253,8 @@ paths:
                           options_pl: -0.0065
                           initial_margin: 1.24669592
                           spot_reserve: 0
+                          locked_balance: 0
+                          additional_reserve: 0
                           delta_total: 31.602958
                           options_gamma: 0.00001
                           session_rpl: -0.03258105
@@ -278,6 +326,7 @@ paths:
                           equity: 100
                           projected_initial_margin: 0.0002
                           spot_reserve: 0.0002
+                          locked_balance: 0
                           cross_collateral_enabled: false
                           available_withdrawal_funds: 99.999597
                           delta_total: 0
@@ -312,6 +361,80 @@ paths:
                                   taker: 0.00025
                                   maker: -0.00005
                                 block_trade: 0.2
+                currenciesResponse:
+                  summary: Currencies response example
+                  value:
+                    jsonrpc: '2.0'
+                    id: 2518
+                    result:
+                      is_direct_access_allowed: false
+                      summaries:
+                        - currency: BTC
+                          delta_total_map:
+                            btc_usd: 31.594357699
+                          margin_balance: 302.62729214
+                          futures_session_rpl: -0.03258105
+                          options_session_rpl: 0
+                          session_upl: 0.05271555
+                          options_gamma_map:
+                            btc_usd: 0.00001
+                          options_theta_map:
+                            btc_usd: 15.97071
+                          options_vega: 0.0858
+                          options_value: -0.0086
+                          available_withdrawal_funds: 301.35396172
+                          projected_delta_total: 32.613978
+                          maintenance_margin: 0.8857841
+                          total_pl: -0.33084225
+                          limits:
+                            limits_per_currency: false
+                            non_matching_engine:
+                              burst: 1500
+                              rate: 1000
+                            matching_engine:
+                              trading:
+                                total:
+                                  burst: 250
+                                  rate: 200
+                              spot:
+                                burst: 250
+                                rate: 200
+                              quotes:
+                                burst: 500
+                                rate: 500
+                              max_quotes:
+                                burst: 10
+                                rate: 10
+                              guaranteed_quotes:
+                                burst: 2
+                                rate: 2
+                              cancel_all:
+                                burst: 250
+                                rate: 200
+                          projected_maintenance_margin: 0.7543841
+                          available_funds: 301.38059622
+                          options_delta: -1.01962
+                          balance: 302.60065765
+                          equity: 302.61869214
+                          futures_session_upl: 0.05921555
+                          fee_balance: 0
+                          options_session_upl: -0.0065
+                          projected_initial_margin: 1.01529592
+                          options_theta: 15.97071
+                          portfolio_margining_enabled: false
+                          cross_collateral_enabled: false
+                          margin_model: segregated_sm
+                          options_vega_map:
+                            btc_usd: 0.0858
+                          futures_pl: -0.32434225
+                          options_pl: -0.0065
+                          initial_margin: 1.24669592
+                          spot_reserve: 0
+                          locked_balance: 0
+                          additional_reserve: 0
+                          delta_total: 31.602958
+                          options_gamma: 0.00001
+                          session_rpl: -0.03258105
           description: Success response
       x-codeSamples:
         - lang: bash
@@ -327,6 +450,23 @@ paths:
               "method": "private/get_account_summaries",
               "params": {
                 "extended": true
+              }
+            }'
+        - lang: bash
+          label: cURL (Currencies)
+          source: |-
+            curl --request POST \
+              --url https://test.deribit.com/api/v2/private/get_account_summaries \
+              --header 'Authorization: Bearer <ACCESS_TOKEN>' \
+              --header 'Content-Type: application/json' \
+              --data '{
+              "jsonrpc": "2.0",
+              "id": 2518,
+              "method": "private/get_account_summaries",
+              "params": {
+                "currencies": [
+                  "BTC"
+                ]
               }
             }'
 components:
@@ -396,12 +536,13 @@ components:
                 (available when parameter `extended` = `true`)
             referrer_id:
               type: string
+              nullable: true
               example: '517.6035'
               description: >-
-                Optional identifier of the referrer (of the affiliation program,
-                and available when parameter `extended` = `true`), which link
-                was used by this account at registration. It coincides with
-                suffix of the affiliation link path after `/reg-`
+                Identifier of the affiliate whose referral link was used to
+                register this account, or `null` when the account was not
+                referred. It equals the suffix of the referral link after
+                `?reg=` (available when parameter `extended` = `true`).
             creation_timestamp:
               type: integer
               example: 1542100802842
@@ -410,15 +551,22 @@ components:
                 Unix epoch; available when parameter `extended` = `true`)
             self_trading_reject_mode:
               type: string
+              enum:
+                - reject_taker
+                - cancel_maker
               description: >-
-                Self trading rejection behavior - `reject_taker` or
-                `cancel_maker` (available when parameter `extended` = `true`)
+                Self-trade prevention behavior: `reject_taker` rejects the
+                incoming (taker) order, `cancel_maker` cancels the resting
+                (maker) order. Returned only when self-trade prevention is
+                configured for the account (available when parameter `extended`
+                = `true`).
             self_trading_extended_to_subaccounts:
               type: boolean
               description: >-
-                `true` if self trading rejection behavior is applied to trades
-                between subaccounts (available when parameter `extended` =
-                `true`)
+                `true` if self-trade prevention also applies to trades between
+                the main account and its subaccounts. Returned only when
+                self-trade prevention is configured (available when parameter
+                `extended` = `true`).
             self_trading_extended_across_members:
               type: boolean
               example: false
@@ -436,17 +584,73 @@ components:
                 parameter `extended` = `true`).
             affiliate_promotion_fee:
               type: number
-              example: 0
-              description: Affiliate promotion fee (if greater than 0.0)
-            trading_products_details:
-              type: object
+              example: 0.1
               description: >-
-                Which trading products are enabled or can be overwritten for the
-                account
+                Active affiliate fee promotion, as a fraction by which trading
+                fees are reduced (fee = standard fee × (1 -
+                `affiliate_promotion_fee`)). Returned only while a promotion is
+                active (available when parameter `extended` = `true`).
+            trading_products_details:
+              type: array
+              items:
+                type: object
+                properties:
+                  product:
+                    type: string
+                    description: Trading product name
+                  enabled:
+                    type: boolean
+                    description: Whether the product is enabled for the account
+                  overwriteable:
+                    type: boolean
+                    description: >-
+                      Whether the setting can be overwritten at the account
+                      level (subaccounts only)
+                  requires_consent:
+                    type: boolean
+                    description: >-
+                      Whether enabling the product requires consent (subaccounts
+                      only)
+                required:
+                  - product
+                  - enabled
+                  - overwriteable
+                  - requires_consent
+              description: >-
+                Per trading product, whether it is enabled and can be
+                overwritten for the account (available when parameter `extended`
+                = `true`)
             receive_notifications:
               type: boolean
               example: false
-              description: Whether the account receives notifications
+              description: >-
+                Email-forwarding flag reported for the account (available when
+                `extended` = `true`). It does not reflect changes made with
+                `private/toggle_notifications_from_subaccount`; see the known
+                limitation there
+            mandatory_tfa:
+              type: boolean
+              example: true
+              description: >-
+                `true` when mandatory two-factor authentication is enforced for
+                the account, so the required security key assignments must be
+                set up (for example, to generate a deposit address); `false`
+                when it is not enforced or the account is exempted. Taken from
+                the main account (available when `extended` = `true`)
+            user_origin:
+              type: string
+              enum:
+                - deribit
+                - coinbase
+              example: deribit
+              description: >-
+                How the account was created: `deribit` for accounts registered
+                on Deribit, `coinbase` for accounts provisioned through Coinbase
+                (available when parameter `extended` = `true`).
+            is_direct_access_allowed:
+              type: boolean
+              example: false
+              description: Whether Direct Access trading is enabled for the account.
             summaries:
               type: array
               items:
@@ -485,6 +689,15 @@ components:
                       also exclude positive session profit, locked balance,
                       `spot_reserve`, `additional_reserve`, and non-withdrawable
                       external/implied equity components. Always ≥ `0`.
+                  available_subaccount_transfer_funds:
+                    type: number
+                    example: 2.5
+                    description: >-
+                      Funds available for transfer to other subaccounts of the
+                      same main account. Returned only when it differs from
+                      `available_withdrawal_funds`, which happens when
+                      additional restrictions apply to external withdrawals
+                      only. Always ≥ `0`.
                   margin_balance:
                     type: number
                     example: 2.25
@@ -510,7 +723,10 @@ components:
                   spot_reserve:
                     example: 0.3
                     type: number
-                    description: The account's balance reserved in active spot orders
+                    description: >-
+                      Part of the balance reserved by open spot orders (the
+                      amount the orders would spend if filled). Excluded from
+                      `available_withdrawal_funds`.
                   locked_balance:
                     $ref: '#/components/schemas/locked_balance'
                   additional_reserve:
@@ -519,13 +735,35 @@ components:
                     $ref: '#/components/schemas/fee_balance'
                   fee_group:
                     type: string
-                    description: >-
-                      Fee group indicates the level of fee discounts applied to
-                      an account. Use `extended`: `true` to view this field. If
-                      the field is missing, the account is not assigned to any
-                      fee group. **📖 Related Support Article:** [Automatically
-                      applied volume based fee
-                      discounts](https://support.deribit.com/hc/en-us/articles/25944746248989-Fees#heading-11)
+                    example: Custom
+                    description: >
+                      Name of the fee tier assigned to the account. This is how
+                      to check which fee tier applies to an account through the
+                      API.
+
+
+                      - A preset tier (for example one of the automatically
+                      applied volume-based tiers) is returned by its name.
+
+                      - `Custom` means the account has individually configured
+                      fee rates that do not come from a preset tier.
+
+
+                      **Requirements:** returned only when `extended` = `true`.
+
+
+                      **When absent:** the account is on the default (standard)
+                      fee tier. The field is omitted together with `fees`; there
+                      is no explicit "Standard" value.
+
+
+                      Subaccounts report the tier of their main account (or of
+                      the SMA manager for accounts linked to one). The rates of
+                      the tier are returned in `fees`.
+
+
+                      **Related articles:**
+                      [Fees](https://support.deribit.com/hc/en-us/articles/25944746248989-Fees#heading-11)
                   currency:
                     example: ETH
                     type: string
@@ -539,7 +777,10 @@ components:
                   deposit_address:
                     example: 14diAAyXL5UzhPTCKC998ch2GV7DMb7yDi
                     type: string
-                    description: The deposit address for the account (if available)
+                    description: >-
+                      The account's deposit address for the selected currency.
+                      Omitted when no deposit address has been generated for the
+                      account yet.
                   equity:
                     example: 2.6437733
                     type: number
@@ -642,17 +883,26 @@ components:
                     type: object
                     additionalProperties:
                       type: number
-                    description: Map of options' gammas per index
+                    description: >-
+                      Sum of option position gammas per index. Keys are index
+                      names (for example `btc_usd`); only indexes with open
+                      options positions are included.
                   options_theta_map:
                     type: object
                     additionalProperties:
                       type: number
-                    description: Map of options' thetas per index
+                    description: >-
+                      Sum of option position thetas per index. Keys are index
+                      names (for example `btc_usd`); only indexes with open
+                      options positions are included.
                   options_vega_map:
                     type: object
                     additionalProperties:
                       type: number
-                    description: Map of options' vegas per index
+                    description: >-
+                      Sum of option position vegas per index. Keys are index
+                      names (for example `btc_usd`); only indexes with open
+                      options positions are included.
                   projected_initial_margin:
                     $ref: '#/components/schemas/projected_initial_margin'
                   projected_maintenance_margin:
@@ -664,15 +914,32 @@ components:
                   portfolio_margining_enabled:
                     type: boolean
                     example: true
-                    description: '`true` when portfolio margining is enabled for user'
+                    description: >-
+                      `true` when the account uses a portfolio margin model
+                      (`segregated_pm` or `cross_pm`), `false` for standard
+                      margin.
                   cross_collateral_enabled:
                     type: boolean
                     example: true
-                    description: When `true` cross collateral is enabled for user
+                    description: >-
+                      `true` when the account uses a cross collateral margin
+                      model (`cross_sm` or `cross_pm`), where all cross
+                      collateral currencies are margined together. The
+                      `total_*_usd` fields are returned only in this case.
                   margin_model:
                     type: string
                     example: segregated_sm
-                    description: Name of user's currently enabled margin model
+                    enum:
+                      - segregated_sm
+                      - segregated_pm
+                      - cross_sm
+                      - cross_pm
+                    description: >-
+                      Margin model currently enabled for the account:
+                      `segregated_sm` (segregated standard margin),
+                      `segregated_pm` (segregated portfolio margin), `cross_sm`
+                      (cross collateral standard margin) or `cross_pm` (cross
+                      collateral portfolio margin).
                   total_equity_usd:
                     example: 2.6437733
                     type: number
@@ -713,8 +980,10 @@ components:
                   has_non_block_chain_equity:
                     type: boolean
                     description: >-
-                      Optional field returned with value `true` when user has
-                      non block chain equity
+                      Returned with value `true` only when part of the account's
+                      equity is not held on chain at Deribit (for example
+                      off-exchange or credit-based equity, or a pending loan in
+                      the selected currency). Omitted otherwise.
                   fees:
                     type: object
                     additionalProperties:
@@ -726,42 +995,75 @@ components:
                             type: object
                             properties:
                               type:
+                                enum:
+                                  - relative
+                                  - fixed
                                 type: string
-                                description: Fee calculation type (e.g., fixed, relative)
+                                description: >-
+                                  `relative` - `maker`/`taker` are multipliers
+                                  of the standard fee; `fixed` - `maker`/`taker`
+                                  are absolute fee rates
                               taker:
                                 type: number
-                                description: Taker fee
+                                description: >-
+                                  Taker fee (multiplier or rate, depending on
+                                  `type`)
                               maker:
                                 type: number
-                                description: Maker fee
+                                description: >-
+                                  Maker fee (multiplier or rate, depending on
+                                  `type`); a negative fixed rate is a rebate
                             required:
                               - type
                               - taker
                               - maker
+                            description: Order book trading fees
                           block_trade:
                             type: number
-                            description: Block trade fee (if applicable)
+                            description: >-
+                              Block trade fee as a multiplier of the standard
+                              block trade fee (only when configured)
+                          settlement:
+                            type: number
+                            description: >-
+                              Fixed delivery/settlement fee rate (only when
+                              configured)
                         required:
                           - default
-                    description: >-
-                      Fee structure for all currency pairs and instrument types
-                      related to the currency (available when parameter
-                      `extended` = `true` and user has any discounts). Keys are
-                      index names (e.g., "btc_usd"), values are objects with
-                      instrument types as keys (option, perpetual, future).
-                  affiliate_promotion_fee:
-                    type: number
-                    example: 0
-                    description: Affiliate promotion fee (if greater than 0.0)
-                  trading_products_details:
-                    type: object
-                    description: >-
-                      Which trading products are enabled or can be overwritten
-                      for the account
-                  receive_notifications:
-                    type: boolean
-                    example: false
-                    description: Whether the account receives notifications
+                      description: Fee rates per instrument kind for one index
+                    description: >
+                      Fee rates of the account's fee tier (see `fee_group`) for
+                      every index related to the selected currency. Keys are
+                      index names (for example `btc_usd`); values are objects
+                      keyed by instrument kind (`future`, `perpetual`, `option`,
+                      `spot`). Kinds and indexes without a configured discount
+                      are omitted and use the standard rates.
+
+
+                      **Requirements:** returned only when `extended` = `true`
+                      and the account is on a non-default fee tier. Absent for
+                      accounts on standard fees.
+
+
+                      **Reading the values:**
+
+                      - `default.type` = `relative`: `maker` and `taker` are
+                      multipliers of the standard fee (for example `0.625` means
+                      62.5% of the standard rate).
+
+                      - `default.type` = `fixed`: `maker` and `taker` are the
+                      fee rates themselves, as a fraction of the traded amount
+                      (negative values are rebates).
+
+                      - `block_trade` is always a multiplier of the standard
+                      block trade fee.
+
+                      - `settlement` is always a fixed fee rate applied at
+                      delivery/settlement.
+
+
+                      **Related articles:**
+                      [Fees](https://support.deribit.com/hc/en-us/articles/25944746248989-Fees)
                 required:
                   - equity
                   - currency
@@ -790,14 +1092,11 @@ components:
                   - projected_maintenance_margin
                   - delta_total
                   - projected_delta_total
-              description: Aggregated list of per-currency account summaries
+              description: >-
+                List of per-currency account summaries (all currencies of the
+                account, or those requested with `currencies`)
           required:
-            - security_keys_enabled
-            - system_name
-            - username
-            - email
-            - type
-            - id
+            - summaries
       required:
         - result
         - jsonrpc
@@ -947,5 +1246,5 @@ components:
 - [private/get_account_summary](https://docs.deribit.com/api-reference/account-management/private-get_account_summary.md)
 - [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md)
 - [Using the currency Parameter](https://docs.deribit.com/articles/currency-parameter.md)
+- [private/toggle_notifications_from_subaccount](https://docs.deribit.com/api-reference/account-management/private-toggle_notifications_from_subaccount.md)
 - [Managing Subaccounts](https://docs.deribit.com/articles/managing-subaccounts-api.md)
-- [private/get_lsp_usage](https://docs.deribit.com/api-reference/lsp/private-get_lsp_usage.md)

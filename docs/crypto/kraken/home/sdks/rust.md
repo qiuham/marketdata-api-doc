@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/home/sdks/rust'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Rust
@@ -31,7 +31,7 @@ Requires Rust 1.88 or later and the tokio async runtime.
 
 ```toml theme={null} theme={null}
 [dependencies]
-kraken-sdk = { git = "https://github.com/krakenfx/kraken-api-sdk", tag = "v0.1.0" }
+kraken-sdk = { git = "https://github.com/krakenfx/kraken-api-sdk", tag = "v0.2.0" }
 tokio = { version = "1", features = ["full"] }
 rust_decimal = "1"
 ```
@@ -51,10 +51,12 @@ rust_decimal = "1"
 * Public Unified WebSocket streams — system status, instrument, ticker, trade, OHLC and order book (maintained with CRC32 validation, or raw deltas)
 * Private Unified WebSocket streams — `executions`, `positions`, `balances`, `margin` and `preferences`
 * Order operations over the authenticated Unified WebSocket: place, amend, cancel by client order id or venue order id, batch place (2–15 orders on one symbol), batch cancel (2–50 orders), cancel-all, and a dead man's switch that is independent of Spot's
+* Rejects orders the venue would refuse before sending them
 * Uses the same API key as Spot
 
 ### Both
 
+* Authentication and automatic WebSocket token refresh
 * Automatic reconnect with subscription replay
 * Typed errors carrying a stable code, category, retryable flag and request id
 * An event bus for connection state, rate-limit warnings, order book gaps and order lifecycle

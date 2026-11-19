@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/public/RPI-OrderBook-Channel
 api_type: WebSocket
-updated_at: 2026-11-18 19:00:56.481758
+updated_at: 2026-11-19 19:07:34.274747
 ---
 
 # RPI Depth Channel

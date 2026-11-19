@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/public/Open-Interest-Limit-Channel
 api_type: WebSocket
-updated_at: 2026-11-18 19:00:54.842585
+updated_at: 2026-11-19 19:07:32.740872
 ---
 
 # Open Interest Limit Channel

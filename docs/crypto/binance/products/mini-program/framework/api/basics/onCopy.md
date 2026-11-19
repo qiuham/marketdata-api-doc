@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/onCopy
 api_type: Guide
-updated_at: 2026-11-18 18:47:06.033815
+updated_at: 2026-11-19 18:50:19.203057
 ---
 
 # bn.onCopy

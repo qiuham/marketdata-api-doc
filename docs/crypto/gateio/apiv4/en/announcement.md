@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/announcement
 api_type: REST
-updated_at: 2026-11-18 18:55:32.925723
+updated_at: 2026-11-19 19:00:32.881035
 ---
 
 # Announcement
@@ -24,18 +24,45 @@ Query announcement articles with pagination and filters for title, category, lan
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | AnnouncementArticleListRequest | Required | none  
-» title_query | body | string | Optional | Article title to use when querying announcements.  
-» page | body | string | Optional | Page number. Optional. Pass as a string, for example "1".  
-» size | body | string | Optional | Number of articles to return per page. Optional. Pass as a string, for example "5".  
-» tags | body | string | Optional | Article tags  
-» timer | body | string | Optional | Query announcements from the last N days, with N passed as a string. For example, on the 10th, pass "10" to query announcements from the 1st through the 10th.  
-» cate_name | body | string | Optional | Announcement category name.  
-» cate_level | body | string | Optional | Category level, passed as a string: "1" or "2".  
-» sub_website_id | body | string | Optional | Subsite ID, passed as a string: "0" for the main site or "177" for the Turkey site. Defaults to "0".  
-» pinned | body | integer | Optional | Whether to include pinned articles: 1 to include them or 0 to exclude them. Defaults to 1.  
-» update_after | body | integer | Optional | Query announcement articles updated after this timestamp.  
-» lang | body | string | Optional | Language code, for example "cn".  
-» filter_empty_content | body | integer | Optional | Whether to exclude articles with empty content in the current language: 0 to keep them or 1 to exclude them. Defaults to 1.  
+title_query | body | string | Optional | Article title to use when querying announcements.  
+page | body | string | Optional | Page number. Optional. Pass as a string, for example "1".  
+size | body | string | Optional | Number of articles to return per page. Optional. Pass as a string, for example "5".  
+tags | body | string | Optional | Article tags  
+timer | body | string | Optional | Query announcements from the last N days, with N passed as a string. For example, on the 10th, pass "10" to query announcements from the 1st through the 10th.  
+cate_name | body | string | Optional | Announcement category name.  
+cate_level | body | string | Optional | Category level, passed as a string: "1" or "2".  
+sub_website_id | body | string | Optional | Subsite ID, passed as a string: "0" for the main site or "177" for the Turkey site. Defaults to "0".  
+pinned | body | integer | Optional | Whether to include pinned articles: 1 to include them or 0 to exclude them. Defaults to 1.  
+update_after | body | integer | Optional | Query announcement articles updated after this timestamp.  
+lang | body | string | Optional | Language code, for example "cn".  
+filter_empty_content | body | integer | Optional | Whether to exclude articles with empty content in the current language: 0 to keep them or 1 to exclude them. Defaults to 1.  
+  
+####  Request Body Schema
+
+AnnouncementArticleListRequest
+
+Announcement article list query
+
+Request Body SchemaType | Constraints  
+---|---  
+AnnouncementArticleListRequest |   
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+title_query | string | Optional |  | Article title to use when querying announcements.  
+page | string | Optional |  | Page number. Optional. Pass as a string, for example "1".  
+size | string | Optional |  | Number of articles to return per page. Optional. Pass as a string, for example "5".  
+tags | string | Optional |  | Article tags  
+timer | string | Optional |  | Query announcements from the last N days, with N passed as a string. For example, on the 10th, pass "10" to query announcements from the 1st through the 10th.  
+cate_name | string | Optional |  | Announcement category name.  
+cate_level | string | Optional |  | Category level, passed as a string: "1" or "2".  
+sub_website_id | string | Optional | default: "0" | Subsite ID, passed as a string: "0" for the main site or "177" for the Turkey site. Defaults to "0".  
+pinned | integer | Optional | default: 1 | Whether to include pinned articles: 1 to include them or 0 to exclude them. Defaults to 1.  
+update_after | integer | Optional |  | Query announcement articles updated after this timestamp.  
+lang | string | Optional |  | Language code, for example "cn".  
+filter_empty_content | integer | Optional | default: 1 | Whether to exclude articles with empty content in the current language: 0 to keep them or 1 to exclude them. Defaults to 1.  
   
 ### Responses
 
@@ -47,35 +74,102 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_AnnouncementArticleListResponse_
+AnnouncementArticleListResponse
 
-Name | Type | Description  
----|---|---  
-» code | integer | Business status code  
-» data | AnnouncementArticleListData | Announcement articles and total count  
-»» list | array | Announcement article list  
-»»» AnnouncementArticle | AnnouncementArticle | Announcement article  
-»»»» id | integer | Announcement article ID.  
-»»»» title | string | Article title  
-»»»» brief | string | Article summary  
-»»»» created | string | Article creation time, returned as a string.  
-»»»» updated | string | Article update time, returned as a string.  
-»»»» release_time | string | Article publication time, returned as a string.  
-»»»» views | integer | View count  
-»»»» author | string | Author  
-»»»» author_id | integer | Article author ID.  
-»»»» tags | string | Article tags  
-»»»» cate | string | Category to which the article belongs.  
-»»»» is_top | integer | Pinned status indicator for the article.  
-»»»» cate_id | integer | ID of the category to which the article belongs.  
-»»»» source | string | Article source  
-»»»» content_lang_list | array | Languages supported by the article, with the code and name of each language.  
-»»»»» AnnouncementArticleLanguage | AnnouncementArticleLanguage | Announcement article language  
-»»»»»» code | string | Language code, for example "cn".  
-»»»»»» name | string | Language name  
-»»»»» total | integer | Total number of announcement articles.  
-»»»» message | string | Response message  
-»»»» version | string | Response version  
+Announcement article list response
+
+Type | Constraints  
+---|---  
+AnnouncementArticleListResponse | required: ["code","data","message","version"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  | Business status code  
+data | AnnouncementArticleListData | Required | required: ["list","total"] | Announcement articles and total count  
+message | string | Required |  | Response message  
+version | string | Required |  | Response version  
+  
+**data**
+
+AnnouncementArticleListData
+
+Announcement articles and total count
+
+Type | Constraints  
+---|---  
+AnnouncementArticleListData | required: ["list","total"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+list | array | Required |  | Announcement article list  
+total | integer | Required |  | Total number of announcement articles.  
+  
+**data / list**
+
+Announcement article list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+AnnouncementArticle
+
+Announcement article
+
+Type | Constraints  
+---|---  
+AnnouncementArticle | required: ["id","title","brief","created","updated","release_time","views","author","author_id","tags","cate","is_top","cate_id","source","content_lang_list"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer | Required |  | Announcement article ID.  
+title | string | Required |  | Article title  
+brief | string | Required |  | Article summary  
+created | string | Required |  | Article creation time, returned as a string.  
+updated | string | Required |  | Article update time, returned as a string.  
+release_time | string | Required |  | Article publication time, returned as a string.  
+views | integer | Required |  | View count  
+author | string | Required |  | Author  
+author_id | integer | Required |  | Article author ID.  
+tags | string | Required |  | Article tags  
+cate | string | Required |  | Category to which the article belongs.  
+is_top | integer | Required |  | Pinned status indicator for the article.  
+cate_id | integer | Required |  | ID of the category to which the article belongs.  
+source | string | Required |  | Article source  
+content_lang_list | array | Required |  | Languages supported by the article, with the code and name of each language.  
+  
+**data / list / items / content_lang_list**
+
+Languages supported by the article, with the code and name of each language.
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items / content_lang_list / items**
+
+AnnouncementArticleLanguage
+
+Announcement article language
+
+Type | Constraints  
+---|---  
+AnnouncementArticleLanguage | required: ["code","name"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | string | Required |  | Language code, for example "cn".  
+name | string | Required |  | Language name  
   
 This operation does not require authentication 
 
@@ -136,24 +230,30 @@ Code samples
 
 ##  AnnouncementArticleListRequest
 
-_AnnouncementArticleListRequest_
+AnnouncementArticleListRequest
 
-###  Properties
+Announcement article list query
 
-PropertiesName | Type | Required | Restrictions | Description  
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-title_query | string | Optional | none | Article title to use when querying announcements.  
-page | string | Optional | none | Page number. Optional. Pass as a string, for example "1".  
-size | string | Optional | none | Number of articles to return per page. Optional. Pass as a string, for example "5".  
-tags | string | Optional | none | Article tags  
-timer | string | Optional | none | Query announcements from the last N days, with N passed as a string. For example, on the 10th, pass "10" to query announcements from the 1st through the 10th.  
-cate_name | string | Optional | none | Announcement category name.  
-cate_level | string | Optional | none | Category level, passed as a string: "1" or "2".  
-sub_website_id | string | Optional | none | Subsite ID, passed as a string: "0" for the main site or "177" for the Turkey site. Defaults to "0".  
-pinned | integer | Optional | none | Whether to include pinned articles: 1 to include them or 0 to exclude them. Defaults to 1.  
-update_after | integer | Optional | none | Query announcement articles updated after this timestamp.  
-lang | string | Optional | none | Language code, for example "cn".  
-filter_empty_content | integer | Optional | none | Whether to exclude articles with empty content in the current language: 0 to keep them or 1 to exclude them. Defaults to 1.  
+title_query | string | Optional |  | Article title to use when querying announcements.  
+page | string | Optional |  | Page number. Optional. Pass as a string, for example "1".  
+size | string | Optional |  | Number of articles to return per page. Optional. Pass as a string, for example "5".  
+tags | string | Optional |  | Article tags  
+timer | string | Optional |  | Query announcements from the last N days, with N passed as a string. For example, on the 10th, pass "10" to query announcements from the 1st through the 10th.  
+cate_name | string | Optional |  | Announcement category name.  
+cate_level | string | Optional |  | Category level, passed as a string: "1" or "2".  
+sub_website_id | string | Optional | default: "0" | Subsite ID, passed as a string: "0" for the main site or "177" for the Turkey site. Defaults to "0".  
+pinned | integer | Optional | default: 1 | Whether to include pinned articles: 1 to include them or 0 to exclude them. Defaults to 1.  
+update_after | integer | Optional |  | Query announcement articles updated after this timestamp.  
+lang | string | Optional |  | Language code, for example "cn".  
+filter_empty_content | integer | Optional | default: 1 | Whether to exclude articles with empty content in the current language: 0 to keep them or 1 to exclude them. Defaults to 1.  
       
     
     {
@@ -175,16 +275,32 @@ filter_empty_content | integer | Optional | none | Whether to exclude articles w
 
 ##  AnnouncementArticleListResponse
 
-_AnnouncementArticleListResponse_
+AnnouncementArticleListResponse
 
-###  Properties
+Announcement article list response
 
-PropertiesName | Type | Required | Restrictions | Description  
+Type | Constraints  
+---|---  
+object | required: ["code","data","message","version"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-code | integer | Required | none | Business status code  
-data | AnnouncementArticleListData | Required | none | Announcement articles and total count  
-message | string | Required | none | Response message  
-version | string | Required | none | Response version  
+code | integer | Required |  | Business status code  
+data | AnnouncementArticleListData | Required | required: ["list","total"] | Announcement articles and total count  
+message | string | Required |  | Response message  
+version | string | Required |  | Response version  
+  
+**data**
+
+AnnouncementArticleListData
+
+Announcement articles and total count
+
+Type | Constraints  
+---|---  
+AnnouncementArticleListData | required: ["list","total"]  
       
     
     {
@@ -203,14 +319,38 @@ version | string | Required | none | Response version
 
 ##  AnnouncementArticleListData
 
-_AnnouncementArticleListData_
+AnnouncementArticleListData
 
-###  Properties
+Announcement articles and total count
 
-PropertiesName | Type | Required | Restrictions | Description  
+Type | Constraints  
+---|---  
+object | required: ["list","total"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-list | [AnnouncementArticle] | Required | none | Announcement article list  
-total | integer | Required | none | Total number of announcement articles.  
+list | array | Required |  | Announcement article list  
+total | integer | Required |  | Total number of announcement articles.  
+  
+**list**
+
+Announcement article list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**list / items**
+
+AnnouncementArticle
+
+Announcement article
+
+Type | Constraints  
+---|---  
+AnnouncementArticle | required: ["id","title","brief","created","updated","release_time","views","author","author_id","tags","cate","is_top","cate_id","source","content_lang_list"]  
       
     
     {
@@ -240,27 +380,51 @@ total | integer | Required | none | Total number of announcement articles.
 
 ##  AnnouncementArticle
 
-_AnnouncementArticle_
+AnnouncementArticle
 
-###  Properties
+Announcement article
 
-PropertiesName | Type | Required | Restrictions | Description  
+Type | Constraints  
+---|---  
+object | required: ["id","title","brief","created","updated","release_time","views","author","author_id","tags","cate","is_top","cate_id","source","content_lang_list"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-id | integer | Required | none | Announcement article ID.  
-title | string | Required | none | Article title  
-brief | string | Required | none | Article summary  
-created | string | Required | none | Article creation time, returned as a string.  
-updated | string | Required | none | Article update time, returned as a string.  
-release_time | string | Required | none | Article publication time, returned as a string.  
-views | integer | Required | none | View count  
-author | string | Required | none | Author  
-author_id | integer | Required | none | Article author ID.  
-tags | string | Required | none | Article tags  
-cate | string | Required | none | Category to which the article belongs.  
-is_top | integer | Required | none | Pinned status indicator for the article.  
-cate_id | integer | Required | none | ID of the category to which the article belongs.  
-source | string | Required | none | Article source  
-content_lang_list | [AnnouncementArticleLanguage] | Required | none | Languages supported by the article, with the code and name of each language.  
+id | integer | Required |  | Announcement article ID.  
+title | string | Required |  | Article title  
+brief | string | Required |  | Article summary  
+created | string | Required |  | Article creation time, returned as a string.  
+updated | string | Required |  | Article update time, returned as a string.  
+release_time | string | Required |  | Article publication time, returned as a string.  
+views | integer | Required |  | View count  
+author | string | Required |  | Author  
+author_id | integer | Required |  | Article author ID.  
+tags | string | Required |  | Article tags  
+cate | string | Required |  | Category to which the article belongs.  
+is_top | integer | Required |  | Pinned status indicator for the article.  
+cate_id | integer | Required |  | ID of the category to which the article belongs.  
+source | string | Required |  | Article source  
+content_lang_list | array | Required |  | Languages supported by the article, with the code and name of each language.  
+  
+**content_lang_list**
+
+Languages supported by the article, with the code and name of each language.
+
+Type | Constraints  
+---|---  
+array |   
+  
+**content_lang_list / items**
+
+AnnouncementArticleLanguage
+
+Announcement article language
+
+Type | Constraints  
+---|---  
+AnnouncementArticleLanguage | required: ["code","name"]  
       
     
     {
@@ -290,14 +454,20 @@ content_lang_list | [AnnouncementArticleLanguage] | Required | none | Languages 
 
 ##  AnnouncementArticleLanguage
 
-_AnnouncementArticleLanguage_
+AnnouncementArticleLanguage
 
-###  Properties
+Announcement article language
 
-PropertiesName | Type | Required | Restrictions | Description  
+Type | Constraints  
+---|---  
+object | required: ["code","name"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-code | string | Required | none | Language code, for example "cn".  
-name | string | Required | none | Language name  
+code | string | Required |  | Language code, for example "cn".  
+name | string | Required |  | Language name  
       
     
     {

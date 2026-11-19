@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/platform/platform_statepublic_methods_state
 api_type: WebSocket
-updated_at: 2026-11-18 18:59:00.079964
+updated_at: 2026-11-19 19:05:34.891116
 ---
 
 # platform_state.public_methods_state

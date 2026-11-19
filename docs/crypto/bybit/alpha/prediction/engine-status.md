@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/engine-status
 api_type: REST
-updated_at: 2026-11-18 18:48:59.605566
+updated_at: 2026-11-19 18:52:30.228062
 ---
 
 # Get Engine Status

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/rest-api
 api_type: Guide
-updated_at: 2026-11-18 19:00:36.922927
+updated_at: 2026-11-19 19:07:14.897528
 ---
 
 # REST API

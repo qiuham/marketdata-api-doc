@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/Camera
 api_type: Guide
-updated_at: 2026-11-18 18:42:44.194261
+updated_at: 2026-11-19 18:45:49.420492
 ---
 
 # Camera

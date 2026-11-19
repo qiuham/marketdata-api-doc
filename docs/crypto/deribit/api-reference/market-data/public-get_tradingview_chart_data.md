@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_tradingview_chart_data
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:17.799397
+updated_at: 2026-11-19 19:05:54.430833
 ---
 
 # public/get_tradingview_chart_data

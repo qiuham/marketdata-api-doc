@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/sdk/overview
 api_type: Guide
-updated_at: 2026-11-18 18:59:52.455313
+updated_at: 2026-11-19 19:06:31.186492
 ---
 
 # SDK

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/earn-classic-loan
 api_type: REST
-updated_at: 2026-11-18 19:01:28.898041
+updated_at: 2026-11-19 19:08:03.717791
 ---
 
 # Classic Earn Loan

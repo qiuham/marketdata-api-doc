@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/changelog/index'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # API Changelog
@@ -26,6 +26,74 @@ Predictions and Margin exchanges. Use the entry tags to filter by API
 surface (`REST`, `WebSocket`, `FIX`) or exchange (`Predictions`, `Margin`).
 FIX API changes, previously tracked on a separate page, now live here under
 the `FIX` tag.
+
+**November 26, 2026**
+
+A new weather point market is now described in the time zone of its
+location, which Kalshi determines from the coordinates. The `timezone` in
+`POST /weather_point_markets` still decides which span of time your `date`
+and hours mean, and the request body, the response and tickers are
+unchanged. What changes, for markets created from now on:
+
+* `title` and `rules_primary`, as returned by `GET /markets` and
+  `GET /events`, give the window in the location's zone, whatever zone
+  created the market. A request for 11pm to 3am in `America/New_York` at a
+  point in Portland, Oregon used to produce a market reading in Eastern
+  time, "from 11pm EST Thu, Nov 19 to 3am EST Fri, Nov 20, 2026"; it now
+  reads "on Thu, Nov 19, 2026, 8pm–12am PST", and its rules "from 8pm to
+  12am PST (America/Los\_Angeles) starting Thu, Nov 19, 2026". A market
+  requested in its location's own zone reads as before.
+* Where `GET /weather_point_markets/availability` returns
+  `max_window_days: 1`, a new market is refused with 409
+  `weather_point_market_unavailable` when its window crosses midnight at
+  the location, and accepted when it doesn't, even if your request sets
+  `end_date`. It no longer depends on the dates of the first request for
+  the event, which replaces what the entry below says.
+* A window that crosses midnight at the location and is longer than 24
+  hours there returns 400 `invalid_parameters`, even when your request
+  names it within one date of another zone.
+* A location whose time zone can't be determined returns 409
+  `weather_point_market_unavailable`.
+
+Events that already exist keep their description, and a new threshold on
+one of them reads like the rest of that event. See
+[On-Request Weather Markets](https://docs.kalshi.com/getting_started/weather_rfqs.md#the-markets-own-time-zone).
+
+**November 26, 2026**
+
+KalshiRFQ sessions can now choose listener mode with
+`ListenerSession<20126>=Y`. The session keeps quoting and also receives your
+account's execution reports, including the fills of your accepted quotes.
+See [Listener Sessions](https://docs.kalshi.com/fix/listener-sessions.md).
+
+**November 26, 2026**
+
+A weather point market's window can now run from one local day into the
+next, for example 11pm to 3am:
+
+* `POST /weather_point_markets` takes an optional `end_date`. Left out, or
+  equal to `date`, the request means what it did before. Set to the day
+  after `date`, the window runs from `start_hour` on `date` to `end_hour`
+  on `end_date`. Such a window is at most 24 hours long, so `end_hour` must
+  not be after `start_hour`; a longer window, or any other `end_date`,
+  returns 400 `invalid_parameters`.
+* `end_hour` no longer has to be after `start_hour` when `end_date` is the
+  day after `date`. For a window on one day it still must be.
+* `GET /weather_point_markets/availability` returns `max_window_days` (2
+  where a window may cross midnight, otherwise 1) and `max_window_hours`
+  (the longest such window, 24). Where `max_window_days` is 1, a new
+  market whose window is stored across two local dates returns 409
+  `weather_point_market_unavailable`. A market stores the dates of the
+  first request for its variable, point and window, normally your own. When
+  that event already exists, its dates decide: a one-date request from
+  another time zone for an event stored across midnight returns the 409,
+  and a request with `end_date` for an event stored on one date succeeds.
+  Markets that already exist are returned either way.
+
+Tickers keep their shape: the window is still its UTC start and its length
+in hours, so 11pm November 23 to 3am November 24 in New York is
+`…-26NOV2404Z-4H-…`. Existing markets and requests without `end_date` are
+unchanged. See [On-Request Weather Markets](https://docs.kalshi.com/getting_started/weather_rfqs.md).
 
 **November 19, 2026**
 

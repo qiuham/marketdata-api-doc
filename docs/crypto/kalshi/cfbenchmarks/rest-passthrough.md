@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/cfbenchmarks/rest-passthrough'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # CF Benchmarks REST Passthrough

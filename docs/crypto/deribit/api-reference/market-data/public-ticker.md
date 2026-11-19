@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-ticker
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:17.939165
+updated_at: 2026-11-19 19:05:54.442055
 ---
 
 # public/ticker
@@ -674,5 +674,5 @@ components:
 - [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md)
 - [Spot Trading: Deribit and Coinbase-Routed Instruments](https://docs.deribit.com/articles/spot-trading-venues.md)
 - [Coinbase International Exchange API Migration](https://docs.deribit.com/articles/intx-api-migration.md)
+- [Rate Limits](https://docs.deribit.com/articles/rate-limits.md)
 - [API Usage Policy](https://docs.deribit.com/articles/api-usage-policy.md)
-- [Starbase Reference Data and Instrument Definitions](https://docs.deribit.com/starbase/reference-data.md)

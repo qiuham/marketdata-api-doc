@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/getUserInfo
 api_type: Guide
-updated_at: 2026-11-18 18:47:29.751283
+updated_at: 2026-11-19 18:50:44.957084
 ---
 
 # bn.getUserInfo

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/error-code/restapi
 api_type: Error Code
-updated_at: 2026-11-18 19:00:32.716363
+updated_at: 2026-11-19 19:07:10.886828
 ---
 
 # REST API Error Code
@@ -155,6 +155,7 @@ updated_at: 2026-11-18 19:00:32.716363
 | 40017      | Parameter verification failed {0}                                                                                                                           |
 | [40034](./common-error-handling#err-40034)      | Parameter {0} does not exist                                                                                                                                |
 | 40042      | The account is an ins loan sub-account and is subject to business restrictions. For more details, please contact customer service.                          |
+| 40304      | clientOid or clientOrderId length cannot greater than 50                                                                                                    |
 | 40500      | Order requests for the symbol are too frequent. Please try again later.
 | [40725](./common-error-handling#err-40725)      | service return an error                                                                                                                                     |
 | 43117      | Exceeded Max. transferable quantity                                                                                                                         |
@@ -356,6 +357,7 @@ updated_at: 2026-11-18 19:00:32.716363
 | [25110](./common-error-handling#err-25110) | 该币种不支持转入统一账户                                        |
 | 25622 | 机构借贷子账户抵押品设置必须为全部币种模式                               |
 | 40042 | 账户为机构子账户，业务受限，详情请联系客服                               |
+| 40304 | clientOid 或 clientOrderId 的长度不能大于 50 个字符                 |
 | 40500 | 当前交易对下单请求过于集中，请稍后重试
 | 43117 | 超过最大可转出数量                                           |
 | 95001 | 当前用户强平中                                             |

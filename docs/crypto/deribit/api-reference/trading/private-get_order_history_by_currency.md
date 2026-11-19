@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-get_order_history_by_currency
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:20.056977
+updated_at: 2026-11-19 19:05:56.264557
 ---
 
 # private/get_order_history_by_currency

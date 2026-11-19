@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/futures/ws/zh_CN
 api_type: WebSocket
-updated_at: 2026-11-18 18:57:02.320061
+updated_at: 2026-11-19 19:02:14.008738
 ---
 
 # Gate Futures WebSocket v4.0.0
@@ -52,6 +52,10 @@ WARNING
 如果你使用老的服务地址(`wss://fx-ws.gateio.ws/v4/ws` 或 `wss://fx-ws-testnet.gateio.ws/v4/ws`), 将默认是 BTC 结算的 websocket 服务.
 
 ##  变更日志
+
+2026-11-19
+
+  * 3.0 用户可在 `futures.order_place`、`futures.order_cancel`、`futures.order_amend`、`futures.order_cancel_cp` 的 `payload.req_header` 中传入 `X-Gate-Client-Send-Us` 和 `X-Gate-Timeout-Window-Us`。这两个参数在撮合引擎生效，撮合引擎按微秒发送时间和超时窗口拒绝过期请求。`futures.order_batch_place`、`futures.order_cancel_ids`、`futures.order_list`、`futures.order_status` 不转发这两个字段。详见 3.0 用户请求超时。
 
 2026-10-22
 
@@ -7859,6 +7863,60 @@ Error 推送示例（限速）
     }
     
 
+##  3.0 用户请求超时
+
+3.0 用户可以在部分交易请求里声明客户端发送时间和允许的超时窗口，用来拒绝发出后已经过期的请求。
+
+这两个字段只写在 `payload.req_header`。不要写到 WebSocket 握手请求头，也不要写到 `req_param`。键名区分大小写，必须与下表一致。值必须是十进制整数字符串，单位是微秒。服务端不生成发送时间，只把非空值原样转发。
+
+字段 | 类型 | 必选 | 描述  
+---|---|---|---  
+`X-Gate-Client-Send-Us` | `string` | 否 | 客户端发出该请求的 Unix 时间戳，单位微秒。例如 `1700000000123456`  
+`X-Gate-Timeout-Window-Us` | `string` | 否 | 超时窗口，单位微秒。例如 `500000` 表示 500 毫秒  
+  
+这两个参数在撮合引擎生效。两个字段都传入有效值时，撮合引擎按下面的条件判断请求是否仍然有效：
+
+`当前时间（微秒） - X-Gate-Client-Send-Us <= X-Gate-Timeout-Window-Us`
+
+超出窗口的请求会被拒绝。
+
+适用频道：
+
+  * `futures.order_place`
+  * `futures.order_cancel`
+  * `futures.order_amend`
+  * `futures.order_cancel_cp`
+
+`futures.order_batch_place`、`futures.order_cancel_ids`、`futures.order_list`、`futures.order_status` 不转发这两个字段。
+
+  * 仅 3.0 用户生效。其他用户传入这两个字段时，服务端不会转发。
+  * 窗口判断需要两个字段同时有效。只传入其中一个时，服务端仍会转发这个非空值。
+  * 空字符串，以及去掉首尾空格后为空的值，视为未传。首尾空格会被去掉后再转发。
+  * 这与 `x-gate-exptime` 不是同一个字段。`x-gate-exptime` 仍是毫秒绝对时间，由 WebSocket 服务在收到请求时判断是否过期，单位不要和上面的微秒字段混用。
+
+下单时携带超时字段。撤单、改单、取消匹配的未结束订单使用同一组 `req_header`，替换 `channel` 和 `req_param` 即可。登录方式不变。
+    
+    
+    {
+      "time": 1681195484,
+      "channel": "futures.order_place",
+      "event": "api",
+      "payload": {
+        "req_id": "request-id-1",
+        "req_header": {
+          "X-Gate-Client-Send-Us": "1700000000123456",
+          "X-Gate-Timeout-Window-Us": "500000"
+        },
+        "req_param": {
+          "contract": "BTC_USDT",
+          "size": "1",
+          "price": "50000",
+          "tif": "gtc"
+        }
+      }
+    }
+    
+
 ##  登录
 
 WARNING
@@ -8181,6 +8239,8 @@ WebSocket api 操作认证使用与 Gate APIv4 API 相同的签名计算方法�
 字段 | 类型 | 必选 | 描述  
 ---|---|---|---  
 `x-gate-exptime` | `string` | 否 | 指定过期的时间戳（毫秒）。如果 ws 收到请求的时间大于过期时间，请求将被拒绝  
+`X-Gate-Client-Send-Us` | `string` | 否 | 3.0 用户的客户端发送时间，单位微秒。须与 `X-Gate-Timeout-Window-Us` 同时传入，见 3.0 用户请求超时  
+`X-Gate-Timeout-Window-Us` | `string` | 否 | 3.0 用户的超时窗口，单位微秒。见 3.0 用户请求超时  
   
 ####  详细描述
 
@@ -8758,6 +8818,8 @@ WebSocket api 操作认证使用与 Gate APIv4 API 相同的签名计算方法�
 字段 | 类型 | 必选 | 描述  
 ---|---|---|---  
 `x-gate-exptime` | `string` | 否 | 指定过期的时间戳（毫秒）。如果 ws 收到请求的时间大于过期时间，请求将被拒绝  
+`X-Gate-Client-Send-Us` | `string` | 否 | 3.0 用户的客户端发送时间，单位微秒。须与 `X-Gate-Timeout-Window-Us` 同时传入，见 3.0 用户请求超时  
+`X-Gate-Timeout-Window-Us` | `string` | 否 | 3.0 用户的超时窗口，单位微秒。见 3.0 用户请求超时  
   
 代码示例：请求前要先登录
     
@@ -9147,6 +9209,8 @@ Payload 格式:
 字段 | 类型 | 必选 | 描述  
 ---|---|---|---  
 `x-gate-exptime` | `string` | 否 | 指定过期的时间戳（毫秒）。如果 ws 收到请求的时间大于过期时间，请求将被拒绝  
+`X-Gate-Client-Send-Us` | `string` | 否 | 3.0 用户的客户端发送时间，单位微秒。须与 `X-Gate-Timeout-Window-Us` 同时传入，见 3.0 用户请求超时  
+`X-Gate-Timeout-Window-Us` | `string` | 否 | 3.0 用户的超时窗口，单位微秒。见 3.0 用户请求超时  
   
 代码示例：请求前要先登录
     
@@ -9361,6 +9425,8 @@ Payload 格式:
 字段 | 类型 | 必选 | 描述  
 ---|---|---|---  
 `x-gate-exptime` | `string` | 否 | 指定过期的时间戳（毫秒）。如果 ws 收到请求的时间大于过期时间，请求将被拒绝  
+`X-Gate-Client-Send-Us` | `string` | 否 | 3.0 用户的客户端发送时间，单位微秒。须与 `X-Gate-Timeout-Window-Us` 同时传入，见 3.0 用户请求超时  
+`X-Gate-Timeout-Window-Us` | `string` | 否 | 3.0 用户的超时窗口，单位微秒。见 3.0 用户请求超时  
   
 ####  详细描述
 
@@ -9941,4 +10007,4 @@ req_param` API 订单模型的 JSON 字节数据:
     }
     
 
-Last Updated: 10/22/2026, 7:54:06 AM
+Last Updated: 11/19/2026, 2:06:06 AM

@@ -2,14 +2,21 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-toggle_notifications_from_subaccount
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:14.991929
+updated_at: 2026-11-19 19:05:51.641251
 ---
 
 # private/toggle_notifications_from_subaccount
 
-> Enables or disables email and other notifications for a subaccount. When notifications are disabled, the subaccount will not receive email alerts, trade confirmations, or other notification messages.
+> Saves a subaccount's preference for forwarding copies of its notification emails to the main account's email address. It does not stop the subaccount from receiving its own emails.
 
-This setting only affects notifications sent to the subaccount's email address. Notifications sent to the main account are not affected.
+When forwarding is active, forwarded copies exclude the registration welcome email and mask activation and password-change links. Their title is `Notification for subaccount: <name> - <original title>`.
+
+**Known limitation:** changing this setting currently has no effect on forwarding, and `receive_notifications` (returned by `private/get_subaccounts`, `private/create_subaccount`, and by `private/get_account_summary` / `private/get_account_summaries` with `extended` = `true`) does not reflect it. A successful response only confirms that the request was accepted.
+
+**Access & Restrictions:**
+- Must be called by the main account that owns the subaccount (`sid`). The target must be an owned subaccount, not the main account itself. An invalid target is rejected with `13009` (`unauthorized`); a removed subaccount returns `13009` with `data.reason` = `already_removed`. Vault subaccounts are rejected with `14049`.
+- Also rejected for accounts without subaccount management (`13009`) and locked accounts (`11098`).
+- Send `state` as a JSON boolean. Do not rely on rejection of other types: the current implementation may coerce them to a boolean.
 
 **[TFA required](https://docs.deribit.com/articles/security-keys)**
 
@@ -72,13 +79,37 @@ paths:
         - Account Management
         - Private
       description: >+
-        Enables or disables email and other notifications for a subaccount. When
-        notifications are disabled, the subaccount will not receive email
-        alerts, trade confirmations, or other notification messages.
+        Saves a subaccount's preference for forwarding copies of its
+        notification emails to the main account's email address. It does not
+        stop the subaccount from receiving its own emails.
 
 
-        This setting only affects notifications sent to the subaccount's email
-        address. Notifications sent to the main account are not affected.
+        When forwarding is active, forwarded copies exclude the registration
+        welcome email and mask activation and password-change links. Their title
+        is `Notification for subaccount: <name> - <original title>`.
+
+
+        **Known limitation:** changing this setting currently has no effect on
+        forwarding, and `receive_notifications` (returned by
+        `private/get_subaccounts`, `private/create_subaccount`, and by
+        `private/get_account_summary` / `private/get_account_summaries` with
+        `extended` = `true`) does not reflect it. A successful response only
+        confirms that the request was accepted.
+
+
+        **Access & Restrictions:**
+
+        - Must be called by the main account that owns the subaccount (`sid`).
+        The target must be an owned subaccount, not the main account itself. An
+        invalid target is rejected with `13009` (`unauthorized`); a removed
+        subaccount returns `13009` with `data.reason` = `already_removed`. Vault
+        subaccounts are rejected with `14049`.
+
+        - Also rejected for accounts without subaccount management (`13009`) and
+        locked accounts (`11098`).
+
+        - Send `state` as a JSON boolean. Do not rely on rejection of other
+        types: the current implementation may coerce them to a boolean.
 
 
         **[TFA required](https://docs.deribit.com/articles/security-keys)**
@@ -101,14 +132,19 @@ paths:
             type: integer
             example: 7
           required: true
-          description: The user id for the subaccount
+          description: >-
+            The user id of the subaccount (must belong to the authenticated main
+            account)
         - name: state
           in: query
           schema:
-            example: true
             type: boolean
+            example: true
           required: true
-          description: enable (`true`) or disable (`false`) notifications
+          description: >-
+            Forwarding preference: `true` to request copies at the main account
+            email, `false` to request no copies. Currently has no effect; see
+            the known limitation above
       requestBody:
         content:
           application/json:
@@ -181,7 +217,7 @@ components:
 ## Related topics
 
 - [Managing Subaccounts](https://docs.deribit.com/articles/managing-subaccounts-api.md)
-- [private/toggle_subaccount_login](https://docs.deribit.com/api-reference/account-management/private-toggle_subaccount_login.md)
 - [private/get_subaccounts](https://docs.deribit.com/api-reference/account-management/private-get_subaccounts.md)
 - [private/create_subaccount](https://docs.deribit.com/api-reference/account-management/private-create_subaccount.md)
-- [private/set_email_for_subaccount](https://docs.deribit.com/api-reference/account-management/private-set_email_for_subaccount.md)
+- [private/get_account_summaries](https://docs.deribit.com/api-reference/account-management/private-get_account_summaries.md)
+- [private/get_account_summary](https://docs.deribit.com/api-reference/account-management/private-get_account_summary.md)

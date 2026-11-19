@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/FlutterSvg
 api_type: Guide
-updated_at: 2026-11-18 18:42:18.333749
+updated_at: 2026-11-19 18:45:22.522815
 ---
 
 # Svg

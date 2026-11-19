@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/rebate
 api_type: Earn
-updated_at: 2026-11-18 18:55:55.817644
+updated_at: 2026-11-19 19:00:58.174582
 ---
 
 # Rebate
@@ -40,21 +40,47 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» currency_pair | string | Currency pair  
-» total | integer(int64) | Total  
-» list | array | List of transaction history  
-»» AgencyTransaction | object | none  
-»»» transaction_time | integer(int64) | Transaction Time. (unix timestamp)  
-»»» user_id | integer(int64) | User ID  
-»»» group_name | string | Group name  
-»»» fee | string | Fee  
-»»» fee_asset | string | Fee currency  
-»»» currency_pair | string | Currency pair  
-»»» amount | string | Transaction amount  
-»»» amount_asset | string | Transaction amount currency  
-»»» source | string | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
+Type | Constraints  
+---|---  
+AgencyTransactionHistory |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency_pair | string | Optional |  | Currency pair  
+total | integer(int64) | Optional |  | Total  
+list | array | Optional |  | List of transaction history  
+  
+**list**
+
+List of transaction history
+
+Type | Constraints  
+---|---  
+array |   
+  
+**list / items**
+
+AgencyTransaction
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+transaction_time | integer(int64) | Optional |  | Transaction Time. (unix timestamp)  
+user_id | integer(int64) | Optional |  | User ID  
+group_name | string | Optional |  | Group name  
+fee | string | Optional |  | Fee  
+fee_asset | string | Optional |  | Fee currency  
+currency_pair | string | Optional |  | Currency pair  
+amount | string | Optional |  | Transaction amount  
+amount_asset | string | Optional |  | Transaction amount currency  
+source | string | Optional |  | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
   
 WARNING
 
@@ -158,18 +184,44 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» currency_pair | string | Currency pair  
-» total | integer(int64) | Total  
-» list | array | List of commission history  
-»» AgencyCommission | object | none  
-»»» commission_time | integer(int64) | Commission time (Unix timestamp in seconds)  
-»»» user_id | integer(int64) | User ID  
-»»» group_name | string | Group name  
-»»» commission_amount | string | Commission amount  
-»»» commission_asset | string | Commission Asset  
-»»» source | string | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
+Type | Constraints  
+---|---  
+AgencyCommissionHistory |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency_pair | string | Optional |  | Currency pair  
+total | integer(int64) | Optional |  | Total  
+list | array | Optional |  | List of commission history  
+  
+**list**
+
+List of commission history
+
+Type | Constraints  
+---|---  
+array |   
+  
+**list / items**
+
+AgencyCommission
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+commission_time | integer(int64) | Optional |  | Commission time (Unix timestamp in seconds)  
+user_id | integer(int64) | Optional |  | User ID  
+group_name | string | Optional |  | Group name  
+commission_amount | string | Optional |  | Commission amount  
+commission_asset | string | Optional |  | Commission Asset  
+source | string | Optional |  | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
   
 WARNING
 
@@ -269,20 +321,46 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» total | integer(int64) | Total  
-» list | array | List of transaction history  
-»» PartnerTransaction | object | none  
-»»» transaction_time | integer(int64) | Transaction Time. (unix timestamp)  
-»»» user_id | integer(int64) | User ID  
-»»» group_name | string | Group name  
-»»» fee | string | Fee  
-»»» fee_asset | string | Fee currency  
-»»» currency_pair | string | Currency pair  
-»»» amount | string | Transaction amount  
-»»» amount_asset | string | Transaction amount currency  
-»»» source | string | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
+Type | Constraints  
+---|---  
+PartnerTransactionHistory |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total  
+list | array | Optional |  | List of transaction history  
+  
+**list**
+
+List of transaction history
+
+Type | Constraints  
+---|---  
+array |   
+  
+**list / items**
+
+PartnerTransaction
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+transaction_time | integer(int64) | Optional |  | Transaction Time. (unix timestamp)  
+user_id | integer(int64) | Optional |  | User ID  
+group_name | string | Optional |  | Group name  
+fee | string | Optional |  | Fee  
+fee_asset | string | Optional |  | Fee currency  
+currency_pair | string | Optional |  | Currency pair  
+amount | string | Optional |  | Transaction amount  
+amount_asset | string | Optional |  | Transaction amount currency  
+source | string | Optional |  | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
   
 WARNING
 
@@ -385,17 +463,43 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» total | integer(int64) | Total  
-» list | array | List of commission history  
-»» PartnerCommission | object | none  
-»»» commission_time | integer(int64) | Commission time (Unix timestamp in seconds)  
-»»» user_id | integer(int64) | User ID  
-»»» group_name | string | Group name  
-»»» commission_amount | string | Commission amount  
-»»» commission_asset | string | Commission Asset  
-»»» source | string | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
+Type | Constraints  
+---|---  
+PartnerCommissionHistory |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total  
+list | array | Optional |  | List of commission history  
+  
+**list**
+
+List of commission history
+
+Type | Constraints  
+---|---  
+array |   
+  
+**list / items**
+
+PartnerCommission
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+commission_time | integer(int64) | Optional |  | Commission time (Unix timestamp in seconds)  
+user_id | integer(int64) | Optional |  | User ID  
+group_name | string | Optional |  | Group name  
+commission_amount | string | Optional |  | Commission amount  
+commission_asset | string | Optional |  | Commission Asset  
+source | string | Optional |  | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
   
 WARNING
 
@@ -492,14 +596,40 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» total | integer(int64) | Total  
-» list | array | Subordinate list  
-»» PartnerSub | object | none  
-»»» user_id | integer(int64) | User ID  
-»»» user_join_time | integer(int64) | Time when user joined the system, Unix timestamp in seconds  
-»»» type | integer(int64) | Type (1-Sub-agent 2-Indirect direct customer 3-Direct direct customer)  
+Type | Constraints  
+---|---  
+PartnerSubList |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total  
+list | array | Optional |  | Subordinate list  
+  
+**list**
+
+Subordinate list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**list / items**
+
+PartnerSub
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | User ID  
+user_join_time | integer(int64) | Optional |  | Time when user joined the system, Unix timestamp in seconds  
+type | integer(int64) | Optional |  | Type (1-Sub-agent 2-Indirect direct customer 3-Direct direct customer)  
   
 WARNING
 
@@ -605,26 +735,65 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» total | integer(int64) | Total  
-» list | array | List of commission history  
-»» BrokerCommissionItem | object | none  
-»»» commission_time | integer(int64) | Commission time (Unix timestamp in seconds)  
-»»» user_id | integer(int64) | User ID  
-»»» group_name | string | Group name  
-»»» amount | string | The amount of commission rebates  
-»»» fee | string | Fee  
-»»» fee_asset | string | Fee currency  
-»»» rebate_fee | string | The income from rebates, converted to USDT  
-»»» source | string | Commission transaction type: Spot, Futures, Options, Alpha、TradFi  
-»»» currency_pair | string | Currency pair  
-»»» sub_broker_info | object | Sub-broker information  
-»»»» user_id | integer(int64) | Sub-broker user ID  
-»»»» original_commission_rate | string | Sub-broker original commission rate  
-»»»» relative_commission_rate | string | Sub-broker relative commission rate  
-»»»» commission_rate | string | Sub-broker actual commission rate  
-»»» alpha_contract_addr | string | Alpha contract address  
+Type | Constraints  
+---|---  
+BrokerCommission |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total  
+list | array | Optional |  | List of commission history  
+  
+**list**
+
+List of commission history
+
+Type | Constraints  
+---|---  
+array |   
+  
+**list / items**
+
+BrokerCommissionItem
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+commission_time | integer(int64) | Optional |  | Commission time (Unix timestamp in seconds)  
+user_id | integer(int64) | Optional |  | User ID  
+group_name | string | Optional |  | Group name  
+amount | string | Optional |  | The amount of commission rebates  
+fee | string | Optional |  | Fee  
+fee_asset | string | Optional |  | Fee currency  
+rebate_fee | string | Optional |  | The income from rebates, converted to USDT  
+source | string | Optional |  | Commission transaction type: Spot, Futures, Options, Alpha、TradFi  
+currency_pair | string | Optional |  | Currency pair  
+sub_broker_info | object | Optional |  | Sub-broker information  
+alpha_contract_addr | string | Optional |  | Alpha contract address  
+  
+**list / items / sub_broker_info**
+
+Sub-broker information
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | Sub-broker user ID  
+original_commission_rate | string | Optional |  | Sub-broker original commission rate  
+relative_commission_rate | string | Optional |  | Sub-broker relative commission rate  
+commission_rate | string | Optional |  | Sub-broker actual commission rate  
   
 WARNING
 
@@ -733,27 +902,66 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_BrokerTransactionHistory_
+BrokerTransactionHistory
 
-Name | Type | Description  
----|---|---  
-» total | integer(int64) | Total  
-» list | array | List of transaction history  
-»» BrokerTransaction | object | none  
-»»» transaction_time | integer(int64) | Transaction Time. (unix timestamp)  
-»»» user_id | integer(int64) | User ID  
-»»» group_name | string | Group name  
-»»» fee | string | Fee amount (USDT)  
-»»» currency_pair | string | Currency pair  
-»»» amount | string | Transaction amount  
-»»» fee_asset | string | Fee currency  
-»»» source | string | Commission transaction type: Spot, Futures, Options, Alpha、TradFi  
-»»» sub_broker_info | object | Sub-broker information  
-»»»» user_id | integer(int64) | Sub-broker user ID  
-»»»» original_commission_rate | string | Sub-broker original commission rate  
-»»»» relative_commission_rate | string | Sub-broker relative commission rate  
-»»»» commission_rate | string | Sub-broker actual commission rate  
-»»» alpha_contract_addr | string | Alpha contract address  
+Type | Constraints  
+---|---  
+BrokerTransactionHistory |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total  
+list | array | Optional |  | List of transaction history  
+  
+**list**
+
+List of transaction history
+
+Type | Constraints  
+---|---  
+array |   
+  
+**list / items**
+
+BrokerTransaction
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+transaction_time | integer(int64) | Optional |  | Transaction Time. (unix timestamp)  
+user_id | integer(int64) | Optional |  | User ID  
+group_name | string | Optional |  | Group name  
+fee | string | Optional |  | Fee amount (USDT)  
+currency_pair | string | Optional |  | Currency pair  
+amount | string | Optional |  | Transaction amount  
+fee_asset | string | Optional |  | Fee currency  
+source | string | Optional |  | Commission transaction type: Spot, Futures, Options, Alpha、TradFi  
+sub_broker_info | object | Optional |  | Sub-broker information  
+alpha_contract_addr | string | Optional |  | Alpha contract address  
+  
+**list / items / sub_broker_info**
+
+Sub-broker information
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | Sub-broker user ID  
+original_commission_rate | string | Optional |  | Sub-broker original commission rate  
+relative_commission_rate | string | Optional |  | Sub-broker relative commission rate  
+commission_rate | string | Optional |  | Sub-broker actual commission rate  
   
 WARNING
 
@@ -849,11 +1057,17 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Retrieve user rebate information_
+Retrieve user rebate information
 
-Name | Type | Description  
----|---|---  
-» invite_uid | integer(int64) | My inviter's UID  
+Type | Constraints  
+---|---  
+RebateUserInfo |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+invite_uid | integer(int64) | Optional |  | My inviter's UID  
   
 WARNING
 
@@ -938,14 +1152,40 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» list | array | Subordinate relationship list  
-»» UserSub | object | none  
-»»» uid | integer(int64) | User ID  
-»»» belong | string | User's system affiliation (partner/referral). Empty means not belonging to any system  
-»»» type | integer(int64) | Type (0-Not in system 1-Direct subordinate agent 2-Indirect subordinate agent 3-Direct direct customer 4-Indirect direct customer 5-Regular user)  
-»»» ref_uid | integer(int64) | Inviter user ID  
+Type | Constraints  
+---|---  
+UserSubRelation |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+list | array | Optional |  | Subordinate relationship list  
+  
+**list**
+
+Subordinate relationship list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**list / items**
+
+UserSub
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+uid | integer(int64) | Optional |  | User ID  
+belong | string | Optional |  | User's system affiliation (partner/referral). Empty means not belonging to any system  
+type | integer(int64) | Optional |  | Type (0-Not in system 1-Direct subordinate agent 2-Indirect subordinate agent 3-Direct direct customer 4-Indirect direct customer 5-Regular user)  
+ref_uid | integer(int64) | Optional |  | Inviter user ID  
   
 WARNING
 
@@ -1041,6 +1281,127 @@ ResponsesStatus | Meaning | Description | Schema
   
 ### Response Schema
 
+Status Code **200**
+
+Type | Constraints  
+---|---  
+PartnerApplicationResponse |   
+  
+**allOf[0]**
+
+Type | Constraints  
+---|---  
+object | required: ["code","message","data","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  | Error Code, 0 Indicates Success  
+message | string | Required |  | Error message description  
+data | object | Required |  | Response data  
+timestamp | integer(int64) | Required |  | Unix timestamp  
+  
+**allOf[1]**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Required |  |   
+  
+**allOf[1] / data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer | Optional |  | Application record ID  
+uid | integer | Optional |  | User ID  
+language | string | Optional |  | Language code  
+country_id | integer | Optional |  | Country ID  
+firstname | string | Optional |  | First name  
+lastname | string | Optional |  | Last name  
+email | string(email) | Optional |  | Email address  
+join_uid | integer | Optional |  | Joined user ID  
+join_country_id | integer | Optional |  | Joined country ID  
+identity_comment | string | Optional |  | Identity description  
+promotion_channels | string | Optional |  | Promotion channels, separated by |  
+contact_details | string | Optional |  | Contact details (JSON string)  
+know_details | string | Optional |  | Learn more  
+question_lang | string | Optional |  | Question language  
+create_timest | string(date-time) | Optional |  | Created time  
+update_timest | string(date-time) | Optional |  | Update time  
+apply_type | integer | Optional |  | Application type  
+audit_status | integer | Optional |  | Review status (0 - pending, 1 - approved, 2 - rejected)  
+edit_counts | integer | Optional |  | Edit count  
+proof_images | string | Optional |  | Proof image path  
+proof_videos | string | Optional |  | Proof video path  
+proof_url | string(uri) | Optional |  | Proof link  
+audit_reason | integer | Optional |  | Review reason code  
+channel_type | integer | Optional |  | Channel type  
+region | string | Optional |  | Region  
+phone | string | Optional |  | Phone number  
+telegram | string | Optional |  | Telegram account  
+other_contact | object | Optional |  | Other contact information  
+proof_images_url_list | array | Optional |  | List of proof image URLs  
+proof_videos_url_list | array | Optional |  | List of proof video URLs  
+apply_msg | string | Optional |  | Application message  
+jump_url | string | Optional |  | Redirect URL  
+  
+**allOf[1] / data / other_contact**
+
+OtherContact
+
+Other contact information
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+type | integer | Optional |  | Contact type  
+value | string | Optional |  | Contact value  
+  
+**allOf[1] / data / proof_images_url_list**
+
+List of proof image URLs
+
+Type | Constraints  
+---|---  
+array |   
+  
+**allOf[1] / data / proof_images_url_list / items**
+
+Type | Constraints  
+---|---  
+string(uri) |   
+  
+**allOf[1] / data / proof_videos_url_list**
+
+List of proof video URLs
+
+Type | Constraints  
+---|---  
+array |   
+  
+**allOf[1] / data / proof_videos_url_list / items**
+
+Type | Constraints  
+---|---  
+string(uri) |   
+  
 WARNING
 
 To perform this operation, you must be authenticated by API key and secret
@@ -1157,6 +1518,93 @@ ResponsesStatus | Meaning | Description | Schema
   
 ### Response Schema
 
+Status Code **200**
+
+Type | Constraints  
+---|---  
+EligibilityResponse |   
+  
+**allOf[0]**
+
+Type | Constraints  
+---|---  
+object | required: ["code","message","data","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  | Error Code, 0 Indicates Success  
+message | string | Required |  | Error message description  
+data | object | Required |  | Response data  
+timestamp | integer(int64) | Required |  | Unix timestamp  
+  
+**allOf[1]**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Required | required: ["eligible","block_reasons","block_reason_codes"] |   
+  
+**allOf[1] / data**
+
+Type | Constraints  
+---|---  
+object | required: ["eligible","block_reasons","block_reason_codes"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+eligible | boolean | Required |  | Whether eligible for application  
+block_reasons | array | Required |  | List of ineligibility reason descriptions  
+block_reason_codes | array | Required |  | List of ineligibility reason codes  
+  
+**allOf[1] / data / block_reasons**
+
+List of ineligibility reason descriptions
+
+Type | Constraints  
+---|---  
+array |   
+  
+**allOf[1] / data / block_reasons / items**
+
+Type | Constraints  
+---|---  
+string |   
+  
+**allOf[1] / data / block_reason_codes**
+
+List of ineligibility reason codes
+
+Type | Constraints  
+---|---  
+array |   
+  
+**allOf[1] / data / block_reason_codes / items**
+
+Type | Constraints  
+---|---  
+string |   
+  
+**Enumerated Values**
+
+Value  
+---  
+"user_not_exist"  
+"user_blacked"  
+"sub_account"  
+"already_agent"  
+"kyc_incomplete"  
+"in_agent_tree"  
+"ch_code_conflict"  
+  
 WARNING
 
 To perform this operation, you must be authenticated by API key and secret
@@ -1316,46 +1764,106 @@ ResponsesStatus | Meaning | Description | Schema
   
 ### Response Schema
 
-####  Enumerated Values
+Status Code **200**
 
-Enumerated ValuesProperty | Value  
+Type | Constraints  
 ---|---  
-business_type | 0  
-business_type | 1  
-business_type | 2  
-business_type | 3  
-business_type | 4  
-business_type | 5  
-business_type | 6  
-business_type | 7  
-business_type | 8  
+PartnerDataAggregatedResponse |   
+  
+**allOf[0]**
+
+Type | Constraints  
+---|---  
+object | required: ["code","message","data","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  | Error Code, 0 Indicates Success  
+message | string | Required |  | Error message description  
+data | object | Required |  | Response data  
+timestamp | integer(int64) | Required |  | Unix timestamp  
+  
+**allOf[1]**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Required | required: ["rebate_amount","trade_volume","net_fee","customer_count","trading_user_count","time_range_desc","business_type","business_type_desc"] |   
+  
+**allOf[1] / data**
+
+Type | Constraints  
+---|---  
+object | required: ["rebate_amount","trade_volume","net_fee","customer_count","trading_user_count","time_range_desc","business_type","business_type_desc"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+rebate_amount | string | Required | pattern: "^\\\d+(\\\\.\\\d{1,6})?$" | Rebate amount as a string for precision.  
+Up to 6 decimal places; trailing zeros removed.  
+trade_volume | string | Required | pattern: "^\\\d+(\\\\.\\\d{1,6})?$" | Trading volume as a string for precision.  
+Up to 6 decimal places; trailing zeros removed.  
+net_fee | string | Required | pattern: "^\\\d+(\\\\.\\\d{1,6})?$" | Net fee as a string for precision.  
+Up to 6 decimal places; trailing zeros removed.  
+customer_count | integer | Required | minimum: 0 | Customer count (invited users)  
+trading_user_count | string|null | Required | nullable: true  
+pattern: "^\\\d+$" | Transaction participant count (string format, consistent with online JSON serialization) only returns a specific value when business_type=0(all), and returns nullfor other business types.  
+time_range_desc | string | Required | pattern: "^\\\d{4}-\\\d{2}-\\\d{2} ~ \\\d{4}-\\\d{2}-\\\d{2}$" | Time range description  
+business_type | integer | Required | enum: [0,1,2,3,4,5,6,7,8] | Business Type  
+business_type_desc | string | Required |  | Business type description; allowed values: All, Spot, Futures, Alpha, Web3, Perps (DEX), Exchange All, Web3 All, TradFi  
   
 Status Code **400**
 
-Name | Type | Description  
----|---|---  
-» code | integer | Error code  
-» message | string | Error message  
-» data | object | Empty object  
-» timestamp | integer(int64) | Unix timestamp  
+Type | Constraints  
+---|---  
+ErrorResponse | required: ["code","message","data","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  | Error code  
+message | string | Required |  | Error message  
+data | object | Required |  | Empty object  
+timestamp | integer(int64) | Required |  | Unix timestamp  
   
 Status Code **401**
 
-Name | Type | Description  
----|---|---  
-» code | integer | Error code  
-» message | string | Error message  
-» data | object | Empty object  
-» timestamp | integer(int64) | Unix timestamp  
+Type | Constraints  
+---|---  
+ErrorResponse | required: ["code","message","data","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  | Error code  
+message | string | Required |  | Error message  
+data | object | Required |  | Empty object  
+timestamp | integer(int64) | Required |  | Unix timestamp  
   
 Status Code **403**
 
-Name | Type | Description  
----|---|---  
-» code | integer | Error code  
-» message | string | Error message  
-» data | object | Empty object  
-» timestamp | integer(int64) | Unix timestamp  
+Type | Constraints  
+---|---  
+ErrorResponse | required: ["code","message","data","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  | Error code  
+message | string | Required |  | Error message  
+data | object | Required |  | Empty object  
+timestamp | integer(int64) | Required |  | Unix timestamp  
   
 WARNING
 
@@ -1488,38 +1996,45 @@ Code samples
 
 #  Schemas
 
-##  RebateUserInfo
-
-_Retrieve user rebate information_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-invite_uid | integer(int64) | Optional | none | My inviter's UID  
-      
-    
-    {
-      "invite_uid": 0
-    }
-    
-    
-
 ##  PartnerCommissionHistory
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-total | integer(int64) | Optional | none | Total  
-list | array | Optional | none | List of commission history  
-» PartnerCommission | object | Optional | none | none  
-»» commission_time | integer(int64) | Optional | none | Commission time (Unix timestamp in seconds)  
-»» user_id | integer(int64) | Optional | none | User ID  
-»» group_name | string | Optional | none | Group name  
-»» commission_amount | string | Optional | none | Commission amount  
-»» commission_asset | string | Optional | none | Commission Asset  
-»» source | string | Optional | none | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
+total | integer(int64) | Optional |  | Total  
+list | array | Optional |  | List of commission history  
+  
+**list**
+
+List of commission history
+
+Type | Constraints  
+---|---  
+array |   
+  
+**list / items**
+
+PartnerCommission
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+commission_time | integer(int64) | Optional |  | Commission time (Unix timestamp in seconds)  
+user_id | integer(int64) | Optional |  | User ID  
+group_name | string | Optional |  | Group name  
+commission_amount | string | Optional |  | Commission amount  
+commission_asset | string | Optional |  | Commission Asset  
+source | string | Optional |  | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
       
     
     {
@@ -1538,27 +2053,240 @@ list | array | Optional | none | List of commission history
     
     
 
-##  UserSubRelation
+##  BrokerCommission
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-list | array | Optional | none | Subordinate relationship list  
-» UserSub | object | Optional | none | none  
-»» uid | integer(int64) | Optional | none | User ID  
-»» belong | string | Optional | none | User's system affiliation (partner/referral). Empty means not belonging to any system  
-»» type | integer(int64) | Optional | none | Type (0-Not in system 1-Direct subordinate agent 2-Indirect subordinate agent 3-Direct direct customer 4-Indirect direct customer 5-Regular user)  
-»» ref_uid | integer(int64) | Optional | none | Inviter user ID  
+total | integer(int64) | Optional |  | Total  
+list | array | Optional |  | List of commission history  
+  
+**list**
+
+List of commission history
+
+Type | Constraints  
+---|---  
+array |   
+  
+**list / items**
+
+BrokerCommissionItem
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+commission_time | integer(int64) | Optional |  | Commission time (Unix timestamp in seconds)  
+user_id | integer(int64) | Optional |  | User ID  
+group_name | string | Optional |  | Group name  
+amount | string | Optional |  | The amount of commission rebates  
+fee | string | Optional |  | Fee  
+fee_asset | string | Optional |  | Fee currency  
+rebate_fee | string | Optional |  | The income from rebates, converted to USDT  
+source | string | Optional |  | Commission transaction type: Spot, Futures, Options, Alpha、TradFi  
+currency_pair | string | Optional |  | Currency pair  
+sub_broker_info | object | Optional |  | Sub-broker information  
+alpha_contract_addr | string | Optional |  | Alpha contract address  
+  
+**list / items / sub_broker_info**
+
+Sub-broker information
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | Sub-broker user ID  
+original_commission_rate | string | Optional |  | Sub-broker original commission rate  
+relative_commission_rate | string | Optional |  | Sub-broker relative commission rate  
+commission_rate | string | Optional |  | Sub-broker actual commission rate  
       
     
     {
+      "total": 0,
       "list": [
         {
-          "uid": 0,
-          "belong": "string",
-          "type": 0,
-          "ref_uid": 0
+          "commission_time": 0,
+          "user_id": 0,
+          "group_name": "string",
+          "amount": "string",
+          "fee": "string",
+          "fee_asset": "string",
+          "rebate_fee": "string",
+          "source": "string",
+          "currency_pair": "string",
+          "sub_broker_info": {},
+          "alpha_contract_addr": "string"
+        }
+      ]
+    }
+    
+    
+
+##  EligibilityResponse
+
+Type | Constraints  
+---|---  
+allOf |   
+  
+**allOf[0]**
+
+Type | Constraints  
+---|---  
+object | required: ["code","message","data","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  | Error Code, 0 Indicates Success  
+message | string | Required |  | Error message description  
+data | object | Required |  | Response data  
+timestamp | integer(int64) | Required |  | Unix timestamp  
+  
+**allOf[1]**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Required | required: ["eligible","block_reasons","block_reason_codes"] |   
+  
+**allOf[1] / data**
+
+Type | Constraints  
+---|---  
+object | required: ["eligible","block_reasons","block_reason_codes"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+eligible | boolean | Required |  | Whether eligible for application  
+block_reasons | array | Required |  | List of ineligibility reason descriptions  
+block_reason_codes | array | Required |  | List of ineligibility reason codes  
+  
+**allOf[1] / data / block_reasons**
+
+List of ineligibility reason descriptions
+
+Type | Constraints  
+---|---  
+array |   
+  
+**allOf[1] / data / block_reasons / items**
+
+Type | Constraints  
+---|---  
+string |   
+  
+**allOf[1] / data / block_reason_codes**
+
+List of ineligibility reason codes
+
+Type | Constraints  
+---|---  
+array |   
+  
+**allOf[1] / data / block_reason_codes / items**
+
+Type | Constraints  
+---|---  
+string |   
+  
+**Enumerated Values**
+
+Value  
+---  
+"user_not_exist"  
+"user_blacked"  
+"sub_account"  
+"already_agent"  
+"kyc_incomplete"  
+"in_agent_tree"  
+"ch_code_conflict"  
+      
+    
+    {
+      "code": 0,
+      "message": "success",
+      "data": {
+        "eligible": false,
+        "block_reasons": [
+          "当前账号为子账号，请您切换至主账号完成申请。"
+        ],
+        "block_reason_codes": [
+          "sub_account"
+        ]
+      },
+      "timestamp": 1773637797
+    }
+    
+    
+
+##  PartnerSubList
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total  
+list | array | Optional |  | Subordinate list  
+  
+**list**
+
+Subordinate list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**list / items**
+
+PartnerSub
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | User ID  
+user_join_time | integer(int64) | Optional |  | Time when user joined the system, Unix timestamp in seconds  
+type | integer(int64) | Optional |  | Type (1-Sub-agent 2-Indirect direct customer 3-Direct direct customer)  
+      
+    
+    {
+      "total": 0,
+      "list": [
+        {
+          "user_id": 0,
+          "user_join_time": 0,
+          "type": 0
         }
       ]
     }
@@ -1567,20 +2295,44 @@ list | array | Optional | none | Subordinate relationship list
 
 ##  AgencyCommissionHistory
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-currency_pair | string | Optional | none | Currency pair  
-total | integer(int64) | Optional | none | Total  
-list | array | Optional | none | List of commission history  
-» AgencyCommission | object | Optional | none | none  
-»» commission_time | integer(int64) | Optional | none | Commission time (Unix timestamp in seconds)  
-»» user_id | integer(int64) | Optional | none | User ID  
-»» group_name | string | Optional | none | Group name  
-»» commission_amount | string | Optional | none | Commission amount  
-»» commission_asset | string | Optional | none | Commission Asset  
-»» source | string | Optional | none | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
+currency_pair | string | Optional |  | Currency pair  
+total | integer(int64) | Optional |  | Total  
+list | array | Optional |  | List of commission history  
+  
+**list**
+
+List of commission history
+
+Type | Constraints  
+---|---  
+array |   
+  
+**list / items**
+
+AgencyCommission
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+commission_time | integer(int64) | Optional |  | Commission time (Unix timestamp in seconds)  
+user_id | integer(int64) | Optional |  | User ID  
+group_name | string | Optional |  | Group name  
+commission_amount | string | Optional |  | Commission amount  
+commission_asset | string | Optional |  | Commission Asset  
+source | string | Optional |  | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
       
     
     {
@@ -1600,60 +2352,492 @@ list | array | Optional | none | List of commission history
     
     
 
+##  RebateUserInfo
+
+Retrieve user rebate information
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+invite_uid | integer(int64) | Optional |  | My inviter's UID  
+      
+    
+    {
+      "invite_uid": 0
+    }
+    
+    
+
+##  ErrorResponse
+
+Type | Constraints  
+---|---  
+object | required: ["code","message","data","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  | Error code  
+message | string | Required |  | Error message  
+data | object | Required |  | Empty object  
+timestamp | integer(int64) | Required |  | Unix timestamp  
+      
+    
+    {
+      "code": 401,
+      "message": "Unauthorized",
+      "data": {},
+      "timestamp": 1773637797
+    }
+    
+    
+
+##  PartnerTransactionHistory
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total  
+list | array | Optional |  | List of transaction history  
+  
+**list**
+
+List of transaction history
+
+Type | Constraints  
+---|---  
+array |   
+  
+**list / items**
+
+PartnerTransaction
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+transaction_time | integer(int64) | Optional |  | Transaction Time. (unix timestamp)  
+user_id | integer(int64) | Optional |  | User ID  
+group_name | string | Optional |  | Group name  
+fee | string | Optional |  | Fee  
+fee_asset | string | Optional |  | Fee currency  
+currency_pair | string | Optional |  | Currency pair  
+amount | string | Optional |  | Transaction amount  
+amount_asset | string | Optional |  | Transaction amount currency  
+source | string | Optional |  | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
+      
+    
+    {
+      "total": 0,
+      "list": [
+        {
+          "transaction_time": 0,
+          "user_id": 0,
+          "group_name": "string",
+          "fee": "string",
+          "fee_asset": "string",
+          "currency_pair": "string",
+          "amount": "string",
+          "amount_asset": "string",
+          "source": "string"
+        }
+      ]
+    }
+    
+    
+
+##  AgencyTransactionHistory
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency_pair | string | Optional |  | Currency pair  
+total | integer(int64) | Optional |  | Total  
+list | array | Optional |  | List of transaction history  
+  
+**list**
+
+List of transaction history
+
+Type | Constraints  
+---|---  
+array |   
+  
+**list / items**
+
+AgencyTransaction
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+transaction_time | integer(int64) | Optional |  | Transaction Time. (unix timestamp)  
+user_id | integer(int64) | Optional |  | User ID  
+group_name | string | Optional |  | Group name  
+fee | string | Optional |  | Fee  
+fee_asset | string | Optional |  | Fee currency  
+currency_pair | string | Optional |  | Currency pair  
+amount | string | Optional |  | Transaction amount  
+amount_asset | string | Optional |  | Transaction amount currency  
+source | string | Optional |  | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
+      
+    
+    {
+      "currency_pair": "string",
+      "total": 0,
+      "list": [
+        {
+          "transaction_time": 0,
+          "user_id": 0,
+          "group_name": "string",
+          "fee": "string",
+          "fee_asset": "string",
+          "currency_pair": "string",
+          "amount": "string",
+          "amount_asset": "string",
+          "source": "string"
+        }
+      ]
+    }
+    
+    
+
+##  PartnerDataAggregatedResponse
+
+Type | Constraints  
+---|---  
+allOf |   
+  
+**allOf[0]**
+
+Type | Constraints  
+---|---  
+object | required: ["code","message","data","timestamp"]  
+  
+**allOf[1]**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Required | required: ["rebate_amount","trade_volume","net_fee","customer_count","trading_user_count","time_range_desc","business_type","business_type_desc"] |   
+  
+**allOf[1] / data**
+
+Type | Constraints  
+---|---  
+object | required: ["rebate_amount","trade_volume","net_fee","customer_count","trading_user_count","time_range_desc","business_type","business_type_desc"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+rebate_amount | string | Required | pattern: "^\\\d+(\\\\.\\\d{1,6})?$" | Rebate amount as a string for precision.  
+Up to 6 decimal places; trailing zeros removed.  
+trade_volume | string | Required | pattern: "^\\\d+(\\\\.\\\d{1,6})?$" | Trading volume as a string for precision.  
+Up to 6 decimal places; trailing zeros removed.  
+net_fee | string | Required | pattern: "^\\\d+(\\\\.\\\d{1,6})?$" | Net fee as a string for precision.  
+Up to 6 decimal places; trailing zeros removed.  
+customer_count | integer | Required | minimum: 0 | Customer count (invited users)  
+trading_user_count | string|null | Required | nullable: true  
+pattern: "^\\\d+$" | Transaction participant count (string format, consistent with online JSON serialization) only returns a specific value when business_type=0(all), and returns nullfor other business types.  
+time_range_desc | string | Required | pattern: "^\\\d{4}-\\\d{2}-\\\d{2} ~ \\\d{4}-\\\d{2}-\\\d{2}$" | Time range description  
+business_type | integer | Required | enum: [0,1,2,3,4,5,6,7,8] | Business Type  
+business_type_desc | string | Required |  | Business type description; allowed values: All, Spot, Futures, Alpha, Web3, Perps (DEX), Exchange All, Web3 All, TradFi  
+      
+    
+    {
+      "code": 0,
+      "message": "success",
+      "data": {
+        "rebate_amount": "1234.567890",
+        "trade_volume": "9876543.210000",
+        "net_fee": "543.210000",
+        "customer_count": 150,
+        "trading_user_count": "85",
+        "time_range_desc": "2024-01-01 ~ 2024-01-07",
+        "business_type": 0,
+        "business_type_desc": "全部"
+      },
+      "timestamp": 1773637797
+    }
+    
+    
+
+##  UserSubRelation
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+list | array | Optional |  | Subordinate relationship list  
+  
+**list**
+
+Subordinate relationship list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**list / items**
+
+UserSub
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+uid | integer(int64) | Optional |  | User ID  
+belong | string | Optional |  | User's system affiliation (partner/referral). Empty means not belonging to any system  
+type | integer(int64) | Optional |  | Type (0-Not in system 1-Direct subordinate agent 2-Indirect subordinate agent 3-Direct direct customer 4-Indirect direct customer 5-Regular user)  
+ref_uid | integer(int64) | Optional |  | Inviter user ID  
+      
+    
+    {
+      "list": [
+        {
+          "uid": 0,
+          "belong": "string",
+          "type": 0,
+          "ref_uid": 0
+        }
+      ]
+    }
+    
+    
+
+##  BrokerTransactionHistory
+
+BrokerTransactionHistory
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | Total  
+list | array | Optional |  | List of transaction history  
+  
+**list**
+
+List of transaction history
+
+Type | Constraints  
+---|---  
+array |   
+  
+**list / items**
+
+BrokerTransaction
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+transaction_time | integer(int64) | Optional |  | Transaction Time. (unix timestamp)  
+user_id | integer(int64) | Optional |  | User ID  
+group_name | string | Optional |  | Group name  
+fee | string | Optional |  | Fee amount (USDT)  
+currency_pair | string | Optional |  | Currency pair  
+amount | string | Optional |  | Transaction amount  
+fee_asset | string | Optional |  | Fee currency  
+source | string | Optional |  | Commission transaction type: Spot, Futures, Options, Alpha、TradFi  
+sub_broker_info | object | Optional |  | Sub-broker information  
+alpha_contract_addr | string | Optional |  | Alpha contract address  
+  
+**list / items / sub_broker_info**
+
+Sub-broker information
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | Sub-broker user ID  
+original_commission_rate | string | Optional |  | Sub-broker original commission rate  
+relative_commission_rate | string | Optional |  | Sub-broker relative commission rate  
+commission_rate | string | Optional |  | Sub-broker actual commission rate  
+      
+    
+    {
+      "total": 0,
+      "list": [
+        {
+          "transaction_time": 0,
+          "user_id": 0,
+          "group_name": "string",
+          "fee": "string",
+          "currency_pair": "string",
+          "amount": "string",
+          "fee_asset": "string",
+          "source": "string",
+          "sub_broker_info": {},
+          "alpha_contract_addr": "string"
+        }
+      ]
+    }
+    
+    
+
 ##  PartnerApplicationResponse
 
-###  Properties
-
-_allOf_
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-_None_ | object | Optional | none | none  
-» code | integer | Required | none | Error Code, 0 Indicates Success  
-» message | string | Required | none | Error message description  
-» data | object | Required | none | Response data  
-» timestamp | integer(int64) | Required | none | Unix timestamp  
+Type | Constraints  
+---|---  
+allOf |   
   
-_and_
+**allOf[0]**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Type | Constraints  
+---|---  
+object | required: ["code","message","data","timestamp"]  
+  
+**allOf[1]**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-_None_ | object | Optional | none | none  
-» data | object | Optional | none | none  
-»» id | integer | Optional | none | Application record ID  
-»» uid | integer | Optional | none | User ID  
-»» language | string | Optional | none | Language code  
-»» country_id | integer | Optional | none | Country ID  
-»» firstname | string | Optional | none | First name  
-»» lastname | string | Optional | none | Last name  
-»» email | string(email) | Optional | none | Email address  
-»» join_uid | integer | Optional | none | Joined user ID  
-»» join_country_id | integer | Optional | none | Joined country ID  
-»» identity_comment | string | Optional | none | Identity description  
-»» promotion_channels | string | Optional | none | Promotion channels, separated by  
-»» contact_details | string | Optional | none | Contact details (JSON string)  
-»» know_details | string | Optional | none | Learn more  
-»» question_lang | string | Optional | none | Question language  
-»» create_timest | string(date-time) | Optional | none | Created time  
-»» update_timest | string(date-time) | Optional | none | Update time  
-»» apply_type | integer | Optional | none | Application type  
-»» audit_status | integer | Optional | none | Review status (0 - pending, 1 - approved, 2 - rejected)  
-»» edit_counts | integer | Optional | none | Edit count  
-»» proof_images | string | Optional | none | Proof image path  
-»» proof_videos | string | Optional | none | Proof video path  
-»» proof_url | string(uri) | Optional | none | Proof link  
-»» audit_reason | integer | Optional | none | Review reason code  
-»» channel_type | integer | Optional | none | Channel type  
-»» region | string | Optional | none | Region  
-»» phone | string | Optional | none | Phone number  
-»» telegram | string | Optional | none | Telegram account  
-»» other_contact | object | Optional | none | Other contact information  
-»»» type | integer | Optional | none | Contact type  
-»»» value | string | Optional | none | Contact value  
-»» proof_images_url_list | array | Optional | none | List of proof image URLs  
-»» proof_videos_url_list | array | Optional | none | List of proof video URLs  
-»» apply_msg | string | Optional | none | Application message  
-»» jump_url | string | Optional | none | Redirect URL  
+data | object | Required |  |   
+  
+**allOf[1] / data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer | Optional |  | Application record ID  
+uid | integer | Optional |  | User ID  
+language | string | Optional |  | Language code  
+country_id | integer | Optional |  | Country ID  
+firstname | string | Optional |  | First name  
+lastname | string | Optional |  | Last name  
+email | string(email) | Optional |  | Email address  
+join_uid | integer | Optional |  | Joined user ID  
+join_country_id | integer | Optional |  | Joined country ID  
+identity_comment | string | Optional |  | Identity description  
+promotion_channels | string | Optional |  | Promotion channels, separated by |  
+contact_details | string | Optional |  | Contact details (JSON string)  
+know_details | string | Optional |  | Learn more  
+question_lang | string | Optional |  | Question language  
+create_timest | string(date-time) | Optional |  | Created time  
+update_timest | string(date-time) | Optional |  | Update time  
+apply_type | integer | Optional |  | Application type  
+audit_status | integer | Optional |  | Review status (0 - pending, 1 - approved, 2 - rejected)  
+edit_counts | integer | Optional |  | Edit count  
+proof_images | string | Optional |  | Proof image path  
+proof_videos | string | Optional |  | Proof video path  
+proof_url | string(uri) | Optional |  | Proof link  
+audit_reason | integer | Optional |  | Review reason code  
+channel_type | integer | Optional |  | Channel type  
+region | string | Optional |  | Region  
+phone | string | Optional |  | Phone number  
+telegram | string | Optional |  | Telegram account  
+other_contact | object | Optional |  | Other contact information  
+proof_images_url_list | array | Optional |  | List of proof image URLs  
+proof_videos_url_list | array | Optional |  | List of proof video URLs  
+apply_msg | string | Optional |  | Application message  
+jump_url | string | Optional |  | Redirect URL  
+  
+**allOf[1] / data / other_contact**
+
+OtherContact
+
+Other contact information
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+type | integer | Optional |  | Contact type  
+value | string | Optional |  | Contact value  
+  
+**allOf[1] / data / proof_images_url_list**
+
+List of proof image URLs
+
+Type | Constraints  
+---|---  
+array |   
+  
+**allOf[1] / data / proof_images_url_list / items**
+
+Type | Constraints  
+---|---  
+string(uri) |   
+  
+**allOf[1] / data / proof_videos_url_list**
+
+List of proof video URLs
+
+Type | Constraints  
+---|---  
+array |   
+  
+**allOf[1] / data / proof_videos_url_list / items**
+
+Type | Constraints  
+---|---  
+string(uri) |   
       
     
     {
@@ -1699,325 +2883,4 @@ _None_ | object | Optional | none | none
         "jump_url": "/referral/affiliate/program-application"
       },
       "timestamp": 1773637797
-    }
-    
-    
-
-##  AgencyTransactionHistory
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency_pair | string | Optional | none | Currency pair  
-total | integer(int64) | Optional | none | Total  
-list | array | Optional | none | List of transaction history  
-» AgencyTransaction | object | Optional | none | none  
-»» transaction_time | integer(int64) | Optional | none | Transaction Time. (unix timestamp)  
-»» user_id | integer(int64) | Optional | none | User ID  
-»» group_name | string | Optional | none | Group name  
-»» fee | string | Optional | none | Fee  
-»» fee_asset | string | Optional | none | Fee currency  
-»» currency_pair | string | Optional | none | Currency pair  
-»» amount | string | Optional | none | Transaction amount  
-»» amount_asset | string | Optional | none | Transaction amount currency  
-»» source | string | Optional | none | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
-      
-    
-    {
-      "currency_pair": "string",
-      "total": 0,
-      "list": [
-        {
-          "transaction_time": 0,
-          "user_id": 0,
-          "group_name": "string",
-          "fee": "string",
-          "fee_asset": "string",
-          "currency_pair": "string",
-          "amount": "string",
-          "amount_asset": "string",
-          "source": "string"
-        }
-      ]
-    }
-    
-    
-
-##  BrokerTransactionHistory
-
-_BrokerTransactionHistory_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-total | integer(int64) | Optional | none | Total  
-list | array | Optional | none | List of transaction history  
-» BrokerTransaction | object | Optional | none | none  
-»» transaction_time | integer(int64) | Optional | none | Transaction Time. (unix timestamp)  
-»» user_id | integer(int64) | Optional | none | User ID  
-»» group_name | string | Optional | none | Group name  
-»» fee | string | Optional | none | Fee amount (USDT)  
-»» currency_pair | string | Optional | none | Currency pair  
-»» amount | string | Optional | none | Transaction amount  
-»» fee_asset | string | Optional | none | Fee currency  
-»» source | string | Optional | none | Commission transaction type: Spot, Futures, Options, Alpha、TradFi  
-»» sub_broker_info | object | Optional | none | Sub-broker information  
-»»» user_id | integer(int64) | Optional | none | Sub-broker user ID  
-»»» original_commission_rate | string | Optional | none | Sub-broker original commission rate  
-»»» relative_commission_rate | string | Optional | none | Sub-broker relative commission rate  
-»»» commission_rate | string | Optional | none | Sub-broker actual commission rate  
-»» alpha_contract_addr | string | Optional | none | Alpha contract address  
-      
-    
-    {
-      "total": 0,
-      "list": [
-        {
-          "transaction_time": 0,
-          "user_id": 0,
-          "group_name": "string",
-          "fee": "string",
-          "currency_pair": "string",
-          "amount": "string",
-          "fee_asset": "string",
-          "source": "string",
-          "sub_broker_info": {},
-          "alpha_contract_addr": "string"
-        }
-      ]
-    }
-    
-    
-
-##  PartnerDataAggregatedResponse
-
-###  Properties
-
-_allOf_
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-_None_ | PartnerApplicationResponse/allOf/0 | Optional | none | none  
-  
-_and_
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-_None_ | object | Optional | none | none  
-» data | object | Optional | none | none  
-»» rebate_amount | string | Required | none | Rebate amount as a string for precision.  
-Up to 6 decimal places; trailing zeros removed.  
-»» trade_volume | string | Required | none | Trading volume as a string for precision.  
-Up to 6 decimal places; trailing zeros removed.  
-»» net_fee | string | Required | none | Net fee as a string for precision.  
-Up to 6 decimal places; trailing zeros removed.  
-»» customer_count | integer | Required | none | Customer count (invited users)  
-»» trading_user_count | string|null | Required | none | Transaction participant count (string format, consistent with online JSON serialization) only returns a specific value when business_type=0(all), and returns nullfor other business types.  
-»» time_range_desc | string | Required | none | Time range description  
-»» business_type | integer | Required | none | Business Type  
-»» business_type_desc | string | Required | none | Business type description; allowed values: All, Spot, Futures, Alpha, Web3, Perps (DEX), Exchange All, Web3 All, TradFi  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-business_type | 0  
-business_type | 1  
-business_type | 2  
-business_type | 3  
-business_type | 4  
-business_type | 5  
-business_type | 6  
-business_type | 7  
-business_type | 8  
-      
-    
-    {
-      "code": 0,
-      "message": "success",
-      "data": {
-        "rebate_amount": "1234.567890",
-        "trade_volume": "9876543.210000",
-        "net_fee": "543.210000",
-        "customer_count": 150,
-        "trading_user_count": "85",
-        "time_range_desc": "2024-01-01 ~ 2024-01-07",
-        "business_type": 0,
-        "business_type_desc": "全部"
-      },
-      "timestamp": 1773637797
-    }
-    
-    
-
-##  ErrorResponse
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-code | integer | Required | none | Error code  
-message | string | Required | none | Error message  
-data | object | Required | none | Empty object  
-timestamp | integer(int64) | Required | none | Unix timestamp  
-      
-    
-    {
-      "code": 401,
-      "message": "Unauthorized",
-      "data": {},
-      "timestamp": 1773637797
-    }
-    
-    
-
-##  PartnerTransactionHistory
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-total | integer(int64) | Optional | none | Total  
-list | array | Optional | none | List of transaction history  
-» PartnerTransaction | object | Optional | none | none  
-»» transaction_time | integer(int64) | Optional | none | Transaction Time. (unix timestamp)  
-»» user_id | integer(int64) | Optional | none | User ID  
-»» group_name | string | Optional | none | Group name  
-»» fee | string | Optional | none | Fee  
-»» fee_asset | string | Optional | none | Fee currency  
-»» currency_pair | string | Optional | none | Currency pair  
-»» amount | string | Optional | none | Transaction amount  
-»» amount_asset | string | Optional | none | Transaction amount currency  
-»» source | string | Optional | none | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
-      
-    
-    {
-      "total": 0,
-      "list": [
-        {
-          "transaction_time": 0,
-          "user_id": 0,
-          "group_name": "string",
-          "fee": "string",
-          "fee_asset": "string",
-          "currency_pair": "string",
-          "amount": "string",
-          "amount_asset": "string",
-          "source": "string"
-        }
-      ]
-    }
-    
-    
-
-##  EligibilityResponse
-
-###  Properties
-
-_allOf_
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-_None_ | PartnerApplicationResponse/allOf/0 | Optional | none | none  
-  
-_and_
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-_None_ | object | Optional | none | none  
-» data | object | Optional | none | none  
-»» eligible | boolean | Required | none | Whether eligible for application  
-»» block_reasons | array | Required | none | List of ineligibility reason descriptions  
-»» block_reason_codes | array | Required | none | List of ineligibility reason codes  
-      
-    
-    {
-      "code": 0,
-      "message": "success",
-      "data": {
-        "eligible": false,
-        "block_reasons": [
-          "当前账号为子账号，请您切换至主账号完成申请。"
-        ],
-        "block_reason_codes": [
-          "sub_account"
-        ]
-      },
-      "timestamp": 1773637797
-    }
-    
-    
-
-##  BrokerCommission
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-total | integer(int64) | Optional | none | Total  
-list | array | Optional | none | List of commission history  
-» BrokerCommissionItem | object | Optional | none | none  
-»» commission_time | integer(int64) | Optional | none | Commission time (Unix timestamp in seconds)  
-»» user_id | integer(int64) | Optional | none | User ID  
-»» group_name | string | Optional | none | Group name  
-»» amount | string | Optional | none | The amount of commission rebates  
-»» fee | string | Optional | none | Fee  
-»» fee_asset | string | Optional | none | Fee currency  
-»» rebate_fee | string | Optional | none | The income from rebates, converted to USDT  
-»» source | string | Optional | none | Commission transaction type: Spot, Futures, Options, Alpha、TradFi  
-»» currency_pair | string | Optional | none | Currency pair  
-»» sub_broker_info | object | Optional | none | Sub-broker information  
-»»» user_id | integer(int64) | Optional | none | Sub-broker user ID  
-»»» original_commission_rate | string | Optional | none | Sub-broker original commission rate  
-»»» relative_commission_rate | string | Optional | none | Sub-broker relative commission rate  
-»»» commission_rate | string | Optional | none | Sub-broker actual commission rate  
-»» alpha_contract_addr | string | Optional | none | Alpha contract address  
-      
-    
-    {
-      "total": 0,
-      "list": [
-        {
-          "commission_time": 0,
-          "user_id": 0,
-          "group_name": "string",
-          "amount": "string",
-          "fee": "string",
-          "fee_asset": "string",
-          "rebate_fee": "string",
-          "source": "string",
-          "currency_pair": "string",
-          "sub_broker_info": {},
-          "alpha_contract_addr": "string"
-        }
-      ]
-    }
-    
-    
-
-##  PartnerSubList
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-total | integer(int64) | Optional | none | Total  
-list | array | Optional | none | Subordinate list  
-» PartnerSub | object | Optional | none | none  
-»» user_id | integer(int64) | Optional | none | User ID  
-»» user_join_time | integer(int64) | Optional | none | Time when user joined the system, Unix timestamp in seconds  
-»» type | integer(int64) | Optional | none | Type (1-Sub-agent 2-Indirect direct customer 3-Direct direct customer)  
-      
-    
-    {
-      "total": 0,
-      "list": [
-        {
-          "user_id": 0,
-          "user_join_time": 0,
-          "type": 0
-        }
-      ]
     }

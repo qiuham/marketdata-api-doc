@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/stp-group
 api_type: REST
-updated_at: 2026-11-18 19:01:34.077578
+updated_at: 2026-11-19 19:08:08.563871
 ---
 
 # STP Group

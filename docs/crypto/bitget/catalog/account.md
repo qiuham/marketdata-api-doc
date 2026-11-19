@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/account
 api_type: REST
-updated_at: 2026-11-18 19:01:02.187792
+updated_at: 2026-11-19 19:07:39.752578
 ---
 
 # Account
@@ -126,6 +126,7 @@ Operation ID: `assetsBalanceGetAccountAssets`
 | data.assets[].locked | string |  | Locked<br><br>_Applicable when placing spot orders_ |
 | data.assets[].bonus | string |  | USDT bonus amount |
 | data.assets[].interestBase | string |  | Interest calculation base<br><br>Formula: debt + abs(min(0, balance + unrealized PnL)) |
+| data.assets[].collateralLimitStatus | string |  | Platform collateral limit status<br><br>`normal` Normal<br><br>`user_warning` User limit warning: the limit has not been triggered, but this coin is approaching the user's collateral limit<br><br>`platform_warning` Platform limit warning: the limit has not been triggered, but this coin is approaching the platform's collateral limit<br><br>`user_limited` User limit triggered<br><br>`platform_limited` Platform limit triggered<br><br>Returns `normal` for coins not under collateral limit management |
 
 ```json
 {
@@ -157,7 +158,8 @@ Operation ID: `assetsBalanceGetAccountAssets`
         "debt": "0",
         "locked": "0",
         "bonus": "10",
-        "interestBase": "0"
+        "interestBase": "0",
+        "collateralLimitStatus": "normal"
       },
       {
         "coin": "BGB",
@@ -169,7 +171,8 @@ Operation ID: `assetsBalanceGetAccountAssets`
         "debt": "0",
         "locked": "0",
         "bonus": "0",
-        "interestBase": "0"
+        "interestBase": "0",
+        "collateralLimitStatus": "normal"
       }
     ]
   }
@@ -239,7 +242,7 @@ Rate limit: 20/sec/UID
 
 Permission: UTA mgt. (read)
 
-Query UTA account financial records within the last 90 days. You can download your <a href="https://www.bitget.com/trade-asset-order/uta-order-finance">full UTA account financial records</a> (data available as early as January 1, 2018) via our website.
+Query financial records within the last 90 days.
 
 Operation ID: `assetsBalanceGetFinancialRecords`
 
@@ -487,6 +490,7 @@ Operation ID: `assetsBalanceGetMaxWithdrawal`
 | data.spotMaxWithdrawal | string |  | Max withdrawable amount for spot account |
 | data.utaMaxWithdrawal | string |  | Max withdrawable amount for unified trading account |
 | data.totalMaxWithdrawal | string |  | Total max withdrawable amount |
+| data.frozenValue | string |  | Frozen asset value, in USDT<br><br>E.g. deposits that have not yet reached the required confirmation count; this amount has already been deducted from the max withdrawable amount |
 
 ```json
 {
@@ -498,7 +502,8 @@ Operation ID: `assetsBalanceGetMaxWithdrawal`
     "otcMaxWithdrawal": "100",
     "spotMaxWithdrawal": "500",
     "utaMaxWithdrawal": "1000",
-    "totalMaxWithdrawal": "1600"
+    "totalMaxWithdrawal": "1600",
+    "frozenValue": "0"
   }
 }
 ```
@@ -2116,7 +2121,7 @@ Rate limit: 10/sec/UID
 
 This API is used to create an API Key for a sub-account under a unified account. It is applicable when the main account is in a mix or unified account mode. If the current main account is in the classic account mode, this API cannot be called.
 
-Currently, only the creation of virtual sub-accounts and Copper custody sub-accounts is supported.
+Supported sub-account types: virtual sub-account, Copper custody sub-account, and regular sub-account. A regular sub-account must already be in unified account mode; if the sub-account is in classic account mode, this API returns an error indicating the sub-account does not support key creation.
 
 Unified account management read and write permissions are required
 
@@ -2128,7 +2133,7 @@ Operation ID: `subAccountsCreateSubAccountApiKey`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| subUid | string | 是 | Sub-account ID |
+| subUid | string | 是 | Sub-account ID<br><br>Now also supports regular sub-account UIDs, in addition to virtual sub-accounts and Copper custody sub-accounts |
 | note | string | 是 | Note Name<br><br>The note needs to start with a letter and supports [0-9], [a-z], [A-Z], as well as [-,_] |
 | type | string | 是 | Permission Type<br><br>`read_write` Read/Write<br><br>`read_only` Read-only |
 | passphrase | string | 是 | passphrase<br><br>A combination of 8 to 32 characters of letters and numbers |
@@ -2528,9 +2533,9 @@ Operation ID: `depositWithdrawalGetSubDepositAddress`
 
 `GET /api/v3/account/deposit-records`
 
-Get deposit records. You can download your <a href="https://www.bitget.com/record/wallet">full deposit and withdrawal records</a> (data available as early as January 1, 2018) via our website.
-
 Rate limit: 10/sec/UID
+
+Get deposit records
 
 Permission: UTA mgt. (read)
 
@@ -2759,7 +2764,7 @@ Operation ID: `depositWithdrawalCancelWithdrawal`
 
 Rate limit: 10/sec/UID
 
-Get withdrawal records. You can download your <a href="https://www.bitget.com/record/wallet">full deposit and withdrawal records</a> (data available as early as January 1, 2018) via our website.
+Get withdrawal records
 
 Permission: UTA mgt. (read)
 
@@ -3191,6 +3196,7 @@ Operation ID: `utaAccountSmallAssetsGetSmallAssetsHistory`
 
 | 名称 | 位置 | 类型 | 必填 | 说明 |
 |---|---|---|---|---|
+| accountType | query | string |  | Account type<br><br>`uta` Unified account<br><br>`funding` Funding account<br><br>If not provided, returns records of all account types |
 | orderId | query | string |  | Convert order ID |
 | startTime | query | string |  | Start time<br><br>Unix millisecond timestamp<br><br>Data from the last 90 days is available; the maximum time range per query is 30 days |
 | endTime | query | string |  | End time<br><br>Unix millisecond timestamp<br><br>Data from the last 90 days is available; the maximum time range per query is 30 days |
@@ -3207,6 +3213,7 @@ Operation ID: `utaAccountSmallAssetsGetSmallAssetsHistory`
 | data | object |  |  |
 | data.list | object[] |  | List |
 | data.list[].orderId | string |  | Convert order ID |
+| data.list[].accountType | string |  | Account type<br><br>`uta`/`funding` |
 | data.list[].fromCoin | string |  | Coin to convert |
 | data.list[].fromAmount | string |  | Amount to convert |
 | data.list[].fromCoinPrice | string |  | Price of the coin at conversion time |
@@ -3228,6 +3235,7 @@ Operation ID: `utaAccountSmallAssetsGetSmallAssetsHistory`
     "list": [
       {
         "orderId": "1234567890123456789",
+        "accountType": "uta",
         "fromCoin": "DOGE",
         "fromAmount": "12.5",
         "fromCoinPrice": "0.064",
@@ -3258,6 +3266,12 @@ Query the list of small-value assets currently held in the unified account. A sm
 - Permission: UTA mgt. (read)
 
 Operation ID: `utaAccountSmallAssetsGetSmallAssets`
+
+### 参数
+
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| accountType | query | string |  | Account type<br><br>`uta` Unified account (default)<br><br>`funding` Funding account |
 
 ### 响应 200：Successful response
 
@@ -3313,6 +3327,7 @@ Operation ID: `utaAccountSmallAssetsSmallAssetsTrade`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
+| accountType | string |  | Account type<br><br>`uta` Unified account (default)<br><br>`funding` Funding account |
 | fromCoinList | string[] | 是 | Coins to convert |
 
 ### 响应 200：Successful response
@@ -3326,6 +3341,7 @@ Operation ID: `utaAccountSmallAssetsSmallAssetsTrade`
 | data.fromCoin | string[] |  | Coins to convert |
 | data.toCoin | string |  | Target coin |
 | data.orderId | string |  | Convert order ID |
+| data.accountType | string |  | Account type<br><br>`uta`/`funding`<br><br>Echoes the account type used for this convert |
 
 ```json
 {
@@ -3338,7 +3354,8 @@ Operation ID: `utaAccountSmallAssetsSmallAssetsTrade`
       "XRP"
     ],
     "toCoin": "BGB",
-    "orderId": "1234567890123456789"
+    "orderId": "1234567890123456789",
+    "accountType": "funding"
   }
 }
 ```
@@ -3576,6 +3593,7 @@ Operation ID: `assetsBalanceGetAccountAssets`
 | data.assets[].locked | string |  | 下单占用<br><br>仅现货下单场景有值 |
 | data.assets[].bonus | string |  | USDT 体验金金额 |
 | data.assets[].interestBase | string |  | 计息基础<br><br>计息 = 借币 + abs(min(0, 余额 + 未实现盈亏)) |
+| data.assets[].collateralLimitStatus | string |  | 平台抵押品限额状态<br><br>`normal`正常<br><br>`user_warning`用户限额预警。未触发限额，但该币种已接近用户抵押品限额<br><br>`platform_warning`平台限额预警。未触发限额，但该币种已接近平台抵押品限额<br><br>`user_limited`用户已触发限额<br><br>`platform_limited`平台已触发限额<br><br>未纳入抵押品限额管理的币种返回 `normal` |
 
 ```json
 {
@@ -3607,7 +3625,8 @@ Operation ID: `assetsBalanceGetAccountAssets`
         "debt": "0",
         "locked": "0",
         "bonus": "10",
-        "interestBase": "0"
+        "interestBase": "0",
+        "collateralLimitStatus": "normal"
       },
       {
         "coin": "BGB",
@@ -3619,7 +3638,8 @@ Operation ID: `assetsBalanceGetAccountAssets`
         "debt": "0",
         "locked": "0",
         "bonus": "0",
-        "interestBase": "0"
+        "interestBase": "0",
+        "collateralLimitStatus": "normal"
       }
     ]
   }
@@ -3689,7 +3709,7 @@ Operation ID: `assetsBalanceGetAccountFundingAssets`
 
 需要统一账户管理只读/读写权限
 
-获取账户90天内统一账户资金流水信息；用户可以通过网页端下载[全部时间统一账户资金流水记录](https://www.bitget.com/zh-CN/trade-asset-order/uta-order-finance)(最早可导出2018年1月1日的数据)
+获取账户90天内流水信息
 
 Operation ID: `assetsBalanceGetFinancialRecords`
 
@@ -3763,7 +3783,7 @@ Operation ID: `assetsBalanceGetFinancialRecords`
 
 需要统一账户管理只读/读写权限
 
-获取资金账户财务流水，最大查询范围90天。用户可以通过网页端下载[全部时间资金账户财务流水](https://www.bitget.com/zh-CN/record/exchange)(最早可导出2018年1月1日的数据)
+获取资金账户财务流水，最大查询范围90天，用户可以通过网页端下载[全部时间资金账户财务流水](https://www.bitget.com/zh-CN/record/exchange)(最早可导出2018年1月1日的数据)
 
 Operation ID: `assetsBalanceGetFundingFinancialRecords`
 
@@ -3937,6 +3957,7 @@ Operation ID: `assetsBalanceGetMaxWithdrawal`
 | data.spotMaxWithdrawal | string |  | 现货账户最大可提币数量 |
 | data.utaMaxWithdrawal | string |  | 统一账户最大可提币数量 |
 | data.totalMaxWithdrawal | string |  | 全部最大可提币数量 |
+| data.frozenValue | string |  | 冻结资产价值，单位为 USDT<br><br>如充值未达确认数的金额；最大可提币数量已扣减该部分 |
 
 ```json
 {
@@ -3948,7 +3969,8 @@ Operation ID: `assetsBalanceGetMaxWithdrawal`
     "otcMaxWithdrawal": "100",
     "spotMaxWithdrawal": "500",
     "utaMaxWithdrawal": "1000",
-    "totalMaxWithdrawal": "1600"
+    "totalMaxWithdrawal": "1600",
+    "frozenValue": "0"
   }
 }
 ```
@@ -5566,7 +5588,7 @@ Operation ID: `subAccountsGetSubAccountUnifiedAssets`
 
 该接口用于新建统一账户子账户的API Key，即母账户为混合账户模式或统一账户模式。如当前母账户模式为经典账户，则无法调用该接口。
 
-目前支持虚拟子账户和 Copper 托管子账户的创建。
+支持的子账户类型：虚拟子账户、Copper 托管子账户、普通子账户。普通子账户需已是统一账户模式；若该子账户为经典账户模式，接口将返回错误，提示该子账户不支持创建 Key。
 
 需要统一账户管理读写权限
 
@@ -5578,7 +5600,7 @@ Operation ID: `subAccountsCreateSubAccountApiKey`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| subUid | string | 是 | 子账户ID |
+| subUid | string | 是 | 子账户ID<br><br>现已支持传入普通子账户 UID，除虚拟子账户和 Copper 托管子账户外 |
 | note | string | 是 | 备注名称<br><br>长度限制20字符；需以字母开头，支持[0-9], [a-z], [A-Z]以及[-,_] |
 | type | string | 是 | 权限类型<br><br>`read_write` 读写<br><br>`read_only` 只读 |
 | passphrase | string | 是 | 密钥<br><br>长度为8至32位的英文字母与数字组合 |
@@ -5978,9 +6000,9 @@ Operation ID: `depositWithdrawalGetSubDepositAddress`
 
 `GET /api/v3/account/deposit-records`
 
-获取充值记录接口。用户可以通过网页端下载[全部时间充值提币记录](https://www.bitget.com/zh-CN/record/wallet)(最早可导出2018年1月1日的数据)
-
 限频规则: 10次/秒/UID
+
+获取充值记录
 
 需要统一账户管理只读权限
 
@@ -6209,7 +6231,7 @@ Operation ID: `depositWithdrawalCancelWithdrawal`
 
 限频规则: 10次/秒/UID
 
-获取提币记录接口。用户可以通过网页端下载[全部时间充值提币记录](https://www.bitget.com/zh-CN/record/wallet)(最早可导出2018年1月1日的数据)
+获取提币记录
 
 需要统一账户管理只读权限
 
@@ -6641,6 +6663,7 @@ Operation ID: `utaAccountSmallAssetsGetSmallAssetsHistory`
 
 | 名称 | 位置 | 类型 | 必填 | 说明 |
 |---|---|---|---|---|
+| accountType | query | string |  | 账户类型<br><br>`uta` 统一账户<br><br>`funding` 资金账户<br><br>不传返回全部账户类型 |
 | orderId | query | string |  | 兑换订单ID |
 | startTime | query | string |  | 开始时间<br><br>Unix毫秒时间戳<br><br>支持查询近90天数据，单次查询时间范围最大30天 |
 | endTime | query | string |  | 结束时间<br><br>Unix毫秒时间戳<br><br>支持查询近90天数据，单次查询时间范围最大30天 |
@@ -6657,6 +6680,7 @@ Operation ID: `utaAccountSmallAssetsGetSmallAssetsHistory`
 | data | object |  |  |
 | data.list | object[] |  | 列表 |
 | data.list[].orderId | string |  | 闪兑记录id |
+| data.list[].accountType | string |  | 账户类型<br><br>`uta`/`funding` |
 | data.list[].fromCoin | string |  | 兑换币种 |
 | data.list[].fromAmount | string |  | 兑换数量 |
 | data.list[].fromCoinPrice | string |  | 兑换时价格 |
@@ -6678,6 +6702,7 @@ Operation ID: `utaAccountSmallAssetsGetSmallAssetsHistory`
     "list": [
       {
         "orderId": "1234567890123456789",
+        "accountType": "uta",
         "fromCoin": "DOGE",
         "fromAmount": "12.5",
         "fromCoinPrice": "0.064",
@@ -6708,6 +6733,12 @@ Operation ID: `utaAccountSmallAssetsGetSmallAssetsHistory`
 - 需要统一账户管理只读权限
 
 Operation ID: `utaAccountSmallAssetsGetSmallAssets`
+
+### 参数
+
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| accountType | query | string |  | 账户类型<br><br>`uta` 统一账户（默认）<br><br>`funding` 资金账户 |
 
 ### 响应 200：Successful response
 
@@ -6763,6 +6794,7 @@ Operation ID: `utaAccountSmallAssetsSmallAssetsTrade`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
+| accountType | string |  | 账户类型<br><br>`uta` 统一账户（默认）<br><br>`funding` 资金账户 |
 | fromCoinList | string[] | 是 | 兑换币种 |
 
 ### 响应 200：Successful response
@@ -6776,6 +6808,7 @@ Operation ID: `utaAccountSmallAssetsSmallAssetsTrade`
 | data.fromCoin | string[] |  | 兑换币种 |
 | data.toCoin | string |  | 目标币种 |
 | data.orderId | string |  | 兑换订单Id |
+| data.accountType | string |  | 账户类型<br><br>`uta`/`funding`<br><br>回传本次兑换的账户类型 |
 
 ```json
 {
@@ -6788,7 +6821,8 @@ Operation ID: `utaAccountSmallAssetsSmallAssetsTrade`
       "XRP"
     ],
     "toCoin": "BGB",
-    "orderId": "1234567890123456789"
+    "orderId": "1234567890123456789",
+    "accountType": "funding"
   }
 }
 ```

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_last_trades_by_instrument_and_time
 api_type: JSON-RPC
-updated_at: 2026-11-18 18:59:17.555458
+updated_at: 2026-11-19 19:05:54.217916
 ---
 
 # public/get_last_trades_by_instrument_and_time

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-spot-account
 api_type: REST
-updated_at: 2026-11-18 19:01:22.026748
+updated_at: 2026-11-19 19:07:57.356085
 ---
 
 # Classic Spot Account API

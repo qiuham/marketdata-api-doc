@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/openservice/broadcast-message
 api_type: Guide
-updated_at: 2026-11-18 18:36:41.190541
+updated_at: 2026-11-19 18:39:31.207432
 ---
 
 # BroadcastMessage

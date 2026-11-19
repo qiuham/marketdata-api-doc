@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/rfqs/accept-an-offer-on-an-open-rfq'
-updated_at: 2026-11-18
+updated_at: 2026-11-19
 ---
 
 # Accept an offer on an open RFQ

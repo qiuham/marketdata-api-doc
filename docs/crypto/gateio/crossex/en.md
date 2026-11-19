@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/crossex/en
 api_type: Trading
-updated_at: 2026-11-18 18:56:51.025041
+updated_at: 2026-11-19 19:02:01.617472
 ---
 
 # Gate CrossEx API v1.0.8
@@ -694,27 +694,208 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | none  
-» symbol | string | Unique trading pair identifier in the format ExchangeType_BusinessType_Base_Counter.  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+Symbol | required: ["symbol","exchange_type","business_type","state","min_size","min_notional","lot_size","tick_size","max_num_orders","max_market_size","max_limit_size","contract_size","liquidation_fee","delist_time","tag"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Unique trading pair identifier in the format ExchangeType_BusinessType_Base_Counter.  
 Stocks and ETFs use the market as ExchangeType (US/HK/KR/JP) and STOCK or ETF as the business type, for example US_STOCK_AAPL_USDT, HK_STOCK_00700_USDT, or US_ETF_SPY_USDT.  
-» exchange_type | string | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
-» business_type | string | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / STOCK: stocks / ETF: exchange-traded funds)  
-» state | string | Status (`live` running / `suspend` paused).  
-» min_size | string | Minimum order quantity  
-» min_notional | string | Minimum Order Value  
-» lot_size | string | Quantity Step  
-» tick_size | string | Price Step  
-» max_num_orders | string | maximumopen orderamount  
-» max_market_size | string | Maximum Market Order Quantity  
-» max_limit_size | string | Maximum order quantity for limit orders.  
-» contract_size | string | Contract multiplier (deprecated; quantity is used uniformly)  
-» liquidation_fee | string | Liquidation Fee Rate  
-» delist_time | string | Millisecond timestamp; `0` means not delisted.  
-» support_rpi | string | Whether RPI order placement is supported (true if supported; false otherwise)  
-» support_cross | string | Whether cross-margin order placement is supported (true if supported; false otherwise)  
-» tag | string | Tag information. Hyperliquid returns DEX information, stocks and ETFs return the security description, and other businesses return an empty string  
+exchange_type | string | Required |  | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
+business_type | string | Required |  | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / STOCK: stocks / ETF: exchange-traded funds)  
+state | string | Required |  | Status (`live` running / `suspend` paused).  
+min_size | string | Required |  | Minimum order quantity  
+min_notional | string | Required |  | Minimum Order Value  
+lot_size | string | Required |  | Quantity Step  
+tick_size | string | Required |  | Price Step  
+max_num_orders | string | Required |  | maximumopen orderamount  
+max_market_size | string | Required |  | Maximum Market Order Quantity  
+max_limit_size | string | Required |  | Maximum order quantity for limit orders.  
+contract_size | string | Required |  | Contract multiplier (deprecated; quantity is used uniformly)  
+liquidation_fee | string | Required |  | Liquidation Fee Rate  
+delist_time | string | Required |  | Millisecond timestamp; `0` means not delisted.  
+support_rpi | string | Optional |  | Whether RPI order placement is supported (true if supported; false otherwise)  
+support_cross | string | Optional |  | Whether cross-margin order placement is supported (true if supported; false otherwise)  
+tag | string | Required |  | Tag information. Hyperliquid returns DEX information, stocks and ETFs return the security description, and other businesses return an empty string  
+  
+**items / symbol**
+
+Currency pair
+
+Unique trading pair identifier in the format ExchangeType_BusinessType_Base_Counter. Stocks and ETFs use the market as ExchangeType (US/HK/KR/JP) and STOCK or ETF as the business type, for example US_STOCK_AAPL_USDT, HK_STOCK_00700_USDT, or US_ETF_SPY_USDT.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / exchange_type**
+
+Exchange
+
+Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / business_type**
+
+Business Type
+
+Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / STOCK: stocks / ETF: exchange-traded funds)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / state**
+
+availablestatus
+
+Status (`live` running / `suspend` paused).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / min_size**
+
+Minimum order quantity
+
+Minimum order quantity
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / min_notional**
+
+Minimum Order Value
+
+Minimum Order Value
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / lot_size**
+
+Quantity Step
+
+Quantity Step
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / tick_size**
+
+Price Step
+
+Price Step
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / max_num_orders**
+
+maximumopen orderamount
+
+maximumopen orderamount
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / max_market_size**
+
+Maximum Market Order Quantity
+
+Maximum Market Order Quantity
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / max_limit_size**
+
+Maximum Limit Order Quantity
+
+Maximum order quantity for limit orders.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / contract_size**
+
+Contract Size
+
+Contract multiplier (deprecated; quantity is used uniformly)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / liquidation_fee**
+
+Liquidation Fee Rate
+
+Liquidation Fee Rate
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / delist_time**
+
+Delisting Time
+
+Millisecond timestamp; `0` means not delisted.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / support_rpi**
+
+Whether RPI order placement is supported
+
+Whether RPI order placement is supported (true if supported; false otherwise)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / support_cross**
+
+Whether cross-margin order placement is supported
+
+Whether cross-margin order placement is supported (true if supported; false otherwise)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / tag**
+
+Tag
+
+Tag information. Hyperliquid returns DEX information, stocks and ETFs return the security description, and other businesses return an empty string
+
+Type | Constraints  
+---|---  
+string |   
   
 This operation does not require authentication 
 
@@ -827,19 +1008,26 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» CrossexOpenCapacity | object | none  
-»» symbol | string | Futures trading pair  
-»» position_side | string | Position side (LONG for long positions / SHORT for short positions)  
-»» available_to_open_notional | number(decimal) | Current maximum remaining opening notional value for the position side; 0 means no position can currently be opened  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
+Type | Constraints  
 ---|---  
-position_side | LONG  
-position_side | SHORT  
+array |   
+  
+**items**
+
+CrossexOpenCapacity
+
+Type | Constraints  
+---|---  
+object | required: ["symbol","position_side","available_to_open_notional"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Futures trading pair  
+position_side | string | Required | enum: ["LONG","SHORT"] | Position side (LONG for long positions / SHORT for short positions)  
+available_to_open_notional | number(decimal) | Required |  | Current maximum remaining opening notional value for the position side; 0 means no position can currently be opened  
+  
 This operation does not require authentication 
 
 Code samples
@@ -918,18 +1106,49 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» CrossexRiskLimit | object | none  
-»» symbol | string | none  
-»» tiers | array | none  
-»»» CrossexRiskLimitTier | object | none  
-»»»» min_risk_limit_value | string | Minimum risk limit value  
-»»»» max_risk_limit_value | string | Maximum risk limit value  
-»»»» quick_cal_amount | string | Quick-calculation amount  
-»»»» leverage_max | string | Maximum leverage  
-»»»» maintenance_rate | string | Maintenance margin rate  
-»»»» tier | string | Tier  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+CrossexRiskLimit
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Optional |  |   
+tiers | array | Optional |  |   
+  
+**items / tiers**
+
+Type | Constraints  
+---|---  
+array |   
+  
+**items / tiers / items**
+
+CrossexRiskLimitTier
+
+Type | Constraints  
+---|---  
+object | required: ["min_risk_limit_value","max_risk_limit_value","quick_cal_amount","leverage_max","maintenance_rate","tier"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+min_risk_limit_value | string | Required |  | Minimum risk limit value  
+max_risk_limit_value | string | Required |  | Maximum risk limit value  
+quick_cal_amount | string | Required |  | Quick-calculation amount  
+leverage_max | string | Required |  | Maximum leverage  
+maintenance_rate | string | Required |  | Maintenance margin rate  
+tier | string | Required |  | Tier  
   
 This operation does not require authentication 
 
@@ -1012,14 +1231,27 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» CrossexTransferCoin | object | none  
-»» coin | string | Currency  
-»» min_trans_amount | number | Minimum transfer amount (estimated fee included)  
-»» est_fee | number | Estimated Fee  
-»» precision | integer | Precision  
-»» is_disabled | integer | If it is disabled. 0 means NOT being disabled  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+CrossexTransferCoin
+
+Type | Constraints  
+---|---  
+object | required: ["coin","is_disabled","precision","est_fee","min_trans_amount"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+coin | string | Required |  | Currency  
+min_trans_amount | number | Required |  | Minimum transfer amount (estimated fee included)  
+est_fee | number | Required |  | Estimated Fee  
+precision | integer | Required |  | Precision  
+is_disabled | integer | Required |  | If it is disabled. 0 means NOT being disabled  
   
 This operation does not require authentication 
 
@@ -1077,11 +1309,29 @@ Rate limit: 10 requests per 10 seconds
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | CrossexTransferRequest | Optional | none  
-» coin | body | string | Required | Currency  
-» amount | body | string | Required | Transfer amount  
-» from | body | string | Required | `from` debit account (funds withdrawn from): `CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`  
-» to | body | string | Required | `to` receiving account (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
-» text | body | string | Optional | User-defined ID  
+coin | body | string | Required | Currency  
+amount | body | string | Required | Transfer amount  
+from | body | string | Required | `from` debit account (funds withdrawn from): `CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`  
+to | body | string | Required | `to` receiving account (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
+text | body | string | Optional | User-defined ID  
+  
+####  Request Body Schema
+
+Fund Transfer Request Body
+
+Request Body SchemaType | Constraints  
+---|---  
+CrossexTransferRequest | required: ["amount","from","coin","to"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+coin | string | Required |  | Currency  
+amount | string | Required |  | Transfer amount  
+from | string | Required |  | `from` debit account (funds withdrawn from): `CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`  
+to | string | Required |  | `to` receiving account (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
+text | string | Optional |  | User-defined ID  
   
 ### Responses
 
@@ -1093,12 +1343,18 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_CrossexTransferResponse_
+CrossexTransferResponse
 
-Name | Type | Description  
----|---|---  
-» tx_id | string | Order ID  
-» text | string | User-defined Order ID  
+Type | Constraints  
+---|---  
+CrossexTransferResponse | required: ["tx_id","text"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+tx_id | string | Required |  | Order ID  
+text | string | Required |  | User-defined Order ID  
   
 WARNING
 
@@ -1201,23 +1457,36 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» CrossexTransferRecord | object | none  
-»» id | string | Order ID  
-»» text | string | Client Custom ID  
-»» from_account_type | string | Source account for this operation (`from`) (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
-»» to_account_type | string | Destination account for this operation (`to`) (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
-»» coin | string | Currency  
-»» amount | string | Transfer amount, the amount requested for the transfer  
-»» actual_receive | string | Actual credited amount (has a value when status = SUCCESS; empty for other statuses)  
-»» status | string | Transfer Status  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+CrossexTransferRecord
+
+Type | Constraints  
+---|---  
+object | required: ["id","text","create_time","update_time","status","from_account_type","to_account_type","amount","coin"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | string | Required |  | Order ID  
+text | string | Required |  | Client Custom ID  
+from_account_type | string | Required |  | Source account for this operation (`from`) (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
+to_account_type | string | Required |  | Destination account for this operation (`to`) (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
+coin | string | Required |  | Currency  
+amount | string | Required |  | Transfer amount, the amount requested for the transfer  
+actual_receive | string | Optional |  | Actual credited amount (has a value when status = SUCCESS; empty for other statuses)  
+status | string | Required |  | Transfer Status  
 \- `FAIL`: Failed  
 \- `SUCCESS`: Successful  
 \- `PENDING`: Transfer in Progress  
-»» fail_reason | string | Failure reason (has a value when status = FAIL; empty for other statuses)  
-»» create_time | integer | Creation time of order  
-»» update_time | integer | OrderUpdateTime  
+fail_reason | string | Optional |  | Failure reason (has a value when status = FAIL; empty for other statuses)  
+create_time | integer | Required |  | Creation time of order  
+update_time | integer | Required |  | OrderUpdateTime  
   
 WARNING
 
@@ -1316,8 +1585,8 @@ Rate limit: 100 requests per 10 seconds; each user may have up to 1,000 open ord
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | CrossexOrderRequest | Optional | none  
-» text | body | string | Optional | Client-defined Order ID, supports letters (a-z), numbers (0-9), symbols (-, _) only  
-» symbol | body | string | Required | Unique identifier Exchange_Business_Base_Counter  
+text | body | string | Optional | Client-defined Order ID, supports letters (a-z), numbers (0-9), symbols (-, _) only  
+symbol | body | string | Required | Unique identifier Exchange_Business_Base_Counter  
 Examples:  
 To place a spot order for ADA/USDT on BINANCE, use `BINANCE_SPOT_ADA_USDT`;  
 To place a USDT-margined perpetual futures order for ADA/USDT on OKX, use `OKX_FUTURE_ADA_USDT`;  
@@ -1331,25 +1600,25 @@ To trade US stock AAPL, use `US_STOCK_AAPL_USDT`;
 To trade Hong Kong stock 00700, use `HK_STOCK_00700_USDT`;  
 To trade US ETF SPY, use `US_ETF_SPY_USDT`;  
 Spot, USDT-margined perpetual futures, spot margin, stock, and ETF orders are supported. BYBIT/DERIBIT do not currently support spot margin orders. KRAKEN, HYPERLIQUID, and LIGHTER do not currently support spot or margin orders. Stocks and ETFs support only cross-exchange account mode  
-» side | body | string | Required | BUY, SELL  
-» type | body | string | Optional | Order type (default: `LIMIT`; supported types: `LIMIT`, `MARKET`)  
-» time_in_force | body | string | Optional | Defaults to GTC. Supported values: `GTC`, `IOC`, `FOK`, `POC`, `RPI`  
+side | body | string | Required | BUY, SELL  
+type | body | string | Optional | Order type (default: `LIMIT`; supported types: `LIMIT`, `MARKET`)  
+time_in_force | body | string | Optional | Defaults to GTC. Supported values: `GTC`, `IOC`, `FOK`, `POC`, `RPI`  
 `GTC`: GoodTillCancelled  
 `IOC`: ImmediateOrCancelled  
 `FOK`: FillOrKill  
 `POC`: PendingOrCancelled or PostOnly  
 `RPI`: RPI  
 Stocks and ETFs support only `GTC`  
-» qty | body | string | Optional | Order quantity (required except for spot and margin market buys; qty is required for stocks and ETFs)  
-» price | body | string | Optional | Limit order price (required for limit orders). Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-» quote_qty | body | string | Optional | Order quote quantity, required for spot and margin market buys. Stock and ETF orders do not support quote_qty  
-» reduce_only | body | string | Optional | Reduce-only: `true` or `false`  
-» position_side | body | string | Optional | Position side: `NONE`, `LONG`, `SHORT`  
+qty | body | string | Optional | Order quantity (required except for spot and margin market buys; qty is required for stocks and ETFs)  
+price | body | string | Optional | Limit order price (required for limit orders). Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+quote_qty | body | string | Optional | Order quote quantity, required for spot and margin market buys. Stock and ETF orders do not support quote_qty  
+reduce_only | body | string | Optional | Reduce-only: `true` or `false`  
+position_side | body | string | Optional | Position side: `NONE`, `LONG`, `SHORT`  
 Defaults to `NONE` (single position mode) if not specified  
   
 ####  Detailed descriptions
 
-**» symbol** : Unique identifier Exchange_Business_Base_Counter  
+** symbol**: Unique identifier Exchange_Business_Base_Counter  
 Examples:  
 To place a spot order for ADA/USDT on BINANCE, use `BINANCE_SPOT_ADA_USDT`;  
 To place a USDT-margined perpetual futures order for ADA/USDT on OKX, use `OKX_FUTURE_ADA_USDT`;  
@@ -1364,7 +1633,7 @@ To trade Hong Kong stock 00700, use `HK_STOCK_00700_USDT`;
 To trade US ETF SPY, use `US_ETF_SPY_USDT`;  
 Spot, USDT-margined perpetual futures, spot margin, stock, and ETF orders are supported. BYBIT/DERIBIT do not currently support spot margin orders. KRAKEN, HYPERLIQUID, and LIGHTER do not currently support spot or margin orders. Stocks and ETFs support only cross-exchange account mode
 
-**» time_in_force** : Defaults to GTC. Supported values: `GTC`, `IOC`, `FOK`, `POC`, `RPI`  
+** time_in_force**: Defaults to GTC. Supported values: `GTC`, `IOC`, `FOK`, `POC`, `RPI`  
 `GTC`: GoodTillCancelled  
 `IOC`: ImmediateOrCancelled  
 `FOK`: FillOrKill  
@@ -1372,27 +1641,72 @@ Spot, USDT-margined perpetual futures, spot margin, stock, and ETF orders are su
 `RPI`: RPI  
 Stocks and ETFs support only `GTC`
 
-**» position_side** : Position side: `NONE`, `LONG`, `SHORT`  
+** position_side**: Position side: `NONE`, `LONG`, `SHORT`  
 Defaults to `NONE` (single position mode) if not specified
 
 ####  Enumerated Values
 
 Enumerated ValuesParameter | Value  
 ---|---  
-» side | BUY  
-» side | SELL  
-» type | LIMIT  
-» type | MARKET  
-» time_in_force | GTC  
-» time_in_force | IOC  
-» time_in_force | FOK  
-» time_in_force | POC  
-» time_in_force | RPI  
-» reduce_only | true  
-» reduce_only | false  
-» position_side | LONG  
-» position_side | SHORT  
-» position_side | NONE  
+side | BUY  
+side | SELL  
+type | LIMIT  
+type | MARKET  
+time_in_force | GTC  
+time_in_force | IOC  
+time_in_force | FOK  
+time_in_force | POC  
+time_in_force | RPI  
+reduce_only | true  
+reduce_only | false  
+position_side | LONG  
+position_side | SHORT  
+position_side | NONE  
+  
+####  Request Body Schema
+
+Place Order Request Body
+
+Request Body SchemaType | Constraints  
+---|---  
+CrossexOrderRequest | required: ["symbol","side"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+text | string | Optional |  | Client-defined Order ID, supports letters (a-z), numbers (0-9), symbols (-, _) only  
+symbol | string | Required |  | Unique identifier Exchange_Business_Base_Counter  
+Examples:  
+To place a spot order for ADA/USDT on BINANCE, use `BINANCE_SPOT_ADA_USDT`;  
+To place a USDT-margined perpetual futures order for ADA/USDT on OKX, use `OKX_FUTURE_ADA_USDT`;  
+To place a spot margin order for ADA/USDT on GATE, use `GATE_MARGIN_ADA_USDT`;  
+To place a spot order for ADA/USDT on BYBIT, use `BYBIT_SPOT_ADA_USDT`;  
+To place a futures order for ADA/USD on KRAKEN, use `KRAKEN_FUTURE_ADA_USD`;  
+To place a futures order for ADA/USDC on HYPERLIQUID, use `HYPERLIQUID_FUTURE_ADA_USDC`;  
+To place a futures order for ADA/USDC on DERIBIT, use `DERIBIT_FUTURE_ADA_USDC`;  
+To place a futures order for ADA/USDC on LIGHTER, use `LIGHTER_FUTURE_ADA_USDC`;  
+To trade US stock AAPL, use `US_STOCK_AAPL_USDT`;  
+To trade Hong Kong stock 00700, use `HK_STOCK_00700_USDT`;  
+To trade US ETF SPY, use `US_ETF_SPY_USDT`;  
+Spot, USDT-margined perpetual futures, spot margin, stock, and ETF orders are supported. BYBIT/DERIBIT do not currently support spot margin orders. KRAKEN, HYPERLIQUID, and LIGHTER do not currently support spot or margin orders. Stocks and ETFs support only cross-exchange account mode  
+side | string | Required | enum: ["BUY","SELL"] | BUY, SELL  
+type | string | Optional | enum: ["LIMIT","MARKET"]  
+default: "LIMIT" | Order type (default: `LIMIT`; supported types: `LIMIT`, `MARKET`)  
+time_in_force | string | Optional | enum: ["GTC","IOC","FOK","POC","RPI"]  
+default: "GTC" | Defaults to GTC. Supported values: `GTC`, `IOC`, `FOK`, `POC`, `RPI`  
+`GTC`: GoodTillCancelled  
+`IOC`: ImmediateOrCancelled  
+`FOK`: FillOrKill  
+`POC`: PendingOrCancelled or PostOnly  
+`RPI`: RPI  
+Stocks and ETFs support only `GTC`  
+qty | string | Optional |  | Order quantity (required except for spot and margin market buys; qty is required for stocks and ETFs)  
+price | string | Optional |  | Limit order price (required for limit orders). Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+quote_qty | string | Optional |  | Order quote quantity, required for spot and margin market buys. Stock and ETF orders do not support quote_qty  
+reduce_only | string | Optional | enum: ["true","false"] | Reduce-only: `true` or `false`  
+position_side | string | Optional | enum: ["LONG","SHORT","NONE"] | Position side: `NONE`, `LONG`, `SHORT`  
+Defaults to `NONE` (single position mode) if not specified  
   
 ### Responses
 
@@ -1404,12 +1718,18 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_CrossexOrderActionResponse_
+CrossexOrderActionResponse
 
-Name | Type | Description  
----|---|---  
-» order_id | string | Order ID  
-» text | string | User-defined Order ID  
+Type | Constraints  
+---|---  
+CrossexOrderActionResponse | required: ["order_id","text"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Required |  | Order ID  
+text | string | Required |  | User-defined Order ID  
   
 WARNING
 
@@ -1497,6 +1817,41 @@ ParametersName | In | Type | Required | Description
 ---|---|---|---|---  
 body | body | array[CrossexBatchCancelOrderRequest] | Required | none  
   
+####  Request Body Schema
+
+Request Body SchemaType | Constraints  
+---|---  
+array |   
+  
+**items**
+
+CrossexBatchCancelOrderRequest
+
+Batch cancel orders
+
+Request Body SchemaType | Constraints  
+---|---  
+CrossexBatchCancelOrderRequest |   
+  
+**Properties**
+
+Request Body SchemaName | Type | Required in this object | Constraints | Description  
+---|---|---|---|---  
+order_id | string | false |  | Order ID; either this field or text is required  
+text | string | false |  | Custom ID specified by the user when creating the order; either this field or order_id is required  
+  
+**items / anyOf[0]**
+
+Request Body SchemaType | Constraints  
+---|---  
+any | required: ["order_id"]  
+  
+**items / anyOf[1]**
+
+Request Body SchemaType | Constraints  
+---|---  
+any | required: ["text"]  
+  
 ### Responses
 
 ResponsesStatus | Meaning | Description | Schema  
@@ -1507,15 +1862,29 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Batch order cancellation request results]  
-» CrossexBatchCancelOrderResponse | CrossexBatchCancelOrderResponse | Batch order cancellation request results  
-»» order_id | string | Order ID  
-»» text | string | Custom ID specified by the user when creating the order  
-»» accepted | string | Whether the request was accepted, as the string true or false  
-»» label | string | Error label when the request is not accepted; empty on success  
-»» message | string | Error message when the request is not accepted; empty on success  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+CrossexBatchCancelOrderResponse
+
+Batch order cancellation request results
+
+Type | Constraints  
+---|---  
+CrossexBatchCancelOrderResponse | required: ["order_id","text","accepted","label","message"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Required |  | Order ID  
+text | string | Required |  | Custom ID specified by the user when creating the order  
+accepted | string | Required |  | Whether the request was accepted, as the string true or false  
+label | string | Required |  | Error label when the request is not accepted; empty on success  
+message | string | Required |  | Error message when the request is not accepted; empty on success  
   
 WARNING
 
@@ -1627,12 +1996,18 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_CrossexOrderActionResponse_
+CrossexOrderActionResponse
 
-Name | Type | Description  
----|---|---  
-» order_id | string | Order ID  
-» text | string | User-defined Order ID  
+Type | Constraints  
+---|---  
+CrossexOrderActionResponse | required: ["order_id","text"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Required |  | Order ID  
+text | string | Required |  | User-defined Order ID  
   
 WARNING
 
@@ -1708,8 +2083,23 @@ ParametersName | In | Type | Required | Description
 ---|---|---|---|---  
 order_id | path | string | Required | Support Order ID or Text for Modify Order  
 body | body | CrossexOrderUpdateRequest | Optional | none  
-» qty | body | string | Optional | modify amount  
-» price | body | string | Optional | modify price  
+qty | body | string | Optional | modify amount  
+price | body | string | Optional | modify price  
+  
+####  Request Body Schema
+
+Order Modification Request Body
+
+Request Body SchemaType | Constraints  
+---|---  
+CrossexOrderUpdateRequest |   
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+qty | string | Optional |  | modify amount  
+price | string | Optional |  | modify price  
   
 ### Responses
 
@@ -1721,12 +2111,18 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_CrossexOrderActionResponse_
+CrossexOrderActionResponse
 
-Name | Type | Description  
----|---|---  
-» order_id | string | Order ID  
-» text | string | User-defined Order ID  
+Type | Constraints  
+---|---  
+CrossexOrderActionResponse | required: ["order_id","text"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Required |  | Order ID  
+text | string | Required |  | User-defined Order ID  
   
 WARNING
 
@@ -1828,14 +2224,20 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_CrossexOrder_
+CrossexOrder
 
-Name | Type | Description  
----|---|---  
-» user_id | string | User ID  
-» order_id | string | Order ID  
-» text | string | Client-defined order ID.  
-» state | string | Order status:  
+Type | Constraints  
+---|---  
+CrossexOrder | required: ["user_id","order_id","text","state","symbol","side","type","exchange_type","attribute","executed_avg_price","executed_amount","executed_qty","time_in_force","price","quote_qty","qty","business_type","fee","fee_coin","reduce_only","leverage","last_executed_price","last_executed_qty","reason","position_side","last_executed_amount","update_time","create_time"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | string | Required |  | User ID  
+order_id | string | Required |  | Order ID  
+text | string | Required |  | Client-defined order ID.  
+state | string | Required |  | Order status:  
 `NEW`: validated locally, pending submission to the exchange  
 `OPEN`: resting on the exchange order book  
 `PARTIALLY_FILLED`: partially filled  
@@ -1843,31 +2245,311 @@ Name | Type | Description
 `FAIL`: CrossEx validation failed; see `reason`  
 `REJECT`: rejected by the exchange; see `reason`  
 `CANCELLED`: cancelled  
-» symbol | string | Unique trading pair identifiers, e.g.  
+symbol | string | Required |  | Unique trading pair identifiers, e.g.  
 `BINANCE_SPOT_BTC_USDT`, `BINANCE_FUTURE_BTC_USDT`.  
-» side | string | Side (`BUY` buy / `SELL` sell).  
-» type | string | Order type (`LIMIT` limit / `MARKET` market).  
-» attribute | string | Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).  
-» exchange_type | string | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
-» business_type | string | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / CONVERT: flash swap / STOCK: stocks / ETF: exchange-traded funds)  
-» qty | string | Order quantity in the base currency.  
-» quote_qty | string | Order quantity in the quote currency.  
-» price | string | Order price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-» time_in_force | string | Time-in-force policy (default: GTC; allowed values: GTC, IOC, FOK, POC, and RPI)  
-» executed_qty | string | Filled base amount.  
-» executed_amount | string | Filled amount in the quote currency. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-» executed_avg_price | string | Average fill price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-» fee_coin | string | Fee currency  
-» fee | string | Fee amount.  
-» reduce_only | string | Reduce-only order (`"true"` or `"false"`).  
-» leverage | string | Order leverage multiplier.  
-» reason | string | Failure reason description.  
-» last_executed_qty | string | Base quantity of the latest fill.  
-» last_executed_price | string | Price of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-» last_executed_amount | string | Amount of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-» position_side | string | Position side (`NONE` one-way position / `LONG` long / `SHORT` short)  
-» create_time | string | Created time  
-» update_time | string | Update time  
+side | string | Required |  | Side (`BUY` buy / `SELL` sell).  
+type | string | Required |  | Order type (`LIMIT` limit / `MARKET` market).  
+attribute | string | Required |  | Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).  
+exchange_type | string | Required |  | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
+business_type | string | Required |  | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / CONVERT: flash swap / STOCK: stocks / ETF: exchange-traded funds)  
+qty | string | Required |  | Order quantity in the base currency.  
+quote_qty | string | Required |  | Order quantity in the quote currency.  
+price | string | Required |  | Order price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+time_in_force | string | Required |  | Time-in-force policy (default: GTC; allowed values: GTC, IOC, FOK, POC, and RPI)  
+executed_qty | string | Required |  | Filled base amount.  
+executed_amount | string | Required |  | Filled amount in the quote currency. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+executed_avg_price | string | Required |  | Average fill price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+fee_coin | string | Required |  | Fee currency  
+fee | string | Required |  | Fee amount.  
+reduce_only | string | Required |  | Reduce-only order (`"true"` or `"false"`).  
+leverage | string | Required |  | Order leverage multiplier.  
+reason | string | Required |  | Failure reason description.  
+last_executed_qty | string | Required |  | Base quantity of the latest fill.  
+last_executed_price | string | Required |  | Price of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+last_executed_amount | string | Required |  | Amount of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+position_side | string | Required |  | Position side (`NONE` one-way position / `LONG` long / `SHORT` short)  
+create_time | string | Required |  | Created time  
+update_time | string | Required |  | Update time  
+  
+**user_id**
+
+User ID
+
+User ID
+
+Type | Constraints  
+---|---  
+string |   
+  
+**order_id**
+
+Order ID
+
+Order ID
+
+Type | Constraints  
+---|---  
+string |   
+  
+**text**
+
+Client Order ID
+
+Client-defined order ID.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**state**
+
+Order status
+
+Order status: `NEW`: validated locally, pending submission to the exchange `OPEN`: resting on the exchange order book `PARTIALLY_FILLED`: partially filled `FILLED`: fully filled `FAIL`: CrossEx validation failed; see `reason` `REJECT`: rejected by the exchange; see `reason` `CANCELLED`: cancelled
+
+Type | Constraints  
+---|---  
+string |   
+  
+**symbol**
+
+Currency pair
+
+Unique trading pair identifiers, e.g. `BINANCE_SPOT_BTC_USDT`, `BINANCE_FUTURE_BTC_USDT`.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**side**
+
+direction
+
+Side (`BUY` buy / `SELL` sell).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**type**
+
+Type
+
+Order type (`LIMIT` limit / `MARKET` market).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**attribute**
+
+Attribute COMMON: Normal Order, LIQ: Liquidation Takeover Order, REDUCE: Liquidation Reduce Order, ADL: Auto-Reduce
+
+Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**exchange_type**
+
+Exchange
+
+Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**business_type**
+
+Business Type
+
+Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / CONVERT: flash swap / STOCK: stocks / ETF: exchange-traded funds)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**qty**
+
+Base Currency Quantity
+
+Order quantity in the base currency.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**quote_qty**
+
+Quote Currency Quantity
+
+Order quantity in the quote currency.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**price**
+
+Price
+
+Order price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**time_in_force**
+
+Time in Force Strategy
+
+Time-in-force policy (default: GTC; allowed values: GTC, IOC, FOK, POC, and RPI)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**executed_qty**
+
+Filled quantity
+
+Filled base amount.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**executed_amount**
+
+Filled Amount
+
+Filled amount in the quote currency. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**executed_avg_price**
+
+Average Filled Price
+
+Average fill price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**fee_coin**
+
+Fee currency
+
+Fee currency
+
+Type | Constraints  
+---|---  
+string |   
+  
+**fee**
+
+fee
+
+Fee amount.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**reduce_only**
+
+Reduce Position Only
+
+Reduce-only order (`"true"` or `"false"`).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**leverage**
+
+Leverage
+
+Order leverage multiplier.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**reason**
+
+Reason
+
+Failure reason description.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**last_executed_qty**
+
+Latest Filled Quantity
+
+Base quantity of the latest fill.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**last_executed_price**
+
+Latest Filled Price
+
+Price of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**last_executed_amount**
+
+Latest Filled Amount
+
+Amount of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**position_side**
+
+Position Direction
+
+Position side (`NONE` one-way position / `LONG` long / `SHORT` short)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**create_time**
+
+Created time
+
+Created time
+
+Type | Constraints  
+---|---  
+string |   
+  
+**update_time**
+
+Update time
+
+Update time
+
+Type | Constraints  
+---|---  
+string |   
   
 WARNING
 
@@ -1968,29 +2650,52 @@ Rate limit: 100 requests per day For HYPERLIQUID, swaps between `HYPERLIQUID_USD
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | CrossexConvertQuoteRequest | Optional | none  
-» exchange_type | body | string | Required | Exchange type  
+exchange_type | body | string | Required | Exchange type  
 Currently supports only BINANCE, OKX, GATE, BYBIT, HYPERLIQUID, KRAKEN, and LIGHTER  
-» from_coin | body | string | Required | Asset Sold  
-» to_coin | body | string | Required | Asset to receive  
+from_coin | body | string | Required | Asset Sold  
+to_coin | body | string | Required | Asset to receive  
 OKX and GATE only support conversion to BTC, ETH, or USDT  
 BYBIT and BINANCE only support conversion to USDT  
 HYPERLIQUID only supports conversion to USDT or USDC  
 KRAKEN only supports conversion to USDT  
 LIGHTER only supports swaps between USDT and USDC  
-» from_amount | body | string | Required | Amount to sell  
+from_amount | body | string | Required | Amount to sell  
   
 ####  Detailed descriptions
 
-**» exchange_type** : Exchange type  
+** exchange_type**: Exchange type  
 Currently supports only BINANCE, OKX, GATE, BYBIT, HYPERLIQUID, KRAKEN, and LIGHTER
 
-**» to_coin** : Asset to receive  
+** to_coin**: Asset to receive  
 OKX and GATE only support conversion to BTC, ETH, or USDT  
 BYBIT and BINANCE only support conversion to USDT  
 HYPERLIQUID only supports conversion to USDT or USDC  
 KRAKEN only supports conversion to USDT  
 LIGHTER only supports swaps between USDT and USDC
 
+####  Request Body Schema
+
+Flash Swap Quote Request Body
+
+Request Body SchemaType | Constraints  
+---|---  
+CrossexConvertQuoteRequest | required: ["exchange_type","from_coin","to_coin","from_amount"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+exchange_type | string | Required |  | Exchange type  
+Currently supports only BINANCE, OKX, GATE, BYBIT, HYPERLIQUID, KRAKEN, and LIGHTER  
+from_coin | string | Required |  | Asset Sold  
+to_coin | string | Required |  | Asset to receive  
+OKX and GATE only support conversion to BTC, ETH, or USDT  
+BYBIT and BINANCE only support conversion to USDT  
+HYPERLIQUID only supports conversion to USDT or USDC  
+KRAKEN only supports conversion to USDT  
+LIGHTER only supports swaps between USDT and USDC  
+from_amount | string | Required |  | Amount to sell  
+  
 ### Responses
 
 ResponsesStatus | Meaning | Description | Schema  
@@ -2001,17 +2706,23 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_CrossexConvertQuoteResponse_
+CrossexConvertQuoteResponse
 
-Name | Type | Description  
----|---|---  
-» quote_id | string | Quote ID  
-» valid_ms | string | Valid time (milliseconds timestamp)  
-» from_coin | string | Asset Sold  
-» to_coin | string | Asset Bought  
-» from_amount | string | Amount to sell  
-» to_amount | string | Amount to buy  
-» price | string | Quoted price  
+Type | Constraints  
+---|---  
+CrossexConvertQuoteResponse | required: ["quote_id","valid_ms","from_coin","to_coin","from_amount","to_amount","price"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+quote_id | string | Required |  | Quote ID  
+valid_ms | string | Required |  | Valid time (milliseconds timestamp)  
+from_coin | string | Required |  | Asset Sold  
+to_coin | string | Required |  | Asset Bought  
+from_amount | string | Required |  | Amount to sell  
+to_amount | string | Required |  | Amount to buy  
+price | string | Required |  | Quoted price  
   
 WARNING
 
@@ -2103,7 +2814,21 @@ Rate limit: 10 requests per 10 seconds
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | CrossexConvertOrderRequest | Optional | none  
-» quote_id | body | string | Required | Inquiry ID  
+quote_id | body | string | Required | Inquiry ID  
+  
+####  Request Body Schema
+
+Flash Swap Transaction Request Body
+
+Request Body SchemaType | Constraints  
+---|---  
+CrossexConvertOrderRequest | required: ["quote_id"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+quote_id | string | Required |  | Inquiry ID  
   
 ### Responses
 
@@ -2115,12 +2840,18 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_CrossexConvertOrderResponse_
+CrossexConvertOrderResponse
 
-Name | Type | Description  
----|---|---  
-» order_id | string | Order ID  
-» text | string | Order ID (cannot be customized)  
+Type | Constraints  
+---|---  
+CrossexConvertOrderResponse | required: ["order_id","text"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Required |  | Order ID  
+text | string | Required |  | Order ID (cannot be customized)  
   
 WARNING
 
@@ -2204,9 +2935,25 @@ Rate Limit: 100 requests per 60 seconds. position_mode+exchange_type modifies co
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | CrossexAccountUpdateRequest | Optional | none  
-» position_mode | body | string | Optional | Futures position mode (SINGLE/DUAL)  
-» account_mode | body | string | Optional | Account mode (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
-» exchange_type | body | string | Optional | Exchange (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to adjust futures position mode.  
+position_mode | body | string | Optional | Futures position mode (SINGLE/DUAL)  
+account_mode | body | string | Optional | Account mode (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
+exchange_type | body | string | Optional | Exchange (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to adjust futures position mode.  
+  
+####  Request Body Schema
+
+Change Account Request Body
+
+Request Body SchemaType | Constraints  
+---|---  
+CrossexAccountUpdateRequest |   
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+position_mode | string | Optional |  | Futures position mode (SINGLE/DUAL)  
+account_mode | string | Optional |  | Account mode (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
+exchange_type | string | Optional |  | Exchange (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to adjust futures position mode.  
   
 ### Responses
 
@@ -2218,13 +2965,19 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **202**
 
-_CrossexAccountUpdateResponse_
+CrossexAccountUpdateResponse
 
-Name | Type | Description  
----|---|---  
-» position_mode | string | Requested futures position mode to modify (SINGLE/DUAL)  
-» account_mode | string | Requested account mode to modify (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
-» exchange_type | string | Exchange targeted by the requested change (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to change futures position mode.  
+Type | Constraints  
+---|---  
+CrossexAccountUpdateResponse |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+position_mode | string | Optional |  | Requested futures position mode to modify (SINGLE/DUAL)  
+account_mode | string | Optional |  | Requested account mode to modify (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
+exchange_type | string | Optional |  | Exchange targeted by the requested change (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to change futures position mode.  
   
 WARNING
 
@@ -2318,37 +3071,63 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_CrossexAccount_
+CrossexAccount
 
-Name | Type | Description  
----|---|---  
-» user_id | string | User ID  
-» available_margin | string | Available Margin  
-» margin_balance | string | marginbalance  
-» initial_margin | string | Initial Margin  
-» maintenance_margin | string | Maintenance margin  
-» initial_margin_rate | string | Initial margin rate  
-» maintenance_margin_rate | string | Maintenance margin rate  
-» position_mode | string | Contract Position Mode  
-» account_limit | string | Account limit  
-» create_time | string | Created time  
-» update_time | string | Update time  
-» account_mode | string | Account Mode. CROSS_EXCHANGE: Cross-Exchange Mode; ISOLATED_EXCHANGE: Split-Exchange Mode  
-» exchange_type | string | Exchange Type. When account_mode is CROSS_EXCHANGE, it must be CROSSEX; otherwise, it is another exchange.  
-» assets | array | Asset list: grouped by exchange and currency, returning per-account balances, margin, and PnL details  
-»» CrossexAccountAsset | object | none  
-»»» user_id | string | User ID  
-»»» coin | string | Currency  
-»»» exchange_type | string | Exchange  
-»»» balance | string | Balance  
-»»» upnl | string | Unrealized P&L  
-»»» equity | string | Net margin equity for the currency  
-»»» futures_initial_margin | string | Currency-specific futures initial margin. This value is populated for futures settlement currencies (USDT/USDC/USD)  
-»»» futures_maintenance_margin | string | Currency-specific futures maintenance margin. This value is populated for futures settlement currencies (USDT/USDC/USD)  
-»»» borrowing_initial_margin | string | Currency-specific margin trading initial margin. This value is populated for margin or futures settlement currencies (USDT/USDC/USD)  
-»»» borrowing_maintenance_margin | string | Currency-specific margin trading maintenance margin. This value is populated for margin or futures settlement currencies (USDT/USDC/USD)  
-»»» available_balance | string | Available Balance  
-»»» liability | string | Liability for the currency. This value is populated only for USDT, USDC, or USD  
+Type | Constraints  
+---|---  
+CrossexAccount | required: ["user_id","available_margin","margin_balance","initial_margin","maintenance_margin","initial_margin_rate","maintenance_margin_rate","position_mode","create_time","update_time","assets"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | string | Required |  | User ID  
+available_margin | string | Required |  | Available Margin  
+margin_balance | string | Required |  | marginbalance  
+initial_margin | string | Required |  | Initial Margin  
+maintenance_margin | string | Required |  | Maintenance margin  
+initial_margin_rate | string | Required |  | Initial margin rate  
+maintenance_margin_rate | string | Required |  | Maintenance margin rate  
+position_mode | string | Required |  | Contract Position Mode  
+account_limit | string | Optional |  | Account limit  
+create_time | string | Required |  | Created time  
+update_time | string | Required |  | Update time  
+account_mode | string | Optional |  | Account Mode. CROSS_EXCHANGE: Cross-Exchange Mode; ISOLATED_EXCHANGE: Split-Exchange Mode  
+exchange_type | string | Optional |  | Exchange Type. When account_mode is CROSS_EXCHANGE, it must be CROSSEX; otherwise, it is another exchange.  
+assets | array | Required |  | Asset list: grouped by exchange and currency, returning per-account balances, margin, and PnL details  
+  
+**assets**
+
+Asset list: grouped by exchange and currency, returning per-account balances, margin, and PnL details
+
+Type | Constraints  
+---|---  
+array |   
+  
+**assets / items**
+
+CrossexAccountAsset
+
+Type | Constraints  
+---|---  
+object | required: ["borrowing_initial_margin","borrowing_maintenance_margin"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | string | Optional |  | User ID  
+coin | string | Optional |  | Currency  
+exchange_type | string | Optional |  | Exchange  
+balance | string | Optional |  | Balance  
+upnl | string | Optional |  | Unrealized P&L  
+equity | string | Optional |  | Net margin equity for the currency  
+futures_initial_margin | string | Optional |  | Currency-specific futures initial margin. This value is populated for futures settlement currencies (USDT/USDC/USD)  
+futures_maintenance_margin | string | Optional |  | Currency-specific futures maintenance margin. This value is populated for futures settlement currencies (USDT/USDC/USD)  
+borrowing_initial_margin | string | Required |  | Currency-specific margin trading initial margin. This value is populated for margin or futures settlement currencies (USDT/USDC/USD)  
+borrowing_maintenance_margin | string | Required |  | Currency-specific margin trading maintenance margin. This value is populated for margin or futures settlement currencies (USDT/USDC/USD)  
+available_balance | string | Optional |  | Available Balance  
+liability | string | Optional |  | Liability for the currency. This value is populated only for USDT, USDC, or USD  
   
 WARNING
 
@@ -2450,8 +3229,23 @@ Rate Limit: 100 requests per 10 seconds
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | CrossexLeverageRequest | Optional | none  
-» symbol | body | string | Required | Currency pair  
-» leverage | body | string | Required | Leverage  
+symbol | body | string | Required | Currency pair  
+leverage | body | string | Required | Leverage  
+  
+####  Request Body Schema
+
+Change Leverage Request Body (for futures/margin)
+
+Request Body SchemaType | Constraints  
+---|---  
+CrossexLeverageRequest | required: ["symbol","leverage"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Currency pair  
+leverage | string | Required |  | Leverage  
   
 ### Responses
 
@@ -2463,12 +3257,18 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **202**
 
-_CrossexLeverageResponse_
+CrossexLeverageResponse
 
-Name | Type | Description  
----|---|---  
-» symbol | string | Currency pair  
-» leverage | string | Requested Modified Leverage  
+Type | Constraints  
+---|---  
+CrossexLeverageResponse | required: ["symbol","leverage"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Currency pair  
+leverage | string | Required |  | Requested Modified Leverage  
   
 WARNING
 
@@ -2564,11 +3364,19 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Mapping from trading pair to leverage multiplier._
+Mapping from trading pair to leverage multiplier.
 
-Name | Type | Description  
----|---|---  
-» **additionalProperties** | string | Leverage multiplier for the corresponding trading pair  
+Type | Constraints  
+---|---  
+object |   
+  
+**additionalProperties**
+
+Leverage multiplier for the corresponding trading pair
+
+Type | Constraints  
+---|---  
+string |   
   
 WARNING
 
@@ -2644,8 +3452,23 @@ Rate Limit: 100 requests per 10 seconds
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | CrossexLeverageRequest | Optional | none  
-» symbol | body | string | Required | Currency pair  
-» leverage | body | string | Required | Leverage  
+symbol | body | string | Required | Currency pair  
+leverage | body | string | Required | Leverage  
+  
+####  Request Body Schema
+
+Change Leverage Request Body (for futures/margin)
+
+Request Body SchemaType | Constraints  
+---|---  
+CrossexLeverageRequest | required: ["symbol","leverage"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Currency pair  
+leverage | string | Required |  | Leverage  
   
 ### Responses
 
@@ -2657,12 +3480,18 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **202**
 
-_CrossexLeverageResponse_
+CrossexLeverageResponse
 
-Name | Type | Description  
----|---|---  
-» symbol | string | Currency pair  
-» leverage | string | Requested Modified Leverage  
+Type | Constraints  
+---|---  
+CrossexLeverageResponse | required: ["symbol","leverage"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Currency pair  
+leverage | string | Required |  | Requested Modified Leverage  
   
 WARNING
 
@@ -2758,11 +3587,19 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Mapping from trading pair to leverage multiplier._
+Mapping from trading pair to leverage multiplier.
 
-Name | Type | Description  
----|---|---  
-» **additionalProperties** | string | Leverage multiplier for the corresponding trading pair  
+Type | Constraints  
+---|---  
+object |   
+  
+**additionalProperties**
+
+Leverage multiplier for the corresponding trading pair
+
+Type | Constraints  
+---|---  
+string |   
   
 WARNING
 
@@ -2847,23 +3684,42 @@ When either condition is met, the system automatically creates a closing order a
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | CrossexClosePositionRequest | Optional | none  
-» symbol | body | string | Required | Trading Pair  
+symbol | body | string | Required | Trading Pair  
 1\. Supports leveraged trading pairs, e.g., BINANCE_MARGIN_SOL_USDT  
 2\. Supports contract trading pairs, e.g., OKX_FUTURE_ETH_USDT  
-» position_side | body | string | Optional | Position Direction  
+position_side | body | string | Optional | Position Direction  
 1\. For leveraged positions, this parameter must be passed  
 2\. For contract positions, pass selectively based on your contract holding method  
   
 ####  Detailed descriptions
 
-**» symbol** : Trading Pair  
+** symbol**: Trading Pair  
 1\. Supports leveraged trading pairs, e.g., BINANCE_MARGIN_SOL_USDT  
 2\. Supports contract trading pairs, e.g., OKX_FUTURE_ETH_USDT
 
-**» position_side** : Position Direction  
+** position_side**: Position Direction  
 1\. For leveraged positions, this parameter must be passed  
 2\. For contract positions, pass selectively based on your contract holding method
 
+####  Request Body Schema
+
+Full Close Position Request Body
+
+Request Body SchemaType | Constraints  
+---|---  
+CrossexClosePositionRequest | required: ["symbol"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Trading Pair  
+1\. Supports leveraged trading pairs, e.g., BINANCE_MARGIN_SOL_USDT  
+2\. Supports contract trading pairs, e.g., OKX_FUTURE_ETH_USDT  
+position_side | string | Optional |  | Position Direction  
+1\. For leveraged positions, this parameter must be passed  
+2\. For contract positions, pass selectively based on your contract holding method  
+  
 ### Responses
 
 ResponsesStatus | Meaning | Description | Schema  
@@ -2874,12 +3730,18 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **202**
 
-_CrossexOrderActionResponse_
+CrossexOrderActionResponse
 
-Name | Type | Description  
----|---|---  
-» order_id | string | Order ID  
-» text | string | User-defined Order ID  
+Type | Constraints  
+---|---  
+CrossexOrderActionResponse | required: ["order_id","text"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Required |  | Order ID  
+text | string | Required |  | User-defined Order ID  
   
 WARNING
 
@@ -2964,15 +3826,30 @@ Rate limit: 100 requests per 10 seconds. Only Hyperliquid futures trading pairs 
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | CrossexMarginModeRequest | Optional | none  
-» symbol | body | string | Required | Hyperliquid futures trading pair  
-» margin_mode | body | string | Required | Margin mode (CROSS/ISOLATED)  
+symbol | body | string | Required | Hyperliquid futures trading pair  
+margin_mode | body | string | Required | Margin mode (CROSS/ISOLATED)  
   
 ####  Enumerated Values
 
 Enumerated ValuesParameter | Value  
 ---|---  
-» margin_mode | CROSS  
-» margin_mode | ISOLATED  
+margin_mode | CROSS  
+margin_mode | ISOLATED  
+  
+####  Request Body Schema
+
+Request body for updating the futures position margin mode
+
+Request Body SchemaType | Constraints  
+---|---  
+CrossexMarginModeRequest | required: ["symbol","margin_mode"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Hyperliquid futures trading pair  
+margin_mode | string | Required | enum: ["CROSS","ISOLATED"] | Margin mode (CROSS/ISOLATED)  
   
 ### Responses
 
@@ -2984,12 +3861,18 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **202**
 
-_CrossexMarginModeResponse_
+CrossexMarginModeResponse
 
-Name | Type | Description  
----|---|---  
-» symbol | string | Futures trading pair  
-» margin_mode | string | Margin mode (CROSS/ISOLATED)  
+Type | Constraints  
+---|---  
+CrossexMarginModeResponse | required: ["symbol","margin_mode"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Futures trading pair  
+margin_mode | string | Required |  | Margin mode (CROSS/ISOLATED)  
   
 WARNING
 
@@ -3085,12 +3968,18 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_CrossexMarginModeResponse_
+CrossexMarginModeResponse
 
-Name | Type | Description  
----|---|---  
-» symbol | string | Futures trading pair  
-» margin_mode | string | Margin mode (CROSS/ISOLATED)  
+Type | Constraints  
+---|---  
+CrossexMarginModeResponse | required: ["symbol","margin_mode"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Futures trading pair  
+margin_mode | string | Required |  | Margin mode (CROSS/ISOLATED)  
   
 WARNING
 
@@ -3165,17 +4054,33 @@ Rate limit: 100 requests per 10 seconds. Only Hyperliquid isolated futures posit
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | CrossexIsolatedMarginRequest | Optional | none  
-» symbol | body | string | Required | Hyperliquid futures trading pair  
-» margin | body | string | Required | Margin adjustment amount. Positive values increase margin, while negative values decrease margin. Values with more than two decimal places are truncated to two decimal places  
-» position_side | body | string | Optional | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
+symbol | body | string | Required | Hyperliquid futures trading pair  
+margin | body | string | Required | Margin adjustment amount. Positive values increase margin, while negative values decrease margin. Values with more than two decimal places are truncated to two decimal places  
+position_side | body | string | Optional | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
   
 ####  Enumerated Values
 
 Enumerated ValuesParameter | Value  
 ---|---  
-» position_side | NONE  
-» position_side | LONG  
-» position_side | SHORT  
+position_side | NONE  
+position_side | LONG  
+position_side | SHORT  
+  
+####  Request Body Schema
+
+Request body for increasing or decreasing isolated margin
+
+Request Body SchemaType | Constraints  
+---|---  
+CrossexIsolatedMarginRequest | required: ["symbol","margin"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Hyperliquid futures trading pair  
+margin | string | Required |  | Margin adjustment amount. Positive values increase margin, while negative values decrease margin. Values with more than two decimal places are truncated to two decimal places  
+position_side | string | Optional | enum: ["NONE","LONG","SHORT"] | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
   
 ### Responses
 
@@ -3187,13 +4092,19 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **202**
 
-_CrossexIsolatedMarginResponse_
+CrossexIsolatedMarginResponse
 
-Name | Type | Description  
----|---|---  
-» symbol | string | Futures trading pair  
-» margin | string | Amount of isolated margin increased or decreased in this request  
-» position_side | string | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
+Type | Constraints  
+---|---  
+CrossexIsolatedMarginResponse | required: ["symbol","margin"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Futures trading pair  
+margin | string | Required |  | Amount of isolated margin increased or decreased in this request  
+position_side | string | Optional |  | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
   
 WARNING
 
@@ -3292,13 +4203,26 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» CrossexInterestRate | object | none  
-»» coin | string | Currency  
-»» exchange_type | string | Exchange  
-»» hour_interest_rate | string | Hourly Interest Rate  
-»» time | string | Millisecond Timestamp  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+CrossexInterestRate
+
+Type | Constraints  
+---|---  
+object | required: ["coin","exchange_type","hour_interest_rate","time"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+coin | string | Required |  | Currency  
+exchange_type | string | Required |  | Exchange  
+hour_interest_rate | string | Required |  | Hourly Interest Rate  
+time | string | Required |  | Millisecond Timestamp  
   
 WARNING
 
@@ -3394,24 +4318,53 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_CrossexFee_
+CrossexFee
 
-Name | Type | Description  
----|---|---  
-CrossexFee | array | none  
-» exchange_type | string | Exchange  
-» spot_maker_fee | string | spotMakerfee rate  
-» spot_taker_fee | string | spotTakerfee rate  
-» spot_rpi_maker_fee | string | Spot RPI order maker fee rate  
-» future_maker_fee | string | contractMakerfee rate  
-» future_taker_fee | string | contractTakerfee rate  
-» future_rpi_maker_fee | string | Futures RPI order maker fee rate  
-» special_fee_list | array | none  
-»» CrossexSpecialFee | object | none  
-»»» symbol | string | Currency pair  
-»»» taker_fee_rate | string | Taker fee rate  
-»»» maker_fee_rate | string | Maker fee rate  
-»»» rpi_fee_rate | string | RPI order maker fee rate  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+object | required: ["spot_maker_fee","spot_taker_fee","future_maker_fee","future_taker_fee","special_fee_list"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+exchange_type | string | Optional |  | Exchange  
+spot_maker_fee | string | Required |  | spotMakerfee rate  
+spot_taker_fee | string | Required |  | spotTakerfee rate  
+spot_rpi_maker_fee | string | Optional |  | Spot RPI order maker fee rate  
+future_maker_fee | string | Required |  | contractMakerfee rate  
+future_taker_fee | string | Required |  | contractTakerfee rate  
+future_rpi_maker_fee | string | Optional |  | Futures RPI order maker fee rate  
+special_fee_list | array | Required |  |   
+  
+**items / special_fee_list**
+
+Type | Constraints  
+---|---  
+array |   
+  
+**items / special_fee_list / items**
+
+CrossexSpecialFee
+
+Type | Constraints  
+---|---  
+object | required: ["symbol","taker_fee_rate","maker_fee_rate"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Currency pair  
+taker_fee_rate | string | Required |  | Taker fee rate  
+maker_fee_rate | string | Required |  | Maker fee rate  
+rpi_fee_rate | string | Optional |  | RPI order maker fee rate  
   
 WARNING
 
@@ -3584,33 +4537,46 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» CrossexPosition | object | none  
-»» user_id | string | User ID  
-»» position_id | string | Position ID  
-»» symbol | string | Currency pair  
-»» position_side | string | Position Direction  
-»» initial_margin | string | Initial Margin  
-»» isolated_margin | string | Isolated margin. It is 0 in cross margin mode and applies only to isolated margin positions  
-»» margin_mode | string | Margin mode (CROSS/ISOLATED)  
-»» maintenance_margin | string | Maintenance margin  
-»» position_qty | string | Position Quantity  
-»» position_value | string | Position Value  
-»» upnl | string | Unrealized P&L  
-»» upnl_rate | string | Unrealized P&L Ratio  
-»» entry_price | string | Position Average Entry Price  
-»» liq_price | string | Liquidation price. It is 0 in cross margin mode and applies only to isolated margin positions; 0 in isolated margin mode means the position will not be liquidated  
-»» mark_price | string | Mark price  
-»» leverage | string | Position Leverage  
-»» max_leverage | string | Maximum leverage  
-»» risk_limit | string | Position risk limit  
-»» fee | string | Position Fee  
-»» funding_fee | string | Accumulated position funding fee. A positive value indicates a gain, while a negative value indicates a loss.  
-»» funding_time | string | Position funding fee collection time (0 indicates it has not been collected yet)  
-»» create_time | string | Position Creation Time  
-»» update_time | string | Position Update Time  
-»» closed_pnl | string | Realized PnL  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+CrossexPosition
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | string | Optional |  | User ID  
+position_id | string | Optional |  | Position ID  
+symbol | string | Optional |  | Currency pair  
+position_side | string | Optional |  | Position Direction  
+initial_margin | string | Optional |  | Initial Margin  
+isolated_margin | string | Optional |  | Isolated margin. It is 0 in cross margin mode and applies only to isolated margin positions  
+margin_mode | string | Optional |  | Margin mode (CROSS/ISOLATED)  
+maintenance_margin | string | Optional |  | Maintenance margin  
+position_qty | string | Optional |  | Position Quantity  
+position_value | string | Optional |  | Position Value  
+upnl | string | Optional |  | Unrealized P&L  
+upnl_rate | string | Optional |  | Unrealized P&L Ratio  
+entry_price | string | Optional |  | Position Average Entry Price  
+liq_price | string | Optional |  | Liquidation price. It is 0 in cross margin mode and applies only to isolated margin positions; 0 in isolated margin mode means the position will not be liquidated  
+mark_price | string | Optional |  | Mark price  
+leverage | string | Optional |  | Position Leverage  
+max_leverage | string | Optional |  | Maximum leverage  
+risk_limit | string | Optional |  | Position risk limit  
+fee | string | Optional |  | Position Fee  
+funding_fee | string | Optional |  | Accumulated position funding fee. A positive value indicates a gain, while a negative value indicates a loss.  
+funding_time | string | Optional |  | Position funding fee collection time (0 indicates it has not been collected yet)  
+create_time | string | Optional |  | Position Creation Time  
+update_time | string | Optional |  | Position Update Time  
+closed_pnl | string | Optional |  | Realized PnL  
   
 WARNING
 
@@ -3721,17 +4687,30 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» CrossexSecurityPosition | object | none  
-»» user_id | string | User ID  
-»» symbol | string | Stock or ETF trading pair  
-»» price | string | Latest price in the listing market currency  
-»» entry_price | string | Position cost price in the listing market currency  
-»» diluted_cost_price | string | Diluted cost price in the listing market currency  
-»» upnl | string | Unrealized profit and loss in the listing market currency  
-»» position_qty | string | Position size  
-»» position_value | string | Position value in the listing market currency  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+CrossexSecurityPosition
+
+Type | Constraints  
+---|---  
+object | required: ["user_id","symbol","price","entry_price","diluted_cost_price","upnl","position_qty","position_value"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | string | Required |  | User ID  
+symbol | string | Required |  | Stock or ETF trading pair  
+price | string | Required |  | Latest price in the listing market currency  
+entry_price | string | Required |  | Position cost price in the listing market currency  
+diluted_cost_price | string | Required |  | Diluted cost price in the listing market currency  
+upnl | string | Required |  | Unrealized profit and loss in the listing market currency  
+position_qty | string | Required |  | Position size  
+position_value | string | Required |  | Position value in the listing market currency  
   
 WARNING
 
@@ -3826,30 +4805,43 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» CrossexMarginPosition | object | none  
-»» user_id | string | User ID  
-»» position_id | string | Leveraged Position ID  
-»» symbol | string | Trading Pair  
-»» position_side | string | Position Direction  
-»» initial_margin | string | Initial position margin  
-»» maintenance_margin | string | Position maintenance margin  
-»» asset_qty | string | Position Asset Quantity  
-»» asset_coin | string | Position Asset Currency  
-»» position_value | string | Position Value  
-»» liability | string | Debt Quantity  
-»» liability_coin | string | Debt Currency  
-»» interest | string | Deducted Interest  
-»» max_position_qty | string | Max Trade Size  
-»» entry_price | string | Position Cost Price (Average Opening Price)  
-»» index_price | string | Index price  
-»» upnl | string | Unrealized P&L  
-»» upnl_rate | string | Unrealized P&L Ratio  
-»» leverage | string | Opening Leverage  
-»» max_leverage | string | Maximum leverage  
-»» create_time | string | Created time  
-»» update_time | string | Update time  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+CrossexMarginPosition
+
+Type | Constraints  
+---|---  
+object | required: ["user_id","position_id","symbol","position_side","initial_margin","maintenance_margin","asset_qty","asset_coin","position_value","liability","liability_coin","interest","max_position_qty","entry_price","index_price","upnl","upnl_rate","leverage","max_leverage","create_time","update_time"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | string | Required |  | User ID  
+position_id | string | Required |  | Leveraged Position ID  
+symbol | string | Required |  | Trading Pair  
+position_side | string | Required |  | Position Direction  
+initial_margin | string | Required |  | Initial position margin  
+maintenance_margin | string | Required |  | Position maintenance margin  
+asset_qty | string | Required |  | Position Asset Quantity  
+asset_coin | string | Required |  | Position Asset Currency  
+position_value | string | Required |  | Position Value  
+liability | string | Required |  | Debt Quantity  
+liability_coin | string | Required |  | Debt Currency  
+interest | string | Required |  | Deducted Interest  
+max_position_qty | string | Required |  | Max Trade Size  
+entry_price | string | Required |  | Position Cost Price (Average Opening Price)  
+index_price | string | Required |  | Index price  
+upnl | string | Required |  | Unrealized P&L  
+upnl_rate | string | Required |  | Unrealized P&L Ratio  
+leverage | string | Required |  | Opening Leverage  
+max_leverage | string | Required |  | Maximum leverage  
+create_time | string | Required |  | Created time  
+update_time | string | Required |  | Update time  
   
 WARNING
 
@@ -3956,15 +4948,21 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_CrossexAdlRank_
+CrossexAdlRank
 
-Name | Type | Description  
----|---|---  
-» user_id | string | User ID  
-» symbol | string | Currency pair  
-» crossex_adl_rank | string | CrossEx ADL priority, with values from 1 to 5  
+Type | Constraints  
+---|---  
+object | required: ["user_id","symbol","crossex_adl_rank","exchange_adl_rank"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | string | Required |  | User ID  
+symbol | string | Required |  | Currency pair  
+crossex_adl_rank | string | Required |  | CrossEx ADL priority, with values from 1 to 5  
 Priority from highest to lowest: 5, 4, 3, 2, 1  
-» exchange_adl_rank | string | Raw exchange ADL rank. Priority order from highest to lowest by exchange:  
+exchange_adl_rank | string | Required |  | Raw exchange ADL rank. Priority order from highest to lowest by exchange:  
 \- BINANCE: 4, 3, 2, 1, 0  
 \- OKX: 5, 4, 3, 2, 1, 0  
 \- GATE: 1, 2, 3, 4, 5  
@@ -4061,14 +5059,26 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | none  
-» CrossexOrder | CrossexOrder | none  
-»» user_id | string | User ID  
-»» order_id | string | Order ID  
-»» text | string | Client-defined order ID.  
-»» state | string | Order status:  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+CrossexOrder
+
+Type | Constraints  
+---|---  
+CrossexOrder | required: ["user_id","order_id","text","state","symbol","side","type","exchange_type","attribute","executed_avg_price","executed_amount","executed_qty","time_in_force","price","quote_qty","qty","business_type","fee","fee_coin","reduce_only","leverage","last_executed_price","last_executed_qty","reason","position_side","last_executed_amount","update_time","create_time"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | string | Required |  | User ID  
+order_id | string | Required |  | Order ID  
+text | string | Required |  | Client-defined order ID.  
+state | string | Required |  | Order status:  
 `NEW`: validated locally, pending submission to the exchange  
 `OPEN`: resting on the exchange order book  
 `PARTIALLY_FILLED`: partially filled  
@@ -4076,31 +5086,311 @@ _None_ | array | none
 `FAIL`: CrossEx validation failed; see `reason`  
 `REJECT`: rejected by the exchange; see `reason`  
 `CANCELLED`: cancelled  
-»» symbol | string | Unique trading pair identifiers, e.g.  
+symbol | string | Required |  | Unique trading pair identifiers, e.g.  
 `BINANCE_SPOT_BTC_USDT`, `BINANCE_FUTURE_BTC_USDT`.  
-»» side | string | Side (`BUY` buy / `SELL` sell).  
-»» type | string | Order type (`LIMIT` limit / `MARKET` market).  
-»» attribute | string | Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).  
-»» exchange_type | string | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
-»» business_type | string | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / CONVERT: flash swap / STOCK: stocks / ETF: exchange-traded funds)  
-»» qty | string | Order quantity in the base currency.  
-»» quote_qty | string | Order quantity in the quote currency.  
-»» price | string | Order price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-»» time_in_force | string | Time-in-force policy (default: GTC; allowed values: GTC, IOC, FOK, POC, and RPI)  
-»» executed_qty | string | Filled base amount.  
-»» executed_amount | string | Filled amount in the quote currency. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-»» executed_avg_price | string | Average fill price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-»» fee_coin | string | Fee currency  
-»» fee | string | Fee amount.  
-»» reduce_only | string | Reduce-only order (`"true"` or `"false"`).  
-»» leverage | string | Order leverage multiplier.  
-»» reason | string | Failure reason description.  
-»» last_executed_qty | string | Base quantity of the latest fill.  
-»» last_executed_price | string | Price of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-»» last_executed_amount | string | Amount of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-»» position_side | string | Position side (`NONE` one-way position / `LONG` long / `SHORT` short)  
-»» create_time | string | Created time  
-»» update_time | string | Update time  
+side | string | Required |  | Side (`BUY` buy / `SELL` sell).  
+type | string | Required |  | Order type (`LIMIT` limit / `MARKET` market).  
+attribute | string | Required |  | Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).  
+exchange_type | string | Required |  | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
+business_type | string | Required |  | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / CONVERT: flash swap / STOCK: stocks / ETF: exchange-traded funds)  
+qty | string | Required |  | Order quantity in the base currency.  
+quote_qty | string | Required |  | Order quantity in the quote currency.  
+price | string | Required |  | Order price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+time_in_force | string | Required |  | Time-in-force policy (default: GTC; allowed values: GTC, IOC, FOK, POC, and RPI)  
+executed_qty | string | Required |  | Filled base amount.  
+executed_amount | string | Required |  | Filled amount in the quote currency. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+executed_avg_price | string | Required |  | Average fill price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+fee_coin | string | Required |  | Fee currency  
+fee | string | Required |  | Fee amount.  
+reduce_only | string | Required |  | Reduce-only order (`"true"` or `"false"`).  
+leverage | string | Required |  | Order leverage multiplier.  
+reason | string | Required |  | Failure reason description.  
+last_executed_qty | string | Required |  | Base quantity of the latest fill.  
+last_executed_price | string | Required |  | Price of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+last_executed_amount | string | Required |  | Amount of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+position_side | string | Required |  | Position side (`NONE` one-way position / `LONG` long / `SHORT` short)  
+create_time | string | Required |  | Created time  
+update_time | string | Required |  | Update time  
+  
+**items / user_id**
+
+User ID
+
+User ID
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / order_id**
+
+Order ID
+
+Order ID
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / text**
+
+Client Order ID
+
+Client-defined order ID.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / state**
+
+Order status
+
+Order status: `NEW`: validated locally, pending submission to the exchange `OPEN`: resting on the exchange order book `PARTIALLY_FILLED`: partially filled `FILLED`: fully filled `FAIL`: CrossEx validation failed; see `reason` `REJECT`: rejected by the exchange; see `reason` `CANCELLED`: cancelled
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / symbol**
+
+Currency pair
+
+Unique trading pair identifiers, e.g. `BINANCE_SPOT_BTC_USDT`, `BINANCE_FUTURE_BTC_USDT`.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / side**
+
+direction
+
+Side (`BUY` buy / `SELL` sell).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / type**
+
+Type
+
+Order type (`LIMIT` limit / `MARKET` market).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / attribute**
+
+Attribute COMMON: Normal Order, LIQ: Liquidation Takeover Order, REDUCE: Liquidation Reduce Order, ADL: Auto-Reduce
+
+Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / exchange_type**
+
+Exchange
+
+Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / business_type**
+
+Business Type
+
+Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / CONVERT: flash swap / STOCK: stocks / ETF: exchange-traded funds)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / qty**
+
+Base Currency Quantity
+
+Order quantity in the base currency.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / quote_qty**
+
+Quote Currency Quantity
+
+Order quantity in the quote currency.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / price**
+
+Price
+
+Order price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / time_in_force**
+
+Time in Force Strategy
+
+Time-in-force policy (default: GTC; allowed values: GTC, IOC, FOK, POC, and RPI)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / executed_qty**
+
+Filled quantity
+
+Filled base amount.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / executed_amount**
+
+Filled Amount
+
+Filled amount in the quote currency. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / executed_avg_price**
+
+Average Filled Price
+
+Average fill price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / fee_coin**
+
+Fee currency
+
+Fee currency
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / fee**
+
+fee
+
+Fee amount.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / reduce_only**
+
+Reduce Position Only
+
+Reduce-only order (`"true"` or `"false"`).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / leverage**
+
+Leverage
+
+Order leverage multiplier.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / reason**
+
+Reason
+
+Failure reason description.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / last_executed_qty**
+
+Latest Filled Quantity
+
+Base quantity of the latest fill.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / last_executed_price**
+
+Latest Filled Price
+
+Price of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / last_executed_amount**
+
+Latest Filled Amount
+
+Amount of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / position_side**
+
+Position Direction
+
+Position side (`NONE` one-way position / `LONG` long / `SHORT` short)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / create_time**
+
+Created time
+
+Created time
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / update_time**
+
+Update time
+
+Update time
+
+Type | Constraints  
+---|---  
+string |   
   
 WARNING
 
@@ -4219,14 +5509,26 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | none  
-» CrossexOrder | CrossexOrder | none  
-»» user_id | string | User ID  
-»» order_id | string | Order ID  
-»» text | string | Client-defined order ID.  
-»» state | string | Order status:  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+CrossexOrder
+
+Type | Constraints  
+---|---  
+CrossexOrder | required: ["user_id","order_id","text","state","symbol","side","type","exchange_type","attribute","executed_avg_price","executed_amount","executed_qty","time_in_force","price","quote_qty","qty","business_type","fee","fee_coin","reduce_only","leverage","last_executed_price","last_executed_qty","reason","position_side","last_executed_amount","update_time","create_time"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | string | Required |  | User ID  
+order_id | string | Required |  | Order ID  
+text | string | Required |  | Client-defined order ID.  
+state | string | Required |  | Order status:  
 `NEW`: validated locally, pending submission to the exchange  
 `OPEN`: resting on the exchange order book  
 `PARTIALLY_FILLED`: partially filled  
@@ -4234,31 +5536,311 @@ _None_ | array | none
 `FAIL`: CrossEx validation failed; see `reason`  
 `REJECT`: rejected by the exchange; see `reason`  
 `CANCELLED`: cancelled  
-»» symbol | string | Unique trading pair identifiers, e.g.  
+symbol | string | Required |  | Unique trading pair identifiers, e.g.  
 `BINANCE_SPOT_BTC_USDT`, `BINANCE_FUTURE_BTC_USDT`.  
-»» side | string | Side (`BUY` buy / `SELL` sell).  
-»» type | string | Order type (`LIMIT` limit / `MARKET` market).  
-»» attribute | string | Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).  
-»» exchange_type | string | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
-»» business_type | string | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / CONVERT: flash swap / STOCK: stocks / ETF: exchange-traded funds)  
-»» qty | string | Order quantity in the base currency.  
-»» quote_qty | string | Order quantity in the quote currency.  
-»» price | string | Order price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-»» time_in_force | string | Time-in-force policy (default: GTC; allowed values: GTC, IOC, FOK, POC, and RPI)  
-»» executed_qty | string | Filled base amount.  
-»» executed_amount | string | Filled amount in the quote currency. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-»» executed_avg_price | string | Average fill price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-»» fee_coin | string | Fee currency  
-»» fee | string | Fee amount.  
-»» reduce_only | string | Reduce-only order (`"true"` or `"false"`).  
-»» leverage | string | Order leverage multiplier.  
-»» reason | string | Failure reason description.  
-»» last_executed_qty | string | Base quantity of the latest fill.  
-»» last_executed_price | string | Price of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-»» last_executed_amount | string | Amount of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-»» position_side | string | Position side (`NONE` one-way position / `LONG` long / `SHORT` short)  
-»» create_time | string | Created time  
-»» update_time | string | Update time  
+side | string | Required |  | Side (`BUY` buy / `SELL` sell).  
+type | string | Required |  | Order type (`LIMIT` limit / `MARKET` market).  
+attribute | string | Required |  | Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).  
+exchange_type | string | Required |  | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
+business_type | string | Required |  | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / CONVERT: flash swap / STOCK: stocks / ETF: exchange-traded funds)  
+qty | string | Required |  | Order quantity in the base currency.  
+quote_qty | string | Required |  | Order quantity in the quote currency.  
+price | string | Required |  | Order price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+time_in_force | string | Required |  | Time-in-force policy (default: GTC; allowed values: GTC, IOC, FOK, POC, and RPI)  
+executed_qty | string | Required |  | Filled base amount.  
+executed_amount | string | Required |  | Filled amount in the quote currency. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+executed_avg_price | string | Required |  | Average fill price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+fee_coin | string | Required |  | Fee currency  
+fee | string | Required |  | Fee amount.  
+reduce_only | string | Required |  | Reduce-only order (`"true"` or `"false"`).  
+leverage | string | Required |  | Order leverage multiplier.  
+reason | string | Required |  | Failure reason description.  
+last_executed_qty | string | Required |  | Base quantity of the latest fill.  
+last_executed_price | string | Required |  | Price of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+last_executed_amount | string | Required |  | Amount of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+position_side | string | Required |  | Position side (`NONE` one-way position / `LONG` long / `SHORT` short)  
+create_time | string | Required |  | Created time  
+update_time | string | Required |  | Update time  
+  
+**items / user_id**
+
+User ID
+
+User ID
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / order_id**
+
+Order ID
+
+Order ID
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / text**
+
+Client Order ID
+
+Client-defined order ID.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / state**
+
+Order status
+
+Order status: `NEW`: validated locally, pending submission to the exchange `OPEN`: resting on the exchange order book `PARTIALLY_FILLED`: partially filled `FILLED`: fully filled `FAIL`: CrossEx validation failed; see `reason` `REJECT`: rejected by the exchange; see `reason` `CANCELLED`: cancelled
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / symbol**
+
+Currency pair
+
+Unique trading pair identifiers, e.g. `BINANCE_SPOT_BTC_USDT`, `BINANCE_FUTURE_BTC_USDT`.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / side**
+
+direction
+
+Side (`BUY` buy / `SELL` sell).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / type**
+
+Type
+
+Order type (`LIMIT` limit / `MARKET` market).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / attribute**
+
+Attribute COMMON: Normal Order, LIQ: Liquidation Takeover Order, REDUCE: Liquidation Reduce Order, ADL: Auto-Reduce
+
+Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / exchange_type**
+
+Exchange
+
+Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / business_type**
+
+Business Type
+
+Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / CONVERT: flash swap / STOCK: stocks / ETF: exchange-traded funds)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / qty**
+
+Base Currency Quantity
+
+Order quantity in the base currency.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / quote_qty**
+
+Quote Currency Quantity
+
+Order quantity in the quote currency.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / price**
+
+Price
+
+Order price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / time_in_force**
+
+Time in Force Strategy
+
+Time-in-force policy (default: GTC; allowed values: GTC, IOC, FOK, POC, and RPI)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / executed_qty**
+
+Filled quantity
+
+Filled base amount.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / executed_amount**
+
+Filled Amount
+
+Filled amount in the quote currency. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / executed_avg_price**
+
+Average Filled Price
+
+Average fill price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / fee_coin**
+
+Fee currency
+
+Fee currency
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / fee**
+
+fee
+
+Fee amount.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / reduce_only**
+
+Reduce Position Only
+
+Reduce-only order (`"true"` or `"false"`).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / leverage**
+
+Leverage
+
+Order leverage multiplier.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / reason**
+
+Reason
+
+Failure reason description.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / last_executed_qty**
+
+Latest Filled Quantity
+
+Base quantity of the latest fill.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / last_executed_price**
+
+Latest Filled Price
+
+Price of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / last_executed_amount**
+
+Latest Filled Amount
+
+Amount of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / position_side**
+
+Position Direction
+
+Position side (`NONE` one-way position / `LONG` long / `SHORT` short)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / create_time**
+
+Created time
+
+Created time
+
+Type | Constraints  
+---|---  
+string |   
+  
+**items / update_time**
+
+Update time
+
+Update time
+
+Type | Constraints  
+---|---  
+string |   
   
 WARNING
 
@@ -4376,30 +5958,43 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» CrossexHistoricalPosition | object | none  
-»» position_id | string | Position ID  
-»» user_id | string | User ID  
-»» symbol | string | Currency pair  
-»» closed_type | string | Position close type (PARTIAL_CLOSED: partially closed; COMPLETE_CLOSED: fully closed)  
-»» closed_pnl | string | Close Position P&L  
-»» closed_pnl_rate | string | Close Position P&L Ratio  
-»» open_avg_price | string | Average Opening Price  
-»» closed_avg_price | string | Average Close Price  
-»» max_position_qty | string | Max Trade Size  
-»» closed_qty | string | Close Position Quantity  
-»» closed_value | string | Close Position Value  
-»» fee | string | Position Accumulated Fees  
-»» liq_fee | string | Liquidation Fee  
-»» funding_fee | string | Funding Fee  
-»» position_side | string | Position Direction Before Close  
-»» position_mode | string | Position Mode at Close  
-»» leverage | string | Leverage at Close  
-»» margin_mode | string | Margin mode (CROSS/ISOLATED)  
-»» business_type | string | Business Type  
-»» create_time | string | Created time  
-»» update_time | string | Update time  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+CrossexHistoricalPosition
+
+Type | Constraints  
+---|---  
+object | required: ["business_type"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+position_id | string | Optional |  | Position ID  
+user_id | string | Optional |  | User ID  
+symbol | string | Optional |  | Currency pair  
+closed_type | string | Optional |  | Position close type (PARTIAL_CLOSED: partially closed; COMPLETE_CLOSED: fully closed)  
+closed_pnl | string | Optional |  | Close Position P&L  
+closed_pnl_rate | string | Optional |  | Close Position P&L Ratio  
+open_avg_price | string | Optional |  | Average Opening Price  
+closed_avg_price | string | Optional |  | Average Close Price  
+max_position_qty | string | Optional |  | Max Trade Size  
+closed_qty | string | Optional |  | Close Position Quantity  
+closed_value | string | Optional |  | Close Position Value  
+fee | string | Optional |  | Position Accumulated Fees  
+liq_fee | string | Optional |  | Liquidation Fee  
+funding_fee | string | Optional |  | Funding Fee  
+position_side | string | Optional |  | Position Direction Before Close  
+position_mode | string | Optional |  | Position Mode at Close  
+leverage | string | Optional |  | Leverage at Close  
+margin_mode | string | Optional |  | Margin mode (CROSS/ISOLATED)  
+business_type | string | Required |  | Business Type  
+create_time | string | Optional |  | Created time  
+update_time | string | Optional |  | Update time  
   
 WARNING
 
@@ -4509,27 +6104,40 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» CrossexHistoricalMarginPosition | object | none  
-»» position_id | string | Position ID  
-»» user_id | string | User ID  
-»» symbol | string | Currency pair  
-»» closed_type | string | Position close type (PARTIAL_CLOSED: partially closed; COMPLETE_CLOSED: fully closed)  
-»» closed_pnl | string | Close Position P&L  
-»» closed_pnl_rate | string | Close Position P&L Ratio  
-»» open_avg_price | string | Average Opening Price  
-»» closed_avg_price | string | Average Close Price  
-»» max_position_qty | string | Max Trade Size  
-»» closed_qty | string | Close Position Quantity  
-»» closed_value | string | Close Position Value  
-»» liq_fee | string | Liquidation Fee  
-»» position_side | string | Position Direction Before Close  
-»» leverage | string | Leverage at Close  
-»» interest | string | Accumulated position interest  
-»» business_type | string | Position Business Type  
-»» create_time | string | Created time  
-»» update_time | string | Update time  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+CrossexHistoricalMarginPosition
+
+Type | Constraints  
+---|---  
+object | required: ["business_type","interest"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+position_id | string | Optional |  | Position ID  
+user_id | string | Optional |  | User ID  
+symbol | string | Optional |  | Currency pair  
+closed_type | string | Optional |  | Position close type (PARTIAL_CLOSED: partially closed; COMPLETE_CLOSED: fully closed)  
+closed_pnl | string | Optional |  | Close Position P&L  
+closed_pnl_rate | string | Optional |  | Close Position P&L Ratio  
+open_avg_price | string | Optional |  | Average Opening Price  
+closed_avg_price | string | Optional |  | Average Close Price  
+max_position_qty | string | Optional |  | Max Trade Size  
+closed_qty | string | Optional |  | Close Position Quantity  
+closed_value | string | Optional |  | Close Position Value  
+liq_fee | string | Optional |  | Liquidation Fee  
+position_side | string | Optional |  | Position Direction Before Close  
+leverage | string | Optional |  | Leverage at Close  
+interest | string | Required |  | Accumulated position interest  
+business_type | string | Required |  | Position Business Type  
+create_time | string | Optional |  | Created time  
+update_time | string | Optional |  | Update time  
   
 WARNING
 
@@ -4638,24 +6246,37 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» CrossexMarginInterestRecord | object | none  
-»» user_id | string | User ID  
-»» symbol | string | Trading Pair  
-»» interest_id | string | Interest Deduction ID  
-»» liability_id | string | Debt Source ID, can be Order ID or Position ID  
-»» liability | string | Debt Quantity  
-»» liability_coin | string | Debt Currency  
-»» interest | string | Interest  
-»» interest_rate | string | interest rate  
-»» interest_type | string | Interest deduction type  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+CrossexMarginInterestRecord
+
+Type | Constraints  
+---|---  
+object | required: ["user_id","symbol","interest_id","liability_id","liability","liability_coin","interest","interest_rate","interest_type","create_time","exchange_type"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | string | Required |  | User ID  
+symbol | string | Required |  | Trading Pair  
+interest_id | string | Required |  | Interest Deduction ID  
+liability_id | string | Required |  | Debt Source ID, can be Order ID or Position ID  
+liability | string | Required |  | Debt Quantity  
+liability_coin | string | Required |  | Debt Currency  
+interest | string | Required |  | Interest  
+interest_rate | string | Required |  | interest rate  
+interest_type | string | Required |  | Interest deduction type  
 `PERIODIC_POSITION`: hourly interest charged on positions  
 `PERIODIC_OPEN_ORDER`: hourly interest charged on open orders  
 `IMMEDIATE_OPEN_ORDER`: interest charged when an order is placed  
 `PERIODIC_ISOLATED`: hourly interest charged on liabilities  
-»» create_time | string | Created time  
-»» exchange_type | string | Exchange  
+create_time | string | Required |  | Created time  
+exchange_type | string | Required |  | Exchange  
   
 WARNING
 
@@ -4769,27 +6390,40 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» CrossexTrade | object | none  
-»» user_id | string | User ID  
-»» transaction_id | string | filledrecordsID  
-»» order_id | string | Order ID  
-»» text | string | User Order ID  
-»» symbol | string | Currency pair  
-»» exchange_type | string | Exchange  
-»» business_type | string | Business Type  
-»» side | string | Buy/Sell Direction  
-»» qty | string | Trading size  
-»» price | string | Fill price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-»» fee | string | fee  
-»» fee_coin | string | Fee currency  
-»» fee_rate | string | Fee Rate  
-»» match_role | string | Filled Role  
-»» rpnl | string | Realized P&L  
-»» position_mode | string | Position Mode  
-»» position_side | string | Position Direction  
-»» create_time | string | Created time  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+CrossexTrade
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | string | Optional |  | User ID  
+transaction_id | string | Optional |  | filledrecordsID  
+order_id | string | Optional |  | Order ID  
+text | string | Optional |  | User Order ID  
+symbol | string | Optional |  | Currency pair  
+exchange_type | string | Optional |  | Exchange  
+business_type | string | Optional |  | Business Type  
+side | string | Optional |  | Buy/Sell Direction  
+qty | string | Optional |  | Trading size  
+price | string | Optional |  | Fill price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+fee | string | Optional |  | fee  
+fee_coin | string | Optional |  | Fee currency  
+fee_rate | string | Optional |  | Fee Rate  
+match_role | string | Optional |  | Filled Role  
+rpnl | string | Optional |  | Realized P&L  
+position_mode | string | Optional |  | Position Mode  
+position_side | string | Optional |  | Position Direction  
+create_time | string | Optional |  | Created time  
   
 WARNING
 
@@ -4898,18 +6532,31 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» CrossexAccountBookRecord | object | none  
-»» id | string | Account Change Record ID  
-»» user_id | string | User ID  
-»» business_id | string | Business ID. Its meaning varies by `statement_type`.  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+CrossexAccountBookRecord
+
+Type | Constraints  
+---|---  
+object | required: ["user_id","business_id","statement_type","exchange_type","change","balance","create_time","id","coin"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | string | Required |  | Account Change Record ID  
+user_id | string | Required |  | User ID  
+business_id | string | Required |  | Business ID. Its meaning varies by `statement_type`.  
 TRANSACTION: order ID  
 TRADING_FEE: order ID  
 LIQUIDATION_FEE: liquidation order ID  
 FUNDING_FEE: position ID and funding fee settlement time  
 For other types, it is a system-generated processing ID with no business meaning  
-»» statement_type | string | Account book transaction type  
+statement_type | string | Required |  | Account book transaction type  
 `TRANSACTION`: Trade  
 `TRADING_FEE`: Trading fee  
 `FUNDING_FEE`: Futures funding fee  
@@ -4924,12 +6571,12 @@ For other types, it is a system-generated processing ID with no business meaning
 `SECURITY_DIVIDEND`: Stock or ETF dividend payout  
 `SECURITY_CORPORATE_ACTION`: Stock or ETF split or reverse split  
 `OTHER`: Other  
-»» exchange_type | string | Exchange  
-»» coin | string | Currency  
-»» symbol | string | Trading Pair  
-»» change | string | Change amount (positive values indicate an increase; negative values indicate a decrease)  
-»» balance | string | Balance after change  
-»» create_time | string | Created time  
+exchange_type | string | Required |  | Exchange  
+coin | string | Required |  | Currency  
+symbol | string | Optional |  | Trading Pair  
+change | string | Required |  | Change amount (positive values indicate an increase; negative values indicate a decrease)  
+balance | string | Required |  | Balance after change  
+create_time | string | Required |  | Created time  
   
 WARNING
 
@@ -5026,15 +6673,28 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» CrossexCoinDiscountRate | object | none  
-»» coin | string | Currency  
-»» exchange_type | string | Exchange  
-»» tier | string | Tier  
-»» min_value | string | Minimum value  
-»» max_value | string | Maximum value  
-»» discount_rate | string | Discount rate  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+CrossexCoinDiscountRate
+
+Type | Constraints  
+---|---  
+object | required: ["coin","exchange_type","tier","min_value","max_value","discount_rate"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+coin | string | Required |  | Currency  
+exchange_type | string | Required |  | Exchange  
+tier | string | Required |  | Tier  
+min_value | string | Required |  | Minimum value  
+max_value | string | Required |  | Maximum value  
+discount_rate | string | Required |  | Discount rate  
   
 WARNING
 
@@ -5144,20 +6804,32 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» symbol | string | Trading Pair  
-» last_price | string | Last price  
-» open_24h | string | 24-hour opening price  
-» low_24h | string | 24h Low  
-» high_24h | string | 24h High  
-» volume_24h_base | string | 24-hour trading volume in base currency  
-» volume_24h_quote | string | 24-hour trading volume in quote currency  
-» mark_price | string | Mark price  
-» index_price | string | Index price  
-» open_interest | string | Open interest  
-» open_interest_quote | string | Open interest (in quote currency)  
-» timestamp | string | Update timestamp  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+object | required: ["symbol","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Trading Pair  
+last_price | string | Optional |  | Last price  
+open_24h | string | Optional |  | 24-hour opening price  
+low_24h | string | Optional |  | 24h Low  
+high_24h | string | Optional |  | 24h High  
+volume_24h_base | string | Optional |  | 24-hour trading volume in base currency  
+volume_24h_quote | string | Optional |  | 24-hour trading volume in quote currency  
+mark_price | string | Optional |  | Mark price  
+index_price | string | Optional |  | Index price  
+open_interest | string | Optional |  | Open interest  
+open_interest_quote | string | Optional |  | Open interest (in quote currency)  
+timestamp | string | Required |  | Update timestamp  
   
 WARNING
 
@@ -5271,12 +6943,24 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» symbol | string | Currency  
-» funding_rate | string | Funding rate  
-» funding_interval | string | Funding interval (in seconds)  
-» funding_time | string | Next funding time (Unix timestamp in milliseconds)  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+object | required: ["symbol","funding_rate","funding_interval","funding_time"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Currency  
+funding_rate | string | Required |  | Funding rate  
+funding_interval | string | Required |  | Funding interval (in seconds)  
+funding_time | string | Required |  | Next funding time (Unix timestamp in milliseconds)  
   
 WARNING
 
@@ -5368,28 +7052,202 @@ Code samples
 
 ##  Symbol
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["symbol","exchange_type","business_type","state","min_size","min_notional","lot_size","tick_size","max_num_orders","max_market_size","max_limit_size","contract_size","liquidation_fee","delist_time","tag"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-symbol | string | Required | none | Unique trading pair identifier in the format ExchangeType_BusinessType_Base_Counter.  
+symbol | string | Required |  | Unique trading pair identifier in the format ExchangeType_BusinessType_Base_Counter.  
 Stocks and ETFs use the market as ExchangeType (US/HK/KR/JP) and STOCK or ETF as the business type, for example US_STOCK_AAPL_USDT, HK_STOCK_00700_USDT, or US_ETF_SPY_USDT.  
-exchange_type | string | Required | none | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
-business_type | string | Required | none | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / STOCK: stocks / ETF: exchange-traded funds)  
-state | string | Required | none | Status (`live` running / `suspend` paused).  
-min_size | string | Required | none | Minimum order quantity  
-min_notional | string | Required | none | Minimum Order Value  
-lot_size | string | Required | none | Quantity Step  
-tick_size | string | Required | none | Price Step  
-max_num_orders | string | Required | none | maximumopen orderamount  
-max_market_size | string | Required | none | Maximum Market Order Quantity  
-max_limit_size | string | Required | none | Maximum order quantity for limit orders.  
-contract_size | string | Required | none | Contract multiplier (deprecated; quantity is used uniformly)  
-liquidation_fee | string | Required | none | Liquidation Fee Rate  
-delist_time | string | Required | none | Millisecond timestamp; `0` means not delisted.  
-support_rpi | string | Optional | none | Whether RPI order placement is supported (true if supported; false otherwise)  
-support_cross | string | Optional | none | Whether cross-margin order placement is supported (true if supported; false otherwise)  
-tag | string | Required | none | Tag information. Hyperliquid returns DEX information, stocks and ETFs return the security description, and other businesses return an empty string  
+exchange_type | string | Required |  | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
+business_type | string | Required |  | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / STOCK: stocks / ETF: exchange-traded funds)  
+state | string | Required |  | Status (`live` running / `suspend` paused).  
+min_size | string | Required |  | Minimum order quantity  
+min_notional | string | Required |  | Minimum Order Value  
+lot_size | string | Required |  | Quantity Step  
+tick_size | string | Required |  | Price Step  
+max_num_orders | string | Required |  | maximumopen orderamount  
+max_market_size | string | Required |  | Maximum Market Order Quantity  
+max_limit_size | string | Required |  | Maximum order quantity for limit orders.  
+contract_size | string | Required |  | Contract multiplier (deprecated; quantity is used uniformly)  
+liquidation_fee | string | Required |  | Liquidation Fee Rate  
+delist_time | string | Required |  | Millisecond timestamp; `0` means not delisted.  
+support_rpi | string | Optional |  | Whether RPI order placement is supported (true if supported; false otherwise)  
+support_cross | string | Optional |  | Whether cross-margin order placement is supported (true if supported; false otherwise)  
+tag | string | Required |  | Tag information. Hyperliquid returns DEX information, stocks and ETFs return the security description, and other businesses return an empty string  
+  
+**symbol**
+
+Currency pair
+
+Unique trading pair identifier in the format ExchangeType_BusinessType_Base_Counter. Stocks and ETFs use the market as ExchangeType (US/HK/KR/JP) and STOCK or ETF as the business type, for example US_STOCK_AAPL_USDT, HK_STOCK_00700_USDT, or US_ETF_SPY_USDT.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**exchange_type**
+
+Exchange
+
+Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**business_type**
+
+Business Type
+
+Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / STOCK: stocks / ETF: exchange-traded funds)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**state**
+
+availablestatus
+
+Status (`live` running / `suspend` paused).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**min_size**
+
+Minimum order quantity
+
+Minimum order quantity
+
+Type | Constraints  
+---|---  
+string |   
+  
+**min_notional**
+
+Minimum Order Value
+
+Minimum Order Value
+
+Type | Constraints  
+---|---  
+string |   
+  
+**lot_size**
+
+Quantity Step
+
+Quantity Step
+
+Type | Constraints  
+---|---  
+string |   
+  
+**tick_size**
+
+Price Step
+
+Price Step
+
+Type | Constraints  
+---|---  
+string |   
+  
+**max_num_orders**
+
+maximumopen orderamount
+
+maximumopen orderamount
+
+Type | Constraints  
+---|---  
+string |   
+  
+**max_market_size**
+
+Maximum Market Order Quantity
+
+Maximum Market Order Quantity
+
+Type | Constraints  
+---|---  
+string |   
+  
+**max_limit_size**
+
+Maximum Limit Order Quantity
+
+Maximum order quantity for limit orders.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**contract_size**
+
+Contract Size
+
+Contract multiplier (deprecated; quantity is used uniformly)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**liquidation_fee**
+
+Liquidation Fee Rate
+
+Liquidation Fee Rate
+
+Type | Constraints  
+---|---  
+string |   
+  
+**delist_time**
+
+Delisting Time
+
+Millisecond timestamp; `0` means not delisted.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**support_rpi**
+
+Whether RPI order placement is supported
+
+Whether RPI order placement is supported (true if supported; false otherwise)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**support_cross**
+
+Whether cross-margin order placement is supported
+
+Whether cross-margin order placement is supported (true if supported; false otherwise)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**tag**
+
+Tag
+
+Tag information. Hyperliquid returns DEX information, stocks and ETFs return the security description, and other businesses return an empty string
+
+Type | Constraints  
+---|---  
+string |   
       
     
     {
@@ -5416,16 +7274,20 @@ tag | string | Required | none | Tag information. Hyperliquid returns DEX inform
 
 ##  CrossexOrder
 
-_CrossexOrder_
+CrossexOrder
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["user_id","order_id","text","state","symbol","side","type","exchange_type","attribute","executed_avg_price","executed_amount","executed_qty","time_in_force","price","quote_qty","qty","business_type","fee","fee_coin","reduce_only","leverage","last_executed_price","last_executed_qty","reason","position_side","last_executed_amount","update_time","create_time"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-user_id | string | Required | none | User ID  
-order_id | string | Required | none | Order ID  
-text | string | Required | none | Client-defined order ID.  
-state | string | Required | none | Order status:  
+user_id | string | Required |  | User ID  
+order_id | string | Required |  | Order ID  
+text | string | Required |  | Client-defined order ID.  
+state | string | Required |  | Order status:  
 `NEW`: validated locally, pending submission to the exchange  
 `OPEN`: resting on the exchange order book  
 `PARTIALLY_FILLED`: partially filled  
@@ -5433,31 +7295,311 @@ state | string | Required | none | Order status:
 `FAIL`: CrossEx validation failed; see `reason`  
 `REJECT`: rejected by the exchange; see `reason`  
 `CANCELLED`: cancelled  
-symbol | string | Required | none | Unique trading pair identifiers, e.g.  
+symbol | string | Required |  | Unique trading pair identifiers, e.g.  
 `BINANCE_SPOT_BTC_USDT`, `BINANCE_FUTURE_BTC_USDT`.  
-side | string | Required | none | Side (`BUY` buy / `SELL` sell).  
-type | string | Required | none | Order type (`LIMIT` limit / `MARKET` market).  
-attribute | string | Required | none | Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).  
-exchange_type | string | Required | none | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
-business_type | string | Required | none | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / CONVERT: flash swap / STOCK: stocks / ETF: exchange-traded funds)  
-qty | string | Required | none | Order quantity in the base currency.  
-quote_qty | string | Required | none | Order quantity in the quote currency.  
-price | string | Required | none | Order price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-time_in_force | string | Required | none | Time-in-force policy (default: GTC; allowed values: GTC, IOC, FOK, POC, and RPI)  
-executed_qty | string | Required | none | Filled base amount.  
-executed_amount | string | Required | none | Filled amount in the quote currency. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-executed_avg_price | string | Required | none | Average fill price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-fee_coin | string | Required | none | Fee currency  
-fee | string | Required | none | Fee amount.  
-reduce_only | string | Required | none | Reduce-only order (`"true"` or `"false"`).  
-leverage | string | Required | none | Order leverage multiplier.  
-reason | string | Required | none | Failure reason description.  
-last_executed_qty | string | Required | none | Base quantity of the latest fill.  
-last_executed_price | string | Required | none | Price of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-last_executed_amount | string | Required | none | Amount of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-position_side | string | Required | none | Position side (`NONE` one-way position / `LONG` long / `SHORT` short)  
-create_time | string | Required | none | Created time  
-update_time | string | Required | none | Update time  
+side | string | Required |  | Side (`BUY` buy / `SELL` sell).  
+type | string | Required |  | Order type (`LIMIT` limit / `MARKET` market).  
+attribute | string | Required |  | Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).  
+exchange_type | string | Required |  | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
+business_type | string | Required |  | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / CONVERT: flash swap / STOCK: stocks / ETF: exchange-traded funds)  
+qty | string | Required |  | Order quantity in the base currency.  
+quote_qty | string | Required |  | Order quantity in the quote currency.  
+price | string | Required |  | Order price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+time_in_force | string | Required |  | Time-in-force policy (default: GTC; allowed values: GTC, IOC, FOK, POC, and RPI)  
+executed_qty | string | Required |  | Filled base amount.  
+executed_amount | string | Required |  | Filled amount in the quote currency. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+executed_avg_price | string | Required |  | Average fill price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+fee_coin | string | Required |  | Fee currency  
+fee | string | Required |  | Fee amount.  
+reduce_only | string | Required |  | Reduce-only order (`"true"` or `"false"`).  
+leverage | string | Required |  | Order leverage multiplier.  
+reason | string | Required |  | Failure reason description.  
+last_executed_qty | string | Required |  | Base quantity of the latest fill.  
+last_executed_price | string | Required |  | Price of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+last_executed_amount | string | Required |  | Amount of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+position_side | string | Required |  | Position side (`NONE` one-way position / `LONG` long / `SHORT` short)  
+create_time | string | Required |  | Created time  
+update_time | string | Required |  | Update time  
+  
+**user_id**
+
+User ID
+
+User ID
+
+Type | Constraints  
+---|---  
+string |   
+  
+**order_id**
+
+Order ID
+
+Order ID
+
+Type | Constraints  
+---|---  
+string |   
+  
+**text**
+
+Client Order ID
+
+Client-defined order ID.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**state**
+
+Order status
+
+Order status: `NEW`: validated locally, pending submission to the exchange `OPEN`: resting on the exchange order book `PARTIALLY_FILLED`: partially filled `FILLED`: fully filled `FAIL`: CrossEx validation failed; see `reason` `REJECT`: rejected by the exchange; see `reason` `CANCELLED`: cancelled
+
+Type | Constraints  
+---|---  
+string |   
+  
+**symbol**
+
+Currency pair
+
+Unique trading pair identifiers, e.g. `BINANCE_SPOT_BTC_USDT`, `BINANCE_FUTURE_BTC_USDT`.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**side**
+
+direction
+
+Side (`BUY` buy / `SELL` sell).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**type**
+
+Type
+
+Order type (`LIMIT` limit / `MARKET` market).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**attribute**
+
+Attribute COMMON: Normal Order, LIQ: Liquidation Takeover Order, REDUCE: Liquidation Reduce Order, ADL: Auto-Reduce
+
+Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**exchange_type**
+
+Exchange
+
+Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**business_type**
+
+Business Type
+
+Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / CONVERT: flash swap / STOCK: stocks / ETF: exchange-traded funds)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**qty**
+
+Base Currency Quantity
+
+Order quantity in the base currency.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**quote_qty**
+
+Quote Currency Quantity
+
+Order quantity in the quote currency.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**price**
+
+Price
+
+Order price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**time_in_force**
+
+Time in Force Strategy
+
+Time-in-force policy (default: GTC; allowed values: GTC, IOC, FOK, POC, and RPI)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**executed_qty**
+
+Filled quantity
+
+Filled base amount.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**executed_amount**
+
+Filled Amount
+
+Filled amount in the quote currency. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**executed_avg_price**
+
+Average Filled Price
+
+Average fill price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**fee_coin**
+
+Fee currency
+
+Fee currency
+
+Type | Constraints  
+---|---  
+string |   
+  
+**fee**
+
+fee
+
+Fee amount.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**reduce_only**
+
+Reduce Position Only
+
+Reduce-only order (`"true"` or `"false"`).
+
+Type | Constraints  
+---|---  
+string |   
+  
+**leverage**
+
+Leverage
+
+Order leverage multiplier.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**reason**
+
+Reason
+
+Failure reason description.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**last_executed_qty**
+
+Latest Filled Quantity
+
+Base quantity of the latest fill.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**last_executed_price**
+
+Latest Filled Price
+
+Price of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**last_executed_amount**
+
+Latest Filled Amount
+
+Amount of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**position_side**
+
+Position Direction
+
+Position side (`NONE` one-way position / `LONG` long / `SHORT` short)
+
+Type | Constraints  
+---|---  
+string |   
+  
+**create_time**
+
+Created time
+
+Created time
+
+Type | Constraints  
+---|---  
+string |   
+  
+**update_time**
+
+Update time
+
+Update time
+
+Type | Constraints  
+---|---  
+string |   
       
     
     {
@@ -5495,14 +7637,18 @@ update_time | string | Required | none | Update time
 
 ##  CrossexOrderActionResponse
 
-_CrossexOrderActionResponse_
+CrossexOrderActionResponse
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["order_id","text"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-order_id | string | Required | none | Order ID  
-text | string | Required | none | User-defined Order ID  
+order_id | string | Required |  | Order ID  
+text | string | Required |  | User-defined Order ID  
       
     
     {
@@ -5514,26 +7660,32 @@ text | string | Required | none | User-defined Order ID
 
 ##  CrossexBatchCancelOrderRequest
 
-_CrossexBatchCancelOrderRequest_
+CrossexBatchCancelOrderRequest
 
-###  Properties
+Batch cancel orders
 
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-order_id | string | Optional | none | Order ID; either this field or text is required  
-text | string | Optional | none | Custom ID specified by the user when creating the order; either this field or order_id is required  
+Type | Constraints  
+---|---  
+object |   
   
-_anyOf_
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required in this object | Constraints | Description  
 ---|---|---|---|---  
-_None_ | object | Optional | none | none  
+order_id | string | false |  | Order ID; either this field or text is required  
+text | string | false |  | Custom ID specified by the user when creating the order; either this field or order_id is required  
   
-_or_
+**anyOf[0]**
 
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-_None_ | object | Optional | none | none  
+Type | Constraints  
+---|---  
+any | required: ["order_id"]  
+  
+**anyOf[1]**
+
+Type | Constraints  
+---|---  
+any | required: ["text"]  
       
     
     {}
@@ -5542,17 +7694,23 @@ _None_ | object | Optional | none | none
 
 ##  CrossexBatchCancelOrderResponse
 
-_CrossexBatchCancelOrderResponse_
+CrossexBatchCancelOrderResponse
 
-###  Properties
+Batch order cancellation request results
 
-PropertiesName | Type | Required | Restrictions | Description  
+Type | Constraints  
+---|---  
+object | required: ["order_id","text","accepted","label","message"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-order_id | string | Required | none | Order ID  
-text | string | Required | none | Custom ID specified by the user when creating the order  
-accepted | string | Required | none | Whether the request was accepted, as the string true or false  
-label | string | Required | none | Error label when the request is not accepted; empty on success  
-message | string | Required | none | Error message when the request is not accepted; empty on success  
+order_id | string | Required |  | Order ID  
+text | string | Required |  | Custom ID specified by the user when creating the order  
+accepted | string | Required |  | Whether the request was accepted, as the string true or false  
+label | string | Required |  | Error label when the request is not accepted; empty on success  
+message | string | Required |  | Error message when the request is not accepted; empty on success  
       
     
     {
@@ -5567,14 +7725,18 @@ message | string | Required | none | Error message when the request is not accep
 
 ##  CrossexLeverageResponse
 
-_CrossexLeverageResponse_
+CrossexLeverageResponse
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["symbol","leverage"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-symbol | string | Required | none | Currency pair  
-leverage | string | Required | none | Requested Modified Leverage  
+symbol | string | Required |  | Currency pair  
+leverage | string | Required |  | Requested Modified Leverage  
       
     
     {
@@ -5586,14 +7748,18 @@ leverage | string | Required | none | Requested Modified Leverage
 
 ##  CrossexMarginModeResponse
 
-_CrossexMarginModeResponse_
+CrossexMarginModeResponse
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["symbol","margin_mode"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-symbol | string | Required | none | Futures trading pair  
-margin_mode | string | Required | none | Margin mode (CROSS/ISOLATED)  
+symbol | string | Required |  | Futures trading pair  
+margin_mode | string | Required |  | Margin mode (CROSS/ISOLATED)  
       
     
     {
@@ -5605,15 +7771,19 @@ margin_mode | string | Required | none | Margin mode (CROSS/ISOLATED)
 
 ##  CrossexIsolatedMarginResponse
 
-_CrossexIsolatedMarginResponse_
+CrossexIsolatedMarginResponse
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["symbol","margin"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-symbol | string | Required | none | Futures trading pair  
-margin | string | Required | none | Amount of isolated margin increased or decreased in this request  
-position_side | string | Optional | none | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
+symbol | string | Required |  | Futures trading pair  
+margin | string | Required |  | Amount of isolated margin increased or decreased in this request  
+position_side | string | Optional |  | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
       
     
     {
@@ -5626,17 +7796,21 @@ position_side | string | Optional | none | Position side (NONE/LONG/SHORT). Defa
 
 ##  CrossexTransferRequest
 
-_Fund Transfer Request Body_
+Fund Transfer Request Body
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["amount","from","coin","to"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-coin | string | Required | none | Currency  
-amount | string | Required | none | Transfer amount  
-from | string | Required | none | `from` debit account (funds withdrawn from): `CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`  
-to | string | Required | none | `to` receiving account (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
-text | string | Optional | none | User-defined ID  
+coin | string | Required |  | Currency  
+amount | string | Required |  | Transfer amount  
+from | string | Required |  | `from` debit account (funds withdrawn from): `CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`  
+to | string | Required |  | `to` receiving account (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
+text | string | Optional |  | User-defined ID  
       
     
     {
@@ -5651,14 +7825,18 @@ text | string | Optional | none | User-defined ID
 
 ##  CrossexOrderRequest
 
-_Place Order Request Body_
+Place Order Request Body
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["symbol","side"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-text | string | Optional | none | Client-defined Order ID, supports letters (a-z), numbers (0-9), symbols (-, _) only  
-symbol | string | Required | none | Unique identifier Exchange_Business_Base_Counter  
+text | string | Optional |  | Client-defined Order ID, supports letters (a-z), numbers (0-9), symbols (-, _) only  
+symbol | string | Required |  | Unique identifier Exchange_Business_Base_Counter  
 Examples:  
 To place a spot order for ADA/USDT on BINANCE, use `BINANCE_SPOT_ADA_USDT`;  
 To place a USDT-margined perpetual futures order for ADA/USDT on OKX, use `OKX_FUTURE_ADA_USDT`;  
@@ -5672,40 +7850,23 @@ To trade US stock AAPL, use `US_STOCK_AAPL_USDT`;
 To trade Hong Kong stock 00700, use `HK_STOCK_00700_USDT`;  
 To trade US ETF SPY, use `US_ETF_SPY_USDT`;  
 Spot, USDT-margined perpetual futures, spot margin, stock, and ETF orders are supported. BYBIT/DERIBIT do not currently support spot margin orders. KRAKEN, HYPERLIQUID, and LIGHTER do not currently support spot or margin orders. Stocks and ETFs support only cross-exchange account mode  
-side | string | Required | none | BUY, SELL  
-type | string | Optional | none | Order type (default: `LIMIT`; supported types: `LIMIT`, `MARKET`)  
-time_in_force | string | Optional | none | Defaults to GTC. Supported values: `GTC`, `IOC`, `FOK`, `POC`, `RPI`  
+side | string | Required | enum: ["BUY","SELL"] | BUY, SELL  
+type | string | Optional | enum: ["LIMIT","MARKET"]  
+default: "LIMIT" | Order type (default: `LIMIT`; supported types: `LIMIT`, `MARKET`)  
+time_in_force | string | Optional | enum: ["GTC","IOC","FOK","POC","RPI"]  
+default: "GTC" | Defaults to GTC. Supported values: `GTC`, `IOC`, `FOK`, `POC`, `RPI`  
 `GTC`: GoodTillCancelled  
 `IOC`: ImmediateOrCancelled  
 `FOK`: FillOrKill  
 `POC`: PendingOrCancelled or PostOnly  
 `RPI`: RPI  
 Stocks and ETFs support only `GTC`  
-qty | string | Optional | none | Order quantity (required except for spot and margin market buys; qty is required for stocks and ETFs)  
-price | string | Optional | none | Limit order price (required for limit orders). Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-quote_qty | string | Optional | none | Order quote quantity, required for spot and margin market buys. Stock and ETF orders do not support quote_qty  
-reduce_only | string | Optional | none | Reduce-only: `true` or `false`  
-position_side | string | Optional | none | Position side: `NONE`, `LONG`, `SHORT`  
+qty | string | Optional |  | Order quantity (required except for spot and margin market buys; qty is required for stocks and ETFs)  
+price | string | Optional |  | Limit order price (required for limit orders). Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+quote_qty | string | Optional |  | Order quote quantity, required for spot and margin market buys. Stock and ETF orders do not support quote_qty  
+reduce_only | string | Optional | enum: ["true","false"] | Reduce-only: `true` or `false`  
+position_side | string | Optional | enum: ["LONG","SHORT","NONE"] | Position side: `NONE`, `LONG`, `SHORT`  
 Defaults to `NONE` (single position mode) if not specified  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-side | BUY  
-side | SELL  
-type | LIMIT  
-type | MARKET  
-time_in_force | GTC  
-time_in_force | IOC  
-time_in_force | FOK  
-time_in_force | POC  
-time_in_force | RPI  
-reduce_only | true  
-reduce_only | false  
-position_side | LONG  
-position_side | SHORT  
-position_side | NONE  
       
     
     {
@@ -5725,14 +7886,18 @@ position_side | NONE
 
 ##  CrossexOrderUpdateRequest
 
-_Order Modification Request Body_
+Order Modification Request Body
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-qty | string | Optional | none | modify amount  
-price | string | Optional | none | modify price  
+qty | string | Optional |  | modify amount  
+price | string | Optional |  | modify price  
       
     
     {
@@ -5744,22 +7909,26 @@ price | string | Optional | none | modify price
 
 ##  CrossexConvertQuoteRequest
 
-_Flash Swap Quote Request Body_
+Flash Swap Quote Request Body
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["exchange_type","from_coin","to_coin","from_amount"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-exchange_type | string | Required | none | Exchange type  
+exchange_type | string | Required |  | Exchange type  
 Currently supports only BINANCE, OKX, GATE, BYBIT, HYPERLIQUID, KRAKEN, and LIGHTER  
-from_coin | string | Required | none | Asset Sold  
-to_coin | string | Required | none | Asset to receive  
+from_coin | string | Required |  | Asset Sold  
+to_coin | string | Required |  | Asset to receive  
 OKX and GATE only support conversion to BTC, ETH, or USDT  
 BYBIT and BINANCE only support conversion to USDT  
 HYPERLIQUID only supports conversion to USDT or USDC  
 KRAKEN only supports conversion to USDT  
 LIGHTER only supports swaps between USDT and USDC  
-from_amount | string | Required | none | Amount to sell  
+from_amount | string | Required |  | Amount to sell  
       
     
     {
@@ -5773,13 +7942,17 @@ from_amount | string | Required | none | Amount to sell
 
 ##  CrossexConvertOrderRequest
 
-_Flash Swap Transaction Request Body_
+Flash Swap Transaction Request Body
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["quote_id"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-quote_id | string | Required | none | Inquiry ID  
+quote_id | string | Required |  | Inquiry ID  
       
     
     {
@@ -5790,15 +7963,19 @@ quote_id | string | Required | none | Inquiry ID
 
 ##  CrossexAccountUpdateRequest
 
-_Change Account Request Body_
+Change Account Request Body
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-position_mode | string | Optional | none | Futures position mode (SINGLE/DUAL)  
-account_mode | string | Optional | none | Account mode (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
-exchange_type | string | Optional | none | Exchange (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to adjust futures position mode.  
+position_mode | string | Optional |  | Futures position mode (SINGLE/DUAL)  
+account_mode | string | Optional |  | Account mode (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
+exchange_type | string | Optional |  | Exchange (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to adjust futures position mode.  
       
     
     {
@@ -5811,14 +7988,18 @@ exchange_type | string | Optional | none | Exchange (`BINANCE` / `OKX` / `GATE` 
 
 ##  CrossexLeverageRequest
 
-_Change Leverage Request Body (for futures/margin)_
+Change Leverage Request Body (for futures/margin)
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["symbol","leverage"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-symbol | string | Required | none | Currency pair  
-leverage | string | Required | none | Leverage  
+symbol | string | Required |  | Currency pair  
+leverage | string | Required |  | Leverage  
       
     
     {
@@ -5830,21 +8011,18 @@ leverage | string | Required | none | Leverage
 
 ##  CrossexMarginModeRequest
 
-_Request body for updating the futures position margin mode_
+Request body for updating the futures position margin mode
 
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-symbol | string | Required | none | Hyperliquid futures trading pair  
-margin_mode | string | Required | none | Margin mode (CROSS/ISOLATED)  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
+Type | Constraints  
 ---|---  
-margin_mode | CROSS  
-margin_mode | ISOLATED  
+object | required: ["symbol","margin_mode"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Hyperliquid futures trading pair  
+margin_mode | string | Required | enum: ["CROSS","ISOLATED"] | Margin mode (CROSS/ISOLATED)  
       
     
     {
@@ -5856,23 +8034,19 @@ margin_mode | ISOLATED
 
 ##  CrossexIsolatedMarginRequest
 
-_Request body for increasing or decreasing isolated margin_
+Request body for increasing or decreasing isolated margin
 
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-symbol | string | Required | none | Hyperliquid futures trading pair  
-margin | string | Required | none | Margin adjustment amount. Positive values increase margin, while negative values decrease margin. Values with more than two decimal places are truncated to two decimal places  
-position_side | string | Optional | none | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
+Type | Constraints  
 ---|---  
-position_side | NONE  
-position_side | LONG  
-position_side | SHORT  
+object | required: ["symbol","margin"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Hyperliquid futures trading pair  
+margin | string | Required |  | Margin adjustment amount. Positive values increase margin, while negative values decrease margin. Values with more than two decimal places are truncated to two decimal places  
+position_side | string | Optional | enum: ["NONE","LONG","SHORT"] | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
       
     
     {
@@ -5885,16 +8059,20 @@ position_side | SHORT
 
 ##  CrossexClosePositionRequest
 
-_Full Close Position Request Body_
+Full Close Position Request Body
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["symbol"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-symbol | string | Required | none | Trading Pair  
+symbol | string | Required |  | Trading Pair  
 1\. Supports leveraged trading pairs, e.g., BINANCE_MARGIN_SOL_USDT  
 2\. Supports contract trading pairs, e.g., OKX_FUTURE_ETH_USDT  
-position_side | string | Optional | none | Position Direction  
+position_side | string | Optional |  | Position Direction  
 1\. For leveraged positions, this parameter must be passed  
 2\. For contract positions, pass selectively based on your contract holding method  
       
@@ -5908,14 +8086,18 @@ position_side | string | Optional | none | Position Direction
 
 ##  CrossexTransferResponse
 
-_CrossexTransferResponse_
+CrossexTransferResponse
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["tx_id","text"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-tx_id | string | Required | none | Order ID  
-text | string | Required | none | User-defined Order ID  
+tx_id | string | Required |  | Order ID  
+text | string | Required |  | User-defined Order ID  
       
     
     {
@@ -5927,19 +8109,23 @@ text | string | Required | none | User-defined Order ID
 
 ##  CrossexConvertQuoteResponse
 
-_CrossexConvertQuoteResponse_
+CrossexConvertQuoteResponse
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["quote_id","valid_ms","from_coin","to_coin","from_amount","to_amount","price"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-quote_id | string | Required | none | Quote ID  
-valid_ms | string | Required | none | Valid time (milliseconds timestamp)  
-from_coin | string | Required | none | Asset Sold  
-to_coin | string | Required | none | Asset Bought  
-from_amount | string | Required | none | Amount to sell  
-to_amount | string | Required | none | Amount to buy  
-price | string | Required | none | Quoted price  
+quote_id | string | Required |  | Quote ID  
+valid_ms | string | Required |  | Valid time (milliseconds timestamp)  
+from_coin | string | Required |  | Asset Sold  
+to_coin | string | Required |  | Asset Bought  
+from_amount | string | Required |  | Amount to sell  
+to_amount | string | Required |  | Amount to buy  
+price | string | Required |  | Quoted price  
       
     
     {
@@ -5956,14 +8142,18 @@ price | string | Required | none | Quoted price
 
 ##  CrossexConvertOrderResponse
 
-_CrossexConvertOrderResponse_
+CrossexConvertOrderResponse
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["order_id","text"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-order_id | string | Required | none | Order ID  
-text | string | Required | none | Order ID (cannot be customized)  
+order_id | string | Required |  | Order ID  
+text | string | Required |  | Order ID (cannot be customized)  
       
     
     {
@@ -5975,39 +8165,63 @@ text | string | Required | none | Order ID (cannot be customized)
 
 ##  CrossexAccount
 
-_CrossexAccount_
+CrossexAccount
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["user_id","available_margin","margin_balance","initial_margin","maintenance_margin","initial_margin_rate","maintenance_margin_rate","position_mode","create_time","update_time","assets"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-user_id | string | Required | none | User ID  
-available_margin | string | Required | none | Available Margin  
-margin_balance | string | Required | none | marginbalance  
-initial_margin | string | Required | none | Initial Margin  
-maintenance_margin | string | Required | none | Maintenance margin  
-initial_margin_rate | string | Required | none | Initial margin rate  
-maintenance_margin_rate | string | Required | none | Maintenance margin rate  
-position_mode | string | Required | none | Contract Position Mode  
-account_limit | string | Optional | none | Account limit  
-create_time | string | Required | none | Created time  
-update_time | string | Required | none | Update time  
-account_mode | string | Optional | none | Account Mode. CROSS_EXCHANGE: Cross-Exchange Mode; ISOLATED_EXCHANGE: Split-Exchange Mode  
-exchange_type | string | Optional | none | Exchange Type. When account_mode is CROSS_EXCHANGE, it must be CROSSEX; otherwise, it is another exchange.  
-assets | array | Required | none | Asset list: grouped by exchange and currency, returning per-account balances, margin, and PnL details  
-» CrossexAccountAsset | object | Optional | none | none  
-»» user_id | string | Optional | none | User ID  
-»» coin | string | Optional | none | Currency  
-»» exchange_type | string | Optional | none | Exchange  
-»» balance | string | Optional | none | Balance  
-»» upnl | string | Optional | none | Unrealized P&L  
-»» equity | string | Optional | none | Net margin equity for the currency  
-»» futures_initial_margin | string | Optional | none | Currency-specific futures initial margin. This value is populated for futures settlement currencies (USDT/USDC/USD)  
-»» futures_maintenance_margin | string | Optional | none | Currency-specific futures maintenance margin. This value is populated for futures settlement currencies (USDT/USDC/USD)  
-»» borrowing_initial_margin | string | Required | none | Currency-specific margin trading initial margin. This value is populated for margin or futures settlement currencies (USDT/USDC/USD)  
-»» borrowing_maintenance_margin | string | Required | none | Currency-specific margin trading maintenance margin. This value is populated for margin or futures settlement currencies (USDT/USDC/USD)  
-»» available_balance | string | Optional | none | Available Balance  
-»» liability | string | Optional | none | Liability for the currency. This value is populated only for USDT, USDC, or USD  
+user_id | string | Required |  | User ID  
+available_margin | string | Required |  | Available Margin  
+margin_balance | string | Required |  | marginbalance  
+initial_margin | string | Required |  | Initial Margin  
+maintenance_margin | string | Required |  | Maintenance margin  
+initial_margin_rate | string | Required |  | Initial margin rate  
+maintenance_margin_rate | string | Required |  | Maintenance margin rate  
+position_mode | string | Required |  | Contract Position Mode  
+account_limit | string | Optional |  | Account limit  
+create_time | string | Required |  | Created time  
+update_time | string | Required |  | Update time  
+account_mode | string | Optional |  | Account Mode. CROSS_EXCHANGE: Cross-Exchange Mode; ISOLATED_EXCHANGE: Split-Exchange Mode  
+exchange_type | string | Optional |  | Exchange Type. When account_mode is CROSS_EXCHANGE, it must be CROSSEX; otherwise, it is another exchange.  
+assets | array | Required |  | Asset list: grouped by exchange and currency, returning per-account balances, margin, and PnL details  
+  
+**assets**
+
+Asset list: grouped by exchange and currency, returning per-account balances, margin, and PnL details
+
+Type | Constraints  
+---|---  
+array |   
+  
+**assets / items**
+
+CrossexAccountAsset
+
+Type | Constraints  
+---|---  
+object | required: ["borrowing_initial_margin","borrowing_maintenance_margin"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | string | Optional |  | User ID  
+coin | string | Optional |  | Currency  
+exchange_type | string | Optional |  | Exchange  
+balance | string | Optional |  | Balance  
+upnl | string | Optional |  | Unrealized P&L  
+equity | string | Optional |  | Net margin equity for the currency  
+futures_initial_margin | string | Optional |  | Currency-specific futures initial margin. This value is populated for futures settlement currencies (USDT/USDC/USD)  
+futures_maintenance_margin | string | Optional |  | Currency-specific futures maintenance margin. This value is populated for futures settlement currencies (USDT/USDC/USD)  
+borrowing_initial_margin | string | Required |  | Currency-specific margin trading initial margin. This value is populated for margin or futures settlement currencies (USDT/USDC/USD)  
+borrowing_maintenance_margin | string | Required |  | Currency-specific margin trading maintenance margin. This value is populated for margin or futures settlement currencies (USDT/USDC/USD)  
+available_balance | string | Optional |  | Available Balance  
+liability | string | Optional |  | Liability for the currency. This value is populated only for USDT, USDC, or USD  
       
     
     {
@@ -6046,15 +8260,19 @@ assets | array | Required | none | Asset list: grouped by exchange and currency,
 
 ##  CrossexAccountUpdateResponse
 
-_CrossexAccountUpdateResponse_
+CrossexAccountUpdateResponse
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-position_mode | string | Optional | none | Requested futures position mode to modify (SINGLE/DUAL)  
-account_mode | string | Optional | none | Requested account mode to modify (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
-exchange_type | string | Optional | none | Exchange targeted by the requested change (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to change futures position mode.  
+position_mode | string | Optional |  | Requested futures position mode to modify (SINGLE/DUAL)  
+account_mode | string | Optional |  | Requested account mode to modify (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
+exchange_type | string | Optional |  | Exchange targeted by the requested change (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to change futures position mode.  
       
     
     {

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/onchainpay-x402/b402-bazaar
 api_type: Guide
-updated_at: 2026-11-18 18:28:58.878903
+updated_at: 2026-11-19 18:31:34.006079
 ---
 
 # B402 Bazaar

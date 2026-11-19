@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/agentic-wallet/use-cases/trading/prediction-market
 api_type: Guide
-updated_at: 2026-11-18 18:42:51.793391
+updated_at: 2026-11-19 18:45:57.269716
 ---
 
 # Prediction Market

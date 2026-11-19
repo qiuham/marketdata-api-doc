@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/broker/api-broker/guidance
 api_type: REST
-updated_at: 2026-11-18 18:49:32.364710
+updated_at: 2026-11-19 18:53:10.759300
 ---
 
 # OAuth Integration Guidance

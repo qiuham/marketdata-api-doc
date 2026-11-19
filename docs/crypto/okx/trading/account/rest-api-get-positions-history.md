@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-positions-history
 anchor_id: trading-account-rest-api-get-positions-history
 api_type: REST
-updated_at: 2026-11-18 18:57:43.670380
+updated_at: 2026-11-19 19:03:13.139322
 ---
 
 # Get positions history

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/isolated-margin
 api_type: REST
-updated_at: 2026-11-18 18:55:46.553240
+updated_at: 2026-11-19 19:00:48.421394
 ---
 
 # Isolated-Margin
@@ -33,28 +33,66 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Margin account information for a trading pair. `base` corresponds to base currency account information, `quote` corresponds to quote currency account information]  
-» _None_ | MarginAccount | Margin account information for a trading pair. `base` corresponds to base currency account information, `quote` corresponds to quote currency account information  
-»» currency_pair | string | Currency pair  
-»» account_type | string | Account Type mmr: maintenance margin rate account;inactive: market not activated  
-»» leverage | string | User's current market leverage multiplier  
-»» locked | boolean | Whether the account is locked  
-»» risk | string | Deprecated  
-»» mmr | string | Current Maintenance Margin Rate of the account  
-»» base | MarginAccount/properties/base | Currency account information  
-»»» currency | string | Currency name  
-»»» available | string | Amount available for margin trading, available = margin + borrowed  
-»»» locked | string | Frozen funds, such as amounts already placed in margin market for order trading  
-»»» borrowed | string | Borrowed funds  
-»»» interest | string | Unpaid interest  
-»» quote | MarginAccount/properties/base | Currency account information  
-»»» currency | string | Currency name  
-»»» available | string | Amount available for margin trading, available = margin + borrowed  
-»»» locked | string | Frozen funds, such as amounts already placed in margin market for order trading  
-»»» borrowed | string | Borrowed funds  
-»»» interest | string | Unpaid interest  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Margin account information for a trading pair. `base` corresponds to base currency account information, `quote` corresponds to quote currency account information
+
+Type | Constraints  
+---|---  
+MarginAccount |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency_pair | string | Optional |  | Currency pair  
+account_type | string | Optional |  | Account Type mmr: maintenance margin rate account;inactive: market not activated  
+leverage | string | Optional |  | User's current market leverage multiplier  
+locked | boolean | Optional |  | Whether the account is locked  
+risk | string | Optional |  | Deprecated  
+mmr | string | Optional |  | Current Maintenance Margin Rate of the account  
+base | object | Optional |  | Currency account information  
+quote | object | Optional |  | Currency account information  
+  
+**items / base**
+
+Currency account information
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency name  
+available | string | Optional |  | Amount available for margin trading, available = margin + borrowed  
+locked | string | Optional |  | Frozen funds, such as amounts already placed in margin market for order trading  
+borrowed | string | Optional |  | Borrowed funds  
+interest | string | Optional |  | Unpaid interest  
+  
+**items / quote**
+
+Currency account information
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency name  
+available | string | Optional |  | Amount available for margin trading, available = margin + borrowed  
+locked | string | Optional |  | Frozen funds, such as amounts already placed in margin market for order trading  
+borrowed | string | Optional |  | Borrowed funds  
+interest | string | Optional |  | Unpaid interest  
   
 WARNING
 
@@ -180,17 +218,28 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | none  
-» id | string | Balance change record ID  
-» time | string | Account change timestamp  
-» time_ms | integer(int64) | The timestamp of the change (in milliseconds)  
-» currency | string | Currency changed  
-» currency_pair | string | Account trading pair  
-» change | string | Amount changed. Positive value means transferring in, while negative out  
-» balance | string | Balance after change  
-» type | string | Account book type. Please refer to account book type for more detail  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+MarginAccountBook |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | string | Optional |  | Balance change record ID  
+time | string | Optional |  | Account change timestamp  
+time_ms | integer(int64) | Optional |  | The timestamp of the change (in milliseconds)  
+currency | string | Optional |  | Currency changed  
+currency_pair | string | Optional |  | Account trading pair  
+change | string | Optional |  | Amount changed. Positive value means transferring in, while negative out  
+balance | string | Optional |  | Balance after change  
+type | string | Optional |  | Account book type. Please refer to account book type for more detail  
   
 WARNING
 
@@ -281,14 +330,25 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | none  
-» currency | string | Currency name  
-» available | string | Available assets to lend, which is identical to spot account `available`  
-» locked | string | Locked amount. i.e. amount in `open` loans  
-» lent | string | Outstanding loan amount yet to be repaid  
-» total_lent | string | Amount used for lending. total_lent = lent + locked  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+FundingAccount |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency name  
+available | string | Optional |  | Available assets to lend, which is identical to spot account `available`  
+locked | string | Optional |  | Locked amount. i.e. amount in `open` loans  
+lent | string | Optional |  | Outstanding loan amount yet to be repaid  
+total_lent | string | Optional |  | Amount used for lending. total_lent = lent + locked  
   
 WARNING
 
@@ -371,18 +431,17 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_AutoRepaySetting_
+AutoRepaySetting
 
-Name | Type | Description  
----|---|---  
-» status | string | Auto repayment status: `on` \- enabled, `off` \- disabled  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
+Type | Constraints  
 ---|---  
-status | on  
-status | off  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+status | string | Optional | enum: ["on","off"] | Auto repayment status: `on` \- enabled, `off` \- disabled  
   
 WARNING
 
@@ -465,18 +524,17 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_AutoRepaySetting_
+AutoRepaySetting
 
-Name | Type | Description  
----|---|---  
-» status | string | Auto repayment status: `on` \- enabled, `off` \- disabled  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
+Type | Constraints  
 ---|---  
-status | on  
-status | off  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+status | string | Optional | enum: ["on","off"] | Auto repayment status: `on` \- enabled, `off` \- disabled  
   
 WARNING
 
@@ -560,13 +618,19 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_MarginTransferable_
+MarginTransferable
 
-Name | Type | Description  
----|---|---  
-» currency | string | Currency detail  
-» currency_pair | string | Currency pair  
-» amount | string | Max transferable amount  
+Type | Constraints  
+---|---  
+MarginTransferable |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency detail  
+currency_pair | string | Optional |  | Currency pair  
+amount | string | Optional |  | Max transferable amount  
   
 WARNING
 
@@ -645,19 +709,31 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Currency pair of the loan]  
-» _None_ | UniCurrencyPair | Currency pair of the loan  
-»» currency_pair | string | Currency pair  
-»» base_min_borrow_amount | string | Minimum borrow amount of base currency  
-»» quote_min_borrow_amount | string | Minimum borrow amount of quote currency  
-»» leverage | string | Leverage multiplier  
-»» status | string | Status  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Currency pair of the loan
+
+Type | Constraints  
+---|---  
+UniCurrencyPair |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency_pair | string | Optional | readOnly: true | Currency pair  
+base_min_borrow_amount | string | Optional | readOnly: true | Minimum borrow amount of base currency  
+quote_min_borrow_amount | string | Optional | readOnly: true | Minimum borrow amount of quote currency  
+leverage | string | Optional | readOnly: true | Leverage multiplier  
+status | string | Optional |  | Status  
   
 \- enabled: Enabled  
 \- disabled: Disabled  
-»» delisted_time | number(int64) | Delisting Time  
+delisted_time | number(int64) | Optional |  | Delisting Time  
   
 This operation does not require authentication 
 
@@ -725,19 +801,25 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Currency pair of the loan_
+Currency pair of the loan
 
-Name | Type | Description  
----|---|---  
-» currency_pair | string | Currency pair  
-» base_min_borrow_amount | string | Minimum borrow amount of base currency  
-» quote_min_borrow_amount | string | Minimum borrow amount of quote currency  
-» leverage | string | Leverage multiplier  
-» status | string | Status  
+Type | Constraints  
+---|---  
+UniCurrencyPair |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency_pair | string | Optional | readOnly: true | Currency pair  
+base_min_borrow_amount | string | Optional | readOnly: true | Minimum borrow amount of base currency  
+quote_min_borrow_amount | string | Optional | readOnly: true | Minimum borrow amount of quote currency  
+leverage | string | Optional | readOnly: true | Leverage multiplier  
+status | string | Optional |  | Status  
   
 \- enabled: Enabled  
 \- disabled: Disabled  
-» delisted_time | number(int64) | Delisting Time  
+delisted_time | number(int64) | Optional |  | Delisting Time  
   
 This operation does not require authentication 
 
@@ -805,11 +887,17 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_Estimate current hourly lending rates, returned by currency_
+Estimate current hourly lending rates, returned by currency
 
-Name | Type | Description  
----|---|---  
-» **additionalProperties** | string | none  
+Type | Constraints  
+---|---  
+EstimateRate |   
+  
+**additionalProperties**
+
+Type | Constraints  
+---|---  
+string |   
   
 WARNING
 
@@ -896,16 +984,28 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Borrowing]  
-» _None_ | UniLoan | Borrowing  
-»» currency | string | Currency  
-»» currency_pair | string | Currency pair  
-»» amount | string | Amount to Repay  
-»» type | string | Loan type: platform borrowing - platform, margin borrowing - margin  
-»» create_time | integer(int64) | Created time  
-»» update_time | integer(int64) | Last Update Time  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Borrowing
+
+Type | Constraints  
+---|---  
+UniLoan |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | Currency  
+currency_pair | string | Optional | readOnly: true | Currency pair  
+amount | string | Optional | readOnly: true | Amount to Repay  
+type | string | Optional | readOnly: true | Loan type: platform borrowing - platform, margin borrowing - margin  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
+update_time | integer(int64) | Optional | readOnly: true | Last Update Time  
   
 WARNING
 
@@ -984,18 +1084,36 @@ _Borrow or repay_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | CreateUniLoan | Required | none  
-» currency | body | string | Required | Currency  
-» type | body | string | Required | Loan Type margin: margin borrowing  
-» amount | body | string | Required | Borrow or repayment amount  
-» repaid_all | body | boolean | Optional | Full repayment. For repayment operations only. When `true`, overrides `amount` and repays the full amount  
-» currency_pair | body | string | Required | Currency pair  
+currency | body | string | Required | Currency  
+type | body | string | Required | Loan Type margin: margin borrowing  
+amount | body | string | Required | Borrow or repayment amount  
+repaid_all | body | boolean | Optional | Full repayment. For repayment operations only. When `true`, overrides `amount` and repays the full amount  
+currency_pair | body | string | Required | Currency pair  
   
 ####  Enumerated Values
 
 Enumerated ValuesParameter | Value  
 ---|---  
-» type | borrow  
-» type | repay  
+type | borrow  
+type | repay  
+  
+####  Request Body Schema
+
+Borrow or repay
+
+Request Body SchemaType | Constraints  
+---|---  
+CreateUniLoan | required: ["currency_pair","currency","amount","type"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Required |  | Currency  
+type | string | Required | enum: ["borrow","repay"] | Loan Type margin: margin borrowing  
+amount | string | Required |  | Borrow or repayment amount  
+repaid_all | boolean | Optional |  | Full repayment. For repayment operations only. When `true`, overrides `amount` and repays the full amount  
+currency_pair | string | Required |  | Currency pair  
   
 ### Responses
 
@@ -1098,15 +1216,27 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Borrowing Records]  
-» _None_ | UniLoanRecord | Borrowing Records  
-»» type | string | Type: `borrow` \- borrow, `repay` \- repay  
-»» currency_pair | string | Currency pair  
-»» currency | string | Currency  
-»» amount | string | Borrow or repayment amount  
-»» create_time | integer(int64) | Created time  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Borrowing Records
+
+Type | Constraints  
+---|---  
+UniLoanRecord |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+type | string | Optional | readOnly: true | Type: `borrow` \- borrow, `repay` \- repay  
+currency_pair | string | Optional | readOnly: true | Currency pair  
+currency | string | Optional | readOnly: true | Currency  
+amount | string | Optional | readOnly: true | Borrow or repayment amount  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
   
 WARNING
 
@@ -1214,17 +1344,29 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Interest Deduction Record]  
-» _None_ | UniLoanInterestRecord | Interest Deduction Record  
-»» currency | string | Currency name  
-»» currency_pair | string | Currency pair  
-»» actual_rate | string | Actual Rate  
-»» interest | string | Interest  
-»» status | integer | Status: 0 - fail, 1 - success  
-»» type | string | Loan Type margin: margin borrowing  
-»» create_time | integer(int64) | Created time  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Interest Deduction Record
+
+Type | Constraints  
+---|---  
+UniLoanInterestRecord |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | Currency name  
+currency_pair | string | Optional | readOnly: true | Currency pair  
+actual_rate | string | Optional | readOnly: true | Actual Rate  
+interest | string | Optional | readOnly: true | Interest  
+status | integer | Optional | readOnly: true | Status: 0 - fail, 1 - success  
+type | string | Optional | readOnly: true | Loan Type margin: margin borrowing  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
   
 WARNING
 
@@ -1316,13 +1458,19 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-_MaxUniBorrowable_
+MaxUniBorrowable
 
-Name | Type | Description  
----|---|---  
-» currency | string | Currency  
-» currency_pair | string | Currency pair  
-» borrowable | string | Maximum borrowable  
+Type | Constraints  
+---|---  
+MaxUniBorrowable | required: ["currency","borrowable"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Required | readOnly: true | Currency  
+currency_pair | string | Optional | readOnly: true | Currency pair  
+borrowable | string | Required | readOnly: true | Maximum borrowable  
   
 WARNING
 
@@ -1409,13 +1557,25 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Market gradient information]  
-» _None_ | MarginLeverageTier | Market gradient information  
-»» upper_limit | string | Maximum borrowing limit. Determined by the leverage you set; the lower the leverage, the larger the borrowing limit.  
-»» mmr | string | Maintenance margin rate.Under tiered margin requirements(https://www.gate.com/en/help/trade/margin-trading/42357), the maintenance margin rate is a composite value.  
-»» leverage | string | the maximum permissible leverage given to the current debt level; the higher the debt level, the lower the maximum leverage.  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Market gradient information
+
+Type | Constraints  
+---|---  
+MarginLeverageTier |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+upper_limit | string | Optional |  | Maximum borrowing limit. Determined by the leverage you set; the lower the leverage, the larger the borrowing limit.  
+mmr | string | Optional |  | Maintenance margin rate.Under tiered margin requirements(https://www.gate.com/en/help/trade/margin-trading/42357), the maintenance margin rate is a composite value.  
+leverage | string | Optional |  | the maximum permissible leverage given to the current debt level; the higher the debt level, the lower the maximum leverage.  
   
 WARNING
 
@@ -1502,13 +1662,25 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Market gradient information]  
-» _None_ | MarginLeverageTier | Market gradient information  
-»» upper_limit | string | Maximum borrowing limit. Determined by the leverage you set; the lower the leverage, the larger the borrowing limit.  
-»» mmr | string | Maintenance margin rate.Under tiered margin requirements(https://www.gate.com/en/help/trade/margin-trading/42357), the maintenance margin rate is a composite value.  
-»» leverage | string | the maximum permissible leverage given to the current debt level; the higher the debt level, the lower the maximum leverage.  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Market gradient information
+
+Type | Constraints  
+---|---  
+MarginLeverageTier |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+upper_limit | string | Optional |  | Maximum borrowing limit. Determined by the leverage you set; the lower the leverage, the larger the borrowing limit.  
+mmr | string | Optional |  | Maintenance margin rate.Under tiered margin requirements(https://www.gate.com/en/help/trade/margin-trading/42357), the maintenance margin rate is a composite value.  
+leverage | string | Optional |  | the maximum permissible leverage given to the current debt level; the higher the debt level, the lower the maximum leverage.  
   
 This operation does not require authentication 
 
@@ -1562,8 +1734,23 @@ _Set user market leverage multiplier_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | MarginMarketLeverage | Required | none  
-» currency_pair | body | string | Optional | Market  
-» leverage | body | string | Required | Leverage multiplier  
+currency_pair | body | string | Optional | Market  
+leverage | body | string | Required | Leverage multiplier  
+  
+####  Request Body Schema
+
+Market leverage settings
+
+Request Body SchemaType | Constraints  
+---|---  
+MarginMarketLeverage | required: ["market","leverage"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency_pair | string | Optional |  | Market  
+leverage | string | Required |  | Leverage multiplier  
   
 ### Responses
 
@@ -1654,28 +1841,66 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-_None_ | array | [Margin account information for a trading pair. `base` corresponds to base currency account information, `quote` corresponds to quote currency account information]  
-» _None_ | MarginAccount | Margin account information for a trading pair. `base` corresponds to base currency account information, `quote` corresponds to quote currency account information  
-»» currency_pair | string | Currency pair  
-»» account_type | string | Account Type mmr: maintenance margin rate account;inactive: market not activated  
-»» leverage | string | User's current market leverage multiplier  
-»» locked | boolean | Whether the account is locked  
-»» risk | string | Deprecated  
-»» mmr | string | Current Maintenance Margin Rate of the account  
-»» base | MarginAccount/properties/base | Currency account information  
-»»» currency | string | Currency name  
-»»» available | string | Amount available for margin trading, available = margin + borrowed  
-»»» locked | string | Frozen funds, such as amounts already placed in margin market for order trading  
-»»» borrowed | string | Borrowed funds  
-»»» interest | string | Unpaid interest  
-»» quote | MarginAccount/properties/base | Currency account information  
-»»» currency | string | Currency name  
-»»» available | string | Amount available for margin trading, available = margin + borrowed  
-»»» locked | string | Frozen funds, such as amounts already placed in margin market for order trading  
-»»» borrowed | string | Borrowed funds  
-»»» interest | string | Unpaid interest  
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Margin account information for a trading pair. `base` corresponds to base currency account information, `quote` corresponds to quote currency account information
+
+Type | Constraints  
+---|---  
+MarginAccount |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency_pair | string | Optional |  | Currency pair  
+account_type | string | Optional |  | Account Type mmr: maintenance margin rate account;inactive: market not activated  
+leverage | string | Optional |  | User's current market leverage multiplier  
+locked | boolean | Optional |  | Whether the account is locked  
+risk | string | Optional |  | Deprecated  
+mmr | string | Optional |  | Current Maintenance Margin Rate of the account  
+base | object | Optional |  | Currency account information  
+quote | object | Optional |  | Currency account information  
+  
+**items / base**
+
+Currency account information
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency name  
+available | string | Optional |  | Amount available for margin trading, available = margin + borrowed  
+locked | string | Optional |  | Frozen funds, such as amounts already placed in margin market for order trading  
+borrowed | string | Optional |  | Borrowed funds  
+interest | string | Optional |  | Unpaid interest  
+  
+**items / quote**
+
+Currency account information
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency name  
+available | string | Optional |  | Amount available for margin trading, available = margin + borrowed  
+locked | string | Optional |  | Frozen funds, such as amounts already placed in margin market for order trading  
+borrowed | string | Optional |  | Borrowed funds  
+interest | string | Optional |  | Unpaid interest  
   
 WARNING
 
@@ -1757,17 +1982,105 @@ Code samples
 
 #  Schemas
 
+##  CreateUniLoan
+
+Borrow or repay
+
+Type | Constraints  
+---|---  
+object | required: ["currency_pair","currency","amount","type"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Required |  | Currency  
+type | string | Required | enum: ["borrow","repay"] | Loan Type margin: margin borrowing  
+amount | string | Required |  | Borrow or repayment amount  
+repaid_all | boolean | Optional |  | Full repayment. For repayment operations only. When `true`, overrides `amount` and repays the full amount  
+currency_pair | string | Required |  | Currency pair  
+      
+    
+    {
+      "currency": "string",
+      "type": "borrow",
+      "amount": "string",
+      "repaid_all": true,
+      "currency_pair": "string"
+    }
+    
+    
+
+##  EstimateRate
+
+Estimate current hourly lending rates, returned by currency
+
+Type | Constraints  
+---|---  
+object |   
+  
+**additionalProperties**
+
+Type | Constraints  
+---|---  
+string |   
+      
+    
+    {
+      "property1": "string",
+      "property2": "string"
+    }
+    
+    
+
+##  MarginAccountBook
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | string | Optional |  | Balance change record ID  
+time | string | Optional |  | Account change timestamp  
+time_ms | integer(int64) | Optional |  | The timestamp of the change (in milliseconds)  
+currency | string | Optional |  | Currency changed  
+currency_pair | string | Optional |  | Account trading pair  
+change | string | Optional |  | Amount changed. Positive value means transferring in, while negative out  
+balance | string | Optional |  | Balance after change  
+type | string | Optional |  | Account book type. Please refer to account book type for more detail  
+      
+    
+    {
+      "id": "string",
+      "time": "string",
+      "time_ms": 0,
+      "currency": "string",
+      "currency_pair": "string",
+      "change": "string",
+      "balance": "string",
+      "type": "string"
+    }
+    
+    
+
 ##  MarginTransferable
 
-_MarginTransferable_
+MarginTransferable
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-currency | string | Optional | none | Currency detail  
-currency_pair | string | Optional | none | Currency pair  
-amount | string | Optional | none | Max transferable amount  
+currency | string | Optional |  | Currency detail  
+currency_pair | string | Optional |  | Currency pair  
+amount | string | Optional |  | Max transferable amount  
       
     
     {
@@ -1778,38 +2091,74 @@ amount | string | Optional | none | Max transferable amount
     
     
 
-##  EstimateRate
+##  MarginMarketLeverage
 
-_Estimate current hourly lending rates, returned by currency_
+Market leverage settings
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["market","leverage"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-**additionalProperties** | string | Optional | none | none  
+currency_pair | string | Optional |  | Market  
+leverage | string | Required |  | Leverage multiplier  
       
     
     {
-      "property1": "string",
-      "property2": "string"
+      "currency_pair": "string",
+      "leverage": "string"
+    }
+    
+    
+
+##  FundingAccount
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency name  
+available | string | Optional |  | Available assets to lend, which is identical to spot account `available`  
+locked | string | Optional |  | Locked amount. i.e. amount in `open` loans  
+lent | string | Optional |  | Outstanding loan amount yet to be repaid  
+total_lent | string | Optional |  | Amount used for lending. total_lent = lent + locked  
+      
+    
+    {
+      "currency": "string",
+      "available": "string",
+      "locked": "string",
+      "lent": "string",
+      "total_lent": "string"
     }
     
     
 
 ##  UniLoan
 
-_Borrowing_
+Borrowing
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-currency | string | Optional | read-only | Currency  
-currency_pair | string | Optional | read-only | Currency pair  
-amount | string | Optional | read-only | Amount to Repay  
-type | string | Optional | read-only | Loan type: platform borrowing - platform, margin borrowing - margin  
-create_time | integer(int64) | Optional | read-only | Created time  
-update_time | integer(int64) | Optional | read-only | Last Update Time  
+currency | string | Optional | readOnly: true | Currency  
+currency_pair | string | Optional | readOnly: true | Currency pair  
+amount | string | Optional | readOnly: true | Amount to Repay  
+type | string | Optional | readOnly: true | Loan type: platform borrowing - platform, margin borrowing - margin  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
+update_time | integer(int64) | Optional | readOnly: true | Last Update Time  
       
     
     {
@@ -1825,25 +2174,42 @@ update_time | integer(int64) | Optional | read-only | Last Update Time
 
 ##  MarginAccount
 
-_Margin account information for a trading pair.`base` corresponds to base currency account information, `quote` corresponds to quote currency account information_
+Margin account information for a trading pair. `base` corresponds to base currency account information, `quote` corresponds to quote currency account information
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-currency_pair | string | Optional | none | Currency pair  
-account_type | string | Optional | none | Account Type mmr: maintenance margin rate account;inactive: market not activated  
-leverage | string | Optional | none | User's current market leverage multiplier  
-locked | boolean | Optional | none | Whether the account is locked  
-risk | string | Optional | none | Deprecated  
-mmr | string | Optional | none | Current Maintenance Margin Rate of the account  
-base | object | Optional | none | Currency account information  
-» currency | string | Optional | none | Currency name  
-» available | string | Optional | none | Amount available for margin trading, available = margin + borrowed  
-» locked | string | Optional | none | Frozen funds, such as amounts already placed in margin market for order trading  
-» borrowed | string | Optional | none | Borrowed funds  
-» interest | string | Optional | none | Unpaid interest  
-quote | MarginAccount/properties/base | Optional | none | Currency account information  
+currency_pair | string | Optional |  | Currency pair  
+account_type | string | Optional |  | Account Type mmr: maintenance margin rate account;inactive: market not activated  
+leverage | string | Optional |  | User's current market leverage multiplier  
+locked | boolean | Optional |  | Whether the account is locked  
+risk | string | Optional |  | Deprecated  
+mmr | string | Optional |  | Current Maintenance Margin Rate of the account  
+base | object | Optional |  | Currency account information  
+quote | object | Optional |  | Currency account information  
+  
+**base**
+
+Currency account information
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Currency name  
+available | string | Optional |  | Amount available for margin trading, available = margin + borrowed  
+locked | string | Optional |  | Frozen funds, such as amounts already placed in margin market for order trading  
+borrowed | string | Optional |  | Borrowed funds  
+interest | string | Optional |  | Unpaid interest  
       
     
     {
@@ -1871,42 +2237,113 @@ quote | MarginAccount/properties/base | Optional | none | Currency account infor
     
     
 
-##  MarginLeverageTier
+##  UniLoanRecord
 
-_Market gradient information_
+Borrowing Records
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-upper_limit | string | Optional | none | Maximum borrowing limit. Determined by the leverage you set; the lower the leverage, the larger the borrowing limit.  
-mmr | string | Optional | none | Maintenance margin rate.Under tiered margin requirements(https://www.gate.com/en/help/trade/margin-trading/42357), the maintenance margin rate is a composite value.  
-leverage | string | Optional | none | the maximum permissible leverage given to the current debt level; the higher the debt level, the lower the maximum leverage.  
+type | string | Optional | readOnly: true | Type: `borrow` \- borrow, `repay` \- repay  
+currency_pair | string | Optional | readOnly: true | Currency pair  
+currency | string | Optional | readOnly: true | Currency  
+amount | string | Optional | readOnly: true | Borrow or repayment amount  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
       
     
     {
-      "upper_limit": "string",
-      "mmr": "string",
-      "leverage": "string"
+      "type": "string",
+      "currency_pair": "string",
+      "currency": "string",
+      "amount": "string",
+      "create_time": 0
+    }
+    
+    
+
+##  MaxUniBorrowable
+
+MaxUniBorrowable
+
+Type | Constraints  
+---|---  
+object | required: ["currency","borrowable"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Required | readOnly: true | Currency  
+currency_pair | string | Optional | readOnly: true | Currency pair  
+borrowable | string | Required | readOnly: true | Maximum borrowable  
+      
+    
+    {
+      "currency": "string",
+      "currency_pair": "string",
+      "borrowable": "string"
+    }
+    
+    
+
+##  UniCurrencyPair
+
+Currency pair of the loan
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency_pair | string | Optional | readOnly: true | Currency pair  
+base_min_borrow_amount | string | Optional | readOnly: true | Minimum borrow amount of base currency  
+quote_min_borrow_amount | string | Optional | readOnly: true | Minimum borrow amount of quote currency  
+leverage | string | Optional | readOnly: true | Leverage multiplier  
+status | string | Optional |  | Status  
+  
+\- enabled: Enabled  
+\- disabled: Disabled  
+delisted_time | number(int64) | Optional |  | Delisting Time  
+      
+    
+    {
+      "currency_pair": "string",
+      "base_min_borrow_amount": "string",
+      "quote_min_borrow_amount": "string",
+      "leverage": "string",
+      "status": "string",
+      "delisted_time": 0
     }
     
     
 
 ##  UniLoanInterestRecord
 
-_Interest Deduction Record_
+Interest Deduction Record
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-currency | string | Optional | read-only | Currency name  
-currency_pair | string | Optional | read-only | Currency pair  
-actual_rate | string | Optional | read-only | Actual Rate  
-interest | string | Optional | read-only | Interest  
-status | integer | Optional | read-only | Status: 0 - fail, 1 - success  
-type | string | Optional | read-only | Loan Type margin: margin borrowing  
-create_time | integer(int64) | Optional | read-only | Created time  
+currency | string | Optional | readOnly: true | Currency name  
+currency_pair | string | Optional | readOnly: true | Currency pair  
+actual_rate | string | Optional | readOnly: true | Actual Rate  
+interest | string | Optional | readOnly: true | Interest  
+status | integer | Optional | readOnly: true | Status: 0 - fail, 1 - success  
+type | string | Optional | readOnly: true | Loan Type margin: margin borrowing  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
       
     
     {
@@ -1921,179 +2358,25 @@ create_time | integer(int64) | Optional | read-only | Created time
     
     
 
-##  MarginMarketLeverage
+##  MarginLeverageTier
 
-_Market leverage settings_
+Market gradient information
 
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency_pair | string | Optional | none | Market  
-leverage | string | Required | none | Leverage multiplier  
-      
-    
-    {
-      "currency_pair": "string",
-      "leverage": "string"
-    }
-    
-    
-
-##  CreateUniLoan
-
-_Borrow or repay_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Required | none | Currency  
-type | string | Required | none | Loan Type margin: margin borrowing  
-amount | string | Required | none | Borrow or repayment amount  
-repaid_all | boolean | Optional | none | Full repayment. For repayment operations only. When `true`, overrides `amount` and repays the full amount  
-currency_pair | string | Required | none | Currency pair  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
+Type | Constraints  
 ---|---  
-type | borrow  
-type | repay  
-      
-    
-    {
-      "currency": "string",
-      "type": "borrow",
-      "amount": "string",
-      "repaid_all": true,
-      "currency_pair": "string"
-    }
-    
-    
-
-##  FundingAccount
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Optional | none | Currency name  
-available | string | Optional | none | Available assets to lend, which is identical to spot account `available`  
-locked | string | Optional | none | Locked amount. i.e. amount in `open` loans  
-lent | string | Optional | none | Outstanding loan amount yet to be repaid  
-total_lent | string | Optional | none | Amount used for lending. total_lent = lent + locked  
-      
-    
-    {
-      "currency": "string",
-      "available": "string",
-      "locked": "string",
-      "lent": "string",
-      "total_lent": "string"
-    }
-    
-    
-
-##  MaxUniBorrowable
-
-_MaxUniBorrowable_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Required | read-only | Currency  
-currency_pair | string | Optional | read-only | Currency pair  
-borrowable | string | Required | read-only | Maximum borrowable  
-      
-    
-    {
-      "currency": "string",
-      "currency_pair": "string",
-      "borrowable": "string"
-    }
-    
-    
-
-##  UniCurrencyPair
-
-_Currency pair of the loan_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency_pair | string | Optional | read-only | Currency pair  
-base_min_borrow_amount | string | Optional | read-only | Minimum borrow amount of base currency  
-quote_min_borrow_amount | string | Optional | read-only | Minimum borrow amount of quote currency  
-leverage | string | Optional | read-only | Leverage multiplier  
-status | string | Optional | none | Status  
+object |   
   
-\- enabled: Enabled  
-\- disabled: Disabled  
-delisted_time | number(int64) | Optional | none | Delisting Time  
-      
-    
-    {
-      "currency_pair": "string",
-      "base_min_borrow_amount": "string",
-      "quote_min_borrow_amount": "string",
-      "leverage": "string",
-      "status": "string",
-      "delisted_time": 0
-    }
-    
-    
+**Properties**
 
-##  MarginAccountBook
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-id | string | Optional | none | Balance change record ID  
-time | string | Optional | none | Account change timestamp  
-time_ms | integer(int64) | Optional | none | The timestamp of the change (in milliseconds)  
-currency | string | Optional | none | Currency changed  
-currency_pair | string | Optional | none | Account trading pair  
-change | string | Optional | none | Amount changed. Positive value means transferring in, while negative out  
-balance | string | Optional | none | Balance after change  
-type | string | Optional | none | Account book type. Please refer to account book type for more detail  
+upper_limit | string | Optional |  | Maximum borrowing limit. Determined by the leverage you set; the lower the leverage, the larger the borrowing limit.  
+mmr | string | Optional |  | Maintenance margin rate.Under tiered margin requirements(https://www.gate.com/en/help/trade/margin-trading/42357), the maintenance margin rate is a composite value.  
+leverage | string | Optional |  | the maximum permissible leverage given to the current debt level; the higher the debt level, the lower the maximum leverage.  
       
     
     {
-      "id": "string",
-      "time": "string",
-      "time_ms": 0,
-      "currency": "string",
-      "currency_pair": "string",
-      "change": "string",
-      "balance": "string",
-      "type": "string"
-    }
-    
-    
-
-##  UniLoanRecord
-
-_Borrowing Records_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-type | string | Optional | read-only | Type: `borrow` \- borrow, `repay` \- repay  
-currency_pair | string | Optional | read-only | Currency pair  
-currency | string | Optional | read-only | Currency  
-amount | string | Optional | read-only | Borrow or repayment amount  
-create_time | integer(int64) | Optional | read-only | Created time  
-      
-    
-    {
-      "type": "string",
-      "currency_pair": "string",
-      "currency": "string",
-      "amount": "string",
-      "create_time": 0
+      "upper_limit": "string",
+      "mmr": "string",
+      "leverage": "string"
     }

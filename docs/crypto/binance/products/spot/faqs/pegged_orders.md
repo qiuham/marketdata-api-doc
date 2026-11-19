@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/pegged_orders
 api_type: Guide
-updated_at: 2026-11-18 18:35:30.009847
+updated_at: 2026-11-19 18:38:17.679101
 ---
 
 # Pegged orders

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/withdrawal
 api_type: Account
-updated_at: 2026-11-18 18:56:05.125899
+updated_at: 2026-11-19 19:01:11.265556
 ---
 
 # Withdrawal
@@ -24,54 +24,21 @@ If the recipient's on-chain address is also Gate, no transaction fee will be cha
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | LedgerRecord | Required | none  
-» withdraw_order_id | body | string | Optional | User-defined order number for withdrawal. Default is empty. When not empty, the specified user-defined order number record will be queried  
-» amount | body | string | Required | Token amount  
-» currency | body | string | Required | Currency name  
-» address | body | string | Optional | Withdrawal address. Required for withdrawals  
-» memo | body | string | Optional | Additional remarks with regards to the withdrawal  
-» withdraw_id | body | string | Optional | Withdrawal record ID starts with 'w', such as: w1879219868. When withdraw_id is not empty, only this specific withdrawal record will be queried, and time-based querying will be disabled  
-» asset_class | body | string | Optional | Withdrawal record currency type, empty by default. Supports users to query withdrawal records in main area and innovation area on demand.  
+id | body | string | Optional | Record ID  
+txid | body | string | Optional | Hash record of the withdrawal  
+withdraw_order_id | body | string | Optional | User-defined order number for withdrawal. Default is empty. When not empty, the specified user-defined order number record will be queried  
+timestamp | body | string | Optional | Operation time  
+amount | body | string | Required | Token amount  
+currency | body | string | Required | Currency name  
+address | body | string | Optional | Withdrawal address. Required for withdrawals  
+memo | body | string | Optional | Additional remarks with regards to the withdrawal  
+withdraw_id | body | string | Optional | Withdrawal record ID starts with 'w', such as: w1879219868. When withdraw_id is not empty, only this specific withdrawal record will be queried, and time-based querying will be disabled  
+asset_class | body | string | Optional | Withdrawal record currency type, empty by default. Supports users to query withdrawal records in main area and innovation area on demand.  
 Valid values: SPOT, PILOT  
   
 SPOT: Main area  
 PILOT: Innovation area  
-» chain | body | string | Required | Name of the chain used in withdrawals  
-  
-####  Detailed descriptions
-
-**» asset_class** : Withdrawal record currency type, empty by default. Supports users to query withdrawal records in main area and innovation area on demand.  
-Valid values: SPOT, PILOT  
-  
-SPOT: Main area  
-PILOT: Innovation area
-
-### Responses
-
-ResponsesStatus | Meaning | Description | Schema  
----|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Withdrawal request accepted. Check withdrawal record status for processing result | LedgerRecord  
-  
-### Response Schema
-
-Status Code **200**
-
-Name | Type | Description  
----|---|---  
-» id | string | Record ID  
-» txid | string | Hash record of the withdrawal  
-» withdraw_order_id | string | User-defined order number for withdrawal. Default is empty. When not empty, the specified user-defined order number record will be queried  
-» timestamp | string | Operation time  
-» amount | string | Token amount  
-» currency | string | Currency name  
-» address | string | Withdrawal address. Required for withdrawals  
-» memo | string | Additional remarks with regards to the withdrawal  
-» withdraw_id | string | Withdrawal record ID starts with 'w', such as: w1879219868. When withdraw_id is not empty, only this specific withdrawal record will be queried, and time-based querying will be disabled  
-» asset_class | string | Withdrawal record currency type, empty by default. Supports users to query withdrawal records in main area and innovation area on demand.  
-Valid values: SPOT, PILOT  
-  
-SPOT: Main area  
-PILOT: Innovation area  
-» status | string | Transaction status  
+status | body | string | Optional | Transaction status  
   
 \- DONE: Completed  
 \- CANCEL: Cancelled  
@@ -86,7 +53,121 @@ PILOT: Innovation area
 \- PEND: Processing  
 \- DMOVE: Pending manual review  
 \- REVIEW: Under review  
-» chain | string | Name of the chain used in withdrawals  
+chain | body | string | Required | Name of the chain used in withdrawals  
+  
+####  Detailed descriptions
+
+** asset_class**: Withdrawal record currency type, empty by default. Supports users to query withdrawal records in main area and innovation area on demand.  
+Valid values: SPOT, PILOT  
+  
+SPOT: Main area  
+PILOT: Innovation area
+
+** status**: Transaction status  
+  
+\- DONE: Completed  
+\- CANCEL: Cancelled  
+\- REQUEST: Requesting  
+\- MANUAL: Pending manual review  
+\- BCODE: GateCode operation  
+\- EXTPEND: Sent, waiting for confirmation  
+\- FAIL: Failed on chain, waiting for confirmation  
+\- INVALID: Invalid order  
+\- VERIFY: Verifying  
+\- PROCES: Processing  
+\- PEND: Processing  
+\- DMOVE: Pending manual review  
+\- REVIEW: Under review
+
+####  Request Body Schema
+
+Request Body SchemaType | Constraints  
+---|---  
+LedgerRecord | required: ["currency","amount","chain"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | string | Optional | readOnly: true | Record ID  
+txid | string | Optional | readOnly: true | Hash record of the withdrawal  
+withdraw_order_id | string | Optional |  | User-defined order number for withdrawal. Default is empty. When not empty, the specified user-defined order number record will be queried  
+timestamp | string | Optional | readOnly: true | Operation time  
+amount | string | Required |  | Token amount  
+currency | string | Required |  | Currency name  
+address | string | Optional |  | Withdrawal address. Required for withdrawals  
+memo | string | Optional |  | Additional remarks with regards to the withdrawal  
+withdraw_id | string | Optional |  | Withdrawal record ID starts with 'w', such as: w1879219868. When withdraw_id is not empty, only this specific withdrawal record will be queried, and time-based querying will be disabled  
+asset_class | string | Optional |  | Withdrawal record currency type, empty by default. Supports users to query withdrawal records in main area and innovation area on demand.  
+Valid values: SPOT, PILOT  
+  
+SPOT: Main area  
+PILOT: Innovation area  
+status | string | Optional | readOnly: true | Transaction status  
+  
+\- DONE: Completed  
+\- CANCEL: Cancelled  
+\- REQUEST: Requesting  
+\- MANUAL: Pending manual review  
+\- BCODE: GateCode operation  
+\- EXTPEND: Sent, waiting for confirmation  
+\- FAIL: Failed on chain, waiting for confirmation  
+\- INVALID: Invalid order  
+\- VERIFY: Verifying  
+\- PROCES: Processing  
+\- PEND: Processing  
+\- DMOVE: Pending manual review  
+\- REVIEW: Under review  
+chain | string | Required |  | Name of the chain used in withdrawals  
+  
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Withdrawal request accepted. Check withdrawal record status for processing result | LedgerRecord  
+  
+### Response Schema
+
+Status Code **200**
+
+Type | Constraints  
+---|---  
+LedgerRecord | required: ["currency","amount","chain"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | string | Optional | readOnly: true | Record ID  
+txid | string | Optional | readOnly: true | Hash record of the withdrawal  
+withdraw_order_id | string | Optional |  | User-defined order number for withdrawal. Default is empty. When not empty, the specified user-defined order number record will be queried  
+timestamp | string | Optional | readOnly: true | Operation time  
+amount | string | Required |  | Token amount  
+currency | string | Required |  | Currency name  
+address | string | Optional |  | Withdrawal address. Required for withdrawals  
+memo | string | Optional |  | Additional remarks with regards to the withdrawal  
+withdraw_id | string | Optional |  | Withdrawal record ID starts with 'w', such as: w1879219868. When withdraw_id is not empty, only this specific withdrawal record will be queried, and time-based querying will be disabled  
+asset_class | string | Optional |  | Withdrawal record currency type, empty by default. Supports users to query withdrawal records in main area and innovation area on demand.  
+Valid values: SPOT, PILOT  
+  
+SPOT: Main area  
+PILOT: Innovation area  
+status | string | Optional | readOnly: true | Transaction status  
+  
+\- DONE: Completed  
+\- CANCEL: Cancelled  
+\- REQUEST: Requesting  
+\- MANUAL: Pending manual review  
+\- BCODE: GateCode operation  
+\- EXTPEND: Sent, waiting for confirmation  
+\- FAIL: Failed on chain, waiting for confirmation  
+\- INVALID: Invalid order  
+\- VERIFY: Verifying  
+\- PROCES: Processing  
+\- PEND: Processing  
+\- DMOVE: Pending manual review  
+\- REVIEW: Under review  
+chain | string | Required |  | Name of the chain used in withdrawals  
   
 WARNING
 
@@ -183,9 +264,23 @@ Transfers between main spot accounts. Both parties cannot be sub-accounts
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | UidPushWithdrawal | Required | none  
-» receive_uid | body | integer(int64) | Required | Recipient UID  
-» currency | body | string | Required | Currency name  
-» amount | body | string | Required | Transfer amount  
+receive_uid | body | integer(int64) | Required | Recipient UID  
+currency | body | string | Required | Currency name  
+amount | body | string | Required | Transfer amount  
+  
+####  Request Body Schema
+
+Request Body SchemaType | Constraints  
+---|---  
+UidPushWithdrawal | required: ["receive_uid","currency","amount"]  
+  
+**Properties**
+
+Request Body SchemaName | Type | Required | Constraints | Description  
+---|---|---|---|---  
+receive_uid | integer(int64) | Required |  | Recipient UID  
+currency | string | Required |  | Currency name  
+amount | string | Required |  | Transfer amount  
   
 ### Responses
 
@@ -197,9 +292,15 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **200**
 
-Name | Type | Description  
----|---|---  
-» id | string | Order ID  
+Type | Constraints  
+---|---  
+UidPushWithdrawalResp |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | string | Optional |  | Order ID  
   
 WARNING
 
@@ -293,17 +394,23 @@ ResponsesStatus | Meaning | Description | Schema
 
 Status Code **202**
 
-Name | Type | Description  
----|---|---  
-» id | string | Record ID  
-» txid | string | Hash record of the withdrawal  
-» timestamp | string | Operation time  
-» amount | string | Token amount  
-» currency | string | Currency name  
-» address | string | Withdrawal address. Required for withdrawals  
-» memo | string | Additional remarks with regards to the withdrawal  
-» block_number | string | Block Number  
-» status | string | Transaction Status  
+Type | Constraints  
+---|---  
+WithdrawalsDel | required: ["currency","amount","chain"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | string | Optional | readOnly: true | Record ID  
+txid | string | Optional | readOnly: true | Hash record of the withdrawal  
+timestamp | string | Optional | readOnly: true | Operation time  
+amount | string | Required |  | Token amount  
+currency | string | Required |  | Currency name  
+address | string | Optional |  | Withdrawal address. Required for withdrawals  
+memo | string | Optional |  | Additional remarks with regards to the withdrawal  
+block_number | string | Optional | readOnly: true | Block Number  
+status | string | Optional | readOnly: true | Transaction Status  
   
 \- BCODE: Deposit Code Operation  
 \- CANCEL: Cancelled  
@@ -318,7 +425,7 @@ Name | Type | Description
 \- REJECT: Rejected  
 \- REQUEST: Request in Progress  
 \- REVIEW: Under Review  
-» chain | string | Name of the chain used in withdrawals  
+chain | string | Required |  | Name of the chain used in withdrawals  
   
 WARNING
 
@@ -388,21 +495,48 @@ Code samples
 
 #  Schemas
 
+##  UidPushWithdrawal
+
+Type | Constraints  
+---|---  
+object | required: ["receive_uid","currency","amount"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+receive_uid | integer(int64) | Required |  | Recipient UID  
+currency | string | Required |  | Currency name  
+amount | string | Required |  | Transfer amount  
+      
+    
+    {
+      "receive_uid": 0,
+      "currency": "string",
+      "amount": "string"
+    }
+    
+    
+
 ##  WithdrawalsDel
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["currency","amount","chain"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-id | string | Optional | read-only | Record ID  
-txid | string | Optional | read-only | Hash record of the withdrawal  
-timestamp | string | Optional | read-only | Operation time  
-amount | string | Required | none | Token amount  
-currency | string | Required | none | Currency name  
-address | string | Optional | none | Withdrawal address. Required for withdrawals  
-memo | string | Optional | none | Additional remarks with regards to the withdrawal  
-block_number | string | Optional | read-only | Block Number  
-status | string | Optional | read-only | Transaction Status  
+id | string | Optional | readOnly: true | Record ID  
+txid | string | Optional | readOnly: true | Hash record of the withdrawal  
+timestamp | string | Optional | readOnly: true | Operation time  
+amount | string | Required |  | Token amount  
+currency | string | Required |  | Currency name  
+address | string | Optional |  | Withdrawal address. Required for withdrawals  
+memo | string | Optional |  | Additional remarks with regards to the withdrawal  
+block_number | string | Optional | readOnly: true | Block Number  
+status | string | Optional | readOnly: true | Transaction Status  
   
 \- BCODE: Deposit Code Operation  
 \- CANCEL: Cancelled  
@@ -417,7 +551,7 @@ status | string | Optional | read-only | Transaction Status
 \- REJECT: Rejected  
 \- REQUEST: Request in Progress  
 \- REVIEW: Under Review  
-chain | string | Required | none | Name of the chain used in withdrawals  
+chain | string | Required |  | Name of the chain used in withdrawals  
       
     
     {
@@ -435,46 +569,31 @@ chain | string | Required | none | Name of the chain used in withdrawals
     
     
 
-##  UidPushWithdrawal
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-receive_uid | integer(int64) | Required | none | Recipient UID  
-currency | string | Required | none | Currency name  
-amount | string | Required | none | Transfer amount  
-      
-    
-    {
-      "receive_uid": 0,
-      "currency": "string",
-      "amount": "string"
-    }
-    
-    
-
 ##  LedgerRecord
 
-###  Properties
+Type | Constraints  
+---|---  
+object | required: ["currency","amount","chain"]  
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-id | string | Optional | read-only | Record ID  
-txid | string | Optional | read-only | Hash record of the withdrawal  
-withdraw_order_id | string | Optional | none | User-defined order number for withdrawal. Default is empty. When not empty, the specified user-defined order number record will be queried  
-timestamp | string | Optional | read-only | Operation time  
-amount | string | Required | none | Token amount  
-currency | string | Required | none | Currency name  
-address | string | Optional | none | Withdrawal address. Required for withdrawals  
-memo | string | Optional | none | Additional remarks with regards to the withdrawal  
-withdraw_id | string | Optional | none | Withdrawal record ID starts with 'w', such as: w1879219868. When withdraw_id is not empty, only this specific withdrawal record will be queried, and time-based querying will be disabled  
-asset_class | string | Optional | none | Withdrawal record currency type, empty by default. Supports users to query withdrawal records in main area and innovation area on demand.  
+id | string | Optional | readOnly: true | Record ID  
+txid | string | Optional | readOnly: true | Hash record of the withdrawal  
+withdraw_order_id | string | Optional |  | User-defined order number for withdrawal. Default is empty. When not empty, the specified user-defined order number record will be queried  
+timestamp | string | Optional | readOnly: true | Operation time  
+amount | string | Required |  | Token amount  
+currency | string | Required |  | Currency name  
+address | string | Optional |  | Withdrawal address. Required for withdrawals  
+memo | string | Optional |  | Additional remarks with regards to the withdrawal  
+withdraw_id | string | Optional |  | Withdrawal record ID starts with 'w', such as: w1879219868. When withdraw_id is not empty, only this specific withdrawal record will be queried, and time-based querying will be disabled  
+asset_class | string | Optional |  | Withdrawal record currency type, empty by default. Supports users to query withdrawal records in main area and innovation area on demand.  
 Valid values: SPOT, PILOT  
   
 SPOT: Main area  
 PILOT: Innovation area  
-status | string | Optional | read-only | Transaction status  
+status | string | Optional | readOnly: true | Transaction status  
   
 \- DONE: Completed  
 \- CANCEL: Cancelled  
@@ -489,7 +608,7 @@ status | string | Optional | read-only | Transaction status
 \- PEND: Processing  
 \- DMOVE: Pending manual review  
 \- REVIEW: Under review  
-chain | string | Required | none | Name of the chain used in withdrawals  
+chain | string | Required |  | Name of the chain used in withdrawals  
       
     
     {
@@ -511,11 +630,15 @@ chain | string | Required | none | Name of the chain used in withdrawals
 
 ##  UidPushWithdrawalResp
 
-###  Properties
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
 
-PropertiesName | Type | Required | Restrictions | Description  
+Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-id | string | Optional | none | Order ID  
+id | string | Optional |  | Order ID  
       
     
     {
