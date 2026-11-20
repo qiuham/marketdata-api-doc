@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/crossex
 api_type: Trading
-updated_at: 2026-11-19 19:00:38.093138
+updated_at: 2026-11-20 18:56:46.852854
 ---
 
 # CrossEx
@@ -5910,7 +5910,21 @@ TRADING_FEE: order ID
 LIQUIDATION_FEE: liquidation order ID  
 FUNDING_FEE: position ID and funding fee settlement time  
 For other types, it is a system-generated processing ID with no business meaning  
-statement_type | string | Required |  | Bill entry type.  
+statement_type | string | Required |  | Account book transaction type  
+`TRANSACTION`: Trade  
+`TRADING_FEE`: Trading fee  
+`FUNDING_FEE`: Futures funding fee  
+`LIQUIDATION_FEE`: Liquidation fee  
+`TRANSFER_IN`: Incoming transfer  
+`TRANSFER_OUT`: Outgoing transfer  
+`BANKRUPT_COMPENSATION`: Bankruptcy compensation  
+`AUTO_REPAY`: Automatic margin liability repayment  
+`INTEREST_ISOLATED`: Interest transaction  
+`ACCOUNT_MODE_CHANGE`: Funds movement on account mode change  
+`KRAKEN_CONVERSION`: Conversion of other collateral currencies to cover a negative KRAKEN_USD balance  
+`SECURITY_DIVIDEND`: Stock or ETF dividend payout  
+`SECURITY_CORPORATE_ACTION`: Stock or ETF split or reverse split  
+`OTHER`: Other  
 exchange_type | string | Required |  | Exchange  
 coin | string | Required |  | Currency  
 symbol | string | Optional |  | Trading Pair  
@@ -6390,6 +6404,335 @@ Code samples
 
 #  Schemas
 
+##  CrossexConvertOrderRequest
+
+Flash Swap Transaction Request Body
+
+Type | Constraints  
+---|---  
+object | required: ["quote_id"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+quote_id | string | Required |  | Inquiry ID  
+      
+    
+    {
+      "quote_id": "string"
+    }
+    
+    
+
+##  CrossexConvertOrderResponse
+
+CrossexConvertOrderResponse
+
+Type | Constraints  
+---|---  
+object | required: ["order_id","text"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Required |  | Order ID  
+text | string | Required |  | Order ID (cannot be customized)  
+      
+    
+    {
+      "order_id": "string",
+      "text": "string"
+    }
+    
+    
+
+##  CrossexIsolatedMarginResponse
+
+CrossexIsolatedMarginResponse
+
+Type | Constraints  
+---|---  
+object | required: ["symbol","margin"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Futures trading pair  
+margin | string | Required |  | Amount of isolated margin increased or decreased in this request  
+position_side | string | Optional |  | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
+      
+    
+    {
+      "symbol": "string",
+      "margin": "string",
+      "position_side": "string"
+    }
+    
+    
+
+##  CrossexIsolatedMarginRequest
+
+Request body for increasing or decreasing isolated margin
+
+Type | Constraints  
+---|---  
+object | required: ["symbol","margin"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Hyperliquid futures trading pair  
+margin | string | Required |  | Margin adjustment amount. Positive values increase margin, while negative values decrease margin. Values with more than two decimal places are truncated to two decimal places  
+position_side | string | Optional | enum: ["NONE","LONG","SHORT"] | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
+      
+    
+    {
+      "symbol": "string",
+      "margin": "string",
+      "position_side": "NONE"
+    }
+    
+    
+
+##  CrossexConvertQuoteResponse
+
+CrossexConvertQuoteResponse
+
+Type | Constraints  
+---|---  
+object | required: ["quote_id","valid_ms","from_coin","to_coin","from_amount","to_amount","price"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+quote_id | string | Required |  | Quote ID  
+valid_ms | string | Required |  | Valid time (milliseconds timestamp)  
+from_coin | string | Required |  | Asset Sold  
+to_coin | string | Required |  | Asset Bought  
+from_amount | string | Required |  | Amount to sell  
+to_amount | string | Required |  | Amount to buy  
+price | string | Required |  | Quoted price  
+      
+    
+    {
+      "quote_id": "string",
+      "valid_ms": "string",
+      "from_coin": "string",
+      "to_coin": "string",
+      "from_amount": "string",
+      "to_amount": "string",
+      "price": "string"
+    }
+    
+    
+
+##  CrossexBatchCancelOrderResponse
+
+CrossexBatchCancelOrderResponse
+
+Batch order cancellation request results
+
+Type | Constraints  
+---|---  
+object | required: ["order_id","text","accepted","label","message"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Required |  | Order ID  
+text | string | Required |  | Custom ID specified by the user when creating the order  
+accepted | string | Required |  | Whether the request was accepted, as the string true or false  
+label | string | Required |  | Error label when the request is not accepted; empty on success  
+message | string | Required |  | Error message when the request is not accepted; empty on success  
+      
+    
+    {
+      "order_id": "string",
+      "text": "string",
+      "accepted": "string",
+      "label": "string",
+      "message": "string"
+    }
+    
+    
+
+##  CrossexConvertQuoteRequest
+
+Flash Swap Quote Request Body
+
+Type | Constraints  
+---|---  
+object | required: ["exchange_type","from_coin","to_coin","from_amount"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+exchange_type | string | Required |  | Exchange type  
+Currently supports only BINANCE, OKX, GATE, BYBIT, HYPERLIQUID, KRAKEN, and LIGHTER  
+from_coin | string | Required |  | Asset Sold  
+to_coin | string | Required |  | Asset to receive  
+OKX and GATE only support conversion to BTC, ETH, or USDT  
+BYBIT and BINANCE only support conversion to USDT  
+HYPERLIQUID only supports conversion to USDT or USDC  
+KRAKEN only supports conversion to USDT  
+LIGHTER only supports swaps between USDT and USDC  
+from_amount | string | Required |  | Amount to sell  
+      
+    
+    {
+      "exchange_type": "string",
+      "from_coin": "string",
+      "to_coin": "string",
+      "from_amount": "string"
+    }
+    
+    
+
+##  CrossexTransferRequest
+
+Fund Transfer Request Body
+
+Type | Constraints  
+---|---  
+object | required: ["amount","from","coin","to"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+coin | string | Required |  | Currency  
+amount | string | Required |  | Transfer amount  
+from | string | Required |  | `from` debit account (funds withdrawn from): `CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`  
+to | string | Required |  | `to` receiving account (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
+text | string | Optional |  | User-defined ID  
+      
+    
+    {
+      "coin": "string",
+      "amount": "string",
+      "from": "string",
+      "to": "string",
+      "text": "string"
+    }
+    
+    
+
+##  CrossexAccountUpdateRequest
+
+Change Account Request Body
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+position_mode | string | Optional |  | Futures position mode (SINGLE/DUAL)  
+account_mode | string | Optional |  | Account mode (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
+exchange_type | string | Optional |  | Exchange (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to adjust futures position mode.  
+      
+    
+    {
+      "position_mode": "string",
+      "account_mode": "string",
+      "exchange_type": "string"
+    }
+    
+    
+
+##  CrossexMarginModeRequest
+
+Request body for updating the futures position margin mode
+
+Type | Constraints  
+---|---  
+object | required: ["symbol","margin_mode"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Hyperliquid futures trading pair  
+margin_mode | string | Required | enum: ["CROSS","ISOLATED"] | Margin mode (CROSS/ISOLATED)  
+      
+    
+    {
+      "symbol": "string",
+      "margin_mode": "CROSS"
+    }
+    
+    
+
+##  CrossexOrderRequest
+
+Place Order Request Body
+
+Type | Constraints  
+---|---  
+object | required: ["symbol","side"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+text | string | Optional |  | Client-defined Order ID, supports letters (a-z), numbers (0-9), symbols (-, _) only  
+symbol | string | Required |  | Unique identifier Exchange_Business_Base_Counter  
+Examples:  
+To place a spot order for ADA/USDT on BINANCE, use `BINANCE_SPOT_ADA_USDT`;  
+To place a USDT-margined perpetual futures order for ADA/USDT on OKX, use `OKX_FUTURE_ADA_USDT`;  
+To place a spot margin order for ADA/USDT on GATE, use `GATE_MARGIN_ADA_USDT`;  
+To place a spot order for ADA/USDT on BYBIT, use `BYBIT_SPOT_ADA_USDT`;  
+To place a futures order for ADA/USD on KRAKEN, use `KRAKEN_FUTURE_ADA_USD`;  
+To place a futures order for ADA/USDC on HYPERLIQUID, use `HYPERLIQUID_FUTURE_ADA_USDC`;  
+To place a futures order for ADA/USDC on DERIBIT, use `DERIBIT_FUTURE_ADA_USDC`;  
+To place a futures order for ADA/USDC on LIGHTER, use `LIGHTER_FUTURE_ADA_USDC`;  
+To trade US stock AAPL, use `US_STOCK_AAPL_USDT`;  
+To trade Hong Kong stock 00700, use `HK_STOCK_00700_USDT`;  
+To trade US ETF SPY, use `US_ETF_SPY_USDT`;  
+Spot, USDT-margined perpetual futures, spot margin, stock, and ETF orders are supported. BYBIT/DERIBIT do not currently support spot margin orders. KRAKEN, HYPERLIQUID, and LIGHTER do not currently support spot or margin orders. Stocks and ETFs support only cross-exchange account mode  
+side | string | Required | enum: ["BUY","SELL"] | BUY, SELL  
+type | string | Optional | enum: ["LIMIT","MARKET"]  
+default: "LIMIT" | Order type (default: `LIMIT`; supported types: `LIMIT`, `MARKET`)  
+time_in_force | string | Optional | enum: ["GTC","IOC","FOK","POC","RPI"]  
+default: "GTC" | Defaults to GTC. Supported values: `GTC`, `IOC`, `FOK`, `POC`, `RPI`  
+`GTC`: GoodTillCancelled  
+`IOC`: ImmediateOrCancelled  
+`FOK`: FillOrKill  
+`POC`: PendingOrCancelled or PostOnly  
+`RPI`: RPI  
+Stocks and ETFs support only `GTC`  
+qty | string | Optional |  | Order quantity (required except for spot and margin market buys; qty is required for stocks and ETFs)  
+price | string | Optional |  | Limit order price (required for limit orders). Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+quote_qty | string | Optional |  | Order quote quantity, required for spot and margin market buys. Stock and ETF orders do not support quote_qty  
+reduce_only | string | Optional | enum: ["true","false"] | Reduce-only: `true` or `false`  
+position_side | string | Optional | enum: ["LONG","SHORT","NONE"] | Position side: `NONE`, `LONG`, `SHORT`  
+Defaults to `NONE` (single position mode) if not specified  
+      
+    
+    {
+      "text": "string",
+      "symbol": "string",
+      "side": "BUY",
+      "type": "LIMIT",
+      "time_in_force": "GTC",
+      "qty": "string",
+      "price": "string",
+      "quote_qty": "string",
+      "reduce_only": "true",
+      "position_side": "LONG"
+    }
+    
+    
+
 ##  CrossexAccountUpdateResponse
 
 CrossexAccountUpdateResponse
@@ -6411,6 +6754,29 @@ exchange_type | string | Optional |  | Exchange targeted by the requested change
       "position_mode": "string",
       "account_mode": "string",
       "exchange_type": "string"
+    }
+    
+    
+
+##  CrossexLeverageResponse
+
+CrossexLeverageResponse
+
+Type | Constraints  
+---|---  
+object | required: ["symbol","leverage"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Currency pair  
+leverage | string | Required |  | Requested Modified Leverage  
+      
+    
+    {
+      "symbol": "string",
+      "leverage": "string"
     }
     
     
@@ -6633,494 +6999,6 @@ string |
       "support_rpi": "string",
       "support_cross": "string",
       "tag": "string"
-    }
-    
-    
-
-##  CrossexIsolatedMarginResponse
-
-CrossexIsolatedMarginResponse
-
-Type | Constraints  
----|---  
-object | required: ["symbol","margin"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-symbol | string | Required |  | Futures trading pair  
-margin | string | Required |  | Amount of isolated margin increased or decreased in this request  
-position_side | string | Optional |  | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
-      
-    
-    {
-      "symbol": "string",
-      "margin": "string",
-      "position_side": "string"
-    }
-    
-    
-
-##  CrossexAccountUpdateRequest
-
-Change Account Request Body
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-position_mode | string | Optional |  | Futures position mode (SINGLE/DUAL)  
-account_mode | string | Optional |  | Account mode (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
-exchange_type | string | Optional |  | Exchange (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to adjust futures position mode.  
-      
-    
-    {
-      "position_mode": "string",
-      "account_mode": "string",
-      "exchange_type": "string"
-    }
-    
-    
-
-##  CrossexTransferResponse
-
-CrossexTransferResponse
-
-Type | Constraints  
----|---  
-object | required: ["tx_id","text"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-tx_id | string | Required |  | Order ID  
-text | string | Required |  | User-defined Order ID  
-      
-    
-    {
-      "tx_id": "string",
-      "text": "string"
-    }
-    
-    
-
-##  CrossexOrderActionResponse
-
-CrossexOrderActionResponse
-
-Type | Constraints  
----|---  
-object | required: ["order_id","text"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-order_id | string | Required |  | Order ID  
-text | string | Required |  | User-defined Order ID  
-      
-    
-    {
-      "order_id": "string",
-      "text": "string"
-    }
-    
-    
-
-##  CrossexOrderRequest
-
-Place Order Request Body
-
-Type | Constraints  
----|---  
-object | required: ["symbol","side"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-text | string | Optional |  | Client-defined Order ID, supports letters (a-z), numbers (0-9), symbols (-, _) only  
-symbol | string | Required |  | Unique identifier Exchange_Business_Base_Counter  
-Examples:  
-To place a spot order for ADA/USDT on BINANCE, use `BINANCE_SPOT_ADA_USDT`;  
-To place a USDT-margined perpetual futures order for ADA/USDT on OKX, use `OKX_FUTURE_ADA_USDT`;  
-To place a spot margin order for ADA/USDT on GATE, use `GATE_MARGIN_ADA_USDT`;  
-To place a spot order for ADA/USDT on BYBIT, use `BYBIT_SPOT_ADA_USDT`;  
-To place a futures order for ADA/USD on KRAKEN, use `KRAKEN_FUTURE_ADA_USD`;  
-To place a futures order for ADA/USDC on HYPERLIQUID, use `HYPERLIQUID_FUTURE_ADA_USDC`;  
-To place a futures order for ADA/USDC on DERIBIT, use `DERIBIT_FUTURE_ADA_USDC`;  
-To place a futures order for ADA/USDC on LIGHTER, use `LIGHTER_FUTURE_ADA_USDC`;  
-To trade US stock AAPL, use `US_STOCK_AAPL_USDT`;  
-To trade Hong Kong stock 00700, use `HK_STOCK_00700_USDT`;  
-To trade US ETF SPY, use `US_ETF_SPY_USDT`;  
-Spot, USDT-margined perpetual futures, spot margin, stock, and ETF orders are supported. BYBIT/DERIBIT do not currently support spot margin orders. KRAKEN, HYPERLIQUID, and LIGHTER do not currently support spot or margin orders. Stocks and ETFs support only cross-exchange account mode  
-side | string | Required | enum: ["BUY","SELL"] | BUY, SELL  
-type | string | Optional | enum: ["LIMIT","MARKET"]  
-default: "LIMIT" | Order type (default: `LIMIT`; supported types: `LIMIT`, `MARKET`)  
-time_in_force | string | Optional | enum: ["GTC","IOC","FOK","POC","RPI"]  
-default: "GTC" | Defaults to GTC. Supported values: `GTC`, `IOC`, `FOK`, `POC`, `RPI`  
-`GTC`: GoodTillCancelled  
-`IOC`: ImmediateOrCancelled  
-`FOK`: FillOrKill  
-`POC`: PendingOrCancelled or PostOnly  
-`RPI`: RPI  
-Stocks and ETFs support only `GTC`  
-qty | string | Optional |  | Order quantity (required except for spot and margin market buys; qty is required for stocks and ETFs)  
-price | string | Optional |  | Limit order price (required for limit orders). Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-quote_qty | string | Optional |  | Order quote quantity, required for spot and margin market buys. Stock and ETF orders do not support quote_qty  
-reduce_only | string | Optional | enum: ["true","false"] | Reduce-only: `true` or `false`  
-position_side | string | Optional | enum: ["LONG","SHORT","NONE"] | Position side: `NONE`, `LONG`, `SHORT`  
-Defaults to `NONE` (single position mode) if not specified  
-      
-    
-    {
-      "text": "string",
-      "symbol": "string",
-      "side": "BUY",
-      "type": "LIMIT",
-      "time_in_force": "GTC",
-      "qty": "string",
-      "price": "string",
-      "quote_qty": "string",
-      "reduce_only": "true",
-      "position_side": "LONG"
-    }
-    
-    
-
-##  CrossexConvertOrderRequest
-
-Flash Swap Transaction Request Body
-
-Type | Constraints  
----|---  
-object | required: ["quote_id"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-quote_id | string | Required |  | Inquiry ID  
-      
-    
-    {
-      "quote_id": "string"
-    }
-    
-    
-
-##  CrossexConvertOrderResponse
-
-CrossexConvertOrderResponse
-
-Type | Constraints  
----|---  
-object | required: ["order_id","text"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-order_id | string | Required |  | Order ID  
-text | string | Required |  | Order ID (cannot be customized)  
-      
-    
-    {
-      "order_id": "string",
-      "text": "string"
-    }
-    
-    
-
-##  CrossexLeverageResponse
-
-CrossexLeverageResponse
-
-Type | Constraints  
----|---  
-object | required: ["symbol","leverage"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-symbol | string | Required |  | Currency pair  
-leverage | string | Required |  | Requested Modified Leverage  
-      
-    
-    {
-      "symbol": "string",
-      "leverage": "string"
-    }
-    
-    
-
-##  CrossexMarginModeRequest
-
-Request body for updating the futures position margin mode
-
-Type | Constraints  
----|---  
-object | required: ["symbol","margin_mode"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-symbol | string | Required |  | Hyperliquid futures trading pair  
-margin_mode | string | Required | enum: ["CROSS","ISOLATED"] | Margin mode (CROSS/ISOLATED)  
-      
-    
-    {
-      "symbol": "string",
-      "margin_mode": "CROSS"
-    }
-    
-    
-
-##  CrossexAccount
-
-CrossexAccount
-
-Type | Constraints  
----|---  
-object | required: ["user_id","available_margin","margin_balance","initial_margin","maintenance_margin","initial_margin_rate","maintenance_margin_rate","position_mode","create_time","update_time","assets"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-user_id | string | Required |  | User ID  
-available_margin | string | Required |  | Available Margin  
-margin_balance | string | Required |  | marginbalance  
-initial_margin | string | Required |  | Initial Margin  
-maintenance_margin | string | Required |  | Maintenance margin  
-initial_margin_rate | string | Required |  | Initial margin rate  
-maintenance_margin_rate | string | Required |  | Maintenance margin rate  
-position_mode | string | Required |  | Contract Position Mode  
-account_limit | string | Optional |  | Account limit  
-create_time | string | Required |  | Created time  
-update_time | string | Required |  | Update time  
-account_mode | string | Optional |  | Account Mode. CROSS_EXCHANGE: Cross-Exchange Mode; ISOLATED_EXCHANGE: Split-Exchange Mode  
-exchange_type | string | Optional |  | Exchange Type. When account_mode is CROSS_EXCHANGE, it must be CROSSEX; otherwise, it is another exchange.  
-assets | array | Required |  | Asset list: grouped by exchange and currency, returning per-account balances, margin, and PnL details  
-  
-**assets**
-
-Asset list: grouped by exchange and currency, returning per-account balances, margin, and PnL details
-
-Type | Constraints  
----|---  
-array |   
-  
-**assets / items**
-
-CrossexAccountAsset
-
-Type | Constraints  
----|---  
-object | required: ["borrowing_initial_margin","borrowing_maintenance_margin"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-user_id | string | Optional |  | User ID  
-coin | string | Optional |  | Currency  
-exchange_type | string | Optional |  | Exchange  
-balance | string | Optional |  | Balance  
-upnl | string | Optional |  | Unrealized P&L  
-equity | string | Optional |  | Net margin equity for the currency  
-futures_initial_margin | string | Optional |  | Currency-specific futures initial margin. This value is populated for futures settlement currencies (USDT/USDC/USD)  
-futures_maintenance_margin | string | Optional |  | Currency-specific futures maintenance margin. This value is populated for futures settlement currencies (USDT/USDC/USD)  
-borrowing_initial_margin | string | Required |  | Currency-specific margin trading initial margin. This value is populated for margin or futures settlement currencies (USDT/USDC/USD)  
-borrowing_maintenance_margin | string | Required |  | Currency-specific margin trading maintenance margin. This value is populated for margin or futures settlement currencies (USDT/USDC/USD)  
-available_balance | string | Optional |  | Available Balance  
-liability | string | Optional |  | Liability for the currency. This value is populated only for USDT, USDC, or USD  
-      
-    
-    {
-      "user_id": "string",
-      "available_margin": "string",
-      "margin_balance": "string",
-      "initial_margin": "string",
-      "maintenance_margin": "string",
-      "initial_margin_rate": "string",
-      "maintenance_margin_rate": "string",
-      "position_mode": "string",
-      "account_limit": "string",
-      "create_time": "string",
-      "update_time": "string",
-      "account_mode": "string",
-      "exchange_type": "string",
-      "assets": [
-        {
-          "user_id": "string",
-          "coin": "string",
-          "exchange_type": "string",
-          "balance": "string",
-          "upnl": "string",
-          "equity": "string",
-          "futures_initial_margin": "string",
-          "futures_maintenance_margin": "string",
-          "borrowing_initial_margin": "string",
-          "borrowing_maintenance_margin": "string",
-          "available_balance": "string",
-          "liability": "string"
-        }
-      ]
-    }
-    
-    
-
-##  CrossexOrderUpdateRequest
-
-Order Modification Request Body
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-qty | string | Optional |  | modify amount  
-price | string | Optional |  | modify price  
-      
-    
-    {
-      "qty": "string",
-      "price": "string"
-    }
-    
-    
-
-##  CrossexConvertQuoteResponse
-
-CrossexConvertQuoteResponse
-
-Type | Constraints  
----|---  
-object | required: ["quote_id","valid_ms","from_coin","to_coin","from_amount","to_amount","price"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-quote_id | string | Required |  | Quote ID  
-valid_ms | string | Required |  | Valid time (milliseconds timestamp)  
-from_coin | string | Required |  | Asset Sold  
-to_coin | string | Required |  | Asset Bought  
-from_amount | string | Required |  | Amount to sell  
-to_amount | string | Required |  | Amount to buy  
-price | string | Required |  | Quoted price  
-      
-    
-    {
-      "quote_id": "string",
-      "valid_ms": "string",
-      "from_coin": "string",
-      "to_coin": "string",
-      "from_amount": "string",
-      "to_amount": "string",
-      "price": "string"
-    }
-    
-    
-
-##  CrossexIsolatedMarginRequest
-
-Request body for increasing or decreasing isolated margin
-
-Type | Constraints  
----|---  
-object | required: ["symbol","margin"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-symbol | string | Required |  | Hyperliquid futures trading pair  
-margin | string | Required |  | Margin adjustment amount. Positive values increase margin, while negative values decrease margin. Values with more than two decimal places are truncated to two decimal places  
-position_side | string | Optional | enum: ["NONE","LONG","SHORT"] | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
-      
-    
-    {
-      "symbol": "string",
-      "margin": "string",
-      "position_side": "NONE"
-    }
-    
-    
-
-##  CrossexBatchCancelOrderRequest
-
-CrossexBatchCancelOrderRequest
-
-Batch cancel orders
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required in this object | Constraints | Description  
----|---|---|---|---  
-order_id | string | false |  | Order ID; either this field or text is required  
-text | string | false |  | Custom ID specified by the user when creating the order; either this field or order_id is required  
-  
-**anyOf[0]**
-
-Type | Constraints  
----|---  
-any | required: ["order_id"]  
-  
-**anyOf[1]**
-
-Type | Constraints  
----|---  
-any | required: ["text"]  
-      
-    
-    {}
-    
-    
-
-##  CrossexBatchCancelOrderResponse
-
-CrossexBatchCancelOrderResponse
-
-Batch order cancellation request results
-
-Type | Constraints  
----|---  
-object | required: ["order_id","text","accepted","label","message"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-order_id | string | Required |  | Order ID  
-text | string | Required |  | Custom ID specified by the user when creating the order  
-accepted | string | Required |  | Whether the request was accepted, as the string true or false  
-label | string | Required |  | Error label when the request is not accepted; empty on success  
-message | string | Required |  | Error message when the request is not accepted; empty on success  
-      
-    
-    {
-      "order_id": "string",
-      "text": "string",
-      "accepted": "string",
-      "label": "string",
-      "message": "string"
     }
     
     
@@ -7488,6 +7366,63 @@ string |
     
     
 
+##  CrossexOrderUpdateRequest
+
+Order Modification Request Body
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+qty | string | Optional |  | modify amount  
+price | string | Optional |  | modify price  
+      
+    
+    {
+      "qty": "string",
+      "price": "string"
+    }
+    
+    
+
+##  CrossexBatchCancelOrderRequest
+
+CrossexBatchCancelOrderRequest
+
+Batch cancel orders
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required in this object | Constraints | Description  
+---|---|---|---|---  
+order_id | string | false |  | Order ID; either this field or text is required  
+text | string | false |  | Custom ID specified by the user when creating the order; either this field or order_id is required  
+  
+**anyOf[0]**
+
+Type | Constraints  
+---|---  
+any | required: ["order_id"]  
+  
+**anyOf[1]**
+
+Type | Constraints  
+---|---  
+any | required: ["text"]  
+      
+    
+    {}
+    
+    
+
 ##  CrossexMarginModeResponse
 
 CrossexMarginModeResponse
@@ -7507,62 +7442,6 @@ margin_mode | string | Required |  | Margin mode (CROSS/ISOLATED)
     {
       "symbol": "string",
       "margin_mode": "string"
-    }
-    
-    
-
-##  CrossexConvertQuoteRequest
-
-Flash Swap Quote Request Body
-
-Type | Constraints  
----|---  
-object | required: ["exchange_type","from_coin","to_coin","from_amount"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-exchange_type | string | Required |  | Exchange type  
-Currently supports only BINANCE, OKX, GATE, BYBIT, HYPERLIQUID, KRAKEN, and LIGHTER  
-from_coin | string | Required |  | Asset Sold  
-to_coin | string | Required |  | Asset to receive  
-OKX and GATE only support conversion to BTC, ETH, or USDT  
-BYBIT and BINANCE only support conversion to USDT  
-HYPERLIQUID only supports conversion to USDT or USDC  
-KRAKEN only supports conversion to USDT  
-LIGHTER only supports swaps between USDT and USDC  
-from_amount | string | Required |  | Amount to sell  
-      
-    
-    {
-      "exchange_type": "string",
-      "from_coin": "string",
-      "to_coin": "string",
-      "from_amount": "string"
-    }
-    
-    
-
-##  CrossexLeverageRequest
-
-Change Leverage Request Body (for futures/margin)
-
-Type | Constraints  
----|---  
-object | required: ["symbol","leverage"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-symbol | string | Required |  | Currency pair  
-leverage | string | Required |  | Leverage  
-      
-    
-    {
-      "symbol": "string",
-      "leverage": "string"
     }
     
     
@@ -7594,29 +7473,164 @@ position_side | string | Optional |  | Position Direction
     
     
 
-##  CrossexTransferRequest
+##  CrossexOrderActionResponse
 
-Fund Transfer Request Body
+CrossexOrderActionResponse
 
 Type | Constraints  
 ---|---  
-object | required: ["amount","from","coin","to"]  
+object | required: ["order_id","text"]  
   
 **Properties**
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-coin | string | Required |  | Currency  
-amount | string | Required |  | Transfer amount  
-from | string | Required |  | `from` debit account (funds withdrawn from): `CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`  
-to | string | Required |  | `to` receiving account (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
-text | string | Optional |  | User-defined ID  
+order_id | string | Required |  | Order ID  
+text | string | Required |  | User-defined Order ID  
       
     
     {
-      "coin": "string",
-      "amount": "string",
-      "from": "string",
-      "to": "string",
+      "order_id": "string",
       "text": "string"
+    }
+    
+    
+
+##  CrossexLeverageRequest
+
+Change Leverage Request Body (for futures/margin)
+
+Type | Constraints  
+---|---  
+object | required: ["symbol","leverage"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Currency pair  
+leverage | string | Required |  | Leverage  
+      
+    
+    {
+      "symbol": "string",
+      "leverage": "string"
+    }
+    
+    
+
+##  CrossexTransferResponse
+
+CrossexTransferResponse
+
+Type | Constraints  
+---|---  
+object | required: ["tx_id","text"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+tx_id | string | Required |  | Order ID  
+text | string | Required |  | User-defined Order ID  
+      
+    
+    {
+      "tx_id": "string",
+      "text": "string"
+    }
+    
+    
+
+##  CrossexAccount
+
+CrossexAccount
+
+Type | Constraints  
+---|---  
+object | required: ["user_id","available_margin","margin_balance","initial_margin","maintenance_margin","initial_margin_rate","maintenance_margin_rate","position_mode","create_time","update_time","assets"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | string | Required |  | User ID  
+available_margin | string | Required |  | Available Margin  
+margin_balance | string | Required |  | marginbalance  
+initial_margin | string | Required |  | Initial Margin  
+maintenance_margin | string | Required |  | Maintenance margin  
+initial_margin_rate | string | Required |  | Initial margin rate  
+maintenance_margin_rate | string | Required |  | Maintenance margin rate  
+position_mode | string | Required |  | Contract Position Mode  
+account_limit | string | Optional |  | Account limit  
+create_time | string | Required |  | Created time  
+update_time | string | Required |  | Update time  
+account_mode | string | Optional |  | Account Mode. CROSS_EXCHANGE: Cross-Exchange Mode; ISOLATED_EXCHANGE: Split-Exchange Mode  
+exchange_type | string | Optional |  | Exchange Type. When account_mode is CROSS_EXCHANGE, it must be CROSSEX; otherwise, it is another exchange.  
+assets | array | Required |  | Asset list: grouped by exchange and currency, returning per-account balances, margin, and PnL details  
+  
+**assets**
+
+Asset list: grouped by exchange and currency, returning per-account balances, margin, and PnL details
+
+Type | Constraints  
+---|---  
+array |   
+  
+**assets / items**
+
+CrossexAccountAsset
+
+Type | Constraints  
+---|---  
+object | required: ["borrowing_initial_margin","borrowing_maintenance_margin"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | string | Optional |  | User ID  
+coin | string | Optional |  | Currency  
+exchange_type | string | Optional |  | Exchange  
+balance | string | Optional |  | Balance  
+upnl | string | Optional |  | Unrealized P&L  
+equity | string | Optional |  | Net margin equity for the currency  
+futures_initial_margin | string | Optional |  | Currency-specific futures initial margin. This value is populated for futures settlement currencies (USDT/USDC/USD)  
+futures_maintenance_margin | string | Optional |  | Currency-specific futures maintenance margin. This value is populated for futures settlement currencies (USDT/USDC/USD)  
+borrowing_initial_margin | string | Required |  | Currency-specific margin trading initial margin. This value is populated for margin or futures settlement currencies (USDT/USDC/USD)  
+borrowing_maintenance_margin | string | Required |  | Currency-specific margin trading maintenance margin. This value is populated for margin or futures settlement currencies (USDT/USDC/USD)  
+available_balance | string | Optional |  | Available Balance  
+liability | string | Optional |  | Liability for the currency. This value is populated only for USDT, USDC, or USD  
+      
+    
+    {
+      "user_id": "string",
+      "available_margin": "string",
+      "margin_balance": "string",
+      "initial_margin": "string",
+      "maintenance_margin": "string",
+      "initial_margin_rate": "string",
+      "maintenance_margin_rate": "string",
+      "position_mode": "string",
+      "account_limit": "string",
+      "create_time": "string",
+      "update_time": "string",
+      "account_mode": "string",
+      "exchange_type": "string",
+      "assets": [
+        {
+          "user_id": "string",
+          "coin": "string",
+          "exchange_type": "string",
+          "balance": "string",
+          "upnl": "string",
+          "equity": "string",
+          "futures_initial_margin": "string",
+          "futures_maintenance_margin": "string",
+          "borrowing_initial_margin": "string",
+          "borrowing_maintenance_margin": "string",
+          "available_balance": "string",
+          "liability": "string"
+        }
+      ]
     }

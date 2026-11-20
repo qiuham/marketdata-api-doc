@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/rwa/place-order
 api_type: REST
-updated_at: 2026-11-19 18:54:08.096618
+updated_at: 2026-11-20 18:52:09.122030
 ---
 
 # Place Order

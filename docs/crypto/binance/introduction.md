@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/introduction
 api_type: Guide
-updated_at: 2026-11-19 18:28:25.313309
+updated_at: 2026-11-20 18:28:22.888542
 ---
 
 # Binance Developer Documentation

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/side-market-list
 api_type: REST
-updated_at: 2026-11-19 18:52:34.638678
+updated_at: 2026-11-20 18:51:08.563769
 ---
 
 # Get Side Market List

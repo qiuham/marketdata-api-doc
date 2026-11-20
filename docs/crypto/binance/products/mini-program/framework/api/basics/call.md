@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/call
 api_type: Guide
-updated_at: 2026-11-19 18:51:16.476273
+updated_at: 2026-11-20 18:50:03.970272
 ---
 
 # bn.call

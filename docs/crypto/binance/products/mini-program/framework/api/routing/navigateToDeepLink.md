@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/routing/navigateToDeepLink
 api_type: Guide
-updated_at: 2026-11-19 18:46:38.488861
+updated_at: 2026-11-20 18:45:35.678386
 ---
 
 # bn.navigateToDeepLink

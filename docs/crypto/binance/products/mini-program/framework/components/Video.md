@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/Video
 api_type: Guide
-updated_at: 2026-11-19 18:44:26.387568
+updated_at: 2026-11-20 18:43:29.980451
 ---
 
 # Video

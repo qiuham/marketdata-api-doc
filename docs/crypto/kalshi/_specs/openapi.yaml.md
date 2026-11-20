@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/openapi.yaml'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # openapi.yaml
@@ -4257,8 +4257,8 @@ paths:
         `end_date` set to the day after `date`, from one day into the next.
         A window that crosses midnight is at most 24 hours long, and only
         offered where `GET /weather_point_markets/availability` returns
-        `max_window_days: 2`. A new market's window must start at least 15
-        minutes from now and within 365 days.
+        `max_window_days: 2`. A new market's window must start at least 6
+        hours from now (15 minutes on demo) and within 365 days.
 
         `timezone` only says which span of time `date` and the hours mean. The
         market is described in the IANA time zone of its location, which
@@ -4290,7 +4290,7 @@ paths:
         | 400 | `bad_request` | The body isn't valid JSON, or a field has the wrong type. |
         | 400 | `missing_parameters` | A required field is missing or empty. |
         | 400 | `invalid_parameters` | A field is present but unusable, or the request can't define a market: a latitude or hour out of range, an `end_hour` not after `start_hour` on one day, an `end_date` other than `date` or the day after it, a window across midnight, in `timezone` or at the location, longer than 24 hours, an unknown variable or strike type, thresholds that don't fit the strike type or the variable's range, a location outside NOAA MRMS coverage, an unknown time zone, a window that doesn't start and end on whole UTC hours, has already ended or starts more than 365 days out, or an hour that a clock change skips or repeats in `timezone`. |
-        | 409 | `weather_point_market_unavailable` | The request is valid but the market isn't offered: the variable isn't offered at that location, the market's grid cell is entirely over open water or outside US land, the window starts in less than 15 minutes, the market's window crosses midnight in the location's time zone where `max_window_days` is 1, or the location's time zone can't be determined. |
+        | 409 | `weather_point_market_unavailable` | The request is valid but the market isn't offered: the variable isn't offered at that location, the market's grid cell is entirely over open water or outside US land, the window starts in less than 6 hours (15 minutes on demo), the market's window crosses midnight in the location's time zone where `max_window_days` is 1, or the location's time zone can't be determined. |
         | 429 | `weather_point_market_limit_exceeded` | A creation limit was reached: the daily limit on new weather markets across all users, or 40 markets for one variable, location and window. Retrying at once doesn't help. |
         | 429 | `too_many_requests` | Your API rate limit. This endpoint is charged against your write budget. |
       tags:
@@ -4372,11 +4372,17 @@ paths:
         refused when the show has moved to another date or has already been
         canceled or postponed.
 
-        An existing market is usually returned until it closes, even when new
-        markets are no longer offered; where creation or its cover is switched
-        off, the request returns 409. A new market's show must start more than an
-        hour from now and within the `max_days_ahead` that
-        `GET /concert_cancellation_markets/availability` reports.
+        A new market's show must start more than 24 hours from now and within
+        the `max_days_ahead` that
+        `GET /concert_cancellation_markets/availability` reports. An existing
+        market is returned only while its show is more than 24 hours away too:
+        inside that, counted to the market's close time or the show's start as
+        now listed, whichever is earlier, the request returns 409. Further
+        out, an existing market is usually returned even when new markets are
+        no longer offered; where creation or its cover is switched off, the
+        request returns 409. A 409 here changes nothing about the market
+        itself, which stays open until its close time and is still returned by
+        `GET /markets/{ticker}`.
 
         A market is traded through RFQs: pass the returned `market_ticker` to
         `POST /communications/rfqs`. These markets are in series starting with
@@ -4393,7 +4399,7 @@ paths:
         | 400 | `missing_parameters` | A required field is missing or empty. |
         | 400 | `invalid_parameters` | A field is present but unusable: an unknown cover, a `jambase_event_id` that isn't `jambase:<id>`, a `scheduled_date` that isn't YYYY-MM-DD, or a show scheduled further ahead than `max_days_ahead`. |
         | 404 | `not_found` | The listing source has no show with that id. |
-        | 409 | `concert_cancellation_market_unavailable` | The request is valid but the market isn't offered: concert markets or the cover are switched off, the show is now listed on another date, has already been canceled or postponed, starts too soon, isn't a concert, or its market has closed. |
+        | 409 | `concert_cancellation_market_unavailable` | The request is valid but the market isn't offered: concert markets or the cover are switched off, the show is now listed on another date, has already been canceled or postponed, starts in 24 hours or less (whether or not its market already exists), isn't a concert, or its market has closed. |
         | 429 | `concert_cancellation_market_limit_exceeded` | The daily limit on new concert markets across all users was reached. Retrying at once doesn't help. |
         | 429 | `too_many_requests` | Your API rate limit. This endpoint is charged against your write budget. |
       tags:
@@ -5704,7 +5710,12 @@ paths:
           kalshiAccessTimestamp: []
         - kalshiOauthAccessToken: []
       parameters:
-        - $ref: '#/components/parameters/TickerQuery'
+        - name: ticker
+          in: query
+          description: Filter by market ticker. Accepts a comma-separated list of up to 100 market tickers.
+          schema:
+            type: string
+            x-go-type-skip-optional-pointer: true
         - $ref: '#/components/parameters/MinTsQuery'
         - $ref: '#/components/parameters/MaxTsQuery'
         - $ref: '#/components/parameters/LimitQuery'

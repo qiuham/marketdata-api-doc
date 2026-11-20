@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/stock
 api_type: REST
-updated_at: 2026-11-19 19:01:02.150020
+updated_at: 2026-11-20 18:57:09.856514
 ---
 
 # Stock
@@ -3712,377 +3712,6 @@ Code samples
 
 #  Schemas
 
-##  TradFiSpotSetMarginFeatureRequest
-
-Request parameters for enabling or disabling margin financing
-
-Type | Constraints  
----|---  
-object | required: ["margin_feature"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-margin_feature | boolean | Required |  | Whether to enable margin financing. true enables it; false disables it.  
-      
-    
-    {
-      "margin_feature": true
-    }
-    
-    
-
-##  ClosePosition
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-data | object | Optional |  |   
-timestamp | integer(int64) | Optional |  |   
-  
-**data**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-order_id | integer(int64) | Optional |  | Close order ID  
-      
-    
-    {
-      "data": {
-        "order_id": 123456
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  OrderDealList
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-data | object | Optional |  |   
-timestamp | integer(int64) | Optional |  |   
-  
-**data**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-total | integer(int64) | Optional |  | Total quantity  
-total_page | integer(int64) | Optional |  | Total pages  
-list | array | Optional |  | Trade records  
-  
-**data / list**
-
-Trade records
-
-Type | Constraints  
----|---  
-array |   
-  
-**data / list / items**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-id | integer(int64) | Optional |  | Trade record primary key ID  
-deal_id | integer(int64) | Optional |  | Trade ID  
-order_id | integer(int64) | Optional |  | Order ID  
-client_order_id | string | Optional |  | Client-defined order ID  
-user_id | integer | Optional |  | User ID  
-symbol | string | Optional |  | Symbol  
-exchange | string | Optional | enum: ["us","hk","kr","jp"] | Exchange.  
-\- us: US stocks.  
-\- hk: Hong Kong stocks.  
-\- kr: Korean stocks.  
-\- jp: Japanese stocks.  
-side | integer | Optional | enum: [1,2] | Side (1=sell, 2=buy)  
-role | string | Optional | enum: ["maker","taker"] | Liquidity role.  
-\- maker: Maker.  
-\- taker: Taker.  
-price | string | Optional |  | Trade price in the instrument trading currency  
-quantity | string | Optional |  | Trading size  
-position_qty | string | Optional |  | Position quantity after the trade  
-avg_entry_price | string | Optional |  | Average entry price  
-value | string | Optional |  | Trade value in the instrument trading currency  
-fx_rate | string | Optional |  | Quote currency to USD exchange rate  
-fee | string | Optional |  | Fee in the instrument trading currency  
-      
-    
-    {
-      "data": {
-        "total": 0,
-        "total_page": 0,
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  FeeRate
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-data | object | Optional |  |   
-timestamp | integer(int64) | Optional |  |   
-  
-**data**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-list | array | Optional |  |   
-  
-**data / list**
-
-Type | Constraints  
----|---  
-array |   
-  
-**data / list / items**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-vip_level | integer | Optional |  | VIP level  
-maker_fee | string | Optional |  | Maker fee rate for Japanese and Korean stocks  
-taker_fee | string | Optional |  | Taker fee rate for Japanese and Korean stocks  
-      
-    
-    {
-      "data": {
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  Exchanges
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-data | object | Optional |  |   
-timestamp | integer(int64) | Optional |  |   
-  
-**data**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-list | array | Optional |  |   
-  
-**data / list**
-
-Type | Constraints  
----|---  
-array |   
-  
-**data / list / items**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-exchange | string | Optional | enum: ["us","hk","kr","jp"] | Trading market.  
-\- us: US stocks.  
-\- hk: Hong Kong stocks.  
-\- kr: Korean stocks.  
-\- jp: Japanese stocks.  
-exchange_desc | string | Optional |  | Market display name  
-icon_link | string | Optional |  | Market icon  
-support_transfer | boolean | Optional |  | Whether stock transfer is supported  
-      
-    
-    {
-      "data": {
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  TradfiSpotUpdateOrder
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-data | object | Optional |  |   
-timestamp | integer(int64) | Optional |  |   
-  
-**data**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-order_id | integer(int64) | Optional |  | Order ID  
-      
-    
-    {
-      "data": {
-        "order_id": 123456
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  TradFiSpotOrderRequest
-
-Place order request parameters
-
-Type | Constraints  
----|---  
-object | required: ["volume","symbol","side","price_type","trading_session","time_in_force"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-volume | string | Required |  | Order quantity  
-symbol | string | Required |  | Symbol  
-side | integer | Required | enum: [1,2] | Side (1=sell, 2=buy)  
-price_type | string | Required | enum: ["market","limit"] | Price type (market = market order, limit = limit order)  
-trading_session | string | Required | enum: ["regular","all"] | Trading session.  
-Limit orders support only all, while market orders support only regular.  
-time_in_force | string | Required | enum: ["day"] | Time in force.  
-\- day: Day order.  
-price | string | Optional |  | Order price, used for limit orders  
-client_order_id | string | Optional |  | Client-defined order ID  
-      
-    
-    {
-      "volume": "10",
-      "symbol": "AAPL",
-      "side": 2,
-      "price_type": "limit",
-      "trading_session": "all",
-      "time_in_force": "day",
-      "price": "200.12",
-      "client_order_id": "client-202607070001"
-    }
-    
-    
-
-##  SetMarginFeature
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-data | object | Optional | additionalProperties: false | Returns empty object on success  
-timestamp | integer(int64) | Optional |  |   
-      
-    
-    {
-      "data": {},
-      "timestamp": 0
-    }
-    
-    
-
-##  DeleteOrder
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-data | object | Optional | additionalProperties: false | Returns empty object on success  
-timestamp | integer(int64) | Optional |  |   
-      
-    
-    {
-      "data": {},
-      "timestamp": 0
-    }
-    
-    
-
 ##  SymbolDetail
 
 Type | Constraints  
@@ -4222,7 +3851,44 @@ value | string | Optional |  | Localized description
     
     
 
-##  TradfiSpotOrderList
+##  TradFiSpotOrderRequest
+
+Place order request parameters
+
+Type | Constraints  
+---|---  
+object | required: ["volume","symbol","side","price_type","trading_session","time_in_force"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+volume | string | Required |  | Order quantity  
+symbol | string | Required |  | Symbol  
+side | integer | Required | enum: [1,2] | Side (1=sell, 2=buy)  
+price_type | string | Required | enum: ["market","limit"] | Price type (market = market order, limit = limit order)  
+trading_session | string | Required | enum: ["regular","all"] | Trading session.  
+Limit orders support only all, while market orders support only regular.  
+time_in_force | string | Required | enum: ["day"] | Time in force.  
+\- day: Day order.  
+price | string | Optional |  | Order price, used for limit orders  
+client_order_id | string | Optional |  | Client-defined order ID  
+      
+    
+    {
+      "volume": "10",
+      "symbol": "AAPL",
+      "side": 2,
+      "price_type": "limit",
+      "trading_session": "all",
+      "time_in_force": "day",
+      "price": "200.12",
+      "client_order_id": "client-202607070001"
+    }
+    
+    
+
+##  TradfiSpotCreateOrder
 
 Type | Constraints  
 ---|---  
@@ -4245,11 +3911,131 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-list | array | Optional |  | Query active order list  
+id | string | Optional |  | Order ID  
+      
+    
+    {
+      "data": {
+        "id": "123456"
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradFiSpotTransactionRequest
+
+Fund transfer request parameters. Transfer in means moving funds from the spot account to the stock account; transfer out means moving funds from the stock account to the spot account.
+
+Type | Constraints  
+---|---  
+object | required: ["asset","change","type","ref_id"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+asset | string | Required | enum: ["USDT"] | Asset, USDT only  
+change | string | Required |  | Change amount, must be greater than 0  
+type | string | Required | enum: ["deposit","withdraw"] | Transaction type. deposit transfers funds from the spot account to the stock account; withdraw transfers funds from the stock account to the spot account.  
+ref_id | string | Required |  | Business idempotent ID  
+      
+    
+    {
+      "asset": "USDT",
+      "change": "100",
+      "type": "deposit",
+      "ref_id": "transfer-202607070001"
+    }
+    
+    
+
+##  TradfiSpotUpdateOrder
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | Order ID  
+      
+    
+    {
+      "data": {
+        "order_id": 123456
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradFiSpotClosePositionRequest
+
+Close position request parameters
+
+Type | Constraints  
+---|---  
+object | required: ["symbol","close_type"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Symbol  
+close_volume | string | Optional |  | Close quantity; required for partial close  
+close_type | integer | Required | enum: [1,2] | Close type (1=partial close, 2=close all)  
+      
+    
+    {
+      "symbol": "AAPL",
+      "close_volume": "2",
+      "close_type": 1
+    }
+    
+    
+
+##  Exchanges
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+list | array | Optional |  |   
   
 **data / list**
-
-Query active order list
 
 Type | Constraints  
 ---|---  
@@ -4265,52 +4051,14 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-order_id | string | Optional |  | Order ID  
-symbol | string | Optional |  | Symbol  
-exchange | string | Optional | enum: ["us","hk","kr","jp"] | Exchange.  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | Trading market.  
 \- us: US stocks.  
 \- hk: Hong Kong stocks.  
 \- kr: Korean stocks.  
 \- jp: Japanese stocks.  
-quote_currency | string | Optional |  | Quote currency  
-fx_rate | string | Optional |  | Quote currency to USD exchange rate  
-symbol_desc | string | Optional |  | Symbol description  
-trade_status | string | Optional | enum: ["pre_market","open","post_market"] | Trading status.  
-\- pre_market: Pre-market.  
-\- open: Regular trading session.  
-\- post_market: Post-market.  
-trade_mode | integer | Optional | enum: [0,1,2,4,5] | Current session trading mode.  
-\- 0: Trading disabled.  
-\- 1: Buy only.  
-\- 2: Sell only.  
-\- 4: Buy and sell supported.  
-\- 5: Trading suspended.  
-price_type | string | Optional | enum: ["market","limit"] | Price type (market = market order, limit = limit order)  
-side | integer | Optional | enum: [1,2] | Side (1=sell, 2=buy)  
-status | integer | Optional | enum: [0,1,2,3,4,5,6,7,8] | Order status.  
-\- 0: Unknown.  
-\- 1: New order; the order has been validated and is waiting to be processed.  
-\- 2: Partially filled.  
-\- 3: Filled.  
-\- 4: Canceled.  
-\- 5: Order rejected.  
-\- 6: Cancellation rejected.  
-\- 7: Order update succeeded.  
-\- 8: Order update rejected.  
-volume | string | Optional |  | Order quantity  
-fill_volume | string | Optional |  | Trading size  
-price | string | Optional |  | Order price  
-time_setup | integer(int64) | Optional |  | Order creation time (Unix timestamp, seconds)  
-time_update | integer(int64) | Optional |  | Order update time (Unix timestamp, seconds)  
-max_order_volume | string | Optional |  | Maximum order quantity  
-step_order_volume | string | Optional |  | Order step size  
-min_order_volume | string | Optional |  | Minimum order quantity  
-price_precision | integer | Optional |  | Price precision  
-price_protection | string | Optional |  | Price protection range  
-sell_price_protection | string | Optional |  | Sell price protection rate  
-buy_price_protection | string | Optional |  | Buy price protection rate  
-commission_rate | string | Optional |  | Fee Rate  
-slippage_rate | string | Optional |  | Slippage  
+exchange_desc | string | Optional |  | Market display name  
+icon_link | string | Optional |  | Market icon  
+support_transfer | boolean | Optional |  | Whether stock transfer is supported  
       
     
     {
@@ -4324,7 +4072,7 @@ slippage_rate | string | Optional |  | Slippage
     
     
 
-##  TradfiSpotOrderBook
+##  TradfiSpotUserAssetResp
 
 Type | Constraints  
 ---|---  
@@ -4335,7 +4083,7 @@ object |
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
 data | object | Optional |  |   
-timestamp | integer(int64) | Optional |  |   
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
   
 **data**
 
@@ -4347,19 +4095,55 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-symbol | string | Optional |  | Symbol  
-bids | array | Optional |  | Bid orders  
-asks | array | Optional |  | Ask orders  
-  
-**data / bids**
+equity | string | Optional |  | Account equity  
+balance | string | Optional |  | Account Balance  
+available | string | Optional |  | Available Balance  
+loan_amount | string | Optional |  | Loan amount. Non-negative: the absolute value of the original available balance when it is negative, otherwise 0.  
+buy_power | string | Optional |  | Buying power  
+leverage | string | Optional |  | Leverage  
+leave_liquidity | string | Optional |  | Excess liquidity  
+leave_liquidity_rate | string | Optional |  | Excess liquidity ratio  
+aee | string | Optional |  | Available Excess Equity (AEE)  
+options_margin | string | Optional |  | Options margin  
+position_market_value | string | Optional |  | Position market value  
+position_pnl | string | Optional |  | Position P&L  
+today_pnl | string | Optional |  | Today's P&L  
+option_position_market_value | string | Optional |  | Option position market value  
+option_position_pnl | string | Optional |  | Option position PnL  
+option_today_pnl | string | Optional |  | Option today's PnL  
+user_exists | boolean | Optional |  | Whether the user has activated the service  
+margin_enabled | boolean | Optional |  | Whether margin financing is enabled  
+long_borrowing_rate | string | Optional |  | Annual margin financing interest rate. An empty string indicates that no valid rate is currently available.  
+      
+    
+    {
+      "data": {
+        "equity": "10000.12",
+        "balance": "8000",
+        "available": "6500.5",
+        "loan_amount": "0",
+        "buy_power": "13000",
+        "leverage": "2",
+        "leave_liquidity": "5000",
+        "leave_liquidity_rate": "0.5",
+        "aee": "4800",
+        "options_margin": "0",
+        "position_market_value": "1500.25",
+        "position_pnl": "12.5",
+        "today_pnl": "3.2",
+        "option_position_market_value": "0",
+        "option_position_pnl": "0",
+        "option_today_pnl": "0",
+        "user_exists": true,
+        "margin_enabled": true,
+        "long_borrowing_rate": "0.03"
+      },
+      "timestamp": 0
+    }
+    
+    
 
-Bid orders
-
-Type | Constraints  
----|---  
-array |   
-  
-**data / bids / items**
+##  DeleteOrder
 
 Type | Constraints  
 ---|---  
@@ -4369,34 +4153,12 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-p | string | Optional |  | Price  
-user_order | boolean | Optional |  | Whether it is the user's own order  
-  
-**data / asks**
-
-Ask orders
-
-Type | Constraints  
----|---  
-array |   
-  
-**data / asks / items**
-
-Type | Constraints  
----|---  
-object |   
+data | object | Optional | additionalProperties: false | Returns empty object on success  
+timestamp | integer(int64) | Optional |  |   
       
     
     {
-      "data": {
-        "symbol": "AAPL",
-        "bids": [
-          {}
-        ],
-        "asks": [
-          {}
-        ]
-      },
+      "data": {},
       "timestamp": 0
     }
     
@@ -4604,78 +4366,7 @@ message | string | Optional |  | Status message
     
     
 
-##  TradfiSpotUserAssetResp
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-data | object | Optional |  |   
-timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
-  
-**data**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-equity | string | Optional |  | Account equity  
-balance | string | Optional |  | Account Balance  
-available | string | Optional |  | Available Balance  
-loan_amount | string | Optional |  | Loan amount. Non-negative: the absolute value of the original available balance when it is negative, otherwise 0.  
-buy_power | string | Optional |  | Buying power  
-leverage | string | Optional |  | Leverage  
-leave_liquidity | string | Optional |  | Excess liquidity  
-leave_liquidity_rate | string | Optional |  | Excess liquidity ratio  
-aee | string | Optional |  | Available Excess Equity (AEE)  
-options_margin | string | Optional |  | Options margin  
-position_market_value | string | Optional |  | Position market value  
-position_pnl | string | Optional |  | Position P&L  
-today_pnl | string | Optional |  | Today's P&L  
-option_position_market_value | string | Optional |  | Option position market value  
-option_position_pnl | string | Optional |  | Option position PnL  
-option_today_pnl | string | Optional |  | Option today's PnL  
-user_exists | boolean | Optional |  | Whether the user has activated the service  
-margin_enabled | boolean | Optional |  | Whether margin financing is enabled  
-long_borrowing_rate | string | Optional |  | Annual margin financing interest rate. An empty string indicates that no valid rate is currently available.  
-      
-    
-    {
-      "data": {
-        "equity": "10000.12",
-        "balance": "8000",
-        "available": "6500.5",
-        "loan_amount": "0",
-        "buy_power": "13000",
-        "leverage": "2",
-        "leave_liquidity": "5000",
-        "leave_liquidity_rate": "0.5",
-        "aee": "4800",
-        "options_margin": "0",
-        "position_market_value": "1500.25",
-        "position_pnl": "12.5",
-        "today_pnl": "3.2",
-        "option_position_market_value": "0",
-        "option_position_pnl": "0",
-        "option_today_pnl": "0",
-        "user_exists": true,
-        "margin_enabled": true,
-        "long_borrowing_rate": "0.03"
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  TradfiSpotTransactionList
+##  OrderDealList
 
 Type | Constraints  
 ---|---  
@@ -4698,13 +4389,13 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-total | integer(int64) | Optional |  |   
-total_page | integer(int64) | Optional |  |   
-list | array | Optional |  | Transaction record list  
+total | integer(int64) | Optional |  | Total quantity  
+total_page | integer(int64) | Optional |  | Total pages  
+list | array | Optional |  | Trade records  
   
 **data / list**
 
-Transaction record list
+Trade records
 
 Type | Constraints  
 ---|---  
@@ -4720,26 +4411,28 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-asset | string | Optional |  | Asset  
+id | integer(int64) | Optional |  | Trade record primary key ID  
+deal_id | integer(int64) | Optional |  | Trade ID  
+order_id | integer(int64) | Optional |  | Order ID  
+client_order_id | string | Optional |  | Client-defined order ID  
+user_id | integer | Optional |  | User ID  
 symbol | string | Optional |  | Symbol  
-symbol_display | string | Optional |  | Symbol display name  
-type | string | Optional | enum: ["deposit","withdraw","fee","dividend","sell","buy","award","stock_transfer_in","stock_transfer_out"] | Transaction type.  
-\- deposit: Funds transfer in.  
-\- withdraw: Funds transfer out.  
-\- fee: Trading fee.  
-\- dividend: Dividend payout.  
-\- sell: Stock sale credit.  
-\- buy: Stock purchase debit.  
-\- award: Airdrop reward.  
-\- stock_transfer_in: Stock transfer in.  
-\- stock_transfer_out: Stock transfer out.  
-type_desc | string | Optional |  | Transaction type description  
-change | string | Optional |  | Change amount. A positive value means a credit, and a negative value means a debit.  
-balance | string | Optional |  | Balance after change  
-ref_id | string | Optional |  | Business idempotent ID  
-time | integer(int64) | Optional |  | Unix timestamp (seconds)  
-unit_text | string | Optional |  | Unit display text  
-detail | object | Optional | additionalProperties: true | Business details  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | Exchange.  
+\- us: US stocks.  
+\- hk: Hong Kong stocks.  
+\- kr: Korean stocks.  
+\- jp: Japanese stocks.  
+side | integer | Optional | enum: [1,2] | Side (1=sell, 2=buy)  
+role | string | Optional | enum: ["maker","taker"] | Liquidity role.  
+\- maker: Maker.  
+\- taker: Taker.  
+price | string | Optional |  | Trade price in the instrument trading currency  
+quantity | string | Optional |  | Trading size  
+position_qty | string | Optional |  | Position quantity after the trade  
+avg_entry_price | string | Optional |  | Average entry price  
+value | string | Optional |  | Trade value in the instrument trading currency  
+fx_rate | string | Optional |  | Quote currency to USD exchange rate  
+fee | string | Optional |  | Fee in the instrument trading currency  
       
     
     {
@@ -4755,7 +4448,7 @@ detail | object | Optional | additionalProperties: true | Business details
     
     
 
-##  TradfiSpotCreateTransaction
+##  ClosePosition
 
 Type | Constraints  
 ---|---  
@@ -4765,20 +4458,10 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-data | object | Optional | additionalProperties: false | Returns empty object on success  
+data | object | Optional |  |   
 timestamp | integer(int64) | Optional |  |   
-      
-    
-    {
-      "data": {},
-      "timestamp": 0
-    }
-    
-    
-
-##  TradFiSpotError
-
-TradFiSpotError
+  
+**data**
 
 Type | Constraints  
 ---|---  
@@ -4788,17 +4471,14 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-label | string | Optional |  | Business error label  
-message | string | Optional |  | Error message  
-data | object|null | Optional | nullable: true | Error additional data  
-timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
+order_id | integer(int64) | Optional |  | Close order ID  
       
     
     {
-      "label": "INVALID_ARGUMENT",
-      "message": "invalid argument",
-      "data": {},
-      "timestamp": 1783411200000
+      "data": {
+        "order_id": 123456
+      },
+      "timestamp": 0
     }
     
     
@@ -4931,59 +4611,7 @@ object |
     
     
 
-##  TradFiSpotClosePositionRequest
-
-Close position request parameters
-
-Type | Constraints  
----|---  
-object | required: ["symbol","close_type"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-symbol | string | Required |  | Symbol  
-close_volume | string | Optional |  | Close quantity; required for partial close  
-close_type | integer | Required | enum: [1,2] | Close type (1=partial close, 2=close all)  
-      
-    
-    {
-      "symbol": "AAPL",
-      "close_volume": "2",
-      "close_type": 1
-    }
-    
-    
-
-##  TradFiSpotTransactionRequest
-
-Fund transfer request parameters. Transfer in means moving funds from the spot account to the stock account; transfer out means moving funds from the stock account to the spot account.
-
-Type | Constraints  
----|---  
-object | required: ["asset","change","type","ref_id"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-asset | string | Required | enum: ["USDT"] | Asset, USDT only  
-change | string | Required |  | Change amount, must be greater than 0  
-type | string | Required | enum: ["deposit","withdraw"] | Transaction type. deposit transfers funds from the spot account to the stock account; withdraw transfers funds from the stock account to the spot account.  
-ref_id | string | Required |  | Business idempotent ID  
-      
-    
-    {
-      "asset": "USDT",
-      "change": "100",
-      "type": "deposit",
-      "ref_id": "transfer-202607070001"
-    }
-    
-    
-
-##  TradfiSpotCreateOrder
+##  TradfiSpotOrderBook
 
 Type | Constraints  
 ---|---  
@@ -5006,14 +4634,78 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-id | string | Optional |  | Order ID  
+symbol | string | Optional |  | Symbol  
+bids | array | Optional |  | Bid orders  
+asks | array | Optional |  | Ask orders  
+  
+**data / bids**
+
+Bid orders
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / bids / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+p | string | Optional |  | Price  
+user_order | boolean | Optional |  | Whether it is the user's own order  
+  
+**data / asks**
+
+Ask orders
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / asks / items**
+
+Type | Constraints  
+---|---  
+object |   
       
     
     {
       "data": {
-        "id": "123456"
+        "symbol": "AAPL",
+        "bids": [
+          {}
+        ],
+        "asks": [
+          {}
+        ]
       },
       "timestamp": 0
+    }
+    
+    
+
+##  TradFiSpotSetMarginFeatureRequest
+
+Request parameters for enabling or disabling margin financing
+
+Type | Constraints  
+---|---  
+object | required: ["margin_feature"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+margin_feature | boolean | Required |  | Whether to enable margin financing. true enables it; false disables it.  
+      
+    
+    {
+      "margin_feature": true
     }
     
     
@@ -5112,6 +4804,54 @@ slippage_rate | string | Optional |  | Slippage
     
     
 
+##  TradFiSpotError
+
+TradFiSpotError
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Optional |  | Business error label  
+message | string | Optional |  | Error message  
+data | object|null | Optional | nullable: true | Error additional data  
+timestamp | integer(int64) | Optional |  | Server timestamp (milliseconds)  
+      
+    
+    {
+      "label": "INVALID_ARGUMENT",
+      "message": "invalid argument",
+      "data": {},
+      "timestamp": 1783411200000
+    }
+    
+    
+
+##  TradfiSpotCreateTransaction
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional | additionalProperties: false | Returns empty object on success  
+timestamp | integer(int64) | Optional |  |   
+      
+    
+    {
+      "data": {},
+      "timestamp": 0
+    }
+    
+    
+
 ##  TradFiSpotOrderUpdateRequest
 
 Modify order request parameters
@@ -5131,4 +4871,264 @@ price | string | Required |  | Modified order price
     {
       "volume": "8",
       "price": "201.23"
+    }
+    
+    
+
+##  FeeRate
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+list | array | Optional |  |   
+  
+**data / list**
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+vip_level | integer | Optional |  | VIP level  
+maker_fee | string | Optional |  | Maker fee rate for Japanese and Korean stocks  
+taker_fee | string | Optional |  | Taker fee rate for Japanese and Korean stocks  
+      
+    
+    {
+      "data": {
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradfiSpotOrderList
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+list | array | Optional |  | Query active order list  
+  
+**data / list**
+
+Query active order list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Optional |  | Order ID  
+symbol | string | Optional |  | Symbol  
+exchange | string | Optional | enum: ["us","hk","kr","jp"] | Exchange.  
+\- us: US stocks.  
+\- hk: Hong Kong stocks.  
+\- kr: Korean stocks.  
+\- jp: Japanese stocks.  
+quote_currency | string | Optional |  | Quote currency  
+fx_rate | string | Optional |  | Quote currency to USD exchange rate  
+symbol_desc | string | Optional |  | Symbol description  
+trade_status | string | Optional | enum: ["pre_market","open","post_market"] | Trading status.  
+\- pre_market: Pre-market.  
+\- open: Regular trading session.  
+\- post_market: Post-market.  
+trade_mode | integer | Optional | enum: [0,1,2,4,5] | Current session trading mode.  
+\- 0: Trading disabled.  
+\- 1: Buy only.  
+\- 2: Sell only.  
+\- 4: Buy and sell supported.  
+\- 5: Trading suspended.  
+price_type | string | Optional | enum: ["market","limit"] | Price type (market = market order, limit = limit order)  
+side | integer | Optional | enum: [1,2] | Side (1=sell, 2=buy)  
+status | integer | Optional | enum: [0,1,2,3,4,5,6,7,8] | Order status.  
+\- 0: Unknown.  
+\- 1: New order; the order has been validated and is waiting to be processed.  
+\- 2: Partially filled.  
+\- 3: Filled.  
+\- 4: Canceled.  
+\- 5: Order rejected.  
+\- 6: Cancellation rejected.  
+\- 7: Order update succeeded.  
+\- 8: Order update rejected.  
+volume | string | Optional |  | Order quantity  
+fill_volume | string | Optional |  | Trading size  
+price | string | Optional |  | Order price  
+time_setup | integer(int64) | Optional |  | Order creation time (Unix timestamp, seconds)  
+time_update | integer(int64) | Optional |  | Order update time (Unix timestamp, seconds)  
+max_order_volume | string | Optional |  | Maximum order quantity  
+step_order_volume | string | Optional |  | Order step size  
+min_order_volume | string | Optional |  | Minimum order quantity  
+price_precision | integer | Optional |  | Price precision  
+price_protection | string | Optional |  | Price protection range  
+sell_price_protection | string | Optional |  | Sell price protection rate  
+buy_price_protection | string | Optional |  | Buy price protection rate  
+commission_rate | string | Optional |  | Fee Rate  
+slippage_rate | string | Optional |  | Slippage  
+      
+    
+    {
+      "data": {
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradfiSpotTransactionList
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional |  |   
+timestamp | integer(int64) | Optional |  |   
+  
+**data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional |  |   
+total_page | integer(int64) | Optional |  |   
+list | array | Optional |  | Transaction record list  
+  
+**data / list**
+
+Transaction record list
+
+Type | Constraints  
+---|---  
+array |   
+  
+**data / list / items**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+asset | string | Optional |  | Asset  
+symbol | string | Optional |  | Symbol  
+symbol_display | string | Optional |  | Symbol display name  
+type | string | Optional | enum: ["deposit","withdraw","fee","dividend","sell","buy","award","stock_transfer_in","stock_transfer_out"] | Transaction type.  
+\- deposit: Funds transfer in.  
+\- withdraw: Funds transfer out.  
+\- fee: Trading fee.  
+\- dividend: Dividend payout.  
+\- sell: Stock sale credit.  
+\- buy: Stock purchase debit.  
+\- award: Airdrop reward.  
+\- stock_transfer_in: Stock transfer in.  
+\- stock_transfer_out: Stock transfer out.  
+type_desc | string | Optional |  | Transaction type description  
+change | string | Optional |  | Change amount. A positive value means a credit, and a negative value means a debit.  
+balance | string | Optional |  | Balance after change  
+ref_id | string | Optional |  | Business idempotent ID  
+time | integer(int64) | Optional |  | Unix timestamp (seconds)  
+unit_text | string | Optional |  | Unit display text  
+detail | object | Optional | additionalProperties: true | Business details  
+      
+    
+    {
+      "data": {
+        "total": 0,
+        "total_page": 0,
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  SetMarginFeature
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Optional | additionalProperties: false | Returns empty object on success  
+timestamp | integer(int64) | Optional |  |   
+      
+    
+    {
+      "data": {},
+      "timestamp": 0
     }

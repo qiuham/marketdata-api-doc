@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-common-vsubaccount
 api_type: REST
-updated_at: 2026-11-19 19:07:46.369855
+updated_at: 2026-11-20 19:01:55.340515
 ---
 
 # Classic Virtual Subaccount API

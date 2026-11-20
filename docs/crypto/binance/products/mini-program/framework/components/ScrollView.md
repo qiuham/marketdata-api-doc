@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/ScrollView
 api_type: Guide
-updated_at: 2026-11-19 18:44:46.861559
+updated_at: 2026-11-20 18:43:48.250735
 ---
 
 # scroll-view

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/network/downloadFile
 api_type: Guide
-updated_at: 2026-11-19 18:47:36.754627
+updated_at: 2026-11-20 18:46:31.122371
 ---
 
 # bn.downloadFile

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/fund-account/introduction
 api_type: Guide
-updated_at: 2026-11-19 18:32:54.800033
+updated_at: 2026-11-20 18:32:32.965323
 ---
 
 # Introduction

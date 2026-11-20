@@ -10,7 +10,7 @@ provider_name: Hyperliquid
 product: api
 product_id: hyperliquid
 source_url: 'https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint/perpetuals'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Perpetuals

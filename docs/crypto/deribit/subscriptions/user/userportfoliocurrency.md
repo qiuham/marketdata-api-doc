@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/user/userportfoliocurrency
 api_type: WebSocket
-updated_at: 2026-11-19 19:05:36.956262
+updated_at: 2026-11-20 19:00:10.489348
 ---
 
 # user.portfolio.(currency)

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/stockoptions
 api_type: REST
-updated_at: 2026-11-19 19:01:04.885731
+updated_at: 2026-11-20 18:57:11.931560
 ---
 
 # Stock options
@@ -3096,38 +3096,7 @@ Code samples
 
 #  Schemas
 
-##  StockOptionClosePositionRequest
-
-`order_type` is optional. Omitted or empty values close at market; only `market` and `limit` are supported.
-
-Type | Constraints  
----|---  
-object | required: ["symbol","quantity"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-symbol | string | Required |  | Option contract symbol to close, with an available position.  
-quantity | string | Required |  | Quantity to close as a positive decimal string. Must not exceed the available position and must satisfy the contract's minimum, maximum and quantity increment rules.  
-order_type | string | Optional | enum: ["market","limit"] | Order type.  
-\- market: Market order, executed at available market prices.  
-\- limit: Limit order, requiring price.  
-price | string | Optional |  | Positive limit closing price as a plain decimal string, up to 64 characters, without scientific notation. Ignored for market closing orders.  
-client_order_id | string | Optional |  | Custom closing order identifier. Generated automatically when omitted or whitespace-only.  
-      
-    
-    {
-      "symbol": "string",
-      "quantity": "string",
-      "order_type": "market",
-      "price": "1.00",
-      "client_order_id": "string"
-    }
-    
-    
-
-##  StockOptionCancelAllOrdersResponse
+##  StockOptionOrderHistoryResponse
 
 Type | Constraints  
 ---|---  
@@ -3170,75 +3139,6 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-success | boolean | Optional |  | Whether the cancellation request succeeded.  
-      
-    
-    {
-      "label": "",
-      "message": "invalid argument",
-      "data": {
-        "success": true
-      },
-      "timestamp": 1785919118845
-    }
-    
-    
-
-##  StockOptionUpdateOrderRequest
-
-Type | Constraints  
----|---  
-object | required: ["price","quantity"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-price | string | Required |  | New limit price, required, as a positive plain decimal string up to 64 characters, without scientific notation.  
-quantity | string | Required |  | New total order quantity as a positive decimal string, not the remaining unfilled quantity. Must be at least filled_quantity.  
-      
-    
-    {
-      "price": "1.25",
-      "quantity": "2"
-    }
-    
-    
-
-##  StockOptionContractListResponse
-
-Type | Constraints  
----|---  
-allOf |   
-  
-**allOf[0]**
-
-Type | Constraints  
----|---  
-object | required: ["label","data","timestamp"]  
-  
-**allOf[1]**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-data | object | Required |  |   
-  
-**allOf[1] / data**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
 total | integer(int64) | Optional |  | Total number of matching records.  
 total_page | integer | Optional |  | Total number of pages.  
 list | array | Optional |  | List of query results.  
@@ -3253,6 +3153,8 @@ array |
   
 **allOf[1] / data / list / items**
 
+Finished orders, including only filled, cancelled and rejected terminal orders.
+
 Type | Constraints  
 ---|---  
 object |   
@@ -3261,30 +3163,32 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
+order_id | string | Optional |  | Order ID.  
 symbol | string | Optional |  | Full option contract symbol.  
 symbol_display | string | Optional |  | Option contract name for display.  
 underlying | string | Optional |  | Option underlying symbol.  
-exchange | string | Optional |  | Trading market.  
-expiration_date | string(date) | Optional |  | Option expiration date in YYYY-MM-DD format.  
-settlement_date | string(date) | Optional |  | Option settlement date in YYYY-MM-DD format.  
-strike_price | string | Optional |  | Strike price.  
-option_type | string | Optional | enum: ["call","put"] | Option type.  
-\- call: Call option.  
-\- put: Put option.  
-multiplier | string | Optional |  | Contract multiplier.  
-open_interest | string | Optional |  | Open interest.  
-quote_currency | string | Optional |  | Quote currency.  
-settlement_type | string | Optional |  | Settlement type.  
-trade_status | string | Optional | enum: ["open","closed"] | Current contract trading status.  
-\- open: Within trading hours, with both the contract and underlying tradable.  
-\- closed: Not tradable, including outside trading hours, an inactive contract or a disabled underlying.  
-trade_mode | integer | Optional | enum: [0,4] | Current trading mode.  
-\- 0: Trading disabled.  
-\- 4: Buying and selling allowed; regular accounts still require sufficient available long positions to sell.  
-price_precision | integer | Optional |  | Number of decimal places for prices.  
-min_order_volume | string | Optional |  | Minimum order quantity.  
-max_order_volume | string | Optional |  | Maximum order quantity.  
-step_order_volume | string | Optional |  | Order quantity increment.  
+side | integer | Optional | enum: [1,2] | Order side.  
+\- 1: Sell.  
+\- 2: Buy.  
+order_type | string | Optional | enum: ["market","limit"] | Order type.  
+\- market: Market order, executed at available market prices.  
+\- limit: Limit order, requiring price.  
+status | integer | Optional | enum: [3,4,5] | Historical order status:  
+\- 3: Filled.  
+\- 4: Cancelled; the order may have been partially filled.  
+\- 5: Rejected.  
+status_desc | string | Optional |  | Human-readable order status description in the requested language.  
+time_in_force | string | Optional | enum: ["day","gtc"] | Time in force. Limit orders support day and gtc; market orders support only day.  
+\- day: Valid for the day; the unfilled portion is cancelled when that day's validity period ends.  
+\- gtc: Good until cancelled.  
+Closing orders always use day.  
+quantity | string | Optional |  | Order quantity.  
+filled_quantity | string | Optional |  | Filled quantity.  
+price | string | Optional |  | Order price.  
+time_setup | integer(int64) | Optional |  | Order creation time.  
+avg_fill_price | string | Optional |  | Average fill price.  
+fee | string | Optional |  | Trading fee.  
+time_done | integer(int64) | Optional |  | Order completion time.  
       
     
     {
@@ -3302,7 +3206,53 @@ step_order_volume | string | Optional |  | Order quantity increment.
     
     
 
-##  StockOptionExpirationListResponse
+##  StockOptionPositionPnlPriceType
+
+Price type for position PnL.
+
+  * latest: Last traded price; used when omitted or empty.
+  * mark: Mark price.
+
+Type | Constraints  
+---|---  
+string | default: "latest"  
+  
+**Enumerated Values**
+
+Value  
+---  
+"latest"  
+"mark"  
+      
+    
+    "latest"
+    
+    
+
+##  StockOptionOptionType
+
+Option type.
+
+  * call: Call option.
+  * put: Put option.
+
+Type | Constraints  
+---|---  
+string |   
+  
+**Enumerated Values**
+
+Value  
+---  
+"call"  
+"put"  
+      
+    
+    "call"
+    
+    
+
+##  StockOptionOrderBookResponse
 
 Type | Constraints  
 ---|---  
@@ -3336,18 +3286,20 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-underlying | string | Optional |  | Option underlying symbol.  
-list | array | Optional |  | List of query results.  
+symbol | string | Optional |  | Full option contract symbol.  
+symbol_display | string | Optional |  | Option contract name for display.  
+bids | array | Optional |  | Bid prices; at most one level, or an empty array when no quote is available.  
+asks | array | Optional |  | Ask prices; at most one level, or an empty array when no quote is available.  
   
-**allOf[1] / data / list**
+**allOf[1] / data / bids**
 
-List of query results.
+Bid prices; at most one level, or an empty array when no quote is available.
 
 Type | Constraints  
 ---|---  
 array |   
   
-**allOf[1] / data / list / items**
+**allOf[1] / data / bids / items**
 
 Type | Constraints  
 ---|---  
@@ -3357,20 +3309,65 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-expiration_date | string(date) | Optional |  | Option expiration date in YYYY-MM-DD format.  
-expiration_date_ts | integer(int64) | Optional |  | Unix timestamp of the expiration date.  
+price | string | Optional |  | Quoted price.  
+  
+**allOf[1] / data / asks**
+
+Ask prices; at most one level, or an empty array when no quote is available.
+
+Type | Constraints  
+---|---  
+array |   
+  
+**allOf[1] / data / asks / items**
+
+Type | Constraints  
+---|---  
+object |   
       
     
     {
       "label": "",
       "message": "invalid argument",
       "data": {
-        "underlying": "string",
-        "list": [
+        "symbol": "string",
+        "symbol_display": "string",
+        "bids": [
+          {}
+        ],
+        "asks": [
           {}
         ]
       },
       "timestamp": 1785919118845
+    }
+    
+    
+
+##  StockOptionCancelAllOrdersRequest
+
+Filters for cancelling limit orders in bulk. side is 1 (sell) or 2 (buy); omit it to include both sides.
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+underlying | string | Optional |  | Option underlying symbol. Empty or omitted values disable underlying filtering.  
+symbol | string | Optional |  | Option contract symbol. Empty or omitted values disable contract filtering.  
+side | integer | Optional | enum: [1,2] | Order side filter.  
+Omit to query both sides.  
+\- 1: Sell orders only.  
+\- 2: Buy orders only.  
+      
+    
+    {
+      "underlying": "AAPL",
+      "symbol": "string",
+      "side": 1
     }
     
     
@@ -3468,13 +3465,131 @@ trade_mode | integer | Optional | enum: [0,4] | Current trading mode.
       "message": "invalid argument",
       "data": {
         "underlying": "string",
-        "expiration_date": "2026-11-19",
+        "expiration_date": "2026-11-20",
         "expiration_date_ts": 0,
         "index_price": "string",
         "list": [
           {}
         ]
       },
+      "timestamp": 1785919118845
+    }
+    
+    
+
+##  StockOptionOrderListResponse
+
+Type | Constraints  
+---|---  
+allOf |   
+  
+**allOf[0]**
+
+Type | Constraints  
+---|---  
+object | required: ["label","data","timestamp"]  
+  
+**allOf[1]**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Required |  |   
+  
+**allOf[1] / data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+list | array | Optional |  | List of query results.  
+  
+**allOf[1] / data / list**
+
+List of query results.
+
+Type | Constraints  
+---|---  
+array |   
+  
+**allOf[1] / data / list / items**
+
+Current unfinished orders, excluding filled, cancelled and rejected terminal orders.
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Optional |  | Order ID.  
+symbol | string | Optional |  | Full option contract symbol.  
+symbol_display | string | Optional |  | Option contract name for display.  
+underlying | string | Optional |  | Option underlying symbol.  
+side | integer | Optional | enum: [1,2] | Order side.  
+\- 1: Sell.  
+\- 2: Buy.  
+order_type | string | Optional | enum: ["market","limit"] | Order type.  
+\- market: Market order, executed at available market prices.  
+\- limit: Limit order, requiring price.  
+status | integer | Optional | enum: [1,2] | Current order status:  
+\- 1: New, validated and awaiting processing.  
+\- 2: Partially filled, with a remaining unfilled quantity.  
+status_desc | string | Optional |  | Human-readable order status description in the requested language.  
+time_in_force | string | Optional | enum: ["day","gtc"] | Time in force. Limit orders support day and gtc; market orders support only day.  
+\- day: Valid for the day; the unfilled portion is cancelled when that day's validity period ends.  
+\- gtc: Good until cancelled.  
+Closing orders always use day.  
+quantity | string | Optional |  | Order quantity.  
+filled_quantity | string | Optional |  | Filled quantity.  
+price | string | Optional |  | Order price.  
+time_setup | integer(int64) | Optional |  | Order creation time.  
+      
+    
+    {
+      "label": "",
+      "message": "invalid argument",
+      "data": {
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 1785919118845
+    }
+    
+    
+
+##  StockOptionApiResponse
+
+Type | Constraints  
+---|---  
+object | required: ["label","data","timestamp"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+label | string | Required |  | Business error label. Empty on successful requests.  
+message | string | Optional |  | Error message. Omitted on successful requests.  
+data | any|null | Required | nullable: true | Business response data.  
+timestamp | integer(int64) | Required |  | Server timestamp in milliseconds.  
+      
+    
+    {
+      "label": "",
+      "message": "invalid argument",
+      "data": null,
       "timestamp": 1785919118845
     }
     
@@ -3528,45 +3643,7 @@ order_id | string | Optional |  | Order ID.
     
     
 
-##  StockOptionPutOrderRequest
-
-Type | Constraints  
----|---  
-object | required: ["symbol","side","order_type","time_in_force","quantity"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-symbol | string | Required |  | Full option contract symbol to trade, obtained from the contract list or option chain.  
-side | integer | Required | enum: [1,2] | Order side.  
-\- 1: Sell.  
-\- 2: Buy.  
-order_type | string | Required | enum: ["market","limit"] | Order type.  
-\- market: Market order, executed at available market prices.  
-\- limit: Limit order, requiring price.  
-time_in_force | string | Required | enum: ["day","gtc"] | Time in force. Limit orders support day and gtc; market orders support only day.  
-\- day: Valid for the day; the unfilled portion is cancelled when that day's validity period ends.  
-\- gtc: Good until cancelled.  
-Closing orders always use day.  
-price | string | Optional |  | Limit order price as a positive plain decimal string, up to 64 characters, without scientific notation. Required for limit orders and ignored for market orders.  
-quantity | string | Required |  | Order quantity as a positive decimal string within the contract's minimum and maximum order quantities.  
-client_order_id | string | Optional | maxLength: 30 | Optional custom order identifier, up to 30 UTF-8 bytes. Generated automatically when omitted or whitespace-only.  
-      
-    
-    {
-      "symbol": "AAPL260814P00130000",
-      "side": 1,
-      "order_type": "market",
-      "time_in_force": "day",
-      "price": "1.00",
-      "quantity": "1",
-      "client_order_id": "string"
-    }
-    
-    
-
-##  StockOptionOrderBookResponse
+##  StockOptionSymbolListResponse
 
 Type | Constraints  
 ---|---  
@@ -3600,20 +3677,17 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-symbol | string | Optional |  | Full option contract symbol.  
-symbol_display | string | Optional |  | Option contract name for display.  
-bids | array | Optional |  | Bid prices; at most one level, or an empty array when no quote is available.  
-asks | array | Optional |  | Ask prices; at most one level, or an empty array when no quote is available.  
+list | array | Optional |  | List of query results.  
   
-**allOf[1] / data / bids**
+**allOf[1] / data / list**
 
-Bid prices; at most one level, or an empty array when no quote is available.
+List of query results.
 
 Type | Constraints  
 ---|---  
 array |   
   
-**allOf[1] / data / bids / items**
+**allOf[1] / data / list / items**
 
 Type | Constraints  
 ---|---  
@@ -3623,33 +3697,42 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-price | string | Optional |  | Quoted price.  
+underlying | string | Optional |  | Option underlying symbol.  
+description | string | Optional |  | Underlying description.  
+descs | array | Optional |  | Underlying descriptions in multiple languages.  
+icon_link | string | Optional |  | Underlying icon URL.  
+price_precision | integer | Optional |  | Number of decimal places for prices.  
+min_order_volume | string | Optional |  | Minimum order quantity.  
+max_order_volume | string | Optional |  | Maximum order quantity.  
+step_order_volume | string | Optional |  | Order quantity increment.  
   
-**allOf[1] / data / asks**
+**allOf[1] / data / list / items / descs**
 
-Ask prices; at most one level, or an empty array when no quote is available.
+Underlying descriptions in multiple languages.
 
 Type | Constraints  
 ---|---  
 array |   
   
-**allOf[1] / data / asks / items**
+**allOf[1] / data / list / items / descs / items**
 
 Type | Constraints  
 ---|---  
 object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+lang | string | Optional |  | Language code.  
+value | string | Optional |  | Underlying description in this language.  
       
     
     {
       "label": "",
       "message": "invalid argument",
       "data": {
-        "symbol": "string",
-        "symbol_display": "string",
-        "bids": [
-          {}
-        ],
-        "asks": [
+        "list": [
           {}
         ]
       },
@@ -3716,299 +3799,6 @@ cat | string | Optional |  | CAT fee.
         "occ": "0.025",
         "orf": "0.012",
         "cat": "0.0003"
-      },
-      "timestamp": 1785919118845
-    }
-    
-    
-
-##  StockOptionApiResponse
-
-Type | Constraints  
----|---  
-object | required: ["label","data","timestamp"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-label | string | Required |  | Business error label. Empty on successful requests.  
-message | string | Optional |  | Error message. Omitted on successful requests.  
-data | any|null | Required | nullable: true | Business response data.  
-timestamp | integer(int64) | Required |  | Server timestamp in milliseconds.  
-      
-    
-    {
-      "label": "",
-      "message": "invalid argument",
-      "data": null,
-      "timestamp": 1785919118845
-    }
-    
-    
-
-##  StockOptionCancelOrderResponse
-
-Type | Constraints  
----|---  
-allOf |   
-  
-**allOf[0]**
-
-Type | Constraints  
----|---  
-object | required: ["label","data","timestamp"]  
-  
-**allOf[1]**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-data | object | Required |  |   
-  
-**allOf[1] / data**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-id | string | Optional |  | Order ID.  
-      
-    
-    {
-      "label": "",
-      "message": "invalid argument",
-      "data": {
-        "id": "string"
-      },
-      "timestamp": 1785919118845
-    }
-    
-    
-
-##  StockOptionOrderHistoryResponse
-
-Type | Constraints  
----|---  
-allOf |   
-  
-**allOf[0]**
-
-Type | Constraints  
----|---  
-object | required: ["label","data","timestamp"]  
-  
-**allOf[1]**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-data | object | Required |  |   
-  
-**allOf[1] / data**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-total | integer(int64) | Optional |  | Total number of matching records.  
-total_page | integer | Optional |  | Total number of pages.  
-list | array | Optional |  | List of query results.  
-  
-**allOf[1] / data / list**
-
-List of query results.
-
-Type | Constraints  
----|---  
-array |   
-  
-**allOf[1] / data / list / items**
-
-Finished orders, including only filled, cancelled and rejected terminal orders.
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-order_id | string | Optional |  | Order ID.  
-symbol | string | Optional |  | Full option contract symbol.  
-symbol_display | string | Optional |  | Option contract name for display.  
-underlying | string | Optional |  | Option underlying symbol.  
-side | integer | Optional | enum: [1,2] | Order side.  
-\- 1: Sell.  
-\- 2: Buy.  
-order_type | string | Optional | enum: ["market","limit"] | Order type.  
-\- market: Market order, executed at available market prices.  
-\- limit: Limit order, requiring price.  
-status | integer | Optional | enum: [3,4,5] | Historical order status:  
-\- 3: Filled.  
-\- 4: Cancelled; the order may have been partially filled.  
-\- 5: Rejected.  
-status_desc | string | Optional |  | Human-readable order status description in the requested language.  
-time_in_force | string | Optional | enum: ["day","gtc"] | Time in force. Limit orders support day and gtc; market orders support only day.  
-\- day: Valid for the day; the unfilled portion is cancelled when that day's validity period ends.  
-\- gtc: Good until cancelled.  
-Closing orders always use day.  
-quantity | string | Optional |  | Order quantity.  
-filled_quantity | string | Optional |  | Filled quantity.  
-price | string | Optional |  | Order price.  
-time_setup | integer(int64) | Optional |  | Order creation time.  
-avg_fill_price | string | Optional |  | Average fill price.  
-fee | string | Optional |  | Trading fee.  
-time_done | integer(int64) | Optional |  | Order completion time.  
-      
-    
-    {
-      "label": "",
-      "message": "invalid argument",
-      "data": {
-        "total": 0,
-        "total_page": 0,
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 1785919118845
-    }
-    
-    
-
-##  StockOptionPutOrderResponse
-
-Type | Constraints  
----|---  
-allOf |   
-  
-**allOf[0]**
-
-Type | Constraints  
----|---  
-object | required: ["label","data","timestamp"]  
-  
-**allOf[1]**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-data | object | Required |  |   
-  
-**allOf[1] / data**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-id | string | Optional |  | Order ID.  
-      
-    
-    {
-      "label": "",
-      "message": "invalid argument",
-      "data": {
-        "id": "string"
-      },
-      "timestamp": 1785919118845
-    }
-    
-    
-
-##  StockOptionOrderListSide
-
-Order side filter. Omit to query both sides.
-
-  * 1: Sell orders only.
-  * 2: Buy orders only.
-
-Type | Constraints  
----|---  
-integer |   
-  
-**Enumerated Values**
-
-Value  
----  
-1  
-2  
-      
-    
-    1
-    
-    
-
-##  StockOptionUpdateOrderResponse
-
-Type | Constraints  
----|---  
-allOf |   
-  
-**allOf[0]**
-
-Type | Constraints  
----|---  
-object | required: ["label","data","timestamp"]  
-  
-**allOf[1]**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-data | object | Required |  |   
-  
-**allOf[1] / data**
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-id | string | Optional |  | Order ID.  
-      
-    
-    {
-      "label": "",
-      "message": "invalid argument",
-      "data": {
-        "id": "string"
       },
       "timestamp": 1785919118845
     }
@@ -4123,7 +3913,7 @@ step_order_volume | string | Optional |  | Order quantity increment.
     
     
 
-##  StockOptionSymbolListResponse
+##  StockOptionContractListResponse
 
 Type | Constraints  
 ---|---  
@@ -4157,6 +3947,8 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
+total | integer(int64) | Optional |  | Total number of matching records.  
+total_page | integer | Optional |  | Total number of pages.  
 list | array | Optional |  | List of query results.  
   
 **allOf[1] / data / list**
@@ -4177,24 +3969,60 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
+symbol | string | Optional |  | Full option contract symbol.  
+symbol_display | string | Optional |  | Option contract name for display.  
 underlying | string | Optional |  | Option underlying symbol.  
-description | string | Optional |  | Underlying description.  
-descs | array | Optional |  | Underlying descriptions in multiple languages.  
-icon_link | string | Optional |  | Underlying icon URL.  
+exchange | string | Optional |  | Trading market.  
+expiration_date | string(date) | Optional |  | Option expiration date in YYYY-MM-DD format.  
+settlement_date | string(date) | Optional |  | Option settlement date in YYYY-MM-DD format.  
+strike_price | string | Optional |  | Strike price.  
+option_type | string | Optional | enum: ["call","put"] | Option type.  
+\- call: Call option.  
+\- put: Put option.  
+multiplier | string | Optional |  | Contract multiplier.  
+open_interest | string | Optional |  | Open interest.  
+quote_currency | string | Optional |  | Quote currency.  
+settlement_type | string | Optional |  | Settlement type.  
+trade_status | string | Optional | enum: ["open","closed"] | Current contract trading status.  
+\- open: Within trading hours, with both the contract and underlying tradable.  
+\- closed: Not tradable, including outside trading hours, an inactive contract or a disabled underlying.  
+trade_mode | integer | Optional | enum: [0,4] | Current trading mode.  
+\- 0: Trading disabled.  
+\- 4: Buying and selling allowed; regular accounts still require sufficient available long positions to sell.  
 price_precision | integer | Optional |  | Number of decimal places for prices.  
 min_order_volume | string | Optional |  | Minimum order quantity.  
 max_order_volume | string | Optional |  | Maximum order quantity.  
 step_order_volume | string | Optional |  | Order quantity increment.  
-  
-**allOf[1] / data / list / items / descs**
+      
+    
+    {
+      "label": "",
+      "message": "invalid argument",
+      "data": {
+        "total": 0,
+        "total_page": 0,
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 1785919118845
+    }
+    
+    
 
-Underlying descriptions in multiple languages.
+##  StockOptionCancelAllOrdersResponse
 
 Type | Constraints  
 ---|---  
-array |   
+allOf |   
   
-**allOf[1] / data / list / items / descs / items**
+**allOf[0]**
+
+Type | Constraints  
+---|---  
+object | required: ["label","data","timestamp"]  
+  
+**allOf[1]**
 
 Type | Constraints  
 ---|---  
@@ -4204,19 +4032,59 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-lang | string | Optional |  | Language code.  
-value | string | Optional |  | Underlying description in this language.  
+data | object | Required |  |   
+  
+**allOf[1] / data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+success | boolean | Optional |  | Whether the cancellation request succeeded.  
       
     
     {
       "label": "",
       "message": "invalid argument",
       "data": {
-        "list": [
-          {}
-        ]
+        "success": true
       },
       "timestamp": 1785919118845
+    }
+    
+    
+
+##  StockOptionClosePositionRequest
+
+`order_type` is optional. Omitted or empty values close at market; only `market` and `limit` are supported.
+
+Type | Constraints  
+---|---  
+object | required: ["symbol","quantity"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Option contract symbol to close, with an available position.  
+quantity | string | Required |  | Quantity to close as a positive decimal string. Must not exceed the available position and must satisfy the contract's minimum, maximum and quantity increment rules.  
+order_type | string | Optional | enum: ["market","limit"] | Order type.  
+\- market: Market order, executed at available market prices.  
+\- limit: Limit order, requiring price.  
+price | string | Optional |  | Positive limit closing price as a plain decimal string, up to 64 characters, without scientific notation. Ignored for market closing orders.  
+client_order_id | string | Optional |  | Custom closing order identifier. Generated automatically when omitted or whitespace-only.  
+      
+    
+    {
+      "symbol": "string",
+      "quantity": "string",
+      "order_type": "market",
+      "price": "1.00",
+      "client_order_id": "string"
     }
     
     
@@ -4314,81 +4182,7 @@ time_done | integer(int64) | Optional |  | Order completion time.
     
     
 
-##  StockOptionOptionType
-
-Option type.
-
-  * call: Call option.
-  * put: Put option.
-
-Type | Constraints  
----|---  
-string |   
-  
-**Enumerated Values**
-
-Value  
----  
-"call"  
-"put"  
-      
-    
-    "call"
-    
-    
-
-##  StockOptionPositionPnlPriceType
-
-Price type for position PnL.
-
-  * latest: Last traded price; used when omitted or empty.
-  * mark: Mark price.
-
-Type | Constraints  
----|---  
-string | default: "latest"  
-  
-**Enumerated Values**
-
-Value  
----  
-"latest"  
-"mark"  
-      
-    
-    "latest"
-    
-    
-
-##  StockOptionCancelAllOrdersRequest
-
-Filters for cancelling limit orders in bulk. side is 1 (sell) or 2 (buy); omit it to include both sides.
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-underlying | string | Optional |  | Option underlying symbol. Empty or omitted values disable underlying filtering.  
-symbol | string | Optional |  | Option contract symbol. Empty or omitted values disable contract filtering.  
-side | integer | Optional | enum: [1,2] | Order side filter.  
-Omit to query both sides.  
-\- 1: Sell orders only.  
-\- 2: Buy orders only.  
-      
-    
-    {
-      "underlying": "AAPL",
-      "symbol": "string",
-      "side": 1
-    }
-    
-    
-
-##  StockOptionOrderListResponse
+##  StockOptionCancelOrderResponse
 
 Type | Constraints  
 ---|---  
@@ -4422,6 +4216,233 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
+id | string | Optional |  | Order ID.  
+      
+    
+    {
+      "label": "",
+      "message": "invalid argument",
+      "data": {
+        "id": "string"
+      },
+      "timestamp": 1785919118845
+    }
+    
+    
+
+##  StockOptionOrderListSide
+
+Order side filter. Omit to query both sides.
+
+  * 1: Sell orders only.
+  * 2: Buy orders only.
+
+Type | Constraints  
+---|---  
+integer |   
+  
+**Enumerated Values**
+
+Value  
+---  
+1  
+2  
+      
+    
+    1
+    
+    
+
+##  StockOptionPutOrderResponse
+
+Type | Constraints  
+---|---  
+allOf |   
+  
+**allOf[0]**
+
+Type | Constraints  
+---|---  
+object | required: ["label","data","timestamp"]  
+  
+**allOf[1]**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Required |  |   
+  
+**allOf[1] / data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | string | Optional |  | Order ID.  
+      
+    
+    {
+      "label": "",
+      "message": "invalid argument",
+      "data": {
+        "id": "string"
+      },
+      "timestamp": 1785919118845
+    }
+    
+    
+
+##  StockOptionUpdateOrderResponse
+
+Type | Constraints  
+---|---  
+allOf |   
+  
+**allOf[0]**
+
+Type | Constraints  
+---|---  
+object | required: ["label","data","timestamp"]  
+  
+**allOf[1]**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Required |  |   
+  
+**allOf[1] / data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | string | Optional |  | Order ID.  
+      
+    
+    {
+      "label": "",
+      "message": "invalid argument",
+      "data": {
+        "id": "string"
+      },
+      "timestamp": 1785919118845
+    }
+    
+    
+
+##  StockOptionUpdateOrderRequest
+
+Type | Constraints  
+---|---  
+object | required: ["price","quantity"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+price | string | Required |  | New limit price, required, as a positive plain decimal string up to 64 characters, without scientific notation.  
+quantity | string | Required |  | New total order quantity as a positive decimal string, not the remaining unfilled quantity. Must be at least filled_quantity.  
+      
+    
+    {
+      "price": "1.25",
+      "quantity": "2"
+    }
+    
+    
+
+##  StockOptionPutOrderRequest
+
+Type | Constraints  
+---|---  
+object | required: ["symbol","side","order_type","time_in_force","quantity"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Full option contract symbol to trade, obtained from the contract list or option chain.  
+side | integer | Required | enum: [1,2] | Order side.  
+\- 1: Sell.  
+\- 2: Buy.  
+order_type | string | Required | enum: ["market","limit"] | Order type.  
+\- market: Market order, executed at available market prices.  
+\- limit: Limit order, requiring price.  
+time_in_force | string | Required | enum: ["day","gtc"] | Time in force. Limit orders support day and gtc; market orders support only day.  
+\- day: Valid for the day; the unfilled portion is cancelled when that day's validity period ends.  
+\- gtc: Good until cancelled.  
+Closing orders always use day.  
+price | string | Optional |  | Limit order price as a positive plain decimal string, up to 64 characters, without scientific notation. Required for limit orders and ignored for market orders.  
+quantity | string | Required |  | Order quantity as a positive decimal string within the contract's minimum and maximum order quantities.  
+client_order_id | string | Optional | maxLength: 30 | Optional custom order identifier, up to 30 UTF-8 bytes. Generated automatically when omitted or whitespace-only.  
+      
+    
+    {
+      "symbol": "AAPL260814P00130000",
+      "side": 1,
+      "order_type": "market",
+      "time_in_force": "day",
+      "price": "1.00",
+      "quantity": "1",
+      "client_order_id": "string"
+    }
+    
+    
+
+##  StockOptionExpirationListResponse
+
+Type | Constraints  
+---|---  
+allOf |   
+  
+**allOf[0]**
+
+Type | Constraints  
+---|---  
+object | required: ["label","data","timestamp"]  
+  
+**allOf[1]**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+data | object | Required |  |   
+  
+**allOf[1] / data**
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+underlying | string | Optional |  | Option underlying symbol.  
 list | array | Optional |  | List of query results.  
   
 **allOf[1] / data / list**
@@ -4434,8 +4455,6 @@ array |
   
 **allOf[1] / data / list / items**
 
-Current unfinished orders, excluding filled, cancelled and rejected terminal orders.
-
 Type | Constraints  
 ---|---  
 object |   
@@ -4444,34 +4463,15 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-order_id | string | Optional |  | Order ID.  
-symbol | string | Optional |  | Full option contract symbol.  
-symbol_display | string | Optional |  | Option contract name for display.  
-underlying | string | Optional |  | Option underlying symbol.  
-side | integer | Optional | enum: [1,2] | Order side.  
-\- 1: Sell.  
-\- 2: Buy.  
-order_type | string | Optional | enum: ["market","limit"] | Order type.  
-\- market: Market order, executed at available market prices.  
-\- limit: Limit order, requiring price.  
-status | integer | Optional | enum: [1,2] | Current order status:  
-\- 1: New, validated and awaiting processing.  
-\- 2: Partially filled, with a remaining unfilled quantity.  
-status_desc | string | Optional |  | Human-readable order status description in the requested language.  
-time_in_force | string | Optional | enum: ["day","gtc"] | Time in force. Limit orders support day and gtc; market orders support only day.  
-\- day: Valid for the day; the unfilled portion is cancelled when that day's validity period ends.  
-\- gtc: Good until cancelled.  
-Closing orders always use day.  
-quantity | string | Optional |  | Order quantity.  
-filled_quantity | string | Optional |  | Filled quantity.  
-price | string | Optional |  | Order price.  
-time_setup | integer(int64) | Optional |  | Order creation time.  
+expiration_date | string(date) | Optional |  | Option expiration date in YYYY-MM-DD format.  
+expiration_date_ts | integer(int64) | Optional |  | Unix timestamp of the expiration date.  
       
     
     {
       "label": "",
       "message": "invalid argument",
       "data": {
+        "underlying": "string",
         "list": [
           {}
         ]

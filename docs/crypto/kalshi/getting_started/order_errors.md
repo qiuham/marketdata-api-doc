@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/getting_started/order_errors'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Order Errors
@@ -43,7 +43,7 @@ A request body the API cannot parse, such as malformed JSON or a field of the wr
 }
 ```
 
-Read `error.code` first and fall back to a top-level `code`. A body that parses but omits a required field is the usual shape. Depending on the field, the code is `missing_parameters` or `invalid_order` (on Create Order, a missing `ticker` gives the first and a missing `side`, `count` or `price` the second), so handle both and read `details`.
+Read `error.code` first and fall back to a top-level `code`. A body that parses but omits a required field is the usual shape. Depending on the field, the code is `missing_parameters` or `invalid_order` (on Create Order, a missing `ticker` or `side` gives the first and a missing `count` or `price` the second), so handle both and read `details`. A `side` other than `bid` or `ask` returns `invalid_parameters`.
 
 > [!NOTE]
 >
@@ -172,6 +172,7 @@ To avoid this, send `market_ticker` on every cancel and decrease and leave `exch
 
 * `400 too_many_orders_in_batch`: the batch exceeds your tier's maximum. Every tier can send at least 20 entries; above that, the maximum is the number of default-cost orders your per-second Write budget covers.
 * `400 invalid_order`: any one order fails request validation, such as `reduce_only` without `immediate_or_cancel`, an `expiration_time` in milliseconds, a count that is not a valid quantity, or an empty `orders` array. An empty batch cancel returns `400 invalid_parameters`.
+* `400 missing_parameters` or `400 invalid_parameters`: any one order omits a required field such as `ticker` or `side`, or sends a `side` other than `bid` or `ask`.
 * `400` with a top-level `code`: the body cannot be parsed, as described at the top of this page.
 * `401` or `403 permission_denied`: the request is not authenticated, or the API key is not allowed to call the endpoint.
 * `400` or `403 subaccount_is_restricted_by_API_key`: any one entry names a subaccount that is out of range or that the API key is not allowed to use.

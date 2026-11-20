@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/setNavigationBarTitle
 api_type: Guide
-updated_at: 2026-11-19 18:48:59.414171
+updated_at: 2026-11-20 18:47:50.851163
 ---
 
 # bn.setNavigationBarTitle

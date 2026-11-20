@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-rest/account/get-perps-account-api-limits'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Get Perps Account API Limits

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/webhook-directdebit-contract
 api_type: Guide
-updated_at: 2026-11-19 18:35:09.909871
+updated_at: 2026-11-20 18:34:54.759653
 ---
 
 # Direct Debit/Pre Authorization Notification

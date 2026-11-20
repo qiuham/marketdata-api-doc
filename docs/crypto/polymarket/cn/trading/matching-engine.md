@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/trading/matching-engine'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # 撮合引擎重启

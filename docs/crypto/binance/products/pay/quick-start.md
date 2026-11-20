@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/pay/quick-start
 api_type: Guide
-updated_at: 2026-11-19 18:31:14.622701
+updated_at: 2026-11-20 18:31:04.415843
 ---
 
 # Quick Start

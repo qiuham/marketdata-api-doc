@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/network/createEventSource
 api_type: Guide
-updated_at: 2026-11-19 18:47:39.669186
+updated_at: 2026-11-20 18:46:34.195736
 ---
 
 # bn.createEventSource

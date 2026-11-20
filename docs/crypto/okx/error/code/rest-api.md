@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-rest-api
 anchor_id: error-code-rest-api
 api_type: REST
-updated_at: 2026-11-19 19:03:26.008593
+updated_at: 2026-11-20 18:59:12.748773
 ---
 
 # REST API
@@ -740,7 +740,7 @@ No
 
 No
 
-### Funding
+### Funding [error-code-rest-api-funding]
 
 Error Code from 58000 to 58999
 
@@ -869,6 +869,11 @@ identity verification.
 58382 | 200 | Unable to process unlock request. Please retry via the user interface.  
 58383 | 200 | Deposit record not found. Unable to process unlock request.  
 58384 | 200 | Per local regulations, please provide accurate sender information. For exchange addresses, please also provide the exchange information and sender identity details.  
+58385 | 200 | Travel Rule questionnaire response format is invalid  
+58386 | 200 | Missing required field in the Travel Rule questionnaire response  
+58387 | 200 | Invalid enum value, country, or date in the Travel Rule questionnaire response  
+58388 | 200 | Control test required, please complete it in App/Web  
+58389 | 200 | Unlocking unsuccessful, reach out to CS for further details  
 58400 | 200 | Request Failed  
 58401 | 200 | Payment method is not supported  
 58402 | 200 | Invalid payment account  
@@ -2047,6 +2052,11 @@ e.g. clOrdId 已存在
 58382 | 200 | 无法处理解锁请求，请通过用户界面重试  
 58383 | 200 | 未找到充值记录，无法处理解锁请求  
 58384 | 200 | 根据当地法规，请提供准确的发送方信息。对于交易所地址，请同时提供交易所信息和发送方身份详情  
+58385 | 200 | 国际转账规则问卷响应格式无效  
+58386 | 200 | 国际转账规则问卷响应缺少必填字段  
+58387 | 200 | 国际转账规则问卷响应中的枚举值、国家/地区或日期无效  
+58388 | 200 | 需要完成控制测试，请在 App/Web 中完成  
+58389 | 200 | 解锁未成功，请联系客户服务获取详情  
   
 ### 账户类 
 

@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/api-reference/unified-ws/positions'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Positions
@@ -323,7 +323,11 @@ The percentage gain or loss relative to the initial margin used in the position.
 
 **max\_fixed\_leverage** `float`
 
-The maximum allowed fixed leverage for the position's instrument.
+The fixed leverage of an isolated position. Absent for a cross-margined position, which reports `cross_max_leverage` instead when capped.
+
+**cross\_max\_leverage** `float`
+
+The maximum leverage of a capped cross-margined position. Absent when the position is isolated or its cross leverage is uncapped; a position never reports both `max_fixed_leverage` and `cross_max_leverage`.
 
 **pnl\_currency** `string`
 
@@ -464,6 +468,24 @@ A `snapshot_too_large` error is delivered in place of the data when the message 
                 "effective_leverage": 0.31865408963748215,
                 "return_on_equity": 5.553450159107747,
                 "max_fixed_leverage": 50,
+                "pnl_currency": "USD"
+            },
+            {
+                "tradeable": "PF_ETHUSD",
+                "size": -1.5,
+                "entry_price": 1612.4,
+                "mark_price": 1598.0535,
+                "index_price": 1598.11,
+                "fill_time": "2023-10-16T09:40:12.551200000Z",
+                "pnl": 21.51975,
+                "initial_margin": 479.41605,
+                "initial_margin_with_orders": 479.41605,
+                "maintenance_margin": 47.941605,
+                "unrealized_funding": -0.0012845,
+                "liquidation_threshold": 2317.81,
+                "effective_leverage": 0.63859184,
+                "return_on_equity": 0.04488744,
+                "cross_max_leverage": 5,
                 "pnl_currency": "USD"
             }
         ],

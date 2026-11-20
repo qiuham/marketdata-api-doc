@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/create-subuid
 api_type: REST
-updated_at: 2026-11-19 18:55:34.672362
+updated_at: 2026-11-20 18:53:08.650298
 ---
 
 # Create Sub UID

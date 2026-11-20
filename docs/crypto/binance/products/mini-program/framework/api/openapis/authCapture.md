@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/authCapture
 api_type: Guide
-updated_at: 2026-11-19 18:47:22.213636
+updated_at: 2026-11-20 18:46:17.526172
 ---
 
 # bn.authCapture

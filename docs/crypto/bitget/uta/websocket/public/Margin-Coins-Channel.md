@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/public/Margin-Coins-Channel
 api_type: WebSocket
-updated_at: 2026-11-19 19:07:30.881208
+updated_at: 2026-11-20 19:01:38.613762
 ---
 
 # Margin Coins Channel

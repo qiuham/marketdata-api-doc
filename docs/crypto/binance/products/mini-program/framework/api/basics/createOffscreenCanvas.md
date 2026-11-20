@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/createOffscreenCanvas
 api_type: Guide
-updated_at: 2026-11-19 18:51:03.987786
+updated_at: 2026-11-20 18:49:50.925258
 ---
 
 # bn.createOffscreenCanvas

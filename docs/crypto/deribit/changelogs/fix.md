@@ -2,12 +2,16 @@
 exchange: deribit
 source_url: https://docs.deribit.com/changelogs/fix
 api_type: Changelog
-updated_at: 2026-11-19 19:05:32.979556
+updated_at: 2026-11-20 19:00:09.974219
 ---
 
 # FIX API Changelog
 
 > Release notes for the Deribit FIX API covering new tags, message changes, session behavior updates, and backward-compatibility announcements.
+
+**Release 24.11.2026**
+
+`Market Data Incremental Refresh` (`X`) messages are now sent at most once every 10 ms per subscription. Changes within that window are merged into one message. After more than 10 ms without changes, the next change is still sent immediately. Under heavy traffic, updates can arrive up to about 15 ms later than before. Merged updates could already occur during periods of very high load.
 
 **Release 10.11.2026**
 

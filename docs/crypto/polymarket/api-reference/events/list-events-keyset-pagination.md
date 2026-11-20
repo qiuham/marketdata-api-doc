@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/events/list-events-keyset-pagination'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # List events (keyset pagination)

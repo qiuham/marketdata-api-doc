@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-options/general-info
 api_type: Guide
-updated_at: 2026-11-19 18:37:21.744844
+updated_at: 2026-11-20 18:33:20.688289
 ---
 
 # General Info

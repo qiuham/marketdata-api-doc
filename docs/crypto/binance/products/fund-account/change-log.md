@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/fund-account/change-log
 api_type: Changelog
-updated_at: 2026-11-19 18:32:56.274332
+updated_at: 2026-11-20 18:32:34.430274
 ---
 
 # Change Log

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/fix-api
 api_type: FIX
-updated_at: 2026-11-19 18:30:55.674366
+updated_at: 2026-11-20 18:30:44.111472
 ---
 
 # FIX API

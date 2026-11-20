@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Connect
 api_type: WebSocket
-updated_at: 2026-11-19 18:41:31.549282
+updated_at: 2026-11-20 18:40:45.126611
 ---
 
 # Websocket Market Streams

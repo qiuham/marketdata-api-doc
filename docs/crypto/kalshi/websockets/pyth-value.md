@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/websockets/pyth-value'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Pyth Value Feed

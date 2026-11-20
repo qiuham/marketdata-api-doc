@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/configuration
 api_type: Guide
-updated_at: 2026-11-19 18:40:11.301258
+updated_at: 2026-11-20 18:39:29.352707
 ---
 
 # Configuration

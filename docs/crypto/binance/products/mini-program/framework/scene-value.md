@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/scene-value
 api_type: Guide
-updated_at: 2026-11-19 18:39:52.122807
+updated_at: 2026-11-20 18:39:10.860100
 ---
 
 # Scene Value

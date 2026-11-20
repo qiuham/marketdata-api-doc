@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/user-response
 api_type: FIX
-updated_at: 2026-11-19 19:05:47.017080
+updated_at: 2026-11-20 19:00:11.312852
 ---
 
 # User Response(BF) (Production FIX API)

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/connectors/python
 api_type: Guide
-updated_at: 2026-11-19 18:28:49.395732
+updated_at: 2026-11-20 18:28:46.117488
 ---
 
 # Python

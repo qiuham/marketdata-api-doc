@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-get_ctn_id
 api_type: JSON-RPC
-updated_at: 2026-11-19 19:05:58.127641
+updated_at: 2026-11-20 19:00:15.592969
 ---
 
 # private/get_ctn_id

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/earnuni
 api_type: Earn
-updated_at: 2026-11-19 19:01:29.591742
+updated_at: 2026-11-20 18:57:35.899012
 ---
 
 # EarnUni
@@ -513,20 +513,22 @@ limit | 请求参数 | integer(int32) | 否 | 列表返回的最大数量。默�
 from | 请求参数 | integer(int64) | 否 | 起始时间戳  
   
 指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
+  
 to | 请求参数 | integer(int64) | 否 | 终止时间戳  
   
 指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
+  
 type | 请求参数 | string | 否 | 操作类型 ; lend - 借出 ， redeem - 赎回  
   
 ####  详细描述
 
 **from** : 起始时间戳  
   
-指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)
+指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
 
 **to** : 终止时间戳  
   
-指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳
+指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
 
 ####  枚举值列表
 
@@ -747,19 +749,21 @@ limit | 请求参数 | integer(int32) | 否 | 列表返回的最大数量。默�
 from | 请求参数 | integer(int64) | 否 | 起始时间戳  
   
 指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
+  
 to | 请求参数 | integer(int64) | 否 | 终止时间戳  
   
 指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
+  
   
 ####  详细描述
 
 **from** : 起始时间戳  
   
-指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)
+指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
 
 **to** : 终止时间戳  
   
-指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳
+指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
 
 ### 返回
 
@@ -1191,9 +1195,9 @@ WARNING
 
 #  模型
 
-##  UniLendRecord
+##  UniInterestRecord
 
-理财记录
+派息记录
 
 类型 | 约束  
 ---|---  
@@ -1203,46 +1207,21 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-currency | string | Optional | readOnly: true | 币种名称  
-amount | string | Optional | readOnly: true | 本次借出或赎回数量  
-last_wallet_amount | string | Optional | readOnly: true | 该记录之前待理财数量  
-last_lent_amount | string | Optional | readOnly: true | 该记录之前已借出数量  
-last_frozen_amount | string | Optional | readOnly: true | 该记录之前已冻结待待赎回数量  
-type | string | Optional | readOnly: true | 记录类型 lend - 借出 , redeem - 赎回  
+status | integer | Optional | readOnly: true | 状态 0 - 失败 , 1 - 成功  
+currency | string | Optional | readOnly: true | 币种  
+actual_rate | string | Optional | readOnly: true | 真实利率  
+interest | string | Optional | readOnly: true | 利息  
+interest_status | string | Optional | readOnly: true | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
 create_time | integer(int64) | Optional | readOnly: true | 创建时间戳  
       
     
     {
+      "status": 0,
       "currency": "string",
-      "amount": "string",
-      "last_wallet_amount": "string",
-      "last_lent_amount": "string",
-      "last_frozen_amount": "string",
-      "type": "string",
+      "actual_rate": "string",
+      "interest": "string",
+      "interest_status": "string",
       "create_time": 0
-    }
-    
-    
-
-##  UniLendInterest
-
-UniLendInterest
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-currency | string | Optional | readOnly: true | 币种  
-interest | string | Optional | readOnly: true | 利息收益  
-      
-    
-    {
-      "currency": "string",
-      "interest": "string"
     }
     
     
@@ -1309,9 +1288,9 @@ min_rate | string | Optional |  | 最低小时利率。
     
     
 
-##  UniInterestRecord
+##  UniLendInterest
 
-派息记录
+UniLendInterest
 
 类型 | 约束  
 ---|---  
@@ -1321,20 +1300,68 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-status | integer | Optional | readOnly: true | 状态 0 - 失败 , 1 - 成功  
 currency | string | Optional | readOnly: true | 币种  
-actual_rate | string | Optional | readOnly: true | 真实利率  
-interest | string | Optional | readOnly: true | 利息  
+interest | string | Optional | readOnly: true | 利息收益  
+      
+    
+    {
+      "currency": "string",
+      "interest": "string"
+    }
+    
+    
+
+##  UniCurrencyInterest
+
+UniCurrencyInterest
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | 币种  
 interest_status | string | Optional | readOnly: true | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
+      
+    
+    {
+      "currency": "string",
+      "interest_status": "string"
+    }
+    
+    
+
+##  UniLendRecord
+
+理财记录
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | 币种名称  
+amount | string | Optional | readOnly: true | 本次借出或赎回数量  
+last_wallet_amount | string | Optional | readOnly: true | 该记录之前待理财数量  
+last_lent_amount | string | Optional | readOnly: true | 该记录之前已借出数量  
+last_frozen_amount | string | Optional | readOnly: true | 该记录之前已冻结待待赎回数量  
+type | string | Optional | readOnly: true | 记录类型 lend - 借出 , redeem - 赎回  
 create_time | integer(int64) | Optional | readOnly: true | 创建时间戳  
       
     
     {
-      "status": 0,
       "currency": "string",
-      "actual_rate": "string",
-      "interest": "string",
-      "interest_status": "string",
+      "amount": "string",
+      "last_wallet_amount": "string",
+      "last_lent_amount": "string",
+      "last_frozen_amount": "string",
+      "type": "string",
       "create_time": 0
     }
     
@@ -1392,27 +1419,4 @@ min_rate | string | Optional |  | 最小利率，如设置过高可能导致借�
       "amount": "string",
       "type": "lend",
       "min_rate": "string"
-    }
-    
-    
-
-##  UniCurrencyInterest
-
-UniCurrencyInterest
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-currency | string | Optional | readOnly: true | 币种  
-interest_status | string | Optional | readOnly: true | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
-      
-    
-    {
-      "currency": "string",
-      "interest_status": "string"
     }

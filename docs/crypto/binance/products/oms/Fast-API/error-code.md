@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/oms/Fast-API/error-code
 api_type: Guide
-updated_at: 2026-11-19 18:39:08.194358
+updated_at: 2026-11-20 18:38:24.268962
 ---
 
 # API Error Code

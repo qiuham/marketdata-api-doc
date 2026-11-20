@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN
 api_type: REST
-updated_at: 2026-11-19 19:01:16.236158
+updated_at: 2026-11-20 18:57:22.990182
 ---
 
 # Gate API v4.106.184
@@ -1627,7 +1627,7 @@ DANGER
 
   * `GET /spot/batch_fee` 接口，返回值增加 `debit_fee` 字段
   * `DELETE /account/stp_groups/{stp_id}/users` 接口，新增 `user_id` 请求字段
-  * 现货API下单增加异步支持模式，`ACK`,`RESULT`,`FULL`，详情请见SPOT API
+  * 现货API下单增加异步支持模式，`ACK`,`RESULT`,`FULL`，详情请见[SPOT API](/docs/developers/apiv4/zh_CN/spot/#opIdcreateOrder)
 
 **v4.64.0**
 

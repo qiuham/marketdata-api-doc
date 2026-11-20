@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/rfqs/cancel-open-offer-on-open-rfq'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Cancel open offer on open RFQ

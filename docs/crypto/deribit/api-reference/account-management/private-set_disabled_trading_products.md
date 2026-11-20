@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-set_disabled_trading_products
 api_type: JSON-RPC
-updated_at: 2026-11-19 19:05:51.597979
+updated_at: 2026-11-20 19:00:13.034532
 ---
 
 # private/set_disabled_trading_products

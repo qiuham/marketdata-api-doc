@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-get_open_orders_by_label
 api_type: JSON-RPC
-updated_at: 2026-11-19 19:05:56.162646
+updated_at: 2026-11-20 19:00:15.106298
 ---
 
 # private/get_open_orders_by_label

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/multi-collateral-loan
 api_type: REST
-updated_at: 2026-11-19 19:01:38.376342
+updated_at: 2026-11-20 18:57:44.448629
 ---
 
 # Multi-collateral-loan
@@ -1927,9 +1927,29 @@ current_rate | string | Optional |  | 币种活期利率
 
 #  模型
 
-##  MultiCollateralOrder
+##  CollateralAdjust
 
-多币质押订单
+类型 | 约束  
+---|---  
+object | required: ["order_id","type","collateral_currencies","currency","amount"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | integer(int64) | Required |  | 订单id  
+type | string | Required |  | 操作类型, append - 补充 , redeem - 提取  
+collaterals | array | Optional |  | 质押币种列表  
+  
+**collaterals**
+
+质押币种列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**collaterals / items**
 
 类型 | 约束  
 ---|---  
@@ -1939,26 +1959,381 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
+currency | string | Optional |  | 币种  
+amount | string | Optional |  | 数量  
+      
+    
+    {
+      "order_id": 0,
+      "type": "string",
+      "collaterals": [
+        {
+          "currency": "string",
+          "amount": "string"
+        }
+      ]
+    }
+    
+    
+
+##  CreateMultiCollateralOrder
+
+类型 | 约束  
+---|---  
+object | required: ["borrow_currency","borrow_amount","currency","amount"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
 order_id | string | Optional |  | 订单id  
-order_type | string | Optional |  | current - 活期，fixed - 定期  
-fixed_type | string | Optional |  | 固定利率借贷周期，7d - 7日，30d - 30日  
-fixed_rate | string | Optional |  | 定期利率  
-expire_time | integer(int64) | Optional |  | 到期时间，时间戳，单位秒  
+order_type | string | Optional |  | current - 活期，fixed - 定期，不传的话默认活期  
+fixed_type | string | Optional |  | 固定利率借贷周期，7d - 7日，30d - 30日, 定期时必传  
+fixed_rate | string | Optional |  | 定期利率, 定期时必传  
 auto_renew | boolean | Optional |  | 固定利率，自动续借  
 auto_repay | boolean | Optional |  | 固定利率，自动还款  
-current_ltv | string | Optional |  | 当前质押率  
-status | string | Optional |  | 订单状态:  
-\- initial: 下单初始状态  
-\- collateral_deducted: 扣除质押物成功  
-\- collateral_returning: 放款失败-待退回质押物  
-\- lent: 放款成功  
-\- repaying: 还款中  
-\- liquidating: 平仓中  
-\- finished: 已完成  
-\- closed_liquidated: 已结束-平仓还款结束  
-borrow_time | integer(int64) | Optional |  | 借款时间，时间戳，单位秒  
-total_left_repay_usdt | string | Optional |  | 换算成USDT后的总待还价值  
-total_left_collateral_usdt | string | Optional |  | 换算成USDT后的总质押价值  
+borrow_currency | string | Required |  | 借款币种  
+borrow_amount | string | Required |  | 借款数量  
+collateral_currencies | array | Optional |  | 质押币种以及数量  
+  
+**collateral_currencies**
+
+质押币种以及数量
+
+类型 | 约束  
+---|---  
+array |   
+  
+**collateral_currencies / items**
+
+CollateralCurrency
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional |  | 币种  
+amount | string | Optional |  | 数量  
+      
+    
+    {
+      "order_id": "string",
+      "order_type": "string",
+      "fixed_type": "string",
+      "fixed_rate": "string",
+      "auto_renew": true,
+      "auto_repay": true,
+      "borrow_currency": "string",
+      "borrow_amount": "string",
+      "collateral_currencies": [
+        {
+          "currency": "string",
+          "amount": "string"
+        }
+      ]
+    }
+    
+    
+
+##  CollateralFixRate
+
+多币质押固定利率
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional |  | 币种  
+rate_7d | string | Optional |  | 借贷周期为7天时的固定利率  
+rate_30d | string | Optional |  | 借贷周期为30天时的固定利率  
+update_time | integer(int64) | Optional |  | 更新时间，时间戳，单位秒  
+      
+    
+    {
+      "currency": "string",
+      "rate_7d": "string",
+      "rate_30d": "string",
+      "update_time": 0
+    }
+    
+    
+
+##  CurrencyQuota
+
+币种配额
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional |  | 币种  
+index_price | string | Optional |  | 币种指数价格  
+min_quota | string | Optional |  | 币种最小`可借/质押`限额  
+left_quota | string | Optional |  | 币种剩余`可借/质押`限额(入参`type`为`borrow`时，代表活期币种)  
+left_quote_usdt | string | Optional |  | 币种换算成USDT的剩余币种限额(入参`type`为`borrow`时，代表活期币种)  
+left_quota_fixed | string | Optional |  | 定期币种剩余`可借/质押`限额  
+left_quote_usdt_fixed | string | Optional |  | 定期币种换算成USDT的剩余币种限额  
+      
+    
+    {
+      "currency": "string",
+      "index_price": "string",
+      "min_quota": "string",
+      "left_quota": "string",
+      "left_quote_usdt": "string",
+      "left_quota_fixed": "string",
+      "left_quote_usdt_fixed": "string"
+    }
+    
+    
+
+##  MultiCollateralCurrency
+
+多币质押支持的借款币种和抵押币种
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+loan_currencies | array | Optional |  | 支持的借款币种列表  
+collateral_currencies | array | Optional |  | 支持的抵押币种列表  
+  
+**loan_currencies**
+
+支持的借款币种列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**loan_currencies / items**
+
+MultiLoanItem
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional |  | 币种  
+price | string | Optional |  | 币种最新价格  
+  
+**collateral_currencies**
+
+支持的抵押币种列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**collateral_currencies / items**
+
+MultiCollateralItem
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional |  | 币种  
+index_price | string | Optional |  | 币种指数价格  
+discount | string | Optional |  | 保证金系数  
+      
+    
+    {
+      "loan_currencies": [
+        {
+          "currency": "string",
+          "price": "string"
+        }
+      ],
+      "collateral_currencies": [
+        {
+          "currency": "string",
+          "index_price": "string",
+          "discount": "string"
+        }
+      ]
+    }
+    
+    
+
+##  CollateralLtv
+
+多币质押质押率
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+init_ltv | string | Optional |  | 初始质押率  
+alert_ltv | string | Optional |  | 预警质押率  
+liquidate_ltv | string | Optional |  | 平仓质押率  
+      
+    
+    {
+      "init_ltv": "string",
+      "alert_ltv": "string",
+      "liquidate_ltv": "string"
+    }
+    
+    
+
+##  MultiRepayResp
+
+多币质押还款
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | 订单id  
+repaid_currencies | array | Optional |  | 还款币种列表  
+  
+**repaid_currencies**
+
+还款币种列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**repaid_currencies / items**
+
+RepayCurrencyRes
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+succeeded | boolean | Optional |  | 是否还款成功  
+label | string | Optional |  | 操作失败时的错误标识，成功时为空  
+message | string | Optional |  | 操作失败时的错误描述，成功时为空  
+currency | string | Optional |  | 还款币种  
+repaid_principal | string | Optional |  | 本金  
+repaid_interest | string | Optional |  | 本金  
+      
+    
+    {
+      "order_id": 0,
+      "repaid_currencies": [
+        {
+          "succeeded": true,
+          "label": "string",
+          "message": "string",
+          "currency": "string",
+          "repaid_principal": "string",
+          "repaid_interest": "string"
+        }
+      ]
+    }
+    
+    
+
+##  RepayMultiLoan
+
+多币质押还款
+
+类型 | 约束  
+---|---  
+object | required: ["order_id","repay_items","currency","amount"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | integer(int64) | Required |  | 订单id  
+repay_items | array | Required |  | 还款币种项  
+  
+**repay_items**
+
+还款币种项
+
+类型 | 约束  
+---|---  
+array |   
+  
+**repay_items / items**
+
+MultiLoanRepayItem
+
+类型 | 约束  
+---|---  
+object | required: ["repaid_all"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional |  | 还款币种  
+amount | string | Optional |  | 数量  
+repaid_all | boolean | Required |  | 还款方式, 为`true`时全部还款, 为`false`时部分还款;  
+      
+    
+    {
+      "order_id": 0,
+      "repay_items": [
+        {
+          "currency": "string",
+          "amount": "string",
+          "repaid_all": true
+        }
+      ]
+    }
+    
+    
+
+##  MultiCollateralRecord
+
+质押物调整记录
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | integer(int64) | Optional |  | 订单id  
+record_id | integer(int64) | Optional |  | 质押物记录 id  
+before_ltv | string | Optional |  | 调整前质押率  
+after_ltv | string | Optional |  | 调整前质押率  
+operate_time | integer(int64) | Optional |  | 操作时间, 时间戳, 秒级  
 borrow_currencies | array | Optional |  | 借款币种信息列表  
 collateral_currencies | array | Optional |  | 质押币种信息列表  
   
@@ -1972,8 +2347,6 @@ array |
   
 **borrow_currencies / items**
 
-BorrowCurrencyInfo
-
 类型 | 约束  
 ---|---  
 object |   
@@ -1984,9 +2357,10 @@ object |
 ---|---|---|---|---  
 currency | string | Optional |  | 币种  
 index_price | string | Optional |  | 币种指数价格  
-left_repay_principal | string | Optional |  | 待还本金  
-left_repay_interest | string | Optional |  | 待还利息  
-left_repay_usdt | string | Optional |  | 换算成USDT后的剩余待还总价值  
+before_amount | string | Optional |  | 操作前数量  
+before_amount_usdt | string | Optional |  | 换算成usdt的操作前价值  
+after_amount | string | Optional |  | 操作后数量  
+after_amount_usdt | string | Optional |  | 换算成usdt的操作后价值  
   
 **collateral_currencies**
 
@@ -1998,50 +2372,35 @@ array |
   
 **collateral_currencies / items**
 
-CollateralCurrencyInfo
-
 类型 | 约束  
 ---|---  
 object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-currency | string | Optional |  | 币种  
-index_price | string | Optional |  | 币种指数价格  
-left_collateral | string | Optional |  | 剩余质押数量  
-left_collateral_usdt | string | Optional |  | 换算成USDT后的剩余质押价值  
       
     
     {
-      "order_id": "string",
-      "order_type": "string",
-      "fixed_type": "string",
-      "fixed_rate": "string",
-      "expire_time": 0,
-      "auto_renew": true,
-      "auto_repay": true,
-      "current_ltv": "string",
-      "status": "string",
-      "borrow_time": 0,
-      "total_left_repay_usdt": "string",
-      "total_left_collateral_usdt": "string",
+      "order_id": 0,
+      "record_id": 0,
+      "before_ltv": "string",
+      "after_ltv": "string",
+      "operate_time": 0,
       "borrow_currencies": [
         {
           "currency": "string",
           "index_price": "string",
-          "left_repay_principal": "string",
-          "left_repay_interest": "string",
-          "left_repay_usdt": "string"
+          "before_amount": "string",
+          "before_amount_usdt": "string",
+          "after_amount": "string",
+          "after_amount_usdt": "string"
         }
       ],
       "collateral_currencies": [
         {
           "currency": "string",
           "index_price": "string",
-          "left_collateral": "string",
-          "left_collateral_usdt": "string"
+          "before_amount": "string",
+          "before_amount_usdt": "string",
+          "after_amount": "string",
+          "after_amount_usdt": "string"
         }
       ]
     }
@@ -2252,95 +2611,7 @@ after_amount_usdt | string | Optional |  | 换算成USDT的还款后利息数量
     
     
 
-##  CreateMultiCollateralOrder
-
-类型 | 约束  
----|---  
-object | required: ["borrow_currency","borrow_amount","currency","amount"]  
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-order_id | string | Optional |  | 订单id  
-order_type | string | Optional |  | current - 活期，fixed - 定期，不传的话默认活期  
-fixed_type | string | Optional |  | 固定利率借贷周期，7d - 7日，30d - 30日, 定期时必传  
-fixed_rate | string | Optional |  | 定期利率, 定期时必传  
-auto_renew | boolean | Optional |  | 固定利率，自动续借  
-auto_repay | boolean | Optional |  | 固定利率，自动还款  
-borrow_currency | string | Required |  | 借款币种  
-borrow_amount | string | Required |  | 借款数量  
-collateral_currencies | array | Optional |  | 质押币种以及数量  
-  
-**collateral_currencies**
-
-质押币种以及数量
-
-类型 | 约束  
----|---  
-array |   
-  
-**collateral_currencies / items**
-
-CollateralCurrency
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-currency | string | Optional |  | 币种  
-amount | string | Optional |  | 数量  
-      
-    
-    {
-      "order_id": "string",
-      "order_type": "string",
-      "fixed_type": "string",
-      "fixed_rate": "string",
-      "auto_renew": true,
-      "auto_repay": true,
-      "borrow_currency": "string",
-      "borrow_amount": "string",
-      "collateral_currencies": [
-        {
-          "currency": "string",
-          "amount": "string"
-        }
-      ]
-    }
-    
-    
-
-##  CollateralCurrentRate
-
-多币质押活期利率
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-currency | string | Optional |  | 币种  
-current_rate | string | Optional |  | 币种活期利率  
-      
-    
-    {
-      "currency": "string",
-      "current_rate": "string"
-    }
-    
-    
-
-##  MultiRepayResp
-
-多币质押还款
+##  OrderResp
 
 类型 | 约束  
 ---|---  
@@ -2351,19 +2622,17 @@ object |
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
 order_id | integer(int64) | Optional |  | 订单id  
-repaid_currencies | array | Optional |  | 还款币种列表  
-  
-**repaid_currencies**
+      
+    
+    {
+      "order_id": 0
+    }
+    
+    
 
-还款币种列表
+##  MultiCollateralOrder
 
-类型 | 约束  
----|---  
-array |   
-  
-**repaid_currencies / items**
-
-RepayCurrencyRes
+多币质押订单
 
 类型 | 约束  
 ---|---  
@@ -2373,24 +2642,109 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-succeeded | boolean | Optional |  | 是否还款成功  
-label | string | Optional |  | 操作失败时的错误标识，成功时为空  
-message | string | Optional |  | 操作失败时的错误描述，成功时为空  
-currency | string | Optional |  | 还款币种  
-repaid_principal | string | Optional |  | 本金  
-repaid_interest | string | Optional |  | 本金  
+order_id | string | Optional |  | 订单id  
+order_type | string | Optional |  | current - 活期，fixed - 定期  
+fixed_type | string | Optional |  | 固定利率借贷周期，7d - 7日，30d - 30日  
+fixed_rate | string | Optional |  | 定期利率  
+expire_time | integer(int64) | Optional |  | 到期时间，时间戳，单位秒  
+auto_renew | boolean | Optional |  | 固定利率，自动续借  
+auto_repay | boolean | Optional |  | 固定利率，自动还款  
+current_ltv | string | Optional |  | 当前质押率  
+status | string | Optional |  | 订单状态:  
+\- initial: 下单初始状态  
+\- collateral_deducted: 扣除质押物成功  
+\- collateral_returning: 放款失败-待退回质押物  
+\- lent: 放款成功  
+\- repaying: 还款中  
+\- liquidating: 平仓中  
+\- finished: 已完成  
+\- closed_liquidated: 已结束-平仓还款结束  
+borrow_time | integer(int64) | Optional |  | 借款时间，时间戳，单位秒  
+total_left_repay_usdt | string | Optional |  | 换算成USDT后的总待还价值  
+total_left_collateral_usdt | string | Optional |  | 换算成USDT后的总质押价值  
+borrow_currencies | array | Optional |  | 借款币种信息列表  
+collateral_currencies | array | Optional |  | 质押币种信息列表  
+  
+**borrow_currencies**
+
+借款币种信息列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**borrow_currencies / items**
+
+BorrowCurrencyInfo
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional |  | 币种  
+index_price | string | Optional |  | 币种指数价格  
+left_repay_principal | string | Optional |  | 待还本金  
+left_repay_interest | string | Optional |  | 待还利息  
+left_repay_usdt | string | Optional |  | 换算成USDT后的剩余待还总价值  
+  
+**collateral_currencies**
+
+质押币种信息列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**collateral_currencies / items**
+
+CollateralCurrencyInfo
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional |  | 币种  
+index_price | string | Optional |  | 币种指数价格  
+left_collateral | string | Optional |  | 剩余质押数量  
+left_collateral_usdt | string | Optional |  | 换算成USDT后的剩余质押价值  
       
     
     {
-      "order_id": 0,
-      "repaid_currencies": [
+      "order_id": "string",
+      "order_type": "string",
+      "fixed_type": "string",
+      "fixed_rate": "string",
+      "expire_time": 0,
+      "auto_renew": true,
+      "auto_repay": true,
+      "current_ltv": "string",
+      "status": "string",
+      "borrow_time": 0,
+      "total_left_repay_usdt": "string",
+      "total_left_collateral_usdt": "string",
+      "borrow_currencies": [
         {
-          "succeeded": true,
-          "label": "string",
-          "message": "string",
           "currency": "string",
-          "repaid_principal": "string",
-          "repaid_interest": "string"
+          "index_price": "string",
+          "left_repay_principal": "string",
+          "left_repay_interest": "string",
+          "left_repay_usdt": "string"
+        }
+      ],
+      "collateral_currencies": [
+        {
+          "currency": "string",
+          "index_price": "string",
+          "left_collateral": "string",
+          "left_collateral_usdt": "string"
         }
       ]
     }
@@ -2454,82 +2808,9 @@ amount | string | Optional |  | 操作质押物成功的数量，操作失败时
     
     
 
-##  RepayMultiLoan
+##  CollateralCurrentRate
 
-多币质押还款
-
-类型 | 约束  
----|---  
-object | required: ["order_id","repay_items","currency","amount"]  
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-order_id | integer(int64) | Required |  | 订单id  
-repay_items | array | Required |  | 还款币种项  
-  
-**repay_items**
-
-还款币种项
-
-类型 | 约束  
----|---  
-array |   
-  
-**repay_items / items**
-
-MultiLoanRepayItem
-
-类型 | 约束  
----|---  
-object | required: ["repaid_all"]  
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-currency | string | Optional |  | 还款币种  
-amount | string | Optional |  | 数量  
-repaid_all | boolean | Required |  | 还款方式, 为`true`时全部还款, 为`false`时部分还款;  
-      
-    
-    {
-      "order_id": 0,
-      "repay_items": [
-        {
-          "currency": "string",
-          "amount": "string",
-          "repaid_all": true
-        }
-      ]
-    }
-    
-    
-
-##  CollateralAdjust
-
-类型 | 约束  
----|---  
-object | required: ["order_id","type","collateral_currencies","currency","amount"]  
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-order_id | integer(int64) | Required |  | 订单id  
-type | string | Required |  | 操作类型, append - 补充 , redeem - 提取  
-collaterals | array | Optional |  | 质押币种列表  
-  
-**collaterals**
-
-质押币种列表
-
-类型 | 约束  
----|---  
-array |   
-  
-**collaterals / items**
+多币质押活期利率
 
 类型 | 约束  
 ---|---  
@@ -2540,291 +2821,10 @@ object |
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
 currency | string | Optional |  | 币种  
-amount | string | Optional |  | 数量  
-      
-    
-    {
-      "order_id": 0,
-      "type": "string",
-      "collaterals": [
-        {
-          "currency": "string",
-          "amount": "string"
-        }
-      ]
-    }
-    
-    
-
-##  CollateralLtv
-
-多币质押质押率
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-init_ltv | string | Optional |  | 初始质押率  
-alert_ltv | string | Optional |  | 预警质押率  
-liquidate_ltv | string | Optional |  | 平仓质押率  
-      
-    
-    {
-      "init_ltv": "string",
-      "alert_ltv": "string",
-      "liquidate_ltv": "string"
-    }
-    
-    
-
-##  MultiCollateralRecord
-
-质押物调整记录
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-order_id | integer(int64) | Optional |  | 订单id  
-record_id | integer(int64) | Optional |  | 质押物记录 id  
-before_ltv | string | Optional |  | 调整前质押率  
-after_ltv | string | Optional |  | 调整前质押率  
-operate_time | integer(int64) | Optional |  | 操作时间, 时间戳, 秒级  
-borrow_currencies | array | Optional |  | 借款币种信息列表  
-collateral_currencies | array | Optional |  | 质押币种信息列表  
-  
-**borrow_currencies**
-
-借款币种信息列表
-
-类型 | 约束  
----|---  
-array |   
-  
-**borrow_currencies / items**
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-currency | string | Optional |  | 币种  
-index_price | string | Optional |  | 币种指数价格  
-before_amount | string | Optional |  | 操作前数量  
-before_amount_usdt | string | Optional |  | 换算成usdt的操作前价值  
-after_amount | string | Optional |  | 操作后数量  
-after_amount_usdt | string | Optional |  | 换算成usdt的操作后价值  
-  
-**collateral_currencies**
-
-质押币种信息列表
-
-类型 | 约束  
----|---  
-array |   
-  
-**collateral_currencies / items**
-
-类型 | 约束  
----|---  
-object |   
-      
-    
-    {
-      "order_id": 0,
-      "record_id": 0,
-      "before_ltv": "string",
-      "after_ltv": "string",
-      "operate_time": 0,
-      "borrow_currencies": [
-        {
-          "currency": "string",
-          "index_price": "string",
-          "before_amount": "string",
-          "before_amount_usdt": "string",
-          "after_amount": "string",
-          "after_amount_usdt": "string"
-        }
-      ],
-      "collateral_currencies": [
-        {
-          "currency": "string",
-          "index_price": "string",
-          "before_amount": "string",
-          "before_amount_usdt": "string",
-          "after_amount": "string",
-          "after_amount_usdt": "string"
-        }
-      ]
-    }
-    
-    
-
-##  OrderResp
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-order_id | integer(int64) | Optional |  | 订单id  
-      
-    
-    {
-      "order_id": 0
-    }
-    
-    
-
-##  CollateralFixRate
-
-多币质押固定利率
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-currency | string | Optional |  | 币种  
-rate_7d | string | Optional |  | 借贷周期为7天时的固定利率  
-rate_30d | string | Optional |  | 借贷周期为30天时的固定利率  
-update_time | integer(int64) | Optional |  | 更新时间，时间戳，单位秒  
+current_rate | string | Optional |  | 币种活期利率  
       
     
     {
       "currency": "string",
-      "rate_7d": "string",
-      "rate_30d": "string",
-      "update_time": 0
-    }
-    
-    
-
-##  MultiCollateralCurrency
-
-多币质押支持的借款币种和抵押币种
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-loan_currencies | array | Optional |  | 支持的借款币种列表  
-collateral_currencies | array | Optional |  | 支持的抵押币种列表  
-  
-**loan_currencies**
-
-支持的借款币种列表
-
-类型 | 约束  
----|---  
-array |   
-  
-**loan_currencies / items**
-
-MultiLoanItem
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-currency | string | Optional |  | 币种  
-price | string | Optional |  | 币种最新价格  
-  
-**collateral_currencies**
-
-支持的抵押币种列表
-
-类型 | 约束  
----|---  
-array |   
-  
-**collateral_currencies / items**
-
-MultiCollateralItem
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-currency | string | Optional |  | 币种  
-index_price | string | Optional |  | 币种指数价格  
-discount | string | Optional |  | 保证金系数  
-      
-    
-    {
-      "loan_currencies": [
-        {
-          "currency": "string",
-          "price": "string"
-        }
-      ],
-      "collateral_currencies": [
-        {
-          "currency": "string",
-          "index_price": "string",
-          "discount": "string"
-        }
-      ]
-    }
-    
-    
-
-##  CurrencyQuota
-
-币种配额
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-currency | string | Optional |  | 币种  
-index_price | string | Optional |  | 币种指数价格  
-min_quota | string | Optional |  | 币种最小`可借/质押`限额  
-left_quota | string | Optional |  | 币种剩余`可借/质押`限额(入参`type`为`borrow`时，代表活期币种)  
-left_quote_usdt | string | Optional |  | 币种换算成USDT的剩余币种限额(入参`type`为`borrow`时，代表活期币种)  
-left_quota_fixed | string | Optional |  | 定期币种剩余`可借/质押`限额  
-left_quote_usdt_fixed | string | Optional |  | 定期币种换算成USDT的剩余币种限额  
-      
-    
-    {
-      "currency": "string",
-      "index_price": "string",
-      "min_quota": "string",
-      "left_quota": "string",
-      "left_quote_usdt": "string",
-      "left_quota_fixed": "string",
-      "left_quote_usdt_fixed": "string"
+      "current_rate": "string"
     }

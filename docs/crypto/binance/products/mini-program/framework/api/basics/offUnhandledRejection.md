@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/offUnhandledRejection
 api_type: Guide
-updated_at: 2026-11-19 18:50:27.290327
+updated_at: 2026-11-20 18:49:15.915410
 ---
 
 # bn.offUnhandledRejection

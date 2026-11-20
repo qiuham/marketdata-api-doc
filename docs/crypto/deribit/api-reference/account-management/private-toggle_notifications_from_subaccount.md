@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-toggle_notifications_from_subaccount
 api_type: JSON-RPC
-updated_at: 2026-11-19 19:05:51.641251
+updated_at: 2026-11-20 19:00:13.179518
 ---
 
 # private/toggle_notifications_from_subaccount

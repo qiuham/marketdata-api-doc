@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api
 api_type: REST
-updated_at: 2026-11-19 18:51:55.001083
+updated_at: 2026-11-20 18:50:41.072783
 ---
 
 # Staking REST API

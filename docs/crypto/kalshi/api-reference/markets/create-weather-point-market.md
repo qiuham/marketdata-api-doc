@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/markets/create-weather-point-market'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Create Weather Point Market
@@ -38,8 +38,8 @@ The window is whole local hours, on one calendar day or, with
 `end_date` set to the day after `date`, from one day into the next.
 A window that crosses midnight is at most 24 hours long, and only
 offered where `GET /weather_point_markets/availability` returns
-`max_window_days: 2`. A new market's window must start at least 15
-minutes from now and within 365 days.
+`max_window_days: 2`. A new market's window must start at least 6
+hours from now (15 minutes on demo) and within 365 days.
 
 `timezone` only says which span of time `date` and the hours mean. The
 market is described in the IANA time zone of its location, which
@@ -71,7 +71,7 @@ Errors carry the specific reason in `details`:
 | 400 | `bad_request` | The body isn't valid JSON, or a field has the wrong type. |
 | 400 | `missing_parameters` | A required field is missing or empty. |
 | 400 | `invalid_parameters` | A field is present but unusable, or the request can't define a market: a latitude or hour out of range, an `end_hour` not after `start_hour` on one day, an `end_date` other than `date` or the day after it, a window across midnight, in `timezone` or at the location, longer than 24 hours, an unknown variable or strike type, thresholds that don't fit the strike type or the variable's range, a location outside NOAA MRMS coverage, an unknown time zone, a window that doesn't start and end on whole UTC hours, has already ended or starts more than 365 days out, or an hour that a clock change skips or repeats in `timezone`. |
-| 409 | `weather_point_market_unavailable` | The request is valid but the market isn't offered: the variable isn't offered at that location, the market's grid cell is entirely over open water or outside US land, the window starts in less than 15 minutes, the market's window crosses midnight in the location's time zone where `max_window_days` is 1, or the location's time zone can't be determined. |
+| 409 | `weather_point_market_unavailable` | The request is valid but the market isn't offered: the variable isn't offered at that location, the market's grid cell is entirely over open water or outside US land, the window starts in less than 6 hours (15 minutes on demo), the market's window crosses midnight in the location's time zone where `max_window_days` is 1, or the location's time zone can't be determined. |
 | 429 | `weather_point_market_limit_exceeded` | A creation limit was reached: the daily limit on new weather markets across all users, or 40 markets for one variable, location and window. Retrying at once doesn't help. |
 | 429 | `too_many_requests` | Your API rate limit. This endpoint is charged against your write budget. |
 
@@ -180,9 +180,9 @@ paths:
 
         offered where `GET /weather_point_markets/availability` returns
 
-        `max_window_days: 2`. A new market's window must start at least 15
+        `max_window_days: 2`. A new market's window must start at least 6
 
-        minutes from now and within 365 days.
+        hours from now (15 minutes on demo) and within 365 days.
 
 
         `timezone` only says which span of time `date` and the hours mean. The
@@ -254,9 +254,10 @@ paths:
         | 409 | `weather_point_market_unavailable` | The request is valid but
         the market isn't offered: the variable isn't offered at that location,
         the market's grid cell is entirely over open water or outside US land,
-        the window starts in less than 15 minutes, the market's window crosses
-        midnight in the location's time zone where `max_window_days` is 1, or
-        the location's time zone can't be determined. |
+        the window starts in less than 6 hours (15 minutes on demo), the
+        market's window crosses midnight in the location's time zone where
+        `max_window_days` is 1, or the location's time zone can't be determined.
+        |
 
         | 429 | `weather_point_market_limit_exceeded` | A creation limit was
         reached: the daily limit on new weather markets across all users, or 40

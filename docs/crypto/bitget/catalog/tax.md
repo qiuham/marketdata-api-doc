@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/tax
 api_type: REST
-updated_at: 2026-11-19 19:08:08.564979
+updated_at: 2026-11-20 19:02:18.289852
 ---
 
 # Tax

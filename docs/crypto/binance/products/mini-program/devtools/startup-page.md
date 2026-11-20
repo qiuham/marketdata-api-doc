@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/devtools/startup-page
 api_type: Guide
-updated_at: 2026-11-19 18:40:18.849508
+updated_at: 2026-11-20 18:39:36.166549
 ---
 
 # Startup Page

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/settings/openSetting
 api_type: Guide
-updated_at: 2026-11-19 18:46:26.890298
+updated_at: 2026-11-20 18:45:25.490776
 ---
 
 # bn.openSetting

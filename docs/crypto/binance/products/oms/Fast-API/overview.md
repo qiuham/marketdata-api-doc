@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/oms/Fast-API/overview
 api_type: Guide
-updated_at: 2026-11-19 18:39:06.728732
+updated_at: 2026-11-20 18:38:22.904263
 ---
 
 # Fast API

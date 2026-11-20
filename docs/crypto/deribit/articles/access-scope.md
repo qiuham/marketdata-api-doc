@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/access-scope
 api_type: Guide
-updated_at: 2026-11-19 19:05:31.844512
+updated_at: 2026-11-20 19:00:09.532625
 ---
 
 # Access Scope

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/resend-request
 api_type: FIX
-updated_at: 2026-11-19 19:05:44.781034
+updated_at: 2026-11-20 19:00:10.951569
 ---
 
 # Resend Request(2) (Production FIX API)

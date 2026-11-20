@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/vip-loan/Introduction
 api_type: Guide
-updated_at: 2026-11-19 18:29:49.941252
+updated_at: 2026-11-20 18:29:44.025627
 ---
 
 # Introduction

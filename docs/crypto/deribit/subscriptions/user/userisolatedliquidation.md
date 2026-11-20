@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/user/userisolatedliquidation
 api_type: WebSocket
-updated_at: 2026-11-19 19:05:43.142983
+updated_at: 2026-11-20 19:00:10.730859
 ---
 
 # user.isolated.liquidation

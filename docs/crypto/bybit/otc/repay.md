@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/repay
 api_type: REST
-updated_at: 2026-11-19 18:54:47.066802
+updated_at: 2026-11-20 18:52:37.103558
 ---
 
 # Repay

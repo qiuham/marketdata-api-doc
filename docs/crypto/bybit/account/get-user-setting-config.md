@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/get-user-setting-config
 api_type: Account
-updated_at: 2026-11-19 18:52:17.816431
+updated_at: 2026-11-20 18:50:57.895791
 ---
 
 # Get Trade Behaviour Config

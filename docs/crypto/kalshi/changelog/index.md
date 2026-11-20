@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/changelog/index'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # API Changelog
@@ -26,6 +26,46 @@ Predictions and Margin exchanges. Use the entry tags to filter by API
 surface (`REST`, `WebSocket`, `FIX`) or exchange (`Predictions`, `Margin`).
 FIX API changes, previously tracked on a separate page, now live here under
 the `FIX` tag.
+
+**November 26, 2026**
+
+`POST /concert_cancellation_markets` now holds a market that already exists to the same
+24 hours as a new one. Once the market's `close_time` or the show's start as now listed,
+whichever is earlier, is 24 hours away or less, the request returns `409` with code
+`concert_cancellation_market_unavailable` and the reason in `details`, where it used to
+return the market until it closed. The market itself is unchanged: it stays open until its
+`close_time`, positions in it are unaffected, `GET /markets/{ticker}` still returns it, and
+it settles as before. See [On-Request Concert Markets](https://docs.kalshi.com/getting_started/concert_rfqs.md). These
+markets are not live yet.
+
+**November 26, 2026**
+
+`GET /historical/fills` accepts up to 100 comma-separated market tickers in the
+`ticker` query parameter. A single ticker still works.
+
+**November 26, 2026**
+
+An RFQ on a market created on request (a ticker starting `KXRFQ`, such as a weather point
+market), or on a combo whose legs are all such markets, obscures its creator's public
+communications ID whether or not `obscure_creator_id` is set. So does an RFQ batch whose
+combos are all made of such markets. Other users receive
+the shared placeholder in RFQ responses, broadcasts and quotes until a successful execution,
+exactly as with `obscure_creator_id: true`; the creator always sees their own ID. RFQs on
+other markets are unchanged.
+
+**November 26, 2026**
+
+Create Order, Amend Order and Batch Create Orders now check `side` with the other required
+fields. A request that omits `side` returns `400` with code `missing_parameters`, and a `side`
+other than `bid` or `ask` returns `400` with code `invalid_parameters`. On Predictions both cases
+returned `invalid_order`. On Margin the order was sent as an ask.
+
+**November 26, 2026**
+
+Margin exit-trigger writes reject a `take_profit_price` or `stop_loss_price` the current mark
+has already passed by more than 2% with `400` and error code `take_profit_already_breached` or
+`stop_loss_already_breached`. These were `400` responses whose `code` was not a stable
+identifier.
 
 **November 26, 2026**
 
@@ -111,6 +151,15 @@ requested `latitude` and `longitude` rounded to three decimal places (about
   market's point, which is no longer always a cell center.
 * Markets created before this change keep their location and stay
   reachable by requesting those coordinates.
+
+**November 19, 2026**
+
+`subaccount_type` on margin balance, position and risk rows gains the value
+`swaps`: a cross-margined wallet for trading event contracts on the margin
+exchange. Its `subaccount` is the wallet's swaps code, 1 through 63, which
+is separate from the primary account and numbered subaccounts. Swaps
+wallets are created by Kalshi. Clients that switch exhaustively on
+`subaccount_type` should accept the new value.
 
 **November 19, 2026**
 

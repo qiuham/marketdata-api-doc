@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/alpha/zh_CN
 api_type: Trading
-updated_at: 2026-11-19 19:00:24.778240
+updated_at: 2026-11-20 18:56:33.718278
 ---
 
 # Gate Alpha API v1.1.1
@@ -607,7 +607,7 @@ _Alpha 账户接口_
 
 返回状态码 | 含义 | 描述 | 格式  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 查询持仓成功 | [Inline]  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 查询持仓成功 | [AccountsResponse]  
   
 ### 返回格式
 
@@ -623,7 +623,7 @@ array |
 
 类型 | 约束  
 ---|---  
-object |   
+AccountsResponse |   
   
 **属性**
 
@@ -721,7 +721,7 @@ limit | 请求参数 | integer(int32) | 否 | 列表数量最大每页100
 
 返回状态码 | 含义 | 描述 | 格式  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 查询流水成功 | [Inline]  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 查询流水成功 | [AccountBookResponse]  
   
 ### 返回格式
 
@@ -737,7 +737,7 @@ array |
 
 类型 | 约束  
 ---|---  
-object |   
+AccountBookResponse |   
   
 **属性**
 
@@ -826,7 +826,7 @@ _Alpha 询价接口_
 
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
-body | body | object | 是 |   
+body | body | QuoteRequest | 是 |   
 currency | body | string | 是 | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098，不是展示符号 USDS。先不传 currency 调用 GET /alpha/currencies，按 name、chain 和 address 确认币种，使用返回的 currency 字段；列表可通过 page 和 limit 分页。  
 side | body | string | 是 | 买单或者卖单  
 \- buy  
@@ -862,7 +862,7 @@ slippage | body | string | 否 | 滑点 10是浮动10%
 
 请求体结构类型 | 约束  
 ---|---  
-object | required: ["currency","side","amount","gas_mode"]  
+QuoteRequest | required: ["currency","side","amount","gas_mode"]  
   
 **属性**
 
@@ -884,7 +884,7 @@ slippage | string | Optional |  | 滑点 10是浮动10%
 
 返回状态码 | 含义 | 描述 | 格式  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 询价成功 | Inline  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 询价成功 | QuoteResponse  
   
 ### 返回格式
 
@@ -894,7 +894,7 @@ slippage | string | Optional |  | 滑点 10是浮动10%
 
 类型 | 约束  
 ---|---  
-object |   
+QuoteResponse |   
   
 **属性**
 
@@ -1007,7 +1007,7 @@ _Alpha 下单接口_
 
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
-body | body | object | 是 |   
+body | body | PlaceOrderRequest | 是 |   
 currency | body | string | 是 | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098，不是展示符号 USDS。先不传 currency 调用 GET /alpha/currencies，按 name、chain 和 address 确认币种，使用返回的 currency 字段；列表可通过 page 和 limit 分页。  
 side | body | string | 是 | 买单或者卖单  
 \- buy  
@@ -1044,7 +1044,7 @@ quote_id | body | string | 是 | 询价返回的quote_id
 
 请求体结构类型 | 约束  
 ---|---  
-object | required: ["currency","side","amount","gas_mode","quote_id"]  
+PlaceOrderRequest | required: ["currency","side","amount","gas_mode","quote_id"]  
   
 **属性**
 
@@ -1067,7 +1067,7 @@ quote_id | string | Required |  | 询价返回的quote_id
 
 返回状态码 | 含义 | 描述 | 格式  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 下单成功 | Inline  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 下单成功 | PlaceOrderResponse  
   
 ### 返回格式
 
@@ -1077,7 +1077,7 @@ quote_id | string | Required |  | 询价返回的quote_id
 
 类型 | 约束  
 ---|---  
-object |   
+PlaceOrderResponse |   
   
 **属性**
 
@@ -1233,7 +1233,7 @@ page | 请求参数 | integer(int32) | 否 | 列表页数
 
 返回状态码 | 含义 | 描述 | 格式  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 列表查询成功 | [Inline]  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 列表查询成功 | [OrderResponse]  
   
 ### 返回格式
 
@@ -1249,7 +1249,7 @@ array |
 
 类型 | 约束  
 ---|---  
-object |   
+OrderResponse |   
   
 **属性**
 
@@ -1369,7 +1369,7 @@ order_id | 请求参数 | string | 是 | 订单id
 
 返回状态码 | 含义 | 描述 | 格式  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 订单查询成功 | Inline  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 订单查询成功 | OrderResponse  
   
 ### 返回格式
 
@@ -1379,7 +1379,7 @@ order_id | 请求参数 | string | 是 | 订单id
 
 类型 | 约束  
 ---|---  
-object |   
+OrderResponse |   
   
 **属性**
 
@@ -1501,7 +1501,7 @@ page | 请求参数 | integer(int32) | 否 | 列表页数
 
 返回状态码 | 含义 | 描述 | 格式  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 查询成功 | [Inline]  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 查询成功 | [AlphaCurrency]  
   
 ### 返回格式
 
@@ -1517,7 +1517,7 @@ AlphaCurrency
 
 类型 | 约束  
 ---|---  
-object |   
+AlphaCurrency |   
   
 **属性**
 
@@ -1599,7 +1599,7 @@ page | 请求参数 | integer(int32) | 否 | 列表页数
 
 返回状态码 | 含义 | 描述 | 格式  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 查询成功 | [Inline]  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 查询成功 | [AlphaTicker]  
   
 ### 返回格式
 
@@ -1615,7 +1615,7 @@ AlphaTicker
 
 类型 | 约束  
 ---|---  
-object |   
+AlphaTicker |   
   
 **属性**
 
@@ -1745,7 +1745,7 @@ page | 请求参数 | integer(int32) | 否 | 列表页数
 
 返回状态码 | 含义 | 描述 | 格式  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 查询成功 | [Inline]  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 查询成功 | [Tokens]  
   
 ### 返回格式
 
@@ -1759,7 +1759,7 @@ array |
 
 类型 | 约束  
 ---|---  
-object |   
+Tokens |   
   
 **属性**
 
@@ -1817,6 +1817,383 @@ status | integer(int32) | Optional |  | 币种交易状态
         "amount_precision": 1
       }
     ]
+    
+
+#  模型
+
+##  AccountsResponse
+
+查询持仓返回
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional |  | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098；用于 Alpha 接口的 currency 参数，不是展示符号 USDS。  
+available | string | Optional |  | 可用余额  
+locked | string | Optional |  | 锁定余额  
+token_address | string | Optional |  | token 地址  
+chain | string | Optional |  | 区块链名称  
+      
+    
+    {
+      "currency": "string",
+      "available": "string",
+      "locked": "string",
+      "token_address": "string",
+      "chain": "string"
+    }
+    
+    
+
+##  AccountBookResponse
+
+查询资产流水返回
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 订单id  
+time | integer(int64) | Optional |  | 操作时间戳  
+currency | string(string) | Optional |  | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098；用于 Alpha 接口的 currency 参数，不是展示符号 USDS。  
+change | string(string) | Optional |  | 变更金额  
+balance | string(string) | Optional |  | 变更后余额  
+      
+    
+    {
+      "id": 0,
+      "time": 0,
+      "currency": "string",
+      "change": "string",
+      "balance": "string"
+    }
+    
+    
+
+##  QuoteRequest
+
+询价请求
+
+类型 | 约束  
+---|---  
+object | required: ["currency","side","amount","gas_mode"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Required |  | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098，不是展示符号 USDS。先不传 currency 调用 GET /alpha/currencies，按 name、chain 和 address 确认币种，使用返回的 currency 字段；列表可通过 page 和 limit 分页。  
+side | string | Required |  | 买单或者卖单  
+\- buy  
+\- sell  
+amount | string | Required |  | 交易数量   
+\- `side` : `buy` 指代计价货币，指`USDT`  
+\- `side` : `sell` 指代交易货币  
+gas_mode | string | Required |  | 交易模式 影响滑点选择  
+\- `speed` : 智能模式  
+\- `custom` : 自定义, 会使用 `slippage`  
+slippage | string | Optional |  | 滑点 10是浮动10%  
+      
+    
+    {
+      "currency": "string",
+      "side": "string",
+      "amount": "string",
+      "gas_mode": "string",
+      "slippage": "string"
+    }
+    
+    
+
+##  QuoteResponse
+
+询价返回
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+quote_id | string | Optional |  | 询价id 用于下单使用1分钟内有效  
+min_amount | string | Optional |  | 最小下单量  
+max_amount | string | Optional |  | 最大下单量  
+price | string | Optional |  | 币价格，U本位  
+slippage | string | Optional |  | 滑点  
+estimate_gas_fee_amount_usdt | string | Optional |  | 预估网络费 U本位  
+order_fee | string | Optional |  | 交易手续费  
+target_token_min_amount | string | Optional |  | 最小获得数量  
+target_token_max_amount | string | Optional |  | 最大获得数量  
+error_type | integer(int32) | Optional |  | 失败类型  
+\- `0` : 成功  
+\- `1` : 超过最大值  
+\- `2` : 低于最小值  
+      
+    
+    {
+      "quote_id": "string",
+      "min_amount": "string",
+      "max_amount": "string",
+      "price": "string",
+      "slippage": "string",
+      "estimate_gas_fee_amount_usdt": "string",
+      "order_fee": "string",
+      "target_token_min_amount": "string",
+      "target_token_max_amount": "string",
+      "error_type": 0
+    }
+    
+    
+
+##  OrderResponse
+
+下单返回
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | string | Optional |  | 订单id  
+tx_hash | string | Optional |  | 交易哈希  
+side | string | Optional |  | 买单或者卖单  
+\- buy  
+\- sell  
+usdt_amount | string | Optional |  | 钱数  
+currency | string | Optional |  | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098；用于 Alpha 接口的 currency 参数，不是展示符号 USDS。  
+currency_amount | string | Optional |  | 币的数量  
+status | integer(int32) | Optional |  | 订单状态  
+\- `0` : 全部  
+\- `1` : 处理中  
+\- `2` : 成功  
+\- `3` : 失败  
+\- `4` : 已取消  
+\- `5` : 买入下单后还未转账完成  
+\- `6` : 取消订单未转账  
+gas_mode | string | Optional |  | 交易模式 影响滑点选择  
+\- `speed` : 智能模式  
+\- `custom` : 自定义, 会使用 `slippage`  
+chain | string | Optional |  | 链  
+gas_fee | string | Optional |  | 矿工费 U本位  
+transaction_fee | string | Optional |  | 交易手续费 U本位  
+failed_reason | string | Optional |  | 失败原因（如果有的话）  
+create_time | integer(int64) | Optional |  | 创建时间（时间戳）  
+      
+    
+    {
+      "order_id": "string",
+      "tx_hash": "string",
+      "side": "string",
+      "usdt_amount": "string",
+      "currency": "string",
+      "currency_amount": "string",
+      "status": 0,
+      "gas_mode": "string",
+      "chain": "string",
+      "gas_fee": "string",
+      "transaction_fee": "string",
+      "failed_reason": "string",
+      "create_time": 0
+    }
+    
+    
+
+##  PlaceOrderRequest
+
+下单请求
+
+类型 | 约束  
+---|---  
+object | required: ["currency","side","amount","gas_mode","quote_id"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Required |  | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098，不是展示符号 USDS。先不传 currency 调用 GET /alpha/currencies，按 name、chain 和 address 确认币种，使用返回的 currency 字段；列表可通过 page 和 limit 分页。  
+side | string | Required |  | 买单或者卖单  
+\- buy  
+\- sell  
+amount | string | Required |  | 交易数量   
+\- `side` : `buy` 指代计价货币，指`USDT`  
+\- `side` : `sell` 指代交易货币  
+gas_mode | string | Required |  | 交易模式 影响滑点选择  
+\- `speed` : 智能模式  
+\- `custom` : 自定义, 会使用 `slippage`  
+slippage | string | Optional |  | 滑点百分比，"10" 表示 10%。  
+quote_id | string | Required |  | 询价返回的quote_id  
+      
+    
+    {
+      "currency": "string",
+      "side": "string",
+      "amount": "string",
+      "gas_mode": "string",
+      "slippage": "string",
+      "quote_id": "string"
+    }
+    
+    
+
+##  PlaceOrderResponse
+
+下单返回
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+order_id | string | Optional |  | 订单id  
+status | integer(int32) | Optional |  | 订单状态  
+\- `0` : 全部  
+\- `1` : 处理中  
+\- `2` : 成功  
+\- `3` : 失败  
+\- `4` : 已取消  
+\- `5` : 买入下单后还未转账完成  
+\- `6` : 取消订单未转账  
+side | string | Optional |  | 买单或者卖单  
+\- buy  
+\- sell  
+gas_mode | string | Optional |  | 交易模式 影响滑点选择  
+\- `speed` : 智能模式  
+\- `custom` : 自定义, 会使用 `slippage`  
+create_time | integer(int64) | Optional |  | 创建时间 (时间戳)  
+amount | string | Optional |  | 交易数量   
+\- `side` : `buy` 指代计价货币，指`USDT`  
+\- `side` : `sell` 指代交易货币  
+token_address | string | Optional |  | 币地址  
+chain | string | Optional |  | 链名  
+      
+    
+    {
+      "order_id": "string",
+      "status": 0,
+      "side": "string",
+      "gas_mode": "string",
+      "create_time": 0,
+      "amount": "string",
+      "token_address": "string",
+      "chain": "string"
+    }
+    
+    
+
+##  AlphaCurrency
+
+AlphaCurrency
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional |  | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098；用于 Alpha 接口的 currency 参数，不是展示符号 USDS。  
+name | string | Optional |  | 币种展示名称或符号，例如 USDS；不能代替 currency 字段作为 Alpha 币种 ID。  
+chain | string | Optional |  | 币对应的主链  
+address | string | Optional |  | 合约地址  
+amount_precision | integer(int32) | Optional |  | 数量精度  
+precision | integer(int32) | Optional |  | 价格精度  
+status | integer(int32) | Optional |  | 币种交易状态  
+\- `1` : 正常交易  
+\- `2` : 暂停交易  
+\- `3` : 下架  
+      
+    
+    {
+      "currency": "string",
+      "name": "string",
+      "chain": "string",
+      "address": "string",
+      "amount_precision": 0,
+      "precision": 0,
+      "status": 0
+    }
+    
+    
+
+##  AlphaTicker
+
+AlphaTicker
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional |  | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098；用于 Alpha 接口的 currency 参数，不是展示符号 USDS。  
+last | string | Optional |  | 最新成交价  
+change | string | Optional |  | 最近24h涨跌百分比，跌用负数标识，如 -7.45  
+volume | string | Optional |  | 最近24h成交额(USDT)  
+market_cap | string | Optional |  | 币种当前市值  
+      
+    
+    {
+      "currency": "string",
+      "last": "string",
+      "change": "string",
+      "volume": "string",
+      "market_cap": "string"
+    }
+    
+    
+
+##  Tokens
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional |  | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098；用于 Alpha 接口的 currency 参数，不是展示符号 USDS。  
+name | string | Optional |  | 币种展示名称或符号，例如 USDS；不能代替 currency 字段作为 Alpha 币种 ID。  
+chain | string | Optional |  | 币对应的主链  
+address | string | Optional |  | 合约地址  
+amount_precision | integer(int32) | Optional |  | 数量精度  
+precision | integer(int32) | Optional |  | 价格精度  
+status | integer(int32) | Optional |  | 币种交易状态  
+\- `1` : 正常交易  
+\- `2` : 暂停交易  
+\- `3` : 下架  
+      
+    
+    {
+      "currency": "string",
+      "name": "string",
+      "chain": "string",
+      "address": "string",
+      "amount_precision": 0,
+      "precision": 0,
+      "status": 0
+    }
+    
     
 
 Last Updated: 10/17/2025, 10:29:26 AM

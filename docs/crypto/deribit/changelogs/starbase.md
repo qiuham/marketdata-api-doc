@@ -2,12 +2,59 @@
 exchange: deribit
 source_url: https://docs.deribit.com/changelogs/starbase
 api_type: Changelog
-updated_at: 2026-11-19 19:05:33.039952
+updated_at: 2026-11-20 19:00:10.023874
 ---
 
 # Starbase API Changelog
 
 > Release notes for the Deribit Starbase binary and REST APIs covering new messages, protocol changes, performance updates, and compatibility notes.
+
+**Starbase Update 26.11.2026**
+
+> [!NOTE]
+>
+> Available on testnet from 20 November 2026. Production release is planned for 26 November 2026.
+
+## API Changes
+
+### Order Entry
+
+> [!WARNING]
+>
+> **Breaking change: speed-bumped orders and quotes can no longer be amended.** Clients that amend or re-quote orders while they are queued in the speed bump must update their handling.
+
+**Amends of speed-bumped orders are rejected.** An `AmendOrderRequest` for an order that is queued in the [speed bump](https://docs.deribit.com/starbase/upcoming/speed-bumps.md) (`orderState = 4`) is rejected with the new reason `SPEED_BUMPED` (`34`). This applies to any change of price, quantity or both, including a quantity reduction and a re-price to a passive price. The order is not changed: it keeps its place in the speed bump queue and its release time, and enters the book unchanged when the speed bump elapses.
+
+* An amend sent while the order is still awaiting its pre-trade risk check is also rejected if the order is speed-bumped by the time the amend is processed
+* Cancelling a speed-bumped order is unchanged: the order is converted to IOC and can still trade at release
+* Once the speed bump has elapsed, the order can be amended as before
+
+Previously, an amend of a speed-bumped order was applied: an aggressing amend restarted the speed bump and a passive amend added the order to the book immediately.
+
+### Mass Quotes
+
+Each quote side is handled separately. Changes to a side that is not speed-bumped are processed as before.
+
+* **Changing a speed-bumped side.** If a `MassQuoteRequest` changes the price or quantity of a speed-bumped quote side, including a quantity reduction at the same price, that side is reported with `bidStatus` / `askStatus` = `UNMODIFIED` and `bidRejectReason` / `askRejectReason` = `SPEED_BUMPED` (`34`). The queued quote is left unchanged. Previously, the queued quote was replaced
+* **Re-sending a speed-bumped side unchanged** returns `UNMODIFIED` with no reject reason (unchanged)
+* **Quantity `0` on a speed-bumped side** converts it to IOC, like a cancel (unchanged)
+* **Crossed or invalid mass quote.** If the request fails validation (bid at or above ask, or an invalid quantity) while one side is speed-bumped, the speed-bumped side is converted to IOC and reported with status `SPEED_BUMPED` (`8`) and no reject reason. It can still trade at its existing price when the speed bump elapses. The other side is rejected and its resting quote cancelled, as before. Previously, the speed-bumped side was removed
+* **New side at or through a speed-bumped side.** If one side is speed-bumped (for example an ask at `100`) and the request moves the other side to or through its price (for example a bid at `101` and an ask at `102`), the speed-bumped side is reported `UNMODIFIED` with reject reason `SPEED_BUMPED` and stays at its old price. The other side is processed normally and can rest at or through that price. On release, the speed-bumped side matches like a new order, and self-match prevention cancels it if it would trade against your own quote
+
+### Market Maker Protection
+
+When a mass quote trips MMP, speed-bumped quote sides in that same request are converted to IOC and reported with status `SPEED_BUMPED` (`8`). They can still trade when the speed bump elapses. This covers sides that were already speed-bumped and sides newly speed-bumped earlier in the same request. Previously, these sides were removed. Speed-bumped quotes that are not in the triggering request are converted to IOC, as before. See [MMP and speed bumps](https://docs.deribit.com/starbase/upcoming/speed-bumps.md#mmp-and-speed-bumps).
+
+### Schema
+
+The order entry SBE schema has been updated to version `23` (`semanticVersion` remains `1.5`). The update is available as the [testnet](https://docs.deribit.com/specifications/deribit-sbe-xmls/deribit-sbe-order-api-testnet.xml) order entry XML.
+
+* `OrderRejectReason`: new reason code `SPEED_BUMPED` (`34`), used in `AmendOrderReject` and in `bidRejectReason` / `askRejectReason` of `MassQuoteResponse`
+* `MassQuoteResponse` (230): new combination of `bidStatus` / `askStatus` = `UNMODIFIED` with reject reason `SPEED_BUMPED` for a rejected change to a speed-bumped side
+
+The reject is sent regardless of the session's schema version. A decoder generated from schema version `22` or earlier does not know value `34` and decodes it as an unknown value (`SBE_UNKNOWN` in generated Java codecs). Update your codecs to version `23` to identify the reason.
+
+See [Amending speed-bumped orders and quotes](https://docs.deribit.com/starbase/upcoming/speed-bumps.md#amending-speed-bumped-orders-and-quotes), [Amending an Order](https://docs.deribit.com/starbase/upcoming/amending-order.md), [Mass Quotes](https://docs.deribit.com/starbase/upcoming/mass-quotes.md) and [Rejection Reason Codes](https://docs.deribit.com/starbase/upcoming/binary-api-reference.md#rejection-reason-codes).
 
 **Starbase Update 18.11.2026**
 

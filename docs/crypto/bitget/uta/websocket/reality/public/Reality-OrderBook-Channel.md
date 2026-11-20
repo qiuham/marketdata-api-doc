@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/reality/public/Reality-OrderBook-Channel
 api_type: WebSocket
-updated_at: 2026-11-19 19:07:36.108181
+updated_at: 2026-11-20 19:01:43.436466
 ---
 
 # Reality Orderbook Channel

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/new-delivery-price
 api_type: Market Data
-updated_at: 2026-11-19 18:54:21.594351
+updated_at: 2026-11-20 18:52:17.750244
 ---
 
 # Get New Delivery Price

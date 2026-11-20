@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/openWidget
 api_type: Guide
-updated_at: 2026-11-19 18:50:11.362440
+updated_at: 2026-11-20 18:49:02.084735
 ---
 
 # bn.openWidget

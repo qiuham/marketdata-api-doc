@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/getPerformance
 api_type: Guide
-updated_at: 2026-11-19 18:50:52.571323
+updated_at: 2026-11-20 18:49:39.859767
 ---
 
 # bn.getPerformance

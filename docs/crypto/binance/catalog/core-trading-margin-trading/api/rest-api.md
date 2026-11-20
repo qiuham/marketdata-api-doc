@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api
 api_type: REST
-updated_at: 2026-11-19 18:51:41.202652
+updated_at: 2026-11-20 18:50:28.952079
 ---
 
 # Margin REST API

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_funding_rate_history
 api_type: JSON-RPC
-updated_at: 2026-11-19 19:05:53.753390
+updated_at: 2026-11-20 19:00:14.110470
 ---
 
 # public/get_funding_rate_history

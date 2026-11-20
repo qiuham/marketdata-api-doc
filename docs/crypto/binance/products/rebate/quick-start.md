@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/rebate/quick-start
 api_type: Guide
-updated_at: 2026-11-19 18:31:06.196985
+updated_at: 2026-11-20 18:30:53.228001
 ---
 
 # Quick Start

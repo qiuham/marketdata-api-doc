@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/market-data/query-l3-order-book'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Query L3 Order Book

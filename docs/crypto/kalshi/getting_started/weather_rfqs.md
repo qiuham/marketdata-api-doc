@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/getting_started/weather_rfqs'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # On-Request Weather Markets
@@ -46,7 +46,7 @@ Not every variable is offered everywhere, and the set differs between production
 
 **Location.** A point inside an offered region whose grid cell touches land in a US state or territory. A cell entirely over open water is refused, and so is a cell entirely outside the US even where a region's rectangle covers it, such as Toronto inside `conus`. The market's point is your coordinates rounded to three decimal places (about 100 m), so requests that agree to three decimal places, with the same variable, window, strike type and thresholds, resolve to the same market; two points in the same grid cell are two markets. A rounded point that lies exactly on the boundary between two grid cells is moved 0.001° north or east, into one of them. The response returns the market's coordinates.
 
-**Window.** Whole local hours, given as `date`, `start_hour` (0 to 23), `end_hour` (1 to 24, exclusive) and an IANA `timezone`. `timezone` only says which span of time your `date` and hours mean; it can be any zone, and it is not how the market is described (see [the market's own time zone](#the-markets-own-time-zone)). A new market's window must start at least 15 minutes from now and within 365 days. The window must start and end on whole UTC hours, so time zones offset by a fraction of an hour are refused.
+**Window.** Whole local hours, given as `date`, `start_hour` (0 to 23), `end_hour` (1 to 24, exclusive) and an IANA `timezone`. `timezone` only says which span of time your `date` and hours mean; it can be any zone, and it is not how the market is described (see [the market's own time zone](#the-markets-own-time-zone)). A new market's window must start at least 6 hours from now (15 minutes on demo) and within 365 days. The window must start and end on whole UTC hours, so time zones offset by a fraction of an hour are refused.
 
 * **On one calendar day.** Leave out `end_date`, or set it to `date`. `end_hour` must be after `start_hour`, and `0` to `24` is the whole day. That is 24 hours, or 25 on the day clocks fall back and 23 on the day they spring forward.
 * **Across midnight.** Set `end_date` to the day after `date`: the window runs from `start_hour` on `date` to `end_hour` on `end_date`. It is at most 24 hours long, so `end_hour` must not be after `start_hour`: `23` to `3` is 11pm to 3am, `8` to `8` is 24 hours, and `8` to `9` is refused. Any other `end_date` is refused. This is offered where availability returns `max_window_days: 2`, for every variable it lists; `max_window_hours` is the longest such window.
@@ -274,7 +274,7 @@ The create endpoint is charged against your write [rate limit](https://docs.kals
 | 400 | `bad_request` | The body isn't valid JSON, or a field has the wrong type |
 | 400 | `missing_parameters` | A required field is missing or empty |
 | 400 | `invalid_parameters` | The request can't define a market: an hour or threshold out of range, an `end_date` other than `date` or the day after it, a window across midnight, in your `timezone` or the location's, longer than 24 hours, a location outside coverage, an unknown time zone, a window that has ended, or one that starts more than 365 days out |
-| 409 | `weather_point_market_unavailable` | Valid, but not offered: the variable isn't offered at that location, the point is over open water or outside US land, the window starts in less than 15 minutes, the market's window crosses midnight in the location's time zone where availability returns `max_window_days: 1` (see [the market's own time zone](#the-markets-own-time-zone)), the location's time zone can't be determined, or weather markets are switched off |
+| 409 | `weather_point_market_unavailable` | Valid, but not offered: the variable isn't offered at that location, the point is over open water or outside US land, the window starts in less than 6 hours (15 minutes on demo), the market's window crosses midnight in the location's time zone where availability returns `max_window_days: 1` (see [the market's own time zone](#the-markets-own-time-zone)), the location's time zone can't be determined, or weather markets are switched off |
 | 429 | `weather_point_market_limit_exceeded` | A creation limit was reached: the limit on new weather markets across all users in a rolling 24 hours, or 40 markets for one variable, point and window. Retrying at once doesn't help |
 | 429 | `too_many_requests` | Your API rate limit |
 

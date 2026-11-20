@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_instruments
 api_type: JSON-RPC
-updated_at: 2026-11-19 19:05:54.020386
+updated_at: 2026-11-20 19:00:14.187573
 ---
 
 # public/get_instruments

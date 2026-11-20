@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/historical/get-historical-fills'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Get Historical Fills
@@ -90,7 +90,14 @@ paths:
         explicitly granted read::compliance_partner scope.
       operationId: GetFillsHistorical
       parameters:
-        - $ref: '#/components/parameters/TickerQuery'
+        - name: ticker
+          in: query
+          description: >-
+            Filter by market ticker. Accepts a comma-separated list of up to 100
+            market tickers.
+          schema:
+            type: string
+            x-go-type-skip-optional-pointer: true
         - $ref: '#/components/parameters/MinTsQuery'
         - $ref: '#/components/parameters/MaxTsQuery'
         - $ref: '#/components/parameters/LimitQuery'
@@ -118,13 +125,6 @@ paths:
         - kalshiOauthAccessToken: []
 components:
   parameters:
-    TickerQuery:
-      name: ticker
-      in: query
-      description: Filter by market ticker
-      schema:
-        type: string
-        x-go-type-skip-optional-pointer: true
     MinTsQuery:
       name: min_ts
       in: query

@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/institutional/api-reference/prime-websocket/quote-cancel-request'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Quote Cancel Request

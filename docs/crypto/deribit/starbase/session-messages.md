@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/session-messages
 api_type: Starbase
-updated_at: 2026-11-19 19:05:48.406304
+updated_at: 2026-11-20 19:00:11.664498
 ---
 
 # Starbase Session Messages

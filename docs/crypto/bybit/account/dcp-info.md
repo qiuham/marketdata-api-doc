@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/dcp-info
 api_type: Account
-updated_at: 2026-11-19 18:52:15.906856
+updated_at: 2026-11-20 18:50:56.742794
 ---
 
 # Get DCP Info

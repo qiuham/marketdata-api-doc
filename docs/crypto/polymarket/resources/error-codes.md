@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/resources/error-codes'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Error Codes

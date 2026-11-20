@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/device/stopDeviceMotionListening
 api_type: Guide
-updated_at: 2026-11-19 18:49:30.196391
+updated_at: 2026-11-20 18:48:22.467144
 ---
 
 # bn.stopDeviceMotionListening

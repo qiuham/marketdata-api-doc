@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/rest-api
 api_type: Guide
-updated_at: 2026-11-19 19:06:28.640718
+updated_at: 2026-11-20 19:00:41.221864
 ---
 
 # REST API

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/order-notification
 api_type: Guide
-updated_at: 2026-11-19 18:35:16.827265
+updated_at: 2026-11-20 18:35:00.179726
 ---
 
 # Binance Pay: Order Notification

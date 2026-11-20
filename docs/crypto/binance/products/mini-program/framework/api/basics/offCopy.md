@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/offCopy
 api_type: Guide
-updated_at: 2026-11-19 18:50:33.746076
+updated_at: 2026-11-20 18:49:21.427442
 ---
 
 # bn.offCopy

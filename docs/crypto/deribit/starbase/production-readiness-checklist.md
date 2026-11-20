@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/production-readiness-checklist
 api_type: Starbase
-updated_at: 2026-11-19 19:05:48.328369
+updated_at: 2026-11-20 19:00:11.619661
 ---
 
 # Production Readiness Checklist

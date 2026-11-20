@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/list-subtrader-bound-api-keys'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # List Subtrader-Bound API Keys

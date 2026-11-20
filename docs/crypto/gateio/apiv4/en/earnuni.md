@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/earnuni
 api_type: Earn
-updated_at: 2026-11-19 19:00:43.465630
+updated_at: 2026-11-20 18:56:51.684235
 ---
 
 # EarnUni
@@ -1219,6 +1219,39 @@ interest_status | string | Optional | readOnly: true | Interest status: interest
     
     
 
+##  UniLendRecord
+
+Lending Record
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | Currency name  
+amount | string | Optional | readOnly: true | Current Amount  
+last_wallet_amount | string | Optional | readOnly: true | Previous Available Amount  
+last_lent_amount | string | Optional | readOnly: true | Previous Lent Amount  
+last_frozen_amount | string | Optional | readOnly: true | Previous Frozen Amount  
+type | string | Optional | readOnly: true | Record Type: lend - Lend, redeem - Redeem  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
+      
+    
+    {
+      "currency": "string",
+      "amount": "string",
+      "last_wallet_amount": "string",
+      "last_lent_amount": "string",
+      "last_frozen_amount": "string",
+      "type": "string",
+      "create_time": 0
+    }
+    
+    
+
 ##  UniCurrency
 
 Currency detail
@@ -1244,6 +1277,60 @@ min_rate | string | Optional | readOnly: true | Minimum rate (Hourly)
       "max_lend_amount": "string",
       "max_rate": "string",
       "min_rate": "string"
+    }
+    
+    
+
+##  UniInterestRecord
+
+Interest Record
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+status | integer | Optional | readOnly: true | Status: 0 - fail, 1 - success  
+currency | string | Optional | readOnly: true | Currency  
+actual_rate | string | Optional | readOnly: true | Actual Rate  
+interest | string | Optional | readOnly: true | Interest  
+interest_status | string | Optional | readOnly: true | Interest status: interest_dividend - Normal dividend, interest_reinvest - Interest reinvestment  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
+      
+    
+    {
+      "status": 0,
+      "currency": "string",
+      "actual_rate": "string",
+      "interest": "string",
+      "interest_status": "string",
+      "create_time": 0
+    }
+    
+    
+
+##  UniLendInterest
+
+UniLendInterest
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | Currency  
+interest | string | Optional | readOnly: true | Interest income  
+      
+    
+    {
+      "currency": "string",
+      "interest": "string"
     }
     
     
@@ -1306,93 +1393,6 @@ update_time | integer(int64) | Optional | readOnly: true | Lending Order Last Up
       "reinvest_left_amount": "string",
       "create_time": 0,
       "update_time": 0
-    }
-    
-    
-
-##  UniLendRecord
-
-Lending Record
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-currency | string | Optional | readOnly: true | Currency name  
-amount | string | Optional | readOnly: true | Current Amount  
-last_wallet_amount | string | Optional | readOnly: true | Previous Available Amount  
-last_lent_amount | string | Optional | readOnly: true | Previous Lent Amount  
-last_frozen_amount | string | Optional | readOnly: true | Previous Frozen Amount  
-type | string | Optional | readOnly: true | Record Type: lend - Lend, redeem - Redeem  
-create_time | integer(int64) | Optional | readOnly: true | Created time  
-      
-    
-    {
-      "currency": "string",
-      "amount": "string",
-      "last_wallet_amount": "string",
-      "last_lent_amount": "string",
-      "last_frozen_amount": "string",
-      "type": "string",
-      "create_time": 0
-    }
-    
-    
-
-##  UniLendInterest
-
-UniLendInterest
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-currency | string | Optional | readOnly: true | Currency  
-interest | string | Optional | readOnly: true | Interest income  
-      
-    
-    {
-      "currency": "string",
-      "interest": "string"
-    }
-    
-    
-
-##  UniInterestRecord
-
-Interest Record
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-status | integer | Optional | readOnly: true | Status: 0 - fail, 1 - success  
-currency | string | Optional | readOnly: true | Currency  
-actual_rate | string | Optional | readOnly: true | Actual Rate  
-interest | string | Optional | readOnly: true | Interest  
-interest_status | string | Optional | readOnly: true | Interest status: interest_dividend - Normal dividend, interest_reinvest - Interest reinvestment  
-create_time | integer(int64) | Optional | readOnly: true | Created time  
-      
-    
-    {
-      "status": 0,
-      "currency": "string",
-      "actual_rate": "string",
-      "interest": "string",
-      "interest_status": "string",
-      "create_time": 0
     }
     
     

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en
 api_type: REST
-updated_at: 2026-11-19 19:00:30.135111
+updated_at: 2026-11-20 18:56:39.032271
 ---
 
 # Gate API v4.106.184
@@ -1629,7 +1629,7 @@ Add `cross_order_margin`、`cross_initial_margin`、`cross_maintenance_margin`�
 
   * Add `debit_fee` field in `GET /spot/batch_fee` response
   * Add `user_id` parameter in `DELETE /account/stp_groups/{stp_id}/users` endpoint
-  * Spot API introduces asynchronous support modes for create orders: `ACK`, `RESULT`, `FULL`. For details, please refer to SPOT API
+  * Spot API introduces asynchronous support modes for create orders: `ACK`, `RESULT`, `FULL`. For details, please refer to [SPOT API](/docs/developers/apiv4/en/spot/#opIdcreateOrder)
 
 **v4.64.0**
 

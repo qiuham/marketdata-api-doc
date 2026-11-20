@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/custom-component
 api_type: Guide
-updated_at: 2026-11-19 18:40:09.397569
+updated_at: 2026-11-20 18:39:27.545973
 ---
 
 # Custom Component

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/tools/binance-cli
 api_type: Guide
-updated_at: 2026-11-19 18:28:38.539310
+updated_at: 2026-11-20 18:28:29.937315
 ---
 
 # Binance CLI

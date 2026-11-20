@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-get_order_margin_by_ids
 api_type: JSON-RPC
-updated_at: 2026-11-19 19:05:56.184969
+updated_at: 2026-11-20 19:00:15.209087
 ---
 
 # private/get_order_margin_by_ids

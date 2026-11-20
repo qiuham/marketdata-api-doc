@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-set_announcement_as_read
 api_type: JSON-RPC
-updated_at: 2026-11-19 19:05:51.191234
+updated_at: 2026-11-20 19:00:13.025806
 ---
 
 # private/set_announcement_as_read

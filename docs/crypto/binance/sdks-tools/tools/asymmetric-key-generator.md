@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/tools/asymmetric-key-generator
 api_type: Guide
-updated_at: 2026-11-19 18:28:40.002938
+updated_at: 2026-11-20 18:28:31.669455
 ---
 
 # Asymmetric Key Generator

@@ -2,12 +2,24 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/changelog
 api_type: Changelog
-updated_at: 2026-11-19 18:35:26.211115
+updated_at: 2026-11-20 18:35:08.908116
 ---
 
 # Binance Pay API: Changelog
 
-Last Updated: 2025-06
+Last Updated: 2026-11
+
+## 2026-11
+
+Release of a new platform certificate for webhook signatures:
+
+- Release of new API to query the new certificate
+  - POST /binancepay/openapi/certificates-new
+- New webhook headers BinancePay-Certificate-SN-New and BinancePay-Signature-New, sent next to the
+  existing headers once the new certificate is enabled
+- Deprecated, to be retired soon: please migrate to the new API and headers
+  - POST /binancepay/openapi/certificates
+  - Webhook headers BinancePay-Certificate-SN and BinancePay-Signature
 
 ## 2025-06
 
@@ -71,7 +83,19 @@ Modification to existing endpoints:
 
 # Binance Pay API: Changelog
 
-Last Updated: 2025-06
+Last Updated: 2026-11
+
+## 2026-11
+
+Release of a new platform certificate for webhook signatures:
+
+- Release of new API to query the new certificate
+  - POST /binancepay/openapi/certificates-new
+- New webhook headers BinancePay-Certificate-SN-New and BinancePay-Signature-New, sent next to the
+  existing headers once the new certificate is enabled
+- Deprecated, to be retired soon: please migrate to the new API and headers
+  - POST /binancepay/openapi/certificates
+  - Webhook headers BinancePay-Certificate-SN and BinancePay-Signature
 
 ## 2025-06
 

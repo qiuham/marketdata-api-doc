@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/demo-mode/general-info
 api_type: Guide
-updated_at: 2026-11-19 18:38:01.007851
+updated_at: 2026-11-20 18:37:29.375300
 ---
 
 # Demo Mode for SPOT Trading

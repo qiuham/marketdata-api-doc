@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/margin-trading/error-code
 api_type: Guide
-updated_at: 2026-11-19 18:32:11.699077
+updated_at: 2026-11-20 18:32:00.158067
 ---
 
 # Error Codes

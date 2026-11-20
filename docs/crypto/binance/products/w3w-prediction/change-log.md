@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/w3w-prediction/change-log
 api_type: Changelog
-updated_at: 2026-11-19 18:29:40.724353
+updated_at: 2026-11-20 18:29:35.721066
 ---
 
 # Change Log

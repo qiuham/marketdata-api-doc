@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/market-data/quoteinstrument_name
 api_type: WebSocket
-updated_at: 2026-11-19 19:05:33.693605
+updated_at: 2026-11-20 19:00:10.186979
 ---
 
 # quote.(instrument_name)
@@ -283,7 +283,7 @@ securitySchemes: []
 ## Related topics
 
 - [Notifications](https://docs.deribit.com/articles/notifications.md)
+- [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md)
 - [user.trades.(instrument_name).(interval) ](https://docs.deribit.com/subscriptions/user/usertradesinstrument_nameinterval.md)
 - [book.(instrument_name).(interval) ](https://docs.deribit.com/subscriptions/orderbook/bookinstrument_nameinterval.md)
 - [book.(instrument_name).(group).(depth).(interval) ](https://docs.deribit.com/subscriptions/orderbook/bookinstrument_namegroupdepthinterval.md)
-- [perpetual.(instrument_name).(interval) ](https://docs.deribit.com/subscriptions/market-data/perpetualinstrument_nameinterval.md)

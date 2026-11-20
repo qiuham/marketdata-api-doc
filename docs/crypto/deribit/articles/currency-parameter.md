@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/currency-parameter
 api_type: Guide
-updated_at: 2026-11-19 19:05:32.331104
+updated_at: 2026-11-20 19:00:09.679657
 ---
 
 # Using the currency Parameter

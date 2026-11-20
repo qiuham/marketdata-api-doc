@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/heartbeat
 api_type: FIX
-updated_at: 2026-11-19 19:05:44.533197
+updated_at: 2026-11-20 19:00:11.043132
 ---
 
 # Heartbeat(0) (Production FIX API)

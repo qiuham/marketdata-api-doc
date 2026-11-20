@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/market-data/get-order-book'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Get Order Book

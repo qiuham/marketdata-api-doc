@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/getDeviceInfo
 api_type: Guide
-updated_at: 2026-11-19 18:50:57.510056
+updated_at: 2026-11-20 18:49:44.817442
 ---
 
 # bn.getDeviceInfo

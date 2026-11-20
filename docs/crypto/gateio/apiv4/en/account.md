@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/account
 api_type: Account
-updated_at: 2026-11-19 19:00:30.342275
+updated_at: 2026-11-20 18:56:39.934776
 ---
 
 # Account
@@ -425,7 +425,7 @@ AccountRateLimit |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-tier | string | Optional | readOnly: true | Frequency limit level (For detailed frequency limit rules, see Transaction ratio frequency limit)  
+tier | string | Optional | readOnly: true | Frequency limit level (For detailed frequency limit rules, see [Transaction ratio frequency limit](/docs/developers/apiv4/en/#rate-limit-based-on-fill-ratio))  
 ratio | string | Optional |  | Fill rate  
 main_ratio | string | Optional | readOnly: true | Total fill ratio of main account  
 updated_at | string | Optional | readOnly: true | Update time  
@@ -1256,6 +1256,117 @@ Code samples
 
 #  Schemas
 
+##  AccountRateLimit
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+tier | string | Optional | readOnly: true | Frequency limit level (For detailed frequency limit rules, see [Transaction ratio frequency limit](/docs/developers/apiv4/en/#rate-limit-based-on-fill-ratio))  
+ratio | string | Optional |  | Fill rate  
+main_ratio | string | Optional | readOnly: true | Total fill ratio of main account  
+updated_at | string | Optional | readOnly: true | Update time  
+      
+    
+    {
+      "tier": "string",
+      "ratio": "string",
+      "main_ratio": "string",
+      "updated_at": "string"
+    }
+    
+    
+
+##  DebitFee
+
+Type | Constraints  
+---|---  
+object | required: ["enabled"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+enabled | boolean | Required |  | Whether GT fee deduction is enabled  
+      
+    
+    {
+      "enabled": true
+    }
+    
+    
+
+##  AddSTPGroupUsersRequest
+
+Type | Constraints  
+---|---  
+array |   
+  
+**items**
+
+Type | Constraints  
+---|---  
+integer(int64) |   
+      
+    
+    [
+      0
+    ]
+    
+    
+
+##  StpGroup
+
+Type | Constraints  
+---|---  
+object | required: ["name"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | STP Group ID  
+name | string | Required |  | STP Group name  
+creator_id | integer(int64) | Optional | readOnly: true | Creator ID  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
+      
+    
+    {
+      "id": 0,
+      "name": "string",
+      "creator_id": 0,
+      "create_time": 0
+    }
+    
+    
+
+##  StpGroupUser
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | User ID  
+stp_id | integer(int64) | Optional | readOnly: true | STP Group ID  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
+      
+    
+    {
+      "user_id": 0,
+      "stp_id": 0,
+      "create_time": 0
+    }
+    
+    
+
 ##  AccountKeyInfo
 
 AccountKeyInfo
@@ -1470,115 +1581,4 @@ mode | integer(int32) | Optional |  | Mode: 1 - Classic mode, 2 - Legacy unified
         "mode": 0
       },
       "copy_trading_role": 0
-    }
-    
-    
-
-##  StpGroup
-
-Type | Constraints  
----|---  
-object | required: ["name"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-id | integer(int64) | Optional | readOnly: true | STP Group ID  
-name | string | Required |  | STP Group name  
-creator_id | integer(int64) | Optional | readOnly: true | Creator ID  
-create_time | integer(int64) | Optional | readOnly: true | Created time  
-      
-    
-    {
-      "id": 0,
-      "name": "string",
-      "creator_id": 0,
-      "create_time": 0
-    }
-    
-    
-
-##  DebitFee
-
-Type | Constraints  
----|---  
-object | required: ["enabled"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-enabled | boolean | Required |  | Whether GT fee deduction is enabled  
-      
-    
-    {
-      "enabled": true
-    }
-    
-    
-
-##  AccountRateLimit
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-tier | string | Optional | readOnly: true | Frequency limit level (For detailed frequency limit rules, see Transaction ratio frequency limit)  
-ratio | string | Optional |  | Fill rate  
-main_ratio | string | Optional | readOnly: true | Total fill ratio of main account  
-updated_at | string | Optional | readOnly: true | Update time  
-      
-    
-    {
-      "tier": "string",
-      "ratio": "string",
-      "main_ratio": "string",
-      "updated_at": "string"
-    }
-    
-    
-
-##  AddSTPGroupUsersRequest
-
-Type | Constraints  
----|---  
-array |   
-  
-**items**
-
-Type | Constraints  
----|---  
-integer(int64) |   
-      
-    
-    [
-      0
-    ]
-    
-    
-
-##  StpGroupUser
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-user_id | integer(int64) | Optional |  | User ID  
-stp_id | integer(int64) | Optional | readOnly: true | STP Group ID  
-create_time | integer(int64) | Optional | readOnly: true | Created time  
-      
-    
-    {
-      "user_id": 0,
-      "stp_id": 0,
-      "create_time": 0
     }

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/margin/cross/private/Cross-Orders
 api_type: WebSocket
-updated_at: 2026-11-19 19:06:42.855178
+updated_at: 2026-11-20 19:00:53.956586
 ---
 
 # Cross-Margin Orders Channel

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/lsp/private-get_lsp_usage
 api_type: JSON-RPC
-updated_at: 2026-11-19 19:05:53.334972
+updated_at: 2026-11-20 19:00:13.873633
 ---
 
 # private/get_lsp_usage

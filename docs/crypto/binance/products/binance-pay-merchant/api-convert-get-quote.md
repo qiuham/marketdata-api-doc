@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-convert-get-quote
 api_type: Guide
-updated_at: 2026-11-19 18:36:32.421687
+updated_at: 2026-11-20 18:36:12.753519
 ---
 
 # Send Quote

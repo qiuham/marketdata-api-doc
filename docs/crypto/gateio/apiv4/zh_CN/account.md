@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/account
 api_type: Account
-updated_at: 2026-11-19 19:01:18.084571
+updated_at: 2026-11-20 18:57:24.611179
 ---
 
 # Account
@@ -425,7 +425,7 @@ AccountRateLimit |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-tier | string | Optional | readOnly: true | 限频等级（详细限频规则查看成交比率限频）  
+tier | string | Optional | readOnly: true | 限频等级（详细限频规则查看[成交比率限频](/docs/developers/apiv4/zh_CN/#成交比率限频)）  
 ratio | string | Optional |  | 成交率  
 main_ratio | string | Optional | readOnly: true | 主账户合计成交比率  
 updated_at | string | Optional | readOnly: true | 更新时间  
@@ -1256,198 +1256,6 @@ WARNING
 
 #  模型
 
-##  AccountRateLimit
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-tier | string | Optional | readOnly: true | 限频等级（详细限频规则查看成交比率限频）  
-ratio | string | Optional |  | 成交率  
-main_ratio | string | Optional | readOnly: true | 主账户合计成交比率  
-updated_at | string | Optional | readOnly: true | 更新时间  
-      
-    
-    {
-      "tier": "string",
-      "ratio": "string",
-      "main_ratio": "string",
-      "updated_at": "string"
-    }
-    
-    
-
-##  AccountDetail
-
-AccountDetail
-
-账户详情
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-ip_whitelist | array | Optional |  | IP 白名单  
-currency_pairs | array | Optional |  | 交易对白名单  
-user_id | integer(int64) | Optional |  | 用户ID  
-tier | integer(int64) | Optional |  | 用户 vip 等级  
-key | object | Optional |  | API Key 详情  
-copy_trading_role | integer(int32) | Optional |  | 用户角色： 0 - 普通用户 1 - 带单者 2 - 跟单者 3 - 带单者与跟单者  
-  
-**ip_whitelist**
-
-IP 白名单
-
-类型 | 约束  
----|---  
-array |   
-  
-**ip_whitelist / items**
-
-类型 | 约束  
----|---  
-string |   
-  
-**currency_pairs**
-
-交易对白名单
-
-类型 | 约束  
----|---  
-array |   
-  
-**currency_pairs / items**
-
-类型 | 约束  
----|---  
-string |   
-  
-**key**
-
-API Key 详情
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-mode | integer(int32) | Optional |  | 模式： 1 - 经典模式 2 - 旧版统一模式  
-      
-    
-    {
-      "ip_whitelist": [
-        "string"
-      ],
-      "currency_pairs": [
-        "string"
-      ],
-      "user_id": 0,
-      "tier": 0,
-      "key": {
-        "mode": 0
-      },
-      "copy_trading_role": 0
-    }
-    
-    
-
-##  DebitFee
-
-类型 | 约束  
----|---  
-object | required: ["enabled"]  
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-enabled | boolean | Required |  | 是否开启GT抵扣  
-      
-    
-    {
-      "enabled": true
-    }
-    
-    
-
-##  StpGroupUser
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-user_id | integer(int64) | Optional |  | 用户ID  
-stp_id | integer(int64) | Optional | readOnly: true | STP用户组ID  
-create_time | integer(int64) | Optional | readOnly: true | 创建时间  
-      
-    
-    {
-      "user_id": 0,
-      "stp_id": 0,
-      "create_time": 0
-    }
-    
-    
-
-##  AddSTPGroupUsersRequest
-
-类型 | 约束  
----|---  
-array |   
-  
-**items**
-
-类型 | 约束  
----|---  
-integer(int64) |   
-      
-    
-    [
-      0
-    ]
-    
-    
-
-##  StpGroup
-
-类型 | 约束  
----|---  
-object | required: ["name"]  
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-id | integer(int64) | Optional | readOnly: true | STP用户组ID  
-name | string | Required |  | STP用户组名称  
-creator_id | integer(int64) | Optional | readOnly: true | 创建人账户ID  
-create_time | integer(int64) | Optional | readOnly: true | 创建时间  
-      
-    
-    {
-      "id": 0,
-      "name": "string",
-      "creator_id": 0,
-      "create_time": 0
-    }
-    
-    
-
 ##  AccountKeyInfo
 
 AccountKeyInfo
@@ -1581,4 +1389,196 @@ mode | integer(int32) | Optional |  | 模式： 1 - 经典模式 2 - 旧版统�
       "created_at": "string",
       "updated_at": "string",
       "last_access": "string"
+    }
+    
+    
+
+##  AccountDetail
+
+AccountDetail
+
+账户详情
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+ip_whitelist | array | Optional |  | IP 白名单  
+currency_pairs | array | Optional |  | 交易对白名单  
+user_id | integer(int64) | Optional |  | 用户ID  
+tier | integer(int64) | Optional |  | 用户 vip 等级  
+key | object | Optional |  | API Key 详情  
+copy_trading_role | integer(int32) | Optional |  | 用户角色： 0 - 普通用户 1 - 带单者 2 - 跟单者 3 - 带单者与跟单者  
+  
+**ip_whitelist**
+
+IP 白名单
+
+类型 | 约束  
+---|---  
+array |   
+  
+**ip_whitelist / items**
+
+类型 | 约束  
+---|---  
+string |   
+  
+**currency_pairs**
+
+交易对白名单
+
+类型 | 约束  
+---|---  
+array |   
+  
+**currency_pairs / items**
+
+类型 | 约束  
+---|---  
+string |   
+  
+**key**
+
+API Key 详情
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+mode | integer(int32) | Optional |  | 模式： 1 - 经典模式 2 - 旧版统一模式  
+      
+    
+    {
+      "ip_whitelist": [
+        "string"
+      ],
+      "currency_pairs": [
+        "string"
+      ],
+      "user_id": 0,
+      "tier": 0,
+      "key": {
+        "mode": 0
+      },
+      "copy_trading_role": 0
+    }
+    
+    
+
+##  StpGroupUser
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | 用户ID  
+stp_id | integer(int64) | Optional | readOnly: true | STP用户组ID  
+create_time | integer(int64) | Optional | readOnly: true | 创建时间  
+      
+    
+    {
+      "user_id": 0,
+      "stp_id": 0,
+      "create_time": 0
+    }
+    
+    
+
+##  AddSTPGroupUsersRequest
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items**
+
+类型 | 约束  
+---|---  
+integer(int64) |   
+      
+    
+    [
+      0
+    ]
+    
+    
+
+##  StpGroup
+
+类型 | 约束  
+---|---  
+object | required: ["name"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | STP用户组ID  
+name | string | Required |  | STP用户组名称  
+creator_id | integer(int64) | Optional | readOnly: true | 创建人账户ID  
+create_time | integer(int64) | Optional | readOnly: true | 创建时间  
+      
+    
+    {
+      "id": 0,
+      "name": "string",
+      "creator_id": 0,
+      "create_time": 0
+    }
+    
+    
+
+##  DebitFee
+
+类型 | 约束  
+---|---  
+object | required: ["enabled"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+enabled | boolean | Required |  | 是否开启GT抵扣  
+      
+    
+    {
+      "enabled": true
+    }
+    
+    
+
+##  AccountRateLimit
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+tier | string | Optional | readOnly: true | 限频等级（详细限频规则查看[成交比率限频](/docs/developers/apiv4/zh_CN/#成交比率限频)）  
+ratio | string | Optional |  | 成交率  
+main_ratio | string | Optional | readOnly: true | 主账户合计成交比率  
+updated_at | string | Optional | readOnly: true | 更新时间  
+      
+    
+    {
+      "tier": "string",
+      "ratio": "string",
+      "main_ratio": "string",
+      "updated_at": "string"
     }

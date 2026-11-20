@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/position-report
 api_type: FIX
-updated_at: 2026-11-19 19:05:46.943319
+updated_at: 2026-11-20 19:00:11.311537
 ---
 
 # Position Report(AP) (Production FIX API)

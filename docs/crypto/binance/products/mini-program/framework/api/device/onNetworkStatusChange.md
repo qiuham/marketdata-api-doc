@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/device/onNetworkStatusChange
 api_type: Guide
-updated_at: 2026-11-19 18:49:43.874315
+updated_at: 2026-11-20 18:48:35.570214
 ---
 
 # bn.onNetworkStatusChange

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/StickySection
 api_type: Guide
-updated_at: 2026-11-19 18:44:36.826972
+updated_at: 2026-11-20 18:43:39.780988
 ---
 
 # StickySectionr

@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/search/get-filters-for-sports'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Get Filters for Sports

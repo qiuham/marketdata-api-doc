@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/get-account-backstop-transfers'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # 获取账户兜底清算转账记录

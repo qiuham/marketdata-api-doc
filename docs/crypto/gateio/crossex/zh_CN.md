@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/crossex/zh_CN
 api_type: Trading
-updated_at: 2026-11-19 19:02:06.585674
+updated_at: 2026-11-20 18:58:12.243805
 ---
 
 # Gate CrossEx API v1.0.8
@@ -725,7 +725,6 @@ max_market_size | string | Required |  | 市价单最大下单数量
 max_limit_size | string | Required |  | 限价单最大下单数量  
 contract_size | string | Required |  | 合约乘数（已废弃，统一是量）  
 liquidation_fee | string | Required |  | 清算费率  
-default_leverage | string | Optional |  | 默认杠杆倍数  
 delist_time | string | Required |  | 毫秒时间戳，0 表示正常未下架  
 support_rpi | string | Optional |  | 是否支持rpi下单(true支持,false不支持)  
 support_cross | string | Optional |  | 是否支持全仓下单(true支持,false不支持)  
@@ -856,16 +855,6 @@ string |
 清算费率
 
 清算费率
-
-类型 | 约束  
----|---  
-string |   
-  
-**items / default_leverage**
-
-默认杠杆
-
-默认杠杆倍数
 
 类型 | 约束  
 ---|---  
@@ -7119,7 +7108,6 @@ max_market_size | string | Required |  | 市价单最大下单数量
 max_limit_size | string | Required |  | 限价单最大下单数量  
 contract_size | string | Required |  | 合约乘数（已废弃，统一是量）  
 liquidation_fee | string | Required |  | 清算费率  
-default_leverage | string | Optional |  | 默认杠杆倍数  
 delist_time | string | Required |  | 毫秒时间戳，0 表示正常未下架  
 support_rpi | string | Optional |  | 是否支持rpi下单(true支持,false不支持)  
 support_cross | string | Optional |  | 是否支持全仓下单(true支持,false不支持)  
@@ -7255,16 +7243,6 @@ string |
 ---|---  
 string |   
   
-**default_leverage**
-
-默认杠杆
-
-默认杠杆倍数
-
-类型 | 约束  
----|---  
-string |   
-  
 **delist_time**
 
 下架时间
@@ -7320,7 +7298,6 @@ string |
       "max_limit_size": "string",
       "contract_size": "string",
       "liquidation_fee": "string",
-      "default_leverage": "string",
       "delist_time": "string",
       "support_rpi": "string",
       "support_cross": "string",

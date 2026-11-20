@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/quick-start
 api_type: Guide
-updated_at: 2026-11-19 18:33:32.058776
+updated_at: 2026-11-20 18:33:08.136189
 ---
 
 # Quick Start

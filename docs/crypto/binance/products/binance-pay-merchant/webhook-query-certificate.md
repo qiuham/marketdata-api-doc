@@ -2,10 +2,15 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/webhook-query-certificate
 api_type: Guide
-updated_at: 2026-11-19 18:35:04.075868
+updated_at: 2026-11-20 18:34:47.235233
 ---
 
-# Webhook query certificate
+# Webhook query certificate (Deprecated)
+
+**The API is deprecated and will be retired soon, please migrate to
+[Query New Certificate API](webhook-query-certificate-new) ASAP.** Look up the public key there by
+the `BinancePay-Certificate-SN-New` webhook header, see
+[Verify the New Signature](webhook-common#verify-the-new-signature).
 
 For Security Purpose, Binance will add signature for webhook notification. Partner need to verify
 the signature using the public key issued from Binance Pay. Public key can be queried from this API
@@ -25,7 +30,12 @@ POST /binancepay/openapi/certificates
 
 ---
 
-# Webhook query certificate
+# Webhook query certificate (Deprecated)
+
+**The API is deprecated and will be retired soon, please migrate to
+[Query New Certificate API](webhook-query-certificate-new) ASAP.** Look up the public key there by
+the `BinancePay-Certificate-SN-New` webhook header, see
+[Verify the New Signature](webhook-common#verify-the-new-signature).
 
 For Security Purpose, Binance will add signature for webhook notification. Partner need to verify
 the signature using the public key issued from Binance Pay. Public key can be queried from this API

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/subscription-management/private-subscribe
 api_type: JSON-RPC
-updated_at: 2026-11-19 19:05:54.851860
+updated_at: 2026-11-20 19:00:14.609381
 ---
 
 # private/subscribe

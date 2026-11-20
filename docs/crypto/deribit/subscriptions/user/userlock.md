@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/user/userlock
 api_type: WebSocket
-updated_at: 2026-11-19 19:05:43.679005
+updated_at: 2026-11-20 19:00:10.711437
 ---
 
 # user.lock

@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/reference/rest-auth-funding-offers'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Active Funding Offers

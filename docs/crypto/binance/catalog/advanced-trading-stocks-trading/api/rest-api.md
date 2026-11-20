@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-stocks-trading/api/rest-api
 api_type: REST
-updated_at: 2026-11-19 18:51:48.107683
+updated_at: 2026-11-20 18:50:35.139000
 ---
 
 # Stocks Trading REST API

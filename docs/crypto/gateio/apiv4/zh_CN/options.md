@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/options
 api_type: Trading
-updated_at: 2026-11-19 19:01:39.200346
+updated_at: 2026-11-20 18:57:44.786026
 ---
 
 # Options
@@ -420,19 +420,21 @@ offset | 请求参数 | integer | 否 | 列表返回的偏移量，从 0 开始
 from | 请求参数 | integer(int64) | 否 | 起始时间戳  
   
 指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
+  
 to | 请求参数 | integer(int64) | 否 | 终止时间戳  
   
 指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
+  
   
 ####  详细描述
 
 **from** : 起始时间戳  
   
-指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)
+指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
 
 **to** : 终止时间戳  
   
-指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳
+指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
 
 ### 返回
 
@@ -607,19 +609,21 @@ offset | 请求参数 | integer | 否 | 列表返回的偏移量，从 0 开始
 from | 请求参数 | integer(int64) | 否 | 起始时间戳  
   
 指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
+  
 to | 请求参数 | integer(int64) | 否 | 终止时间戳  
   
 指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
+  
   
 ####  详细描述
 
 **from** : 起始时间戳  
   
-指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)
+指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
 
 **to** : 终止时间戳  
   
-指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳
+指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
 
 ### 返回
 
@@ -1080,20 +1084,22 @@ limit | 请求参数 | integer | 否 | 列表返回的最大数量
 from | 请求参数 | integer(int64) | 否 | 起始时间戳  
   
 指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
+  
 to | 请求参数 | integer(int64) | 否 | 终止时间戳  
   
 指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
+  
 interval | 请求参数 | string | 否 | 数据点的时间间隔  
   
 ####  详细描述
 
 **from** : 起始时间戳  
   
-指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)
+指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
 
 **to** : 终止时间戳  
   
-指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳
+指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
 
 ####  枚举值列表
 
@@ -1197,20 +1203,22 @@ limit | 请求参数 | integer | 否 | 列表返回的最大数量
 from | 请求参数 | integer(int64) | 否 | 起始时间戳  
   
 指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
+  
 to | 请求参数 | integer(int64) | 否 | 终止时间戳  
   
 指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
+  
 interval | 请求参数 | string | 否 | 数据点的时间间隔  
   
 ####  详细描述
 
 **from** : 起始时间戳  
   
-指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)
+指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
 
 **to** : 终止时间戳  
   
-指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳
+指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
 
 ####  枚举值列表
 
@@ -1316,19 +1324,21 @@ offset | 请求参数 | integer | 否 | 列表返回的偏移量，从 0 开始
 from | 请求参数 | integer(int64) | 否 | 起始时间戳  
   
 指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
+  
 to | 请求参数 | integer(int64) | 否 | 终止时间戳  
   
 指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
+  
   
 ####  详细描述
 
 **from** : 起始时间戳  
   
-指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)
+指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
 
 **to** : 终止时间戳  
   
-指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳
+指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
 
 ### 返回
 
@@ -1546,9 +1556,11 @@ offset | 请求参数 | integer | 否 | 列表返回的偏移量，从 0 开始
 from | 请求参数 | integer(int64) | 否 | 起始时间戳  
   
 指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
+  
 to | 请求参数 | integer(int64) | 否 | 终止时间戳  
   
 指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
+  
 type | 请求参数 | string | 否 | 变更类型：  
 \- dnw: 转入转出  
 \- prem: 交易权利金  
@@ -1556,22 +1568,23 @@ type | 请求参数 | string | 否 | 变更类型：
 \- refr: 推荐人返佣  
 \- set: 结算盈亏  
   
+  
 ####  详细描述
 
 **from** : 起始时间戳  
   
-指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)
+指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
 
 **to** : 终止时间戳  
   
-指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳
+指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
 
 **type** : 变更类型：  
 \- dnw: 转入转出  
 \- prem: 交易权利金  
 \- fee: 手续费  
 \- refr: 推荐人返佣  
-\- set: 结算盈亏
+\- set: 结算盈亏  
 
 ####  枚举值列表
 
@@ -2117,19 +2130,21 @@ offset | 请求参数 | integer | 否 | 列表返回的偏移量，从 0 开始
 from | 请求参数 | integer(int64) | 否 | 起始时间戳  
   
 指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
+  
 to | 请求参数 | integer(int64) | 否 | 终止时间戳  
   
 指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
+  
   
 ####  详细描述
 
 **from** : 起始时间戳  
   
-指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)
+指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
 
 **to** : 终止时间戳  
   
-指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳
+指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
 
 ####  枚举值列表
 
@@ -3427,13 +3442,14 @@ _倒计时取消订单_
 body | body | CountdownCancelAllOptionsTask | 是 |   
 timeout | body | integer(int32) | 是 | 倒计时时间，单位 秒  
 至少5秒，为0时表示取消倒计时  
+  
 contract | body | string | 否 | 期权合约名称  
 underlying | body | string | 否 | 标的物  
   
 ####  详细描述
 
 ** timeout**: 倒计时时间，单位 秒  
-至少5秒，为0时表示取消倒计时
+至少5秒，为0时表示取消倒计时  
 
 ####  请求体结构
 
@@ -3563,19 +3579,21 @@ offset | 请求参数 | integer | 否 | 列表返回的偏移量，从 0 开始
 from | 请求参数 | integer(int64) | 否 | 起始时间戳  
   
 指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
+  
 to | 请求参数 | integer(int64) | 否 | 终止时间戳  
   
 指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
+  
   
 ####  详细描述
 
 **from** : 起始时间戳  
   
-指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)
+指定起始时间，时间格式为Unix时间戳。不指定则默认为(to和limit实际返回的时间范围的数据起始时间)  
 
 **to** : 终止时间戳  
   
-指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳
+指定结束时间，不指定则默认为当前时间，时间格式为Unix时间戳  
 
 ### 返回
 
@@ -4077,6 +4095,208 @@ WARNING
 
 #  模型
 
+##  OptionsMMP
+
+MMP设置
+
+类型 | 约束  
+---|---  
+object | required: ["underlying","window","frozen_period","qty_limit","delta_limit"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+underlying | string | Required |  | 标的物  
+window | integer(int32) | Required |  | 时间窗口（毫秒），1-5000之间，0表示停用MMP  
+frozen_period | integer(int32) | Required |  | 冻结时长（毫秒），0表示一直冻结，需要调用重置API解冻  
+qty_limit | string | Required |  | 成交量上限（正数，至多2位小数）  
+delta_limit | string | Required |  | 净delta值上限（正数，至多2位小数）  
+trigger_time_ms | integer(int64) | Optional | readOnly: true | 触发冻结时间（毫秒），0表示没有触发冻结  
+frozen_until_ms | integer(int64) | Optional | readOnly: true | 解冻时间（毫秒），如果未配置冻结时长，触发冻结后无解冻时间  
+      
+    
+    {
+      "underlying": "string",
+      "window": 0,
+      "frozen_period": 0,
+      "qty_limit": "string",
+      "delta_limit": "string",
+      "trigger_time_ms": 0,
+      "frozen_until_ms": 0
+    }
+    
+    
+
+##  OptionsAccount
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user | integer(int64) | Optional |  | 用户 ID  
+total | string | Optional |  | 账户余额（如果是统一账户，则此字段无效）  
+position_value | string | Optional |  | 仓位价值，做多仓位价值为正，做空仓位价值为负  
+equity | string | Optional |  | 账户权益，账户余额与仓位价值的和。（如果是统一账户，则此字段无效）  
+short_enabled | boolean | Optional |  | 是否允许做空  
+mmp_enabled | boolean | Optional |  | 是否启用MMP  
+liq_triggered | boolean | Optional |  | 账户是否处于强平状态  
+margin_mode | integer(int32) | Optional | enum: [0,1,2,3] | 此字段表示统一账户所使用的保证金模式：  
+  
+\- 0：经典现货保证金模式  
+\- 1：跨币种保证金模式  
+\- 2：组合保证金模式  
+\- 3: 表示为单币种保证金模式  
+unrealised_pnl | string | Optional |  | 未实现盈亏，仅供参考。仓位未实现盈亏 =（标记价格 - 开仓均价）× 仓位数量。仓位数量以币数计量，空头为负，多头为正。  
+init_margin | string | Optional |  | 仓位初始保证金  
+maint_margin | string | Optional |  | 仓位维持保证金  
+order_margin | string | Optional |  | 未完成订单的保证金  
+ask_order_margin | string | Optional |  | 未完成卖单的保证金  
+bid_order_margin | string | Optional |  | 未完成买单的保证金  
+available | string | Optional |  | 可用的转出或交易的额度  
+point | string | Optional |  | 点卡数额  
+currency | string | Optional |  | 结算币种  
+orders_limit | integer(int32) | Optional |  | 未完成订单数量上限  
+position_notional_limit | string | Optional |  | 名义价值上限，包含仓位以及未完成订单的名义价值  
+      
+    
+    {
+      "user": 0,
+      "total": "string",
+      "position_value": "string",
+      "equity": "string",
+      "short_enabled": true,
+      "mmp_enabled": true,
+      "liq_triggered": true,
+      "margin_mode": 0,
+      "unrealised_pnl": "string",
+      "init_margin": "string",
+      "maint_margin": "string",
+      "order_margin": "string",
+      "ask_order_margin": "string",
+      "bid_order_margin": "string",
+      "available": "string",
+      "point": "string",
+      "currency": "string",
+      "orders_limit": 0,
+      "position_notional_limit": "string"
+    }
+    
+    
+
+##  OptionsAccountBook
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+time | number(double) | Optional |  | 时间  
+change | string | Optional |  | 变更数量 (USDT)  
+balance | string | Optional |  | 变更后账户总资产 (USDT)  
+type | string | Optional |  | 变更类型：  
+  
+\- dnw, 充提  
+\- prem, 交易权益金  
+\- fee, 交易手续费  
+\- set, 结算  
+\- refr, 推荐人返佣  
+\- point_dnw  
+\- point_fee  
+\- point_refr  
+text | string | Optional |  | 备注  
+      
+    
+    {
+      "time": 0,
+      "change": "string",
+      "balance": "string",
+      "type": "string",
+      "text": "string"
+    }
+    
+    
+
+##  OptionsPosition
+
+期权合约仓位详情
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user | integer | Optional | readOnly: true | 用户ID  
+underlying | string | Optional | readOnly: true | 标的物  
+underlying_price | string | Optional | readOnly: true | 对应交割日期的远期期货价格  
+contract | string | Optional | readOnly: true | 期权合约标识  
+size | integer(int64) | Optional | readOnly: true | 头寸大小 (合约张数)  
+entry_price | string | Optional | readOnly: true | 开仓价格 (计价货币)  
+mark_price | string | Optional | readOnly: true | 期权合约当前标记价格 (计价货币)  
+mark_iv | string | Optional | readOnly: true | 隐含波动率  
+realised_pnl | string | Optional | readOnly: true | 已实现盈亏  
+unrealised_pnl | string | Optional | readOnly: true | 未实现盈亏，该数值仅供参考。仓位未实现盈亏 = (标记价格 - 开仓均价) * 仓位数量，其中空头仓位数量为负数，多头仓位数量为正数，均为币数单位。  
+pending_orders | integer | Optional | readOnly: true | 当前未完成委托数量  
+close_order | object|null | Optional | nullable: true  
+readOnly: true | 当前平仓委托信息，如果没有平仓则为`null`  
+delta | string | Optional | readOnly: true | 希腊字母delta  
+gamma | string | Optional | readOnly: true | 希腊字母gamma  
+vega | string | Optional | readOnly: true | 希腊字母vega  
+theta | string | Optional | readOnly: true | 希腊字母theta  
+  
+**close_order**
+
+当前平仓委托信息，如果没有平仓则为`null`
+
+类型 | 约束  
+---|---  
+object|null | nullable: true  
+readOnly: true  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 委托ID  
+price | string | Optional |  | 委托价格 (计价货币)  
+is_liq | boolean | Optional |  | 是否为强制平仓  
+      
+    
+    {
+      "user": 0,
+      "underlying": "string",
+      "underlying_price": "string",
+      "contract": "string",
+      "size": 0,
+      "entry_price": "string",
+      "mark_price": "string",
+      "mark_iv": "string",
+      "realised_pnl": "string",
+      "unrealised_pnl": "string",
+      "pending_orders": 0,
+      "close_order": {
+        "id": 0,
+        "price": "string",
+        "is_liq": true
+      },
+      "delta": "string",
+      "gamma": "string",
+      "vega": "string",
+      "theta": "string"
+    }
+    
+    
+
 ##  OptionsContract
 
 期权合约详情
@@ -4146,175 +4366,23 @@ orders_limit | integer | Optional |  | 每个用户在该盘口最多可挂的�
     
     
 
-##  OptionsCandlestick
+##  OptionsMMPReset
 
-每个时间粒度的 K 线数据
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-t | number(double) | Optional |  | 秒 s 精度的 Unix 时间戳  
-v | integer(int64) | Optional |  | 交易量，只有市场行情的 K 线数据里有该值 (合约张数)  
-c | string | Optional |  | 收盘价 (计价货币, 单位:标的对应的期权价格)  
-h | string | Optional |  | 最高价 (计价货币, 单位:标的对应的期权价格)  
-l | string | Optional |  | 最低价 (计价货币, 单位:标的对应的期权价格)  
-o | string | Optional |  | 开盘价 (计价货币, 单位:标的对应的期权价格)  
-      
-    
-    {
-      "t": 0,
-      "v": 0,
-      "c": "string",
-      "h": "string",
-      "l": "string",
-      "o": "string"
-    }
-    
-    
-
-##  OptionsUnderlyingTicker
-
-期权标的详情
+MMP重置
 
 类型 | 约束  
 ---|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-trade_put | integer(int64) | Optional |  | 所有看跌合约24小时总成交量  
-trade_call | integer(int64) | Optional |  | 所有看涨合约24小时总成交量  
-index_price | string | Optional |  | 指数价格 (计价货币)  
-      
-    
-    {
-      "trade_put": 0,
-      "trade_call": 0,
-      "index_price": "string"
-    }
-    
-    
-
-##  OptionsAccountBook
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-time | number(double) | Optional |  | 时间  
-change | string | Optional |  | 变更数量 (USDT)  
-balance | string | Optional |  | 变更后账户总资产 (USDT)  
-type | string | Optional |  | 变更类型：  
-  
-\- dnw, 充提  
-\- prem, 交易权益金  
-\- fee, 交易手续费  
-\- set, 结算  
-\- refr, 推荐人返佣  
-\- point_dnw  
-\- point_fee  
-\- point_refr  
-text | string | Optional |  | 备注  
-      
-    
-    {
-      "time": 0,
-      "change": "string",
-      "balance": "string",
-      "type": "string",
-      "text": "string"
-    }
-    
-    
-
-##  OptionsAccount
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-user | integer(int64) | Optional |  | 用户 ID  
-total | string | Optional |  | 账户余额（如果是统一账户，则此字段无效）  
-position_value | string | Optional |  | 仓位价值，做多仓位价值为正，做空仓位价值为负  
-equity | string | Optional |  | 账户权益，账户余额与仓位价值的和。（如果是统一账户，则此字段无效）  
-short_enabled | boolean | Optional |  | 是否允许做空  
-mmp_enabled | boolean | Optional |  | 是否启用MMP  
-liq_triggered | boolean | Optional |  | 账户是否处于强平状态  
-margin_mode | integer(int32) | Optional | enum: [0,1,2,3] | 此字段表示统一账户所使用的保证金模式：  
-  
-\- 0：经典现货保证金模式  
-\- 1：跨币种保证金模式  
-\- 2：组合保证金模式  
-\- 3: 表示为单币种保证金模式  
-unrealised_pnl | string | Optional |  | 未实现盈亏，仅供参考。仓位未实现盈亏 =（标记价格 - 开仓均价）× 仓位数量。仓位数量以币数计量，空头为负，多头为正。  
-init_margin | string | Optional |  | 仓位初始保证金  
-maint_margin | string | Optional |  | 仓位维持保证金  
-order_margin | string | Optional |  | 未完成订单的保证金  
-ask_order_margin | string | Optional |  | 未完成卖单的保证金  
-bid_order_margin | string | Optional |  | 未完成买单的保证金  
-available | string | Optional |  | 可用的转出或交易的额度  
-point | string | Optional |  | 点卡数额  
-currency | string | Optional |  | 结算币种  
-orders_limit | integer(int32) | Optional |  | 未完成订单数量上限  
-position_notional_limit | string | Optional |  | 名义价值上限，包含仓位以及未完成订单的名义价值  
-      
-    
-    {
-      "user": 0,
-      "total": "string",
-      "position_value": "string",
-      "equity": "string",
-      "short_enabled": true,
-      "mmp_enabled": true,
-      "liq_triggered": true,
-      "margin_mode": 0,
-      "unrealised_pnl": "string",
-      "init_margin": "string",
-      "maint_margin": "string",
-      "order_margin": "string",
-      "ask_order_margin": "string",
-      "bid_order_margin": "string",
-      "available": "string",
-      "point": "string",
-      "currency": "string",
-      "orders_limit": 0,
-      "position_notional_limit": "string"
-    }
-    
-    
-
-##  OptionsMMP
-
-MMP设置
-
-类型 | 约束  
----|---  
-object | required: ["underlying","window","frozen_period","qty_limit","delta_limit"]  
+object | required: ["underlying"]  
   
 **属性**
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
 underlying | string | Required |  | 标的物  
-window | integer(int32) | Required |  | 时间窗口（毫秒），1-5000之间，0表示停用MMP  
-frozen_period | integer(int32) | Required |  | 冻结时长（毫秒），0表示一直冻结，需要调用重置API解冻  
-qty_limit | string | Required |  | 成交量上限（正数，至多2位小数）  
-delta_limit | string | Required |  | 净delta值上限（正数，至多2位小数）  
+window | integer(int32) | Optional | readOnly: true | 时间窗口（毫秒），1-5000之间，0表示停用MMP  
+frozen_period | integer(int32) | Optional | readOnly: true | 冻结时长（毫秒），0表示一直冻结，需要调用重置API解冻  
+qty_limit | string | Optional | readOnly: true | 成交量上限（正数，至多2位小数）  
+delta_limit | string | Optional | readOnly: true | 净delta值上限（正数，至多2位小数）  
 trigger_time_ms | integer(int64) | Optional | readOnly: true | 触发冻结时间（毫秒），0表示没有触发冻结  
 frozen_until_ms | integer(int64) | Optional | readOnly: true | 解冻时间（毫秒），如果未配置冻结时长，触发冻结后无解冻时间  
       
@@ -4327,66 +4395,6 @@ frozen_until_ms | integer(int64) | Optional | readOnly: true | 解冻时间（�
       "delta_limit": "string",
       "trigger_time_ms": 0,
       "frozen_until_ms": 0
-    }
-    
-    
-
-##  AmendOptionsOrderRequest
-
-AmendOptionsOrderRequest
-
-改单请求体
-
-类型 | 约束  
----|---  
-object | required: ["contract","price","size"]  
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-contract | string | Required |  | 期权合约名称  
-price | string | Required |  | 委托价  
-size | integer(int64) | Required |  | 交易数量  
-      
-    
-    {
-      "contract": "string",
-      "price": "string",
-      "size": 0
-    }
-    
-    
-
-##  OptionsMyTrade
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-id | integer(int64) | Optional |  | 成交记录 ID  
-create_time | number(double) | Optional |  | 成交时间  
-contract | string | Optional |  | 期权合约标识  
-order_id | integer(int64) | Optional |  | 成交记录关联订单 ID  
-size | integer(int64) | Optional |  | 成交数量  
-price | string | Optional |  | 成交价格 (计价货币)  
-underlying_price | string | Optional |  | 对应交割日期的远期期货价格  
-role | string | Optional | enum: ["taker","maker"] | 成交角色， taker - 吃单, maker - 做单  
-      
-    
-    {
-      "id": 0,
-      "create_time": 0,
-      "contract": "string",
-      "order_id": 0,
-      "size": 0,
-      "price": "string",
-      "underlying_price": "string",
-      "role": "taker"
     }
     
     
@@ -4470,6 +4478,288 @@ s | integer(int64) | Optional |  | 数量
           "s": 0
         }
       ]
+    }
+    
+    
+
+##  OptionsSettlement
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+time | number(double) | Optional |  | 配置最后更新时间  
+contract | string | Optional |  | 期权合约名  
+profit | string | Optional |  | 单张结算盈利 (计价货币)  
+fee | string | Optional |  | 单张结算手续费 (计价货币)  
+strike_price | string | Optional |  | 行权价格 (计价货币)  
+settle_price | string | Optional |  | 结算价格 (计价货币)  
+      
+    
+    {
+      "time": 0,
+      "contract": "string",
+      "profit": "string",
+      "fee": "string",
+      "strike_price": "string",
+      "settle_price": "string"
+    }
+    
+    
+
+##  OptionsMyTrade
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | 成交记录 ID  
+create_time | number(double) | Optional |  | 成交时间  
+contract | string | Optional |  | 期权合约标识  
+order_id | integer(int64) | Optional |  | 成交记录关联订单 ID  
+size | integer(int64) | Optional |  | 成交数量  
+price | string | Optional |  | 成交价格 (计价货币)  
+underlying_price | string | Optional |  | 对应交割日期的远期期货价格  
+role | string | Optional | enum: ["taker","maker"] | 成交角色， taker - 吃单, maker - 做单  
+      
+    
+    {
+      "id": 0,
+      "create_time": 0,
+      "contract": "string",
+      "order_id": 0,
+      "size": 0,
+      "price": "string",
+      "underlying_price": "string",
+      "role": "taker"
+    }
+    
+    
+
+##  TriggerTime
+
+triggerTime
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+triggerTime | integer(int64) | Optional |  | 倒计时结束时的时间戳，毫秒  
+      
+    
+    {
+      "triggerTime": "1660039145000"
+    }
+    
+    
+
+##  AmendOptionsOrderRequest
+
+AmendOptionsOrderRequest
+
+改单请求体
+
+类型 | 约束  
+---|---  
+object | required: ["contract","price","size"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+contract | string | Required |  | 期权合约名称  
+price | string | Required |  | 委托价  
+size | integer(int64) | Required |  | 交易数量  
+      
+    
+    {
+      "contract": "string",
+      "price": "string",
+      "size": 0
+    }
+    
+    
+
+##  OptionsMySettlements
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+time | number(double) | Optional |  | 结算时间  
+underlying | string | Optional |  | 标的  
+contract | string | Optional |  | 期权合约标识  
+strike_price | string | Optional |  | 行权价格 (计价货币)  
+settle_price | string | Optional |  | 结算价格 (计价货币)  
+size | integer(int64) | Optional |  | 结算张数  
+settle_profit | string | Optional |  | 结算收益 (计价货币)  
+fee | string | Optional |  | 结算费用 (计价货币)  
+realised_pnl | string | Optional |  | 开仓累计盈亏，包括权益金，手续费，结算盈利等。(计价货币)  
+      
+    
+    {
+      "time": 0,
+      "underlying": "string",
+      "contract": "string",
+      "strike_price": "string",
+      "settle_price": "string",
+      "size": 0,
+      "settle_profit": "string",
+      "fee": "string",
+      "realised_pnl": "string"
+    }
+    
+    
+
+##  OptionsPositionClose
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+time | number(double) | Optional | readOnly: true | 平仓时间  
+contract | string | Optional | readOnly: true | 期权合约标识  
+side | string | Optional | enum: ["long","short"]  
+readOnly: true | 多空方向  
+  
+\- `long`: 做多  
+\- `short`: 做空  
+pnl | string | Optional | readOnly: true | 盈亏  
+text | string | Optional | readOnly: true | 平仓委托的来源，具体取值参见`order.text`字段  
+settle_size | string | Optional | readOnly: true | 结算仓位大小  
+      
+    
+    {
+      "time": 0,
+      "contract": "string",
+      "side": "long",
+      "pnl": "string",
+      "text": "string",
+      "settle_size": "string"
+    }
+    
+    
+
+##  OptionsTicker
+
+期权合约详情
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+name | string | Optional |  | 期权合约标识  
+last_price | string | Optional |  | 上一次成交价格 (计价货币)  
+mark_price | string | Optional |  | 当前标记价格 (计价货币)  
+index_price | string | Optional |  | 当前指数价格 (计价货币)  
+ask1_size | integer(int64) | Optional |  | 卖1深度大小  
+ask1_price | string | Optional |  | 卖1深度价格  
+bid1_size | integer(int64) | Optional |  | 买1深度大小  
+bid1_price | string | Optional |  | 买1深度价格  
+position_size | integer(int64) | Optional |  | 当前做多用户持有仓位总和  
+mark_iv | string | Optional |  | 隐含波动率  
+bid_iv | string | Optional |  | 买方隐含波动率  
+ask_iv | string | Optional |  | 卖方隐含波动率  
+leverage | string | Optional |  | 杠杆倍数 = underlying_price / (mark_price * delta)，该数值仅供参考  
+delta | string | Optional |  | 希腊字母delta  
+gamma | string | Optional |  | 希腊字母gamma  
+vega | string | Optional |  | 希腊字母vega  
+theta | string | Optional |  | 希腊字母theta  
+rho | string | Optional |  | 希腊字母rho  
+      
+    
+    {
+      "name": "string",
+      "last_price": "string",
+      "mark_price": "string",
+      "index_price": "string",
+      "ask1_size": 0,
+      "ask1_price": "string",
+      "bid1_size": 0,
+      "bid1_price": "string",
+      "position_size": 0,
+      "mark_iv": "string",
+      "bid_iv": "string",
+      "ask_iv": "string",
+      "leverage": "string",
+      "delta": "string",
+      "gamma": "string",
+      "vega": "string",
+      "theta": "string",
+      "rho": "string"
+    }
+    
+    
+
+##  OptionsUnderlying
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+name | string | Optional |  | 标的名  
+index_price | string | Optional |  | 现货指数价格 (计价货币)  
+      
+    
+    {
+      "name": "string",
+      "index_price": "string"
+    }
+    
+    
+
+##  CountdownCancelAllOptionsTask
+
+CountdownCancelAllOptionsTask
+
+倒计时任务详情
+
+类型 | 约束  
+---|---  
+object | required: ["timeout"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+timeout | integer(int32) | Required |  | 倒计时时间，单位 秒  
+至少5秒，为0时表示取消倒计时  
+contract | string | Optional |  | 期权合约名称  
+underlying | string | Optional |  | 标的物  
+      
+    
+    {
+      "timeout": 0,
+      "contract": "string",
+      "underlying": "string"
     }
     
     
@@ -4579,62 +4869,9 @@ refr | string | Optional | readOnly: true | 推荐人返佣
     
     
 
-##  OptionsTicker
+##  OptionsUnderlyingTicker
 
-期权合约详情
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-name | string | Optional |  | 期权合约标识  
-last_price | string | Optional |  | 上一次成交价格 (计价货币)  
-mark_price | string | Optional |  | 当前标记价格 (计价货币)  
-index_price | string | Optional |  | 当前指数价格 (计价货币)  
-ask1_size | integer(int64) | Optional |  | 卖1深度大小  
-ask1_price | string | Optional |  | 卖1深度价格  
-bid1_size | integer(int64) | Optional |  | 买1深度大小  
-bid1_price | string | Optional |  | 买1深度价格  
-position_size | integer(int64) | Optional |  | 当前做多用户持有仓位总和  
-mark_iv | string | Optional |  | 隐含波动率  
-bid_iv | string | Optional |  | 买方隐含波动率  
-ask_iv | string | Optional |  | 卖方隐含波动率  
-leverage | string | Optional |  | 杠杆倍数 = underlying_price / (mark_price * delta)，该数值仅供参考  
-delta | string | Optional |  | 希腊字母delta  
-gamma | string | Optional |  | 希腊字母gamma  
-vega | string | Optional |  | 希腊字母vega  
-theta | string | Optional |  | 希腊字母theta  
-rho | string | Optional |  | 希腊字母rho  
-      
-    
-    {
-      "name": "string",
-      "last_price": "string",
-      "mark_price": "string",
-      "index_price": "string",
-      "ask1_size": 0,
-      "ask1_price": "string",
-      "bid1_size": 0,
-      "bid1_price": "string",
-      "position_size": 0,
-      "mark_iv": "string",
-      "bid_iv": "string",
-      "ask_iv": "string",
-      "leverage": "string",
-      "delta": "string",
-      "gamma": "string",
-      "vega": "string",
-      "theta": "string",
-      "rho": "string"
-    }
-    
-    
-
-##  OptionsSettlement
+期权标的详情
 
 类型 | 约束  
 ---|---  
@@ -4644,80 +4881,22 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-time | number(double) | Optional |  | 配置最后更新时间  
-contract | string | Optional |  | 期权合约名  
-profit | string | Optional |  | 单张结算盈利 (计价货币)  
-fee | string | Optional |  | 单张结算手续费 (计价货币)  
-strike_price | string | Optional |  | 行权价格 (计价货币)  
-settle_price | string | Optional |  | 结算价格 (计价货币)  
+trade_put | integer(int64) | Optional |  | 所有看跌合约24小时总成交量  
+trade_call | integer(int64) | Optional |  | 所有看涨合约24小时总成交量  
+index_price | string | Optional |  | 指数价格 (计价货币)  
       
     
     {
-      "time": 0,
-      "contract": "string",
-      "profit": "string",
-      "fee": "string",
-      "strike_price": "string",
-      "settle_price": "string"
-    }
-    
-    
-
-##  OptionsMMPReset
-
-MMP重置
-
-类型 | 约束  
----|---  
-object | required: ["underlying"]  
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-underlying | string | Required |  | 标的物  
-window | integer(int32) | Optional | readOnly: true | 时间窗口（毫秒），1-5000之间，0表示停用MMP  
-frozen_period | integer(int32) | Optional | readOnly: true | 冻结时长（毫秒），0表示一直冻结，需要调用重置API解冻  
-qty_limit | string | Optional | readOnly: true | 成交量上限（正数，至多2位小数）  
-delta_limit | string | Optional | readOnly: true | 净delta值上限（正数，至多2位小数）  
-trigger_time_ms | integer(int64) | Optional | readOnly: true | 触发冻结时间（毫秒），0表示没有触发冻结  
-frozen_until_ms | integer(int64) | Optional | readOnly: true | 解冻时间（毫秒），如果未配置冻结时长，触发冻结后无解冻时间  
-      
-    
-    {
-      "underlying": "string",
-      "window": 0,
-      "frozen_period": 0,
-      "qty_limit": "string",
-      "delta_limit": "string",
-      "trigger_time_ms": 0,
-      "frozen_until_ms": 0
-    }
-    
-    
-
-##  OptionsUnderlying
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-name | string | Optional |  | 标的名  
-index_price | string | Optional |  | 现货指数价格 (计价货币)  
-      
-    
-    {
-      "name": "string",
+      "trade_put": 0,
+      "trade_call": 0,
       "index_price": "string"
     }
     
     
 
-##  OptionsPositionClose
+##  OptionsCandlestick
+
+每个时间粒度的 K 线数据
 
 类型 | 约束  
 ---|---  
@@ -4727,133 +4906,21 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-time | number(double) | Optional | readOnly: true | 平仓时间  
-contract | string | Optional | readOnly: true | 期权合约标识  
-side | string | Optional | enum: ["long","short"]  
-readOnly: true | 多空方向  
-  
-\- `long`: 做多  
-\- `short`: 做空  
-pnl | string | Optional | readOnly: true | 盈亏  
-text | string | Optional | readOnly: true | 平仓委托的来源，具体取值参见`order.text`字段  
-settle_size | string | Optional | readOnly: true | 结算仓位大小  
+t | number(double) | Optional |  | 秒 s 精度的 Unix 时间戳  
+v | integer(int64) | Optional |  | 交易量，只有市场行情的 K 线数据里有该值 (合约张数)  
+c | string | Optional |  | 收盘价 (计价货币, 单位:标的对应的期权价格)  
+h | string | Optional |  | 最高价 (计价货币, 单位:标的对应的期权价格)  
+l | string | Optional |  | 最低价 (计价货币, 单位:标的对应的期权价格)  
+o | string | Optional |  | 开盘价 (计价货币, 单位:标的对应的期权价格)  
       
     
     {
-      "time": 0,
-      "contract": "string",
-      "side": "long",
-      "pnl": "string",
-      "text": "string",
-      "settle_size": "string"
-    }
-    
-    
-
-##  OptionsMySettlements
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-time | number(double) | Optional |  | 结算时间  
-underlying | string | Optional |  | 标的  
-contract | string | Optional |  | 期权合约标识  
-strike_price | string | Optional |  | 行权价格 (计价货币)  
-settle_price | string | Optional |  | 结算价格 (计价货币)  
-size | integer(int64) | Optional |  | 结算张数  
-settle_profit | string | Optional |  | 结算收益 (计价货币)  
-fee | string | Optional |  | 结算费用 (计价货币)  
-realised_pnl | string | Optional |  | 开仓累计盈亏，包括权益金，手续费，结算盈利等。(计价货币)  
-      
-    
-    {
-      "time": 0,
-      "underlying": "string",
-      "contract": "string",
-      "strike_price": "string",
-      "settle_price": "string",
-      "size": 0,
-      "settle_profit": "string",
-      "fee": "string",
-      "realised_pnl": "string"
-    }
-    
-    
-
-##  OptionsPosition
-
-期权合约仓位详情
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-user | integer | Optional | readOnly: true | 用户ID  
-underlying | string | Optional | readOnly: true | 标的物  
-underlying_price | string | Optional | readOnly: true | 对应交割日期的远期期货价格  
-contract | string | Optional | readOnly: true | 期权合约标识  
-size | integer(int64) | Optional | readOnly: true | 头寸大小 (合约张数)  
-entry_price | string | Optional | readOnly: true | 开仓价格 (计价货币)  
-mark_price | string | Optional | readOnly: true | 期权合约当前标记价格 (计价货币)  
-mark_iv | string | Optional | readOnly: true | 隐含波动率  
-realised_pnl | string | Optional | readOnly: true | 已实现盈亏  
-unrealised_pnl | string | Optional | readOnly: true | 未实现盈亏，该数值仅供参考。仓位未实现盈亏 = (标记价格 - 开仓均价) * 仓位数量，其中空头仓位数量为负数，多头仓位数量为正数，均为币数单位。  
-pending_orders | integer | Optional | readOnly: true | 当前未完成委托数量  
-close_order | object|null | Optional | nullable: true  
-readOnly: true | 当前平仓委托信息，如果没有平仓则为`null`  
-delta | string | Optional | readOnly: true | 希腊字母delta  
-gamma | string | Optional | readOnly: true | 希腊字母gamma  
-vega | string | Optional | readOnly: true | 希腊字母vega  
-theta | string | Optional | readOnly: true | 希腊字母theta  
-  
-**close_order**
-
-当前平仓委托信息，如果没有平仓则为`null`
-
-类型 | 约束  
----|---  
-object|null | nullable: true  
-readOnly: true  
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-id | integer(int64) | Optional |  | 委托ID  
-price | string | Optional |  | 委托价格 (计价货币)  
-is_liq | boolean | Optional |  | 是否为强制平仓  
-      
-    
-    {
-      "user": 0,
-      "underlying": "string",
-      "underlying_price": "string",
-      "contract": "string",
-      "size": 0,
-      "entry_price": "string",
-      "mark_price": "string",
-      "mark_iv": "string",
-      "realised_pnl": "string",
-      "unrealised_pnl": "string",
-      "pending_orders": 0,
-      "close_order": {
-        "id": 0,
-        "price": "string",
-        "is_liq": true
-      },
-      "delta": "string",
-      "gamma": "string",
-      "vega": "string",
-      "theta": "string"
+      "t": 0,
+      "v": 0,
+      "c": "string",
+      "h": "string",
+      "l": "string",
+      "o": "string"
     }
     
     
@@ -4881,53 +4948,4 @@ price | string | Optional |  | 成交价格 (计价货币, 单位:标的对应�
       "contract": "string",
       "size": 0,
       "price": "string"
-    }
-    
-    
-
-##  TriggerTime
-
-triggerTime
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-triggerTime | integer(int64) | Optional |  | 倒计时结束时的时间戳，毫秒  
-      
-    
-    {
-      "triggerTime": "1660039145000"
-    }
-    
-    
-
-##  CountdownCancelAllOptionsTask
-
-CountdownCancelAllOptionsTask
-
-倒计时任务详情
-
-类型 | 约束  
----|---  
-object | required: ["timeout"]  
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-timeout | integer(int32) | Required |  | 倒计时时间，单位 秒  
-至少5秒，为0时表示取消倒计时  
-contract | string | Optional |  | 期权合约名称  
-underlying | string | Optional |  | 标的物  
-      
-    
-    {
-      "timeout": 0,
-      "contract": "string",
-      "underlying": "string"
     }

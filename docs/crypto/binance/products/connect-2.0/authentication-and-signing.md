@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/connect-2.0/authentication-and-signing
 api_type: Guide
-updated_at: 2026-11-19 18:34:34.509904
+updated_at: 2026-11-20 18:34:17.631471
 ---
 
 # Authentication and Signing

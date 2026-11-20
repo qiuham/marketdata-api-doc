@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/withdraw/questionnaire
 api_type: REST
-updated_at: 2026-11-19 18:53:00.176011
+updated_at: 2026-11-20 18:51:25.104517
 ---
 
 # Questionnaire

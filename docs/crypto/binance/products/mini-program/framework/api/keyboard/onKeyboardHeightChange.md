@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/keyboard/onKeyboardHeightChange
 api_type: Guide
-updated_at: 2026-11-19 18:48:23.249826
+updated_at: 2026-11-20 18:47:16.203964
 ---
 
 # bn.onKeyboardHeightChange

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/alpha/en
 api_type: Trading
-updated_at: 2026-11-19 19:00:24.041224
+updated_at: 2026-11-20 18:56:33.120621
 ---
 
 # Gate Alpha API v1.1.1
@@ -595,7 +595,7 @@ Query position assets
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Positions queried successfully | [Inline]  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Positions queried successfully | [AccountsResponse]  
   
 ### Response Schema
 
@@ -611,7 +611,7 @@ Query Position Return
 
 Type | Constraints  
 ---|---  
-object |   
+AccountsResponse |   
   
 **Properties**
 
@@ -709,7 +709,7 @@ limit | query | integer(int32) | Optional | Maximum 100 items per page
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Transaction history retrieved successfully | [Inline]  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Transaction history retrieved successfully | [AccountBookResponse]  
   
 ### Response Schema
 
@@ -725,7 +725,7 @@ Query Asset Flow Return
 
 Type | Constraints  
 ---|---  
-object |   
+AccountBookResponse |   
   
 **Properties**
 
@@ -814,7 +814,7 @@ The quote_id returned by the price inquiry interface is valid for one minute; an
 
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
-body | body | object | Required | none  
+body | body | QuoteRequest | Required | none  
 currency | body | string | Required | Alpha currency ID, for example USDS02b5a8dd2f59a098, not the display symbol USDS. First call GET /alpha/currencies without currency, match the token by name, chain and address, and use the returned currency field. Paginate with page and limit.  
 side | body | string | Required | Buy or sell orders  
 \- buy  
@@ -847,7 +847,7 @@ Quote Request
 
 Request Body SchemaType | Constraints  
 ---|---  
-object | required: ["currency","side","amount","gas_mode"]  
+QuoteRequest | required: ["currency","side","amount","gas_mode"]  
   
 **Properties**
 
@@ -869,7 +869,7 @@ slippage | string | Optional |  | Slippage tolerance (10 means 10% tolerance)
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Quote retrieved successfully | Inline  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Quote retrieved successfully | QuoteResponse  
   
 ### Response Schema
 
@@ -879,7 +879,7 @@ Quote Response
 
 Type | Constraints  
 ---|---  
-object |   
+QuoteResponse |   
   
 **Properties**
 
@@ -992,7 +992,7 @@ Order placement interface, rate-limited at 5 requests per second per user.
 
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
-body | body | object | Required | none  
+body | body | PlaceOrderRequest | Required | none  
 currency | body | string | Required | Alpha currency ID, for example USDS02b5a8dd2f59a098, not the display symbol USDS. First call GET /alpha/currencies without currency, match the token by name, chain and address, and use the returned currency field. Paginate with page and limit.  
 side | body | string | Required | Buy or sell orders  
 \- buy  
@@ -1026,7 +1026,7 @@ Order request
 
 Request Body SchemaType | Constraints  
 ---|---  
-object | required: ["currency","side","amount","gas_mode","quote_id"]  
+PlaceOrderRequest | required: ["currency","side","amount","gas_mode","quote_id"]  
   
 **Properties**
 
@@ -1049,7 +1049,7 @@ quote_id | string | Required |  | Quote ID returned from quotation API
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Order placed successfully | Inline  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Order placed successfully | PlaceOrderResponse  
   
 ### Response Schema
 
@@ -1059,7 +1059,7 @@ Order response
 
 Type | Constraints  
 ---|---  
-object |   
+PlaceOrderResponse |   
   
 **Properties**
 
@@ -1213,7 +1213,7 @@ page | query | integer(int32) | Optional | Page number
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | [Inline]  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | [OrderResponse]  
   
 ### Response Schema
 
@@ -1229,7 +1229,7 @@ Order response
 
 Type | Constraints  
 ---|---  
-object |   
+OrderResponse |   
   
 **Properties**
 
@@ -1349,7 +1349,7 @@ order_id | query | string | Required | Order ID
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Order queried successfully | Inline  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Order queried successfully | OrderResponse  
   
 ### Response Schema
 
@@ -1359,7 +1359,7 @@ Order response
 
 Type | Constraints  
 ---|---  
-object |   
+OrderResponse |   
   
 **Properties**
 
@@ -1481,7 +1481,7 @@ page | query | integer(int32) | Optional | Page number
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | [Inline]  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | [AlphaCurrency]  
   
 ### Response Schema
 
@@ -1497,7 +1497,7 @@ AlphaCurrency
 
 Type | Constraints  
 ---|---  
-object |   
+AlphaCurrency |   
   
 **Properties**
 
@@ -1579,7 +1579,7 @@ page | query | integer(int32) | Optional | Page number
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | [Inline]  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | [AlphaTicker]  
   
 ### Response Schema
 
@@ -1595,7 +1595,7 @@ AlphaTicker
 
 Type | Constraints  
 ---|---  
-object |   
+AlphaTicker |   
   
 **Properties**
 
@@ -1723,7 +1723,7 @@ page | query | integer(int32) | Optional | Page number
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | [Inline]  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | [Tokens]  
   
 ### Response Schema
 
@@ -1737,7 +1737,7 @@ array |
 
 Type | Constraints  
 ---|---  
-object |   
+Tokens |   
   
 **Properties**
 
@@ -1795,6 +1795,383 @@ Code samples
         "amount_precision": 1
       }
     ]
+    
+
+#  Schemas
+
+##  AccountsResponse
+
+Query Position Return
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Alpha currency ID, for example USDS02b5a8dd2f59a098; use it as the currency parameter in Alpha APIs, not the display symbol USDS.  
+available | string | Optional |  | Available Balance  
+locked | string | Optional |  | Locked balance  
+token_address | string | Optional |  | Token address  
+chain | string | Optional |  | Blockchain name  
+      
+    
+    {
+      "currency": "string",
+      "available": "string",
+      "locked": "string",
+      "token_address": "string",
+      "chain": "string"
+    }
+    
+    
+
+##  AccountBookResponse
+
+Query Asset Flow Return
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | Order ID  
+time | integer(int64) | Optional |  | Operation timestamp  
+currency | string(string) | Optional |  | Alpha currency ID, for example USDS02b5a8dd2f59a098; use it as the currency parameter in Alpha APIs, not the display symbol USDS.  
+change | string(string) | Optional |  | Change amount  
+balance | string(string) | Optional |  | Balance after change  
+      
+    
+    {
+      "id": 0,
+      "time": 0,
+      "currency": "string",
+      "change": "string",
+      "balance": "string"
+    }
+    
+    
+
+##  QuoteRequest
+
+Quote Request
+
+Type | Constraints  
+---|---  
+object | required: ["currency","side","amount","gas_mode"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Required |  | Alpha currency ID, for example USDS02b5a8dd2f59a098, not the display symbol USDS. First call GET /alpha/currencies without currency, match the token by name, chain and address, and use the returned currency field. Paginate with page and limit.  
+side | string | Required |  | Buy or sell orders  
+\- buy  
+\- sell  
+amount | string | Required |  | Trade Quantity  
+\- `side` : `buy` refers to the quote currency, i.e., `USDT`  
+\- `side` : `sell` refers to the base currency  
+gas_mode | string | Required |  | Trading mode affects slippage selection  
+\- `speed` : Smart mode  
+\- `custom` : Custom mode, uses `slippage` parameter  
+slippage | string | Optional |  | Slippage tolerance (10 means 10% tolerance)  
+      
+    
+    {
+      "currency": "string",
+      "side": "string",
+      "amount": "string",
+      "gas_mode": "string",
+      "slippage": "string"
+    }
+    
+    
+
+##  QuoteResponse
+
+Quote Response
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+quote_id | string | Optional |  | Quote ID for order placement, valid for 1 minute  
+min_amount | string | Optional |  | Minimum order size  
+max_amount | string | Optional |  | Maximum order size  
+price | string | Optional |  | Token Price (USDT-based)  
+slippage | string | Optional |  | Slippage  
+estimate_gas_fee_amount_usdt | string | Optional |  | Estimated Gas Fee (USDT-based)  
+order_fee | string | Optional |  | Trading fee  
+target_token_min_amount | string | Optional |  | Minimum received amount  
+target_token_max_amount | string | Optional |  | Maximum received amount  
+error_type | integer(int32) | Optional |  | Failure Type  
+\- `0` : Success  
+\- `1` : Exceeds maximum value  
+\- `2` : Below minimum value  
+      
+    
+    {
+      "quote_id": "string",
+      "min_amount": "string",
+      "max_amount": "string",
+      "price": "string",
+      "slippage": "string",
+      "estimate_gas_fee_amount_usdt": "string",
+      "order_fee": "string",
+      "target_token_min_amount": "string",
+      "target_token_max_amount": "string",
+      "error_type": 0
+    }
+    
+    
+
+##  OrderResponse
+
+Order response
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Optional |  | Order ID  
+tx_hash | string | Optional |  | Transaction Hash  
+side | string | Optional |  | Buy or sell orders  
+\- buy  
+\- sell  
+usdt_amount | string | Optional |  | Amount (USDT)  
+currency | string | Optional |  | Alpha currency ID, for example USDS02b5a8dd2f59a098; use it as the currency parameter in Alpha APIs, not the display symbol USDS.  
+currency_amount | string | Optional |  | Token amount  
+status | integer(int32) | Optional |  | Order Status  
+\- `0` : All  
+\- `1` : Processing  
+\- `2` : Successful  
+\- `3` : Failed  
+\- `4` : Cancelled  
+\- `5` : Buy order placed but transfer not completed  
+\- `6` : Order cancelled but transfer not completed  
+gas_mode | string | Optional |  | Trading mode affects slippage selection  
+\- `speed` : Smart mode  
+\- `custom` : Custom mode, uses `slippage` parameter  
+chain | string | Optional |  | Blockchain  
+gas_fee | string | Optional |  | Gas Fee (USDT-based)  
+transaction_fee | string | Optional |  | Trading Fee (USDT-based)  
+failed_reason | string | Optional |  | Failure reason (if applicable)  
+create_time | integer(int64) | Optional |  | Creation timestamp  
+      
+    
+    {
+      "order_id": "string",
+      "tx_hash": "string",
+      "side": "string",
+      "usdt_amount": "string",
+      "currency": "string",
+      "currency_amount": "string",
+      "status": 0,
+      "gas_mode": "string",
+      "chain": "string",
+      "gas_fee": "string",
+      "transaction_fee": "string",
+      "failed_reason": "string",
+      "create_time": 0
+    }
+    
+    
+
+##  PlaceOrderRequest
+
+Order request
+
+Type | Constraints  
+---|---  
+object | required: ["currency","side","amount","gas_mode","quote_id"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Required |  | Alpha currency ID, for example USDS02b5a8dd2f59a098, not the display symbol USDS. First call GET /alpha/currencies without currency, match the token by name, chain and address, and use the returned currency field. Paginate with page and limit.  
+side | string | Required |  | Buy or sell orders  
+\- buy  
+\- sell  
+amount | string | Required |  | Trade Quantity  
+\- `side` : `buy` refers to the quote currency, i.e., `USDT`  
+\- `side` : `sell` refers to the base currency  
+gas_mode | string | Required |  | Trading mode affects slippage selection  
+\- `speed` : Smart mode  
+\- `custom` : Custom mode, uses `slippage` parameter  
+slippage | string | Optional |  | Slippage percentage: "10" means 10%.  
+quote_id | string | Required |  | Quote ID returned from quotation API  
+      
+    
+    {
+      "currency": "string",
+      "side": "string",
+      "amount": "string",
+      "gas_mode": "string",
+      "slippage": "string",
+      "quote_id": "string"
+    }
+    
+    
+
+##  PlaceOrderResponse
+
+Order response
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+order_id | string | Optional |  | Order ID  
+status | integer(int32) | Optional |  | Order Status  
+\- `0` : All  
+\- `1` : Processing  
+\- `2` : Successful  
+\- `3` : Failed  
+\- `4` : Cancelled  
+\- `5` : Buy order placed but transfer not completed  
+\- `6` : Order cancelled but transfer not completed  
+side | string | Optional |  | Buy or sell orders  
+\- buy  
+\- sell  
+gas_mode | string | Optional |  | Trading mode affects slippage selection  
+\- `speed` : Smart mode  
+\- `custom` : Custom mode, uses `slippage` parameter  
+create_time | integer(int64) | Optional |  | Creation timestamp  
+amount | string | Optional |  | Trade Quantity  
+\- `side` : `buy` refers to the quote currency, i.e., `USDT`  
+\- `side` : `sell` refers to the base currency  
+token_address | string | Optional |  | Token contract address  
+chain | string | Optional |  | Blockchain name  
+      
+    
+    {
+      "order_id": "string",
+      "status": 0,
+      "side": "string",
+      "gas_mode": "string",
+      "create_time": 0,
+      "amount": "string",
+      "token_address": "string",
+      "chain": "string"
+    }
+    
+    
+
+##  AlphaCurrency
+
+AlphaCurrency
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Alpha currency ID, for example USDS02b5a8dd2f59a098; use it as the currency parameter in Alpha APIs, not the display symbol USDS.  
+name | string | Optional |  | Display name or symbol, for example USDS; it cannot replace the currency field as the Alpha currency ID.  
+chain | string | Optional |  | The main chain corresponding to the coin  
+address | string | Optional |  | Contract Address  
+amount_precision | integer(int32) | Optional |  | Quantity precision  
+precision | integer(int32) | Optional |  | Price precision  
+status | integer(int32) | Optional |  | Currency Trading Status  
+\- `1` : Normal trading  
+\- `2` : Suspended trading  
+\- `3` : Delisted  
+      
+    
+    {
+      "currency": "string",
+      "name": "string",
+      "chain": "string",
+      "address": "string",
+      "amount_precision": 0,
+      "precision": 0,
+      "status": 0
+    }
+    
+    
+
+##  AlphaTicker
+
+AlphaTicker
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Alpha currency ID, for example USDS02b5a8dd2f59a098; use it as the currency parameter in Alpha APIs, not the display symbol USDS.  
+last | string | Optional |  | Last trading price  
+change | string | Optional |  | 24h price change percentage (negative for decrease, e.g., -7.45)  
+volume | string | Optional |  | 24h Trading Volume (USDT)  
+market_cap | string | Optional |  | Current Token Market Cap  
+      
+    
+    {
+      "currency": "string",
+      "last": "string",
+      "change": "string",
+      "volume": "string",
+      "market_cap": "string"
+    }
+    
+    
+
+##  Tokens
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+currency | string | Optional |  | Alpha currency ID, for example USDS02b5a8dd2f59a098; use it as the currency parameter in Alpha APIs, not the display symbol USDS.  
+name | string | Optional |  | Display name or symbol, for example USDS; it cannot replace the currency field as the Alpha currency ID.  
+chain | string | Optional |  | The main chain corresponding to the coin  
+address | string | Optional |  | Contract Address  
+amount_precision | integer(int32) | Optional |  | Quantity precision  
+precision | integer(int32) | Optional |  | Price precision  
+status | integer(int32) | Optional |  | Currency Trading Status  
+\- `1` : Normal trading  
+\- `2` : Suspended trading  
+\- `3` : Delisted  
+      
+    
+    {
+      "currency": "string",
+      "name": "string",
+      "chain": "string",
+      "address": "string",
+      "amount_precision": 0,
+      "precision": 0,
+      "status": 0
+    }
+    
     
 
 Last Updated: 10/17/2025, 10:29:26 AM

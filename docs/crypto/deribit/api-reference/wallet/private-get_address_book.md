@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-get_address_book
 api_type: JSON-RPC
-updated_at: 2026-11-19 19:05:59.124407
+updated_at: 2026-11-20 19:00:15.598697
 ---
 
 # private/get_address_book

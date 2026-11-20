@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/profiles/get-public-profile-by-wallet-address'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Get public profile by wallet address

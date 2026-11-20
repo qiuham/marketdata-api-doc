@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-set_address_requires_security_key
 api_type: JSON-RPC
-updated_at: 2026-11-19 19:05:59.458855
+updated_at: 2026-11-20 19:00:15.746703
 ---
 
 # private/set_address_requires_security_key

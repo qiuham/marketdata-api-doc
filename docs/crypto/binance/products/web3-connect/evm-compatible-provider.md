@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/web3-connect/evm-compatible-provider
 api_type: Guide
-updated_at: 2026-11-19 18:29:15.744050
+updated_at: 2026-11-20 18:29:14.312905
 ---
 
 # EVM-Compatible Provider

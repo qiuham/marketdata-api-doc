@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/amending-order
 api_type: Starbase
-updated_at: 2026-11-19 19:05:48.613170
+updated_at: 2026-11-20 19:00:11.702801
 ---
 
 # Amending an Order
@@ -133,5 +133,5 @@ Reject generated in case an `AmendOrderRequest` is unsuccessful.
 - [Order Cancel/Replace Request(G) (Production FIX API)](https://docs.deribit.com/fix-api/production/order-cancel-replace.md)
 - [Starbase Market Maker Protection (MMP)](https://docs.deribit.com/starbase/mmp.md)
 - [Starbase API Rate Limits](https://docs.deribit.com/starbase/api-rate-limits.md)
+- [Starbase API Changelog](https://docs.deribit.com/changelogs/starbase.md)
 - [Binary API Reference](https://docs.deribit.com/starbase/binary-api-reference.md)
-- [Cancel on Disconnect](https://docs.deribit.com/starbase/cancel-on-disconnect.md)

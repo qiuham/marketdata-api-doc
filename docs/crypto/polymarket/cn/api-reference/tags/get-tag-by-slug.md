@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/tags/get-tag-by-slug'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # 按 Slug 获取标签

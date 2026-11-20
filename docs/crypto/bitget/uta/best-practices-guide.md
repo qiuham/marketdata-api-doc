@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/best-practices-guide
 api_type: Guide
-updated_at: 2026-11-19 19:06:53.982804
+updated_at: 2026-11-20 19:01:04.319209
 ---
 
 # Best Practices Guide

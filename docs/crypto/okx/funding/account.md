@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account
 anchor_id: funding-account
 api_type: API
-updated_at: 2026-11-19 19:03:23.179544
+updated_at: 2026-11-20 18:59:10.870205
 ---
 
 # Funding Account
@@ -1371,6 +1371,151 @@ About deposit state
 **Deposit credited** is that there is sufficient number of blockchain confirmations for the currency to be credited to the account, but it cannot be withdrawn yet.   
 **Deposit successful** means the crypto has been credited to the account and it can be withdrawn. 
 
+### Get locked Travel Rule deposits
+
+Retrieve the list of deposits currently locked under the Travel Rule. Returns an empty array if the user has no locked deposits. The maximum number of locked deposits is limited to 50.
+
+#### Rate Limit: 3 requests per second
+
+#### Rate limit rule: User ID + IP
+
+#### HTTP Request
+
+`GET /api/v5/asset/travel-rule/get-locked`
+
+> Request Example
+    
+    
+    GET /api/v5/asset/travel-rule/get-locked
+    
+    
+    
+    import okx.Funding as Funding
+    
+    apikey = "YOUR_API_KEY"
+    secretkey = "YOUR_SECRET_KEY"
+    passphrase = "YOUR_PASSPHRASE"
+    
+    flag = "0"  # Production trading: 0, Demo trading: 1
+    
+    fundingAPI = Funding.FundingAPI(apikey, secretkey, passphrase, False, flag)
+    
+    result = fundingAPI.get_travel_rule_locked_deposits()
+    print(result)
+    
+
+#### Request Parameters
+
+None. User identity is resolved from API key authentication.
+
+> Response Example
+    
+    
+    {
+      "code": "0",
+      "data": [
+        {
+          "depId": "98765",
+          "txId": "0xabc123def456789...",
+          "addr": "0xdef456abc789012...",
+          "ccy": "USDT",
+          "chain": "ERC20",
+          "amt": "100.00000000",
+          "ts": "1714564800000"
+        }
+      ],
+      "msg": ""
+    }
+    
+
+#### Response Parameters
+
+Parameter | Type | Description  
+---|---|---  
+depId | String | Deposit ID  
+txId | String | On-chain transaction hash  
+addr | String | Receiving deposit address  
+ccy | String | Currency, e.g. `USDT`. Empty string if currency lookup fails.  
+chain | String | Network/chain name, e.g. `ERC20`. Empty string if chain lookup fails.  
+amt | String | Deposit amount  
+ts | String | Data generation time. Unix timestamp in milliseconds, e.g. `1714564800000`  
+  
+### Unlock Travel Rule deposit
+
+Submit originator information to unlock a deposit locked under the Travel Rule. If the deposit has already been unlocked, the request returns success without re-processing.
+
+#### Rate Limit: 3 requests per second
+
+#### Rate limit rule: User ID + IP
+
+#### Permission: Withdraw
+
+#### HTTP Request
+
+`POST /api/v5/asset/travel-rule/unlock`
+
+#### Request Parameters
+
+Parameter | Type | Required | Description  
+---|---|---|---  
+depId | String | Yes | Locked deposit ID  
+questionnaire | Object | Yes | Originator information. Required keys depend on the user's entity.  
+> personType | String | Yes | Originator type. `1`: self (the depositor is the account holder); `2`: third party.  
+> walletType | String | Yes | Source wallet type. `exchange`: exchange wallet; `private`: private wallet.  
+> exchId | String | Conditional | Source exchange ID from [Get exchange list (public)](/docs-v5/en/#funding-account-rest-api-get-exchange-list-public). Use `0` if the exchange is not listed. Required when `walletType` = `exchange`.  
+> exchName | String | Conditional | Source exchange name, e.g. `Example Exchange`. Required when `exchId` = `0`.  
+> origFirstName | String | Conditional | Originator first name. Required for a natural person if `origCompanyName` is not provided.  
+> origLastName | String | Conditional | Originator last name. Required for a natural person if `origCompanyName` is not provided.  
+> origCompanyName | String | Conditional | Originator company name. Required for a legal entity if `origFirstName` and `origLastName` are not provided.  
+> origCountry | String | Conditional | Originator country of residence, or country of registration for a legal entity. ISO 3166-1 alpha-2 code, e.g. `SG`.  
+> origGeoAddress | String | Conditional | Full address on one line: street, town/city, state/province, postal code.  
+> origDob | String | Conditional | Originator date of birth, or date of incorporation / registration for a legal entity, `YYYY-MM-DD`.  
+> origPob | String | Conditional | Originator place of birth, or country of registration for a legal entity. ISO 3166-1 alpha-2 code, e.g. `SG`.  
+> origNationality | String | Conditional | Originator nationality. ISO 3166-1 alpha-2 code, e.g. `SG`. Required for a natural person.  
+> brazilClassificationCode | String | Conditional | Transfer purpose code. For deposits below USD 50,000, use an Annex I code. For deposits of USD 50,000 or more, use an Annex II code. Optional for OKX Brazil users for now; will become required.  
+  
+> Request Example
+    
+    
+    POST /api/v5/asset/travel-rule/unlock
+    body
+    
+    
+    
+    {
+      "depId": "1234567890",
+      "questionnaire": {
+        "personType": "2",
+        "walletType": "exchange",
+        "exchId": "0",
+        "exchName": "Example Exchange",
+        "origFirstName": "Alex",
+        "origLastName": "Chen",
+        "origCountry": "SG",
+        "origGeoAddress": "123 Main St, Singapore 018956",
+        "origDob": "1990-01-01",
+        "origPob": "SG"
+      }
+    }
+    
+
+> Response Example
+    
+    
+    {
+      "code": "0",
+      "data": [{"result": true}],
+      "msg": ""
+    }
+    
+
+#### Response Parameters
+
+Parameter | Type | Description  
+---|---|---  
+result | Boolean | `true`: unlock accepted — deposit released or was already unlocked.  
+Empty `data` array: unlock failed — deposit remains locked.  
+  
 ### Withdrawal
 
 Only supported withdrawal of assets from funding account. Common sub-account does not support withdrawal. 
@@ -5529,6 +5674,151 @@ xstockShareName | String | 对应的站内资产名称
 **确认到账** 是够充币确认数，且币已经到账户中，但是不可提。  
 **充值成功** 是当前账户完成到提币确认，可以提出。 
 
+### 获取因国际转账规则而锁定的充值记录 
+
+获取当前因国际转账规则而被锁定的充值列表。如果用户没有被锁定的充值，则返回空数组。锁定充值的最大数量限制为 50 条。
+
+#### 限速：3次/s
+
+#### 限速规则：User ID + IP
+
+#### HTTP 请求
+
+`GET /api/v5/asset/travel-rule/get-locked`
+
+> 请求示例
+    
+    
+    GET /api/v5/asset/travel-rule/get-locked
+    
+    
+    
+    import okx.Funding as Funding
+    
+    apikey = "YOUR_API_KEY"
+    secretkey = "YOUR_SECRET_KEY"
+    passphrase = "YOUR_PASSPHRASE"
+    
+    flag = "0"  # 实盘: 0, 模拟盘: 1
+    
+    fundingAPI = Funding.FundingAPI(apikey, secretkey, passphrase, False, flag)
+    
+    result = fundingAPI.get_travel_rule_locked_deposits()
+    print(result)
+    
+
+#### 请求参数
+
+无。用户身份通过 API Key 认证解析。
+
+> 返回示例
+    
+    
+    {
+      "code": "0",
+      "data": [
+        {
+          "depId": "98765",
+          "txId": "0xabc123def456789...",
+          "addr": "0xdef456abc789012...",
+          "ccy": "USDT",
+          "chain": "ERC20",
+          "amt": "100.00000000",
+          "ts": "1714564800000"
+        }
+      ],
+      "msg": ""
+    }
+    
+
+#### 返回参数
+
+参数 | 类型 | 描述  
+---|---|---  
+depId | String | 充值 ID  
+txId | String | 链上交易哈希  
+addr | String | 充值地址  
+ccy | String | 币种，如 `USDT`。如果币种查询失败则返回空字符串  
+chain | String | 网络/链名称，如 `ERC20`。如果链查询失败则返回空字符串  
+amt | String | 充值数量  
+ts | String | 数据生成时间，Unix 时间戳的毫秒数格式，如 `1714564800000`  
+  
+### 解锁国际转账规则充值 
+
+提交发起人信息以解锁因国际转账规则而被锁定的充值。如果充值已经解锁，则直接返回成功，不重复处理。
+
+#### 限速：3次/s
+
+#### 限速规则：User ID + IP
+
+#### 权限：提币
+
+#### HTTP 请求
+
+`POST /api/v5/asset/travel-rule/unlock`
+
+#### 请求参数
+
+参数 | 类型 | 是否必须 | 描述  
+---|---|---|---  
+depId | String | 是 | 被锁定的充值 ID  
+questionnaire | Object | 是 | 发起人信息。所需字段取决于用户所属实体。  
+> personType | String | 是 | 发起人类型。`1`：本人（存款人即账户持有人）；`2`：第三方。  
+> walletType | String | 是 | 来源钱包类型。`exchange`：交易所钱包；`private`：私人钱包。  
+> exchId | String | 条件必填 | 来源交易所 ID，可通过[获取交易所列表（公共）](/docs-v5/zh/#funding-account-rest-api-get-exchange-list-public)查询；未列出的交易所使用 `0`。当 `walletType` = `exchange` 时必填。  
+> exchName | String | 条件必填 | 来源交易所名称，如 `Example Exchange`。当 `exchId` = `0` 时必填。  
+> origFirstName | String | 条件必填 | 发起人名字。自然人未提供 `origCompanyName` 时必填。  
+> origLastName | String | 条件必填 | 发起人姓氏。自然人未提供 `origCompanyName` 时必填。  
+> origCompanyName | String | 条件必填 | 发起人公司名称。法人实体未提供 `origFirstName` 和 `origLastName` 时必填。  
+> origCountry | String | 条件必填 | 发起人居住国家；法人实体填写注册国家。ISO 3166-1 alpha-2 代码，如 `SG`。  
+> origGeoAddress | String | 条件必填 | 单行完整地址：街道、城镇/城市、州/省、邮政编码。  
+> origDob | String | 条件必填 | 发起人出生日期；法人实体填写注册/成立日期，格式为 `YYYY-MM-DD`。  
+> origPob | String | 条件必填 | 发起人出生地；法人实体填写注册国家。ISO 3166-1 alpha-2 代码，如 `SG`。  
+> origNationality | String | 条件必填 | 发起人国籍。ISO 3166-1 alpha-2 代码，如 `SG`。自然人必填。  
+> brazilClassificationCode | String | 条件必填 | 转账用途代码。充值金额低于 50,000 USD 时使用 Annex I 代码；达到或超过 50,000 USD 时使用 Annex II 代码。OKX Brazil 用户目前可选，后续将改为必填。  
+  
+> 请求示例
+    
+    
+    POST /api/v5/asset/travel-rule/unlock
+    body
+    
+    
+    
+    {
+      "depId": "1234567890",
+      "questionnaire": {
+        "personType": "2",
+        "walletType": "exchange",
+        "exchId": "0",
+        "exchName": "Example Exchange",
+        "origFirstName": "Alex",
+        "origLastName": "Chen",
+        "origCountry": "SG",
+        "origGeoAddress": "123 Main St, Singapore 018956",
+        "origDob": "1990-01-01",
+        "origPob": "SG"
+      }
+    }
+    
+
+> 返回示例
+    
+    
+    {
+      "code": "0",
+      "data": [{"result": true}],
+      "msg": ""
+    }
+    
+
+#### 返回参数
+
+参数 | 类型 | 描述  
+---|---|---  
+result | Boolean | `true`：接受解锁请求，充值已释放或已提前解锁。  
+空 `data` 数组：解锁失败，充值仍处于锁定状态。  
+  
 ### 提币 
 
 支持资金账户资产提币。普通子账户不支持提币。

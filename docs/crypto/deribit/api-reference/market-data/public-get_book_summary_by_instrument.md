@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_book_summary_by_instrument
 api_type: JSON-RPC
-updated_at: 2026-11-19 19:05:53.436172
+updated_at: 2026-11-20 19:00:13.938223
 ---
 
 # public/get_book_summary_by_instrument

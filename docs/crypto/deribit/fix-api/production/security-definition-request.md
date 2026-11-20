@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/security-definition-request
 api_type: FIX
-updated_at: 2026-11-19 19:05:48.012631
+updated_at: 2026-11-20 19:00:11.479318
 ---
 
 # Security Definition Request(c) (Production FIX API)

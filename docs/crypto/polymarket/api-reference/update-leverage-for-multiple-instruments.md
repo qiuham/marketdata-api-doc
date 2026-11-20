@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/update-leverage-for-multiple-instruments'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Update Leverage for Multiple Instruments

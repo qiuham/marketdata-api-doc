@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/agentic-wallet/quickstart/install-agentic-wallet
 api_type: Guide
-updated_at: 2026-11-19 18:44:08.092013
+updated_at: 2026-11-20 18:43:20.693857
 ---
 
 # Install Agentic Wallet

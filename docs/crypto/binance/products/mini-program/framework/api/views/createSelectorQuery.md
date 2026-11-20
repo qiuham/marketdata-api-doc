@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/views/createSelectorQuery
 api_type: Guide
-updated_at: 2026-11-19 18:46:08.411144
+updated_at: 2026-11-20 18:45:06.608748
 ---
 
 # bn.createSelectorQuery

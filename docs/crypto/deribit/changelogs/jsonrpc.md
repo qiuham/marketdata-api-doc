@@ -2,12 +2,27 @@
 exchange: deribit
 source_url: https://docs.deribit.com/changelogs/jsonrpc
 api_type: Changelog
-updated_at: 2026-11-19 19:05:32.909366
+updated_at: 2026-11-20 19:00:09.990010
 ---
 
 # JSON-RPC API Changelog
 
 > Release notes for the Deribit JSON-RPC API covering new endpoints, parameter changes, subscription updates, and backward-compatibility announcements.
+
+**Release 24.11.2026**
+
+**Raw subscriptions: changes merged over at least 10 ms**
+
+Notifications on raw subscriptions are now sent at most once every 10 ms. Changes that happen within that window are merged into one notification. When a channel has been quiet for longer than 10 ms, the next change is still sent immediately. Under heavy traffic, raw notifications can arrive up to about 15 ms later than before.
+
+This applies to:
+
+* `book.{instrument_name}.raw`: one notification carries the combined changes. Consecutive notifications still form an unbroken `prev_change_id` / `change_id` chain
+* `ticker.{instrument_name}.raw` and `quote.{instrument_name}`: only the latest value is sent
+* `trades.{instrument_name}.raw` and `trades.{kind}.{currency}.raw`: trades from the window are sent together in one notification
+* `user.orders.{instrument_name}.raw` and `user.orders.{kind}.{currency}.raw`: only the last state of an order within the window is sent, so intermediate states can be skipped
+
+Merged notifications could already occur during periods of very high load. Clients that process each notification as a complete update need no change. Do not rely on receiving every intermediate order state on raw channels.
 
 **Release 19.11.2026**
 

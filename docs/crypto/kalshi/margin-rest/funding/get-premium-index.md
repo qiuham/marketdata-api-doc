@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-rest/funding/get-premium-index'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Get Premium Index

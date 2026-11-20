@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/contract-transaction-log
 api_type: REST
-updated_at: 2026-11-19 18:52:10.059929
+updated_at: 2026-11-20 18:50:52.687220
 ---
 
 # Get Transaction Log

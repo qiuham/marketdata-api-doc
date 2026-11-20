@@ -10,7 +10,7 @@
   "status": "active",
   "docs_dir": "docs/crypto/bitfinex",
   "total": 141,
-  "updated_at": "2026-11-19",
+  "updated_at": "2026-11-20",
   "documents_by_type": {
     "reference": [
       {
@@ -23,7 +23,7 @@
         "source_url": "https://docs.bitfinex.com/docs/abbreviations-glossary",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "changelog",
@@ -35,7 +35,7 @@
         "source_url": "https://docs.bitfinex.com/docs/changelog",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "derivatives",
@@ -47,7 +47,7 @@
         "source_url": "https://docs.bitfinex.com/docs/derivatives",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "flag-values",
@@ -59,7 +59,7 @@
         "source_url": "https://docs.bitfinex.com/docs/flag-values",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "introduction",
@@ -71,7 +71,7 @@
         "source_url": "https://docs.bitfinex.com/docs/introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "open-source-libraries",
@@ -83,7 +83,7 @@
         "source_url": "https://docs.bitfinex.com/docs/open-source-libraries",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "requirements-and-limitations",
@@ -95,7 +95,7 @@
         "source_url": "https://docs.bitfinex.com/docs/requirements-and-limitations",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth",
@@ -107,7 +107,7 @@
         "source_url": "https://docs.bitfinex.com/docs/rest-auth",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-general",
@@ -119,7 +119,7 @@
         "source_url": "https://docs.bitfinex.com/docs/rest-general",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-public",
@@ -131,7 +131,7 @@
         "source_url": "https://docs.bitfinex.com/docs/rest-public",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-reading-the-api-documentation",
@@ -143,7 +143,7 @@
         "source_url": "https://docs.bitfinex.com/docs/rest-reading-the-api-documentation",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "showcase",
@@ -155,7 +155,7 @@
         "source_url": "https://docs.bitfinex.com/docs/showcase",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "withdraw-requests-and-the-travel-rule",
@@ -167,7 +167,7 @@
         "source_url": "https://docs.bitfinex.com/docs/withdraw-requests-and-the-travel-rule",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth",
@@ -179,7 +179,7 @@
         "source_url": "https://docs.bitfinex.com/docs/ws-auth",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-general",
@@ -191,7 +191,7 @@
         "source_url": "https://docs.bitfinex.com/docs/ws-general",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-public",
@@ -203,7 +203,7 @@
         "source_url": "https://docs.bitfinex.com/docs/ws-public",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-reading-the-documentation",
@@ -215,7 +215,7 @@
         "source_url": "https://docs.bitfinex.com/docs/ws-reading-the-documentation",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-websocket-checksum",
@@ -227,7 +227,7 @@
         "source_url": "https://docs.bitfinex.com/docs/ws-websocket-checksum",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "restc-authenticated-request-example",
@@ -239,7 +239,7 @@
         "source_url": "https://docs.bitfinex.com/recipes/restc-authenticated-request-example",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "restjava-authenticated-request-example",
@@ -251,7 +251,7 @@
         "source_url": "https://docs.bitfinex.com/recipes/restjava-authenticated-request-example",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "restjavascript-authenticated-request-example",
@@ -263,7 +263,7 @@
         "source_url": "https://docs.bitfinex.com/recipes/restjavascript-authenticated-request-example",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "restphp-authenticated-request-example",
@@ -275,7 +275,7 @@
         "source_url": "https://docs.bitfinex.com/recipes/restphp-authenticated-request-example",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "restpython-authenticated-request-example",
@@ -287,7 +287,7 @@
         "source_url": "https://docs.bitfinex.com/recipes/restpython-authenticated-request-example",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "wsjavascript-authenticated-connection-example-1",
@@ -299,7 +299,7 @@
         "source_url": "https://docs.bitfinex.com/recipes/wsjavascript-authenticated-connection-example-1",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "wspython-authenticated-connection-example",
@@ -311,7 +311,7 @@
         "source_url": "https://docs.bitfinex.com/recipes/wspython-authenticated-connection-example",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "deposit-address-all",
@@ -323,7 +323,7 @@
         "source_url": "https://docs.bitfinex.com/reference/deposit-address-all",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "generate-token",
@@ -335,7 +335,7 @@
         "source_url": "https://docs.bitfinex.com/reference/generate-token",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "honey-framework",
@@ -347,7 +347,7 @@
         "source_url": "https://docs.bitfinex.com/reference/honey-framework",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "key-permissions",
@@ -359,7 +359,7 @@
         "source_url": "https://docs.bitfinex.com/reference/key-permissions",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "lnx-invoice-payments",
@@ -371,7 +371,7 @@
         "source_url": "https://docs.bitfinex.com/reference/lnx-invoice-payments",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "movement-info",
@@ -383,7 +383,7 @@
         "source_url": "https://docs.bitfinex.com/reference/movement-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "otc-orders-history",
@@ -395,7 +395,7 @@
         "source_url": "https://docs.bitfinex.com/reference/otc-orders-history",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-alert-del",
@@ -407,7 +407,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-alert-del",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-alert-set",
@@ -419,7 +419,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-alert-set",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-alerts",
@@ -431,7 +431,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-alerts",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-audit-hist",
@@ -443,7 +443,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-audit-hist",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-calc-deriv-collateral-limits",
@@ -455,7 +455,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-calc-deriv-collateral-limits",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-calc-order-avail",
@@ -467,7 +467,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-calc-order-avail",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-cancel-all-funding-offers",
@@ -479,7 +479,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-cancel-all-funding-offers",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-cancel-funding-offer",
@@ -491,7 +491,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-cancel-funding-offer",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-cancel-order",
@@ -503,7 +503,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-cancel-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-cancel-orders-multiple",
@@ -515,7 +515,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-cancel-orders-multiple",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-deposit-address",
@@ -527,7 +527,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-deposit-address",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-deposit-invoice",
@@ -539,7 +539,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-deposit-invoice",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-deriv-pos-collateral-set",
@@ -551,7 +551,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-deriv-pos-collateral-set",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-funding-auto-renew",
@@ -563,7 +563,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-auto-renew",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-funding-close",
@@ -575,7 +575,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-close",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-funding-credits-hist",
@@ -587,7 +587,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-credits-hist",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-funding-credits",
@@ -599,7 +599,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-credits",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-funding-loans-hist",
@@ -611,7 +611,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-loans-hist",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-funding-loans",
@@ -623,7 +623,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-loans",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-funding-offers-hist",
@@ -635,7 +635,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-offers-hist",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-funding-offers",
@@ -647,7 +647,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-offers",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-funding-trades-hist",
@@ -659,7 +659,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-trades-hist",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-increase-position-info",
@@ -671,7 +671,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-increase-position-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-info-funding",
@@ -683,7 +683,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-info-funding",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-info-margin",
@@ -695,7 +695,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-info-margin",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-info-user",
@@ -707,7 +707,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-info-user",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-keep-funding",
@@ -719,7 +719,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-keep-funding",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-ledgers",
@@ -731,7 +731,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-ledgers",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-logins-hist",
@@ -743,7 +743,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-logins-hist",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-movements",
@@ -755,7 +755,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-movements",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-order-multi",
@@ -767,7 +767,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-order-multi",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-order-trades",
@@ -779,7 +779,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-order-trades",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-orders-history-by-symbol",
@@ -791,7 +791,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-orders-history-by-symbol",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-orders-history",
@@ -803,7 +803,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-orders-history",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-position-claim",
@@ -815,7 +815,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-position-claim",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-position-increase",
@@ -827,7 +827,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-position-increase",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-positions-audit",
@@ -839,7 +839,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-positions-audit",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-positions-hist",
@@ -851,7 +851,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-positions-hist",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-positions-snap",
@@ -863,7 +863,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-positions-snap",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-positions",
@@ -875,7 +875,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-positions",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-retrieve-orders-by-symbol",
@@ -887,7 +887,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-retrieve-orders-by-symbol",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-retrieve-orders",
@@ -899,7 +899,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-retrieve-orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-settings-del",
@@ -911,7 +911,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-settings-del",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-settings-set",
@@ -923,7 +923,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-settings-set",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-settings",
@@ -935,7 +935,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-settings",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-submit-funding-offer",
@@ -947,7 +947,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-submit-funding-offer",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-submit-order",
@@ -959,7 +959,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-submit-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-summary",
@@ -971,7 +971,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-summary",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-trades-by-symbol",
@@ -983,7 +983,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-trades-by-symbol",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-trades",
@@ -995,7 +995,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-trades",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-transfer",
@@ -1007,7 +1007,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-transfer",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-update-order",
@@ -1019,7 +1019,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-update-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-wallets",
@@ -1031,7 +1031,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-wallets",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-auth-withdraw",
@@ -1043,7 +1043,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-auth-withdraw",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-public-book",
@@ -1055,7 +1055,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-public-book",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-public-candles",
@@ -1067,7 +1067,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-public-candles",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-public-conf",
@@ -1079,7 +1079,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-public-conf",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-public-derivatives-status-history",
@@ -1091,7 +1091,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-public-derivatives-status-history",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-public-derivatives-status",
@@ -1103,7 +1103,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-public-derivatives-status",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-public-foreign-exchange-rate",
@@ -1115,7 +1115,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-public-foreign-exchange-rate",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-public-funding-stats",
@@ -1127,7 +1127,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-public-funding-stats",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-public-liquidations",
@@ -1139,7 +1139,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-public-liquidations",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-public-market-average-price",
@@ -1151,7 +1151,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-public-market-average-price",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-public-platform-status",
@@ -1163,7 +1163,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-public-platform-status",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-public-rankings",
@@ -1175,7 +1175,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-public-rankings",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-public-stats",
@@ -1187,7 +1187,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-public-stats",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-public-ticker",
@@ -1199,7 +1199,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-public-ticker",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-public-tickers-history",
@@ -1211,7 +1211,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-public-tickers-history",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-public-tickers",
@@ -1223,7 +1223,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-public-tickers",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "rest-public-trades",
@@ -1235,7 +1235,7 @@
         "source_url": "https://docs.bitfinex.com/reference/rest-public-trades",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "thalex-deposit-request",
@@ -1247,7 +1247,7 @@
         "source_url": "https://docs.bitfinex.com/reference/thalex-deposit-request",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "thalex-free-transfer-count",
@@ -1259,7 +1259,7 @@
         "source_url": "https://docs.bitfinex.com/reference/thalex-free-transfer-count",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "thalex-withdrawal-request",
@@ -1271,7 +1271,7 @@
         "source_url": "https://docs.bitfinex.com/reference/thalex-withdrawal-request",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "thalex",
@@ -1283,7 +1283,7 @@
         "source_url": "https://docs.bitfinex.com/reference/thalex",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ui-goodies",
@@ -1295,7 +1295,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ui-goodies",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "update-position-funding-type",
@@ -1307,7 +1307,7 @@
         "source_url": "https://docs.bitfinex.com/reference/update-position-funding-type",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "virtual-asset-service-providers",
@@ -1319,7 +1319,7 @@
         "source_url": "https://docs.bitfinex.com/reference/virtual-asset-service-providers",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-account-info",
@@ -1331,7 +1331,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-account-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-balance-info",
@@ -1343,7 +1343,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-balance-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-funding-credits",
@@ -1355,7 +1355,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-funding-credits",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-funding-loans",
@@ -1367,7 +1367,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-funding-loans",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-funding-offers",
@@ -1379,7 +1379,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-funding-offers",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-funding-trades",
@@ -1391,7 +1391,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-funding-trades",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-funding",
@@ -1403,7 +1403,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-funding",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-historical-credits",
@@ -1415,7 +1415,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-historical-credits",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-historical-loans",
@@ -1427,7 +1427,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-historical-loans",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-historical-offers",
@@ -1439,7 +1439,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-historical-offers",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-historical-orders",
@@ -1451,7 +1451,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-historical-orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-input-calc",
@@ -1463,7 +1463,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-input-calc",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-input-offer-cancel",
@@ -1475,7 +1475,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-input-offer-cancel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-input-offer-new",
@@ -1487,7 +1487,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-input-offer-new",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-input-order-cancel-multi",
@@ -1499,7 +1499,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-input-order-cancel-multi",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-input-order-cancel",
@@ -1511,7 +1511,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-input-order-cancel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-input-order-multi-op",
@@ -1523,7 +1523,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-input-order-multi-op",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-input-order-new",
@@ -1535,7 +1535,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-input-order-new",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-input-order-update",
@@ -1547,7 +1547,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-input-order-update",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-input",
@@ -1559,7 +1559,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-input",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-margin-info",
@@ -1571,7 +1571,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-margin-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-notifications",
@@ -1583,7 +1583,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-notifications",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-orders",
@@ -1595,7 +1595,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-positions",
@@ -1607,7 +1607,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-positions",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-trades",
@@ -1619,7 +1619,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-trades",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-auth-wallets",
@@ -1631,7 +1631,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-auth-wallets",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-public-books",
@@ -1643,7 +1643,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-public-books",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-public-candles",
@@ -1655,7 +1655,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-public-candles",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-public-raw-books",
@@ -1667,7 +1667,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-public-raw-books",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-public-status",
@@ -1679,7 +1679,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-public-status",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-public-ticker",
@@ -1691,7 +1691,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-public-ticker",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       },
       {
         "id": "ws-public-trades",
@@ -1703,7 +1703,7 @@
         "source_url": "https://docs.bitfinex.com/reference/ws-public-trades",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-19"
+        "updated_at": "2026-11-20"
       }
     ]
   },
@@ -1718,7 +1718,7 @@
       "source_url": "https://docs.bitfinex.com/docs/derivatives",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "abbreviations-glossary",
@@ -1730,7 +1730,7 @@
       "source_url": "https://docs.bitfinex.com/docs/abbreviations-glossary",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-account-info",
@@ -1742,7 +1742,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-account-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-funding-offers",
@@ -1754,7 +1754,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-offers",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-alert-del",
@@ -1766,7 +1766,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-alert-del",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-alerts",
@@ -1778,7 +1778,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-alerts",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-alert-set",
@@ -1790,7 +1790,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-alert-set",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth",
@@ -1802,7 +1802,7 @@
       "source_url": "https://docs.bitfinex.com/docs/ws-auth",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth",
@@ -1814,7 +1814,7 @@
       "source_url": "https://docs.bitfinex.com/docs/rest-auth",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-calc-order-avail",
@@ -1826,7 +1826,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-calc-order-avail",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-balance-info",
@@ -1838,7 +1838,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-balance-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-public-book",
@@ -1850,7 +1850,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-public-book",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-public-books",
@@ -1862,7 +1862,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-public-books",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-input-calc",
@@ -1874,7 +1874,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-input-calc",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-cancel-all-funding-offers",
@@ -1886,7 +1886,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-cancel-all-funding-offers",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-cancel-funding-offer",
@@ -1898,7 +1898,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-cancel-funding-offer",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-input-offer-cancel",
@@ -1910,7 +1910,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-input-offer-cancel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-cancel-order",
@@ -1922,7 +1922,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-cancel-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-input-order-cancel",
@@ -1934,7 +1934,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-input-order-cancel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-input-order-cancel-multi",
@@ -1946,7 +1946,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-input-order-cancel-multi",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-cancel-orders-multiple",
@@ -1958,7 +1958,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-cancel-orders-multiple",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-public-candles",
@@ -1970,7 +1970,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-public-candles",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-public-candles",
@@ -1982,7 +1982,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-public-candles",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "changelog",
@@ -1994,7 +1994,7 @@
       "source_url": "https://docs.bitfinex.com/docs/changelog",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-audit-hist",
@@ -2006,7 +2006,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-audit-hist",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-position-claim",
@@ -2018,7 +2018,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-position-claim",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-public-conf",
@@ -2030,7 +2030,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-public-conf",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-deposit-address",
@@ -2042,7 +2042,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-deposit-address",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "deposit-address-all",
@@ -2054,7 +2054,7 @@
       "source_url": "https://docs.bitfinex.com/reference/deposit-address-all",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-deriv-pos-collateral-set",
@@ -2066,7 +2066,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-deriv-pos-collateral-set",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-calc-deriv-collateral-limits",
@@ -2078,7 +2078,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-calc-deriv-collateral-limits",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-public-derivatives-status",
@@ -2090,7 +2090,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-public-derivatives-status",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-public-derivatives-status-history",
@@ -2102,7 +2102,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-public-derivatives-status-history",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "flag-values",
@@ -2114,7 +2114,7 @@
       "source_url": "https://docs.bitfinex.com/docs/flag-values",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-public-foreign-exchange-rate",
@@ -2126,7 +2126,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-public-foreign-exchange-rate",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-funding-auto-renew",
@@ -2138,7 +2138,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-auto-renew",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-funding-close",
@@ -2150,7 +2150,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-close",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-funding-credits",
@@ -2162,7 +2162,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-credits",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-funding-credits",
@@ -2174,7 +2174,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-funding-credits",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-funding-credits-hist",
@@ -2186,7 +2186,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-credits-hist",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-info-funding",
@@ -2198,7 +2198,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-info-funding",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-funding",
@@ -2210,7 +2210,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-funding",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-funding-loans",
@@ -2222,7 +2222,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-loans",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-funding-loans",
@@ -2234,7 +2234,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-funding-loans",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-funding-loans-hist",
@@ -2246,7 +2246,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-loans-hist",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-funding-offers",
@@ -2258,7 +2258,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-funding-offers",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-funding-offers-hist",
@@ -2270,7 +2270,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-offers-hist",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-public-funding-stats",
@@ -2282,7 +2282,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-public-funding-stats",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-funding-trades-hist",
@@ -2294,7 +2294,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-funding-trades-hist",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-funding-trades",
@@ -2306,7 +2306,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-funding-trades",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-general",
@@ -2318,7 +2318,7 @@
       "source_url": "https://docs.bitfinex.com/docs/rest-general",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-general",
@@ -2330,7 +2330,7 @@
       "source_url": "https://docs.bitfinex.com/docs/ws-general",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-deposit-invoice",
@@ -2342,7 +2342,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-deposit-invoice",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "generate-token",
@@ -2354,7 +2354,7 @@
       "source_url": "https://docs.bitfinex.com/reference/generate-token",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-historical-credits",
@@ -2366,7 +2366,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-historical-credits",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-historical-loans",
@@ -2378,7 +2378,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-historical-loans",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-historical-offers",
@@ -2390,7 +2390,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-historical-offers",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-historical-orders",
@@ -2402,7 +2402,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-historical-orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "honey-framework",
@@ -2414,7 +2414,7 @@
       "source_url": "https://docs.bitfinex.com/reference/honey-framework",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-position-increase",
@@ -2426,7 +2426,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-position-increase",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-increase-position-info",
@@ -2438,7 +2438,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-increase-position-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "introduction",
@@ -2450,7 +2450,7 @@
       "source_url": "https://docs.bitfinex.com/docs/introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-keep-funding",
@@ -2462,7 +2462,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-keep-funding",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "key-permissions",
@@ -2474,7 +2474,7 @@
       "source_url": "https://docs.bitfinex.com/reference/key-permissions",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "lnx-invoice-payments",
@@ -2486,7 +2486,7 @@
       "source_url": "https://docs.bitfinex.com/reference/lnx-invoice-payments",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-public-rankings",
@@ -2498,7 +2498,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-public-rankings",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-ledgers",
@@ -2510,7 +2510,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-ledgers",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-public-liquidations",
@@ -2522,7 +2522,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-public-liquidations",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-logins-hist",
@@ -2534,7 +2534,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-logins-hist",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-info-margin",
@@ -2546,7 +2546,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-info-margin",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-margin-info",
@@ -2558,7 +2558,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-margin-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-public-market-average-price",
@@ -2570,7 +2570,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-public-market-average-price",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "movement-info",
@@ -2582,7 +2582,7 @@
       "source_url": "https://docs.bitfinex.com/reference/movement-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-movements",
@@ -2594,7 +2594,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-movements",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-input-offer-new",
@@ -2606,7 +2606,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-input-offer-new",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-input-order-new",
@@ -2618,7 +2618,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-input-order-new",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-notifications",
@@ -2630,7 +2630,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-notifications",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "otc-orders-history",
@@ -2642,7 +2642,7 @@
       "source_url": "https://docs.bitfinex.com/reference/otc-orders-history",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "open-source-libraries",
@@ -2654,7 +2654,7 @@
       "source_url": "https://docs.bitfinex.com/docs/open-source-libraries",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-order-multi",
@@ -2666,7 +2666,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-order-multi",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-input-order-multi-op",
@@ -2678,7 +2678,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-input-order-multi-op",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-order-trades",
@@ -2690,7 +2690,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-order-trades",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-orders",
@@ -2702,7 +2702,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-orders-history",
@@ -2714,7 +2714,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-orders-history",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-orders-history-by-symbol",
@@ -2726,7 +2726,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-orders-history-by-symbol",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-public-platform-status",
@@ -2738,7 +2738,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-public-platform-status",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-positions",
@@ -2750,7 +2750,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-positions",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-positions-audit",
@@ -2762,7 +2762,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-positions-audit",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-positions-hist",
@@ -2774,7 +2774,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-positions-hist",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-positions-snap",
@@ -2786,7 +2786,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-positions-snap",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-public",
@@ -2798,7 +2798,7 @@
       "source_url": "https://docs.bitfinex.com/docs/ws-public",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-public",
@@ -2810,7 +2810,7 @@
       "source_url": "https://docs.bitfinex.com/docs/rest-public",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-public-raw-books",
@@ -2822,7 +2822,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-public-raw-books",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-reading-the-api-documentation",
@@ -2834,7 +2834,7 @@
       "source_url": "https://docs.bitfinex.com/docs/rest-reading-the-api-documentation",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-reading-the-documentation",
@@ -2846,7 +2846,7 @@
       "source_url": "https://docs.bitfinex.com/docs/ws-reading-the-documentation",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "requirements-and-limitations",
@@ -2858,7 +2858,7 @@
       "source_url": "https://docs.bitfinex.com/docs/requirements-and-limitations",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-retrieve-orders",
@@ -2870,7 +2870,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-retrieve-orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-retrieve-orders-by-symbol",
@@ -2882,7 +2882,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-retrieve-orders-by-symbol",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-positions",
@@ -2894,7 +2894,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-positions",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "showcase",
@@ -2906,7 +2906,7 @@
       "source_url": "https://docs.bitfinex.com/docs/showcase",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-public-stats",
@@ -2918,7 +2918,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-public-stats",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-public-status",
@@ -2930,7 +2930,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-public-status",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-submit-funding-offer",
@@ -2942,7 +2942,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-submit-funding-offer",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-submit-order",
@@ -2954,7 +2954,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-submit-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-summary",
@@ -2966,7 +2966,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-summary",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "thalex-deposit-request",
@@ -2978,7 +2978,7 @@
       "source_url": "https://docs.bitfinex.com/reference/thalex-deposit-request",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "thalex",
@@ -2990,7 +2990,7 @@
       "source_url": "https://docs.bitfinex.com/reference/thalex",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "thalex-free-transfer-count",
@@ -3002,7 +3002,7 @@
       "source_url": "https://docs.bitfinex.com/reference/thalex-free-transfer-count",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "thalex-withdrawal-request",
@@ -3014,7 +3014,7 @@
       "source_url": "https://docs.bitfinex.com/reference/thalex-withdrawal-request",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-public-ticker",
@@ -3026,7 +3026,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-public-ticker",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-public-ticker",
@@ -3038,7 +3038,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-public-ticker",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-public-tickers",
@@ -3050,7 +3050,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-public-tickers",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-public-tickers-history",
@@ -3062,7 +3062,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-public-tickers-history",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-trades",
@@ -3074,7 +3074,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-trades",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-public-trades",
@@ -3086,7 +3086,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-public-trades",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-trades",
@@ -3098,7 +3098,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-trades",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-public-trades",
@@ -3110,7 +3110,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-public-trades",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-trades-by-symbol",
@@ -3122,7 +3122,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-trades-by-symbol",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-transfer",
@@ -3134,7 +3134,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-transfer",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ui-goodies",
@@ -3146,7 +3146,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ui-goodies",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-update-order",
@@ -3158,7 +3158,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-update-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-input-order-update",
@@ -3170,7 +3170,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-input-order-update",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "update-position-funding-type",
@@ -3182,7 +3182,7 @@
       "source_url": "https://docs.bitfinex.com/reference/update-position-funding-type",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-info-user",
@@ -3194,7 +3194,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-info-user",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-settings-del",
@@ -3206,7 +3206,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-settings-del",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-settings",
@@ -3218,7 +3218,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-settings",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-settings-set",
@@ -3230,7 +3230,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-settings-set",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "virtual-asset-service-providers",
@@ -3242,7 +3242,7 @@
       "source_url": "https://docs.bitfinex.com/reference/virtual-asset-service-providers",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-wallets",
@@ -3254,7 +3254,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-wallets",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-wallets",
@@ -3266,7 +3266,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-wallets",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-websocket-checksum",
@@ -3278,7 +3278,7 @@
       "source_url": "https://docs.bitfinex.com/docs/ws-websocket-checksum",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "ws-auth-input",
@@ -3290,7 +3290,7 @@
       "source_url": "https://docs.bitfinex.com/reference/ws-auth-input",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "withdraw-requests-and-the-travel-rule",
@@ -3302,7 +3302,7 @@
       "source_url": "https://docs.bitfinex.com/docs/withdraw-requests-and-the-travel-rule",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "rest-auth-withdraw",
@@ -3314,7 +3314,7 @@
       "source_url": "https://docs.bitfinex.com/reference/rest-auth-withdraw",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "restc-authenticated-request-example",
@@ -3326,7 +3326,7 @@
       "source_url": "https://docs.bitfinex.com/recipes/restc-authenticated-request-example",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "restjava-authenticated-request-example",
@@ -3338,7 +3338,7 @@
       "source_url": "https://docs.bitfinex.com/recipes/restjava-authenticated-request-example",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "restjavascript-authenticated-request-example",
@@ -3350,7 +3350,7 @@
       "source_url": "https://docs.bitfinex.com/recipes/restjavascript-authenticated-request-example",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "restphp-authenticated-request-example",
@@ -3362,7 +3362,7 @@
       "source_url": "https://docs.bitfinex.com/recipes/restphp-authenticated-request-example",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "restpython-authenticated-request-example",
@@ -3374,7 +3374,7 @@
       "source_url": "https://docs.bitfinex.com/recipes/restpython-authenticated-request-example",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "wsjavascript-authenticated-connection-example-1",
@@ -3386,7 +3386,7 @@
       "source_url": "https://docs.bitfinex.com/recipes/wsjavascript-authenticated-connection-example-1",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     },
     {
       "id": "wspython-authenticated-connection-example",
@@ -3398,7 +3398,7 @@
       "source_url": "https://docs.bitfinex.com/recipes/wspython-authenticated-connection-example",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-19"
+      "updated_at": "2026-11-20"
     }
   ]
 }

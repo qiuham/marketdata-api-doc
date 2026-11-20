@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/guides/affiliate/introduction'
-updated_at: 2026-11-19
+updated_at: 2026-11-20
 ---
 
 # Affiliate Introduction
