@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/caas/overview
 api_type: Guide
-updated_at: 2026-11-20 18:34:21.761997
+updated_at: 2026-11-21 18:32:23.722435
 ---
 
 # Crypto-As-A-Service (CAAS)

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/devtools/preview
 api_type: Guide
-updated_at: 2026-11-20 18:39:42.948625
+updated_at: 2026-11-21 18:37:32.288533
 ---
 
 # Preview the Developing Application on the Device

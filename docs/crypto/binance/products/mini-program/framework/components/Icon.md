@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/Icon
 api_type: Guide
-updated_at: 2026-11-20 18:44:10.157323
+updated_at: 2026-11-21 18:42:30.875845
 ---
 
 # icon

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/pay/general-info
 api_type: Guide
-updated_at: 2026-11-20 18:31:05.917298
+updated_at: 2026-11-21 18:29:03.907472
 ---
 
 # General Info

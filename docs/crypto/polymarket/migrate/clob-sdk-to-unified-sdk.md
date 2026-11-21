@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/migrate/clob-sdk-to-unified-sdk'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # Migrate from Legacy SDKs to Unified SDKs

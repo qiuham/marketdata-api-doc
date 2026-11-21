@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/changelog/perps'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # Perps Changelog
@@ -18,6 +18,174 @@ updated_at: 2026-11-20
 > Recent changes to the Polymarket Perps API and platform
 
 Notable changes to the Polymarket Perps API.
+
+**Nov 20, 2026**
+
+Upcoming: Perps fee and liquidity reward changes
+
+Trading fees, liquidation fees, and liquidity rewards are scheduled to change
+on November 25, 2026. Current rules apply until the changes go live.
+
+* **Trading fees.** Standard maker fees increase below \$25M in trailing
+  30-day volume, and taker fees increase below \$5M. Maker rebates will be
+  0.5 bps at the \$500M threshold and 1 bp at the \$1B threshold. Volume
+  thresholds remain unchanged.
+* **Liquidation fees.** The liquidation fee increases from 0.50% to 1.00% of
+  liquidated notional, in addition to ordinary trading fees. 100% of
+  liquidation fees will be routed to bolster the Perps insurance fund.
+* **Liquidity rewards.** Fixed daily allocations per market and combined
+  scoring across each firm's accounts replace the current allocation and
+  scoring rules. Firms must declare all quoting accounts and sub-accounts
+  before launch. Eligibility will depend on maker share, two-sided quoted
+  notional, and uptime. Rewards will be scored and accrued daily, with weekly
+  payouts in pUSD. ANT's \$3,000 daily pool will run through November 30, 2026.
+
+See [Upcoming Fee and Liquidity Reward
+Changes](https://docs.polymarket.com/perps/fee-and-liquidity-reward-changes-november-2026.md) for the new rates,
+market pools, and quoting requirements.
+
+**Nov 19, 2026**
+
+Stale-price portfolio values, isolated withdrawals, and ANT, INTC, and SNDK tick changes
+
+No endpoints or required request fields are removed. Check portfolio values
+during price outages and size parsing before the deploy. `ANT`, `INTC`, and
+`SNDK` change tick size, and `SNDK` splits 8-for-1.
+
+**Changed**
+
+* **Portfolio values during price outages.** When a market's mark price goes
+  stale, the portfolio WebSocket channel and the account endpoints now keep the
+  last known value instead of `"0"`. A non-zero value does not prove that the
+  price is fresh.
+* **Size formatting.** Position and order sizes drop trailing zeros, so a size
+  that read `"1.50000"` can now read `"1.5"`. Parse sizes as decimals, not as
+  fixed-width strings.
+* **Withdrawable collateral with isolated positions.** The withdrawal floor
+  previously counted 10% of every position's notional. It now counts 10% of
+  cross notional, plus each isolated position's margin reservation and any
+  negative equity. Traders with large isolated positions can withdraw more
+  than before.
+* **Order history paging from browsers.** The `x-next-cursor` header on
+  `GET /v1/account/orders` is now exposed to browser clients through CORS, so
+  web apps can page through order history.
+* **Candles around a stock split.** The one-minute candle that contains a split
+  is rebuilt so it is no longer converted twice. If you cache candles, refetch
+  any that cover a split minute.
+* **Withdrawals and transfers during a split.** A queued withdrawal or transfer
+  that touches a market mid-split now fails with `stock_split_restricted`. Retry
+  after the market reopens.
+
+**Added**
+
+* **Statistics share unit version.** `/v1/info/statistics` and the statistics
+  WebSocket channel include `share_unit_version` for markets that have been
+  through a stock split, matching tickers. Compare it before combining prices
+  across responses. `/v1/info/markets` may briefly omit `open_price` and
+  `sparkline` right after a split.
+* **Leaderboard win leverage.** Each `GET /v1/info/leaderboard/wins` entry gains
+  a nullable integer `leverage`: the leverage held when the closing fills
+  executed.
+* **Per-market control errors.** `open_interest_cap_exceeded`,
+  `account_open_interest_cap_exceeded`, `strict_isolated_cross_exposure`,
+  `strict_isolated_margin_removal`, and `instrument_post_only` are returned only
+  after the matching per-market control is turned on. None are on at release. A
+  cap can stop an order after a partial fill. See [Errors](https://docs.polymarket.com/perps/errors.md).
+
+**Market Maintenance**
+
+* **`ANT` and `INTC` tick size.** During the maintenance window, both markets
+  move to 3 quantity decimals and 3 price decimals: a `0.001` size step and a
+  `0.001` price tick.
+  * Each market pauses, and all of its orders, TP/SL orders, and algos are
+    canceled.
+  * Positions are rounded toward zero to the new `0.001` size step. Any
+    remainder below `0.001` is closed to the insurance fund, so reconcile your
+    positions before quoting again.
+  * Refetch `/v1/info/instruments` and update cached decimals.
+    `share_unit_version` does not change for a tick-size change, so it cannot
+    detect this one. Progress shows on `/v1/info/stock-splits` and the
+    `corporate-actions::{iid}` channel.
+* **Post-only reopening.** After the exchange-wide cancel-only mode lifts, `ANT`
+  and `INTC` first accept only post-only GTC limit orders with a positive price.
+  * Other order types return `stock_split_restricted`.
+  * A post-only order that would cross returns `post_only_rejected`.
+  * Cancels always work.
+  * Normal trading resumes after at least one minute of continuous two-sided
+    depth from at least two makers per side. Makers should rebuild quotes from
+    scratch on the new grid instead of replaying their old book.
+* **`SNDK` 8-for-1 split.** Trading pauses Thursday, November 19 at 7:55 PM ET
+  (00:55 UTC Friday) and resumes Friday, November 20 at 8:00 AM ET (13:00 UTC),
+  with the same post-only reopening. Prices and sizes convert 8-for-1, and
+  `SNDK` moves to the `0.001` tick and size step at the same time.
+  `share_unit_version` increments for `SNDK`, as in earlier splits.
+
+**Rollout**
+
+Maintenance starts Thursday, November 19 at 6:00 AM ET (11:00 UTC) and is
+expected to take 30–45 minutes. The exchange is cancel-only during the upgrade:
+cancels keep working, new orders are rejected, and resting orders stay on the
+book. `ANT` and `INTC` change tick size in the same window.
+
+**Nov 13, 2026**
+
+Price precision, public leverage, and capabilities
+
+No endpoints or required request fields are removed. Prices used to calculate
+PnL carry more precision, leverage is public on several reads, and binary event
+consumers must accept schema version 61.
+
+**Changed**
+
+* **Price precision.** `mark_price` and `index_price` on the public ticker over
+  HTTP, and `mark` and `idx` over WebSocket, no longer round to five significant
+  figures. Position `entry_price` in account and public portfolios and WebSocket
+  portfolio updates also keep more digits. These decimal strings can have up to
+  `price_decimals` + 6 decimal places, with trailing zeros removed. For example,
+  a mark previously sent as `"12346"` can now be `"12345.678"`. Accept
+  variable-length decimal strings, calculate PnL from the received prices and
+  round for display, and keep applying the existing order-price rules when
+  submitting orders. Largest-position entry prices, fills, and liquidation-price
+  formatting are unchanged.
+* **Public position cards.** `POST /v1/info/position-snapshots` now returns
+  `leverage` and `pnl_percent` to everyone, including anonymous callers. These
+  fields can still be null when historical leverage was not captured; historical
+  cards use the leverage captured with the selected fill. Do not use null values
+  in these fields to decide whether the caller owns an account. Authentication
+  remains optional; invalid supplied credentials still return `401`.
+* **Liquidation sizing.** After the 30-second escalation, liquidation keeps
+  closing in slices targeting at most \$100,000 at the mark, instead of sending
+  the whole remaining position in one order. A minimum of one lot can exceed that
+  amount. Use fills and remaining position size to track progress.
+* **Binary event schema.** Consumers must accept schema version `61`.
+
+**Added**
+
+* **Capability discovery.** Public `GET /v1/info/capabilities` lists the
+  server's available HTTP routes, accepted enum query values, optional request
+  features, WebSocket channels, and routes using a web-session cookie. Weight
+  1, with `Cache-Control: no-store`. Use it to check support before offering a
+  feature. During a rollout, another server may still return `404` for a listed
+  route, so keep your fallback. The list does not describe availability of
+  signed WebSocket trading actions.
+* **Public leverage.** Each position in `GET /v1/info/largest-positions` and
+  `GET /v1/info/portfolio` gains an integer `leverage`. This is the holder's
+  current leverage setting for that market, including its default when no
+  setting was selected. It is not the leverage when the position opened or
+  notional divided by margin.
+
+**Clarified**
+
+* **Stock splits.** `ANT-USD` can now go through a stock split to move to
+  per-share units. Nothing happens on deploy; the pause and conversion will be
+  announced separately. After it reopens, refresh its prices and sizes and
+  recreate quotes canceled with `stock_split`.
+
+**Rollout**
+
+Order placement pauses during the window and cancels keep working. WebSocket
+connections drop when the gateway restarts; reconnect and resubscribe. After
+opting into cancel-on-disconnect, gateway restarts also cancel covered orders.
 
 **Nov 10, 2026**
 
@@ -611,8 +779,7 @@ Expect one WebSocket reconnect and a short cancel-only window.
   `timestamp`, `price`, `insurance_debit`; present only after
   settlement). Instruments may also carry an optional `display_symbol`;
   `symbol` is unchanged.
-* **SBE schema version 49.** Market-maker binary streams stamp schema
-  49\. All changes are appended fields or new messages; decoders that
+* **SBE schema version 49.** Market-maker binary streams stamp schema 49. All changes are appended fields or new messages; decoders that
   ignore fields beyond their compiled version keep working. Anything
   that asserts the schema version must accept `49`.
 * **`exp` on signed requests is now capped instead of rejected.** A
@@ -1169,12 +1336,11 @@ Exchange statistics endpoint added
 Added `GET /v1/info/exchange-stats`, a public endpoint returning aggregate
 statistics for all pUSD-quoted perpetual markets over a required
 `[start_timestamp, end_timestamp)` window of up to 31 days: matched USD
-volume, gross positive maker and taker trading fees (rebates, incentives,
-and referral payments excluded), and one-sided open interest in USD notional
-with its sample time, taken from the latest complete sample before the
-window end — both null when no complete sample is available. Responses are
-cached for five minutes; a request costs weight 10, and a request served
-from cache costs 1.
+volume, gross positive maker and taker trading fees (rebates, incentives, and
+referral payments excluded), and one-sided open interest in USD notional with
+its sample time, taken from the latest complete sample before the window end —
+both null when no complete sample is available. Responses are cached for five
+minutes; a request costs weight 10, and a request served from cache costs 1.
 
 **Sep 1, 2026**
 
@@ -1311,15 +1477,15 @@ optional metadata.
 
 Current position fills endpoint added
 
-Added `GET /v1/info/position-fills`, a public endpoint returning every fill
-in a registered account's current open position cycle for one instrument. A
-cycle begins when the position opens from flat or flips direction, and a
-multi-leg flip stays in one cycle. Pages of up to 100 fills are linked by an
-opaque `cursor` returned alongside the data; the cursor is validated against
-the live position on every page and returns `400` if the position changed
-mid-pagination. `GET /v1/account/fills` has returned the same opaque
-`cursor` field since Jul 24 — passing the last fill's trade ID as `cursor`
-still works there.
+Added `GET /v1/info/position-fills`, a public endpoint returning every fill in
+a registered account's current open position cycle for one instrument. A cycle
+begins when the position opens from flat or flips direction, and a multi-leg
+flip stays in one cycle. Pages of up to 100 fills are linked by an opaque
+`cursor` returned alongside the data; the cursor is validated against the live
+position on every page and returns `400` if the position changed
+mid-pagination. `GET /v1/account/fills` has returned the same opaque `cursor`
+field since Jul 24 — passing the last fill's trade ID as `cursor` still works
+there.
 
 **Aug 14, 2026**
 

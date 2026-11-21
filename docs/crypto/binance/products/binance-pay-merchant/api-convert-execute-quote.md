@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-convert-execute-quote
 api_type: Guide
-updated_at: 2026-11-20 18:36:14.133556
+updated_at: 2026-11-21 18:34:11.989096
 ---
 
 # Execute Quote

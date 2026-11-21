@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/getWeb3Provider
 api_type: Guide
-updated_at: 2026-11-20 18:46:00.142508
+updated_at: 2026-11-21 18:44:23.890334
 ---
 
 # bn.getWeb3Provider

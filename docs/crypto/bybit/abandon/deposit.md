@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/deposit
 api_type: REST
-updated_at: 2026-11-20 18:50:52.766409
+updated_at: 2026-11-21 18:49:24.472646
 ---
 
 # Deposit Funds

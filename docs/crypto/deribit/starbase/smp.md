@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/smp
 api_type: Starbase
-updated_at: 2026-11-20 19:00:12.111744
+updated_at: 2026-11-21 19:01:38.398204
 ---
 
 # Self Match Prevention (SMP)

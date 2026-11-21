@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/reference/lnx-invoice-payments'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # LNX Invoice Payments

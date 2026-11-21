@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/websockets/multivariate-market-and-event-lifecycle'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # Multivariate Market & Event Lifecycle

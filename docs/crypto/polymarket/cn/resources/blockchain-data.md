@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/resources/blockchain-data'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # 区块链数据

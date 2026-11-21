@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/device/offMemoryWarning
 api_type: Guide
-updated_at: 2026-11-20 18:48:46.938859
+updated_at: 2026-11-21 18:47:12.193447
 ---
 
 # bn.offMemoryWarning

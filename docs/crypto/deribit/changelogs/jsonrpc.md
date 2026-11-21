@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/changelogs/jsonrpc
 api_type: Changelog
-updated_at: 2026-11-20 19:00:09.990010
+updated_at: 2026-11-21 19:01:34.485745
 ---
 
 # JSON-RPC API Changelog

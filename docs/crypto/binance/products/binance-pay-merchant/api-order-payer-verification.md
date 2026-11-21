@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-order-payer-verification
 api_type: Guide
-updated_at: 2026-11-20 18:35:49.764695
+updated_at: 2026-11-21 18:33:47.458743
 ---
 
 # Payment Payer Verification

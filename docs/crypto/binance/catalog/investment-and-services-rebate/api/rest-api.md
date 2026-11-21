@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/investment-and-services-rebate/api/rest-api
 api_type: REST
-updated_at: 2026-11-20 18:50:42.783851
+updated_at: 2026-11-21 18:49:11.133967
 ---
 
 # Rebate REST API

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-get_currencies
 api_type: JSON-RPC
-updated_at: 2026-11-20 19:00:12.597365
+updated_at: 2026-11-21 19:01:39.455418
 ---
 
 # private/get_currencies

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/spot-x/launchpool/launchpool-user-history
 api_type: REST
-updated_at: 2026-11-20 18:52:11.624697
+updated_at: 2026-11-21 18:51:24.374018
 ---
 
 # Get Launchpool User History

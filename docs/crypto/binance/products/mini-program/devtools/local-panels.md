@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/devtools/local-panels
 api_type: Guide
-updated_at: 2026-11-20 18:39:48.668080
+updated_at: 2026-11-21 18:37:38.510866
 ---
 
 # Local Panels

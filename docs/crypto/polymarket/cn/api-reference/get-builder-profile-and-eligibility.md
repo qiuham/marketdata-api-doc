@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/get-builder-profile-and-eligibility'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # 获取构建者资料及资格

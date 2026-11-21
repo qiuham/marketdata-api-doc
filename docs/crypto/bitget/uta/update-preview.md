@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/update-preview
 api_type: Guide
-updated_at: 2026-11-20 19:01:27.624510
+updated_at: 2026-11-21 19:03:26.071500
 ---
 
 # Update Preview

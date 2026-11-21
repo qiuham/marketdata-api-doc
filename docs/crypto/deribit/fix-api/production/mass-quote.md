@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/mass-quote
 api_type: FIX
-updated_at: 2026-11-20 19:00:11.388339
+updated_at: 2026-11-21 19:01:37.184106
 ---
 
 # Mass Quote(i) (Production FIX API)

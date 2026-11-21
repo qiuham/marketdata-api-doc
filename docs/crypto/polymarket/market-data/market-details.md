@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/market-data/market-details'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # Market Details
@@ -401,6 +401,65 @@ enabled:
 See [Augmented Negative Risk](https://docs.polymarket.com/concepts/negative-risk.md#augmented-negative-risk)
 for how named outcomes, placeholders, and Other behave.
 
+## Market Clarifications
+
+A [clarification](https://docs.polymarket.com/concepts/resolution.md#clarifications) is a note that
+resolves ambiguity in how a market settles. Read a market's clarifications
+before you rely on its rules, since they are published after trading begins.
+
+> [tab] TypeScript
+>
+> Call `listMarketClarifications()` with the market ID:
+>
+> ```ts theme={null}
+> const pages = client.listMarketClarifications({ marketId: market.id });
+>
+> for await (const page of pages) {
+>   // page.items: MarketClarification[]
+> }
+> ```
+
+> [tab] Python
+>
+> Call `list_market_clarifications()` with the market ID:
+>
+> ```python theme={null}
+> pages = client.list_market_clarifications(market_ids=market.id)
+>
+> async for page in pages:
+>     ...  # page.items: tuple[MarketClarification, ...]
+> ```
+
+> [tab] API
+>
+> Call the [List market clarifications](https://docs.polymarket.com/api-reference/markets/list-market-clarifications.md)
+> endpoint with the market ID:
+>
+> ```bash theme={null}
+> curl "https://gamma-api.polymarket.com/market-clarifications?market_id=$MARKET_ID"
+> ```
+
+Each clarification includes its text and when it was posted:
+
+```json theme={null}
+{
+  "id": 23029,
+  "marketId": 4900727,
+  "content": "This market's rules have been updated for clarity. ...",
+  "clearBook": true,
+  "txTimestamp": "2026-09-25T18:53:01.335415Z"
+}
+```
+
+| Field | Type | Description |
+| - | - | - |
+| `content` | string | Clarification text. |
+| `clearBook` | boolean | Open orders were cleared when the clarification was posted. |
+| `txTimestamp` | string | When the clarification was posted onchain. |
+
+You can also filter by event, question ID, or the transaction that posted the
+clarification.
+
 ## Trading Constraints
 
 Every market enforces a minimum price increment, also known as the **tick size**,
@@ -503,7 +562,10 @@ Read the active constraints for a market in your integration:
 ## Trading Fees
 
 Some markets charge trading fees. The fee schedule determines how fees vary
-with price, which side pays them, and what share is returned to makers.
+with price and which side pays them.
+
+Maker rebate rates depend on the account's maker tier, not the market's rebate
+configuration. See the [Maker Rebates Program](https://docs.polymarket.com/programs/maker-rebates.md).
 
 > [tab] TypeScript
 >
@@ -518,7 +580,7 @@ with price, which side pays them, and what share is returned to makers.
 > //   rate: DecimalString;  base rate used in the fee calculation
 > //   exponent: number;     exponent applied to the price component
 > //   takerOnly: boolean;   fees charged to taker side only
-> //   rebateRate: DecimalString; maker rebate as fraction of taker fee
+> //   rebateRate: DecimalString; market-level rebate fraction
 > // } | null
 > ```
 >
@@ -543,7 +605,7 @@ with price, which side pays them, and what share is returned to makers.
 > {
 >   "feesEnabled": true,
 >   "feeSchedule": {
->     "rate": "0.04",
+>     "rate": "0.05",
 >     "exponent": 1,
 >     "takerOnly": true,
 >     "rebateRate": "0.25"
@@ -563,7 +625,7 @@ with price, which side pays them, and what share is returned to makers.
 > # fee_schedule.rate: Decimal            base rate used in the fee calculation
 > # fee_schedule.exponent: int | float    exponent applied to the price component
 > # fee_schedule.taker_only: bool         taker-only flag
-> # fee_schedule.rebate_rate: Decimal     maker rebate fraction
+> # fee_schedule.rebate_rate: Decimal     market-level rebate fraction
 > ```
 >
 > The SDK exposes this configuration through `MarketTrading` and
@@ -585,7 +647,7 @@ with price, which side pays them, and what share is returned to makers.
 > {
 >   "fees_enabled": true,
 >   "fee_schedule": {
->     "rate": 0.04,
+>     "rate": 0.05,
 >     "exponent": 1,
 >     "taker_only": true,
 >     "rebate_rate": 0.25
@@ -601,7 +663,7 @@ with price, which side pays them, and what share is returned to makers.
 > {
 >   "feesEnabled": true,
 >   "feeSchedule": {
->     "rate": 0.04,
+>     "rate": 0.05,
 >     "exponent": 1,
 >     "takerOnly": true,
 >     "rebateRate": 0.25
@@ -617,7 +679,7 @@ with price, which side pays them, and what share is returned to makers.
 > | `feeSchedule.rate` | number | Base rate used in the fee calculation. |
 > | `feeSchedule.exponent` | number | Exponent applied to the price component of the fee curve. |
 > | `feeSchedule.takerOnly` | boolean | When `true`, fees are charged to the taker side only, and makers pay no fee. |
-> | `feeSchedule.rebateRate` | number | Fraction of taker fees rebated back to the resting maker. Example: `0.25` = 25% rebate. |
+> | `feeSchedule.rebateRate` | number | Market-level rebate fraction (`0.25` = 25%); not the account's maker tier rebate rate. |
 
 ## Liquidity Reward Settings
 

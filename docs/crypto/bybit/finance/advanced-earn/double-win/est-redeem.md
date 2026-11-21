@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/double-win/est-redeem
 api_type: REST
-updated_at: 2026-11-20 18:51:47.169848
+updated_at: 2026-11-21 18:50:46.279872
 ---
 
 # Get Redeem Estimated Amount

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/hideToast
 api_type: Guide
-updated_at: 2026-11-20 18:48:00.500014
+updated_at: 2026-11-21 18:46:22.869616
 ---
 
 # bn.hideToast

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/crypto-loan/change-log
 api_type: Changelog
-updated_at: 2026-11-20 18:33:33.609418
+updated_at: 2026-11-21 18:31:48.554915
 ---
 
 # Change Log

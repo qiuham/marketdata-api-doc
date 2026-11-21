@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/connectors/ruby
 api_type: Guide
-updated_at: 2026-11-20 18:28:44.357292
+updated_at: 2026-11-21 18:26:29.460078
 ---
 
 # Ruby

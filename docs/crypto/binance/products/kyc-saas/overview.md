@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/kyc-saas/overview
 api_type: Guide
-updated_at: 2026-11-20 18:32:08.029701
+updated_at: 2026-11-21 18:30:09.042310
 ---
 
 # Binance Link KYC SaaS

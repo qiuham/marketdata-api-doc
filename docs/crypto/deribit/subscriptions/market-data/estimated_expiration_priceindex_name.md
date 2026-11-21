@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/market-data/estimated_expiration_priceindex_name
 api_type: WebSocket
-updated_at: 2026-11-20 19:00:10.308239
+updated_at: 2026-11-21 19:01:35.097227
 ---
 
 # estimated_expiration_price.(index_name)

@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/combo-markets/get-combo-markets'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # 获取组合市场

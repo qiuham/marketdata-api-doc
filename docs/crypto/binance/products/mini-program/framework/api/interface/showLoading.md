@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/showLoading
 api_type: Guide
-updated_at: 2026-11-20 18:47:39.879659
+updated_at: 2026-11-21 18:46:03.309211
 ---
 
 # bn.showLoading

@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/reference/key-permissions'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # Key Permissions

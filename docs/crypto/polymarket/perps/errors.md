@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/errors'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # Errors
@@ -113,11 +113,23 @@ budgets, including separate limits for read-only keys.
 
 ## Stock Split Errors
 
-Automatic stock splits stay disabled in production. This identifier is reserved for when that path is enabled.
+| Error | Condition |
+| - | - |
+| `stock_split_restricted` | The market is mid-split or in its post-only reopening. Queued withdrawals and transfers that touch the market, and non-post-only orders, are refused. Retry after it reopens. |
+| `stock_split_unit_mismatch` | An automatic stock split supplied a price outside its expected post-split range. Automatic stock splits stay disabled in production, so this identifier is reserved. |
+
+## Per-Market Control Errors
+
+These errors are returned only after the matching per-market control is turned
+on. A cap can stop an order after a partial fill.
 
 | Error | Condition |
 | - | - |
-| `stock_split_unit_mismatch` | An automatic stock split supplied a price outside its expected post-split range. |
+| `open_interest_cap_exceeded` | The order would push the market's open interest above its cap. |
+| `account_open_interest_cap_exceeded` | The order would push the account's open interest above its cap. |
+| `strict_isolated_cross_exposure` | The market requires isolated margin and refuses cross exposure. |
+| `strict_isolated_margin_removal` | The market's strict isolated mode refuses this margin removal. |
+| `instrument_post_only` | The market currently accepts post-only orders only. |
 
 ## Order Placement Errors
 

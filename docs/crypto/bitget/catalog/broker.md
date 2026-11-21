@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/broker
 api_type: REST
-updated_at: 2026-11-20 19:01:47.863751
+updated_at: 2026-11-21 19:03:46.144657
 ---
 
 # Broker

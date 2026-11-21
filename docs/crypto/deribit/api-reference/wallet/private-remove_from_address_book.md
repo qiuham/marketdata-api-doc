@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-remove_from_address_book
 api_type: JSON-RPC
-updated_at: 2026-11-20 19:00:15.681392
+updated_at: 2026-11-21 19:01:44.940480
 ---
 
 # private/remove_from_address_book

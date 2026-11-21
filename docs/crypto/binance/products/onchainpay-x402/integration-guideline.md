@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/onchainpay-x402/integration-guideline
 api_type: Guide
-updated_at: 2026-11-20 18:31:14.207930
+updated_at: 2026-11-21 18:29:17.994613
 ---
 
 # Integration Guideline

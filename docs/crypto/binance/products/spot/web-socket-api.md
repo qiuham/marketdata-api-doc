@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/web-socket-api
 api_type: WebSocket
-updated_at: 2026-11-20 18:30:36.929902
+updated_at: 2026-11-21 18:28:30.416903
 ---
 
 # General WebSocket API Information

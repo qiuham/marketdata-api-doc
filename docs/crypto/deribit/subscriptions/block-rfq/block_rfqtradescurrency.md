@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/block-rfq/block_rfqtradescurrency
 api_type: WebSocket
-updated_at: 2026-11-20 19:00:10.806065
+updated_at: 2026-11-21 19:01:36.075923
 ---
 
 # block_rfq.trades.(currency)

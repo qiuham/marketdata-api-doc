@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/unified
 api_type: Account
-updated_at: 2026-11-20 18:57:59.464824
+updated_at: 2026-11-21 18:59:02.144294
 ---
 
 # Unified

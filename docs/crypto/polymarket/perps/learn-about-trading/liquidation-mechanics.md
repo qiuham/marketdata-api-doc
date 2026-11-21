@@ -10,12 +10,19 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/learn-about-trading/liquidation-mechanics'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # Liquidation Mechanics
 
 > Detection, execution, insurance-fund backstop, and auto-deleveraging
+
+> [!NOTE]
+>
+> **Upcoming changes — November 25, 2026.** Polymarket Perps trading fees,
+> liquidation fees, and liquidity rewards will change. The current rules below
+> apply until the changes go live. [See all fee and liquidity reward
+> changes](https://docs.polymarket.com/perps/fee-and-liquidity-reward-changes-november-2026.md).
 
 When a trader's equity drops below maintenance margin, the system closes the
 position before it becomes insolvent. Normal liquidations route through the order

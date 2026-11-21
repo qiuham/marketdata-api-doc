@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/device/offCompassChange
 api_type: Guide
-updated_at: 2026-11-20 18:48:53.120636
+updated_at: 2026-11-21 18:47:18.453067
 ---
 
 # bn.offCompassChange

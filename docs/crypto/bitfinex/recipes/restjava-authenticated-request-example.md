@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/recipes/restjava-authenticated-request-example'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # [REST][Java] Authenticated request example

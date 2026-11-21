@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/market-model
 api_type: Starbase
-updated_at: 2026-11-20 19:00:11.992502
+updated_at: 2026-11-21 19:01:38.250390
 ---
 
 # Market Model

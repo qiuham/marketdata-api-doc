@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/quoteNotionalLimit
 api_type: Guide
-updated_at: 2026-11-20 18:37:41.279257
+updated_at: 2026-11-21 18:35:43.143453
 ---
 
 # Using quoteNotionalLimit

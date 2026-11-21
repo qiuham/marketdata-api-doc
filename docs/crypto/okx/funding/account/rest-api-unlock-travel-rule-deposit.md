@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-unlock-travel-rule-deposit
 anchor_id: funding-account-rest-api-unlock-travel-rule-deposit
 api_type: REST
-updated_at: 2026-11-20 18:59:11.138930
+updated_at: 2026-11-21 19:00:18.452465
 ---
 
 # Unlock Travel Rule deposit

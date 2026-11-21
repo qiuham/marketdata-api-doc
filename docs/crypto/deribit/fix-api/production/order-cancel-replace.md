@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/order-cancel-replace
 api_type: FIX
-updated_at: 2026-11-20 19:00:11.207956
+updated_at: 2026-11-21 19:01:36.708437
 ---
 
 # Order Cancel/Replace Request(G) (Production FIX API)

@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/fcm/create-fcm-subtrader'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # Create FCM Subtrader

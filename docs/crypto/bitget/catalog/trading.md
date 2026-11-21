@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/trading
 api_type: REST
-updated_at: 2026-11-20 19:02:19.408308
+updated_at: 2026-11-21 19:04:15.478362
 ---
 
 # Trading

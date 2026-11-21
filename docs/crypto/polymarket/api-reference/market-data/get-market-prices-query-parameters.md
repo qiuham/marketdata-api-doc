@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/market-data/get-market-prices-query-parameters'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # Get market prices (query parameters)

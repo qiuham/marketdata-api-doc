@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/connect-prime/change-log
 api_type: Changelog
-updated_at: 2026-11-20 18:34:10.559379
+updated_at: 2026-11-21 18:32:10.970341
 ---
 
 # Change Log

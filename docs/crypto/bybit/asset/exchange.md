@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/exchange
 api_type: REST
-updated_at: 2026-11-20 18:51:19.482213
+updated_at: 2026-11-21 18:50:05.248550
 ---
 
 # Get Coin Exchange Records

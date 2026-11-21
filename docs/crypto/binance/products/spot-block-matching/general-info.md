@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot-block-matching/general-info
 api_type: Guide
-updated_at: 2026-11-20 18:30:22.827550
+updated_at: 2026-11-21 18:28:14.087917
 ---
 
 # General Info

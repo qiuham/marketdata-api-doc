@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/Button
 api_type: Guide
-updated_at: 2026-11-20 18:44:48.905454
+updated_at: 2026-11-21 18:43:11.468834
 ---
 
 # Button

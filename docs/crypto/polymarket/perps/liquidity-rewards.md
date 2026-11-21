@@ -10,20 +10,27 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/liquidity-rewards'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # Liquidity Rewards
 
-> Earn daily pUSD rewards by providing deep, two-sided liquidity on Perps
+> Earn pUSD rewards by providing deep, two-sided liquidity on Perps
+
+> [!NOTE]
+>
+> **Upcoming changes — November 25, 2026.** Polymarket Perps trading fees,
+> liquidation fees, and liquidity rewards will change. The current rules below
+> apply until the changes go live. [See all fee and liquidity reward
+> changes](https://docs.polymarket.com/perps/fee-and-liquidity-reward-changes-november-2026.md).
 
 Every Perps account is automatically considered for daily liquidity rewards.
 There is no application or participant allowlist: the same eligibility threshold
 and scoring rules apply to every maker.
 
-Rewards are calculated for 24-hour periods from 12:00 UTC to 12:00 UTC. Each
-period is labeled by its end date, and earned rewards are credited in pUSD to the
-earning Perps account.
+Rewards are scored and accrued daily for 24-hour periods from 12:00 UTC to
+12:00 UTC. Each period is labeled by its end date. Rewards are paid weekly in
+pUSD.
 
 ## How Rewards Are Allocated
 
@@ -131,6 +138,7 @@ penalized.
 | Daily program budget | \$75,000 |
 | New listing bonus | \$1,000 per market, first day |
 | Reward period | 12:00 UTC to 12:00 UTC |
+| Reward payouts | Weekly, in pUSD |
 | Maker-share lookback | 7 days |
 | Eligibility threshold | 1% maker share |
 | Maker-score cap | 25% maker share |

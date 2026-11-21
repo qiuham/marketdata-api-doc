@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/market-data/market-details'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # 市场详情
@@ -461,7 +461,9 @@ updated_at: 2026-11-20
 
 ## 交易费用
 
-部分市场会收取交易费用。费用计划决定费用如何随价格变化、由哪一方支付，以及返还给做市商的比例。
+部分市场会收取交易费用。费用计划决定费用如何随价格变化、由哪一方支付。
+
+Maker 返利比例取决于账户的 Maker 等级，而非市场费用配置。请参阅 [Maker 返利计划](https://docs.polymarket.com/cn/programs/maker-rebates.md)。
 
 > [tab] TypeScript
 >
@@ -476,7 +478,7 @@ updated_at: 2026-11-20
 > //   rate: DecimalString;  base rate used in the fee calculation
 > //   exponent: number;     exponent applied to the price component
 > //   takerOnly: boolean;   fees charged to taker side only
-> //   rebateRate: DecimalString; maker rebate as fraction of taker fee
+> //   rebateRate: DecimalString; market-level rebate fraction
 > // } | null
 > ```
 >
@@ -500,7 +502,7 @@ updated_at: 2026-11-20
 > {
 >   "feesEnabled": true,
 >   "feeSchedule": {
->     "rate": "0.04",
+>     "rate": "0.05",
 >     "exponent": 1,
 >     "takerOnly": true,
 >     "rebateRate": "0.25"
@@ -520,7 +522,7 @@ updated_at: 2026-11-20
 > # fee_schedule.rate: Decimal            base rate used in the fee calculation
 > # fee_schedule.exponent: int | float    exponent applied to the price component
 > # fee_schedule.taker_only: bool         taker-only flag
-> # fee_schedule.rebate_rate: Decimal     maker rebate fraction
+> # fee_schedule.rebate_rate: Decimal     market-level rebate fraction
 > ```
 >
 > SDK 通过 `MarketTrading` 和 `FeeSchedule` 提供此配置：
@@ -541,7 +543,7 @@ updated_at: 2026-11-20
 > {
 >   "fees_enabled": true,
 >   "fee_schedule": {
->     "rate": 0.04,
+>     "rate": 0.05,
 >     "exponent": 1,
 >     "taker_only": true,
 >     "rebate_rate": 0.25
@@ -557,7 +559,7 @@ updated_at: 2026-11-20
 > {
 >   "feesEnabled": true,
 >   "feeSchedule": {
->     "rate": 0.04,
+>     "rate": 0.05,
 >     "exponent": 1,
 >     "takerOnly": true,
 >     "rebateRate": 0.25
@@ -573,7 +575,7 @@ updated_at: 2026-11-20
 > | `feeSchedule.rate` | number | 费用计算使用的基础费率。 |
 > | `feeSchedule.exponent` | number | 应用于费用曲线价格部分的指数。 |
 > | `feeSchedule.takerOnly` | boolean | 为 `true` 时，仅向吃单方收取费用，做市商无需付费。 |
-> | `feeSchedule.rebateRate` | number | 向挂单做市商返还的吃单费用比例。例如：`0.25` 表示返还 25%。 |
+> | `feeSchedule.rebateRate` | number | 市场级返利比例（`0.25` 表示 25%），不是账户的 Maker 等级返利比例。 |
 
 ## 流动性奖励设置
 

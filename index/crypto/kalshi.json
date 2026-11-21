@@ -10,7 +10,7 @@
   "status": "active",
   "docs_dir": "docs/crypto/kalshi",
   "total": 298,
-  "updated_at": "2026-11-20",
+  "updated_at": "2026-11-21",
   "documents_by_type": {
     "spec": [
       {
@@ -23,7 +23,7 @@
         "source_url": "https://docs.kalshi.com/asyncapi.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "openapi.yaml",
@@ -35,7 +35,7 @@
         "source_url": "https://docs.kalshi.com/openapi.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "perps_asyncapi.yaml",
@@ -47,7 +47,7 @@
         "source_url": "https://docs.kalshi.com/perps_asyncapi.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "perps_openapi.yaml",
@@ -59,7 +59,7 @@
         "source_url": "https://docs.kalshi.com/perps_openapi.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "perps_scm_openapi.yaml",
@@ -71,7 +71,7 @@
         "source_url": "https://docs.kalshi.com/perps_scm_openapi.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       }
     ],
     "reference": [
@@ -85,7 +85,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/account/get-account-api-limits",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-account-api-usage-level-volume-progress",
@@ -97,7 +97,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/account/get-account-api-usage-level-volume-progress",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "list-non-default-endpoint-costs",
@@ -109,7 +109,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/account/list-non-default-endpoint-costs",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "upgrade-account-api-usage-level",
@@ -121,7 +121,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/account/upgrade-account-api-usage-level",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-api-key",
@@ -133,7 +133,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/api-keys/create-api-key",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "delete-api-key",
@@ -145,7 +145,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/api-keys/delete-api-key",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "generate-api-key",
@@ -157,7 +157,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/api-keys/generate-api-key",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-api-keys",
@@ -169,7 +169,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/api-keys/get-api-keys",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "accept-block-trade-proposal",
@@ -181,7 +181,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/accept-block-trade-proposal",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "accept-quote",
@@ -193,7 +193,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/accept-quote",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "accept-rfq-quote",
@@ -205,7 +205,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/accept-rfq-quote",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "cancel-block-trade-proposal",
@@ -217,7 +217,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/cancel-block-trade-proposal",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "confirm-quote",
@@ -229,7 +229,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/confirm-quote",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "confirm-rfq-quote",
@@ -241,7 +241,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/confirm-rfq-quote",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-quote",
@@ -253,7 +253,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/create-quote",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-rfq",
@@ -265,7 +265,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/create-rfq",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "delete-quote",
@@ -277,7 +277,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/delete-quote",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "delete-rfq-quote",
@@ -289,7 +289,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/delete-rfq-quote",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "delete-rfq",
@@ -301,7 +301,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/delete-rfq",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-block-trade-proposals",
@@ -313,7 +313,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/get-block-trade-proposals",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-communications-id",
@@ -325,7 +325,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/get-communications-id",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-quote",
@@ -337,7 +337,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/get-quote",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-quotes",
@@ -349,7 +349,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/get-quotes",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-rfq-quote",
@@ -361,7 +361,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/get-rfq-quote",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-rfq",
@@ -373,7 +373,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/get-rfq",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-rfqs",
@@ -385,7 +385,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/get-rfqs",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "propose-block-trade",
@@ -397,7 +397,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/propose-block-trade",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "reject-block-trade-proposal",
@@ -409,7 +409,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/communications/reject-block-trade-proposal",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-subtrader-bound-api-key",
@@ -421,7 +421,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/create-subtrader-bound-api-key",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-subtrader-group",
@@ -433,7 +433,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/create-subtrader-group",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "delete-subtrader-bound-api-key",
@@ -445,7 +445,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/delete-subtrader-bound-api-key",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "delete-subtrader-group",
@@ -457,7 +457,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/delete-subtrader-group",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "estimate-portfolio-maintenance-margin",
@@ -469,7 +469,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/estimate-portfolio-maintenance-margin",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-event-candlesticks",
@@ -481,7 +481,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/events/get-event-candlesticks",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-event-fee-changes",
@@ -493,7 +493,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/events/get-event-fee-changes",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-event-forecast-percentile-history",
@@ -505,7 +505,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/events/get-event-forecast-percentile-history",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-event-metadata",
@@ -517,7 +517,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/events/get-event-metadata",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-event",
@@ -529,7 +529,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/events/get-event",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-events",
@@ -541,7 +541,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/events/get-events",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-multivariate-events",
@@ -553,7 +553,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/events/get-multivariate-events",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-exchange-schedule",
@@ -565,7 +565,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/exchange/get-exchange-schedule",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-exchange-status",
@@ -577,7 +577,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/exchange/get-exchange-status",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-series-fee-changes",
@@ -589,7 +589,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/exchange/get-series-fee-changes",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-user-data-timestamp",
@@ -601,7 +601,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/exchange/get-user-data-timestamp",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-fcm-position-transfer",
@@ -613,7 +613,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/fcm/create-fcm-position-transfer",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-fcm-subtrader",
@@ -625,7 +625,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/fcm/create-fcm-subtrader",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "delete-fcm-subtrader-event-contract-daily-cap",
@@ -637,7 +637,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/fcm/delete-fcm-subtrader-event-contract-daily-cap",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-fcm-fills",
@@ -649,7 +649,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/fcm/get-fcm-fills",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-fcm-orders",
@@ -661,7 +661,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/fcm/get-fcm-orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-fcm-positions",
@@ -673,7 +673,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/fcm/get-fcm-positions",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-fcm-subtrader-blocked-categories",
@@ -685,7 +685,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/fcm/get-fcm-subtrader-blocked-categories",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-fcm-subtrader-event-contract-daily-cap",
@@ -697,7 +697,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/fcm/get-fcm-subtrader-event-contract-daily-cap",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "list-fcm-subtraders",
@@ -709,7 +709,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/fcm/list-fcm-subtraders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "update-fcm-subtrader-blocked-categories",
@@ -721,7 +721,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/fcm/update-fcm-subtrader-blocked-categories",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "update-fcm-subtrader-event-contract-daily-cap",
@@ -733,7 +733,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/fcm/update-fcm-subtrader-event-contract-daily-cap",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "generate-subtrader-bound-api-key",
@@ -745,7 +745,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/generate-subtrader-bound-api-key",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-active-margin-obligations",
@@ -757,7 +757,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-active-margin-obligations",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-funding-estimate-by-asset-class",
@@ -769,7 +769,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-funding-estimate-by-asset-class",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-funding-schedule",
@@ -781,7 +781,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-funding-schedule",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-guaranty-fund-balance",
@@ -793,7 +793,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-guaranty-fund-balance",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-large-trader-positions",
@@ -805,7 +805,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-large-trader-positions",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-maintenance-margin-metadata",
@@ -817,7 +817,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-maintenance-margin-metadata",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-margin-reports",
@@ -829,7 +829,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-margin-reports",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-member-funding-payments",
@@ -841,7 +841,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-member-funding-payments",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-obligation-corporate-action-payments",
@@ -853,7 +853,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-obligation-corporate-action-payments",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-obligation-funding-payments",
@@ -865,7 +865,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-obligation-funding-payments",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-obligation-history",
@@ -877,7 +877,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-obligation-history",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-obligation-maintenance-margin-details",
@@ -889,7 +889,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-obligation-maintenance-margin-details",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-obligation-settlement-details",
@@ -901,7 +901,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-obligation-settlement-details",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-settlement-balance-history",
@@ -913,7 +913,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-settlement-balance-history",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-settlement-balance-withdrawal",
@@ -925,7 +925,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-settlement-balance-withdrawal",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-settlement-balance",
@@ -937,7 +937,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-settlement-balance",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-settlement-estimate-by-asset-class",
@@ -949,7 +949,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-settlement-estimate-by-asset-class",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-settlement-prices",
@@ -961,7 +961,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-settlement-prices",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-subtrader-groups",
@@ -973,7 +973,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/get-subtrader-groups",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-historical-cutoff-timestamps",
@@ -985,7 +985,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/historical/get-historical-cutoff-timestamps",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-historical-fills",
@@ -997,7 +997,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/historical/get-historical-fills",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-historical-market-candlesticks",
@@ -1009,7 +1009,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/historical/get-historical-market-candlesticks",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-historical-market",
@@ -1021,7 +1021,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/historical/get-historical-market",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-historical-markets",
@@ -1033,7 +1033,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/historical/get-historical-markets",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-historical-orders",
@@ -1045,7 +1045,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/historical/get-historical-orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-historical-positions",
@@ -1057,7 +1057,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/historical/get-historical-positions",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-historical-trades",
@@ -1069,7 +1069,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/historical/get-historical-trades",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-incentive-schedules",
@@ -1081,7 +1081,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/incentive-programs/get-incentive-schedules",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-incentives",
@@ -1093,7 +1093,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/incentive-programs/get-incentives",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "list-subtrader-bound-api-keys",
@@ -1105,7 +1105,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/list-subtrader-bound-api-keys",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-event-live-data",
@@ -1117,7 +1117,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/live-data/get-event-live-data",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-game-stats",
@@ -1129,7 +1129,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/live-data/get-game-stats",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-live-data-with-type",
@@ -1141,7 +1141,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/live-data/get-live-data-with-type",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-live-data",
@@ -1153,7 +1153,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/live-data/get-live-data",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-multiple-live-data",
@@ -1165,7 +1165,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/live-data/get-multiple-live-data",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-weather-index-calibrations",
@@ -1177,7 +1177,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/live-data/get-weather-index-calibrations",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-weather-index",
@@ -1189,7 +1189,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/live-data/get-weather-index",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "batch-get-market-candlesticks",
@@ -1201,7 +1201,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/market/batch-get-market-candlesticks",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-market-candlesticks",
@@ -1213,7 +1213,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-market-orderbook",
@@ -1225,7 +1225,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/market/get-market-orderbook",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-market",
@@ -1237,7 +1237,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/market/get-market",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-markets",
@@ -1249,7 +1249,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/market/get-markets",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-multiple-market-orderbooks",
@@ -1261,7 +1261,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/market/get-multiple-market-orderbooks",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-series-list",
@@ -1273,7 +1273,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/market/get-series-list",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-series",
@@ -1285,7 +1285,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/market/get-series",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-trades",
@@ -1297,7 +1297,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/market/get-trades",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-concert-cancellation-market",
@@ -1309,7 +1309,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/markets/create-concert-cancellation-market",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-weather-point-market",
@@ -1321,7 +1321,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/markets/create-weather-point-market",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-concert-cancellation-market-availability",
@@ -1333,7 +1333,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/markets/get-concert-cancellation-market-availability",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-concerts",
@@ -1345,7 +1345,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/markets/get-concerts",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-weather-point-market-availability",
@@ -1357,7 +1357,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/markets/get-weather-point-market-availability",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "search-concerts",
@@ -1369,7 +1369,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/markets/search-concerts",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-milestone",
@@ -1381,7 +1381,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/milestone/get-milestone",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-milestones",
@@ -1393,7 +1393,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/milestone/get-milestones",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-market-in-multivariate-event-collection",
@@ -1405,7 +1405,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/multivariate/create-market-in-multivariate-event-collection",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-multivariate-event-collection",
@@ -1417,7 +1417,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/multivariate/get-multivariate-event-collection",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-multivariate-event-collections",
@@ -1429,7 +1429,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/multivariate/get-multivariate-event-collections",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-order-group",
@@ -1441,7 +1441,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/order-groups/create-order-group",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "delete-order-group",
@@ -1453,7 +1453,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/order-groups/delete-order-group",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-order-group",
@@ -1465,7 +1465,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/order-groups/get-order-group",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-order-groups",
@@ -1477,7 +1477,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/order-groups/get-order-groups",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "reset-order-group",
@@ -1489,7 +1489,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/order-groups/reset-order-group",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "trigger-order-group",
@@ -1501,7 +1501,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/order-groups/trigger-order-group",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "update-order-group-limit",
@@ -1513,7 +1513,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/order-groups/update-order-group-limit",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "amend-order-v2",
@@ -1525,7 +1525,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/orders/amend-order-v2",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "batch-cancel-orders-v2",
@@ -1537,7 +1537,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/orders/batch-cancel-orders-v2",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "batch-create-orders-v2",
@@ -1549,7 +1549,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/orders/batch-create-orders-v2",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "cancel-all-orders",
@@ -1561,7 +1561,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/orders/cancel-all-orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "cancel-order-v2",
@@ -1573,7 +1573,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/orders/cancel-order-v2",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-order-v2",
@@ -1585,7 +1585,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/orders/create-order-v2",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "decrease-order-v2",
@@ -1597,7 +1597,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/orders/decrease-order-v2",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-order-queue-position",
@@ -1609,7 +1609,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/orders/get-order-queue-position",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-order",
@@ -1621,7 +1621,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/orders/get-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-orders",
@@ -1633,7 +1633,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/orders/get-orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-queue-positions-for-orders",
@@ -1645,7 +1645,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/orders/get-queue-positions-for-orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-subaccount",
@@ -1657,7 +1657,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/create-subaccount",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-all-subaccount-balances",
@@ -1669,7 +1669,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-all-subaccount-balances",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-balance",
@@ -1681,7 +1681,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-balance",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-credit-history",
@@ -1693,7 +1693,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-credit-history",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-deposits",
@@ -1705,7 +1705,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-deposits",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-fills",
@@ -1717,7 +1717,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-fills",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-intra-account-transfer",
@@ -1729,7 +1729,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-intra-account-transfer",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-intra-account-transfers",
@@ -1741,7 +1741,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-intra-account-transfers",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-positions",
@@ -1753,7 +1753,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-positions",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-settlements",
@@ -1765,7 +1765,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-settlements",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-subaccount-netting",
@@ -1777,7 +1777,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-subaccount-netting",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-subaccount-transfers",
@@ -1789,7 +1789,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-subaccount-transfers",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-target-balance-allocation",
@@ -1801,7 +1801,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-target-balance-allocation",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-total-resting-order-value",
@@ -1813,7 +1813,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-total-resting-order-value",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-withdrawals",
@@ -1825,7 +1825,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-withdrawals",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "intra-account-transfer",
@@ -1837,7 +1837,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/intra-account-transfer",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "set-target-balance-allocation",
@@ -1849,7 +1849,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/set-target-balance-allocation",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "transfer-between-subaccounts",
@@ -1861,7 +1861,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/transfer-between-subaccounts",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "update-subaccount-netting",
@@ -1873,7 +1873,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/portfolio/update-subaccount-netting",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-filters-for-sports",
@@ -1885,7 +1885,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/search/get-filters-for-sports",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-tags-for-series-categories",
@@ -1897,7 +1897,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-structured-target",
@@ -1909,7 +1909,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/structured-targets/get-structured-target",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-structured-targets",
@@ -1921,7 +1921,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/structured-targets/get-structured-targets",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "update-subtrader-group",
@@ -1933,7 +1933,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/update-subtrader-group",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "withdraw-settlement-balance",
@@ -1945,7 +1945,7 @@
         "source_url": "https://docs.kalshi.com/api-reference/withdraw-settlement-balance",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "rest-passthrough",
@@ -1957,7 +1957,7 @@
         "source_url": "https://docs.kalshi.com/cfbenchmarks/rest-passthrough",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "index",
@@ -1969,7 +1969,7 @@
         "source_url": "https://docs.kalshi.com/changelog/index",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "authentication",
@@ -1981,7 +1981,7 @@
         "source_url": "https://docs.kalshi.com/fix/authentication",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "common-components",
@@ -1993,7 +1993,7 @@
         "source_url": "https://docs.kalshi.com/fix/common-components",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "connectivity",
@@ -2005,7 +2005,7 @@
         "source_url": "https://docs.kalshi.com/fix/connectivity",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "drop-copy",
@@ -2017,7 +2017,7 @@
         "source_url": "https://docs.kalshi.com/fix/drop-copy",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "error-handling",
@@ -2029,7 +2029,7 @@
         "source_url": "https://docs.kalshi.com/fix/error-handling",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "listener-sessions",
@@ -2041,7 +2041,7 @@
         "source_url": "https://docs.kalshi.com/fix/listener-sessions",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "market-data",
@@ -2053,7 +2053,7 @@
         "source_url": "https://docs.kalshi.com/fix/market-data",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "market-settlement",
@@ -2065,7 +2065,7 @@
         "source_url": "https://docs.kalshi.com/fix/market-settlement",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "order-entry",
@@ -2077,7 +2077,7 @@
         "source_url": "https://docs.kalshi.com/fix/order-entry",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "order-groups",
@@ -2089,7 +2089,7 @@
         "source_url": "https://docs.kalshi.com/fix/order-groups",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "rfq-messages",
@@ -2101,7 +2101,7 @@
         "source_url": "https://docs.kalshi.com/fix/rfq-messages",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "subpenny-pricing",
@@ -2113,7 +2113,7 @@
         "source_url": "https://docs.kalshi.com/fix/subpenny-pricing",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "authentication",
@@ -2125,7 +2125,7 @@
         "source_url": "https://docs.kalshi.com/fix-margin/authentication",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "connectivity",
@@ -2137,7 +2137,7 @@
         "source_url": "https://docs.kalshi.com/fix-margin/connectivity",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "drop-copy",
@@ -2149,7 +2149,7 @@
         "source_url": "https://docs.kalshi.com/fix-margin/drop-copy",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "error-handling",
@@ -2161,7 +2161,7 @@
         "source_url": "https://docs.kalshi.com/fix-margin/error-handling",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "listener-sessions",
@@ -2173,7 +2173,7 @@
         "source_url": "https://docs.kalshi.com/fix-margin/listener-sessions",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "market-data",
@@ -2185,7 +2185,7 @@
         "source_url": "https://docs.kalshi.com/fix-margin/market-data",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "order-entry",
@@ -2197,7 +2197,7 @@
         "source_url": "https://docs.kalshi.com/fix-margin/order-entry",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "order-groups",
@@ -2209,7 +2209,7 @@
         "source_url": "https://docs.kalshi.com/fix-margin/order-groups",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "api_environments",
@@ -2221,7 +2221,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/api_environments",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "api_keys",
@@ -2233,7 +2233,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/api_keys",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "concert_rfqs",
@@ -2245,7 +2245,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/concert_rfqs",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "demo_env",
@@ -2257,7 +2257,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/demo_env",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "exchange_sharding",
@@ -2269,7 +2269,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/exchange_sharding",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "fee_rounding",
@@ -2281,7 +2281,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/fee_rounding",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "fixed_point_migration",
@@ -2293,7 +2293,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/fixed_point_migration",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "historical_data",
@@ -2305,7 +2305,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/historical_data",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "maintenance_and_pauses",
@@ -2317,7 +2317,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/maintenance_and_pauses",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "making_your_first_request",
@@ -2329,7 +2329,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/making_your_first_request",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "market_lifecycle",
@@ -2341,7 +2341,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/market_lifecycle",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "market_settlement",
@@ -2353,7 +2353,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/market_settlement",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "mcp",
@@ -2365,7 +2365,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/mcp",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "order_direction",
@@ -2377,7 +2377,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/order_direction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "order_errors",
@@ -2389,7 +2389,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/order_errors",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "order_groups",
@@ -2401,7 +2401,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/order_groups",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "orderbook_responses",
@@ -2413,7 +2413,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/orderbook_responses",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "pagination",
@@ -2425,7 +2425,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/pagination",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "quick_start_authenticated_requests",
@@ -2437,7 +2437,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/quick_start_authenticated_requests",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "quick_start_create_order",
@@ -2449,7 +2449,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/quick_start_create_order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "quick_start_market_data",
@@ -2461,7 +2461,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/quick_start_market_data",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "quick_start_websockets",
@@ -2473,7 +2473,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/quick_start_websockets",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "rate_limits",
@@ -2485,7 +2485,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/rate_limits",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "rfqs",
@@ -2497,7 +2497,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/rfqs",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "settlement_bounds",
@@ -2509,7 +2509,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/settlement_bounds",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "sub_users_vs_subaccounts",
@@ -2521,7 +2521,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/sub_users_vs_subaccounts",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "subaccounts",
@@ -2533,7 +2533,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/subaccounts",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "targets_and_milestones",
@@ -2545,7 +2545,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/targets_and_milestones",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "terms",
@@ -2557,7 +2557,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/terms",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "weather_rfqs",
@@ -2569,7 +2569,7 @@
         "source_url": "https://docs.kalshi.com/getting_started/weather_rfqs",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "corporate-actions",
@@ -2581,7 +2581,7 @@
         "source_url": "https://docs.kalshi.com/margin/corporate-actions",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "price-banding",
@@ -2593,7 +2593,7 @@
         "source_url": "https://docs.kalshi.com/margin/price-banding",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-perps-account-api-limits",
@@ -2605,7 +2605,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/account/get-perps-account-api-limits",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-margin-corporate-actions",
@@ -2617,7 +2617,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/corporate-actions/get-margin-corporate-actions",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-enabled-status",
@@ -2629,7 +2629,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/exchange/get-enabled-status",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-exchange-status",
@@ -2641,7 +2641,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/exchange/get-exchange-status",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "cancel-cross-exit-trigger-by-id",
@@ -2653,7 +2653,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/exit-triggers/cancel-cross-exit-trigger-by-id",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "cancel-cross-exit-triggers",
@@ -2665,7 +2665,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/exit-triggers/cancel-cross-exit-triggers",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "cancel-isolated-exit-trigger",
@@ -2677,7 +2677,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/exit-triggers/cancel-isolated-exit-trigger",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-cross-exit-triggers",
@@ -2689,7 +2689,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/exit-triggers/get-cross-exit-triggers",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-isolated-exit-triggers",
@@ -2701,7 +2701,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/exit-triggers/get-isolated-exit-triggers",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "set-cross-exit-trigger",
@@ -2713,7 +2713,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/exit-triggers/set-cross-exit-trigger",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "set-isolated-exit-trigger",
@@ -2725,7 +2725,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/exit-triggers/set-isolated-exit-trigger",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "update-cross-exit-trigger",
@@ -2737,7 +2737,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/exit-triggers/update-cross-exit-trigger",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-margin-fcm-position-transfer",
@@ -2749,7 +2749,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/fcm/create-margin-fcm-position-transfer",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-margin-fcm-subtrader",
@@ -2761,7 +2761,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/fcm/create-margin-fcm-subtrader",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "delete-fcm-notional-risk-limit",
@@ -2773,7 +2773,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/fcm/delete-fcm-notional-risk-limit",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "delete-fcm-subtrader-risk-controls",
@@ -2785,7 +2785,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/fcm/delete-fcm-subtrader-risk-controls",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-fcm-subtrader-risk-controls",
@@ -2797,7 +2797,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/fcm/get-fcm-subtrader-risk-controls",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "update-fcm-notional-risk-limit",
@@ -2809,7 +2809,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/fcm/update-fcm-notional-risk-limit",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "update-fcm-subtrader-risk-controls",
@@ -2821,7 +2821,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/fcm/update-fcm-subtrader-risk-controls",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-fee-tier-rates",
@@ -2833,7 +2833,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/fees/get-fee-tier-rates",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-fee-tiers",
@@ -2845,7 +2845,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/fees/get-fee-tiers",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-funding-history",
@@ -2857,7 +2857,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/funding/get-funding-history",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-funding-rate-estimate",
@@ -2869,7 +2869,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/funding/get-funding-rate-estimate",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-historical-funding-rates",
@@ -2881,7 +2881,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/funding/get-historical-funding-rates",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-premium-index",
@@ -2893,7 +2893,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/funding/get-premium-index",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-market-candlesticks",
@@ -2905,7 +2905,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/market/get-market-candlesticks",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-market-orderbook",
@@ -2917,7 +2917,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/market/get-market-orderbook",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-market-schedules",
@@ -2929,7 +2929,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/market/get-market-schedules",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-market",
@@ -2941,7 +2941,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/market/get-market",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-markets",
@@ -2953,7 +2953,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/market/get-markets",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-multiple-market-orderbooks",
@@ -2965,7 +2965,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/market/get-multiple-market-orderbooks",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-trades",
@@ -2977,7 +2977,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/market/get-trades",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-order-group",
@@ -2989,7 +2989,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/order-groups/create-order-group",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "delete-order-group",
@@ -3001,7 +3001,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/order-groups/delete-order-group",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-order-group",
@@ -3013,7 +3013,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/order-groups/get-order-group",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-order-groups",
@@ -3025,7 +3025,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/order-groups/get-order-groups",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "reset-order-group",
@@ -3037,7 +3037,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/order-groups/reset-order-group",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "trigger-order-group",
@@ -3049,7 +3049,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/order-groups/trigger-order-group",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "update-order-group-limit",
@@ -3061,7 +3061,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/order-groups/update-order-group-limit",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "amend-order",
@@ -3073,7 +3073,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/orders/amend-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "cancel-all-orders",
@@ -3085,7 +3085,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/orders/cancel-all-orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "cancel-order",
@@ -3097,7 +3097,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/orders/cancel-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-order",
@@ -3109,7 +3109,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/orders/create-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "decrease-order",
@@ -3121,7 +3121,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/orders/decrease-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-order",
@@ -3133,7 +3133,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/orders/get-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-orders",
@@ -3145,7 +3145,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/orders/get-orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "create-subaccount",
@@ -3157,7 +3157,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/portfolio/create-subaccount",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-balance",
@@ -3169,7 +3169,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/portfolio/get-balance",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-fills",
@@ -3181,7 +3181,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/portfolio/get-fills",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-positions",
@@ -3193,7 +3193,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/portfolio/get-positions",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "intra-account-transfer",
@@ -3205,7 +3205,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/portfolio/intra-account-transfer",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "transfer-between-subaccounts",
@@ -3217,7 +3217,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/portfolio/transfer-between-subaccounts",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-notional-risk-limit",
@@ -3229,7 +3229,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/risk/get-notional-risk-limit",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-risk-parameters",
@@ -3241,7 +3241,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/risk/get-risk-parameters",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "get-risk",
@@ -3253,7 +3253,7 @@
         "source_url": "https://docs.kalshi.com/margin-rest/risk/get-risk",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "connection-keep-alive",
@@ -3265,7 +3265,7 @@
         "source_url": "https://docs.kalshi.com/margin-ws/websockets/connection-keep-alive",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "market-lifecycle",
@@ -3277,7 +3277,7 @@
         "source_url": "https://docs.kalshi.com/margin-ws/websockets/market-lifecycle",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "market-ticker",
@@ -3289,7 +3289,7 @@
         "source_url": "https://docs.kalshi.com/margin-ws/websockets/market-ticker",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "order-group-updates",
@@ -3301,7 +3301,7 @@
         "source_url": "https://docs.kalshi.com/margin-ws/websockets/order-group-updates",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "orderbook-updates",
@@ -3313,7 +3313,7 @@
         "source_url": "https://docs.kalshi.com/margin-ws/websockets/orderbook-updates",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "public-trades",
@@ -3325,7 +3325,7 @@
         "source_url": "https://docs.kalshi.com/margin-ws/websockets/public-trades",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "user-fills",
@@ -3337,7 +3337,7 @@
         "source_url": "https://docs.kalshi.com/margin-ws/websockets/user-fills",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "user-orders",
@@ -3349,7 +3349,7 @@
         "source_url": "https://docs.kalshi.com/margin-ws/websockets/user-orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "websocket-connection",
@@ -3361,7 +3361,7 @@
         "source_url": "https://docs.kalshi.com/margin-ws/websockets/websocket-connection",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "margin",
@@ -3373,7 +3373,7 @@
         "source_url": "https://docs.kalshi.com/margin",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "overview",
@@ -3385,7 +3385,7 @@
         "source_url": "https://docs.kalshi.com/sdks/overview",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "cfbenchmarks-value-5hz",
@@ -3397,7 +3397,7 @@
         "source_url": "https://docs.kalshi.com/websockets/cfbenchmarks-value-5hz",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "cfbenchmarks-value",
@@ -3409,7 +3409,7 @@
         "source_url": "https://docs.kalshi.com/websockets/cfbenchmarks-value",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "communications",
@@ -3421,7 +3421,7 @@
         "source_url": "https://docs.kalshi.com/websockets/communications",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "connection-keep-alive",
@@ -3433,7 +3433,7 @@
         "source_url": "https://docs.kalshi.com/websockets/connection-keep-alive",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "market-and-event-lifecycle",
@@ -3445,7 +3445,7 @@
         "source_url": "https://docs.kalshi.com/websockets/market-and-event-lifecycle",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "market-positions",
@@ -3457,7 +3457,7 @@
         "source_url": "https://docs.kalshi.com/websockets/market-positions",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "market-ticker",
@@ -3469,7 +3469,7 @@
         "source_url": "https://docs.kalshi.com/websockets/market-ticker",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "multivariate-market-and-event-lifecycle",
@@ -3481,7 +3481,7 @@
         "source_url": "https://docs.kalshi.com/websockets/multivariate-market-and-event-lifecycle",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "order-group-updates",
@@ -3493,7 +3493,7 @@
         "source_url": "https://docs.kalshi.com/websockets/order-group-updates",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "orderbook-updates",
@@ -3505,7 +3505,7 @@
         "source_url": "https://docs.kalshi.com/websockets/orderbook-updates",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "public-trades",
@@ -3517,7 +3517,7 @@
         "source_url": "https://docs.kalshi.com/websockets/public-trades",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "pyth-value",
@@ -3529,7 +3529,7 @@
         "source_url": "https://docs.kalshi.com/websockets/pyth-value",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "user-fills",
@@ -3541,7 +3541,7 @@
         "source_url": "https://docs.kalshi.com/websockets/user-fills",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "user-orders",
@@ -3553,7 +3553,7 @@
         "source_url": "https://docs.kalshi.com/websockets/user-orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "websocket-connection",
@@ -3565,7 +3565,7 @@
         "source_url": "https://docs.kalshi.com/websockets/websocket-connection",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "websockets",
@@ -3577,7 +3577,7 @@
         "source_url": "https://docs.kalshi.com/websockets",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       },
       {
         "id": "index",
@@ -3589,7 +3589,7 @@
         "source_url": "https://docs.kalshi.com/welcome/index",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-20"
+        "updated_at": "2026-11-21"
       }
     ]
   },
@@ -3604,7 +3604,7 @@
       "source_url": "https://docs.kalshi.com/changelog/index",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "api_environments",
@@ -3616,7 +3616,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/api_environments",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "api_keys",
@@ -3628,7 +3628,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/api_keys",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "accept-block-trade-proposal",
@@ -3640,7 +3640,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/accept-block-trade-proposal",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "accept-quote",
@@ -3652,7 +3652,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/accept-quote",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "accept-rfq-quote",
@@ -3664,7 +3664,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/accept-rfq-quote",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "amend-order",
@@ -3676,7 +3676,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/orders/amend-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "amend-order-v2",
@@ -3688,7 +3688,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/orders/amend-order-v2",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "authentication",
@@ -3700,7 +3700,7 @@
       "source_url": "https://docs.kalshi.com/fix/authentication",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "authentication",
@@ -3712,7 +3712,7 @@
       "source_url": "https://docs.kalshi.com/fix-margin/authentication",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "batch-cancel-orders-v2",
@@ -3724,7 +3724,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/orders/batch-cancel-orders-v2",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "batch-create-orders-v2",
@@ -3736,7 +3736,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/orders/batch-create-orders-v2",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "batch-get-market-candlesticks",
@@ -3748,7 +3748,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/market/batch-get-market-candlesticks",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "cfbenchmarks-value-5hz",
@@ -3760,7 +3760,7 @@
       "source_url": "https://docs.kalshi.com/websockets/cfbenchmarks-value-5hz",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "rest-passthrough",
@@ -3772,7 +3772,7 @@
       "source_url": "https://docs.kalshi.com/cfbenchmarks/rest-passthrough",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "cfbenchmarks-value",
@@ -3784,7 +3784,7 @@
       "source_url": "https://docs.kalshi.com/websockets/cfbenchmarks-value",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "cancel-all-orders",
@@ -3796,7 +3796,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/orders/cancel-all-orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "cancel-all-orders",
@@ -3808,7 +3808,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/orders/cancel-all-orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "cancel-block-trade-proposal",
@@ -3820,7 +3820,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/cancel-block-trade-proposal",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "cancel-cross-exit-trigger-by-id",
@@ -3832,7 +3832,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/exit-triggers/cancel-cross-exit-trigger-by-id",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "cancel-cross-exit-triggers",
@@ -3844,7 +3844,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/exit-triggers/cancel-cross-exit-triggers",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "cancel-isolated-exit-trigger",
@@ -3856,7 +3856,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/exit-triggers/cancel-isolated-exit-trigger",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "cancel-order",
@@ -3868,7 +3868,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/orders/cancel-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "cancel-order-v2",
@@ -3880,7 +3880,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/orders/cancel-order-v2",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "common-components",
@@ -3892,7 +3892,7 @@
       "source_url": "https://docs.kalshi.com/fix/common-components",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "communications",
@@ -3904,7 +3904,7 @@
       "source_url": "https://docs.kalshi.com/websockets/communications",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "confirm-quote",
@@ -3916,7 +3916,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/confirm-quote",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "confirm-rfq-quote",
@@ -3928,7 +3928,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/confirm-rfq-quote",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "mcp",
@@ -3940,7 +3940,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/mcp",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "connection-keep-alive",
@@ -3952,7 +3952,7 @@
       "source_url": "https://docs.kalshi.com/margin-ws/websockets/connection-keep-alive",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "connection-keep-alive",
@@ -3964,7 +3964,7 @@
       "source_url": "https://docs.kalshi.com/websockets/connection-keep-alive",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "connectivity",
@@ -3976,7 +3976,7 @@
       "source_url": "https://docs.kalshi.com/fix/connectivity",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "connectivity",
@@ -3988,7 +3988,7 @@
       "source_url": "https://docs.kalshi.com/fix-margin/connectivity",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "corporate-actions",
@@ -4000,7 +4000,7 @@
       "source_url": "https://docs.kalshi.com/margin/corporate-actions",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-api-key",
@@ -4012,7 +4012,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/api-keys/create-api-key",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-concert-cancellation-market",
@@ -4024,7 +4024,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/markets/create-concert-cancellation-market",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-fcm-position-transfer",
@@ -4036,7 +4036,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/fcm/create-fcm-position-transfer",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-fcm-subtrader",
@@ -4048,7 +4048,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/fcm/create-fcm-subtrader",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-margin-fcm-position-transfer",
@@ -4060,7 +4060,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/fcm/create-margin-fcm-position-transfer",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-margin-fcm-subtrader",
@@ -4072,7 +4072,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/fcm/create-margin-fcm-subtrader",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-market-in-multivariate-event-collection",
@@ -4084,7 +4084,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/multivariate/create-market-in-multivariate-event-collection",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-order",
@@ -4096,7 +4096,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/orders/create-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-order-v2",
@@ -4108,7 +4108,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/orders/create-order-v2",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-order-group",
@@ -4120,7 +4120,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/order-groups/create-order-group",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-order-group",
@@ -4132,7 +4132,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/order-groups/create-order-group",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-quote",
@@ -4144,7 +4144,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/create-quote",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-rfq",
@@ -4156,7 +4156,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/create-rfq",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-subaccount",
@@ -4168,7 +4168,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/create-subaccount",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-subaccount",
@@ -4180,7 +4180,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/portfolio/create-subaccount",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-subtrader-group",
@@ -4192,7 +4192,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/create-subtrader-group",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-subtrader-bound-api-key",
@@ -4204,7 +4204,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/create-subtrader-bound-api-key",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "create-weather-point-market",
@@ -4216,7 +4216,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/markets/create-weather-point-market",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "decrease-order",
@@ -4228,7 +4228,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/orders/decrease-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "decrease-order-v2",
@@ -4240,7 +4240,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/orders/decrease-order-v2",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "delete-api-key",
@@ -4252,7 +4252,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/api-keys/delete-api-key",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "delete-fcm-notional-risk-limit",
@@ -4264,7 +4264,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/fcm/delete-fcm-notional-risk-limit",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "delete-fcm-subtrader-event-contract-daily-cap",
@@ -4276,7 +4276,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/fcm/delete-fcm-subtrader-event-contract-daily-cap",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "delete-fcm-subtrader-risk-controls",
@@ -4288,7 +4288,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/fcm/delete-fcm-subtrader-risk-controls",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "delete-order-group",
@@ -4300,7 +4300,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/order-groups/delete-order-group",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "delete-order-group",
@@ -4312,7 +4312,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/order-groups/delete-order-group",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "delete-quote",
@@ -4324,7 +4324,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/delete-quote",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "delete-rfq",
@@ -4336,7 +4336,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/delete-rfq",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "delete-rfq-quote",
@@ -4348,7 +4348,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/delete-rfq-quote",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "delete-subtrader-group",
@@ -4360,7 +4360,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/delete-subtrader-group",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "delete-subtrader-bound-api-key",
@@ -4372,7 +4372,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/delete-subtrader-bound-api-key",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "drop-copy",
@@ -4384,7 +4384,7 @@
       "source_url": "https://docs.kalshi.com/fix/drop-copy",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "drop-copy",
@@ -4396,7 +4396,7 @@
       "source_url": "https://docs.kalshi.com/fix-margin/drop-copy",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "error-handling",
@@ -4408,7 +4408,7 @@
       "source_url": "https://docs.kalshi.com/fix/error-handling",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "error-handling",
@@ -4420,7 +4420,7 @@
       "source_url": "https://docs.kalshi.com/fix-margin/error-handling",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "estimate-portfolio-maintenance-margin",
@@ -4432,7 +4432,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/estimate-portfolio-maintenance-margin",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "exchange_sharding",
@@ -4444,7 +4444,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/exchange_sharding",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "fee_rounding",
@@ -4456,7 +4456,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/fee_rounding",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "fixed_point_migration",
@@ -4468,7 +4468,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/fixed_point_migration",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "generate-api-key",
@@ -4480,7 +4480,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/api-keys/generate-api-key",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "generate-subtrader-bound-api-key",
@@ -4492,7 +4492,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/generate-subtrader-bound-api-key",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-api-keys",
@@ -4504,7 +4504,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/api-keys/get-api-keys",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-account-api-limits",
@@ -4516,7 +4516,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/account/get-account-api-limits",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-account-api-usage-level-volume-progress",
@@ -4528,7 +4528,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/account/get-account-api-usage-level-volume-progress",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-active-margin-obligations",
@@ -4540,7 +4540,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-active-margin-obligations",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-all-subaccount-balances",
@@ -4552,7 +4552,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-all-subaccount-balances",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-balance",
@@ -4564,7 +4564,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-balance",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-balance",
@@ -4576,7 +4576,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/portfolio/get-balance",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-block-trade-proposals",
@@ -4588,7 +4588,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/get-block-trade-proposals",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-communications-id",
@@ -4600,7 +4600,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/get-communications-id",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-concert-cancellation-market-availability",
@@ -4612,7 +4612,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/markets/get-concert-cancellation-market-availability",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-concerts",
@@ -4624,7 +4624,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/markets/get-concerts",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-credit-history",
@@ -4636,7 +4636,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-credit-history",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-cross-exit-triggers",
@@ -4648,7 +4648,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/exit-triggers/get-cross-exit-triggers",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-deposits",
@@ -4660,7 +4660,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-deposits",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-enabled-status",
@@ -4672,7 +4672,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/exchange/get-enabled-status",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-event",
@@ -4684,7 +4684,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/events/get-event",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-event-candlesticks",
@@ -4696,7 +4696,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/events/get-event-candlesticks",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-event-fee-changes",
@@ -4708,7 +4708,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/events/get-event-fee-changes",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-event-forecast-percentile-history",
@@ -4720,7 +4720,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/events/get-event-forecast-percentile-history",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-event-live-data",
@@ -4732,7 +4732,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/live-data/get-event-live-data",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-event-metadata",
@@ -4744,7 +4744,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/events/get-event-metadata",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-events",
@@ -4756,7 +4756,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/events/get-events",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-exchange-schedule",
@@ -4768,7 +4768,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/exchange/get-exchange-schedule",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-exchange-status",
@@ -4780,7 +4780,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/exchange/get-exchange-status",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-exchange-status",
@@ -4792,7 +4792,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/exchange/get-exchange-status",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-fcm-fills",
@@ -4804,7 +4804,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/fcm/get-fcm-fills",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-fcm-orders",
@@ -4816,7 +4816,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/fcm/get-fcm-orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-fcm-positions",
@@ -4828,7 +4828,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/fcm/get-fcm-positions",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-fcm-subtrader-blocked-categories",
@@ -4840,7 +4840,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/fcm/get-fcm-subtrader-blocked-categories",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-fcm-subtrader-event-contract-daily-cap",
@@ -4852,7 +4852,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/fcm/get-fcm-subtrader-event-contract-daily-cap",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-fcm-subtrader-risk-controls",
@@ -4864,7 +4864,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/fcm/get-fcm-subtrader-risk-controls",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-fee-tier-rates",
@@ -4876,7 +4876,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/fees/get-fee-tier-rates",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-fee-tiers",
@@ -4888,7 +4888,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/fees/get-fee-tiers",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-fills",
@@ -4900,7 +4900,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-fills",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-fills",
@@ -4912,7 +4912,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/portfolio/get-fills",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-filters-for-sports",
@@ -4924,7 +4924,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/search/get-filters-for-sports",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-funding-estimate-by-asset-class",
@@ -4936,7 +4936,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-funding-estimate-by-asset-class",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-funding-history",
@@ -4948,7 +4948,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/funding/get-funding-history",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-funding-rate-estimate",
@@ -4960,7 +4960,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/funding/get-funding-rate-estimate",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-funding-schedule",
@@ -4972,7 +4972,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-funding-schedule",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-game-stats",
@@ -4984,7 +4984,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/live-data/get-game-stats",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-guaranty-fund-balance",
@@ -4996,7 +4996,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-guaranty-fund-balance",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-historical-cutoff-timestamps",
@@ -5008,7 +5008,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/historical/get-historical-cutoff-timestamps",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-historical-fills",
@@ -5020,7 +5020,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/historical/get-historical-fills",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-historical-funding-rates",
@@ -5032,7 +5032,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/funding/get-historical-funding-rates",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-historical-market",
@@ -5044,7 +5044,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/historical/get-historical-market",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-historical-market-candlesticks",
@@ -5056,7 +5056,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/historical/get-historical-market-candlesticks",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-historical-markets",
@@ -5068,7 +5068,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/historical/get-historical-markets",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-historical-orders",
@@ -5080,7 +5080,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/historical/get-historical-orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-historical-positions",
@@ -5092,7 +5092,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/historical/get-historical-positions",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-historical-trades",
@@ -5104,7 +5104,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/historical/get-historical-trades",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-incentive-schedules",
@@ -5116,7 +5116,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/incentive-programs/get-incentive-schedules",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-incentives",
@@ -5128,7 +5128,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/incentive-programs/get-incentives",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-intra-account-transfer",
@@ -5140,7 +5140,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-intra-account-transfer",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-intra-account-transfers",
@@ -5152,7 +5152,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-intra-account-transfers",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-isolated-exit-triggers",
@@ -5164,7 +5164,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/exit-triggers/get-isolated-exit-triggers",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-large-trader-positions",
@@ -5176,7 +5176,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-large-trader-positions",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-live-data",
@@ -5188,7 +5188,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/live-data/get-live-data",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-live-data-with-type",
@@ -5200,7 +5200,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/live-data/get-live-data-with-type",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-maintenance-margin-metadata",
@@ -5212,7 +5212,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-maintenance-margin-metadata",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-margin-corporate-actions",
@@ -5224,7 +5224,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/corporate-actions/get-margin-corporate-actions",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-margin-reports",
@@ -5236,7 +5236,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-margin-reports",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-market",
@@ -5248,7 +5248,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/market/get-market",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-market",
@@ -5260,7 +5260,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/market/get-market",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-market-candlesticks",
@@ -5272,7 +5272,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/market/get-market-candlesticks",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-market-candlesticks",
@@ -5284,7 +5284,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/market/get-market-candlesticks",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-market-orderbook",
@@ -5296,7 +5296,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/market/get-market-orderbook",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-market-orderbook",
@@ -5308,7 +5308,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/market/get-market-orderbook",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-market-schedules",
@@ -5320,7 +5320,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/market/get-market-schedules",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-markets",
@@ -5332,7 +5332,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/market/get-markets",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-markets",
@@ -5344,7 +5344,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/market/get-markets",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-member-funding-payments",
@@ -5356,7 +5356,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-member-funding-payments",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-milestone",
@@ -5368,7 +5368,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/milestone/get-milestone",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-milestones",
@@ -5380,7 +5380,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/milestone/get-milestones",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-multiple-live-data",
@@ -5392,7 +5392,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/live-data/get-multiple-live-data",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-multiple-market-orderbooks",
@@ -5404,7 +5404,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/market/get-multiple-market-orderbooks",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-multiple-market-orderbooks",
@@ -5416,7 +5416,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/market/get-multiple-market-orderbooks",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-multivariate-event-collection",
@@ -5428,7 +5428,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/multivariate/get-multivariate-event-collection",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-multivariate-event-collections",
@@ -5440,7 +5440,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/multivariate/get-multivariate-event-collections",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-multivariate-events",
@@ -5452,7 +5452,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/events/get-multivariate-events",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-notional-risk-limit",
@@ -5464,7 +5464,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/risk/get-notional-risk-limit",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-obligation-corporate-action-payments",
@@ -5476,7 +5476,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-obligation-corporate-action-payments",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-obligation-funding-payments",
@@ -5488,7 +5488,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-obligation-funding-payments",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-obligation-history",
@@ -5500,7 +5500,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-obligation-history",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-obligation-maintenance-margin-details",
@@ -5512,7 +5512,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-obligation-maintenance-margin-details",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-obligation-settlement-details",
@@ -5524,7 +5524,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-obligation-settlement-details",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-order",
@@ -5536,7 +5536,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/orders/get-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-order",
@@ -5548,7 +5548,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/orders/get-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-order-group",
@@ -5560,7 +5560,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/order-groups/get-order-group",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-order-group",
@@ -5572,7 +5572,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/order-groups/get-order-group",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-order-groups",
@@ -5584,7 +5584,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/order-groups/get-order-groups",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-order-groups",
@@ -5596,7 +5596,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/order-groups/get-order-groups",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-order-queue-position",
@@ -5608,7 +5608,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/orders/get-order-queue-position",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-orders",
@@ -5620,7 +5620,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/orders/get-orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-orders",
@@ -5632,7 +5632,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/orders/get-orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-perps-account-api-limits",
@@ -5644,7 +5644,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/account/get-perps-account-api-limits",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-positions",
@@ -5656,7 +5656,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-positions",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-positions",
@@ -5668,7 +5668,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/portfolio/get-positions",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-premium-index",
@@ -5680,7 +5680,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/funding/get-premium-index",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-queue-positions-for-orders",
@@ -5692,7 +5692,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/orders/get-queue-positions-for-orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-quote",
@@ -5704,7 +5704,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/get-quote",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-quotes",
@@ -5716,7 +5716,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/get-quotes",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-rfq",
@@ -5728,7 +5728,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/get-rfq",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-rfq-quote",
@@ -5740,7 +5740,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/get-rfq-quote",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-rfqs",
@@ -5752,7 +5752,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/get-rfqs",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-risk",
@@ -5764,7 +5764,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/risk/get-risk",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-risk-parameters",
@@ -5776,7 +5776,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/risk/get-risk-parameters",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-series",
@@ -5788,7 +5788,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/market/get-series",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-series-fee-changes",
@@ -5800,7 +5800,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/exchange/get-series-fee-changes",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-series-list",
@@ -5812,7 +5812,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/market/get-series-list",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-settlement-balance",
@@ -5824,7 +5824,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-settlement-balance",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-settlement-balance-history",
@@ -5836,7 +5836,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-settlement-balance-history",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-settlement-balance-withdrawal",
@@ -5848,7 +5848,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-settlement-balance-withdrawal",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-settlement-estimate-by-asset-class",
@@ -5860,7 +5860,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-settlement-estimate-by-asset-class",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-settlement-prices",
@@ -5872,7 +5872,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-settlement-prices",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-settlements",
@@ -5884,7 +5884,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-settlements",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-structured-target",
@@ -5896,7 +5896,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/structured-targets/get-structured-target",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-structured-targets",
@@ -5908,7 +5908,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/structured-targets/get-structured-targets",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-subaccount-netting",
@@ -5920,7 +5920,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-subaccount-netting",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-subaccount-transfers",
@@ -5932,7 +5932,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-subaccount-transfers",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-subtrader-groups",
@@ -5944,7 +5944,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/get-subtrader-groups",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-tags-for-series-categories",
@@ -5956,7 +5956,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/search/get-tags-for-series-categories",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-target-balance-allocation",
@@ -5968,7 +5968,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-target-balance-allocation",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-total-resting-order-value",
@@ -5980,7 +5980,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-total-resting-order-value",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-trades",
@@ -5992,7 +5992,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/market/get-trades",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-trades",
@@ -6004,7 +6004,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/market/get-trades",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-user-data-timestamp",
@@ -6016,7 +6016,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/exchange/get-user-data-timestamp",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-weather-index",
@@ -6028,7 +6028,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/live-data/get-weather-index",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-weather-index-calibrations",
@@ -6040,7 +6040,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/live-data/get-weather-index-calibrations",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-weather-point-market-availability",
@@ -6052,7 +6052,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/markets/get-weather-point-market-availability",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "get-withdrawals",
@@ -6064,7 +6064,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/get-withdrawals",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "historical_data",
@@ -6076,7 +6076,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/historical_data",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "intra-account-transfer",
@@ -6088,7 +6088,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/intra-account-transfer",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "intra-account-transfer",
@@ -6100,7 +6100,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/portfolio/intra-account-transfer",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "index",
@@ -6112,7 +6112,7 @@
       "source_url": "https://docs.kalshi.com/welcome/index",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "terms",
@@ -6124,7 +6124,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/terms",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "overview",
@@ -6136,7 +6136,7 @@
       "source_url": "https://docs.kalshi.com/sdks/overview",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "list-fcm-subtraders",
@@ -6148,7 +6148,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/fcm/list-fcm-subtraders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "list-non-default-endpoint-costs",
@@ -6160,7 +6160,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/account/list-non-default-endpoint-costs",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "list-subtrader-bound-api-keys",
@@ -6172,7 +6172,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/list-subtrader-bound-api-keys",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "listener-sessions",
@@ -6184,7 +6184,7 @@
       "source_url": "https://docs.kalshi.com/fix/listener-sessions",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "listener-sessions",
@@ -6196,7 +6196,7 @@
       "source_url": "https://docs.kalshi.com/fix-margin/listener-sessions",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "maintenance_and_pauses",
@@ -6208,7 +6208,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/maintenance_and_pauses",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "making_your_first_request",
@@ -6220,7 +6220,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/making_your_first_request",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "market-and-event-lifecycle",
@@ -6232,7 +6232,7 @@
       "source_url": "https://docs.kalshi.com/websockets/market-and-event-lifecycle",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "market-data",
@@ -6244,7 +6244,7 @@
       "source_url": "https://docs.kalshi.com/fix/market-data",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "market-data",
@@ -6256,7 +6256,7 @@
       "source_url": "https://docs.kalshi.com/fix-margin/market-data",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "market_lifecycle",
@@ -6268,7 +6268,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/market_lifecycle",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "market-lifecycle",
@@ -6280,7 +6280,7 @@
       "source_url": "https://docs.kalshi.com/margin-ws/websockets/market-lifecycle",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "market-positions",
@@ -6292,7 +6292,7 @@
       "source_url": "https://docs.kalshi.com/websockets/market-positions",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "market-settlement",
@@ -6304,7 +6304,7 @@
       "source_url": "https://docs.kalshi.com/fix/market-settlement",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "market_settlement",
@@ -6316,7 +6316,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/market_settlement",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "market-ticker",
@@ -6328,7 +6328,7 @@
       "source_url": "https://docs.kalshi.com/margin-ws/websockets/market-ticker",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "market-ticker",
@@ -6340,7 +6340,7 @@
       "source_url": "https://docs.kalshi.com/websockets/market-ticker",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "multivariate-market-and-event-lifecycle",
@@ -6352,7 +6352,7 @@
       "source_url": "https://docs.kalshi.com/websockets/multivariate-market-and-event-lifecycle",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "concert_rfqs",
@@ -6364,7 +6364,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/concert_rfqs",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "weather_rfqs",
@@ -6376,7 +6376,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/weather_rfqs",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "order-entry",
@@ -6388,7 +6388,7 @@
       "source_url": "https://docs.kalshi.com/fix/order-entry",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "order-entry",
@@ -6400,7 +6400,7 @@
       "source_url": "https://docs.kalshi.com/fix-margin/order-entry",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "order_errors",
@@ -6412,7 +6412,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/order_errors",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "order-group-updates",
@@ -6424,7 +6424,7 @@
       "source_url": "https://docs.kalshi.com/margin-ws/websockets/order-group-updates",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "order-group-updates",
@@ -6436,7 +6436,7 @@
       "source_url": "https://docs.kalshi.com/websockets/order-group-updates",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "order-groups",
@@ -6448,7 +6448,7 @@
       "source_url": "https://docs.kalshi.com/fix/order-groups",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "order-groups",
@@ -6460,7 +6460,7 @@
       "source_url": "https://docs.kalshi.com/fix-margin/order-groups",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "order_groups",
@@ -6472,7 +6472,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/order_groups",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "order_direction",
@@ -6484,7 +6484,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/order_direction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "orderbook_responses",
@@ -6496,7 +6496,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/orderbook_responses",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "orderbook-updates",
@@ -6508,7 +6508,7 @@
       "source_url": "https://docs.kalshi.com/margin-ws/websockets/orderbook-updates",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "orderbook-updates",
@@ -6520,7 +6520,7 @@
       "source_url": "https://docs.kalshi.com/websockets/orderbook-updates",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "margin",
@@ -6532,7 +6532,7 @@
       "source_url": "https://docs.kalshi.com/margin",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "price-banding",
@@ -6544,7 +6544,7 @@
       "source_url": "https://docs.kalshi.com/margin/price-banding",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "propose-block-trade",
@@ -6556,7 +6556,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/propose-block-trade",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "public-trades",
@@ -6568,7 +6568,7 @@
       "source_url": "https://docs.kalshi.com/margin-ws/websockets/public-trades",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "public-trades",
@@ -6580,7 +6580,7 @@
       "source_url": "https://docs.kalshi.com/websockets/public-trades",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "pyth-value",
@@ -6592,7 +6592,7 @@
       "source_url": "https://docs.kalshi.com/websockets/pyth-value",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "quick_start_authenticated_requests",
@@ -6604,7 +6604,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/quick_start_authenticated_requests",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "quick_start_create_order",
@@ -6616,7 +6616,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/quick_start_create_order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "quick_start_market_data",
@@ -6628,7 +6628,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/quick_start_market_data",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "quick_start_websockets",
@@ -6640,7 +6640,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/quick_start_websockets",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "rfq-messages",
@@ -6652,7 +6652,7 @@
       "source_url": "https://docs.kalshi.com/fix/rfq-messages",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "rate_limits",
@@ -6664,7 +6664,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/rate_limits",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "reject-block-trade-proposal",
@@ -6676,7 +6676,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/communications/reject-block-trade-proposal",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "rfqs",
@@ -6688,7 +6688,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/rfqs",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "reset-order-group",
@@ -6700,7 +6700,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/order-groups/reset-order-group",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "reset-order-group",
@@ -6712,7 +6712,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/order-groups/reset-order-group",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "search-concerts",
@@ -6724,7 +6724,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/markets/search-concerts",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "set-cross-exit-trigger",
@@ -6736,7 +6736,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/exit-triggers/set-cross-exit-trigger",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "set-isolated-exit-trigger",
@@ -6748,7 +6748,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/exit-triggers/set-isolated-exit-trigger",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "set-target-balance-allocation",
@@ -6760,7 +6760,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/set-target-balance-allocation",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "settlement_bounds",
@@ -6772,7 +6772,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/settlement_bounds",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "sub_users_vs_subaccounts",
@@ -6784,7 +6784,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/sub_users_vs_subaccounts",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "subaccounts",
@@ -6796,7 +6796,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/subaccounts",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "subpenny-pricing",
@@ -6808,7 +6808,7 @@
       "source_url": "https://docs.kalshi.com/fix/subpenny-pricing",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "targets_and_milestones",
@@ -6820,7 +6820,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/targets_and_milestones",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "demo_env",
@@ -6832,7 +6832,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/demo_env",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "transfer-between-subaccounts",
@@ -6844,7 +6844,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/transfer-between-subaccounts",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "transfer-between-subaccounts",
@@ -6856,7 +6856,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/portfolio/transfer-between-subaccounts",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "trigger-order-group",
@@ -6868,7 +6868,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/order-groups/trigger-order-group",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "trigger-order-group",
@@ -6880,7 +6880,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/order-groups/trigger-order-group",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "pagination",
@@ -6892,7 +6892,7 @@
       "source_url": "https://docs.kalshi.com/getting_started/pagination",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "update-cross-exit-trigger",
@@ -6904,7 +6904,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/exit-triggers/update-cross-exit-trigger",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "update-fcm-notional-risk-limit",
@@ -6916,7 +6916,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/fcm/update-fcm-notional-risk-limit",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "update-fcm-subtrader-blocked-categories",
@@ -6928,7 +6928,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/fcm/update-fcm-subtrader-blocked-categories",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "update-fcm-subtrader-event-contract-daily-cap",
@@ -6940,7 +6940,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/fcm/update-fcm-subtrader-event-contract-daily-cap",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "update-fcm-subtrader-risk-controls",
@@ -6952,7 +6952,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/fcm/update-fcm-subtrader-risk-controls",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "update-order-group-limit",
@@ -6964,7 +6964,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/order-groups/update-order-group-limit",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "update-order-group-limit",
@@ -6976,7 +6976,7 @@
       "source_url": "https://docs.kalshi.com/margin-rest/order-groups/update-order-group-limit",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "update-subaccount-netting",
@@ -6988,7 +6988,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/portfolio/update-subaccount-netting",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "update-subtrader-group",
@@ -7000,7 +7000,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/update-subtrader-group",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "upgrade-account-api-usage-level",
@@ -7012,7 +7012,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/account/upgrade-account-api-usage-level",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "user-fills",
@@ -7024,7 +7024,7 @@
       "source_url": "https://docs.kalshi.com/margin-ws/websockets/user-fills",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "user-fills",
@@ -7036,7 +7036,7 @@
       "source_url": "https://docs.kalshi.com/websockets/user-fills",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "user-orders",
@@ -7048,7 +7048,7 @@
       "source_url": "https://docs.kalshi.com/margin-ws/websockets/user-orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "user-orders",
@@ -7060,7 +7060,7 @@
       "source_url": "https://docs.kalshi.com/websockets/user-orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "websockets",
@@ -7072,7 +7072,7 @@
       "source_url": "https://docs.kalshi.com/websockets",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "websocket-connection",
@@ -7084,7 +7084,7 @@
       "source_url": "https://docs.kalshi.com/margin-ws/websockets/websocket-connection",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "websocket-connection",
@@ -7096,7 +7096,7 @@
       "source_url": "https://docs.kalshi.com/websockets/websocket-connection",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "withdraw-settlement-balance",
@@ -7108,7 +7108,7 @@
       "source_url": "https://docs.kalshi.com/api-reference/withdraw-settlement-balance",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "asyncapi.yaml",
@@ -7120,7 +7120,7 @@
       "source_url": "https://docs.kalshi.com/asyncapi.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "openapi.yaml",
@@ -7132,7 +7132,7 @@
       "source_url": "https://docs.kalshi.com/openapi.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "perps_asyncapi.yaml",
@@ -7144,7 +7144,7 @@
       "source_url": "https://docs.kalshi.com/perps_asyncapi.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "perps_openapi.yaml",
@@ -7156,7 +7156,7 @@
       "source_url": "https://docs.kalshi.com/perps_openapi.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     },
     {
       "id": "perps_scm_openapi.yaml",
@@ -7168,7 +7168,7 @@
       "source_url": "https://docs.kalshi.com/perps_scm_openapi.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-20"
+      "updated_at": "2026-11-21"
     }
   ]
 }

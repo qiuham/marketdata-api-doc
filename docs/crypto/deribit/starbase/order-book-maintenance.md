@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/order-book-maintenance
 api_type: Starbase
-updated_at: 2026-11-20 19:00:11.819142
+updated_at: 2026-11-21 19:01:37.911286
 ---
 
 # Maintaining the order book

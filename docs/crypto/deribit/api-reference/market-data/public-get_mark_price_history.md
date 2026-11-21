@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_mark_price_history
 api_type: JSON-RPC
-updated_at: 2026-11-20 19:00:14.317028
+updated_at: 2026-11-21 19:01:42.222670
 ---
 
 # public/get_mark_price_history

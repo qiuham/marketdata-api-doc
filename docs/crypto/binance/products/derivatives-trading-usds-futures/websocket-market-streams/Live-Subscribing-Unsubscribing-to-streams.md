@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Live-Subscribing-Unsubscribing-to-streams
 api_type: WebSocket
-updated_at: 2026-11-20 18:40:40.613132
+updated_at: 2026-11-21 18:38:54.678720
 ---
 
 # Live Subscribing/Unsubscribing to streams

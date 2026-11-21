@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/full-ob
 api_type: Market Data
-updated_at: 2026-11-20 18:52:14.796861
+updated_at: 2026-11-21 18:51:28.895063
 ---
 
 # Get Full Depth Orderbook

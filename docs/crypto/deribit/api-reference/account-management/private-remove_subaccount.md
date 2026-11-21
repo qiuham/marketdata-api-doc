@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-remove_subaccount
 api_type: JSON-RPC
-updated_at: 2026-11-20 19:00:12.986770
+updated_at: 2026-11-21 19:01:39.837292
 ---
 
 # private/remove_subaccount

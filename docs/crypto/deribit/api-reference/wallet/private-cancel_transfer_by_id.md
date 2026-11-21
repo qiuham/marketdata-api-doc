@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-cancel_transfer_by_id
 api_type: JSON-RPC
-updated_at: 2026-11-20 19:00:15.515409
+updated_at: 2026-11-21 19:01:44.334859
 ---
 
 # private/cancel_transfer_by_id

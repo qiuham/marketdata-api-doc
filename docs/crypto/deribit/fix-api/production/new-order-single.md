@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/new-order-single
 api_type: FIX
-updated_at: 2026-11-20 19:00:11.176424
+updated_at: 2026-11-21 19:01:36.651503
 ---
 
 # New Order Single(D) (Production FIX API)

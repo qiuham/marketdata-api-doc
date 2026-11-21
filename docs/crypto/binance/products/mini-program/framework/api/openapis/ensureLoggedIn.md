@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/ensureLoggedIn
 api_type: Guide
-updated_at: 2026-11-20 18:46:13.415447
+updated_at: 2026-11-21 18:44:37.312105
 ---
 
 # bn.ensureLoggedIn

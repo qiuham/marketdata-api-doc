@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/earnuni
 api_type: Earn
-updated_at: 2026-11-20 18:56:51.684235
+updated_at: 2026-11-21 18:57:50.611486
 ---
 
 # EarnUni

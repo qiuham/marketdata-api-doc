@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/c2c/quick-start
 api_type: Guide
-updated_at: 2026-11-20 18:34:30.635622
+updated_at: 2026-11-21 18:32:32.649011
 ---
 
 # Quick Start

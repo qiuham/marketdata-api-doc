@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/changelog/sdks'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # SDK Changelog
@@ -18,6 +18,10 @@ updated_at: 2026-11-20
 > Recent changes to the official SDKs.
 
 > [tab] TypeScript
+>
+> ### `@polymarket/client 0.20.1`
+>
+> * `fetchOrder(...)` now throws `RequestRejectedError` with status `404` when the order is not found, instead of `UnexpectedResponseError`.
 >
 > ### `0.20.0`
 >
@@ -630,6 +634,11 @@ updated_at: 2026-11-20
 > ```
 
 > [tab] Python
+>
+> ### `polymarket-client 0.20.1`
+>
+> * Added `list_market_clarifications(...)` to list market clarifications, the notes that resolve ambiguity in how a market settles. Filter by `market_ids`, `event_ids`, `question_ids`, or `tx_hash`, and sort with `order` and `ascending`. Pages hold up to 100 clarifications. This applies to sync and async clients.
+> * `get_order(...)` now raises `RequestRejectedError` with status `404` when the order is not found, instead of `UnexpectedResponseError`.
 >
 > ### `0.20.0`
 >

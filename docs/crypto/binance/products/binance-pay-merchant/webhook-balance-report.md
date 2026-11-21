@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/webhook-balance-report
 api_type: Guide
-updated_at: 2026-11-20 18:34:57.466712
+updated_at: 2026-11-21 18:32:55.810969
 ---
 
 # Binance Pay: Balance Report Notification

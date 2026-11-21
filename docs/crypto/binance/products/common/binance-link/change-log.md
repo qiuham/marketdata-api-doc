@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/common/binance-link/change-log
 api_type: Changelog
-updated_at: 2026-11-20 18:42:55.958942
+updated_at: 2026-11-21 18:41:12.965072
 ---
 
 # Change Log

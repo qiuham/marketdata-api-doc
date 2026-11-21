@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/reference-data
 api_type: Starbase
-updated_at: 2026-11-20 19:00:11.813325
+updated_at: 2026-11-21 19:01:37.946143
 ---
 
 # Starbase Reference Data and Instrument Definitions

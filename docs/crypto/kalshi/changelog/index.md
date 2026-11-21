@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/changelog/index'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # API Changelog
@@ -30,12 +30,13 @@ the `FIX` tag.
 **November 26, 2026**
 
 `POST /concert_cancellation_markets` now holds a market that already exists to the same
-24 hours as a new one. Once the market's `close_time` or the show's start as now listed,
-whichever is earlier, is 24 hours away or less, the request returns `409` with code
+7 days as a new one. Once the market's `close_time` or the show's start as now listed,
+whichever is earlier, is 7 days away or less, the request returns `409` with code
 `concert_cancellation_market_unavailable` and the reason in `details`, where it used to
 return the market until it closed. The market itself is unchanged: it stays open until its
 `close_time`, positions in it are unaffected, `GET /markets/{ticker}` still returns it, and
-it settles as before. See [On-Request Concert Markets](https://docs.kalshi.com/getting_started/concert_rfqs.md). These
+it settles as before. A new market is held to the same 7 days: its show must start more
+than 7 days from now, where 24 hours used to be enough. See [On-Request Concert Markets](https://docs.kalshi.com/getting_started/concert_rfqs.md). These
 markets are not live yet.
 
 **November 26, 2026**

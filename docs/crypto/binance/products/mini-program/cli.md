@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/cli
 api_type: Guide
-updated_at: 2026-11-20 18:31:33.476549
+updated_at: 2026-11-21 18:29:43.035750
 ---
 
 # CLI

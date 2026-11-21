@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/analytics/get-liquidity-pool-statistic'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # Get liquidity pool statistic

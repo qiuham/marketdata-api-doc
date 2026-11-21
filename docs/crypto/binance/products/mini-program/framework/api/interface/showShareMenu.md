@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/showShareMenu
 api_type: Guide
-updated_at: 2026-11-20 18:47:34.935585
+updated_at: 2026-11-21 18:45:58.721643
 ---
 
 # bn.showShareMenu

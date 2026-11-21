@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_last_trades_by_currency
 api_type: JSON-RPC
-updated_at: 2026-11-20 19:00:14.247575
+updated_at: 2026-11-21 19:01:42.061119
 ---
 
 # public/get_last_trades_by_currency

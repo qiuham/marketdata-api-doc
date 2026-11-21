@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/requestSubscribeMessage
 api_type: Guide
-updated_at: 2026-11-20 18:45:47.481771
+updated_at: 2026-11-21 18:44:10.317238
 ---
 
 # bn.requestSubscribeMessage

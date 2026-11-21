@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/block-trade/block_trade_confirmationscurrency
 api_type: WebSocket
-updated_at: 2026-11-20 19:00:10.430344
+updated_at: 2026-11-21 19:01:35.315484
 ---
 
 # block_trade_confirmations.(currency)

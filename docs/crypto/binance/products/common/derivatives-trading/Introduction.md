@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/common/derivatives-trading/Introduction
 api_type: Guide
-updated_at: 2026-11-20 18:42:54.170362
+updated_at: 2026-11-21 18:41:11.550399
 ---
 
 # Introduction

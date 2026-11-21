@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-rest-authentication
 anchor_id: overview-rest-authentication
 api_type: REST
-updated_at: 2026-11-20 18:59:03.126986
+updated_at: 2026-11-21 19:00:06.769216
 ---
 
 # REST Authentication

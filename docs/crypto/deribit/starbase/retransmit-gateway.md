@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/retransmit-gateway
 api_type: Starbase
-updated_at: 2026-11-20 19:00:12.195209
+updated_at: 2026-11-21 19:01:38.712321
 ---
 
 # Multicast Retransmit Gateway

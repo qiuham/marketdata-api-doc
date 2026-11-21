@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/gift-card/error-code
 api_type: Guide
-updated_at: 2026-11-20 18:32:27.968644
+updated_at: 2026-11-21 18:30:29.401813
 ---
 
 # Error Codes

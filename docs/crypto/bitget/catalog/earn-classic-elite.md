@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/earn-classic-elite
 api_type: REST
-updated_at: 2026-11-20 19:02:12.836466
+updated_at: 2026-11-21 19:04:09.066876
 ---
 
 # Classic On-chain Elite Earn

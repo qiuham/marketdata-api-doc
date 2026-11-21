@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/request-for-positions
 api_type: FIX
-updated_at: 2026-11-20 19:00:11.324580
+updated_at: 2026-11-21 19:01:36.891917
 ---
 
 # Request For Positions(AN) (Production FIX API)

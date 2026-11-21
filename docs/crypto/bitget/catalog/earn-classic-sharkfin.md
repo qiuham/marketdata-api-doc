@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/earn-classic-sharkfin
 api_type: REST
-updated_at: 2026-11-20 19:02:14.086251
+updated_at: 2026-11-21 19:04:10.883136
 ---
 
 # Classic Earn SharkFin

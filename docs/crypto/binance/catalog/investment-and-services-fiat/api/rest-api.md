@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/investment-and-services-fiat/api/rest-api
 api_type: REST
-updated_at: 2026-11-20 18:50:42.389805
+updated_at: 2026-11-21 18:49:10.699457
 ---
 
 # Fiat REST API

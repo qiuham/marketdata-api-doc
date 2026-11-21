@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/showModal
 api_type: Guide
-updated_at: 2026-11-20 18:47:38.235240
+updated_at: 2026-11-21 18:46:01.832848
 ---
 
 # bn.showModal

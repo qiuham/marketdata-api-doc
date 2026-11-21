@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/transparency/pre-trade-data'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # Pre-Trade Data

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/max-loan-amt
 api_type: REST
-updated_at: 2026-11-20 18:52:29.398698
+updated_at: 2026-11-21 18:51:50.419880
 ---
 
 # Obtain Max Loan Amount

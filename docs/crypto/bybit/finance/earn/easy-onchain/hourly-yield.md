@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/easy-onchain/hourly-yield
 api_type: REST
-updated_at: 2026-11-20 18:51:58.097771
+updated_at: 2026-11-21 18:51:03.417312
 ---
 
 # Get Hourly Yield History

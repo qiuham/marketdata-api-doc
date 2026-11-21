@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/introduction
 api_type: Guide
-updated_at: 2026-11-20 18:35:04.849684
+updated_at: 2026-11-21 18:33:03.166518
 ---
 
 # Merchant API References | Binance Pay

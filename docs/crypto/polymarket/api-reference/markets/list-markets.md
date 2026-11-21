@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/markets/list-markets'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # List markets
@@ -46,6 +46,10 @@ tags:
     description: User profile management
   - name: Search
     description: Search functionality across different entity types
+  - name: taker-tier
+    description: Taker rebate tiers and weighted volume
+  - name: maker-tier
+    description: Maker rebate tiers and weighted volume
 paths:
   /markets:
     get:

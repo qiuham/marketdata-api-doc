@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot-block-matching/error-code
 api_type: Guide
-updated_at: 2026-11-20 18:30:24.176074
+updated_at: 2026-11-21 18:28:15.667382
 ---
 
 # Error Codes

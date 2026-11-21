@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/stocks/error-code
 api_type: Guide
-updated_at: 2026-11-20 18:30:00.749797
+updated_at: 2026-11-21 18:27:58.584509
 ---
 
 # Error Code

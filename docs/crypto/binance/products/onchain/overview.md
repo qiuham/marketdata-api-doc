@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/onchain/overview
 api_type: Guide
-updated_at: 2026-11-20 18:31:19.180073
+updated_at: 2026-11-21 18:29:22.405555
 ---
 
 # Binance Pay Onchain Developer Documentation

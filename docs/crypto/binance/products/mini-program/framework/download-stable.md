@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/download-stable
 api_type: Guide
-updated_at: 2026-11-20 18:39:24.207213
+updated_at: 2026-11-21 18:38:04.509086
 ---
 
 # Download Stable Version

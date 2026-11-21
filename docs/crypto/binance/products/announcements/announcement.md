@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/announcements/announcement
 api_type: Guide
-updated_at: 2026-11-20 18:36:28.155404
+updated_at: 2026-11-21 18:34:29.179573
 ---
 
 # Announcements

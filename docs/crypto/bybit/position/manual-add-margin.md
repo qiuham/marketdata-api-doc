@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/manual-add-margin
 api_type: Position
-updated_at: 2026-11-20 18:52:38.720631
+updated_at: 2026-11-21 18:52:02.938274
 ---
 
 # Add Or Reduce Margin

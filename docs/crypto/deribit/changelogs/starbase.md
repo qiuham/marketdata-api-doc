@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/changelogs/starbase
 api_type: Changelog
-updated_at: 2026-11-20 19:00:10.023874
+updated_at: 2026-11-21 19:01:34.553886
 ---
 
 # Starbase API Changelog

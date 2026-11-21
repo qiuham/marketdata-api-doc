@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-institutional-loan/api/rest-api
 api_type: REST
-updated_at: 2026-11-20 18:50:33.546249
+updated_at: 2026-11-21 18:49:00.028936
 ---
 
 # Institutional Loan REST API

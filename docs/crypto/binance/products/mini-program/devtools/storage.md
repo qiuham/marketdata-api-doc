@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/devtools/storage
 api_type: Guide
-updated_at: 2026-11-20 18:39:34.810855
+updated_at: 2026-11-21 18:37:23.524715
 ---
 
 # Storage Panel

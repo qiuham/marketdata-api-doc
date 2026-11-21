@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-collection-result-query
 api_type: Guide
-updated_at: 2026-11-20 18:36:17.452220
+updated_at: 2026-11-21 18:34:14.806256
 ---
 
 # Query Collection Result

@@ -10,12 +10,19 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/learn-about-trading/fees'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # Fees
 
 > Tiered maker and taker trading fees for Polymarket Perps
+
+> [!NOTE]
+>
+> **Upcoming changes — November 25, 2026.** Polymarket Perps trading fees,
+> liquidation fees, and liquidity rewards will change. The current rules below
+> apply until the changes go live. [See all fee and liquidity reward
+> changes](https://docs.polymarket.com/perps/fee-and-liquidity-reward-changes-november-2026.md).
 
 Perps trading fees are tiered by an account's trailing 30-day trading volume.
 Higher-volume accounts pay lower taker fees, and the top tier earns a maker

@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-spec/gamma-openapi.yaml'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # gamma-openapi.yaml
@@ -45,6 +45,10 @@ tags:
   description: User profile management
 - name: Search
   description: Search functionality across different entity types
+- name: taker-tier
+  description: Taker rebate tiers and weighted volume
+- name: maker-tier
+  description: Maker rebate tiers and weighted volume
 paths:
   /status:
     get:
@@ -811,6 +815,65 @@ paths:
                 $ref: '#/components/schemas/MarketDescription'
         '404':
           description: Not found
+  /market-clarifications:
+    get:
+      tags:
+      - Markets
+      summary: List market clarifications
+      description: Returns published clarifications, the notes that resolve ambiguity in how a market settles.
+      operationId: listMarketClarifications
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          minimum: 0
+          maximum: 100
+          default: 20
+      - $ref: '#/components/parameters/offset'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/ascending'
+      - name: market_id
+        in: query
+        description: Market IDs. Repeat the parameter to pass several.
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: integer
+      - name: event_id
+        in: query
+        description: Event IDs. Repeat the parameter to pass several.
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: integer
+      - name: question_id
+        in: query
+        description: Question IDs. Repeat the parameter to pass several.
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: tx_hash
+        in: query
+        description: Transaction hash that posted the clarification.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Market clarifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MarketClarification'
   /markets/{id}/tags:
     get:
       tags:
@@ -1739,6 +1802,158 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Search'
+  /tiers:
+    post:
+      tags:
+      - taker-tier
+      operationId: get-taker-tiers
+      summary: Get taker tiers for addresses
+      description: >
+        Current taker tier and 30-day weighted volume for up to 100 proxy-wallet
+        (or EOA) addresses. Addresses are case-insensitive; unknown addresses
+        return tier 0. No authentication.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - addresses
+              properties:
+                addresses:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                  maxItems: 100
+            example:
+              addresses:
+              - '0xa4b7b1814b0da33f2b61be4939976898aa476008'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - tiers
+                properties:
+                  tiers:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                      - address
+                      - tier
+                      - tier_name
+                      - wv_30d
+                      properties:
+                        address:
+                          type: string
+                        tier:
+                          type: integer
+                        tier_name:
+                          type: string
+                        wv_30d:
+                          type: number
+                          format: double
+              example:
+                tiers:
+                - address: '0xa4b7b1814b0da33f2b61be4939976898aa476008'
+                  tier: 6
+                  tier_name: Obsidian
+                  wv_30d: 17189511.9883
+        '422':
+          description: Empty or invalid address, or more than 100 addresses
+  /v1/maker-tier/tiers:
+    post:
+      tags:
+      - maker-tier
+      operationId: get-maker-tiers
+      summary: Get maker tiers for addresses
+      description: >
+        Maker tier, rebate rate and 30-day weighted volume for up to 100 maker
+        addresses, from the newest daily snapshot (the tier paying each address's
+        fills today). Addresses are case-insensitive and matched as given against
+        the address that made the fills (usually the proxy wallet). An address
+        with no snapshot row returns tier 0 with no snapshot_date. No authentication.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - addresses
+              properties:
+                addresses:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                  maxItems: 100
+                  description: Maker addresses (proxy wallet or EOA), case-insensitive
+            example:
+              addresses:
+              - '0xa4b7b1814b0da33f2b61be4939976898aa476008'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - tiers
+                properties:
+                  tiers:
+                    type: array
+                    description: One entry per distinct requested address, in first-seen request order
+                    items:
+                      type: object
+                      required:
+                      - address
+                      - tier
+                      - rebate_bps
+                      - wv_30d
+                      - own_wv_30d
+                      properties:
+                        address:
+                          type: string
+                          description: Normalized (trimmed, lowercased)
+                        snapshot_date:
+                          type: string
+                          description: UTC day (YYYY-MM-DD) whose fills this tier pays; omitted when no snapshot row
+                        tier:
+                          type: integer
+                          description: 0 when no snapshot row
+                        rebate_bps:
+                          type: integer
+                          description: Share of the taker fee each maker fill generates, in basis points
+                        wv_30d:
+                          type: number
+                          format: double
+                          description: 30-day weighted volume pooled across the maker link group
+                        own_wv_30d:
+                          type: number
+                          format: double
+                          description: This address's own share of wv_30d
+              example:
+                tiers:
+                - address: '0xa4b7b1814b0da33f2b61be4939976898aa476008'
+                  snapshot_date: '2026-11-19'
+                  tier: 1
+                  rebate_bps: 300
+                  wv_30d: 250000.0
+                  own_wv_30d: 250000.0
+        '422':
+          description: Empty or invalid address, or more than 100 addresses
 components:
   parameters:
     limit:
@@ -1808,6 +2023,68 @@ components:
           nullable: true
         relname:
           type: string
+          nullable: true
+    MarketClarification:
+      type: object
+      properties:
+        id:
+          type: integer
+        marketId:
+          type: integer
+          nullable: true
+        eventId:
+          type: integer
+          nullable: true
+        questionId:
+          type: string
+          nullable: true
+        content:
+          type: string
+          nullable: true
+          description: Clarification text.
+        state:
+          type: string
+          nullable: true
+          enum:
+          - pending
+          - queued
+          - success
+          - failed
+          - cancelled
+        clearBook:
+          type: boolean
+          nullable: true
+          description: Whether open orders were cleared when the clarification was posted.
+        notifyDiscord:
+          type: boolean
+          nullable: true
+        showInFrontend:
+          type: boolean
+          nullable: true
+        adapterAddress:
+          type: string
+          nullable: true
+        negRiskRequestId:
+          type: string
+          nullable: true
+        txHash:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+          nullable: true
+        queuedAt:
+          type: string
+          format: date-time
+          nullable: true
+        scheduledFor:
+          type: string
+          format: date-time
+          nullable: true
+        txTimestamp:
+          type: string
+          format: date-time
           nullable: true
     Team:
       type: object

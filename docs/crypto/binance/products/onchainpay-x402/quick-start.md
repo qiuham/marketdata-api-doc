@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/onchainpay-x402/quick-start
 api_type: Guide
-updated_at: 2026-11-20 18:31:11.486180
+updated_at: 2026-11-21 18:29:15.132975
 ---
 
 # Quick Start

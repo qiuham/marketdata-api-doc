@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-alpha-trading/api/rest-api
 api_type: REST
-updated_at: 2026-11-20 18:50:33.769058
+updated_at: 2026-11-21 18:49:00.294315
 ---
 
 # Alpha Trading REST API

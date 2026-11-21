@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/error-code/common-error-handling
 api_type: Error Code
-updated_at: 2026-11-20 19:01:19.754087
+updated_at: 2026-11-21 19:03:17.723300
 ---
 
 # Common Error Handling

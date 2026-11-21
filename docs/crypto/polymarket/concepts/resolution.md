@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/concepts/resolution'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # Resolution
@@ -97,6 +97,9 @@ Clarifications:
 * Cannot change the fundamental intent of the question
 * Are published onchain via the bulletin board contract
 * Should be considered by UMA voters when resolving disputes
+
+To read a market's clarifications programmatically, see [Market
+Clarifications](https://docs.polymarket.com/market-data/market-details.md#market-clarifications).
 
 > [!TIP]
 >

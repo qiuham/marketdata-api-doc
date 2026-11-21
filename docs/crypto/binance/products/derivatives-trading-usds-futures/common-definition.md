@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/common-definition
 api_type: Guide
-updated_at: 2026-11-20 18:32:52.706214
+updated_at: 2026-11-21 18:30:54.045845
 ---
 
 # Public Endpoints Info
@@ -80,6 +80,7 @@ updated_at: 2026-11-20 18:32:52.706214
 - GTD - Good Till Date
 - RPI - Retail Price Improvement(RPI order is post only and only be matched with the order from APP
   or Web)
+- OTC
 
 **Working Type (workingType)**
 
@@ -391,6 +392,7 @@ price is used.
 - GTX - Good Till Crossing 无法成为挂单方就撤销
 - GTD - Good Till Date 在特定时间之前有效，到期自动撤销
 - RPI - Retail Price Improvement（仅与来自APP或者网页端的订单成交，且为Post Only）
+- OTC
 
 **条件价格触发类型 (workingType)**
 

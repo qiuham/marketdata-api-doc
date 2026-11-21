@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/trading/combos/requesters'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # Requesters

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/scanCode
 api_type: Guide
-updated_at: 2026-11-20 18:45:46.117699
+updated_at: 2026-11-21 18:44:08.592959
 ---
 
 # bn.scanCode

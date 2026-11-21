@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/getting_started/subaccounts'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # Subaccounts

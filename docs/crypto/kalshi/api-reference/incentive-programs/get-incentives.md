@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/incentive-programs/get-incentives'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # Get Incentives

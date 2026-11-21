@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/logon
 api_type: FIX
-updated_at: 2026-11-20 19:00:10.897758
+updated_at: 2026-11-21 19:01:36.113045
 ---
 
 # Logon(A) (Production FIX API)

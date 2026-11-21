@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/user-data-streams
 api_type: WebSocket
-updated_at: 2026-11-20 18:32:46.469881
+updated_at: 2026-11-21 18:30:47.790067
 ---
 
 # User Data Streams
@@ -171,6 +171,7 @@ When new order created, order status changed will push such event. Event type is
 - IOC
 - FOK
 - GTX
+- OTC
 
 **Working Type**
 
@@ -584,6 +585,7 @@ When the `listenKey` used for the user data stream turns expired, this event wil
 - IOC
 - FOK
 - GTX
+- OTC
 
 **强平和ADL:**
 

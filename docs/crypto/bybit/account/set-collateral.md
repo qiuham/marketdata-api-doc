@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/set-collateral
 api_type: Account
-updated_at: 2026-11-20 18:50:59.302459
+updated_at: 2026-11-21 18:49:34.039606
 ---
 
 # Set Collateral Coin

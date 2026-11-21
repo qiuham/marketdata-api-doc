@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/corporate-action
 api_type: Market Data
-updated_at: 2026-11-20 18:52:14.488813
+updated_at: 2026-11-21 18:51:28.513253
 ---
 
 # Query Corporate Action

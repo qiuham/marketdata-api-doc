@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en
 api_type: REST
-updated_at: 2026-11-20 18:56:39.032271
+updated_at: 2026-11-21 18:57:37.267624
 ---
 
 # Gate API v4.106.184

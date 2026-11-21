@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/private/Batch-Place-Order-Channel
 api_type: WebSocket
-updated_at: 2026-11-20 19:01:31.070319
+updated_at: 2026-11-21 19:03:29.392308
 ---
 
 # Batch Place Order Channel

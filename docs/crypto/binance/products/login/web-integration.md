@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/login/web-integration
 api_type: Guide
-updated_at: 2026-11-20 18:31:47.324861
+updated_at: 2026-11-21 18:29:49.142361
 ---
 
 # Integrate Binance Login with your web application

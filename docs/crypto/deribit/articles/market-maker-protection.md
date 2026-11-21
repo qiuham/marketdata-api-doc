@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/market-maker-protection
 api_type: Guide
-updated_at: 2026-11-20 19:00:09.816375
+updated_at: 2026-11-21 19:01:34.294672
 ---
 
 # Market Maker Protection (MMP) API Configuration

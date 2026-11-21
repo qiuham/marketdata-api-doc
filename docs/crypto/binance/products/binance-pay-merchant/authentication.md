@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/authentication
 api_type: Guide
-updated_at: 2026-11-20 18:35:11.626569
+updated_at: 2026-11-21 18:33:10.578457
 ---
 
 # Binance Pay API: Authentication

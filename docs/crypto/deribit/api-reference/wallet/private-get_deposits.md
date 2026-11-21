@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-get_deposits
 api_type: JSON-RPC
-updated_at: 2026-11-20 19:00:15.610222
+updated_at: 2026-11-21 19:01:44.677950
 ---
 
 # private/get_deposits

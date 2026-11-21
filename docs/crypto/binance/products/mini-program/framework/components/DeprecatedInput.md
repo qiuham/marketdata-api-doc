@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/DeprecatedInput
 api_type: Guide
-updated_at: 2026-11-20 18:44:39.795880
+updated_at: 2026-11-21 18:43:02.304287
 ---
 
 # Input

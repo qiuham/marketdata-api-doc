@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/openapi.yaml'
-updated_at: 2026-11-20
+updated_at: 2026-11-21
 ---
 
 # openapi.yaml
@@ -4372,10 +4372,10 @@ paths:
         refused when the show has moved to another date or has already been
         canceled or postponed.
 
-        A new market's show must start more than 24 hours from now and within
+        A new market's show must start more than 7 days from now and within
         the `max_days_ahead` that
         `GET /concert_cancellation_markets/availability` reports. An existing
-        market is returned only while its show is more than 24 hours away too:
+        market is returned only while its show is more than 7 days away too:
         inside that, counted to the market's close time or the show's start as
         now listed, whichever is earlier, the request returns 409. Further
         out, an existing market is usually returned even when new markets are
@@ -4399,7 +4399,7 @@ paths:
         | 400 | `missing_parameters` | A required field is missing or empty. |
         | 400 | `invalid_parameters` | A field is present but unusable: an unknown cover, a `jambase_event_id` that isn't `jambase:<id>`, a `scheduled_date` that isn't YYYY-MM-DD, or a show scheduled further ahead than `max_days_ahead`. |
         | 404 | `not_found` | The listing source has no show with that id. |
-        | 409 | `concert_cancellation_market_unavailable` | The request is valid but the market isn't offered: concert markets or the cover are switched off, the show is now listed on another date, has already been canceled or postponed, starts in 24 hours or less (whether or not its market already exists), isn't a concert, or its market has closed. |
+        | 409 | `concert_cancellation_market_unavailable` | The request is valid but the market isn't offered: concert markets or the cover are switched off, the show is now listed on another date, has already been canceled or postponed, starts in 7 days or less (whether or not its market already exists), isn't a concert, or its market has closed. |
         | 429 | `concert_cancellation_market_limit_exceeded` | The daily limit on new concert markets across all users was reached. Retrying at once doesn't help. |
         | 429 | `too_many_requests` | Your API rate limit. This endpoint is charged against your write budget. |
       tags:
