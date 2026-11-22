@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/agentic-wallet/use-cases/trading/defi
 api_type: Guide
-updated_at: 2026-11-21 18:43:24.757636
+updated_at: 2026-11-22 18:41:19.171775
 ---
 
 # DeFi

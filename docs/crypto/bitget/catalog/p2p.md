@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/p2p
 api_type: REST
-updated_at: 2026-11-21 19:04:12.925918
+updated_at: 2026-11-22 19:01:18.001967
 ---
 
 # P2P

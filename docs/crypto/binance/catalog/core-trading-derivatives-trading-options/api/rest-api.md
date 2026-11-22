@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api
 api_type: REST
-updated_at: 2026-11-21 18:48:52.181875
+updated_at: 2026-11-22 18:46:07.437925
 ---
 
 # Options REST API

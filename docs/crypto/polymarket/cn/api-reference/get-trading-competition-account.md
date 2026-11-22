@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/get-trading-competition-account'
-updated_at: 2026-11-21
+updated_at: 2026-11-22
 ---
 
 # 获取账户的交易竞赛数据

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/mmp
 api_type: Starbase
-updated_at: 2026-11-21 19:01:38.386054
+updated_at: 2026-11-22 18:59:25.328800
 ---
 
 # Starbase Market Maker Protection (MMP)

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/agentic-wallet/use-cases/automated-strategies
 api_type: Guide
-updated_at: 2026-11-21 18:41:37.416492
+updated_at: 2026-11-22 18:39:44.751902
 ---
 
 # Automated Trading Strategies

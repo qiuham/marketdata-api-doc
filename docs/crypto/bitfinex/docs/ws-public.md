@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/docs/ws-public'
-updated_at: 2026-11-21
+updated_at: 2026-11-22
 ---
 
 # Public Channels

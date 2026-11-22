@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/webhook-shareinfo-account-id
 api_type: Guide
-updated_at: 2026-11-21 18:32:41.954106
+updated_at: 2026-11-22 18:31:59.577493
 ---
 
 # Share Account Id Notification

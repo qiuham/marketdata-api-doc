@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/bridge/create-bridge-addresses'
-updated_at: 2026-11-21
+updated_at: 2026-11-22
 ---
 
 # 创建跨链桥地址

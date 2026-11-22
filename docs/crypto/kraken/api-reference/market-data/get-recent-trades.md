@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/market-data/get-recent-trades'
-updated_at: 2026-11-21
+updated_at: 2026-11-22
 ---
 
 # Get Recent Trades

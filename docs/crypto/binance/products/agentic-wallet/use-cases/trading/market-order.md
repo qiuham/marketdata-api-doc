@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/agentic-wallet/use-cases/trading/market-order
 api_type: Guide
-updated_at: 2026-11-21 18:43:21.873137
+updated_at: 2026-11-22 18:41:16.615240
 ---
 
 # Market Order (Swap)

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/connectors/rust
 api_type: Guide
-updated_at: 2026-11-21 18:26:27.770038
+updated_at: 2026-11-22 18:26:37.803085
 ---
 
 # Rust

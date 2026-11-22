@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/web3-dapp/self-listing
 api_type: Guide
-updated_at: 2026-11-21 18:26:48.815934
+updated_at: 2026-11-22 18:26:55.225646
 ---
 
 # DApp Self-Listing Manual

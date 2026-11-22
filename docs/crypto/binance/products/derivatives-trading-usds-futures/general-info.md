@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/general-info
 api_type: Guide
-updated_at: 2026-11-21 18:30:51.202371
+updated_at: 2026-11-22 18:30:21.095571
 ---
 
 # General Info

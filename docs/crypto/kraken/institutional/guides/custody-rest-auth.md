@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/institutional/guides/custody-rest-auth'
-updated_at: 2026-11-21
+updated_at: 2026-11-22
 ---
 
 # Custody REST Authentication

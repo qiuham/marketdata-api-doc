@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/repayment-available-amount
 api_type: REST
-updated_at: 2026-11-21 18:52:33.844957
+updated_at: 2026-11-22 18:50:01.216666
 ---
 
 # Get Available Amount to Repay

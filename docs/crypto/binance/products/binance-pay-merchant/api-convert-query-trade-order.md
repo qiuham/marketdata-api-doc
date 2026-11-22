@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-convert-query-trade-order
 api_type: Guide
-updated_at: 2026-11-21 18:34:07.722771
+updated_at: 2026-11-22 18:33:16.598133
 ---
 
 # Query Quote

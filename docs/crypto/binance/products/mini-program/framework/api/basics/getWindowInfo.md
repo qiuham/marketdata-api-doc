@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/getWindowInfo
 api_type: Guide
-updated_at: 2026-11-21 18:47:57.417763
+updated_at: 2026-11-22 18:45:16.952575
 ---
 
 # bn.getWindowInfo

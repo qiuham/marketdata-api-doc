@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/routing/exitMiniProgram
 api_type: Guide
-updated_at: 2026-11-21 18:44:03.789848
+updated_at: 2026-11-22 18:41:53.536881
 ---
 
 # bn.exitMiniProgram

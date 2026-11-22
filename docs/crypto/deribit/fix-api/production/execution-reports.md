@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/execution-reports
 api_type: FIX
-updated_at: 2026-11-21 19:01:36.867243
+updated_at: 2026-11-22 18:59:23.959085
 ---
 
 # Execution Reports(8) (Production FIX API)

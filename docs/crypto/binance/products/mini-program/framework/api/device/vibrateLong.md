@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/device/vibrateLong
 api_type: Guide
-updated_at: 2026-11-21 18:46:42.703416
+updated_at: 2026-11-22 18:44:11.732383
 ---
 
 # bn.vibrateLong

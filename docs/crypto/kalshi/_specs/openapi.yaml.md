@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/openapi.yaml'
-updated_at: 2026-11-21
+updated_at: 2026-11-22
 ---
 
 # openapi.yaml
@@ -4291,7 +4291,7 @@ paths:
         | 400 | `missing_parameters` | A required field is missing or empty. |
         | 400 | `invalid_parameters` | A field is present but unusable, or the request can't define a market: a latitude or hour out of range, an `end_hour` not after `start_hour` on one day, an `end_date` other than `date` or the day after it, a window across midnight, in `timezone` or at the location, longer than 24 hours, an unknown variable or strike type, thresholds that don't fit the strike type or the variable's range, a location outside NOAA MRMS coverage, an unknown time zone, a window that doesn't start and end on whole UTC hours, has already ended or starts more than 365 days out, or an hour that a clock change skips or repeats in `timezone`. |
         | 409 | `weather_point_market_unavailable` | The request is valid but the market isn't offered: the variable isn't offered at that location, the market's grid cell is entirely over open water or outside US land, the window starts in less than 6 hours (15 minutes on demo), the market's window crosses midnight in the location's time zone where `max_window_days` is 1, or the location's time zone can't be determined. |
-        | 429 | `weather_point_market_limit_exceeded` | A creation limit was reached: the daily limit on new weather markets across all users, or 40 markets for one variable, location and window. Retrying at once doesn't help. |
+        | 429 | `weather_point_market_limit_exceeded` | A creation limit was reached: the daily limit on new weather markets for your account, the daily limit across all users, or 40 markets for one variable, location and window. Returning an existing market never counts toward your account's limit. Retrying at once doesn't help. |
         | 429 | `too_many_requests` | Your API rate limit. This endpoint is charged against your write budget. |
       tags:
         - markets
@@ -4400,7 +4400,7 @@ paths:
         | 400 | `invalid_parameters` | A field is present but unusable: an unknown cover, a `jambase_event_id` that isn't `jambase:<id>`, a `scheduled_date` that isn't YYYY-MM-DD, or a show scheduled further ahead than `max_days_ahead`. |
         | 404 | `not_found` | The listing source has no show with that id. |
         | 409 | `concert_cancellation_market_unavailable` | The request is valid but the market isn't offered: concert markets or the cover are switched off, the show is now listed on another date, has already been canceled or postponed, starts in 7 days or less (whether or not its market already exists), isn't a concert, or its market has closed. |
-        | 429 | `concert_cancellation_market_limit_exceeded` | The daily limit on new concert markets across all users was reached. Retrying at once doesn't help. |
+        | 429 | `concert_cancellation_market_limit_exceeded` | A daily limit on new concert markets was reached: your account's, or the one across all users. Returning an existing market never counts toward your account's limit. Retrying at once doesn't help. |
         | 429 | `too_many_requests` | Your API rate limit. This endpoint is charged against your write budget. |
       tags:
         - markets
@@ -4666,7 +4666,7 @@ paths:
         | 400 | `invalid_parameters` | A field is present but unusable: an unknown cover or delay basis, a carrier, flight number or airport code of the wrong form, a `scheduled_date` that isn't YYYY-MM-DD, a `delayed` or `either` request without `delay_basis` and `delay_minutes`, a `cancelled` request with either of them, a `delay_minutes` that isn't a multiple of `delay_step_minutes` or is above `max_delay_minutes`, or a flight scheduled further ahead than `max_days_ahead`. |
         | 404 | `not_found` | No such flight is scheduled on that date. |
         | 409 | `flight_disruption_market_unavailable` | The request is valid but the market isn't offered: flight markets or the cover are switched off, the flight leaves too soon, departs from a country that isn't offered, or its market has closed. |
-        | 429 | `flight_disruption_market_limit_exceeded` | A limit on new flight markets was reached. Retrying at once doesn't help. |
+        | 429 | `flight_disruption_market_limit_exceeded` | A daily limit on new flight markets was reached: your account's, or the one across all users. Returning an existing market never counts toward your account's limit. Retrying at once doesn't help. |
         | 429 | `too_many_requests` | Your API rate limit. This endpoint is charged against your write budget. |
       tags:
         - markets
@@ -11845,11 +11845,19 @@ components:
         - ConcertCoverCancelled
         - ConcertCoverEither
       description: |
-        What a concert cancellation market pays on, read from the show's
-        listing after its scheduled date has ended:
-        - `postponed`: Yes when the show is listed as postponed, or as taking
-          place on any other date. A show listed as canceled resolves to No.
-        - `cancelled`: Yes when the show is listed as canceled.
+        What a concert cancellation market pays on: what the show's listing
+        first shows from the market's creation to the show's scheduled start
+        (the market's close time is one minute before it), whatever the
+        listing says afterwards.
+        - `postponed`: Yes when the show is postponed, or moved to a later
+          date. A new start time on the scheduled date, or within six hours
+          of the scheduled start, is not a postponement, even when it falls
+          on the next calendar day (11:30 PM moved to 12:30 AM). A
+          cancellation alone doesn't count: a show that is canceled and not
+          postponed resolves to No, and one that is canceled, reinstated and
+          then postponed was postponed.
+        - `cancelled`: Yes when the show is canceled, including after a
+          postponement.
         - `either`: Yes in both of those cases.
 
     CreateConcertCancellationMarketRequest:

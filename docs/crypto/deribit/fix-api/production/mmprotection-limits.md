@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/mmprotection-limits
 api_type: FIX
-updated_at: 2026-11-21 19:01:37.092898
+updated_at: 2026-11-22 18:59:24.085460
 ---
 
 # MMProtection Limits (MM) (Production FIX API)

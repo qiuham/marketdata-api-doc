@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/Swiper
 api_type: Guide
-updated_at: 2026-11-21 18:41:54.308831
+updated_at: 2026-11-22 18:39:59.621918
 ---
 
 # swiper

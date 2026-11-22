@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading-post-cancel-close-position-order-for-contract-grid
 anchor_id: order-book-trading-grid-trading-post-cancel-close-position-order-for-contract-grid
 api_type: API
-updated_at: 2026-11-21 19:00:12.091198
+updated_at: 2026-11-22 18:58:00.693624
 ---
 
 # POST / Cancel close position order for contract grid

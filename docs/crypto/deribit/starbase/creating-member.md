@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/creating-member
 api_type: Starbase
-updated_at: 2026-11-21 19:01:37.491323
+updated_at: 2026-11-22 18:59:24.518958
 ---
 
 # Creating and Assigning a Member

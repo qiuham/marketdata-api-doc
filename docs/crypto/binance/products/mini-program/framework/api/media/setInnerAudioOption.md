@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/media/setInnerAudioOption
 api_type: Guide
-updated_at: 2026-11-21 18:45:03.373469
+updated_at: 2026-11-22 18:42:44.115042
 ---
 
 # bn.setInnerAudioOption

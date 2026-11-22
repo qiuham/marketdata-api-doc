@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/agent-native/mcp-server
 api_type: Guide
-updated_at: 2026-11-21 18:26:12.575746
+updated_at: 2026-11-22 18:26:24.358991
 ---
 
 # MCP Server

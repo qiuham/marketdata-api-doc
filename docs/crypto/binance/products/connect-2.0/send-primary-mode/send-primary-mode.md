@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/connect-2.0/send-primary-mode/send-primary-mode
 api_type: Guide
-updated_at: 2026-11-21 18:39:52.358689
+updated_at: 2026-11-22 18:38:14.288513
 ---
 
 # Onchain Payment APIs

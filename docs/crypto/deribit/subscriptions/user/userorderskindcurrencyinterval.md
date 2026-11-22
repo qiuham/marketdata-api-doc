@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/user/userorderskindcurrencyinterval
 api_type: WebSocket
-updated_at: 2026-11-21 19:01:35.672157
+updated_at: 2026-11-22 18:59:22.926390
 ---
 
 # user.orders.(kind).(currency).(interval)

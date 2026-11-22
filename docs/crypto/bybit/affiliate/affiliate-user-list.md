@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/affiliate/affiliate-user-list
 api_type: REST
-updated_at: 2026-11-21 18:49:39.992596
+updated_at: 2026-11-22 18:46:52.772474
 ---
 
 # Get Affiliate User List

@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/markets/list-a-markets-top-holders'
-updated_at: 2026-11-21
+updated_at: 2026-11-22
 ---
 
 # 列出市场最大持仓者

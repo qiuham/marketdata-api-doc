@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/login/introduction
 api_type: Guide
-updated_at: 2026-11-21 18:29:50.566122
+updated_at: 2026-11-22 18:29:26.847911
 ---
 
 # Binance Login (OAuth2)

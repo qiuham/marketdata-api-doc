@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/user-data-streams
 api_type: WebSocket
-updated_at: 2026-11-21 18:31:09.345925
+updated_at: 2026-11-22 18:30:36.968982
 ---
 
 # User Data Streams

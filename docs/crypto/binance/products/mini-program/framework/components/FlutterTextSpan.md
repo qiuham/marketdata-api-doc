@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/FlutterTextSpan
 api_type: Guide
-updated_at: 2026-11-21 18:42:35.419559
+updated_at: 2026-11-22 18:40:36.153904
 ---
 
 # text-span

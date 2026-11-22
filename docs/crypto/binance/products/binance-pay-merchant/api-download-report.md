@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-download-report
 api_type: Guide
-updated_at: 2026-11-21 18:33:55.659244
+updated_at: 2026-11-22 18:33:06.244297
 ---
 
 # Download Report

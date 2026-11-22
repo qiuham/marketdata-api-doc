@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/openservice/get-user-pay-id
 api_type: Guide
-updated_at: 2026-11-21 18:36:55.531366
+updated_at: 2026-11-22 18:35:36.410480
 ---
 
 # GetUserPayId

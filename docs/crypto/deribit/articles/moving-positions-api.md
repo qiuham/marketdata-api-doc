@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/moving-positions-api
 api_type: Guide
-updated_at: 2026-11-21 19:01:34.053466
+updated_at: 2026-11-22 18:59:21.637993
 ---
 
 # Moving Positions

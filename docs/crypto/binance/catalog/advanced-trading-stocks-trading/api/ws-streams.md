@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-stocks-trading/api/ws-streams
 api_type: WebSocket Streams
-updated_at: 2026-11-21 18:49:02.344790
+updated_at: 2026-11-22 18:46:16.417708
 ---
 
 # Stocks Trading WebSocket Streams

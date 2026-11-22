@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/user-data-stream
 api_type: WebSocket
-updated_at: 2026-11-21 18:35:11.784975
+updated_at: 2026-11-22 18:34:13.020132
 ---
 
 # User Data Streams for Binance Spot TESTNET

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/font/loadFontFace
 api_type: Guide
-updated_at: 2026-11-21 18:46:38.197218
+updated_at: 2026-11-22 18:44:07.373908
 ---
 
 # bn.loadFontFace

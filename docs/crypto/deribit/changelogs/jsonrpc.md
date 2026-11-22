@@ -2,12 +2,29 @@
 exchange: deribit
 source_url: https://docs.deribit.com/changelogs/jsonrpc
 api_type: Changelog
-updated_at: 2026-11-21 19:01:34.485745
+updated_at: 2026-11-22 18:59:21.833903
 ---
 
 # JSON-RPC API Changelog
 
 > Release notes for the Deribit JSON-RPC API covering new endpoints, parameter changes, subscription updates, and backward-compatibility announcements.
+
+**Release 26.11.2026**
+
+> [!NOTE]
+>
+> Available on testnet from 20 November 2026. Production release is planned for 26 November 2026.
+
+**Breaking Change: speed-bumped orders and quotes can no longer be edited**
+
+On instruments with a [speed bump](https://docs.deribit.com/starbase/speed-bumps.md), an order or quote is held for the speed bump duration before it enters the book. While it is held, it can no longer be changed:
+
+* [private/edit](https://docs.deribit.com/api-reference/trading/private-edit.md) and [private/edit\_by\_label](https://docs.deribit.com/api-reference/trading/private-edit_by_label.md) are rejected with error `11030` (`other_reject`) when the order is speed-bumped (`order_state` = `speed_bumped`). This applies to any change of price, amount or both. The order is not changed and enters the book when the speed bump elapses
+* In [private/mass\_quote](https://docs.deribit.com/api-reference/trading/private-mass_quote.md), a change of price or amount to a speed-bumped quote is not applied. The quote keeps its price and amount and enters the book when the speed bump elapses. Other quotes in the request are processed as usual
+
+Once the speed bump has elapsed, the order or quote can be edited as before. Cancels are still accepted: a cancelled speed-bumped order can still trade when the speed bump elapses, and any remainder is then cancelled. There are no other API changes.
+
+See [Speed Bumps](https://docs.deribit.com/starbase/upcoming/speed-bumps.md#amending-speed-bumped-orders-and-quotes).
 
 **Release 24.11.2026**
 

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/rate-limits
 api_type: Guide
-updated_at: 2026-11-21 19:01:33.708264
+updated_at: 2026-11-22 18:59:21.383571
 ---
 
 # Rate Limits

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/changelogs/starbase
 api_type: Changelog
-updated_at: 2026-11-21 19:01:34.553886
+updated_at: 2026-11-22 18:59:21.977955
 ---
 
 # Starbase API Changelog
@@ -53,6 +53,10 @@ The order entry SBE schema has been updated to version `23` (`semanticVersion` r
 * `MassQuoteResponse` (230): new combination of `bidStatus` / `askStatus` = `UNMODIFIED` with reject reason `SPEED_BUMPED` for a rejected change to a speed-bumped side
 
 The reject is sent regardless of the session's schema version. A decoder generated from schema version `22` or earlier does not know value `34` and decodes it as an unknown value (`SBE_UNKNOWN` in generated Java codecs). Update your codecs to version `23` to identify the reason.
+
+### JSON-RPC API
+
+The same rule applies to orders and quotes submitted through the JSON-RPC API: [private/edit](https://docs.deribit.com/api-reference/trading/private-edit.md) and [private/edit\_by\_label](https://docs.deribit.com/api-reference/trading/private-edit_by_label.md) on a speed-bumped order are rejected, and in [private/mass\_quote](https://docs.deribit.com/api-reference/trading/private-mass_quote.md) a change to a speed-bumped quote is not applied. See the [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md).
 
 See [Amending speed-bumped orders and quotes](https://docs.deribit.com/starbase/upcoming/speed-bumps.md#amending-speed-bumped-orders-and-quotes), [Amending an Order](https://docs.deribit.com/starbase/upcoming/amending-order.md), [Mass Quotes](https://docs.deribit.com/starbase/upcoming/mass-quotes.md) and [Rejection Reason Codes](https://docs.deribit.com/starbase/upcoming/binary-api-reference.md#rejection-reason-codes).
 

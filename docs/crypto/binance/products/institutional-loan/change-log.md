@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/institutional-loan/change-log
 api_type: Changelog
-updated_at: 2026-11-21 18:30:18.244825
+updated_at: 2026-11-22 18:29:51.418006
 ---
 
 # Change Log

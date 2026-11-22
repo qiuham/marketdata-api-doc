@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/getWalletHub
 api_type: Guide
-updated_at: 2026-11-21 18:44:25.302425
+updated_at: 2026-11-22 18:42:12.049260
 ---
 
 # bn.getWalletHub

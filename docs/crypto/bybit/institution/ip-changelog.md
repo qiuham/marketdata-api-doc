@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/institution/ip-changelog
 api_type: REST
-updated_at: 2026-11-21 18:51:26.390493
+updated_at: 2026-11-22 18:48:48.962706
 ---
 
 # Get Institution IP Change Log

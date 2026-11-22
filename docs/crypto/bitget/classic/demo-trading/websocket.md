@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/demo-trading/websocket
 api_type: WebSocket
-updated_at: 2026-11-21 19:02:36.566907
+updated_at: 2026-11-22 18:59:51.245976
 ---
 
 # Demo Trading (WebSocket)

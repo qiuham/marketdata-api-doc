@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-get_subaccounts_details
 api_type: JSON-RPC
-updated_at: 2026-11-21 19:01:39.676494
+updated_at: 2026-11-22 18:59:26.436971
 ---
 
 # private/get_subaccounts_details

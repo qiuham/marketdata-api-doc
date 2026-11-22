@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/callSync
 api_type: Guide
-updated_at: 2026-11-21 18:48:24.776202
+updated_at: 2026-11-22 18:45:41.351795
 ---
 
 # bn.callSync

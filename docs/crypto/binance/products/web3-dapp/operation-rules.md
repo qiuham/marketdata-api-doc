@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/web3-dapp/operation-rules
 api_type: Guide
-updated_at: 2026-11-21 18:26:50.506274
+updated_at: 2026-11-22 18:26:56.503333
 ---
 
 # Web3 DApp Platform Operation Rules

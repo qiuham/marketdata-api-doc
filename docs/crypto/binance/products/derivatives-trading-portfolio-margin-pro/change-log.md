@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin-pro/change-log
 api_type: Changelog
-updated_at: 2026-11-21 18:31:06.505857
+updated_at: 2026-11-22 18:30:34.401895
 ---
 
 # Change Log

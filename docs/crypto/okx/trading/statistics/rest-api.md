@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-statistics-rest-api
 anchor_id: trading-statistics-rest-api
 api_type: REST
-updated_at: 2026-11-21 19:00:17.634794
+updated_at: 2026-11-22 18:58:06.809995
 ---
 
 # REST API

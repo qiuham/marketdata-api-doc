@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/user/usermmp_triggerindex_name
 api_type: WebSocket
-updated_at: 2026-11-21 19:01:35.439812
+updated_at: 2026-11-22 18:59:22.646911
 ---
 
 # user.mmp_trigger.(index_name)

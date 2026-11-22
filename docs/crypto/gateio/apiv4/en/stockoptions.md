@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/stockoptions
 api_type: REST
-updated_at: 2026-11-21 18:58:12.112371
+updated_at: 2026-11-22 18:56:07.661235
 ---
 
 # Stock options

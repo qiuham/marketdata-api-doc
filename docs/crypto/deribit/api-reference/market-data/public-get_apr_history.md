@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_apr_history
 api_type: JSON-RPC
-updated_at: 2026-11-21 19:01:41.471643
+updated_at: 2026-11-22 18:59:28.050895
 ---
 
 # public/get_apr_history

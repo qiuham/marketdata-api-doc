@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/setPageScrollable
 api_type: Guide
-updated_at: 2026-11-21 18:44:06.902933
+updated_at: 2026-11-22 18:41:56.107092
 ---
 
 # bn.setPageScrollable

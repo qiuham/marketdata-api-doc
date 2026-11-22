@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/oauth-api-collection-create
 api_type: Guide
-updated_at: 2026-11-21 18:33:00.315606
+updated_at: 2026-11-22 18:32:15.359633
 ---
 
 # OAuth API : Create Collection

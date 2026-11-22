@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-spot-bgb-convert
 api_type: REST
-updated_at: 2026-11-21 19:04:03.670468
+updated_at: 2026-11-22 19:01:10.081879
 ---
 
 # Classic Spot BGB Convert API

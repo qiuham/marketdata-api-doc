@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mining/general-info
 api_type: Guide
-updated_at: 2026-11-21 18:29:29.660856
+updated_at: 2026-11-22 18:29:07.933806
 ---
 
 # General Info

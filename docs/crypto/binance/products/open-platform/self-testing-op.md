@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/open-platform/self-testing-op
 api_type: Guide
-updated_at: 2026-11-21 18:29:10.088345
+updated_at: 2026-11-22 18:28:50.306351
 ---
 
 # DApp Self-Testing Manual

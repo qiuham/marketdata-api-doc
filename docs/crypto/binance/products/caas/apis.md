@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/caas/apis
 api_type: Guide
-updated_at: 2026-11-21 18:32:29.809628
+updated_at: 2026-11-22 18:31:49.106312
 ---
 
 # APIs

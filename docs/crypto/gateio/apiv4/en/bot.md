@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/bot
 api_type: REST
-updated_at: 2026-11-21 18:57:41.455152
+updated_at: 2026-11-22 18:55:36.740383
 ---
 
 # Bot

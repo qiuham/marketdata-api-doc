@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/isLoggedIn
 api_type: Guide
-updated_at: 2026-11-21 18:44:19.426093
+updated_at: 2026-11-22 18:42:07.128760
 ---
 
 # bn.isLoggedIn

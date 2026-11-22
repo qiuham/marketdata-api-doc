@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/wss/perps-place-orders'
-updated_at: 2026-11-21
+updated_at: 2026-11-22
 ---
 
 # Place Orders

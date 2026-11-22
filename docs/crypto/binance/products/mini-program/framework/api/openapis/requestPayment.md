@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/requestPayment
 api_type: Guide
-updated_at: 2026-11-21 18:44:12.006162
+updated_at: 2026-11-22 18:42:00.537960
 ---
 
 # bn.requestPayment

@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/migrate/data-api-v1-to-v2'
-updated_at: 2026-11-21
+updated_at: 2026-11-22
 ---
 
 # 从 Data API v1 迁移到 v2

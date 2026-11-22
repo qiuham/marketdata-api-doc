@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/fiat/general-info
 api_type: Guide
-updated_at: 2026-11-21 18:30:39.898437
+updated_at: 2026-11-22 18:30:10.985333
 ---
 
 # General Info

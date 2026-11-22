@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/enableSheetGesture
 api_type: Guide
-updated_at: 2026-11-21 18:48:15.852754
+updated_at: 2026-11-22 18:45:33.477579
 ---
 
 # bn.enableSheetGesture

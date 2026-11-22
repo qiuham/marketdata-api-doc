@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/coinstate
 api_type: REST
-updated_at: 2026-11-21 18:52:26.044766
+updated_at: 2026-11-22 18:49:52.140399
 ---
 
 # Get Coin State

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/margin/cross/private/Margin-Cross-Account-Assets
 api_type: WebSocket
-updated_at: 2026-11-21 19:02:53.259527
+updated_at: 2026-11-22 19:00:06.568620
 ---
 
 # Cross-Margin Account Channel

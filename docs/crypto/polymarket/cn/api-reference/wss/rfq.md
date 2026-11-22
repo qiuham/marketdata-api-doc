@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/wss/rfq'
-updated_at: 2026-11-21
+updated_at: 2026-11-22
 ---
 
 # 报价方网关

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/sbe/sbe-intro
 api_type: SBE
-updated_at: 2026-11-21 19:03:44.044488
+updated_at: 2026-11-22 19:00:53.346833
 ---
 
 # SBE Introduction

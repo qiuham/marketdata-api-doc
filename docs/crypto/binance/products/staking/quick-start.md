@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/staking/quick-start
 api_type: Guide
-updated_at: 2026-11-21 18:28:19.992639
+updated_at: 2026-11-22 18:28:06.229942
 ---
 
 # Quick Start

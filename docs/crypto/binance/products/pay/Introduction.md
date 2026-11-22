@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/pay/Introduction
 api_type: Guide
-updated_at: 2026-11-21 18:29:08.668650
+updated_at: 2026-11-22 18:28:49.025513
 ---
 
 # Introduction

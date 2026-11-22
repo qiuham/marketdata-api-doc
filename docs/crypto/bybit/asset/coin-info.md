@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/coin-info
 api_type: REST
-updated_at: 2026-11-21 18:49:56.931888
+updated_at: 2026-11-22 18:47:11.583724
 ---
 
 # Get Coin Info

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/copy-trading/change-log
 api_type: Changelog
-updated_at: 2026-11-21 18:31:55.672144
+updated_at: 2026-11-22 18:31:19.783443
 ---
 
 # Change Log

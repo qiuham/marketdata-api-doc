@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-copytrading-future-follower
 api_type: REST
-updated_at: 2026-11-21 19:03:55.391507
+updated_at: 2026-11-22 19:01:03.140156
 ---
 
 # Classic Futures Copy Trading Follower API

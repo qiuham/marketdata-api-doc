@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/static-template
 api_type: Guide
-updated_at: 2026-11-21 18:37:49.123700
+updated_at: 2026-11-22 18:36:23.912392
 ---
 
 # Render Template Earlier

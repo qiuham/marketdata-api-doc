@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/general-info
 api_type: Guide
-updated_at: 2026-11-21 18:35:17.163290
+updated_at: 2026-11-22 18:34:17.784091
 ---
 
 # Testnet General Info

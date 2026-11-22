@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/block-rfq-api-walkthrough
 api_type: Guide
-updated_at: 2026-11-21 19:01:34.347172
+updated_at: 2026-11-22 18:59:21.860652
 ---
 
 # Deribit Block RFQ API Walkthrough

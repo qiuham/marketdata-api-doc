@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/changelog/index'
-updated_at: 2026-11-21
+updated_at: 2026-11-22
 ---
 
 # API Changelog
@@ -26,6 +26,37 @@ Predictions and Margin exchanges. Use the entry tags to filter by API
 surface (`REST`, `WebSocket`, `FIX`) or exchange (`Predictions`, `Margin`).
 FIX API changes, previously tracked on a separate page, now live here under
 the `FIX` tag.
+
+**November 26, 2026**
+
+On-request concert markets (series starting with `KXRFQCONCERT`) now resolve on what the show's
+JamBase listing first shows within the market's period, from its creation to the show's
+scheduled start, instead of on the listing's status at one reading after the show's date. A
+cancellation or postponement first shown in that time counts even if the show is later
+reinstated, and a show that is postponed and then canceled resolves all three covers to Yes;
+one first shown after the scheduled start doesn't count. The `postponed` cover now pays on a
+postponement or a move to a later date, not on any other date. `close_time` is now one minute
+before the show's scheduled start (it was the scheduled start); a change the listing first
+shows in that last minute still counts. `rules_primary` and `rules_secondary` of new markets
+say so. `latest_expiration_time` is now 10:00 AM ET one week after the final day of the market's
+period at the venue, the day of the last moment before the show's scheduled start (it was seven
+days after `expected_expiration_time`). Endpoints, fields and
+`expected_expiration_time` are unchanged. See
+[On-Request Concert Markets](https://docs.kalshi.com/getting_started/concert_rfqs.md). These markets are not live yet.
+
+**November 26, 2026**
+
+The on-request market endpoints now limit how many new markets one account may
+create in a rolling 24 hours, beside the existing limit across all users:
+`POST /weather_point_markets`, `POST /concert_cancellation_markets` and
+`POST /flight_disruption_markets`. Past your account's limit, a request that would
+create a market returns `429` with the endpoint's existing code
+(`weather_point_market_limit_exceeded`, `concert_cancellation_market_limit_exceeded`
+or `flight_disruption_market_limit_exceeded`), and `details` says it is your
+account's limit. A request that returns an existing market (`created: false`) never
+counts toward it and is still answered at the limit, so you can keep requesting RFQs
+on markets that exist. No codes are added or changed. See
+[On-Request Weather Markets](https://docs.kalshi.com/getting_started/weather_rfqs.md).
 
 **November 26, 2026**
 

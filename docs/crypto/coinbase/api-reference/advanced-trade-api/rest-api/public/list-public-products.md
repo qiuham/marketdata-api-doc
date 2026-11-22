@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/list-public-products
 api_type: Market Data
-updated_at: 2026-11-21 18:56:59.644817
+updated_at: 2026-11-22 18:54:55.730179
 ---
 
 # List Public Products
@@ -373,134 +373,331 @@ contract_expiry_type
 
 enum<string>
 
-default:UNKNOWN_CONTRACT_EXPIRY_TYPE
+default:Public
 
-Only returns the products matching the contract expiry type. Only applicable if product_type is set to FUTURE.
+# List Public Products
 
-Available options:
+Get a list of the available currency pairs for trading.
 
-`UNKNOWN_CONTRACT_EXPIRY_TYPE`,
+GET
 
-`EXPIRING`,
+/
 
-`PERPETUAL`
+api
 
-expiring_contract_status
+/
 
-enum<string>
+v3
 
-default:UNKNOWN_EXPIRING_CONTRACT_STATUS
+/
 
-Only returns contracts with this status (default is UNEXPIRED).
+brokerage
 
-Available options:
+/
 
-`UNKNOWN_EXPIRING_CONTRACT_STATUS`,
+market
 
-`STATUS_UNEXPIRED`,
-
-`STATUS_EXPIRED`,
-
-`STATUS_ALL`
-
-get_all_products
-
-boolean
-
-If true, return all products of all product types (including expired futures contracts).
-
-products_sort_order
-
-enum<string>
-
-default:PRODUCTS_SORT_ORDER_UNDEFINED
-
-The order in which products are returned. By default, products are returned in 24 hour volume descending (in quote).
-
-Available options:
-
-`PRODUCTS_SORT_ORDER_UNDEFINED`,
-
-`PRODUCTS_SORT_ORDER_VOLUME_24H_DESCENDING`,
-
-`PRODUCTS_SORT_ORDER_LIST_TIME_DESCENDING`
-
-cursor
-
-string
-
-The cursor to use for pagination. This will be a base64 encoded string that decodes into the last productId of the previously returned page
-
-futures_underlying_type
-
-enum<string>
-
-default:UNKNOWN_FUTURES_UNDERLYING_TYPE
-
-Only returns the products matching the underlying type. Only applicable if product_type is set to FUTURE.
-
-Available options:
-
-`UNKNOWN_FUTURES_UNDERLYING_TYPE`,
-
-`FUTURES_UNDERLYING_TYPE_SPOT`,
-
-`FUTURES_UNDERLYING_TYPE_INDEX`,
-
-`FUTURES_UNDERLYING_TYPE_EQUITY`,
-
-`FUTURES_UNDERLYING_TYPE_EQUITY_INDEX`,
-
-`FUTURES_UNDERLYING_TYPE_EQUITY_ETF`,
-
-`FUTURES_UNDERLYING_TYPE_PREIPO`,
-
-`FUTURES_UNDERLYING_TYPE_COMMOD`,
-
-`FUTURES_UNDERLYING_TYPE_COMMOD_ETF`,
-
-`FUTURES_UNDERLYING_TYPE_COMMOD_INDEX`,
-
-`FUTURES_UNDERLYING_TYPE_ADR`,
-
-`FUTURES_UNDERLYING_TYPE_FOREIGN_EQUITY`,
-
-`FUTURES_UNDERLYING_TYPE_OTC`
-
-user_country_code
-
-string
-
-The country code of the user. This is used to provide differentiated product display names.
-
-expired
-
-boolean
-
-If true, return recently expired instruments instead of active ones. Only applicable to product_venue=DERIBIT; ignored for other venues. Defaults to false.
-
-#### Response
-
-A successful response.
+/
 
 products
 
-Get Products · object[]
+List Public Products
+    
+    
+    curl --request GET \
+      --url https://api.coinbase.com/api/v3/brokerage/market/products
+    
+    
+    import requests
+    
+    url = "https://api.coinbase.com/api/v3/brokerage/market/products"
+    
+    response = requests.get(url)
+    
+    print(response.text)
+    
+    
+    const options = {method: 'GET'};
+    
+    fetch('https://api.coinbase.com/api/v3/brokerage/market/products', options)
+      .then(res => res.json())
+      .then(res => console.log(res))
+      .catch(err => console.error(err));
+    
+    
+    <?php
+    
+    $curl = curl_init();
+    
+    curl_setopt_array($curl, [
+      CURLOPT_URL => "https://api.coinbase.com/api/v3/brokerage/market/products",
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => "",
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 30,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => "GET",
+    ]);
+    
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
+    
+    curl_close($curl);
+    
+    if ($err) {
+      echo "cURL Error #:" . $err;
+    } else {
+      echo $response;
+    }
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"net/http"
+    	"io"
+    )
+    
+    func main() {
+    
+    	url := "https://api.coinbase.com/api/v3/brokerage/market/products"
+    
+    	req, _ := http.NewRequest("GET", url, nil)
+    
+    	res, _ := http.DefaultClient.Do(req)
+    
+    	defer res.Body.Close()
+    	body, _ := io.ReadAll(res.Body)
+    
+    	fmt.Println(string(body))
+    
+    }
+    
+    
+    HttpResponse<String> response = Unirest.get("https://api.coinbase.com/api/v3/brokerage/market/products")
+      .asString();
+    
+    
+    require 'uri'
+    require 'net/http'
+    
+    url = URI("https://api.coinbase.com/api/v3/brokerage/market/products")
+    
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    
+    request = Net::HTTP::Get.new(url)
+    
+    response = http.request(request)
+    puts response.read_body
+    
+    
+    {
+      "products": [
+        {
+          "product_id": "BTC-USD",
+          "price": "140.21",
+          "price_percentage_change_24h": "9.43%",
+          "volume_24h": "1908432",
+          "volume_percentage_change_24h": "9.43%",
+          "base_increment": "0.00000001",
+          "quote_increment": "0.00000001",
+          "quote_min_size": "0.00000001",
+          "quote_max_size": "1000",
+          "base_min_size": "0.00000001",
+          "base_max_size": "1000",
+          "base_name": "Bitcoin",
+          "quote_name": "US Dollar",
+          "watched": true,
+          "is_disabled": false,
+          "new": true,
+          "status": "<string>",
+          "cancel_only": true,
+          "limit_only": true,
+          "post_only": true,
+          "trading_disabled": false,
+          "auction_mode": true,
+          "base_display_symbol": "BTC",
+          "quote_display_symbol": "USD",
+          "product_type": "UNKNOWN_PRODUCT_TYPE",
+          "quote_currency_id": "USD",
+          "base_currency_id": "BTC",
+          "fcm_trading_session_details": {
+            "is_session_open": true,
+            "open_time": "<string>",
+            "close_time": "<string>",
+            "session_state": "FCM_TRADING_SESSION_STATE_UNDEFINED",
+            "after_hours_order_entry_disabled": true,
+            "closed_reason": "FCM_TRADING_SESSION_CLOSED_REASON_UNDEFINED",
+            "maintenance": {
+              "start_time": "<string>",
+              "end_time": "<string>"
+            }
+          },
+          "mid_market_price": "140.22",
+          "alias": "BTC-USD",
+          "alias_to": [
+            "BTC-USDC"
+          ],
+          "view_only": true,
+          "price_increment": "0.00000001",
+          "display_name": "BTC PERP",
+          "product_venue": "neptune",
+          "approximate_quote_24h_volume": "1908432",
+          "new_at": "2021-07-01T00:00:00Z",
+          "market_cap": "1500000000000",
+          "icon_color": "red",
+          "icon_url": "https://example.com",
+          "display_name_overwrite": "Bitcoin Perpetual",
+          "about_description": "nano Crude Oil Futures is a monthly cash-settled contract that allows participants to manage risk, trade on margin, or speculate on the price of oil.",
+          "best_bid_price": "<string>",
+          "best_ask_price": "<string>",
+          "high_24h": "<string>",
+          "low_24h": "<string>",
+          "future_product_details": {
+            "venue": "<string>",
+            "contract_code": "<string>",
+            "contract_expiry": "<string>",
+            "contract_size": "<string>",
+            "contract_root_unit": "<string>",
+            "group_description": "<string>",
+            "contract_expiry_timezone": "<string>",
+            "group_short_description": "<string>",
+            "risk_managed_by": "UNKNOWN_RISK_MANAGEMENT_TYPE",
+            "contract_expiry_type": "UNKNOWN_CONTRACT_EXPIRY_TYPE",
+            "perpetual_details": {
+              "open_interest": "<string>",
+              "funding_rate": "<string>",
+              "funding_time": "<string>",
+              "max_leverage": "<string>"UNKNOWN_CONTRACT_EXPIRY_TYPE
+    
+    Only returns the products matching the contract expiry type. Only applicable if product_type is set to FUTURE.
+    
+    Available options: 
+    
+    UNKNOWN_CONTRACT_EXPIRY_TYPE, 
+    
+    EXPIRING, 
+    
+    PERPETUAL 
+    
+    expiring_contract_status
+    
+    enum<string>
+    
+    default:UNKNOWN_EXPIRING_CONTRACT_STATUS
+    
+    Only returns contracts with this status (default is UNEXPIRED).
+    
+    Available options: 
+    
+    UNKNOWN_EXPIRING_CONTRACT_STATUS, 
+    
+    STATUS_UNEXPIRED, 
+    
+    STATUS_EXPIRED, 
+    
+    STATUS_ALL 
+    
+    get_all_products
+    
+    boolean
+    
+    If true, return all products of all product types (including expired futures contracts).
+    
+    products_sort_order
+    
+    enum<string>
+    
+    default:PRODUCTS_SORT_ORDER_UNDEFINED
+    
+    The order in which products are returned. By default, products are returned in 24 hour volume descending (in quote).
+    
+    Available options: 
+    
+    PRODUCTS_SORT_ORDER_UNDEFINED, 
+    
+    PRODUCTS_SORT_ORDER_VOLUME_24H_DESCENDING, 
+    
+    PRODUCTS_SORT_ORDER_LIST_TIME_DESCENDING 
+    
+    cursor
+    
+    string
+    
+    The cursor to use for pagination. This will be a base64 encoded string that decodes into the last productId of the previously returned page
+    
+    futures_underlying_type
+    
+    enum<string>
+    
+    default:UNKNOWN_FUTURES_UNDERLYING_TYPE
+    
+    Only returns the products matching the underlying type. Only applicable if product_type is set to FUTURE.
+    
+    Available options: 
+    
+    UNKNOWN_FUTURES_UNDERLYING_TYPE, 
+    
+    FUTURES_UNDERLYING_TYPE_SPOT, 
+    
+    FUTURES_UNDERLYING_TYPE_INDEX, 
+    
+    FUTURES_UNDERLYING_TYPE_EQUITY, 
+    
+    FUTURES_UNDERLYING_TYPE_EQUITY_INDEX, 
+    
+    FUTURES_UNDERLYING_TYPE_EQUITY_ETF, 
+    
+    FUTURES_UNDERLYING_TYPE_PREIPO, 
+    
+    FUTURES_UNDERLYING_TYPE_COMMOD, 
+    
+    FUTURES_UNDERLYING_TYPE_COMMOD_ETF, 
+    
+    FUTURES_UNDERLYING_TYPE_COMMOD_INDEX, 
+    
+    FUTURES_UNDERLYING_TYPE_ADR, 
+    
+    FUTURES_UNDERLYING_TYPE_FOREIGN_EQUITY, 
+    
+    FUTURES_UNDERLYING_TYPE_OTC 
+    
+    user_country_code
+    
+    string
+    
+    The country code of the user. This is used to provide differentiated product display names.
+    
+    expired
+    
+    boolean
+    
+    If true, return recently expired instruments instead of active ones. Only applicable to product_venue=DERIBIT; ignored for other venues. Defaults to false.
+    
+    #### Response
+    
+    A successful response.
+    
+    products
+    
+    Get Products · object[]
+    
+    Array of objects, each representing one product.
 
-Array of objects, each representing one product.
-
-num_products
-
-integer<int32>
-
-Number of products that were returned.
-
-Example:
-
-`100`
-
-pagination
-
-object
-
-Pagination metadata for paginated responses.
+    num_products
+    
+    integer<int32>
+    
+    Number of products that were returned.
+    
+    Example:
+    
+    100
+    
+    pagination
+    
+    object
+    
+    Pagination metadata for paginated responses.

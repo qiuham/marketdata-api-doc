@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/vip-loan/error-code
 api_type: Guide
-updated_at: 2026-11-21 18:27:39.700578
+updated_at: 2026-11-22 18:27:30.070402
 ---
 
 # Error Codes

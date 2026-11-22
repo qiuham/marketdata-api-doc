@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/rebates/get-taker-tiers-for-addresses'
-updated_at: 2026-11-21
+updated_at: 2026-11-22
 ---
 
 # Get taker tiers for addresses

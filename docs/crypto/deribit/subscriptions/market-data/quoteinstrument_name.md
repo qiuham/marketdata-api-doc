@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/market-data/quoteinstrument_name
 api_type: WebSocket
-updated_at: 2026-11-21 19:01:34.882684
+updated_at: 2026-11-22 18:59:22.292711
 ---
 
 # quote.(instrument_name)

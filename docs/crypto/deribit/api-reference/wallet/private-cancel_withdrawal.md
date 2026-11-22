@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-cancel_withdrawal
 api_type: JSON-RPC
-updated_at: 2026-11-21 19:01:44.446645
+updated_at: 2026-11-22 18:59:30.573175
 ---
 
 # private/cancel_withdrawal

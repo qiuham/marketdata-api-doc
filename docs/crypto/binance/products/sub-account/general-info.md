@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/sub-account/general-info
 api_type: Guide
-updated_at: 2026-11-21 18:27:45.404692
+updated_at: 2026-11-22 18:27:35.290562
 ---
 
 # General Info

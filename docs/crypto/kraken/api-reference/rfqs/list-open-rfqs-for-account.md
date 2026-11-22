@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/rfqs/list-open-rfqs-for-account'
-updated_at: 2026-11-21
+updated_at: 2026-11-22
 ---
 
 # List open RFQs for account

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-dual-investment-post-request-for-quote
 anchor_id: financial-product-dual-investment-post-request-for-quote
 api_type: API
-updated_at: 2026-11-21 19:00:20.205500
+updated_at: 2026-11-22 18:58:09.744911
 ---
 
 # POST / Request for quote

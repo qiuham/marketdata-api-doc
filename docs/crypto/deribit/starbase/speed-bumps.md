@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/speed-bumps
 api_type: Starbase
-updated_at: 2026-11-21 19:01:38.360737
+updated_at: 2026-11-22 18:59:25.246550
 ---
 
 # Speed Bumps
@@ -191,8 +191,8 @@ See [Execution Reports](https://docs.deribit.com/fix-api/production/execution-re
 
 ## Related topics
 
+- [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md)
 - [Starbase API Changelog](https://docs.deribit.com/changelogs/starbase.md)
 - [Starbase Mass Cancel Messages](https://docs.deribit.com/starbase/mass-cancel.md)
 - [Starbase Market Maker Protection (MMP)](https://docs.deribit.com/starbase/mmp.md)
 - [Starbase FIX Drop Copy API](https://docs.deribit.com/starbase/fix-drop-copy-api.md)
-- [Risk Bypass](https://docs.deribit.com/starbase/risk-bypass.md)

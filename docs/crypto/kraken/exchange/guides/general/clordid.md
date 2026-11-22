@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/guides/general/clordid'
-updated_at: 2026-11-21
+updated_at: 2026-11-22
 ---
 
 # Spot Client Order Identifiers

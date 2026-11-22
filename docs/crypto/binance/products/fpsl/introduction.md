@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/fpsl/introduction
 api_type: Guide
-updated_at: 2026-11-21 18:30:36.873439
+updated_at: 2026-11-22 18:30:07.938627
 ---
 
 # Introduction

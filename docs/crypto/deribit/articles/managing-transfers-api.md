@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/managing-transfers-api
 api_type: Guide
-updated_at: 2026-11-21 19:01:33.878776
+updated_at: 2026-11-22 18:59:21.509829
 ---
 
 # Managing Transfers

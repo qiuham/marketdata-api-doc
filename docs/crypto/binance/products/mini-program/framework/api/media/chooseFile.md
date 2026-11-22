@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/media/chooseFile
 api_type: Guide
-updated_at: 2026-11-21 18:45:28.943617
+updated_at: 2026-11-22 18:43:06.759782
 ---
 
 # bn.chooseFile

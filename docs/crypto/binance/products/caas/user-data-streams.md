@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/caas/user-data-streams
 api_type: WebSocket
-updated_at: 2026-11-21 18:32:22.037282
+updated_at: 2026-11-22 18:31:42.584677
 ---
 
 # User Data Streams

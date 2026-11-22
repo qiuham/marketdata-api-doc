@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-options/websocket-market-streams/How-to-manage-a-local-order-book-correctly
 api_type: WebSocket
-updated_at: 2026-11-21 18:39:03.642572
+updated_at: 2026-11-22 18:37:31.614271
 ---
 
 # How to manage a local order book correctly

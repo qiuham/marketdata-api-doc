@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-options/faq/stp-faq
 api_type: Guide
-updated_at: 2026-11-21 18:39:06.485234
+updated_at: 2026-11-22 18:37:34.284374
 ---
 
 # Self Trade Prevention (STP) FAQ

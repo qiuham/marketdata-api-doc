@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/supporting/public-hello
 api_type: JSON-RPC
-updated_at: 2026-11-21 19:01:42.940288
+updated_at: 2026-11-22 18:59:29.337854
 ---
 
 # public/hello

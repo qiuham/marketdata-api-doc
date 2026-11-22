@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-download-balance-report-query
 api_type: Guide
-updated_at: 2026-11-21 18:33:58.849072
+updated_at: 2026-11-22 18:33:08.820830
 ---
 
 # Query Balance Report

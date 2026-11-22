@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/migrate/rtds-to-polybolt'
-updated_at: 2026-11-21
+updated_at: 2026-11-22
 ---
 
 # 从 RTDS 迁移到 PolyBolt

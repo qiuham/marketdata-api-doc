@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-get-24h-total-volume
 anchor_id: order-book-trading-market-data-get-24h-total-volume
 api_type: API
-updated_at: 2026-11-21 19:00:14.008163
+updated_at: 2026-11-22 18:58:02.864214
 ---
 
 # GET / 24H total volume

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/web3-dapp/self-testing
 api_type: Guide
-updated_at: 2026-11-21 18:26:47.392593
+updated_at: 2026-11-22 18:26:53.946141
 ---
 
 # DApp Self-Testing Manual

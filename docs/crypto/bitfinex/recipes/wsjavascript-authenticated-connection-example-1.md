@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/recipes/wsjavascript-authenticated-connection-example-1'
-updated_at: 2026-11-21
+updated_at: 2026-11-22
 ---
 
 # [WS][JavaScript] Authenticated connection example

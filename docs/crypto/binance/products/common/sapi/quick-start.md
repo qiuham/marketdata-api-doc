@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/common/sapi/quick-start
 api_type: Guide
-updated_at: 2026-11-21 18:40:58.752432
+updated_at: 2026-11-22 18:39:11.944753
 ---
 
 # Quick Start
