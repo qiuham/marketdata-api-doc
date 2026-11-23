@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/RichText
 api_type: Guide
-updated_at: 2026-11-22 18:40:14.398024
+updated_at: 2026-11-23 18:42:55.966056
 ---
 
 # rich-text

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/addPhoneRepeatCalendar
 api_type: Guide
-updated_at: 2026-11-22 18:45:46.816269
+updated_at: 2026-11-23 18:49:15.456482
 ---
 
 # bn.addPhoneRepeatCalendar

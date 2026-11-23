@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/reference/rest-auth-trades-by-symbol'
-updated_at: 2026-11-22
+updated_at: 2026-11-23
 ---
 
 # Trades (by symbol)

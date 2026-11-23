@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/connect-prime/introduction
 api_type: Guide
-updated_at: 2026-11-22 18:31:30.246189
+updated_at: 2026-11-23 18:32:54.979812
 ---
 
 # Institutional Embedded Buy/Sell Solution

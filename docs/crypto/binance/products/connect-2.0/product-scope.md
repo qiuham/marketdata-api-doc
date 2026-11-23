@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/connect-2.0/product-scope
 api_type: Guide
-updated_at: 2026-11-22 18:31:35.782144
+updated_at: 2026-11-23 18:33:01.159785
 ---
 
 # Product Scope

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/web3-task-verification/on-chain-verification
 api_type: Guide
-updated_at: 2026-11-22 18:26:51.328314
+updated_at: 2026-11-23 18:27:43.912800
 ---
 
 # Binance Web3 ON-Chain API Specification

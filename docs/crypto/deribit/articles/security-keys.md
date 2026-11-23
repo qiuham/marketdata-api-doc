@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/security-keys
 api_type: Guide
-updated_at: 2026-11-22 18:59:21.302174
+updated_at: 2026-11-23 19:00:28.932666
 ---
 
 # Security Keys

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/fiat/Introduction
 api_type: Guide
-updated_at: 2026-11-22 18:30:15.221364
+updated_at: 2026-11-23 18:31:32.599780
 ---
 
 # Introduction

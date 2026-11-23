@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/markets/create-concert-cancellation-market'
-updated_at: 2026-11-22
+updated_at: 2026-11-23
 ---
 
 # Create Concert Cancellation Market

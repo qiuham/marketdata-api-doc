@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/fee-and-liquidity-reward-changes-november-2026'
-updated_at: 2026-11-22
+updated_at: 2026-11-23
 ---
 
 # Upcoming Fee and Liquidity Reward Changes

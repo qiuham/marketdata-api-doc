@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/market
 api_type: REST
-updated_at: 2026-11-22 19:01:17.684279
+updated_at: 2026-11-23 19:02:44.888685
 ---
 
 # Market

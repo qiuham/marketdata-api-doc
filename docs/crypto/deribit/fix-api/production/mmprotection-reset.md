@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/mmprotection-reset
 api_type: FIX
-updated_at: 2026-11-22 18:59:24.221182
+updated_at: 2026-11-23 19:00:32.734529
 ---
 
 # MMProtection Reset(MZ) (Production FIX API)

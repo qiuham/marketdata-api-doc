@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/block-trading-api
 api_type: Guide
-updated_at: 2026-11-22 18:59:21.685440
+updated_at: 2026-11-23 19:00:29.473840
 ---
 
 # Block Trading

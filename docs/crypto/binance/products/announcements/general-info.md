@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/announcements/general-info
 api_type: Guide
-updated_at: 2026-11-22 18:33:33.893009
+updated_at: 2026-11-23 18:35:18.383110
 ---
 
 # WebSocket API Basic Information

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-create_subaccount
 api_type: JSON-RPC
-updated_at: 2026-11-22 18:59:25.970232
+updated_at: 2026-11-23 19:00:34.958606
 ---
 
 # private/create_subaccount

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-websocket-private-channel-structure-block-trades-channel
 anchor_id: block-trading-websocket-private-channel-structure-block-trades-channel
 api_type: WebSocket
-updated_at: 2026-11-22 18:58:04.037119
+updated_at: 2026-11-23 18:59:16.761095
 ---
 
 # Structure block trades channel

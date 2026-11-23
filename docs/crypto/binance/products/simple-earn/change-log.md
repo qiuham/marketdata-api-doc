@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/simple-earn/change-log
 api_type: Changelog
-updated_at: 2026-11-22 18:28:34.415489
+updated_at: 2026-11-23 18:29:38.791090
 ---
 
 # Change Log

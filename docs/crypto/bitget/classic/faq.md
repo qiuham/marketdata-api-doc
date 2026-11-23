@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/faq
 api_type: Guide
-updated_at: 2026-11-22 18:59:52.561632
+updated_at: 2026-11-23 19:01:05.436539
 ---
 
 # FAQ

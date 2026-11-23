@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/media/createContext
 api_type: Guide
-updated_at: 2026-11-22 18:43:00.308679
+updated_at: 2026-11-23 18:46:01.695680
 ---
 
 # bn.createContext

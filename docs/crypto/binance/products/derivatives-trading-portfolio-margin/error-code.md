@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/error-code
 api_type: Guide
-updated_at: 2026-11-22 18:30:40.815339
+updated_at: 2026-11-23 18:32:00.385487
 ---
 
 # Error Codes

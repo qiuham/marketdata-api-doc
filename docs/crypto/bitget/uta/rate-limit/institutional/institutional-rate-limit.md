@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/rate-limit/institutional/institutional-rate-limit
 api_type: Rate Limit
-updated_at: 2026-11-22 19:00:31.524507
+updated_at: 2026-11-23 19:01:49.708163
 ---
 
 # Institutional Rate Limit
@@ -39,16 +39,31 @@ The current quota allocation can be queried via:
 
 ### Business Rules
 
-1. The single account rate limit Quota must not exceed the single account rate limit Cap.
-2. The sum of all sub-account rate limit Quotas (i.e., the Master-Sub Quota) must not exceed the Master-Sub Cap.
-3. If adjusting a sub-account's Quota causes the total Master-Sub Quota to exceed the Master-Sub Cap, the API call will be rejected.
-4. The institutional rate limit applies to virtual sub-accounts, regular sub-accounts, managed sub-accounts, Agent sub-accounts, and Copper sub-accounts under the master account.
+#### Scope
+
+1. The institutional rate limit applies only to spot trading and futures trading under the Unified Trading Account. Spot and futures quotas are calculated independently. Rate limits for classic accounts remain unchanged; see [Classic Account Rate Limits](#classic-account-rate-limits) below.
+2. The rate limit covers placing, canceling, and modifying orders. The three operations are **calculated independently** and share the same UID-level configured value. For example, if a UID's single account rate limit Quota is 100/s, that UID can place up to 100 orders, cancel up to 100 orders, and modify up to 100 orders per second, without affecting one another.
+3. Rate limits are counted using a sliding window: requests are counted over any rolling 1-second period rather than reset at each calendar second.
+4. WebSocket and REST share the same rate limit quota; requests from both channels are counted together.
+5. Cancel and modify requests must include the `category` parameter to be counted against the configured institutional rate limit. Requests without it are subject to the default basic rate limit.
+
+#### Quota Configuration
+
+1. The single account rate limit Quota must not exceed the single account rate limit Cap; otherwise, the configuration API returns an error.
+2. The sum of all sub-accounts' single account rate limit Quotas (i.e., the Master-Sub Account Rate Limit Quota) must not exceed the Master-Sub Account Rate Limit Cap. If a configuration would push the sum over the Cap, the API call fails with an error indicating the master-sub total limit has been exceeded. For example, if the Master-Sub Cap is 120,000/s and 119,900/s has already been allocated, the next sub-account can be configured with at most 100/s.
+3. The master account is not included in the Master-Sub Account Rate Limit Quota sum. Its rate limit defaults to the single account rate limit Cap of its tier.
+
+#### Tier Changes
+
+1. **Tier upgrade**: The single account Cap and Master-Sub Cap are raised automatically. The additional quota is not allocated automatically and must be allocated manually by the master account.
+2. **Tier downgrade**: Sub-accounts whose Quota exceeds the new tier's single account Cap are first lowered to the new Cap. If the sum still exceeds the new Master-Sub Cap, all quotas are scaled down proportionally by new Master-Sub Cap ÷ current sum, rounded down.
+
+#### Applicable Account Types
+
+1. The institutional rate limit applies to virtual sub-accounts, regular sub-accounts, managed sub-accounts, Agent sub-accounts, and Copper sub-accounts under the master account.
     - **Managed sub-accounts** in managed mode: read the trading team master account's single account Cap; do not participate in the Master-Sub total rate limit calculation.
     - **Managed sub-accounts** in non-managed mode: API trading is not supported.
     - **Agent sub-accounts / Copper sub-accounts**: treated as virtual sub-accounts.
-5. Websocket and REST will share the rate limit.
-6. For order cancellation and modification requests, the `category` parameter must be added in the request parameters in order to trigger the configured rate limit.
-7. Rate limits include placing orders, canceling orders, and modifying orders (Rate limits are calculated independently).
 
 
 ### MM/PRO Rate Limit Tiers
@@ -159,16 +174,32 @@ For classic spot and futures accounts under MM and PRO rate limits:
 
 ### 业务规则
 
-1. 单账户限频 Quota 数值不得超过单账户限频 Cap，否则接口报错。
-2. 所有子账户的单账户限频 Quota 总和（即母子账户限频 Quota）不得超过母子账户限频硬顶 Cap。
-3. 如果调整某账户限频 Quota 后，母子账户限频 Quota 超出母子账户硬顶 Cap，则当次接口调用不会成功。
-4. 母子账户限频总量作用于母账户下的虚拟子账户、普通子账户、托管子账户、Agent 子账户、Copper 子账户。
+#### 限频范围
+
+1. 机构限频仅适用于统一账户下的现货交易和合约交易，现货与合约的限频额度独立计算。经典账户的限频保持不变，见下方「经典账户限频配置」。
+2. 限频对象为下单、撤单、改单三类操作，三者**各自独立计算**，共用同一个 UID 限频配置值。例如某 UID 的单账户限频 Quota 为 100/s，则该 UID 每秒最多可下单 100 次、撤单 100 次、改单 100 次，三者互不占用。
+3. 限频采用滑动窗口计数，即统计任意连续 1 秒内的请求数，而非按自然秒重置。
+4. WebSocket 与 REST 共享同一份限频额度，两种渠道的请求合并计数。
+5. 撤单和改单请求需传入 `category` 参数，才会按已配置的机构限频计算；未传入时按默认基础限频限制。
+
+#### 配额配置
+
+1. 单账户限频 Quota 不得超过单账户限频硬顶 Cap，否则配置接口报错。
+2. 所有子账户的单账户限频 Quota 之和（即母子账户限频 Quota）不得超过母子账户限频硬顶 Cap。若某次配置导致总和超出硬顶，当次接口调用失败，并提示超出母子账户总限额。例如母子账户限频硬顶 Cap 为 120,000/s，已分配 119,900/s，则下一个子账户最多只能配置 100/s。
+3. 母账户不计入母子账户限频 Quota 总和，其限频默认为所属档位的单账户限频硬顶 Cap。
+
+#### 等级变更
+
+1. **等级提升**：单账户限频硬顶 Cap 与母子账户限频硬顶 Cap 自动提升，新增额度不会自动分配，需由母账户手动分配。
+2. **等级降低**：系统先将超过新档位单账户限频硬顶 Cap 的子账户下调至新硬顶；若调整后总和仍超出新档位母子账户限频硬顶 Cap，再按「新母子账户限频硬顶 Cap ÷ 当前总和」等比下调，结果向下取整。
+
+#### 适用账户类型
+
+1. 机构限频适用于母账户下的虚拟子账户、普通子账户、托管子账户、Agent 子账户、Copper 子账户。
     - **托管子账户**在托管状态下：读取交易团队母账户的单账户限频硬顶 Cap，不参与母子总限频计算。
     - **托管子账户**在非托管状态下：不支持 API 交易。
     - **Agent 子账户 / Copper 子账户**：视作虚拟子账户。
-5. Websocket和REST共享限频
-6. 撤单和改单需要传入`category`入参来触发配置的限频
-7. 限频包含下单、撤单和改单(限频独立计算)
+
 
 ### MM/PRO限频梯度
 

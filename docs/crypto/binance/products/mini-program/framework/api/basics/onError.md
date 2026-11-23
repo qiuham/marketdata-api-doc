@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/onError
 api_type: Guide
-updated_at: 2026-11-22 18:44:55.325853
+updated_at: 2026-11-23 18:48:16.669722
 ---
 
 # bn.onError

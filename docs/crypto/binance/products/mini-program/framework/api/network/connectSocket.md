@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/network/connectSocket
 api_type: Guide
-updated_at: 2026-11-22 18:42:42.836692
+updated_at: 2026-11-23 18:45:42.496467
 ---
 
 # bn.connectSocket

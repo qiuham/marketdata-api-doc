@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/agentic-wallet/use-cases/overview
 api_type: Guide
-updated_at: 2026-11-22 18:39:42.152695
+updated_at: 2026-11-23 18:42:17.256532
 ---
 
 # Use Cases Overview

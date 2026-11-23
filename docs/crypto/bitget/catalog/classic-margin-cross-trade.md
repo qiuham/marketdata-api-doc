@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-margin-cross-trade
 api_type: REST
-updated_at: 2026-11-22 19:01:07.453686
+updated_at: 2026-11-23 19:02:32.513017
 ---
 
 # Classic Cross Margin Trade API

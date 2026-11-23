@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/FlutterDeprecatedTextArea
 api_type: Guide
-updated_at: 2026-11-22 18:40:48.481373
+updated_at: 2026-11-23 18:43:34.526648
 ---
 
 # TextArea

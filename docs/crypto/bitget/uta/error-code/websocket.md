@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/error-code/websocket
 api_type: WebSocket
-updated_at: 2026-11-22 19:00:29.867215
+updated_at: 2026-11-23 19:01:47.707773
 ---
 
 # WebSocket Error Code

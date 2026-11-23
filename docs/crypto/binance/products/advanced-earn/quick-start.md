@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/advanced-earn/quick-start
 api_type: Guide
-updated_at: 2026-11-22 18:33:54.599724
+updated_at: 2026-11-23 18:35:41.878434
 ---
 
 # Quick Start

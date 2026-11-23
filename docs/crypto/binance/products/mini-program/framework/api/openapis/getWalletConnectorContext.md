@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/getWalletConnectorContext
 api_type: Guide
-updated_at: 2026-11-22 18:42:13.525608
+updated_at: 2026-11-23 18:45:09.841919
 ---
 
 # bn.getWalletConnectorContext

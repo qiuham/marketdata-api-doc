@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/authentication
 api_type: Guide
-updated_at: 2026-11-22 18:59:21.238061
+updated_at: 2026-11-23 19:00:28.756624
 ---
 
 # API Authentication with OAuth 2.0 and Signatures

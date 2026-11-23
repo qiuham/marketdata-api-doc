@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/routing/reLaunch
 api_type: Guide
-updated_at: 2026-11-22 18:41:45.518735
+updated_at: 2026-11-23 18:44:38.105034
 ---
 
 # bn.reLaunch

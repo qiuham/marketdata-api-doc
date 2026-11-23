@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-payout-validate-receiver
 api_type: Guide
-updated_at: 2026-11-22 18:32:50.769518
+updated_at: 2026-11-23 18:34:35.912480
 ---
 
 # Payout Validate Receiver

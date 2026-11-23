@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/institutional-loan/quick-start
 api_type: Guide
-updated_at: 2026-11-22 18:29:45.780388
+updated_at: 2026-11-23 18:30:59.746920
 ---
 
 # Quick Start

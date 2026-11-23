@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/storage/removeStorageSync
 api_type: Guide
-updated_at: 2026-11-22 18:41:31.729207
+updated_at: 2026-11-23 18:44:18.737217
 ---
 
 # bn.removeStorageSync

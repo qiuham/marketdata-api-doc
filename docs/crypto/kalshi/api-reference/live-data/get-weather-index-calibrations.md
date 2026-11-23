@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/live-data/get-weather-index-calibrations'
-updated_at: 2026-11-22
+updated_at: 2026-11-23
 ---
 
 # Get Weather Index Calibrations

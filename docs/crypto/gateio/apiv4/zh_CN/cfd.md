@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/cfd
 api_type: REST
-updated_at: 2026-11-22 18:56:26.050267
+updated_at: 2026-11-23 18:57:42.118570
 ---
 
 # CFD

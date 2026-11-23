@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/getting_started/quick_start_websockets'
-updated_at: 2026-11-22
+updated_at: 2026-11-23
 ---
 
 # Quick Start: WebSockets

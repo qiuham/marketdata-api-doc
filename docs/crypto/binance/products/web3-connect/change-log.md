@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/web3-connect/change-log
 api_type: Changelog
-updated_at: 2026-11-22 18:27:08.982857
+updated_at: 2026-11-23 18:28:05.832351
 ---
 
 # Change Log

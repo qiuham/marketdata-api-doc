@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/common/sapi/general-info
 api_type: Guide
-updated_at: 2026-11-22 18:39:13.457756
+updated_at: 2026-11-23 18:41:52.582215
 ---
 
 # General Info

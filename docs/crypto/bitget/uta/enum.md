@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/enum
 api_type: Guide
-updated_at: 2026-11-22 19:00:28.532516
+updated_at: 2026-11-23 19:01:46.236439
 ---
 
 # Enumeration
@@ -273,11 +273,11 @@ updated_at: 2026-11-22 19:00:28.532516
 - `interest` Interest
 - `discount_subscribe` Discount subscribe
 - `discount_allocate` Discount allocate
-- `savings_flexible_subscribe` Savings flexible subscribe
-- `savings_flexible_redeem` Savings flexible redeem
-- `savings_flexible_profit` Savings flexible profit
-- `savings_fixed_subscribe` Savings fixed subscribe
-- `savings_fixed_redeem` Savings fixed redeem
+- `savings_flexible_subscribe` Simple Earn flexible subscribe
+- `savings_flexible_redeem` Simple Earn flexible redeem
+- `savings_flexible_profit` Simple Earn flexible profit
+- `savings_fixed_subscribe` Simple Earn fixed subscribe
+- `savings_fixed_redeem` Simple Earn fixed redeem
 - `trend_subscribe` Trend subscribe
 - `trend_settle` Trend settle
 - `range_subscribe` Range subscribe
@@ -839,11 +839,11 @@ updated_at: 2026-11-22 19:00:28.532516
 - `interest` 利息
 - `discount_subscribe` 打折认购申购
 - `discount_allocate` 打折认购分配
-- `savings_flexible_subscribe` 理财宝活期申购
-- `savings_flexible_redeem` 理财宝活期赎回
-- `savings_flexible_profit` 理财宝活期收益
-- `savings_fixed_subscribe` 理财宝定期申购
-- `savings_fixed_redeem` 理财宝定期赎回
+- `savings_flexible_subscribe` 简单赚币活期申购
+- `savings_flexible_redeem` 简单赚币活期赎回
+- `savings_flexible_profit` 简单赚币活期收益
+- `savings_fixed_subscribe` 简单赚币定期申购
+- `savings_fixed_redeem` 简单赚币定期赎回
 - `trend_subscribe` 趋势智盈申购
 - `trend_settle` 趋势智盈结算
 - `range_subscribe` 区间猎手申购

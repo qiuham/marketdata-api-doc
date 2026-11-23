@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/move-position
 api_type: Position
-updated_at: 2026-11-22 18:49:30.176790
+updated_at: 2026-11-23 18:52:02.047516
 ---
 
 # Move Position
@@ -58,6 +58,17 @@ list| **true**|  array| Object. Up to 25 legs per request
 > qty| **true**|  string| Executed qty 
 
   * The value must satisfy the qty rule from [Instruments Info](/docs/v5/market/instrument), in particular, category=`linear` is able to input `maxOrderQty` * 5
+
+  
+> reduceOnly| false| boolean| **Reduces or closes an existing position without opening a position in the opposite direction.**  
+  
+**Usage and requirements:**
+
+  1. Applies only to `fromUid` and only to Futures and Options.
+  2. When `reduceOnly=true`, `fromUid` must have a non-zero position. For a long position, `side` must be `Sell`.
+  3. If `qty` exceeds the position size, the entire position is closed.
+  4. **Cancel all active orders** for the symbol before initiating the position move with `reduceOnly=true` in case any executions during position movement in-flight.
+  5. If any leg fails to execute, all other legs also fail.
 
   
   
@@ -217,6 +228,17 @@ list| **true**|  array| Object. 單次請求最多支持25腿
 > qty| **true**|  string| 交易數量
 
   * 該數字需要滿足[查詢可交易產品的規格信息](/docs/zh-TW/v5/market/instrument)的qty規則, 特別的, 對於linear, 可以支持5倍的`maxOrderQty`
+
+  
+> reduceOnly| false| boolean| **用於確保減倉或者平倉時不會開出反方向的倉位**  
+  
+**用法和要求**
+
+  1. 僅作用於`fromUid` 並且僅支持合約和期權
+  2. When `reduceOnly=true`, `fromUid`必須有持倉. 對於多頭, `side`必須是`Sell`.
+  3. 如果`qty`超過持倉大小, 則整個倉位會被平掉
+  4. 對於`reduceOnly=true`的symbol，需要**撤銷所有掛單** ，避免移倉過程中出現掛單成交的情況.
+  5. 這條腿無法成功執行的話，所有腿都將執行失敗
 
   
   

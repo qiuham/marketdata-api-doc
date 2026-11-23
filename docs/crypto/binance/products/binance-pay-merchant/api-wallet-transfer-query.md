@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-wallet-transfer-query
 api_type: Guide
-updated_at: 2026-11-22 18:32:28.762894
+updated_at: 2026-11-23 18:34:12.054471
 ---
 
 # Query Transfer Result

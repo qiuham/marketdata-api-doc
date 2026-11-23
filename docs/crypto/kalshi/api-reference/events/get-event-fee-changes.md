@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/events/get-event-fee-changes'
-updated_at: 2026-11-22
+updated_at: 2026-11-23
 ---
 
 # Get Event Fee Changes

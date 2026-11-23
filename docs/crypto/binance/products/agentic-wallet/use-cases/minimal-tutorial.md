@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/agentic-wallet/use-cases/minimal-tutorial
 api_type: Guide
-updated_at: 2026-11-22 18:39:43.469756
+updated_at: 2026-11-23 18:42:18.676176
 ---
 
 # Minimal Tutorial

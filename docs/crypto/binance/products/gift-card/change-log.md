@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/gift-card/change-log
 api_type: Changelog
-updated_at: 2026-11-22 18:30:02.580863
+updated_at: 2026-11-23 18:31:18.978503
 ---
 
 # Change Log

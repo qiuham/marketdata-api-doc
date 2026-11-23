@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-get_settlement_history_by_instrument
 api_type: JSON-RPC
-updated_at: 2026-11-22 18:59:30.176800
+updated_at: 2026-11-23 19:00:40.150739
 ---
 
 # private/get_settlement_history_by_instrument
@@ -330,4 +330,4 @@ components:
 - [private/get_order_history_by_instrument](https://docs.deribit.com/api-reference/trading/private-get_order_history_by_instrument.md)
 - [private/get_trigger_order_history](https://docs.deribit.com/api-reference/trading/private-get_trigger_order_history.md)
 - [private/get_order_history_by_currency](https://docs.deribit.com/api-reference/trading/private-get_order_history_by_currency.md)
-- [Market Data Collection](https://docs.deribit.com/articles/market-data-collection-best-practices.md)
+- [private/get_position](https://docs.deribit.com/api-reference/account-management/private-get_position.md)

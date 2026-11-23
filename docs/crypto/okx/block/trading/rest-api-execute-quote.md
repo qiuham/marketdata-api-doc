@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-execute-quote
 anchor_id: block-trading-rest-api-execute-quote
 api_type: REST
-updated_at: 2026-11-22 18:58:03.639763
+updated_at: 2026-11-23 18:59:16.570631
 ---
 
 # Execute Quote

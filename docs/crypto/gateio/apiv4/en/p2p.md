@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/p2p
 api_type: REST
-updated_at: 2026-11-22 18:55:59.750524
+updated_at: 2026-11-23 18:57:18.942214
 ---
 
 # P2p

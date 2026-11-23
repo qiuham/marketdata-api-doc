@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/learn-about-trading/markets/pre-ipo-anthropic'
-updated_at: 2026-11-22
+updated_at: 2026-11-23
 ---
 
 # Anthropic (ANT): Pre-IPO Specifications

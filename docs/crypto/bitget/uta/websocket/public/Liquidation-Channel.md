@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/public/Liquidation-Channel
 api_type: WebSocket
-updated_at: 2026-11-22 19:00:46.126182
+updated_at: 2026-11-23 19:02:05.882894
 ---
 
 # Liquidation Channel

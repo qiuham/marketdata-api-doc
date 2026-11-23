@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/getLaunchOptionsSync
 api_type: Guide
-updated_at: 2026-11-22 18:45:26.526964
+updated_at: 2026-11-23 18:48:51.986518
 ---
 
 # bn.getLaunchOptionsSync

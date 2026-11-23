@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/makePhoneCall
 api_type: Guide
-updated_at: 2026-11-22 18:42:04.564288
+updated_at: 2026-11-23 18:44:59.703996
 ---
 
 # bn.makePhoneCall

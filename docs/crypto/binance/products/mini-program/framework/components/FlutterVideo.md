@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/FlutterVideo
 api_type: Guide
-updated_at: 2026-11-22 18:40:34.874827
+updated_at: 2026-11-23 18:43:19.237002
 ---
 
 # Video

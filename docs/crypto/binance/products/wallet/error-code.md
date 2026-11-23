@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/wallet/error-code
 api_type: Guide
-updated_at: 2026-11-22 18:27:20.422096
+updated_at: 2026-11-23 18:28:16.621444
 ---
 
 # Error Codes

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/management/kyb
 api_type: Guide
-updated_at: 2026-11-22 18:35:54.036557
+updated_at: 2026-11-23 18:38:02.723788
 ---
 
 # How to complete the kyb process

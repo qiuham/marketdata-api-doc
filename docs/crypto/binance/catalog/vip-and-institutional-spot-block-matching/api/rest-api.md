@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/vip-and-institutional-spot-block-matching/api/rest-api
 api_type: REST
-updated_at: 2026-11-22 18:46:18.533844
+updated_at: 2026-11-23 18:49:40.604980
 ---
 
 # Spot Block Matching REST API

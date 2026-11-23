@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/open-platform/airdrop-creation
 api_type: Guide
-updated_at: 2026-11-22 18:28:52.965785
+updated_at: 2026-11-23 18:30:00.581841
 ---
 
 # How to Create an Airdrop Campaign on Binance Web3 Open Platform?

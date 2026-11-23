@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/WidgetSlot
 api_type: Guide
-updated_at: 2026-11-22 18:39:48.589104
+updated_at: 2026-11-23 18:42:27.702148
 ---
 
 # WidgetSlot

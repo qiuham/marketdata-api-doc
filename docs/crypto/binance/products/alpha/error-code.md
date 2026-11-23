@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/alpha/error-code
 api_type: Guide
-updated_at: 2026-11-22 18:33:43.705278
+updated_at: 2026-11-23 18:35:29.456280
 ---
 
 # Error Codes

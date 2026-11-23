@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/vip-loan/change-log
 api_type: Changelog
-updated_at: 2026-11-22 18:27:31.348386
+updated_at: 2026-11-23 18:28:27.405482
 ---
 
 # Change Log

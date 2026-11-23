@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/getRandomValues
 api_type: Guide
-updated_at: 2026-11-22 18:45:23.947713
+updated_at: 2026-11-23 18:48:48.730186
 ---
 
 # bn.getRandomValues

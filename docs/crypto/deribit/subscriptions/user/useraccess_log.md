@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/user/useraccess_log
 api_type: WebSocket
-updated_at: 2026-11-22 18:59:23.041596
+updated_at: 2026-11-23 19:00:31.289620
 ---
 
 # user.access_log

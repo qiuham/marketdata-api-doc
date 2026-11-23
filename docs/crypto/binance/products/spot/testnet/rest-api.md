@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/rest-api
 api_type: Guide
-updated_at: 2026-11-22 18:34:16.506962
+updated_at: 2026-11-23 18:36:08.385100
 ---
 
 # Public Rest API for Binance SPOT Testnet

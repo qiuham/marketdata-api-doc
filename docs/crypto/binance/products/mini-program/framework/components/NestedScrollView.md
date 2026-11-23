@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/NestedScrollView
 api_type: Guide
-updated_at: 2026-11-22 18:40:20.988178
+updated_at: 2026-11-23 18:43:03.734993
 ---
 
 # nested-scroll-view

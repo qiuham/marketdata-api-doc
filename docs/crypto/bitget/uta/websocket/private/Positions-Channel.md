@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/private/Positions-Channel
 api_type: WebSocket
-updated_at: 2026-11-22 19:00:43.660284
+updated_at: 2026-11-23 19:02:02.852864
 ---
 
 # Positions Channel

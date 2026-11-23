@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-algo-trading/api/rest-api
 api_type: REST
-updated_at: 2026-11-22 18:46:13.458494
+updated_at: 2026-11-23 18:49:37.042167
 ---
 
 # Algo Trading REST API

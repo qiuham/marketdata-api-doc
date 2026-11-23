@@ -2,293 +2,65 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/isolated-positions
 api_type: Guide
-updated_at: 2026-11-22 18:54:55.786072
+updated_at: 2026-11-23 18:56:20.003500
 ---
 
 # Isolated Positions API Guide
 
-,
-              "base_asset_uuid": "<string>",
-              "underlying_type": "<string>"
-            },
-            "contract_display_name": "<string>",
-            "time_to_expiry_ms": "<string>",
-            "non_crypto": true,
-            "contract_expiry_name": "<string>",
-            "twenty_four_by_seven": true,
-            "funding_interval": "<string>",
-            "open_interest": "<string>",
-            "funding_rate": "<string>",
-            "funding_time": "<string>",
-            "display_name": "<string>",
-            "region_enabled": {},
-            "intraday_margin_rate": {
-              "long_margin_rate": "0.5",
-              "short_margin_rate": "0.5"
-            },
-            "overnight_margin_rate": {
-              "long_margin_rate": "0.5",
-              "short_margin_rate": "0.5"
-            },
-            "settlement_price": "<string>",
-            "futures_asset_type": "UNKNOWN_FUTURES_ASSET_TYPE",
-            "index_price": "<string>",
-            "contract_code_display_name": "<string>",
-            "product_group_cbrn": "<string>",
-            "futures_asset_types": [
-              "UNKNOWN_FUTURES_ASSET_TYPE"
-            ],
-            "trading_hours_type": "TRADING_HOURS_TYPE_UNSPECIFIED",
-            "deribit_product_details": {
-              "instrument_id": "<string>",
-              "settlement_currency": "<string>",
-              "counter_currency": "<string>",
-              "settlement_period": "<string>",
-              "price_index": "<string>",
-              "instrument_type": "<string>",
-              "maker_commission": "<string>",
-              "taker_commission": "<string>",
-              "block_trade_commission": "<string>",
-              "block_trade_tick_size": "<string>",
-              "block_trade_min_trade_amount": "<string>",
-              "creation_time": "<string>",
-              "max_leverage": "<string>",
-              "max_liquidation_commission": "<string>",
-              "tick_size_steps": [
-                {
-                  "above_price": "<string>",
-                  "tick_size": "<string>"
-                }
-              ],
-              "qty_tick_size": "<string>",
-              "index_id": "<string>",
-              "product_group": "<string>",
-              "base_currency_uuid": "<string>",
-              "quote_currency_uuid": "<string>",
-              "state": "<string>",
-              "delivery_price": "<string>"
-            }
-          },
-          "equity_product_details": {
-            "equity_subtype": "EQUITY_PRODUCT_SUBTYPE_UNSPECIFIED",
-            "fractionable": true,
-            "liquidate_only": true,
-            "ticker": "<string>",
-            "description": "<string>",
-            "trading_halted": true,
-            "trading_halted_start_time": "<string>",
-            "trading_halted_end_time": "<string>",
-            "fractional_notional_min_size": "<string>",
-            "cik": "<string>",
-            "short_name": "<string>",
-            "company_description": "<string>",
-            "company_website": "<string>",
-            "trading_day_info": {
-              "venue_id": "<string>",
-              "date": "<string>",
-              "trade_date_type": "TRADE_DATE_TYPE_UNSPECIFIED",
-              "holiday_name": "<string>",
-              "version_id": "<string>",
-              "trading_sessions": [
-                {
-                  "session_type": "UNKNOWN_EQUITY_TRADING_SESSION",
-                  "session_start_time": "<string>",
-                  "session_end_time": "<string>",
-                  "support_fractional": true,
-                  "limit_only": true
-                }
-              ]
-            },
-            "current_session": "UNKNOWN_EQUITY_TRADING_SESSION",
-            "opol": "<string>",
-            "recent_trading_days": {
-              "trading_days": [
-                {
-                  "venue_id": "<string>",
-                  "date": "<string>",
-                  "trade_date_type": "TRADE_DATE_TYPE_UNSPECIFIED",
-                  "holiday_name": "<string>",
-                  "version_id": "<string>",
-                  "trading_sessions": [
-                    {
-                      "session_type": "UNKNOWN_EQUITY_TRADING_SESSION",
-                      "session_start_time": "<string>",
-                      "session_end_time": "<string>",
-                      "support_fractional": true,
-                      "limit_only": true
-                    }
-                  ]
-                }
-              ]
-            },
-            "equity_trading_flags": {
-              "tradable": true,
-              "searchable": true,
-              "buy_enabled": true,
-              "buy_whole_shares": true,
-              "buy_fractional_shares": true,
-              "buy_notional": true,
-              "sell_enabled": true,
-              "sell_whole_shares": true,
-              "sell_fractional_shares": true,
-              "sell_notional": true
-            }
-          }
-        }
-      ],
-      "num_products": 100,
-      "pagination": {
-        "prev_cursor": "<string>",
-        "next_cursor": "<string>",
-        "has_next": true,
-        "has_prev": true
-      }
-    }Global Derivatives
-    
-    # Isolated Positions API Guide
-    
-    Learn how to manage isolated positions with the Global Derivatives JSON-RPC API.
-    
-    Isolated margin confines risk to the collateral allocated to one position.
-    Isolated orders and positions are owned by managed subaccounts that the API
-    provisions on demand and hides from account listings unless you ask for them
-    with include_isolated: true.
-    This guide covers the behavior that differs from cross-margin trading and how
-    to integrate against the JSON-RPC API. Examples use SOL_USDC-PERPETUAL.
-    123456 stands for a discovered integer subaccount ID; subaccount_id is an
-    integer on the wire, not a string.
-    
-    
-    ## 1. How isolated margin works
-    
-    
-    Four behaviors differ from ordinary cross trading. Read these before the
-    walkthrough; most integration bugs come from assuming one of them away.
-    
-    
-    ### 1.1 The API provisions hidden subaccounts for you
-    
-    
-    You never create an isolated subaccount yourself. Sending [private/buy](/api-reference/trading/private-buy) or
-    [private/sell](/api-reference/trading/private-sell) from the main account with isolated: true:
-    
-    
-    
-    
-        1. claims a free isolated subaccount (slot) or creates one if none is free,
-    
-    
-        2. binds it to the requested instrument,
-    
-    
-        3. places the order under that subaccount’s ID.
-    
-    
-    
-    The order and position are owned by the isolated subaccount (user_id, for
-    example 123456), not the main account. Responses also carry main_uid,
-    which identifies the owning main account.
-    Cross and isolated positions can coexist on the same instrument. A main account
-    can maintain a cross position while simultaneously holding an isolated position on
-    the same instrument via a provisioned slot. Each position is margined, tracked,
-    and managed independently under its respective account ID (user_id).
-    
-    
-    ### 1.2 Two flags: routing versus visibility
-    
-    
-    Because isolated records live on subaccounts, most operations take one of two
-    flags. Mixing them up is the most common integration mistake.
-    
-    
-    
-    
-        * isolated: true routes a single-order operation (place, edit, cancel,
-        close, leverage, per-order reads) to the subaccount that owns the instrument
-        or order. The default is false, so omitting it silently targets cross
-        margin instead of producing an error.
-    
-    
-        * include_isolated: true widens a main-account list, snapshot, or mass
-        cancel to include hidden isolated subaccounts. Without it, hidden isolated
-        slots are excluded.
-    
-    
-        * subaccount_id targets one discovered subaccount directly. History calls
-        for a slot require subaccount_id; they do not aggregate with include_isolated.
-    
-    
-    
-    
-    
-    Operation| Methods| Flag| If omitted  
-    ---|---|---|---  
-    Single-order operations| [private/buy](/api-reference/trading/private-buy), [private/sell](/api-reference/trading/private-sell), [private/edit](/api-reference/trading/private-edit), [private/edit_by_label](/api-reference/trading/private-edit_by_label), [private/cancel](/api-reference/trading/private-cancel), [private/close_position](/api-reference/trading/private-close_position), [private/get_margins](/api-reference/trading/private-get_margins), [private/get_leverage](/api-reference/account-management/private-get_leverage), [private/set_leverage](/api-reference/trading/private-set_leverage), [private/get_order_state](/api-reference/trading/private-get_order_state), [private/get_user_trades_by_order](/api-reference/trading/private-get_user_trades_by_order), [private/get_max_order_size](/api-reference/trading/private-get_max_order_size), [private/get_order_margin_by_ids](/api-reference/trading/private-get_order_margin_by_ids)| isolated: true| Acts on cross margin. [private/cancel](/api-reference/trading/private-cancel) and [private/edit](/api-reference/trading/private-edit) return order_not_found or not_owner_of_order.  
-    Main-account aggregates| [private/get_subaccounts](/api-reference/account-management/private-get_subaccounts), [private/get_subaccounts_details](/api-reference/account-management/private-get_subaccounts_details), [private/get_positions](/api-reference/account-management/private-get_positions), [private/get_position](/api-reference/account-management/private-get_position), [private/get_open_orders](/api-reference/trading/private-get_open_orders), [private/get_account_summaries](/api-reference/account-management/private-get_account_summaries), [private/get_order_state_by_label](/api-reference/trading/private-get_order_state_by_label)| include_isolated: true| Excludes hidden isolated slots.  
-    Mass cancel| [private/cancel_all](/api-reference/trading/private-cancel_all), [private/cancel_all_by_instrument](/api-reference/trading/private-cancel_all_by_instrument), [private/cancel_all_by_currency](/api-reference/trading/private-cancel_all_by_currency), [private/cancel_by_label](/api-reference/trading/private-cancel_by_label)| include_isolated: true| Cancels main-account orders only; isolated orders stay open.  
-    History| [private/get_order_history_by_currency](/api-reference/trading/private-get_order_history_by_currency), [private/get_user_trades_by_currency](/api-reference/trading/private-get_user_trades_by_currency), [private/get_settlement_history_by_currency](/api-reference/trading/private-get_settlement_history_by_currency), [private/get_transaction_log](/api-reference/account-management/private-get_transaction_log)| subaccount_id| —  
-      
-    
-    
-    
-    ### 1.3 Slots are recycled and IDs are reused
-    
-    
-    A slot binds to one instrument at a time, reported as
-    isolated_margin_instrument. A slot is recycled only when both conditions
-    hold:
-    
-    
-    
-    
-        * no position has a non-zero size;
-    
-    
-        * no open order remains.
-    
-    
-    
-    On recycling, remaining collateral settles back to the main account and the
-    binding clears. The subaccount ID itself is retained and can later be bound to
-    a different instrument. Two consequences:
-    
-    
-    
-    
-        * History for one subaccount_id can span multiple instruments. Key audit
-        trails by subaccount_id, instrument_name, and timestamp.
-    
-    
-        * Do not cache an instrument-to-subaccount mapping. Rediscover it.
-    
-    
-    
-    
-    
-    ### 1.4 Orders auto-allocate margin and slots auto-sweep on close
-    
-    
-    Placing a risk-increasing order with isolated: true automatically transfers the
-    required margin from the main account to the slot, unless you supply allocated_margin
-    explicitly. If passed, allocated_margin must meet the required minimum, or placement
-    fails with 14033 isolated_allocated_too_low.
-    When an isolated position is completely closed and has no open orders, an **auto-sweep**
-    automatically transfers all remaining collateral and P&L back to the main account and
-    recycles the slot. Partial position reductions or leverage increases do not trigger a
-    partial auto-sweep; excess margin remains in the slot until complete closure or [manual transfer](/api-reference/wallet/private-submit_transfer_between_subaccounts).
-    
-    
-    ## 2. Integration walkthrough
-    
-    
-    
-    
-    ### 2.1 Authenticate and subscribe
-    
-    
-    Authenticate HTTP and WebSocket sessions as the main account before you call private methods or subscribe. For the authentication flow, see the [Global Derivatives technical guide](/coinbase-app/advanced-trade-apis/guides/derivatives/technical).
-    Subscribe to the [isolated order](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedorderskindcurrencyinterval), [isolated trade](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedtradeskindcurrencyinterval), [isolated change](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedchangeskindcurrencyinterval), [isolated portfolio](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedportfoliocurrency), and [isolated liquidation](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedliquidation) channels. For all private channels and the AsyncAPI specification, see [Global Derivatives WebSocket endpoints](/coinbase-app/advanced-trade-apis/websocket/websocket-endpoints):
-    
+Learn how to manage isolated positions with the Global Derivatives JSON-RPC API.
+
+Isolated margin confines risk to the collateral allocated to one position. Isolated orders and positions are owned by managed subaccounts that the API provisions on demand and hides from account listings unless you ask for them with `include_isolated: true`. This guide covers the behavior that differs from cross-margin trading and how to integrate against the JSON-RPC API. Examples use `SOL_USDC-PERPETUAL`. `123456` stands for a discovered integer subaccount ID; `subaccount_id` is an integer on the wire, not a string.
+
+## 1\. How isolated margin works
+
+Four behaviors differ from ordinary cross trading. Read these before the walkthrough; most integration bugs come from assuming one of them away.
+
+### 1.1 The API provisions hidden subaccounts for you
+
+You never create an isolated subaccount yourself. Sending [`private/buy`](/api-reference/trading/private-buy) or [`private/sell`](/api-reference/trading/private-sell) from the main account with `isolated: true`:
+
+  1. claims a free isolated subaccount (slot) or creates one if none is free,
+  2. binds it to the requested instrument,
+  3. places the order under that subaccount’s ID.
+
+The order and position are owned by the isolated subaccount (`user_id`, for example `123456`), not the main account. Responses also carry `main_uid`, which identifies the owning main account. Cross and isolated positions can coexist on the same instrument. A main account can maintain a cross position while simultaneously holding an isolated position on the same instrument via a provisioned slot. Each position is margined, tracked, and managed independently under its respective account ID (`user_id`).
+
+### 1.2 Two flags: routing versus visibility
+
+Because isolated records live on subaccounts, most operations take one of two flags. Mixing them up is the most common integration mistake.
+
+  * `isolated: true` routes a single-order operation (place, edit, cancel, close, leverage, per-order reads) to the subaccount that owns the instrument or order. The default is `false`, so omitting it silently targets cross margin instead of producing an error.
+  * `include_isolated: true` widens a main-account list, snapshot, or mass cancel to include hidden isolated subaccounts. Without it, hidden isolated slots are excluded.
+  * `subaccount_id` targets one discovered subaccount directly. History calls for a slot require `subaccount_id`; they do not aggregate with `include_isolated`.
+
+Operation| Methods| Flag| If omitted  
+---|---|---|---  
+Single-order operations| [`private/buy`](/api-reference/trading/private-buy), [`private/sell`](/api-reference/trading/private-sell), [`private/edit`](/api-reference/trading/private-edit), [`private/edit_by_label`](/api-reference/trading/private-edit_by_label), [`private/cancel`](/api-reference/trading/private-cancel), [`private/close_position`](/api-reference/trading/private-close_position), [`private/get_margins`](/api-reference/trading/private-get_margins), [`private/get_leverage`](/api-reference/account-management/private-get_leverage), [`private/set_leverage`](/api-reference/trading/private-set_leverage), [`private/get_order_state`](/api-reference/trading/private-get_order_state), [`private/get_user_trades_by_order`](/api-reference/trading/private-get_user_trades_by_order), [`private/get_max_order_size`](/api-reference/trading/private-get_max_order_size), [`private/get_order_margin_by_ids`](/api-reference/trading/private-get_order_margin_by_ids)| `isolated: true`| Acts on cross margin. [`private/cancel`](/api-reference/trading/private-cancel) and [`private/edit`](/api-reference/trading/private-edit) return `order_not_found` or `not_owner_of_order`.  
+Main-account aggregates| [`private/get_subaccounts`](/api-reference/account-management/private-get_subaccounts), [`private/get_subaccounts_details`](/api-reference/account-management/private-get_subaccounts_details), [`private/get_positions`](/api-reference/account-management/private-get_positions), [`private/get_position`](/api-reference/account-management/private-get_position), [`private/get_open_orders`](/api-reference/trading/private-get_open_orders), [`private/get_account_summaries`](/api-reference/account-management/private-get_account_summaries), [`private/get_order_state_by_label`](/api-reference/trading/private-get_order_state_by_label)| `include_isolated: true`| Excludes hidden isolated slots.  
+Mass cancel| [`private/cancel_all`](/api-reference/trading/private-cancel_all), [`private/cancel_all_by_instrument`](/api-reference/trading/private-cancel_all_by_instrument), [`private/cancel_all_by_currency`](/api-reference/trading/private-cancel_all_by_currency), [`private/cancel_by_label`](/api-reference/trading/private-cancel_by_label)| `include_isolated: true`| Cancels main-account orders only; isolated orders stay open.  
+History| [`private/get_order_history_by_currency`](/api-reference/trading/private-get_order_history_by_currency), [`private/get_user_trades_by_currency`](/api-reference/trading/private-get_user_trades_by_currency), [`private/get_settlement_history_by_currency`](/api-reference/trading/private-get_settlement_history_by_currency), [`private/get_transaction_log`](/api-reference/account-management/private-get_transaction_log)| `subaccount_id`| —  
+  
+### 1.3 Slots are recycled and IDs are reused
+
+A slot binds to one instrument at a time, reported as `isolated_margin_instrument`. A slot is recycled only when both conditions hold:
+
+  * no position has a non-zero size;
+  * no open order remains.
+
+On recycling, remaining collateral settles back to the main account and the binding clears. The subaccount ID itself is retained and can later be bound to a different instrument. Two consequences:
+
+  * History for one `subaccount_id` can span multiple instruments. Key audit trails by `subaccount_id`, `instrument_name`, and timestamp.
+  * Do not cache an instrument-to-subaccount mapping. Rediscover it.
+
+### 1.4 Orders auto-allocate margin and slots auto-sweep on close
+
+Placing a risk-increasing order with `isolated: true` automatically transfers the required margin from the main account to the slot, unless you supply `allocated_margin` explicitly. If passed, `allocated_margin` must meet the required minimum, or placement fails with `14033 isolated_allocated_too_low`. When an isolated position is completely closed and has no open orders, an **auto-sweep** automatically transfers all remaining collateral and P&L back to the main account and recycles the slot. Partial position reductions or leverage increases do not trigger a partial auto-sweep; excess margin remains in the slot until complete closure or [manual transfer](/api-reference/wallet/private-submit_transfer_between_subaccounts).
+
+## 2\. Integration walkthrough
+
+### 2.1 Authenticate and subscribe
+
+Authenticate HTTP and WebSocket sessions as the main account before you call private methods or subscribe. For the authentication flow, see the [Global Derivatives technical guide](/coinbase-app/advanced-trade-apis/guides/derivatives/technical). Subscribe to the [isolated order](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedorderskindcurrencyinterval), [isolated trade](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedtradeskindcurrencyinterval), [isolated change](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedchangeskindcurrencyinterval), [isolated portfolio](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedportfoliocurrency), and [isolated liquidation](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedliquidation) channels. For all private channels and the AsyncAPI specification, see [Global Derivatives WebSocket endpoints](/coinbase-app/advanced-trade-apis/websocket/websocket-endpoints):
     
     
     {

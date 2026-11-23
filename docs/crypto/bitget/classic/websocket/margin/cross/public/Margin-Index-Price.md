@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/margin/cross/public/Margin-Index-Price
 api_type: WebSocket
-updated_at: 2026-11-22 19:00:07.032613
+updated_at: 2026-11-23 19:01:21.737680
 ---
 
 # Margin Index Price

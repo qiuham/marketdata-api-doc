@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_trade_volumes
 api_type: JSON-RPC
-updated_at: 2026-11-22 18:59:28.805266
+updated_at: 2026-11-23 19:00:38.521187
 ---
 
 # public/get_trade_volumes

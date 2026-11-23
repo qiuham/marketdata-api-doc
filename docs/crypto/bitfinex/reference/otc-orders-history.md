@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/reference/otc-orders-history'
-updated_at: 2026-11-22
+updated_at: 2026-11-23
 ---
 
 # OTC Orders History

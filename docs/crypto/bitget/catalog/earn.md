@@ -2,12 +2,12 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/earn
 api_type: REST
-updated_at: 2026-11-22 19:01:13.996919
+updated_at: 2026-11-23 19:02:40.439226
 ---
 
 # Earn
 
-On-chain Elite, Cash+, Savings and SharkFin product endpoints for subscribing, redeeming, and querying assets, positions and history.
+On-chain Elite, Cash+, Simple Earn and SharkFin product endpoints for subscribing, redeeming, and querying assets, positions and history.
 
 版本: 1.0.0
 
@@ -33,15 +33,15 @@ On-chain Elite, Cash+, Savings and SharkFin product endpoints for subscribing, r
 - `GET /api/v3/earn/cashplus/redeem-result` — Get Cash+ Redeem Result
 - `GET /api/v3/earn/cashplus/positions` — Get Cash+ Positions
 - `GET /api/v3/earn/cashplus/history-orders` — Get Cash+ History Orders
-- `GET /api/v3/earn/savings/product` — Get Savings Product List
-- `GET /api/v3/earn/savings/account` — Savings Account
-- `GET /api/v3/earn/savings/assets` — Savings Assets
-- `GET /api/v3/earn/savings/records` — Savings Records
-- `GET /api/v3/earn/savings/subscribe-info` — Savings Subscription Detail
-- `POST /api/v3/earn/savings/subscribe` — Subscribe Savings
-- `GET /api/v3/earn/savings/subscribe-result` — Savings Subscription Result
-- `POST /api/v3/earn/savings/redeem` — Redeem Savings
-- `GET /api/v3/earn/savings/redeem-result` — Savings Redemption Results
+- `GET /api/v3/earn/savings/product` — Get Simple Earn Product List
+- `GET /api/v3/earn/savings/account` — Simple Earn Account
+- `GET /api/v3/earn/savings/assets` — Simple Earn Assets
+- `GET /api/v3/earn/savings/records` — Simple Earn Records
+- `GET /api/v3/earn/savings/subscribe-info` — Simple Earn Subscription Detail
+- `POST /api/v3/earn/savings/subscribe` — Subscribe Simple Earn
+- `GET /api/v3/earn/savings/subscribe-result` — Simple Earn Subscription Result
+- `POST /api/v3/earn/savings/redeem` — Redeem Simple Earn
+- `GET /api/v3/earn/savings/redeem-result` — Simple Earn Redemption Results
 - `GET /api/v3/earn/sharkfin/product` — Get Sharkfin Products
 - `GET /api/v3/earn/sharkfin/account` — SharkFin Account
 - `GET /api/v3/earn/sharkfin/assets` — SharkFin Assets
@@ -1009,7 +1009,7 @@ Operation ID: `getCashPlusHistoryOrders`
 }
 ```
 
-## Get Savings Product List
+## Get Simple Earn Product List
 
 `GET /api/v3/earn/savings/product`
 
@@ -1035,7 +1035,7 @@ Operation ID: `getSavingsProduct`
 | requestTime | integer |  |  |
 | data | object[] |  |  |
 | data[].productId | string |  | Product id |
-| data[].coin | string |  | Savings subscription coin |
+| data[].coin | string |  | Simple Earn subscription coin |
 | data[].periodType | string |  | Period type<br><br>`flexible` flexible period<br><br>`fixed` fixed period |
 | data[].period | string |  | Period<br><br>`flexible` This value is not returned |
 | data[].apyType | string |  | Interest rate type<br><br>`single` single interest rate<br><br>`ladder` ladder income |
@@ -1084,7 +1084,7 @@ Operation ID: `getSavingsProduct`
 }
 ```
 
-## Savings Account
+## Simple Earn Account
 
 `GET /api/v3/earn/savings/account`
 
@@ -1125,7 +1125,7 @@ Operation ID: `getSavingsAccount`
 }
 ```
 
-## Savings Assets
+## Simple Earn Assets
 
 `GET /api/v3/earn/savings/assets`
 
@@ -1140,8 +1140,8 @@ Operation ID: `getSavingsAssets`
 | 名称 | 位置 | 类型 | 必填 | 说明 |
 |---|---|---|---|---|
 | periodType | query | string | 是 | Period type<br><br>`flexible` demand deposit<br><br>`fixed` time deposit |
-| startTime | query | string |  | Start timestamp<br><br>(Savings creation time)<br><br>Milliseconds format of timestamp Unix, e.g. 1597026383085<br><br>(The maximum time span supported is three months. The default start time is three months ago if no value is set for the start time.) |
-| endTime | query | string |  | End timestamp<br><br>(Savings creation time)<br><br>Milliseconds format of timestamp Unix, e.g. 1597026383085<br><br>(The maximum time span supported is three months. The default end time is now if no value is set for the end time.) |
+| startTime | query | string |  | Start timestamp<br><br>(Simple Earn creation time)<br><br>Milliseconds format of timestamp Unix, e.g. 1597026383085<br><br>(The maximum time span supported is three months. The default start time is three months ago if no value is set for the start time.) |
+| endTime | query | string |  | End timestamp<br><br>(Simple Earn creation time)<br><br>Milliseconds format of timestamp Unix, e.g. 1597026383085<br><br>(The maximum time span supported is three months. The default end time is now if no value is set for the end time.) |
 | limit | query | string |  | Number of queries: Default: 20, maximum: 100. |
 | cursor | query | string |  | Cursor ID<br><br>Used for pagination. Omit it on the first call. For subsequent calls, pass in the last `endId` returned by the previous query. |
 
@@ -1153,10 +1153,10 @@ Operation ID: `getSavingsAssets`
 | msg | string |  |  |
 | requestTime | integer |  |  |
 | data | object |  |  |
-| data.resultList | object[] |  | Savings assets list |
+| data.resultList | object[] |  | Simple Earn assets list |
 | data.resultList[].productId | string |  | Product ID |
 | data.resultList[].orderId | string |  | assets order ID<br><br>only for `fixed` |
-| data.resultList[].productCoin | string |  | Savings subscription coin |
+| data.resultList[].productCoin | string |  | Simple Earn subscription coin |
 | data.resultList[].interestCoin | string |  | Interest earning coin |
 | data.resultList[].periodType | string |  | Period type<br><br>`flexible` flexible current<br><br>`fixed` fixed term |
 | data.resultList[].period | string |  | Duration<br><br>`flexible` This value is not returned |
@@ -1210,7 +1210,7 @@ Operation ID: `getSavingsAssets`
 }
 ```
 
-## Savings Records
+## Simple Earn Records
 
 `GET /api/v3/earn/savings/records`
 
@@ -1276,7 +1276,7 @@ Operation ID: `getSavingsRecords`
 }
 ```
 
-## Savings Subscription Detail
+## Simple Earn Subscription Detail
 
 `GET /api/v3/earn/savings/subscribe-info`
 
@@ -1355,7 +1355,7 @@ Operation ID: `getSavingsSubscribeInfo`
 }
 ```
 
-## Subscribe Savings
+## Subscribe Simple Earn
 
 `POST /api/v3/earn/savings/subscribe`
 
@@ -1394,7 +1394,7 @@ Operation ID: `savingsSubscribe`
 }
 ```
 
-## Savings Subscription Result
+## Simple Earn Subscription Result
 
 `GET /api/v3/earn/savings/subscribe-result`
 
@@ -1434,7 +1434,7 @@ Operation ID: `getSavingsSubscribeResult`
 }
 ```
 
-## Redeem Savings
+## Redeem Simple Earn
 
 `POST /api/v3/earn/savings/redeem`
 
@@ -1478,7 +1478,7 @@ Operation ID: `savingsRedeem`
 }
 ```
 
-## Savings Redemption Results
+## Simple Earn Redemption Results
 
 `GET /api/v3/earn/savings/redeem-result`
 
@@ -1911,7 +1911,7 @@ Operation ID: `getSharkfinSubscribeResult`
 
 ---
 
-链上精选、现金宝（Cash+）、理财宝与鲨鱼鳍理财产品接口，支持申购、赎回与资产/持仓/历史查询。
+链上精选、现金宝（Cash+）、简单赚币与鲨鱼鳍理财产品接口，支持申购、赎回与资产/持仓/历史查询。
 
 版本: 1.0.0
 
@@ -1937,15 +1937,15 @@ Operation ID: `getSharkfinSubscribeResult`
 - `GET /api/v3/earn/cashplus/redeem-result` — 获取现金宝赎回结果
 - `GET /api/v3/earn/cashplus/positions` — 获取现金宝持仓
 - `GET /api/v3/earn/cashplus/history-orders` — 获取现金宝历史订单
-- `GET /api/v3/earn/savings/product` — 理财宝产品列表
-- `GET /api/v3/earn/savings/account` — 理财宝账户信息
-- `GET /api/v3/earn/savings/assets` — 理财宝资产信息
-- `GET /api/v3/earn/savings/records` — 理财宝历史记录
-- `GET /api/v3/earn/savings/subscribe-info` — 理财宝申购详情
-- `POST /api/v3/earn/savings/subscribe` — 理财宝申购
-- `GET /api/v3/earn/savings/subscribe-result` — 理财宝申购结果
-- `POST /api/v3/earn/savings/redeem` — 理财宝赎回
-- `GET /api/v3/earn/savings/redeem-result` — 理财宝赎回结果
+- `GET /api/v3/earn/savings/product` — 简单赚币产品列表
+- `GET /api/v3/earn/savings/account` — 简单赚币账户信息
+- `GET /api/v3/earn/savings/assets` — 简单赚币资产信息
+- `GET /api/v3/earn/savings/records` — 简单赚币历史记录
+- `GET /api/v3/earn/savings/subscribe-info` — 简单赚币申购详情
+- `POST /api/v3/earn/savings/subscribe` — 简单赚币申购
+- `GET /api/v3/earn/savings/subscribe-result` — 简单赚币申购结果
+- `POST /api/v3/earn/savings/redeem` — 简单赚币赎回
+- `GET /api/v3/earn/savings/redeem-result` — 简单赚币赎回结果
 - `GET /api/v3/earn/sharkfin/product` — 鲨鱼鳍产品列表
 - `GET /api/v3/earn/sharkfin/account` — 鲨鱼鳍账户信息
 - `GET /api/v3/earn/sharkfin/assets` — 鲨鱼鳍资产信息
@@ -2913,13 +2913,13 @@ Operation ID: `getCashPlusHistoryOrders`
 }
 ```
 
-## 理财宝产品列表
+## 简单赚币产品列表
 
 `GET /api/v3/earn/savings/product`
 
 限频规则: 10次/秒/UID
 
-获取理财宝产品列表。
+获取简单赚币产品列表。
 
 Operation ID: `getSavingsProduct`
 
@@ -2988,13 +2988,13 @@ Operation ID: `getSavingsProduct`
 }
 ```
 
-## 理财宝账户信息
+## 简单赚币账户信息
 
 `GET /api/v3/earn/savings/account`
 
 限频规则: 10次/秒/UID
 
-获取理财宝账户信息。
+获取简单赚币账户信息。
 
 Operation ID: `getSavingsAccount`
 
@@ -3029,13 +3029,13 @@ Operation ID: `getSavingsAccount`
 }
 ```
 
-## 理财宝资产信息
+## 简单赚币资产信息
 
 `GET /api/v3/earn/savings/assets`
 
 限频规则: 10次/秒/UID
 
-获取理财宝资产信息。
+获取简单赚币资产信息。
 
 Operation ID: `getSavingsAssets`
 
@@ -3114,13 +3114,13 @@ Operation ID: `getSavingsAssets`
 }
 ```
 
-## 理财宝历史记录
+## 简单赚币历史记录
 
 `GET /api/v3/earn/savings/records`
 
 限频规则: 10次/秒/UID
 
-获取理财宝历史记录。
+获取简单赚币历史记录。
 
 Operation ID: `getSavingsRecords`
 
@@ -3180,13 +3180,13 @@ Operation ID: `getSavingsRecords`
 }
 ```
 
-## 理财宝申购详情
+## 简单赚币申购详情
 
 `GET /api/v3/earn/savings/subscribe-info`
 
 限频规则: 10次/秒/UID
 
-获取理财宝申购详情。
+获取简单赚币申购详情。
 
 Operation ID: `getSavingsSubscribeInfo`
 
@@ -3259,13 +3259,13 @@ Operation ID: `getSavingsSubscribeInfo`
 }
 ```
 
-## 理财宝申购
+## 简单赚币申购
 
 `POST /api/v3/earn/savings/subscribe`
 
 限频规则: 10次/秒/UID
 
-理财宝申购。
+简单赚币申购。
 
 Operation ID: `savingsSubscribe`
 
@@ -3298,13 +3298,13 @@ Operation ID: `savingsSubscribe`
 }
 ```
 
-## 理财宝申购结果
+## 简单赚币申购结果
 
 `GET /api/v3/earn/savings/subscribe-result`
 
 限频规则: 10次/秒/UID
 
-获取理财宝申购结果。
+获取简单赚币申购结果。
 
 Operation ID: `getSavingsSubscribeResult`
 
@@ -3338,13 +3338,13 @@ Operation ID: `getSavingsSubscribeResult`
 }
 ```
 
-## 理财宝赎回
+## 简单赚币赎回
 
 `POST /api/v3/earn/savings/redeem`
 
 限频规则: 10次/秒/UID
 
-理财宝赎回。
+简单赚币赎回。
 
 每次赎回间隔应大于1分钟，否则可能会报错。
 
@@ -3382,13 +3382,13 @@ Operation ID: `savingsRedeem`
 }
 ```
 
-## 理财宝赎回结果
+## 简单赚币赎回结果
 
 `GET /api/v3/earn/savings/redeem-result`
 
 限频规则: 10次/秒/UID
 
-获取理财宝赎回结果。
+获取简单赚币赎回结果。
 
 Operation ID: `getSavingsRedeemResult`
 

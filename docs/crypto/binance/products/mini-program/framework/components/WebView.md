@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/WebView
 api_type: Guide
-updated_at: 2026-11-22 18:39:49.868385
+updated_at: 2026-11-23 18:42:29.114729
 ---
 
 # WebView

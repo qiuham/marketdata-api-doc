@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/market-data/perpetualinstrument_nameinterval
 api_type: WebSocket
-updated_at: 2026-11-22 18:59:22.212725
+updated_at: 2026-11-23 19:00:30.215174
 ---
 
 # perpetual.(instrument_name).(interval)

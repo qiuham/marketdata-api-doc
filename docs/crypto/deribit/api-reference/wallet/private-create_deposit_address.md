@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-create_deposit_address
 api_type: JSON-RPC
-updated_at: 2026-11-22 18:59:30.552713
+updated_at: 2026-11-23 19:00:40.781251
 ---
 
 # private/create_deposit_address

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/connect-prime/quick-start
 api_type: Guide
-updated_at: 2026-11-22 18:31:28.966042
+updated_at: 2026-11-23 18:32:53.405173
 ---
 
 # Getting Started

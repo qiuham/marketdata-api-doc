@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/margin/isolated/private/Margin-isolated-account-assets
 api_type: WebSocket
-updated_at: 2026-11-22 19:00:08.032642
+updated_at: 2026-11-23 19:01:22.859751
 ---
 
 # Isolated-Margin Account Channel

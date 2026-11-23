@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/CHANGELOG
 api_type: Changelog
-updated_at: 2026-11-22 18:34:26.272028
+updated_at: 2026-11-23 18:36:20.505909
 ---
 
 # CHANGELOG for Binance SPOT Testnet

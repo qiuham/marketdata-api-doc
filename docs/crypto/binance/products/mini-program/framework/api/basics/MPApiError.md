@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/MPApiError
 api_type: Guide
-updated_at: 2026-11-22 18:45:49.793634
+updated_at: 2026-11-23 18:49:18.905553
 ---
 
 # bn.MPApiError

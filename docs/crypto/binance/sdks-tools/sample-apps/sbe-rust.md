@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/sample-apps/sbe-rust
 api_type: SBE
-updated_at: 2026-11-22 18:26:33.721488
+updated_at: 2026-11-23 18:27:18.248295
 ---
 
 # SBE Sample App (Rust)

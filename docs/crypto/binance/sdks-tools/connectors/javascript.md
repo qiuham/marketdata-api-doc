@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/connectors/javascript
 api_type: Guide
-updated_at: 2026-11-22 18:26:43.333809
+updated_at: 2026-11-23 18:27:34.972268
 ---
 
 # JavaScript

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/demo-trading/rest-api
 api_type: Guide
-updated_at: 2026-11-22 18:59:50.377011
+updated_at: 2026-11-23 19:01:03.083922
 ---
 
 # Demo Trading (REST API)

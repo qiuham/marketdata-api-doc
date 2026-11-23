@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/authentication/public-exchange_token
 api_type: JSON-RPC
-updated_at: 2026-11-22 18:59:25.615584
+updated_at: 2026-11-23 19:00:34.609588
 ---
 
 # public/exchange_token

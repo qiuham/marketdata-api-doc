@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/data-download-center
 api_type: Guide
-updated_at: 2026-11-22 19:00:26.539104
+updated_at: 2026-11-23 19:01:43.926943
 ---
 
 # Data Download Center
@@ -98,7 +98,7 @@ API endpoints are limited to a recent query window (typically 90 days). If you n
 
 | Data Type | Description |
 |:---|:---|
-| 🪙 Savings | Subscription, redemption, and interest payout records for flexible/fixed savings products |
+| 🪙 Simple Earn | Subscription, redemption, and interest payout records for Simple Earn flexible/fixed products |
 | ⛓️ On-chain Earn | Orders for on-chain earn products such as staking and liquidity mining |
 | 🔀 Dual Investment | Subscription and settlement records for Dual Investment products |
 | 🦈 Shark Fin | Subscription and settlement records for Shark Fin structured products |

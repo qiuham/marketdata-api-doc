@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/PROD-TERMS-OF-USE
 api_type: Guide
-updated_at: 2026-11-22 18:28:27.538760
+updated_at: 2026-11-23 18:29:30.803973
 ---
 
 # SPOT Exchange Terms of Use

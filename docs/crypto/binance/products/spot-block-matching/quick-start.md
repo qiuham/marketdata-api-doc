@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot-block-matching/quick-start
 api_type: Guide
-updated_at: 2026-11-22 18:27:59.130999
+updated_at: 2026-11-23 18:29:07.652183
 ---
 
 # Quick Start

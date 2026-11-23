@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/accessing-historical-trades-orders
 api_type: Guide
-updated_at: 2026-11-22 18:59:21.764802
+updated_at: 2026-11-23 19:00:29.660028
 ---
 
 # Accessing Historical Trades and Orders Using API
@@ -12,6 +12,8 @@ updated_at: 2026-11-22 18:59:21.764802
 ## Overview
 
 While recent records (**30 minutes** for orders and **24 hours** for trades) can be accessed without this parameter, they are only stored temporarily and eventually removed. After this period, the records are only available through the historical parameter.
+
+The `historical` parameter applies only to your own account's orders and trades. All supported endpoints are `private/` methods. For public trades on a market, use the methods in [Backfilling historical data](https://docs.deribit.com/articles/market-data-collection-best-practices.md#backfilling-historical-data).
 
 ## Retention Periods
 

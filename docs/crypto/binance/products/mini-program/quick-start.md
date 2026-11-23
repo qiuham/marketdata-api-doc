@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/quick-start
 api_type: Guide
-updated_at: 2026-11-22 18:29:15.955546
+updated_at: 2026-11-23 18:30:25.897693
 ---
 
 # Quick Start

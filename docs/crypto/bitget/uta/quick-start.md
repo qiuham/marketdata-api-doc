@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/quick-start
 api_type: Guide
-updated_at: 2026-11-22 19:00:30.957569
+updated_at: 2026-11-23 19:01:48.870453
 ---
 
 # Quick Start

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/error-code/restapi
 api_type: Error Code
-updated_at: 2026-11-22 18:59:51.579690
+updated_at: 2026-11-23 19:01:04.320166
 ---
 
 # REST API Error Code

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/openservice/update-sku
 api_type: Guide
-updated_at: 2026-11-22 18:35:28.283234
+updated_at: 2026-11-23 18:37:32.853195
 ---
 
 # UpdateSKU

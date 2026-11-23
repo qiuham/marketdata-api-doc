@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/hideBackButton
 api_type: Guide
-updated_at: 2026-11-22 18:44:03.134746
+updated_at: 2026-11-23 18:47:15.708196
 ---
 
 # bn.hideBackButton

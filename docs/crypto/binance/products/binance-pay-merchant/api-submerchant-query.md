@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-submerchant-query
 api_type: Guide
-updated_at: 2026-11-22 18:32:35.213759
+updated_at: 2026-11-23 18:34:19.587399
 ---
 
 # Query SubMerchant

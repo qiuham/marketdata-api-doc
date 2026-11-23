@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/market-data-request-reject
 api_type: FIX
-updated_at: 2026-11-22 18:59:23.509906
+updated_at: 2026-11-23 19:00:32.023209
 ---
 
 # Market Data Request Reject(Y) (Production FIX API)

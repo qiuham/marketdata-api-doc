@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/showBackButton
 api_type: Guide
-updated_at: 2026-11-22 18:43:40.727068
+updated_at: 2026-11-23 18:46:49.213351
 ---
 
 # bn.showBackButton

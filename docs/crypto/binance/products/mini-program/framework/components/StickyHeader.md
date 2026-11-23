@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/StickyHeader
 api_type: Guide
-updated_at: 2026-11-22 18:40:03.700132
+updated_at: 2026-11-23 18:42:43.890391
 ---
 
 # StickyHeader

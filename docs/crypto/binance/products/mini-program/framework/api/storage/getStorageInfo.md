@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/storage/getStorageInfo
 api_type: Guide
-updated_at: 2026-11-22 18:41:37.449065
+updated_at: 2026-11-23 18:44:24.466524
 ---
 
 # bn.getStorageInfo

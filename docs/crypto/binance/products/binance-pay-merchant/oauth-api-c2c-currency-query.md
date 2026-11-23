@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/oauth-api-c2c-currency-query
 api_type: Guide
-updated_at: 2026-11-22 18:32:16.640779
+updated_at: 2026-11-23 18:33:57.970699
 ---
 
 # OAuth API : Query Supported Currency

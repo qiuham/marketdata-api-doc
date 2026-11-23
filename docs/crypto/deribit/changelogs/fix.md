@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/changelogs/fix
 api_type: Changelog
-updated_at: 2026-11-22 18:59:21.974508
+updated_at: 2026-11-23 19:00:29.838357
 ---
 
 # FIX API Changelog

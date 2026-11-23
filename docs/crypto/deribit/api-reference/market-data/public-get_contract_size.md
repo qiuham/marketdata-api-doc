@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_contract_size
 api_type: JSON-RPC
-updated_at: 2026-11-22 18:59:28.175294
+updated_at: 2026-11-23 19:00:37.671443
 ---
 
 # public/get_contract_size

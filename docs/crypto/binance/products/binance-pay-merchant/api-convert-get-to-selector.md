@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-convert-get-to-selector
 api_type: Guide
-updated_at: 2026-11-22 18:33:17.883889
+updated_at: 2026-11-23 18:35:07.775160
 ---
 
 # List All Convert Pairs

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/market-data/markpriceoptionsindex_name
 api_type: WebSocket
-updated_at: 2026-11-22 18:59:22.427472
+updated_at: 2026-11-23 19:00:30.411370
 ---
 
 # markprice.options.(index_name)

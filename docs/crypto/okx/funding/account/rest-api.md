@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api
 anchor_id: funding-account-rest-api
 api_type: REST
-updated_at: 2026-11-22 18:58:07.476175
+updated_at: 2026-11-23 18:59:18.412209
 ---
 
 # REST API
@@ -5266,6 +5266,151 @@ xstockShareName | String | 对应的站内资产名称
 **确认到账** 是够充币确认数，且币已经到账户中，但是不可提。  
 **充值成功** 是当前账户完成到提币确认，可以提出。 
 
+### 获取因国际转账规则而锁定的充值记录 
+
+获取当前因国际转账规则而被锁定的充值列表。如果用户没有被锁定的充值，则返回空数组。锁定充值的最大数量限制为 50 条。
+
+#### 限速：3次/s
+
+#### 限速规则：User ID + IP
+
+#### HTTP 请求
+
+`GET /api/v5/asset/travel-rule/get-locked`
+
+> 请求示例
+    
+    
+    GET /api/v5/asset/travel-rule/get-locked
+    
+    
+    
+    import okx.Funding as Funding
+    
+    apikey = "YOUR_API_KEY"
+    secretkey = "YOUR_SECRET_KEY"
+    passphrase = "YOUR_PASSPHRASE"
+    
+    flag = "0"  # 实盘: 0, 模拟盘: 1
+    
+    fundingAPI = Funding.FundingAPI(apikey, secretkey, passphrase, False, flag)
+    
+    result = fundingAPI.get_travel_rule_locked_deposits()
+    print(result)
+    
+
+#### 请求参数
+
+无。用户身份通过 API Key 认证解析。
+
+> 返回示例
+    
+    
+    {
+      "code": "0",
+      "data": [
+        {
+          "depId": "98765",
+          "txId": "0xabc123def456789...",
+          "addr": "0xdef456abc789012...",
+          "ccy": "USDT",
+          "chain": "ERC20",
+          "amt": "100.00000000",
+          "ts": "1714564800000"
+        }
+      ],
+      "msg": ""
+    }
+    
+
+#### 返回参数
+
+参数 | 类型 | 描述  
+---|---|---  
+depId | String | 充值 ID  
+txId | String | 链上交易哈希  
+addr | String | 充值地址  
+ccy | String | 币种，如 `USDT`。如果币种查询失败则返回空字符串  
+chain | String | 网络/链名称，如 `ERC20`。如果链查询失败则返回空字符串  
+amt | String | 充值数量  
+ts | String | 数据生成时间，Unix 时间戳的毫秒数格式，如 `1714564800000`  
+  
+### 解锁国际转账规则充值 
+
+提交发起人信息以解锁因国际转账规则而被锁定的充值。如果充值已经解锁，则直接返回成功，不重复处理。
+
+#### 限速：3次/s
+
+#### 限速规则：User ID + IP
+
+#### 权限：提币
+
+#### HTTP 请求
+
+`POST /api/v5/asset/travel-rule/unlock`
+
+#### 请求参数
+
+参数 | 类型 | 是否必须 | 描述  
+---|---|---|---  
+depId | String | 是 | 被锁定的充值 ID  
+questionnaire | Object | 是 | 发起人信息。所需字段取决于用户所属实体。  
+> personType | String | 是 | 发起人类型。`1`：本人（存款人即账户持有人）；`2`：第三方。  
+> walletType | String | 是 | 来源钱包类型。`exchange`：交易所钱包；`private`：私人钱包。  
+> exchId | String | 条件必填 | 来源交易所 ID，可通过[获取交易所列表（公共）](/docs-v5/zh/#funding-account-rest-api-get-exchange-list-public)查询；未列出的交易所使用 `0`。当 `walletType` = `exchange` 时必填。  
+> exchName | String | 条件必填 | 来源交易所名称，如 `Example Exchange`。当 `exchId` = `0` 时必填。  
+> origFirstName | String | 条件必填 | 发起人名字。自然人未提供 `origCompanyName` 时必填。  
+> origLastName | String | 条件必填 | 发起人姓氏。自然人未提供 `origCompanyName` 时必填。  
+> origCompanyName | String | 条件必填 | 发起人公司名称。法人实体未提供 `origFirstName` 和 `origLastName` 时必填。  
+> origCountry | String | 条件必填 | 发起人居住国家；法人实体填写注册国家。ISO 3166-1 alpha-2 代码，如 `SG`。  
+> origGeoAddress | String | 条件必填 | 单行完整地址：街道、城镇/城市、州/省、邮政编码。  
+> origDob | String | 条件必填 | 发起人出生日期；法人实体填写注册/成立日期，格式为 `YYYY-MM-DD`。  
+> origPob | String | 条件必填 | 发起人出生地；法人实体填写注册国家。ISO 3166-1 alpha-2 代码，如 `SG`。  
+> origNationality | String | 条件必填 | 发起人国籍。ISO 3166-1 alpha-2 代码，如 `SG`。自然人必填。  
+> brazilClassificationCode | String | 条件必填 | 转账用途代码。充值金额低于 50,000 USD 时使用 Annex I 代码；达到或超过 50,000 USD 时使用 Annex II 代码。OKX Brazil 用户目前可选，后续将改为必填。  
+  
+> 请求示例
+    
+    
+    POST /api/v5/asset/travel-rule/unlock
+    body
+    
+    
+    
+    {
+      "depId": "1234567890",
+      "questionnaire": {
+        "personType": "2",
+        "walletType": "exchange",
+        "exchId": "0",
+        "exchName": "Example Exchange",
+        "origFirstName": "Alex",
+        "origLastName": "Chen",
+        "origCountry": "SG",
+        "origGeoAddress": "123 Main St, Singapore 018956",
+        "origDob": "1990-01-01",
+        "origPob": "SG"
+      }
+    }
+    
+
+> 返回示例
+    
+    
+    {
+      "code": "0",
+      "data": [{"result": true}],
+      "msg": ""
+    }
+    
+
+#### 返回参数
+
+参数 | 类型 | 描述  
+---|---|---  
+result | Boolean | `true`：接受解锁请求，充值已释放或已提前解锁。  
+空 `data` 数组：解锁失败，充值仍处于锁定状态。  
+  
 ### 提币 
 
 支持资金账户资产提币。普通子账户不支持提币。

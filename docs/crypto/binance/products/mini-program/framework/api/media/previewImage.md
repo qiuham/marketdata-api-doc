@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/media/previewImage
 api_type: Guide
-updated_at: 2026-11-22 18:42:47.072672
+updated_at: 2026-11-23 18:45:47.088333
 ---
 
 # bn.previewImage

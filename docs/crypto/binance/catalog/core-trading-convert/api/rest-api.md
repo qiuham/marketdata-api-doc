@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api
 api_type: REST
-updated_at: 2026-11-22 18:46:10.946249
+updated_at: 2026-11-23 18:49:34.957869
 ---
 
 # Convert REST API

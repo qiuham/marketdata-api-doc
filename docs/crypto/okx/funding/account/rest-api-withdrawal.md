@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-withdrawal
 anchor_id: funding-account-rest-api-withdrawal
 api_type: REST
-updated_at: 2026-11-22 18:58:07.706461
+updated_at: 2026-11-23 18:59:18.526750
 ---
 
 # Withdrawal
@@ -415,8 +415,8 @@ American Samoa | AS
 
 # 提币
 
-支持资金账户资产提币。普通子账户不支持提币。
-
+支持资金账户资产提币。普通子账户不支持提币。  
+  
 API只能提币到免认证地址/账户上，通过 WEB/APP 可以设置免认证地址。  关于标签  
 某些币种如XRP充币时同时需要一个充值地址和标签（又名memo/payment_id），标签是一种保证您的充币地址唯一性的数字串，与充币地址成对出现并一一对应。请您务必遵守正确的充值步骤，在提币时输入完整信息，否则将面临丢失币的风险！  
 对于有标签的币种，如果是OKX用户间的提币，请走内部转账不要走链上提币。  下列内容仅适用于居住地为阿拉伯联合酋长国的用户  

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/market-data-collection-best-practices
 api_type: Guide
-updated_at: 2026-11-22 18:59:21.452087
+updated_at: 2026-11-23 19:00:28.977661
 ---
 
 # Market Data Collection
@@ -145,6 +145,8 @@ Subscriptions only deliver data from the moment you subscribe. To backfill histo
 | Mark prices | [`public/get_mark_price_history`](https://docs.deribit.com/api-reference/market-data/public-get_mark_price_history) | 5-minute data. Available only for options that participate in volatility index calculations. Futures and perpetuals return an empty list; use OHLC candles for those instead. |
 | Funding rates (perpetuals) | [`public/get_funding_rate_history`](https://docs.deribit.com/api-reference/market-data/public-get_funding_rate_history), [`public/get_funding_chart_data`](https://docs.deribit.com/api-reference/market-data/public-get_funding_chart_data) | Hourly funding rate records or chart-ready data points. |
 | Settlements and deliveries | [`public/get_last_settlements_by_currency`](https://docs.deribit.com/api-reference/market-data/public-get_last_settlements_by_currency), [`public/get_last_settlements_by_instrument`](https://docs.deribit.com/api-reference/market-data/public-get_last_settlements_by_instrument), [`public/get_delivery_prices`](https://docs.deribit.com/api-reference/market-data/public-get_delivery_prices) | Settlement, delivery, and bankruptcy events, plus historical delivery prices per index. |
+
+Order book history (past bids and asks) isn't in this table. [`public/get_order_book`](https://docs.deribit.com/api-reference/market-data/public-get_order_book) accepts only `instrument_name` and `depth`, so it always returns the book as it is now. To analyze historical bids and asks, subscribe to the [`book.*`](https://docs.deribit.com/subscriptions/orderbook/bookinstrument_nameinterval) or [`ticker.*`](https://docs.deribit.com/subscriptions/market-data/tickerinstrument_nameinterval) channels and store the updates yourself while the instrument is live. This also applies to options and futures that later expire.
 
 For your own past trades and orders, set `historical: true` on the `private/get_user_trades_*` and `private/get_order_history_*` endpoints. See [Accessing Historical Trades and Orders](https://docs.deribit.com/articles/accessing-historical-trades-orders.md).
 

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/move-position-history
 api_type: Position
-updated_at: 2026-11-22 18:49:30.270345
+updated_at: 2026-11-23 18:52:02.089792
 ---
 
 # Get Move Position History
@@ -42,6 +42,7 @@ list| array| Object
 > execFee| string| The fee for taker or maker in the base currency paid to the Exchange executing the block trade  
 > status| string| Block trade status. `Processing`, `Filled`, `Rejected`  
 > execId| string| The unique trade ID from the exchange  
+> reduceOnly| boolean| Reduce-only flag  
 > resultCode| integer| The result code of the order. `0` means success  
 > resultMessage| string| The error message. `""` when resultCode=0  
 > createdAt| number| The timestamp (ms) when the order is created  
@@ -176,6 +177,7 @@ list| array| Object
 > execFee| string| 成交費用  
 > status| string| 大宗交易訂單狀態. `Processing`, `Filled`, `Rejected`  
 > execId| string| 交易所側的成交ID  
+> reduceOnly| boolean| 只減倉標記  
 > resultCode| integer| 錯誤碼. `0`表示成功  
 > resultMessage| string| 錯誤信息. 當resultCode=0時, 則返回`""`  
 > createdAt| number| 訂單創建時間戳 (毫秒)  

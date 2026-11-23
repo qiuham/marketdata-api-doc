@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/dual-asset/create-order
 api_type: REST
-updated_at: 2026-11-22 18:48:08.592090
+updated_at: 2026-11-23 18:51:03.754300
 ---
 
 # Place Order

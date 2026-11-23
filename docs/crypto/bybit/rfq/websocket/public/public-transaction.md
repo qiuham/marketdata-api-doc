@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/websocket/public/public-transaction
 api_type: WebSocket
-updated_at: 2026-11-22 18:49:48.491119
+updated_at: 2026-11-23 18:52:16.018013
 ---
 
 # Trade

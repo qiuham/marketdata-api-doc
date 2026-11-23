@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-directdebit-create-contract
 api_type: Guide
-updated_at: 2026-11-22 18:33:15.319950
+updated_at: 2026-11-23 18:35:04.641014
 ---
 
 # Direct Debit/Pre Authorization Create Contract

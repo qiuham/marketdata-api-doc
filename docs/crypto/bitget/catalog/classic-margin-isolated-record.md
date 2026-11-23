@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-margin-isolated-record
 api_type: REST
-updated_at: 2026-11-22 19:01:08.269548
+updated_at: 2026-11-23 19:02:33.601135
 ---
 
 # Classic Isolated Margin Records API

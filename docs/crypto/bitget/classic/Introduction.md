@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/Introduction
 api_type: Guide
-updated_at: 2026-11-22 18:59:33.071300
+updated_at: 2026-11-23 19:00:43.767672
 ---
 
 # Introduction
@@ -183,7 +183,7 @@ Our interfaces provide detailed information about trading pairs, including:
 
 We offer comprehensive interfaces for crypto Earn products, including:
 
-- **Savings**: Both fixed and flexible options
+- **Simple Earn**: Both fixed and flexible options
 - **Shark Fin**: Structured products
 - Features include information retrieval, PnL statistics, asset analysis, subscription, and redemption
 
@@ -383,7 +383,7 @@ Due to the volatile nature of the cryptocurrency market, coin price fluctuations
 
 我们为加密货币理财产品提供全面的接口，包括：
 
-- **理财宝**：活期和定期选项
+- **简单赚币**：活期和定期选项
 - **鲨鱼鳍**：结构化产品
 - 功能包括信息检索、收益统计、资产分析、申购和赎回
 

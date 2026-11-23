@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/user/userordersinstrument_nameinterval
 api_type: WebSocket
-updated_at: 2026-11-22 18:59:22.879596
+updated_at: 2026-11-23 19:00:31.112404
 ---
 
 # user.orders.(instrument_name).(interval)

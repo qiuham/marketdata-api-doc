@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/private/Order-Channel
 api_type: WebSocket
-updated_at: 2026-11-22 19:00:42.630945
+updated_at: 2026-11-23 19:02:01.750477
 ---
 
 # Order Channel

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-wallet-transfer
 api_type: Guide
-updated_at: 2026-11-22 18:32:27.481320
+updated_at: 2026-11-23 18:34:10.600048
 ---
 
 # Transfer Fund

@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/algo-trading/get-closed-strategies'
-updated_at: 2026-11-22
+updated_at: 2026-11-23
 ---
 
 # Get Closed Strategies

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/spot/private/Place-Order-Channel
 api_type: WebSocket
-updated_at: 2026-11-22 19:00:10.565514
+updated_at: 2026-11-23 19:01:26.011983
 ---
 
 # Place Order Channel

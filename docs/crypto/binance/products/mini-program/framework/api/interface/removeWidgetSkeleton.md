@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/removeWidgetSkeleton
 api_type: Guide
-updated_at: 2026-11-22 18:43:49.931950
+updated_at: 2026-11-23 18:47:00.101875
 ---
 
 # bn.removeWidgetSkeleton

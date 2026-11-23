@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/public/Candlesticks-Channel
 api_type: WebSocket
-updated_at: 2026-11-22 19:00:44.671152
+updated_at: 2026-11-23 19:02:03.988595
 ---
 
 # Candlestick Channel
