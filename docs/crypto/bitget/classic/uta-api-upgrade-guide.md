@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/uta-api-upgrade-guide
 api_type: Guide
-updated_at: 2026-11-23 19:01:11.248678
+updated_at: 2026-11-24 19:00:29.339836
 ---
 
 # Upgrade to Unified Trading Account

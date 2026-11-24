@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/device/onMemoryWarning
 api_type: Guide
-updated_at: 2026-11-23 18:47:43.297490
+updated_at: 2026-11-24 18:47:24.984113
 ---
 
 # bn.onMemoryWarning

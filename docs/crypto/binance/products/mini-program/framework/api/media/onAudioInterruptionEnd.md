@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/media/onAudioInterruptionEnd
 api_type: Guide
-updated_at: 2026-11-23 18:45:49.924287
+updated_at: 2026-11-24 18:45:34.014435
 ---
 
 # bn.onAudioInterruptionEnd

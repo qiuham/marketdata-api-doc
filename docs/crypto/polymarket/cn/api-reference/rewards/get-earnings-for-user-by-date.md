@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/rewards/get-earnings-for-user-by-date'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # 获取用户指定日期的收益

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_historical_volatility
 api_type: JSON-RPC
-updated_at: 2026-11-23 19:00:37.957378
+updated_at: 2026-11-24 18:59:51.597104
 ---
 
 # public/get_historical_volatility

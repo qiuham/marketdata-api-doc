@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/trade-capture-report-request
 api_type: FIX
-updated_at: 2026-11-23 19:00:32.889073
+updated_at: 2026-11-24 18:59:45.574903
 ---
 
 # TradeCaptureReportRequest(AD) (Production FIX API)

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/market-data-collection-best-practices
 api_type: Guide
-updated_at: 2026-11-23 19:00:28.977661
+updated_at: 2026-11-24 18:59:41.536136
 ---
 
 # Market Data Collection

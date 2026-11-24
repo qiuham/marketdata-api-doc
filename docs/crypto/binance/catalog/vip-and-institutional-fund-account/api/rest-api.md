@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/vip-and-institutional-fund-account/api/rest-api
 api_type: REST
-updated_at: 2026-11-23 18:49:41.587311
+updated_at: 2026-11-24 18:49:19.218591
 ---
 
 # Fund Account REST API

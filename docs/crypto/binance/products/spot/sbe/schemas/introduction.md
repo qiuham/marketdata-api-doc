@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/sbe/schemas/introduction
 api_type: SBE
-updated_at: 2026-11-23 18:42:26.271861
+updated_at: 2026-11-24 18:42:11.538818
 ---
 
 # SBE

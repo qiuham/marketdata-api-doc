@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/reference/rest-auth-cancel-funding-offer'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Cancel Funding Offer

@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/learn-about-trading/markets'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Markets
@@ -46,15 +46,18 @@ Each instrument also includes details that shape how it trades:
 Each market tracks an underlying market through external price feeds. Those
 feeds drive the [Index Price](https://docs.polymarket.com/perps/learn-about-trading/index-price.md), and the Index Price helps anchor the [Mark Price](https://docs.polymarket.com/perps/learn-about-trading/mark-price.md).
 
-## Pre-IPO Markets
+## Asset Specifications
 
-Pre-IPO perpetuals track a private company's valuation before it lists. Each
-pre-IPO market has its own specification page covering its price sources,
-contract terms, and what happens when the company goes public.
+Some markets have additional pricing, contract, and settlement rules. Read
+their specifications before trading.
 
-> [card] [Anthropic (ANT)](https://docs.polymarket.com/perps/learn-about-trading/markets/pre-ipo-anthropic.md)
+> [card] [Pre-IPO Perps](https://docs.polymarket.com/perps/learn-about-trading/markets/pre-ipo.md)
 >
-> Specifications and the November 16 rebase to a per-share market.
+> Pre-IPO pricing, contract terms, and the transition to per-share pricing.
+
+> [card] [Compute Perps](https://docs.polymarket.com/perps/learn-about-trading/markets/compute.md)
+>
+> Planned GPU rental-price markets, pricing, and settlement.
 
 
 This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

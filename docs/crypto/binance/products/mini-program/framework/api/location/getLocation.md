@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/location/getLocation
 api_type: Guide
-updated_at: 2026-11-23 18:46:19.321134
+updated_at: 2026-11-24 18:46:02.862310
 ---
 
 # bn.getLocation

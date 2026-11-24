@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-get_account_summaries
 api_type: JSON-RPC
-updated_at: 2026-11-23 19:00:35.198634
+updated_at: 2026-11-24 18:59:47.808945
 ---
 
 # private/get_account_summaries

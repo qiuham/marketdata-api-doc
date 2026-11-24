@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/errors
 api_type: Guide
-updated_at: 2026-11-23 18:36:14.956895
+updated_at: 2026-11-24 18:36:07.566756
 ---
 
 # Error codes for Binance SPOT Testnet

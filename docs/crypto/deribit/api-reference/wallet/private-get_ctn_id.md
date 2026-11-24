@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-get_ctn_id
 api_type: JSON-RPC
-updated_at: 2026-11-23 19:00:40.903459
+updated_at: 2026-11-24 18:59:55.609260
 ---
 
 # private/get_ctn_id
@@ -156,8 +156,8 @@ components:
 
 ## Related topics
 
+- [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md)
 - [private/withdraw](https://docs.deribit.com/api-reference/wallet/private-withdraw.md)
 - [private/get_address_book](https://docs.deribit.com/api-reference/wallet/private-get_address_book.md)
 - [private/get_current_deposit_address](https://docs.deribit.com/api-reference/wallet/private-get_current_deposit_address.md)
 - [private/get_members](https://docs.deribit.com/api-reference/account-management/private-get_members.md)
-- [private/get_deposits](https://docs.deribit.com/api-reference/wallet/private-get_deposits.md)

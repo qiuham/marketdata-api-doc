@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams
 api_type: WebSocket Streams
-updated_at: 2026-11-23 18:49:31.116897
+updated_at: 2026-11-24 18:49:06.889913
 ---
 
 # Futures (USDⓈ-M) WebSocket Market Streams
@@ -161,11 +161,11 @@ Operation ID: `aggregateTradeStreams`
 
 流名称: `!forceOrder@arr`
 
-The All Liquidation Order Snapshot Streams push force liquidation order information for all symbols in the market. For each symbol，only the latest one liquidation order within 1000ms will be pushed as the snapshot. If no liquidation happens in the interval of 1000ms, no stream will be pushed.
+The All Liquidation Order Snapshot Streams push force liquidation order information for all symbols in the market. For each symbol，only the largest one liquidation order within 1000ms will be pushed as the snapshot. If no liquidation happens in the interval of 1000ms, no stream will be pushed.
 
 > **After CM migration**, this stream pushes the merged UM + CM universe (subscribable on both `fstream` and `dstream`); each payload is appended with a new `st` field (`1` = UM, `2` = CM) and a new `ps` field (pair symbol).
 
-全市场强平订单快照流推送市场上所有交易对的强平订单信息。对于每个交易对，在1000毫秒内只会推送最新的一笔强平订单作为快照。如果在1000毫秒的时间间隔内没有发生强平，则不会推送任何流。
+全市场强平订单快照流推送市场上所有交易对的强平订单信息。对于每个交易对，在1000毫秒内只会推送最大的一笔强平订单作为快照。如果在1000毫秒的时间间隔内没有发生强平，则不会推送任何流。
 
 > **迁移后**,此 stream 推送合并的 UM + CM universe(`fstream` 与 `dstream` 都可订阅);payload 末尾新增 `st` 字段(`1` = UM,`2` = CM)以及 `ps`(pair symbol)字段。
 
@@ -1364,9 +1364,9 @@ Operation ID: `klineCandlestickStreams`
 
 流名称: `{symbol}@forceOrder`
 
-The Liquidation Order Snapshot Streams push force liquidation order information for specific symbol. For each symbol，only the latest one liquidation order within 1000ms will be pushed as the snapshot. If no liquidation happens in the interval of 1000ms, no stream will be pushed.
+The Liquidation Order Snapshot Streams push force liquidation order information for specific symbol. For each symbol，only the largest one liquidation order within 1000ms will be pushed as the snapshot. If no liquidation happens in the interval of 1000ms, no stream will be pushed.
 
-强平订单快照流推送特定交易对的强平订单信息。对于每个交易对，在1000毫秒内只会推送最新的一笔强平订单作为快照。如果在1000毫秒的时间间隔内没有发生强平，则不会推送任何流。
+强平订单快照流推送特定交易对的强平订单信息。对于每个交易对，在1000毫秒内只会推送最大的一笔强平订单作为快照。如果在1000毫秒的时间间隔内没有发生强平，则不会推送任何流。
 
 更新速度: 1000ms
 

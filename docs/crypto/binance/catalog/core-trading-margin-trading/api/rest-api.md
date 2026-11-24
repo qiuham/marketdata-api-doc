@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api
 api_type: REST
-updated_at: 2026-11-23 18:49:34.060117
+updated_at: 2026-11-24 18:49:11.815954
 ---
 
 # Margin REST API
@@ -1129,9 +1129,9 @@ Operation ID: `startUserDataStreamV2`
 
 `PUT /sapi/v2/margin/listen-key`
 
-Keepalive a user data stream to prevent a time out.
+Keep alive a user data stream to prevent a timeout. Each successful request extends the listen key validity for 1 hour.
 
-有效期延长至本次调用后24小时。
+有效期延长至本次调用后1小时。
 
 Operation ID: `keepaliveUserDataStreamV2`
 
@@ -1155,7 +1155,31 @@ Operation ID: `keepaliveUserDataStreamV2`
 
 Close out a user data stream.
 
-关闭某账户数据流
+**Note:** After this request, you will receive another WebSocket message:
+
+```json
+{
+  "e": "eventStreamTerminated",
+  "E": 1793646860552
+}
+```
+
+- `e` (string): event type. Example: `eventStreamTerminated`
+- `E` (integer): current timestamp. Example: `1793646860552`
+
+关闭某账户数据流。
+
+**说明：** 调用此接口后，您将收到另一条 WebSocket 消息：
+
+```json
+{
+  "e": "eventStreamTerminated",
+  "E": 1793646860552
+}
+```
+
+- `e`（string）：事件类型。示例：`eventStreamTerminated`
+- `E`（integer）：当前时间戳。示例：`1793646860552`
 
 Operation ID: `closeUserDataStreamV2`
 

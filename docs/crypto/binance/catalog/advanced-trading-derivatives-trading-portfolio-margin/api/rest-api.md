@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api
 api_type: REST
-updated_at: 2026-11-23 18:49:36.375656
+updated_at: 2026-11-24 18:49:13.850437
 ---
 
 # Portfolio Margin REST API
@@ -37,7 +37,13 @@ Access account information, manage margin positions, and trade with Binance Port
 - `POST /papi/v1/auto-collection` — Fund Auto-collection (TRADE)
 - `POST /papi/v1/asset-collection` — Fund Collection by Asset (TRADE)
 - `GET /papi/v1/cm/account` — Get CM Account Detail (USER_DATA)
+- `GET /papi/v1/cm/order/asyn/id` — Get CM Futures Order Download Link by Id (USER_DATA)
+- `GET /papi/v1/cm/trade/asyn/id` — Get CM Futures Trade Download Link by Id (USER_DATA)
+- `GET /papi/v1/cm/income/asyn/id` — Get CM Futures Transaction Download Link by Id (USER_DATA)
 - `GET /papi/v1/cm/income` — Get CM Income History (USER_DATA)
+- `GET /papi/v1/cm/order/asyn` — Get Download Id For CM Futures Order History (USER_DATA)
+- `GET /papi/v1/cm/trade/asyn` — Get Download Id For CM Futures Trade History (USER_DATA)
+- `GET /papi/v1/cm/income/asyn` — Get Download Id For CM Futures Transaction History (USER_DATA)
 - `GET /papi/v1/um/order/asyn` — Get Download Id For UM Futures Order History (USER_DATA)
 - `GET /papi/v1/um/trade/asyn` — Get Download Id For UM Futures Trade History (USER_DATA)
 - `GET /papi/v1/um/income/asyn` — Get Download Id For UM Futures Transaction History (USER_DATA)
@@ -593,6 +599,99 @@ Operation ID: `getCmAccountDetail`
 | positions[].maxQty | string |  | maximum quantity of base asset<br>例: `50` |
 | positions[].updateTime | integer (int64) |  | last update time<br>更新时间<br>例: `0` |
 
+## Get CM Futures Order Download Link by Id (USER_DATA)（通过下载Id获取CM合约订单历史下载链接 (USER_DATA)）
+
+`GET /papi/v1/cm/order/asyn/id`
+
+Get CM futures order download link by Id
+
+通过下载Id获取CM合约订单历史下载链接
+
+Operation ID: `getCmFuturesOrderDownloadLinkById`
+
+### 参数
+
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| X-MBX-APIKEY | header | string | 是 | An API Key is required to access this endpoint and must be included in the request headers. To create an API Key, refer to: [https://www.binance.com/en/support/faq/detail/360002502072](https://www.binance.com/en/support/faq/detail/360002502072).<br>访问此接口需要 API Key，并且必须在请求头中携带。关于如何创建 API Key，请参考：[https://www.binance.com/cn/support/faq/detail/360002502072](https://www.binance.com/cn/support/faq/detail/360002502072)。<br>例: `API_KEY` |
+| downloadId | query | string | 是 | get by download id api<br>通过下载id 接口获取<br>例: `545923594199212032` |
+| recvWindow | query | integer (int64) |  | 例: `5000` |
+| timestamp | query | integer (int64) | 是 | Unix timestamp in milliseconds used to sign the request. The value must reflect the current client time and is validated by the server for signed endpoints.<br>用于请求签名的 Unix 时间戳，单位为毫秒. 该值必须反映客户端当前时间，并会在签名接口中由服务器进行校验.<br>例: `1770736694138` |
+
+### 响应 200：Get CM Futures Order Download Link by Id / 获取CM 合约 订单 Download Link by ID
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| downloadId | string |  | Download ID.<br>例: `545923594199212032` |
+| status | string |  | Enum：completed，processing<br>状态，枚举类型：completed 已完成，processing 处理中<br>例: `processing` |
+| url | string |  | The link is mapped to download id<br>适配该笔ID请求的下载链接<br>例: `` |
+| s3Link | string |  | S3 Link.<br>例: `null` |
+| notified | boolean |  | ignore<br>忽略<br>例: `False` |
+| expirationTimestamp | integer (int64) |  | The link would expire after this timestamp<br>晚于该时间戳之后链接将自动失效<br>例: `-1` |
+| isExpired | string |  | Is Expired.<br>例: `null` |
+
+## Get CM Futures Trade Download Link by Id (USER_DATA)（通过下载Id获取CM合约交易历史下载链接 (USER_DATA)）
+
+`GET /papi/v1/cm/trade/asyn/id`
+
+Get CM futures trade download link by Id
+
+通过下载Id获取CM合约交易历史下载链接
+
+Operation ID: `getCmFuturesTradeDownloadLinkById`
+
+### 参数
+
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| X-MBX-APIKEY | header | string | 是 | An API Key is required to access this endpoint and must be included in the request headers. To create an API Key, refer to: [https://www.binance.com/en/support/faq/detail/360002502072](https://www.binance.com/en/support/faq/detail/360002502072).<br>访问此接口需要 API Key，并且必须在请求头中携带。关于如何创建 API Key，请参考：[https://www.binance.com/cn/support/faq/detail/360002502072](https://www.binance.com/cn/support/faq/detail/360002502072)。<br>例: `API_KEY` |
+| downloadId | query | string | 是 | get by download id api<br>通过下载id 接口获取<br>例: `545923594199212032` |
+| recvWindow | query | integer (int64) |  | 例: `5000` |
+| timestamp | query | integer (int64) | 是 | Unix timestamp in milliseconds used to sign the request. The value must reflect the current client time and is validated by the server for signed endpoints.<br>用于请求签名的 Unix 时间戳，单位为毫秒. 该值必须反映客户端当前时间，并会在签名接口中由服务器进行校验.<br>例: `1770736694138` |
+
+### 响应 200：Get CM Futures Trade Download Link by Id / 获取CM 合约 交易 Download Link by ID
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| downloadId | string |  | Download ID.<br>例: `545923594199212032` |
+| status | string |  | Enum：completed，processing<br>状态，枚举类型：completed 已完成，processing 处理中<br>例: `processing` |
+| url | string |  | The link is mapped to download id<br>适配该笔ID请求的下载链接<br>例: `` |
+| s3Link | string |  | S3 Link.<br>例: `null` |
+| notified | boolean |  | ignore<br>忽略<br>例: `False` |
+| expirationTimestamp | integer (int64) |  | The link would expire after this timestamp<br>晚于该时间戳之后链接将自动失效<br>例: `-1` |
+| isExpired | string |  | Is Expired.<br>例: `null` |
+
+## Get CM Futures Transaction Download Link by Id (USER_DATA)（通过下载Id获取CM合约资金流水历史下载链接 (USER_DATA)）
+
+`GET /papi/v1/cm/income/asyn/id`
+
+Get CM futures Transaction download link by Id
+
+通过下载Id获取CM合约资金流水历史下载链接
+
+Operation ID: `getCmFuturesTransactionDownloadLinkById`
+
+### 参数
+
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| X-MBX-APIKEY | header | string | 是 | An API Key is required to access this endpoint and must be included in the request headers. To create an API Key, refer to: [https://www.binance.com/en/support/faq/detail/360002502072](https://www.binance.com/en/support/faq/detail/360002502072).<br>访问此接口需要 API Key，并且必须在请求头中携带。关于如何创建 API Key，请参考：[https://www.binance.com/cn/support/faq/detail/360002502072](https://www.binance.com/cn/support/faq/detail/360002502072)。<br>例: `API_KEY` |
+| downloadId | query | string | 是 | get by download id api<br>通过下载id 接口获取<br>例: `545923594199212032` |
+| recvWindow | query | integer (int64) |  | 例: `5000` |
+| timestamp | query | integer (int64) | 是 | Unix timestamp in milliseconds used to sign the request. The value must reflect the current client time and is validated by the server for signed endpoints.<br>用于请求签名的 Unix 时间戳，单位为毫秒. 该值必须反映客户端当前时间，并会在签名接口中由服务器进行校验.<br>例: `1770736694138` |
+
+### 响应 200：Get CM Futures Transaction Download Link by Id / 获取CM 合约 Transaction Download Link by ID
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| downloadId | string |  | Download ID.<br>例: `545923594199212032` |
+| status | string |  | Enum：completed，processing<br>状态，枚举类型：completed 已完成，processing 处理中<br>例: `processing` |
+| url | string |  | The link is mapped to download id<br>适配该笔ID请求的下载链接<br>例: `` |
+| s3Link | string |  | S3 Link.<br>例: `null` |
+| notified | boolean |  | ignore<br>忽略<br>例: `False` |
+| expirationTimestamp | integer (int64) |  | The link would expire after this timestamp<br>晚于该时间戳之后链接将自动失效<br>例: `-1` |
+| isExpired | string |  | Is Expired.<br>例: `null` |
+
 ## Get CM Income History (USER_DATA)（获取CM损益资金流水 (USER_DATA)）
 
 `GET /papi/v1/cm/income`
@@ -628,6 +727,87 @@ Operation ID: `getCmIncomeHistory`
 | [].time | integer (int64) |  | Event time.<br>时间。<br>例: `1570608000000` |
 | [].tranId | string |  | Transaction ID.<br>交易ID。<br>例: `9689322392` |
 | [].tradeId | string |  | Trade ID, if existing.<br>成交ID（如存在）。<br>例: `` |
+
+## Get Download Id For CM Futures Order History (USER_DATA)（获取CM合约订单历史下载Id (USER_DATA)）
+
+`GET /papi/v1/cm/order/asyn`
+
+Get download id for CM futures order history
+
+获取CM合约订单历史下载Id
+
+Operation ID: `getDownloadIdForCmFuturesOrderHistory`
+
+### 参数
+
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| X-MBX-APIKEY | header | string | 是 | An API Key is required to access this endpoint and must be included in the request headers. To create an API Key, refer to: [https://www.binance.com/en/support/faq/detail/360002502072](https://www.binance.com/en/support/faq/detail/360002502072).<br>访问此接口需要 API Key，并且必须在请求头中携带。关于如何创建 API Key，请参考：[https://www.binance.com/cn/support/faq/detail/360002502072](https://www.binance.com/cn/support/faq/detail/360002502072)。<br>例: `API_KEY` |
+| startTime | query | integer (int64) | 是 | Timestamp in ms<br>时间戳，单位ms<br>例: `1623319461670` |
+| endTime | query | integer (int64) | 是 | Timestamp in ms<br>时间戳，单位ms<br>例: `1641782889000` |
+| recvWindow | query | integer (int64) |  | 例: `5000` |
+| timestamp | query | integer (int64) | 是 | Unix timestamp in milliseconds used to sign the request. The value must reflect the current client time and is validated by the server for signed endpoints.<br>用于请求签名的 Unix 时间戳，单位为毫秒. 该值必须反映客户端当前时间，并会在签名接口中由服务器进行校验.<br>例: `1770736694138` |
+
+### 响应 200：Get Download Id For CM Futures Order History / 获取Download ID 用于 CM 合约 订单 历史
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| avgCostTimestampOfLast30d | integer (int64) |  | Average time taken for data download in the past 30 days<br>过去30天平均数据下载时间<br>例: `7241837` |
+| downloadId | string |  | Download ID.<br>例: `546975389218332672` |
+
+## Get Download Id For CM Futures Trade History (USER_DATA)（获取CM合约交易历史下载Id (USER_DATA)）
+
+`GET /papi/v1/cm/trade/asyn`
+
+Get download id for CM futures trade history
+
+获取CM合约交易历史下载Id
+
+Operation ID: `getDownloadIdForCmFuturesTradeHistory`
+
+### 参数
+
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| X-MBX-APIKEY | header | string | 是 | An API Key is required to access this endpoint and must be included in the request headers. To create an API Key, refer to: [https://www.binance.com/en/support/faq/detail/360002502072](https://www.binance.com/en/support/faq/detail/360002502072).<br>访问此接口需要 API Key，并且必须在请求头中携带。关于如何创建 API Key，请参考：[https://www.binance.com/cn/support/faq/detail/360002502072](https://www.binance.com/cn/support/faq/detail/360002502072)。<br>例: `API_KEY` |
+| startTime | query | integer (int64) | 是 | Timestamp in ms<br>时间戳，单位ms<br>例: `1623319461670` |
+| endTime | query | integer (int64) | 是 | Timestamp in ms<br>时间戳，单位ms<br>例: `1641782889000` |
+| recvWindow | query | integer (int64) |  | 例: `5000` |
+| timestamp | query | integer (int64) | 是 | Unix timestamp in milliseconds used to sign the request. The value must reflect the current client time and is validated by the server for signed endpoints.<br>用于请求签名的 Unix 时间戳，单位为毫秒. 该值必须反映客户端当前时间，并会在签名接口中由服务器进行校验.<br>例: `1770736694138` |
+
+### 响应 200：Get Download Id For CM Futures Trade History / 获取Download ID 用于 CM 合约 交易 历史
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| avgCostTimestampOfLast30d | integer (int64) |  | Average time taken for data download in the past 30 days<br>过去30天平均数据下载时间<br>例: `7241837` |
+| downloadId | string |  | Download ID.<br>例: `546975389218332672` |
+
+## Get Download Id For CM Futures Transaction History (USER_DATA)（获取CM合约资金流水历史下载Id (USER_DATA)）
+
+`GET /papi/v1/cm/income/asyn`
+
+Get download id for CM futures transaction history
+
+获取CM合约资金流水历史下载Id
+
+Operation ID: `getDownloadIdForCmFuturesTransactionHistory`
+
+### 参数
+
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| X-MBX-APIKEY | header | string | 是 | An API Key is required to access this endpoint and must be included in the request headers. To create an API Key, refer to: [https://www.binance.com/en/support/faq/detail/360002502072](https://www.binance.com/en/support/faq/detail/360002502072).<br>访问此接口需要 API Key，并且必须在请求头中携带。关于如何创建 API Key，请参考：[https://www.binance.com/cn/support/faq/detail/360002502072](https://www.binance.com/cn/support/faq/detail/360002502072)。<br>例: `API_KEY` |
+| startTime | query | integer (int64) | 是 | Timestamp in ms<br>时间戳，单位ms<br>例: `1623319461670` |
+| endTime | query | integer (int64) | 是 | Timestamp in ms<br>时间戳，单位ms<br>例: `1641782889000` |
+| recvWindow | query | integer (int64) |  | 例: `5000` |
+| timestamp | query | integer (int64) | 是 | Unix timestamp in milliseconds used to sign the request. The value must reflect the current client time and is validated by the server for signed endpoints.<br>用于请求签名的 Unix 时间戳，单位为毫秒. 该值必须反映客户端当前时间，并会在签名接口中由服务器进行校验.<br>例: `1770736694138` |
+
+### 响应 200：Get Download Id For CM Futures Transaction History / 获取Download ID 用于 CM 合约 Transaction 历史
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| avgCostTimestampOfLast30d | integer (int64) |  | Average time taken for data download in the past 30 days<br>过去30天平均数据下载时间<br>例: `7241837` |
+| downloadId | string |  | Download ID.<br>例: `546975389218332672` |
 
 ## Get Download Id For UM Futures Order History (USER_DATA)（获取UM合约订单历史下载Id (USER_DATA)）
 

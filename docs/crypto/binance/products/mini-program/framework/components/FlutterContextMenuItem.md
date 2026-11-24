@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/FlutterContextMenuItem
 api_type: Guide
-updated_at: 2026-11-23 18:43:35.945773
+updated_at: 2026-11-24 18:43:21.734168
 ---
 
 # ContextMenuItem

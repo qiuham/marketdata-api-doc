@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/stocks/websocket-streams-general-info
 api_type: WebSocket
-updated_at: 2026-11-23 18:28:55.625049
+updated_at: 2026-11-24 18:28:31.880396
 ---
 
 # WebSocket Streams — General Info

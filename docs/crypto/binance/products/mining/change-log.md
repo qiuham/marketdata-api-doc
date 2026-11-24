@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mining/change-log
 api_type: Changelog
-updated_at: 2026-11-23 18:30:19.875678
+updated_at: 2026-11-24 18:30:15.187288
 ---
 
 # Change Log
@@ -10,7 +10,7 @@ updated_at: 2026-11-23 18:30:19.875678
 ## 2022-05-19
 
 - Update endpoint for Mining:
-  - `GET /sapi/v1/mining/pub/algoList` and `GET /sapi/v1/mining/pub/coinList`: Need no paramter.
+  - `GET /sapi/v1/mining/pub/algoList` and `GET /sapi/v1/mining/pub/coinList`: Need no parameter.
 
 ---
 

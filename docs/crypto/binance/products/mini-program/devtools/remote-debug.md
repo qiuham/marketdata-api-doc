@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/devtools/remote-debug
 api_type: Guide
-updated_at: 2026-11-23 18:38:41.517704
+updated_at: 2026-11-24 18:38:04.435583
 ---
 
 # Remote Debug

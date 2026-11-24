@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/search/search-markets-events-and-profiles'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # 搜索市场、事件和资料

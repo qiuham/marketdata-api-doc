@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/web-socket-api
 api_type: WebSocket
-updated_at: 2026-11-23 18:36:02.422597
+updated_at: 2026-11-24 18:35:54.964980
 ---
 
 # Public WebSocket API for Binance SPOT Testnet
@@ -72,7 +72,7 @@ Example of request:
     "quantity": "10",
     "timeInForce": "GTC",
     "timestamp": 1655716096498,
-    "apiKey": "T59MTDLWlpRW16JVeZ2Nju5A5C98WkMm8CSzWC4oqynUlTm1zXOxyauT8LmwXEv9",
+    "apiKey": "YOUR_API_KEY",
     "signature": "5942ad337e6779f2f4c62cd1c26dba71c91514400a24990a3e7f5edec9323f90"
   }
 }
@@ -661,10 +661,10 @@ Here is a step-by-step guide on how to sign requests using an HMAC secret key.
 
 Example API key and secret key:
 
-| Key         | Value                                                              |
-| ----------- | ------------------------------------------------------------------ |
-| `apiKey`    | `vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A` |
-| `secretKey` | `NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j` |
+| Key         | Value             |
+| ----------- | ----------------- |
+| `apiKey`    | `YOUR_API_KEY`    |
+| `secretKey` | `YOUR_SECRET_KEY` |
 
 **WARNING: DO NOT SHARE YOUR API KEY AND SECRET KEY WITH ANYONE.**
 
@@ -685,7 +685,7 @@ Example of request with a symbol name comprised entirely of ASCII characters:
     "price": "52000.00",
     "recvWindow": 100,
     "timestamp": 1645423376532,
-    "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+    "apiKey": "YOUR_API_KEY",
     "signature": "------ FILL ME ------"
   }
 }
@@ -706,7 +706,7 @@ Example of a request with a symbol name containing non-ASCII characters:
     "price": "0.10000000",
     "recvWindow": 5000,
     "timestamp": 1645423376532,
-    "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+    "apiKey": "YOUR_API_KEY",
     "signature": "------ FILL ME ------"
   }
 }
@@ -721,45 +721,45 @@ name**:
 
 For the first set of example parameters (ASCII only):
 
-| Parameter     | Value                                                            |
-| ------------- | ---------------------------------------------------------------- |
-| `apiKey`      | vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A |
-| `price`       | 52000.00                                                         |
-| `quantity`    | 0.01000000                                                       |
-| `recvWindow`  | 100                                                              |
-| `side`        | SELL                                                             |
-| `symbol`      | BTCUSDT                                                          |
-| `timeInForce` | GTC                                                              |
-| `timestamp`   | 1645423376532                                                    |
-| `type`        | LIMIT                                                            |
+| Parameter     | Value         |
+| ------------- | ------------- |
+| `apiKey`      | YOUR_API_KEY  |
+| `price`       | 52000.00      |
+| `quantity`    | 0.01000000    |
+| `recvWindow`  | 100           |
+| `side`        | SELL          |
+| `symbol`      | BTCUSDT       |
+| `timeInForce` | GTC           |
+| `timestamp`   | 1645423376532 |
+| `type`        | LIMIT         |
 
 For the second set of example parameters (some non-ASCII characters):
 
-| Parameter     | Value                                                            |
-| ------------- | ---------------------------------------------------------------- |
-| `apiKey`      | vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A |
-| `price`       | 0.10000000                                                       |
-| `quantity`    | 1.00000000                                                       |
-| `recvWindow`  | 5000                                                             |
-| `side`        | BUY                                                              |
-| `symbol`      | １２３４５６                                                     |
-| `timeInForce` | GTC                                                              |
-| `timestamp`   | 1645423376532                                                    |
-| `type`        | LIMIT                                                            |
+| Parameter     | Value         |
+| ------------- | ------------- |
+| `apiKey`      | YOUR_API_KEY  |
+| `price`       | 0.10000000    |
+| `quantity`    | 1.00000000    |
+| `recvWindow`  | 5000          |
+| `side`        | BUY           |
+| `symbol`      | １２３４５６  |
+| `timeInForce` | GTC           |
+| `timestamp`   | 1645423376532 |
+| `type`        | LIMIT         |
 
 Format parameters as `parameter=value` pairs separated by `&`. Values need to be encoded in UTF-8.
 
 For the first set of example parameters (ASCII only), the signature payload should look like this:
 
 ```console
-apiKey=vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
+apiKey=YOUR_API_KEY&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
 ```
 
 For the second set of example parameters (some non-ASCII characters), the signature payload should
 look like this:
 
 ```console
-apiKey=vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
+apiKey=YOUR_API_KEY&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
 ```
 
 **Step 2: Compute the signature**
@@ -776,8 +776,8 @@ You can cross-check your signature algorithm implementation with OpenSSL:
 For the first set of example parameters (ASCII only):
 
 ```console
-$ echo -n 'apiKey=vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
-  | openssl dgst -hex -sha256 -hmac 'NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j'
+$ echo -n 'apiKey=YOUR_API_KEY&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
+  | openssl dgst -hex -sha256 -hmac 'YOUR_SECRET_KEY'
 
 aa1b5712c094bc4e57c05a1a5c1fd8d88dcd628338ea863fec7b88e59fe2db24
 ```
@@ -785,8 +785,8 @@ aa1b5712c094bc4e57c05a1a5c1fd8d88dcd628338ea863fec7b88e59fe2db24
 For the second set of example parameters (some non-ASCII characters):
 
 ```console
-$ echo -n 'apiKey=vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
-  | openssl dgst -hex -sha256 -hmac 'NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j'
+$ echo -n 'apiKey=YOUR_API_KEY&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
+  | openssl dgst -hex -sha256 -hmac 'YOUR_SECRET_KEY'
 
 b33892ae8e687c939f4468c6268ddd4c40ac1af18ad19a064864c47bae0752cd
 ```
@@ -810,7 +810,7 @@ For the first set of example parameters (ASCII only):
     "price": "52000.00",
     "recvWindow": 100,
     "timestamp": 1645423376532,
-    "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+    "apiKey": "YOUR_API_KEY",
     "signature": "aa1b5712c094bc4e57c05a1a5c1fd8d88dcd628338ea863fec7b88e59fe2db24"
   }
 }
@@ -831,7 +831,7 @@ For the second set of example parameters (some non-ASCII characters):
     "price": "0.10000000",
     "recvWindow": 5000,
     "timestamp": 1645423376532,
-    "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+    "apiKey": "YOUR_API_KEY",
     "signature": "b33892ae8e687c939f4468c6268ddd4c40ac1af18ad19a064864c47bae0752cd"
   }
 }
@@ -841,9 +841,9 @@ For the second set of example parameters (some non-ASCII characters):
 
 Here is a step-by-step guide on how to sign requests using an RSA private key.
 
-| Key      | Value                                                              |
-| -------- | ------------------------------------------------------------------ |
-| `apiKey` | `CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ` |
+| Key      | Value          |
+| -------- | -------------- |
+| `apiKey` | `YOUR_API_KEY` |
 
 These examples assume the private key is stored in the file `test-rsa-prv.pem`.
 
@@ -866,7 +866,7 @@ Example of request with a symbol name comprised entirely of ASCII characters:
     "price": "52000.00",
     "recvWindow": 100,
     "timestamp": 1645423376532,
-    "apiKey": "CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ",
+    "apiKey": "YOUR_API_KEY",
     "signature": "------ FILL ME ------"
   }
 }
@@ -887,7 +887,7 @@ Example of a request with a symbol name containing non-ASCII characters:
     "price": "0.10000000",
     "recvWindow": 5000,
     "timestamp": 1645423376532,
-    "apiKey": "CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ",
+    "apiKey": "YOUR_API_KEY",
     "signature": "------ FILL ME ------"
   }
 }
@@ -900,45 +900,45 @@ name**:
 
 For the first set of example parameters (ASCII only):
 
-| Parameter     | Value                                                            |
-| ------------- | ---------------------------------------------------------------- |
-| `apiKey`      | CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ |
-| `price`       | 52000.00                                                         |
-| `quantity`    | 0.01000000                                                       |
-| `recvWindow`  | 100                                                              |
-| `side`        | SELL                                                             |
-| `symbol`      | BTCUSDT                                                          |
-| `timeInForce` | GTC                                                              |
-| `timestamp`   | 1645423376532                                                    |
-| `type`        | LIMIT                                                            |
+| Parameter     | Value         |
+| ------------- | ------------- |
+| `apiKey`      | YOUR_API_KEY  |
+| `price`       | 52000.00      |
+| `quantity`    | 0.01000000    |
+| `recvWindow`  | 100           |
+| `side`        | SELL          |
+| `symbol`      | BTCUSDT       |
+| `timeInForce` | GTC           |
+| `timestamp`   | 1645423376532 |
+| `type`        | LIMIT         |
 
 For the second set of example parameters (some non-ASCII characters):
 
-| Parameter     | Value                                                            |
-| ------------- | ---------------------------------------------------------------- |
-| `apiKey`      | CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ |
-| `price`       | 0.10000000                                                       |
-| `quantity`    | 1.00000000                                                       |
-| `recvWindow`  | 5000                                                             |
-| `side`        | BUY                                                              |
-| `symbol`      | １２３４５６                                                     |
-| `timeInForce` | GTC                                                              |
-| `timestamp`   | 1645423376532                                                    |
-| `type`        | LIMIT                                                            |
+| Parameter     | Value         |
+| ------------- | ------------- |
+| `apiKey`      | YOUR_API_KEY  |
+| `price`       | 0.10000000    |
+| `quantity`    | 1.00000000    |
+| `recvWindow`  | 5000          |
+| `side`        | BUY           |
+| `symbol`      | １２３４５６  |
+| `timeInForce` | GTC           |
+| `timestamp`   | 1645423376532 |
+| `type`        | LIMIT         |
 
 Format parameters as `parameter=value` pairs separated by `&`. Values need to be encoded in UTF-8.
 
 For the first set of example parameters (ASCII only), the signature payload should look like this:
 
 ```console
-apiKey=CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
+apiKey=YOUR_API_KEY&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
 ```
 
 For the second set of example parameters (some non-ASCII characters), the signature payload should
 look like this:
 
 ```console
-apiKey=CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
+apiKey=YOUR_API_KEY&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
 ```
 
 **Step 2: Compute the signature**
@@ -954,7 +954,7 @@ You can cross-check your signature algorithm implementation with OpenSSL:
 For the first set of example parameters (ASCII only):
 
 ```console
-$ echo -n 'apiKey=CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
+$ echo -n 'apiKey=YOUR_API_KEY&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
   | openssl dgst -sha256 -sign test-rsa-prv.pem \
   | openssl enc -base64 -A
 
@@ -964,7 +964,7 @@ OJJaf8C/3VGrU4ATTR4GiUDqL2FboSE1Qw7UnnoYNfXTXHubIl1iaePGuGyfct4NPu5oVEZCH4Q6ZStf
 For the second set of example parameters (some non-ASCII characters):
 
 ```console
-$ echo -n 'apiKey=CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
+$ echo -n 'apiKey=YOUR_API_KEY&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
   | openssl dgst -sha256 -sign test-rsa-prv.pem \
   | openssl enc -base64 -A
 
@@ -991,7 +991,7 @@ For the first set of example parameters (ASCII only):
     "newOrderRespType": "ACK",
     "recvWindow": 100,
     "timestamp": 1645423376532,
-    "apiKey": "CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ",
+    "apiKey": "YOUR_API_KEY",
     "signature": "OJJaf8C/3VGrU4ATTR4GiUDqL2FboSE1Qw7UnnoYNfXTXHubIl1iaePGuGyfct4NPu5oVEZCH4Q6ZStfB1w4ssgu0uiB/Bg+fBrRFfVgVaLKBdYHMvT+ljUJzqVaeoThG9oXlduiw8PbS9U8DYAbDvWN3jqZLo4Z2YJbyovyDAvDTr/oC0+vssLqP7NmlNb3fF3Bj7StmOwJvQJTbRAtzxK5PP7OQe+0mbW+D7RqVkUiSswR8qJFWTeSe4nXXNIdZdueYhF/Xf25L+KitJS5IHdIHcKfEw3MQzHFb2ZsGWkjDQwxkwr7Noi0Zaa+gFtxCuatGFm9dFIyx217pmSHtA=="
   }
 }
@@ -1012,7 +1012,7 @@ For the second set of example parameters (some non-ASCII characters):
     "price": "0.10000000",
     "recvWindow": 5000,
     "timestamp": 1645423376532,
-    "apiKey": "CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ",
+    "apiKey": "YOUR_API_KEY",
     "signature": "F3o/79Ttvl2cVYGPfBOF3oEOcm5QcYmTYWpdVIrKve5u+8paMNDAdUE+teqMxFM9HcquetGcfuFpLYtsQames5bDx/tskGM76TWW8HaM+6tuSYBSFLrKqChfA9hQGLYGjAiflf1YBnDhY+7vNbJFusUborNOloOj+ufzP5q42PvI3H0uNy3W5V3pyfXpDGCBtfCYYr9NAqA4d+AQfyllL/zkO9h9JSdozN49t0/hWGoD2dWgSO0Je6MytKEvD4DQXGeqNlBTB6tUXcWnRW+FcaKZ4KYqnxCtb1u8rFXUYgFykr2CbcJLSmw6ydEJ3EZ/NaZopRr+cU0W2m0HZ3qucw=="
   }
 }
@@ -1025,9 +1025,9 @@ and security out of all supported key types.**
 
 Here is a step-by-step guide on how to sign requests using an Ed25519 private key.
 
-| Key      | Value                                                              |
-| -------- | ------------------------------------------------------------------ |
-| `apiKey` | `4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO` |
+| Key      | Value          |
+| -------- | -------------- |
+| `apiKey` | `YOUR_API_KEY` |
 
 These examples assume the private key is stored in the file `test-ed25519-prv.pem`.
 
@@ -1050,7 +1050,7 @@ Example of request with a symbol name comprised entirely of ASCII characters:
     "price": "52000.00",
     "recvWindow": 100,
     "timestamp": 1645423376532,
-    "apiKey": "4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO",
+    "apiKey": "YOUR_API_KEY",
     "signature": "------ FILL ME ------"
   }
 }
@@ -1071,7 +1071,7 @@ Example of a request with a symbol name containing non-ASCII characters:
     "price": "0.10000000",
     "recvWindow": 5000,
     "timestamp": 1645423376532,
-    "apiKey": "4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO",
+    "apiKey": "YOUR_API_KEY",
     "signature": "------ FILL ME ------"
   }
 }
@@ -1084,45 +1084,45 @@ name**:
 
 For the first set of example parameters (ASCII only):
 
-| Parameter     | Value                                                            |
-| ------------- | ---------------------------------------------------------------- |
-| `apiKey`      | 4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO |
-| `price`       | 52000.00                                                         |
-| `quantity`    | 0.01000000                                                       |
-| `recvWindow`  | 100                                                              |
-| `side`        | SELL                                                             |
-| `symbol`      | BTCUSDT                                                          |
-| `timeInForce` | GTC                                                              |
-| `timestamp`   | 1645423376532                                                    |
-| `type`        | LIMIT                                                            |
+| Parameter     | Value         |
+| ------------- | ------------- |
+| `apiKey`      | YOUR_API_KEY  |
+| `price`       | 52000.00      |
+| `quantity`    | 0.01000000    |
+| `recvWindow`  | 100           |
+| `side`        | SELL          |
+| `symbol`      | BTCUSDT       |
+| `timeInForce` | GTC           |
+| `timestamp`   | 1645423376532 |
+| `type`        | LIMIT         |
 
 For the second set of example parameters (some non-ASCII characters):
 
-| Parameter     | Value                                                            |
-| ------------- | ---------------------------------------------------------------- |
-| `apiKey`      | 4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO |
-| `price`       | 0.20000000                                                       |
-| `quantity`    | 1.00000000                                                       |
-| `recvWindow`  | 5000                                                             |
-| `side`        | SELL                                                             |
-| `symbol`      | １２３４５６                                                     |
-| `timeInForce` | GTC                                                              |
-| `timestamp`   | 1668481559918                                                    |
-| `type`        | LIMIT                                                            |
+| Parameter     | Value         |
+| ------------- | ------------- |
+| `apiKey`      | YOUR_API_KEY  |
+| `price`       | 0.20000000    |
+| `quantity`    | 1.00000000    |
+| `recvWindow`  | 5000          |
+| `side`        | SELL          |
+| `symbol`      | １２３４５６  |
+| `timeInForce` | GTC           |
+| `timestamp`   | 1668481559918 |
+| `type`        | LIMIT         |
 
 Format parameters as `parameter=value` pairs separated by `&`. Values need to be encoded in UTF-8.
 
 For the first set of example parameters (ASCII only), the signature payload should look like this:
 
 ```console
-apiKey=4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
+apiKey=YOUR_API_KEY&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
 ```
 
 For the second set of example parameters (some non-ASCII characters), the signature payload should
 look like this:
 
 ```console
-apiKey=4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
+apiKey=YOUR_API_KEY&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
 ```
 
 **Step 2: Compute the signature**
@@ -1138,7 +1138,7 @@ You can cross-check your signature algorithm implementation with OpenSSL:
 For the first set of example parameters (ASCII only):
 
 ```console
-echo -n "apiKey=4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT" \
+echo -n "apiKey=YOUR_API_KEY&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT" \
   | openssl dgst -sign ./test-ed25519-prv.pem \
   | openssl enc -base64 -A
 
@@ -1148,7 +1148,7 @@ EocljwPl29jDxWYaaRaOo4pJ9wEblFbklJvPugNscLLuKd5vHM2grWjn1z+rY0aJ7r/44enxHL6mOAJu
 For the second set of example parameters (some non-ASCII characters):
 
 ```console
-echo -n "apiKey=4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT" \
+echo -n "apiKey=YOUR_API_KEY&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT" \
   | openssl dgst -sign ./test-ed25519-prv.pem \
   | openssl enc -base64 -A
 
@@ -1173,7 +1173,7 @@ For the first set of example parameters (ASCII only):
     "newOrderRespType": "ACK",
     "recvWindow": 100,
     "timestamp": 1645423376532,
-    "apiKey": "4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO",
+    "apiKey": "YOUR_API_KEY",
     "signature": "EocljwPl29jDxWYaaRaOo4pJ9wEblFbklJvPugNscLLuKd5vHM2grWjn1z+rY0aJ7r/44enxHL6mOAJuJ1kqCg=="
   }
 }
@@ -1194,7 +1194,7 @@ For the second set of example parameters (some non-ASCII characters):
     "price": "0.10000000",
     "recvWindow": 5000,
     "timestamp": 1645423376532,
-    "apiKey": "4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO",
+    "apiKey": "YOUR_API_KEY",
     "signature": "dtNHJeyKry+cNjiGv+sv5kynO9S40tf8k7D5CfAEQAp0s2scunZj+ovJdz2OgW8XhkB9G3/HmASkA9uY9eyFCA=="
   }
 }
@@ -1704,13 +1704,14 @@ You can use `depth` request together with `<symbol>@depth` streams to
 |  101–500  |   25   |
 | 501–1000  |   50   |
 | 1001–5000 |  250   |
+| 5001–7500 |  500   |
 
 **Parameters:**
 
 | Name           | Type   | Mandatory | Description                                                                                                                                                               |
 | -------------- | ------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `symbol`       | STRING | YES       |
-| `limit`        | INT    | NO        | Default: 100; Maximum: 5000                                                                                                                                               |
+| `limit`        | INT    | NO        | Default: 100; Maximum: 7500. <br/> If limit > 7500, only 7500 entries will be returned.                                                                                   |
 | `symbolStatus` | ENUM   | NO        | Filters for symbols that have this `tradingStatus`.<br/>A status mismatch returns error `-1220 SYMBOL_DOES_NOT_MATCH_STATUS`<br/>Valid values: `TRADING`, `HALT`, `BREAK` |
 
 **Data Source:** Memory
@@ -3336,7 +3337,7 @@ If the reference price is being calculated outside the matching engine:
     "id": "c174a2b1-3f51-4580-b200-8528bd237cb7",
     "method": "session.logon",
     "params": {
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "1cf54395b336b0a9727ef27d5d98987962bc47aca6e13fe978612d0adee066ed",
         "timestamp": 1649729878532
     }
@@ -3371,7 +3372,7 @@ current authenticated API key.
     "id": "c174a2b1-3f51-4580-b200-8528bd237cb7",
     "status": 200,
     "result": {
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "authorizedSince": 1649729878532,
         "connectedSince": 1649729873021,
         "returnRateLimits": false,
@@ -3409,7 +3410,7 @@ requests.
     "status": 200,
     "result": {
         // if the connection is not authenticated, "apiKey" and "authorizedSince" will be shown as null
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "authorizedSince": 1649729878532,
         "connectedSince": 1649729873021,
         "returnRateLimits": false,
@@ -3473,7 +3474,7 @@ where needed.
         "timeInForce": "GTC",
         "price": "23416.10000000",
         "quantity": "0.00847000",
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "15af09e41c36f3cc61378c2fbe2c33719a03dd5eba8d0f9206fbda44de717c88",
         "timestamp": 1660801715431
     }
@@ -3951,7 +3952,7 @@ The fields are listed below:
         "timeInForce": "GTC",
         "price": "23416.10000000",
         "quantity": "0.00847000",
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "15af09e41c36f3cc61378c2fbe2c33719a03dd5eba8d0f9206fbda44de717c88",
         "timestamp": 1660801715431
     }
@@ -4049,7 +4050,7 @@ With `computeCommissionRates`:
     "params": {
         "symbol": "BTCUSDT",
         "origClientOrderId": "4d96324ff9d44481926157",
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "33d5b721f278ae17a52f004a82a6f68a70c68e7dd6776ed0be77a455ab855282",
         "timestamp": 1660801715830
     }
@@ -4307,7 +4308,7 @@ When an order list is canceled:
         "timeInForce": "GTC",
         "price": "23416.10000000",
         "quantity": "0.00847000",
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "7028fdc187868754d25e42c37ccfa5ba2bab1d180ad55d4c3a7e2de643943dc5",
         "timestamp": 1660813156900
     }
@@ -5146,7 +5147,7 @@ exceeded your unfilled order count, you will get status `409` with the following
         "recvWindow": 5000,
         "symbol": "BTCUSDT",
         "timestamp": 1741922620419,
-        "apiKey": "Rl1KOMDCpSg6xviMYOkNk9ENUB5QOTnufXukVe0Ijd40yduAlpHn78at3rJyJN4F",
+        "apiKey": "YOUR_API_KEY",
         "signature": "fa49c0c4ebc331c6ebd3fcb20deb387f60081ea858eebe6e35aa6fcdf2a82e08"
     }
 }
@@ -5290,7 +5291,7 @@ Response for an order which is part of an Order list:
     "method": "openOrders.cancelAll",
     "params": {
         "symbol": "BTCUSDT",
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "773f01b6e3c2c9e0c1d217bc043ce383c1ddd6f0e25f8d6070f2b66a6ceaf3a5",
         "timestamp": 1660805557200
     }
@@ -5442,7 +5443,7 @@ Cancellation reports for orders and order lists have the same format as in
         "aboveTimeInForce": "GTC",
         "belowType": "LIMIT_MAKER",
         "belowPrice": "1.49999999",
-        "apiKey": "duwNf97YPLqhFIk7kZF0dDdGYVAXStA7BeEz0fIT9RAhUbixJtyS6kJ3hhzJsRXC",
+        "apiKey": "YOUR_API_KEY",
         "signature": "64614cfd8dd38260d4fd86d3c455dbf4b9d1c8a8170ea54f700592a986c30ddb"
     }
 }
@@ -5615,7 +5616,7 @@ examples.
     "method": "orderList.place.oto",
     "params": {
         "signature": "3e1e5ac8690b0caf9a2afd5c5de881ceba69939cc9d817daead5386bf65d0cbb",
-        "apiKey": "Rf07JlnL9PHVxjs27O5CvKNyOsV4qJ5gXdrRfpvlOdvMZbGZbPO5Ce2nIwfRP0iA",
+        "apiKey": "YOUR_API_KEY",
         "pendingQuantity": 1,
         "pendingSide": "BUY",
         "pendingType": "MARKET",
@@ -5803,7 +5804,7 @@ Matching Engine
     "method": "orderList.place.otoco",
     "params": {
         "signature": "c094473304374e1b9c5f7e2558358066cfa99df69f50f63d09cfee755136cb07",
-        "apiKey": "Rf07JlnL9PHVxjs27O5CvKNyOsV4qJ5gXdrRfpvlOdvMZbGZbPO5Ce2nIwfRP0iA",
+        "apiKey": "YOUR_API_KEY",
         "pendingQuantity": 5,
         "pendingSide": "SELL",
         "pendingBelowPrice": 5,
@@ -6038,7 +6039,7 @@ will become mandatory.
     "workingSide": "BUY",
     "symbol": "BTCUSDT",
     "timestamp": 1762941318129,
-    "apiKey": "aHb4Ur1cK1biW3sgibqUFs39SE58f9d5Xwf4uEW0tFh7ibun5g035QKSktxoOBfE",
+    "apiKey": "YOUR_API_KEY",
     "signature": "b50ce8977333a78a3bbad21df178d7e104a8c985d19007b55df688cdf868639a"
   }
 }
@@ -6184,7 +6185,7 @@ Place an [OPO](/products/spot/faqs/opo).
     "workingSide": "BUY",
     "symbol": "BTCUSDT",
     "timestamp": 1763000139091,
-    "apiKey": "2wiKgTLyllTCu0QWXaEtKWX9tUQ5iQMiDQqTQPdUe2bZ1IVT9aXoS6o19wkYIKl2",
+    "apiKey": "YOUR_API_KEY",
     "signature": "adfa185c50f793392a54ad5a6e2c39fd34ef6d35944adf2ddd6f30e1866e58d3"
   }
 }
@@ -6351,7 +6352,7 @@ Place an [OPOCO](/products/spot/faqs/opo).
     "params": {
         "symbol": "BTCUSDT",
         "orderListId": 1274512,
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "4973f4b2fee30bf6d45e4a973e941cc60fdd53c8dd5a25edeac96f5733c0ccee",
         "timestamp": 1660801720210
     }
@@ -6527,7 +6528,7 @@ Notes:
         "timeInForce": "GTC",
         "price": 31000,
         "timestamp": 1687485436575,
-        "apiKey": "u5lgqJb97QWXWfgeV4cROuHbReSJM9rgQL0IvYcYc7BVeA5lpAqqc3a5p2OARIFk",
+        "apiKey": "YOUR_API_KEY",
         "signature": "fd301899567bc9472ce023392160cdc265ad8fcbbb67e0ea1b2af70a4b0cd9c7"
     }
 }
@@ -6634,7 +6635,7 @@ supported.
         "timeInForce": "GTC",
         "price": 0.1,
         "timestamp": 1687485436575,
-        "apiKey": "u5lgqJb97QWXWfgeV4cROuHbReSJM9rgQL0IvYcYc7BVeA5lpAqqc3a5p2OARIFk",
+        "apiKey": "YOUR_API_KEY",
         "signature": "fd301899567bc9472ce023392160cdc265ad8fcbbb67e0ea1b2af70a4b0cd9c7"
     }
 }
@@ -6725,7 +6726,7 @@ With `computeCommissionRates`:
     "id": "605a6d20-6588-4cb9-afa0-b0ab087507ba",
     "method": "account.status",
     "params": {
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "83303b4a136ac1371795f465808367242685a9e3a42b22edb4d977d0696eb45c",
         "timestamp": 1660801839480
     }
@@ -6814,7 +6815,7 @@ Query information about your account.
     "params": {
         "symbol": "BTCUSDT",
         "orderId": 12569099453,
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "2c3aab5a078ee4ea465ecd95523b77289f61476c2f238ec10c55ea6cb11a6f35",
         "timestamp": 1660801720951
     }
@@ -6949,7 +6950,7 @@ Notes:
     "method": "openOrders.status",
     "params": {
         "symbol": "BTCUSDT",
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "d632b3fdb8a81dd44f82c7c901833309dd714fe508772a89b0a35b0ee0c48b89",
         "timestamp": 1660813156812
     }
@@ -7047,7 +7048,7 @@ to tell which symbol the orders belong to.
         "startTime": 1660780800000,
         "endTime": 1660867200000,
         "limit": 5,
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "f50a972ba7fad92842187643f6b930802d4e20bce1ba1e788e856e811577bd42",
         "timestamp": 1661955123341
     }
@@ -7145,7 +7146,7 @@ Note that some fields are optional and included only for orders that set them.
   "method": "orderList.status",
   "params": {
     "origClientOrderId": "08985fedd9ea2cf6b28996",
-    "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+    "apiKey": "YOUR_API_KEY",
     "signature": "d12f4e8892d46c0ddfbd43d556ff6d818581b3be22a02810c2c20cb719aed6a4",
     "timestamp": 1660801713965
   }
@@ -7263,7 +7264,7 @@ Notes:
     "id": "3a4437e2-41a3-4c19-897c-9cadc5dce8b6",
     "method": "openOrderLists.status",
     "params": {
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "1bea8b157dd78c3da30359bddcd999e4049749fe50b828e620e12f64e8b433c9",
         "timestamp": 1660801713831
     }
@@ -7343,7 +7344,7 @@ If you need to continuously monitor order status updates, please consider using 
         "startTime": 1660780800000,
         "endTime": 1660867200000,
         "limit": 5,
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "c8e1484db4a4a02d0e84dfa627eb9b8298f07ebf12fcc4eaf86e4a565b2712c2",
         "timestamp": 1661955123341
     }
@@ -7434,7 +7435,7 @@ Status reports for order lists are identical to [`orderList.status`](#query-orde
         "symbol": "BTCUSDT",
         "startTime": 1660780800000,
         "endTime": 1660867200000,
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "c5a5ffb79fd4f2e10a92f895d488943a57954edf5933bde3338dfb6ea6d6eefc",
         "timestamp": 1661955125250
     }
@@ -7542,7 +7543,7 @@ Notes:
     "id": "d3783d8d-f8d1-4d2c-b8a0-b7596af5a664",
     "method": "account.rateLimits.orders",
     "params": {
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "76289424d6e288f4dc47d167ac824e859dabf78736f4348abbbac848d719eb94",
         "timestamp": 1660801839500
     }
@@ -7607,7 +7608,7 @@ Query your current unfilled order count for all intervals.
     "params": {
         "symbol": "BTCUSDT",
         "orderId": 35,
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "c5a5ffb79fd4f2e10a92f895d488943a57954edf5933bde3338dfb6ea6d6eefc",
         "timestamp": 1673923281052
     }
@@ -7688,7 +7689,7 @@ Database
     "params": {
         "symbol": "BTCUSDT",
         "orderId": 500,
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "c5a5ffb79fd4f2e10a92f895d488943a57954edf5933bde3338dfb6ea6d6eefc",
         "timestamp": 1673923281052
     }
@@ -7772,7 +7773,7 @@ Supported parameter combinations:
     "method": "account.commission",
     "params": {
         "symbol": "BTCUSDT",
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "c5a5ffb79fd4f2e10a92f895d488943a57954edf5933bde3338dfb6ea6d6eefc",
         "timestamp": 1673923281052
     }
@@ -7847,7 +7848,7 @@ Get current account commission rates.
         "recvWindow": 5000,
         "symbol": "BTCUSDT",
         "timestamp": 1741925524887,
-        "apiKey": "N3Swv7WaBF7S2rzA12UkPunM3udJiDddbgv1W7CzFGnsQXH9H62zzSCST0CndjeE",
+        "apiKey": "YOUR_API_KEY",
         "signature": "0eed2e9d95b6868ea5ec21da0d14538192ef344c30ecf9fe83d58631699334dc"
     }
 }
@@ -7912,7 +7913,7 @@ Queries all amendments of a single order.
         "recvWindow": 5000,
         "symbol": "BTCUSDT",
         "timestamp": 1758008841149,
-        "apiKey": "nQ6kG5gDExDd5MZSO0MfOOWEVZmdkRllpNMfm1FjMjkMnmw1NUd3zPDfvcnDJlil",
+        "apiKey": "YOUR_API_KEY",
         "signature": "7edc54dd0493dd5bc47adbab9b17bfc9b378d55c20511ae5a168456d3d37aa3a"
     }
 }
@@ -8224,7 +8225,7 @@ but not subscriptions opened with `userDataStream.subscribe.signature`.
     "id": "d3df8a22-98ea-4fe0-9f4e-0fcea5d418b7",
     "method": "userDataStream.subscribe.signature",
     "params": {
-        "apiKey": "mjcKCrJzTU6TChLsnPmgnQJJMR616J4yWvdZWDUeXkk6vL6dLyS7rcVOQlADlVjA",
+        "apiKey": "YOUR_API_KEY",
         "timestamp": 1747385641636,
         "signature": "yN1vWpXb+qoZ3/dGiFs9vmpNdV7e3FxkA+BstzbezDKwObcijvk/CVkWxIwMCtCJbP270R0OempYwEpS6rDZCQ=="
     }
@@ -8326,7 +8327,7 @@ Example of request:
     "quantity": "10",
     "timeInForce": "GTC",
     "timestamp": 1655716096498,
-    "apiKey": "T59MTDLWlpRW16JVeZ2Nju5A5C98WkMm8CSzWC4oqynUlTm1zXOxyauT8LmwXEv9",
+    "apiKey": "YOUR_API_KEY",
     "signature": "5942ad337e6779f2f4c62cd1c26dba71c91514400a24990a3e7f5edec9323f90"
   }
 }
@@ -8915,10 +8916,10 @@ Here is a step-by-step guide on how to sign requests using an HMAC secret key.
 
 Example API key and secret key:
 
-| Key         | Value                                                              |
-| ----------- | ------------------------------------------------------------------ |
-| `apiKey`    | `vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A` |
-| `secretKey` | `NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j` |
+| Key         | Value             |
+| ----------- | ----------------- |
+| `apiKey`    | `YOUR_API_KEY`    |
+| `secretKey` | `YOUR_SECRET_KEY` |
 
 **WARNING: DO NOT SHARE YOUR API KEY AND SECRET KEY WITH ANYONE.**
 
@@ -8939,7 +8940,7 @@ Example of request with a symbol name comprised entirely of ASCII characters:
     "price": "52000.00",
     "recvWindow": 100,
     "timestamp": 1645423376532,
-    "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+    "apiKey": "YOUR_API_KEY",
     "signature": "------ FILL ME ------"
   }
 }
@@ -8960,7 +8961,7 @@ Example of a request with a symbol name containing non-ASCII characters:
     "price": "0.10000000",
     "recvWindow": 5000,
     "timestamp": 1645423376532,
-    "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+    "apiKey": "YOUR_API_KEY",
     "signature": "------ FILL ME ------"
   }
 }
@@ -8975,45 +8976,45 @@ name**:
 
 For the first set of example parameters (ASCII only):
 
-| Parameter     | Value                                                            |
-| ------------- | ---------------------------------------------------------------- |
-| `apiKey`      | vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A |
-| `price`       | 52000.00                                                         |
-| `quantity`    | 0.01000000                                                       |
-| `recvWindow`  | 100                                                              |
-| `side`        | SELL                                                             |
-| `symbol`      | BTCUSDT                                                          |
-| `timeInForce` | GTC                                                              |
-| `timestamp`   | 1645423376532                                                    |
-| `type`        | LIMIT                                                            |
+| Parameter     | Value         |
+| ------------- | ------------- |
+| `apiKey`      | YOUR_API_KEY  |
+| `price`       | 52000.00      |
+| `quantity`    | 0.01000000    |
+| `recvWindow`  | 100           |
+| `side`        | SELL          |
+| `symbol`      | BTCUSDT       |
+| `timeInForce` | GTC           |
+| `timestamp`   | 1645423376532 |
+| `type`        | LIMIT         |
 
 For the second set of example parameters (some non-ASCII characters):
 
-| Parameter     | Value                                                            |
-| ------------- | ---------------------------------------------------------------- |
-| `apiKey`      | vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A |
-| `price`       | 0.10000000                                                       |
-| `quantity`    | 1.00000000                                                       |
-| `recvWindow`  | 5000                                                             |
-| `side`        | BUY                                                              |
-| `symbol`      | １２３４５６                                                     |
-| `timeInForce` | GTC                                                              |
-| `timestamp`   | 1645423376532                                                    |
-| `type`        | LIMIT                                                            |
+| Parameter     | Value         |
+| ------------- | ------------- |
+| `apiKey`      | YOUR_API_KEY  |
+| `price`       | 0.10000000    |
+| `quantity`    | 1.00000000    |
+| `recvWindow`  | 5000          |
+| `side`        | BUY           |
+| `symbol`      | １２３４５６  |
+| `timeInForce` | GTC           |
+| `timestamp`   | 1645423376532 |
+| `type`        | LIMIT         |
 
 Format parameters as `parameter=value` pairs separated by `&`. Values need to be encoded in UTF-8.
 
 For the first set of example parameters (ASCII only), the signature payload should look like this:
 
 ```console
-apiKey=vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
+apiKey=YOUR_API_KEY&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
 ```
 
 For the second set of example parameters (some non-ASCII characters), the signature payload should
 look like this:
 
 ```console
-apiKey=vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
+apiKey=YOUR_API_KEY&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
 ```
 
 **Step 2: Compute the signature**
@@ -9030,8 +9031,8 @@ You can cross-check your signature algorithm implementation with OpenSSL:
 For the first set of example parameters (ASCII only):
 
 ```console
-$ echo -n 'apiKey=vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
-  | openssl dgst -hex -sha256 -hmac 'NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j'
+$ echo -n 'apiKey=YOUR_API_KEY&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
+  | openssl dgst -hex -sha256 -hmac 'YOUR_SECRET_KEY'
 
 aa1b5712c094bc4e57c05a1a5c1fd8d88dcd628338ea863fec7b88e59fe2db24
 ```
@@ -9039,8 +9040,8 @@ aa1b5712c094bc4e57c05a1a5c1fd8d88dcd628338ea863fec7b88e59fe2db24
 For the second set of example parameters (some non-ASCII characters):
 
 ```console
-$ echo -n 'apiKey=vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
-  | openssl dgst -hex -sha256 -hmac 'NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j'
+$ echo -n 'apiKey=YOUR_API_KEY&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
+  | openssl dgst -hex -sha256 -hmac 'YOUR_SECRET_KEY'
 
 b33892ae8e687c939f4468c6268ddd4c40ac1af18ad19a064864c47bae0752cd
 ```
@@ -9064,7 +9065,7 @@ For the first set of example parameters (ASCII only):
     "price": "52000.00",
     "recvWindow": 100,
     "timestamp": 1645423376532,
-    "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+    "apiKey": "YOUR_API_KEY",
     "signature": "aa1b5712c094bc4e57c05a1a5c1fd8d88dcd628338ea863fec7b88e59fe2db24"
   }
 }
@@ -9085,7 +9086,7 @@ For the second set of example parameters (some non-ASCII characters):
     "price": "0.10000000",
     "recvWindow": 5000,
     "timestamp": 1645423376532,
-    "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+    "apiKey": "YOUR_API_KEY",
     "signature": "b33892ae8e687c939f4468c6268ddd4c40ac1af18ad19a064864c47bae0752cd"
   }
 }
@@ -9095,9 +9096,9 @@ For the second set of example parameters (some non-ASCII characters):
 
 Here is a step-by-step guide on how to sign requests using an RSA private key.
 
-| Key      | Value                                                              |
-| -------- | ------------------------------------------------------------------ |
-| `apiKey` | `CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ` |
+| Key      | Value          |
+| -------- | -------------- |
+| `apiKey` | `YOUR_API_KEY` |
 
 These examples assume the private key is stored in the file `test-rsa-prv.pem`.
 
@@ -9120,7 +9121,7 @@ Example of request with a symbol name comprised entirely of ASCII characters:
     "price": "52000.00",
     "recvWindow": 100,
     "timestamp": 1645423376532,
-    "apiKey": "CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ",
+    "apiKey": "YOUR_API_KEY",
     "signature": "------ FILL ME ------"
   }
 }
@@ -9141,7 +9142,7 @@ Example of a request with a symbol name containing non-ASCII characters:
     "price": "0.10000000",
     "recvWindow": 5000,
     "timestamp": 1645423376532,
-    "apiKey": "CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ",
+    "apiKey": "YOUR_API_KEY",
     "signature": "------ FILL ME ------"
   }
 }
@@ -9154,45 +9155,45 @@ name**:
 
 For the first set of example parameters (ASCII only):
 
-| Parameter     | Value                                                            |
-| ------------- | ---------------------------------------------------------------- |
-| `apiKey`      | CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ |
-| `price`       | 52000.00                                                         |
-| `quantity`    | 0.01000000                                                       |
-| `recvWindow`  | 100                                                              |
-| `side`        | SELL                                                             |
-| `symbol`      | BTCUSDT                                                          |
-| `timeInForce` | GTC                                                              |
-| `timestamp`   | 1645423376532                                                    |
-| `type`        | LIMIT                                                            |
+| Parameter     | Value         |
+| ------------- | ------------- |
+| `apiKey`      | YOUR_API_KEY  |
+| `price`       | 52000.00      |
+| `quantity`    | 0.01000000    |
+| `recvWindow`  | 100           |
+| `side`        | SELL          |
+| `symbol`      | BTCUSDT       |
+| `timeInForce` | GTC           |
+| `timestamp`   | 1645423376532 |
+| `type`        | LIMIT         |
 
 For the second set of example parameters (some non-ASCII characters):
 
-| Parameter     | Value                                                            |
-| ------------- | ---------------------------------------------------------------- |
-| `apiKey`      | CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ |
-| `price`       | 0.10000000                                                       |
-| `quantity`    | 1.00000000                                                       |
-| `recvWindow`  | 5000                                                             |
-| `side`        | BUY                                                              |
-| `symbol`      | １２３４５６                                                     |
-| `timeInForce` | GTC                                                              |
-| `timestamp`   | 1645423376532                                                    |
-| `type`        | LIMIT                                                            |
+| Parameter     | Value         |
+| ------------- | ------------- |
+| `apiKey`      | YOUR_API_KEY  |
+| `price`       | 0.10000000    |
+| `quantity`    | 1.00000000    |
+| `recvWindow`  | 5000          |
+| `side`        | BUY           |
+| `symbol`      | １２３４５６  |
+| `timeInForce` | GTC           |
+| `timestamp`   | 1645423376532 |
+| `type`        | LIMIT         |
 
 Format parameters as `parameter=value` pairs separated by `&`. Values need to be encoded in UTF-8.
 
 For the first set of example parameters (ASCII only), the signature payload should look like this:
 
 ```console
-apiKey=CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
+apiKey=YOUR_API_KEY&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
 ```
 
 For the second set of example parameters (some non-ASCII characters), the signature payload should
 look like this:
 
 ```console
-apiKey=CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
+apiKey=YOUR_API_KEY&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
 ```
 
 **Step 2: Compute the signature**
@@ -9208,7 +9209,7 @@ You can cross-check your signature algorithm implementation with OpenSSL:
 For the first set of example parameters (ASCII only):
 
 ```console
-$ echo -n 'apiKey=CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
+$ echo -n 'apiKey=YOUR_API_KEY&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
   | openssl dgst -sha256 -sign test-rsa-prv.pem \
   | openssl enc -base64 -A
 
@@ -9218,7 +9219,7 @@ OJJaf8C/3VGrU4ATTR4GiUDqL2FboSE1Qw7UnnoYNfXTXHubIl1iaePGuGyfct4NPu5oVEZCH4Q6ZStf
 For the second set of example parameters (some non-ASCII characters):
 
 ```console
-$ echo -n 'apiKey=CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
+$ echo -n 'apiKey=YOUR_API_KEY&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
   | openssl dgst -sha256 -sign test-rsa-prv.pem \
   | openssl enc -base64 -A
 
@@ -9245,7 +9246,7 @@ For the first set of example parameters (ASCII only):
     "newOrderRespType": "ACK",
     "recvWindow": 100,
     "timestamp": 1645423376532,
-    "apiKey": "CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ",
+    "apiKey": "YOUR_API_KEY",
     "signature": "OJJaf8C/3VGrU4ATTR4GiUDqL2FboSE1Qw7UnnoYNfXTXHubIl1iaePGuGyfct4NPu5oVEZCH4Q6ZStfB1w4ssgu0uiB/Bg+fBrRFfVgVaLKBdYHMvT+ljUJzqVaeoThG9oXlduiw8PbS9U8DYAbDvWN3jqZLo4Z2YJbyovyDAvDTr/oC0+vssLqP7NmlNb3fF3Bj7StmOwJvQJTbRAtzxK5PP7OQe+0mbW+D7RqVkUiSswR8qJFWTeSe4nXXNIdZdueYhF/Xf25L+KitJS5IHdIHcKfEw3MQzHFb2ZsGWkjDQwxkwr7Noi0Zaa+gFtxCuatGFm9dFIyx217pmSHtA=="
   }
 }
@@ -9266,7 +9267,7 @@ For the second set of example parameters (some non-ASCII characters):
     "price": "0.10000000",
     "recvWindow": 5000,
     "timestamp": 1645423376532,
-    "apiKey": "CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ",
+    "apiKey": "YOUR_API_KEY",
     "signature": "F3o/79Ttvl2cVYGPfBOF3oEOcm5QcYmTYWpdVIrKve5u+8paMNDAdUE+teqMxFM9HcquetGcfuFpLYtsQames5bDx/tskGM76TWW8HaM+6tuSYBSFLrKqChfA9hQGLYGjAiflf1YBnDhY+7vNbJFusUborNOloOj+ufzP5q42PvI3H0uNy3W5V3pyfXpDGCBtfCYYr9NAqA4d+AQfyllL/zkO9h9JSdozN49t0/hWGoD2dWgSO0Je6MytKEvD4DQXGeqNlBTB6tUXcWnRW+FcaKZ4KYqnxCtb1u8rFXUYgFykr2CbcJLSmw6ydEJ3EZ/NaZopRr+cU0W2m0HZ3qucw=="
   }
 }
@@ -9279,9 +9280,9 @@ and security out of all supported key types.**
 
 Here is a step-by-step guide on how to sign requests using an Ed25519 private key.
 
-| Key      | Value                                                              |
-| -------- | ------------------------------------------------------------------ |
-| `apiKey` | `4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO` |
+| Key      | Value          |
+| -------- | -------------- |
+| `apiKey` | `YOUR_API_KEY` |
 
 These examples assume the private key is stored in the file `test-ed25519-prv.pem`.
 
@@ -9304,7 +9305,7 @@ Example of request with a symbol name comprised entirely of ASCII characters:
     "price": "52000.00",
     "recvWindow": 100,
     "timestamp": 1645423376532,
-    "apiKey": "4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO",
+    "apiKey": "YOUR_API_KEY",
     "signature": "------ FILL ME ------"
   }
 }
@@ -9325,7 +9326,7 @@ Example of a request with a symbol name containing non-ASCII characters:
     "price": "0.10000000",
     "recvWindow": 5000,
     "timestamp": 1645423376532,
-    "apiKey": "4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO",
+    "apiKey": "YOUR_API_KEY",
     "signature": "------ FILL ME ------"
   }
 }
@@ -9338,45 +9339,45 @@ name**:
 
 For the first set of example parameters (ASCII only):
 
-| Parameter     | Value                                                            |
-| ------------- | ---------------------------------------------------------------- |
-| `apiKey`      | 4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO |
-| `price`       | 52000.00                                                         |
-| `quantity`    | 0.01000000                                                       |
-| `recvWindow`  | 100                                                              |
-| `side`        | SELL                                                             |
-| `symbol`      | BTCUSDT                                                          |
-| `timeInForce` | GTC                                                              |
-| `timestamp`   | 1645423376532                                                    |
-| `type`        | LIMIT                                                            |
+| Parameter     | Value         |
+| ------------- | ------------- |
+| `apiKey`      | YOUR_API_KEY  |
+| `price`       | 52000.00      |
+| `quantity`    | 0.01000000    |
+| `recvWindow`  | 100           |
+| `side`        | SELL          |
+| `symbol`      | BTCUSDT       |
+| `timeInForce` | GTC           |
+| `timestamp`   | 1645423376532 |
+| `type`        | LIMIT         |
 
 For the second set of example parameters (some non-ASCII characters):
 
-| Parameter     | Value                                                            |
-| ------------- | ---------------------------------------------------------------- |
-| `apiKey`      | 4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO |
-| `price`       | 0.20000000                                                       |
-| `quantity`    | 1.00000000                                                       |
-| `recvWindow`  | 5000                                                             |
-| `side`        | SELL                                                             |
-| `symbol`      | １２３４５６                                                     |
-| `timeInForce` | GTC                                                              |
-| `timestamp`   | 1668481559918                                                    |
-| `type`        | LIMIT                                                            |
+| Parameter     | Value         |
+| ------------- | ------------- |
+| `apiKey`      | YOUR_API_KEY  |
+| `price`       | 0.20000000    |
+| `quantity`    | 1.00000000    |
+| `recvWindow`  | 5000          |
+| `side`        | SELL          |
+| `symbol`      | １２３４５６  |
+| `timeInForce` | GTC           |
+| `timestamp`   | 1668481559918 |
+| `type`        | LIMIT         |
 
 Format parameters as `parameter=value` pairs separated by `&`. Values need to be encoded in UTF-8.
 
 For the first set of example parameters (ASCII only), the signature payload should look like this:
 
 ```console
-apiKey=4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
+apiKey=YOUR_API_KEY&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
 ```
 
 For the second set of example parameters (some non-ASCII characters), the signature payload should
 look like this:
 
 ```console
-apiKey=4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
+apiKey=YOUR_API_KEY&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
 ```
 
 **Step 2: Compute the signature**
@@ -9392,7 +9393,7 @@ You can cross-check your signature algorithm implementation with OpenSSL:
 For the first set of example parameters (ASCII only):
 
 ```console
-echo -n "apiKey=4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT" \
+echo -n "apiKey=YOUR_API_KEY&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT" \
   | openssl dgst -sign ./test-ed25519-prv.pem \
   | openssl enc -base64 -A
 
@@ -9402,7 +9403,7 @@ EocljwPl29jDxWYaaRaOo4pJ9wEblFbklJvPugNscLLuKd5vHM2grWjn1z+rY0aJ7r/44enxHL6mOAJu
 For the second set of example parameters (some non-ASCII characters):
 
 ```console
-echo -n "apiKey=4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT" \
+echo -n "apiKey=YOUR_API_KEY&price=0.10000000&quantity=1.00000000&recvWindow=5000&side=BUY&symbol=１２３４５６&timeInForce=GTC&timestamp=1645423376532&type=LIMIT" \
   | openssl dgst -sign ./test-ed25519-prv.pem \
   | openssl enc -base64 -A
 
@@ -9427,7 +9428,7 @@ For the first set of example parameters (ASCII only):
     "newOrderRespType": "ACK",
     "recvWindow": 100,
     "timestamp": 1645423376532,
-    "apiKey": "4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO",
+    "apiKey": "YOUR_API_KEY",
     "signature": "EocljwPl29jDxWYaaRaOo4pJ9wEblFbklJvPugNscLLuKd5vHM2grWjn1z+rY0aJ7r/44enxHL6mOAJuJ1kqCg=="
   }
 }
@@ -9448,7 +9449,7 @@ For the second set of example parameters (some non-ASCII characters):
     "price": "0.10000000",
     "recvWindow": 5000,
     "timestamp": 1645423376532,
-    "apiKey": "4yNzx3yWC5bS6YTwEkSRaC0nRmSQIIStAUOh1b6kqaBrTLIhjCpI5lJH8q8R8WNO",
+    "apiKey": "YOUR_API_KEY",
     "signature": "dtNHJeyKry+cNjiGv+sv5kynO9S40tf8k7D5CfAEQAp0s2scunZj+ovJdz2OgW8XhkB9G3/HmASkA9uY9eyFCA=="
   }
 }
@@ -9958,13 +9959,14 @@ You can use `depth` request together with `<symbol>@depth` streams to
 |  101–500  |   25   |
 | 501–1000  |   50   |
 | 1001–5000 |  250   |
+| 5001–7500 |  500   |
 
 **Parameters:**
 
 | Name           | Type   | Mandatory | Description                                                                                                                                                               |
 | -------------- | ------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `symbol`       | STRING | YES       |
-| `limit`        | INT    | NO        | Default: 100; Maximum: 5000                                                                                                                                               |
+| `limit`        | INT    | NO        | Default: 100; Maximum: 7500. <br/> If limit > 7500, only 7500 entries will be returned.                                                                                   |
 | `symbolStatus` | ENUM   | NO        | Filters for symbols that have this `tradingStatus`.<br/>A status mismatch returns error `-1220 SYMBOL_DOES_NOT_MATCH_STATUS`<br/>Valid values: `TRADING`, `HALT`, `BREAK` |
 
 **Data Source:** Memory
@@ -11590,7 +11592,7 @@ If the reference price is being calculated outside the matching engine:
     "id": "c174a2b1-3f51-4580-b200-8528bd237cb7",
     "method": "session.logon",
     "params": {
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "1cf54395b336b0a9727ef27d5d98987962bc47aca6e13fe978612d0adee066ed",
         "timestamp": 1649729878532
     }
@@ -11625,7 +11627,7 @@ current authenticated API key.
     "id": "c174a2b1-3f51-4580-b200-8528bd237cb7",
     "status": 200,
     "result": {
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "authorizedSince": 1649729878532,
         "connectedSince": 1649729873021,
         "returnRateLimits": false,
@@ -11663,7 +11665,7 @@ requests.
     "status": 200,
     "result": {
         // if the connection is not authenticated, "apiKey" and "authorizedSince" will be shown as null
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "authorizedSince": 1649729878532,
         "connectedSince": 1649729873021,
         "returnRateLimits": false,
@@ -11727,7 +11729,7 @@ where needed.
         "timeInForce": "GTC",
         "price": "23416.10000000",
         "quantity": "0.00847000",
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "15af09e41c36f3cc61378c2fbe2c33719a03dd5eba8d0f9206fbda44de717c88",
         "timestamp": 1660801715431
     }
@@ -12205,7 +12207,7 @@ The fields are listed below:
         "timeInForce": "GTC",
         "price": "23416.10000000",
         "quantity": "0.00847000",
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "15af09e41c36f3cc61378c2fbe2c33719a03dd5eba8d0f9206fbda44de717c88",
         "timestamp": 1660801715431
     }
@@ -12303,7 +12305,7 @@ With `computeCommissionRates`:
     "params": {
         "symbol": "BTCUSDT",
         "origClientOrderId": "4d96324ff9d44481926157",
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "33d5b721f278ae17a52f004a82a6f68a70c68e7dd6776ed0be77a455ab855282",
         "timestamp": 1660801715830
     }
@@ -12561,7 +12563,7 @@ When an order list is canceled:
         "timeInForce": "GTC",
         "price": "23416.10000000",
         "quantity": "0.00847000",
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "7028fdc187868754d25e42c37ccfa5ba2bab1d180ad55d4c3a7e2de643943dc5",
         "timestamp": 1660813156900
     }
@@ -13400,7 +13402,7 @@ exceeded your unfilled order count, you will get status `409` with the following
         "recvWindow": 5000,
         "symbol": "BTCUSDT",
         "timestamp": 1741922620419,
-        "apiKey": "Rl1KOMDCpSg6xviMYOkNk9ENUB5QOTnufXukVe0Ijd40yduAlpHn78at3rJyJN4F",
+        "apiKey": "YOUR_API_KEY",
         "signature": "fa49c0c4ebc331c6ebd3fcb20deb387f60081ea858eebe6e35aa6fcdf2a82e08"
     }
 }
@@ -13544,7 +13546,7 @@ Response for an order which is part of an Order list:
     "method": "openOrders.cancelAll",
     "params": {
         "symbol": "BTCUSDT",
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "773f01b6e3c2c9e0c1d217bc043ce383c1ddd6f0e25f8d6070f2b66a6ceaf3a5",
         "timestamp": 1660805557200
     }
@@ -13696,7 +13698,7 @@ Cancellation reports for orders and order lists have the same format as in
         "aboveTimeInForce": "GTC",
         "belowType": "LIMIT_MAKER",
         "belowPrice": "1.49999999",
-        "apiKey": "duwNf97YPLqhFIk7kZF0dDdGYVAXStA7BeEz0fIT9RAhUbixJtyS6kJ3hhzJsRXC",
+        "apiKey": "YOUR_API_KEY",
         "signature": "64614cfd8dd38260d4fd86d3c455dbf4b9d1c8a8170ea54f700592a986c30ddb"
     }
 }
@@ -13869,7 +13871,7 @@ examples.
     "method": "orderList.place.oto",
     "params": {
         "signature": "3e1e5ac8690b0caf9a2afd5c5de881ceba69939cc9d817daead5386bf65d0cbb",
-        "apiKey": "Rf07JlnL9PHVxjs27O5CvKNyOsV4qJ5gXdrRfpvlOdvMZbGZbPO5Ce2nIwfRP0iA",
+        "apiKey": "YOUR_API_KEY",
         "pendingQuantity": 1,
         "pendingSide": "BUY",
         "pendingType": "MARKET",
@@ -14057,7 +14059,7 @@ Matching Engine
     "method": "orderList.place.otoco",
     "params": {
         "signature": "c094473304374e1b9c5f7e2558358066cfa99df69f50f63d09cfee755136cb07",
-        "apiKey": "Rf07JlnL9PHVxjs27O5CvKNyOsV4qJ5gXdrRfpvlOdvMZbGZbPO5Ce2nIwfRP0iA",
+        "apiKey": "YOUR_API_KEY",
         "pendingQuantity": 5,
         "pendingSide": "SELL",
         "pendingBelowPrice": 5,
@@ -14292,7 +14294,7 @@ will become mandatory.
     "workingSide": "BUY",
     "symbol": "BTCUSDT",
     "timestamp": 1762941318129,
-    "apiKey": "aHb4Ur1cK1biW3sgibqUFs39SE58f9d5Xwf4uEW0tFh7ibun5g035QKSktxoOBfE",
+    "apiKey": "YOUR_API_KEY",
     "signature": "b50ce8977333a78a3bbad21df178d7e104a8c985d19007b55df688cdf868639a"
   }
 }
@@ -14438,7 +14440,7 @@ Place an [OPO](/products/spot/faqs/opo).
     "workingSide": "BUY",
     "symbol": "BTCUSDT",
     "timestamp": 1763000139091,
-    "apiKey": "2wiKgTLyllTCu0QWXaEtKWX9tUQ5iQMiDQqTQPdUe2bZ1IVT9aXoS6o19wkYIKl2",
+    "apiKey": "YOUR_API_KEY",
     "signature": "adfa185c50f793392a54ad5a6e2c39fd34ef6d35944adf2ddd6f30e1866e58d3"
   }
 }
@@ -14605,7 +14607,7 @@ Place an [OPOCO](/products/spot/faqs/opo).
     "params": {
         "symbol": "BTCUSDT",
         "orderListId": 1274512,
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "4973f4b2fee30bf6d45e4a973e941cc60fdd53c8dd5a25edeac96f5733c0ccee",
         "timestamp": 1660801720210
     }
@@ -14781,7 +14783,7 @@ Notes:
         "timeInForce": "GTC",
         "price": 31000,
         "timestamp": 1687485436575,
-        "apiKey": "u5lgqJb97QWXWfgeV4cROuHbReSJM9rgQL0IvYcYc7BVeA5lpAqqc3a5p2OARIFk",
+        "apiKey": "YOUR_API_KEY",
         "signature": "fd301899567bc9472ce023392160cdc265ad8fcbbb67e0ea1b2af70a4b0cd9c7"
     }
 }
@@ -14888,7 +14890,7 @@ supported.
         "timeInForce": "GTC",
         "price": 0.1,
         "timestamp": 1687485436575,
-        "apiKey": "u5lgqJb97QWXWfgeV4cROuHbReSJM9rgQL0IvYcYc7BVeA5lpAqqc3a5p2OARIFk",
+        "apiKey": "YOUR_API_KEY",
         "signature": "fd301899567bc9472ce023392160cdc265ad8fcbbb67e0ea1b2af70a4b0cd9c7"
     }
 }
@@ -14979,7 +14981,7 @@ With `computeCommissionRates`:
     "id": "605a6d20-6588-4cb9-afa0-b0ab087507ba",
     "method": "account.status",
     "params": {
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "83303b4a136ac1371795f465808367242685a9e3a42b22edb4d977d0696eb45c",
         "timestamp": 1660801839480
     }
@@ -15068,7 +15070,7 @@ Query information about your account.
     "params": {
         "symbol": "BTCUSDT",
         "orderId": 12569099453,
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "2c3aab5a078ee4ea465ecd95523b77289f61476c2f238ec10c55ea6cb11a6f35",
         "timestamp": 1660801720951
     }
@@ -15203,7 +15205,7 @@ Notes:
     "method": "openOrders.status",
     "params": {
         "symbol": "BTCUSDT",
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "d632b3fdb8a81dd44f82c7c901833309dd714fe508772a89b0a35b0ee0c48b89",
         "timestamp": 1660813156812
     }
@@ -15301,7 +15303,7 @@ to tell which symbol the orders belong to.
         "startTime": 1660780800000,
         "endTime": 1660867200000,
         "limit": 5,
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "f50a972ba7fad92842187643f6b930802d4e20bce1ba1e788e856e811577bd42",
         "timestamp": 1661955123341
     }
@@ -15399,7 +15401,7 @@ Note that some fields are optional and included only for orders that set them.
   "method": "orderList.status",
   "params": {
     "origClientOrderId": "08985fedd9ea2cf6b28996",
-    "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+    "apiKey": "YOUR_API_KEY",
     "signature": "d12f4e8892d46c0ddfbd43d556ff6d818581b3be22a02810c2c20cb719aed6a4",
     "timestamp": 1660801713965
   }
@@ -15517,7 +15519,7 @@ Notes:
     "id": "3a4437e2-41a3-4c19-897c-9cadc5dce8b6",
     "method": "openOrderLists.status",
     "params": {
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "1bea8b157dd78c3da30359bddcd999e4049749fe50b828e620e12f64e8b433c9",
         "timestamp": 1660801713831
     }
@@ -15597,7 +15599,7 @@ If you need to continuously monitor order status updates, please consider using 
         "startTime": 1660780800000,
         "endTime": 1660867200000,
         "limit": 5,
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "c8e1484db4a4a02d0e84dfa627eb9b8298f07ebf12fcc4eaf86e4a565b2712c2",
         "timestamp": 1661955123341
     }
@@ -15688,7 +15690,7 @@ Status reports for order lists are identical to [`orderList.status`](#query-orde
         "symbol": "BTCUSDT",
         "startTime": 1660780800000,
         "endTime": 1660867200000,
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "c5a5ffb79fd4f2e10a92f895d488943a57954edf5933bde3338dfb6ea6d6eefc",
         "timestamp": 1661955125250
     }
@@ -15796,7 +15798,7 @@ Notes:
     "id": "d3783d8d-f8d1-4d2c-b8a0-b7596af5a664",
     "method": "account.rateLimits.orders",
     "params": {
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "76289424d6e288f4dc47d167ac824e859dabf78736f4348abbbac848d719eb94",
         "timestamp": 1660801839500
     }
@@ -15861,7 +15863,7 @@ Query your current unfilled order count for all intervals.
     "params": {
         "symbol": "BTCUSDT",
         "orderId": 35,
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "c5a5ffb79fd4f2e10a92f895d488943a57954edf5933bde3338dfb6ea6d6eefc",
         "timestamp": 1673923281052
     }
@@ -15942,7 +15944,7 @@ Database
     "params": {
         "symbol": "BTCUSDT",
         "orderId": 500,
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "c5a5ffb79fd4f2e10a92f895d488943a57954edf5933bde3338dfb6ea6d6eefc",
         "timestamp": 1673923281052
     }
@@ -16026,7 +16028,7 @@ Supported parameter combinations:
     "method": "account.commission",
     "params": {
         "symbol": "BTCUSDT",
-        "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+        "apiKey": "YOUR_API_KEY",
         "signature": "c5a5ffb79fd4f2e10a92f895d488943a57954edf5933bde3338dfb6ea6d6eefc",
         "timestamp": 1673923281052
     }
@@ -16101,7 +16103,7 @@ Get current account commission rates.
         "recvWindow": 5000,
         "symbol": "BTCUSDT",
         "timestamp": 1741925524887,
-        "apiKey": "N3Swv7WaBF7S2rzA12UkPunM3udJiDddbgv1W7CzFGnsQXH9H62zzSCST0CndjeE",
+        "apiKey": "YOUR_API_KEY",
         "signature": "0eed2e9d95b6868ea5ec21da0d14538192ef344c30ecf9fe83d58631699334dc"
     }
 }
@@ -16166,7 +16168,7 @@ Queries all amendments of a single order.
         "recvWindow": 5000,
         "symbol": "BTCUSDT",
         "timestamp": 1758008841149,
-        "apiKey": "nQ6kG5gDExDd5MZSO0MfOOWEVZmdkRllpNMfm1FjMjkMnmw1NUd3zPDfvcnDJlil",
+        "apiKey": "YOUR_API_KEY",
         "signature": "7edc54dd0493dd5bc47adbab9b17bfc9b378d55c20511ae5a168456d3d37aa3a"
     }
 }
@@ -16478,7 +16480,7 @@ but not subscriptions opened with `userDataStream.subscribe.signature`.
     "id": "d3df8a22-98ea-4fe0-9f4e-0fcea5d418b7",
     "method": "userDataStream.subscribe.signature",
     "params": {
-        "apiKey": "mjcKCrJzTU6TChLsnPmgnQJJMR616J4yWvdZWDUeXkk6vL6dLyS7rcVOQlADlVjA",
+        "apiKey": "YOUR_API_KEY",
         "timestamp": 1747385641636,
         "signature": "yN1vWpXb+qoZ3/dGiFs9vmpNdV7e3FxkA+BstzbezDKwObcijvk/CVkWxIwMCtCJbP270R0OempYwEpS6rDZCQ=="
     }

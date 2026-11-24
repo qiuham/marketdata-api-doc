@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/api-reference/unified-fix/mdsfr'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Market Data Snapshot Full Refresh
@@ -64,21 +64,22 @@ Price of the market data entry.
 
 Volume represented by the market data entry.
 
-**273 - MDEntryTime** `string` *required*
+**273 - MDEntryTime** `string`
 
 Time of market data entry.
-
-**5060 - MDEntryTimestamp** `string`
-
-High-precision event time for this market data update.
-**Level 3 only.** When present with 5273, 5060 is the time the update was generated; 5273 is the queue entry time.
-Sample format: `2026-02-03T10:24:34.650069468Z` (ISO 8601, nanosecond fractional seconds, UTC).
+**Level 2 only.** Level 3 entries carry 5273 instead and do not include 273.
 
 **5273 - MDEntryTimeQueue** `string`
 
 Queue entry time: when the order entered the book at this price level.
 **Level 3 only.** For L3, orders at the same price are ordered by this tag.
 Sample format: `2026-02-03T10:24:29.175114502Z` (ISO 8601, nanosecond fractional seconds, UTC).
+
+**5060 - MDEntryTimestamp** `string`
+
+High-precision event time for this message. Sent once per message, after the repeating group, not on each entry.
+**Level 3 only.**
+Sample format: `2026-02-03T10:24:34.650069468Z` (ISO 8601, nanosecond fractional seconds, UTC).
 
 **trailer** *required*
 
@@ -87,5 +88,5 @@ Sample format: `2026-02-03T10:24:29.175114502Z` (ISO 8601, nanosecond fractional
 ```
 
 ```text Futures L3 Example theme={null}
-8=FIX.4.4|9=87775|35=W|34=2|49=KRAKEN-DRV-MD|52=20250304-15:25:09.911|56=MYCOMPID_DRV|55=PF_ETHUSD|262=1|268=10|269=1|278=00bf00ff-00bb-00f7-00ed-006f007f00de|270=2043.1|271=2.05|273=15:25:09.883|269=1|278=009e005a-00b9-0035-00ff-009e00ce007e|270=2043.9|271=2.05|273=15:25:09.767|...|10=000|
+8=FIX.4.4|9=...|35=W|34=2|49=KRAKEN-DRV-MD|52=20261112-17:59:55.585|56=MYCOMPID_DRV|55=PF_CRVUSD|262=1|268=226|269=1|278=a3359aed-64df-4069-aeb7-9203ee0b034a|270=0.2362|271=2000|5273=2026-11-12T17:57:58.432980188Z|269=1|278=a3359aee-e717-43e3-adea-f2217d55f922|270=0.2362|271=2000|5273=2026-11-12T17:57:59.421705274Z|...|893=Y|5060=2026-11-12T17:59:55.059327516Z|10=...|
 ```

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/filesystem/getFileSystemManager
 api_type: Guide
-updated_at: 2026-11-23 18:47:21.950967
+updated_at: 2026-11-24 18:47:04.114073
 ---
 
 # bn.getFileSystemManager

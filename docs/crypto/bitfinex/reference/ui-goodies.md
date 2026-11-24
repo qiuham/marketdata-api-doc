@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/reference/ui-goodies'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # UI Goodies

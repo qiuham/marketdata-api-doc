@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/caas/Faq
 api_type: Guide
-updated_at: 2026-11-23 18:33:18.682226
+updated_at: 2026-11-24 18:33:17.115443
 ---
 
 # FAQ

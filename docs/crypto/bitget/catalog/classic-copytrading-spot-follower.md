@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-copytrading-spot-follower
 api_type: REST
-updated_at: 2026-11-23 19:02:27.920117
+updated_at: 2026-11-24 19:01:59.396395
 ---
 
 # Classic Spot Copy Trading Follower API

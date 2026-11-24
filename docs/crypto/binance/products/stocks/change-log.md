@@ -2,12 +2,28 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/stocks/change-log
 api_type: Changelog
-updated_at: 2026-11-23 18:29:05.941644
+updated_at: 2026-11-24 18:28:42.644388
 ---
 
-# change log
+# Change Log
 
-the latest update: 2026-11-18
+The latest update: 2026-11-24
+
+## 2026-11-24
+
+### New parameter `tokenizedAssetSettleWalletType`
+
+- Added optional request parameter `tokenizedAssetSettleWalletType` (`MAIN` = Spot wallet, `CARD` =
+  Funding wallet, default `CARD`) to choose the wallet the tokenized asset is settled in:
+  - `POST /sapi/v1/equity/order/place` — wallet that receives the tokenized asset minted after the
+    fill. Only applies when `side` = `BUY` and `tokenize` = `true`.
+  - `POST /sapi/v1/equity/tokenized/mint` — wallet that receives the minted tokenized asset.
+  - `POST /sapi/v1/equity/tokenized/redeem` — wallet the tokenized asset is deducted from.
+- Added response field `tokenizedAssetSettleWalletType`, the settle wallet actually used, to:
+  - `POST /sapi/v1/equity/tokenized/mint`
+  - `POST /sapi/v1/equity/tokenized/redeem`
+  - `GET /sapi/v1/equity/tokenized/history` (each element of `rows`)
+  - `GET /sapi/v1/equity/tokenized/convert-status`
 
 ## 2026-11-18
 
@@ -119,7 +135,23 @@ market-data WebSocket streams.
 
 # 更新日志
 
-最新更新：2026-11-18
+最新更新：2026-11-24
+
+## 2026-11-24
+
+### 新增参数 `tokenizedAssetSettleWalletType`
+
+- 新增可选请求参数 `tokenizedAssetSettleWalletType`（`MAIN` = 现货钱包，`CARD` = 资金钱包，默认
+  `CARD`），用于选择代币化资产的结算钱包：
+  - `POST /sapi/v1/equity/order/place` — 订单成交后铸造的代币化资产所划入的钱包。仅在 `side` = `BUY`
+    且 `tokenize` = `true` 时生效。
+  - `POST /sapi/v1/equity/tokenized/mint` — 接收所铸造代币化资产的钱包。
+  - `POST /sapi/v1/equity/tokenized/redeem` — 扣减代币化资产的钱包。
+- 以下接口的响应新增字段 `tokenizedAssetSettleWalletType`，表示实际使用的结算钱包：
+  - `POST /sapi/v1/equity/tokenized/mint`
+  - `POST /sapi/v1/equity/tokenized/redeem`
+  - `GET /sapi/v1/equity/tokenized/history`（`rows` 中的每个元素）
+  - `GET /sapi/v1/equity/tokenized/convert-status`
 
 ## 2026-11-18
 

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/web-socket-streams
 api_type: WebSocket
-updated_at: 2026-11-23 18:35:59.643276
+updated_at: 2026-11-24 18:35:53.177145
 ---
 
 # WebSocket Streams for Binance SPOT Testnet
@@ -687,10 +687,10 @@ To apply an event to your local order book, follow this update procedure:
 
 :::note
 
-Since depth snapshots retrieved from the API have a limit on the number of price levels (5000 on
+Since depth snapshots retrieved from the API have a limit on the number of price levels (7500 on
 each side maximum), you won't learn the quantities for the levels outside of the initial snapshot
 unless they change. <br> So be careful when using the information for those levels, since they might
-not reflect the full view of the order book. <br> However, for most use cases, seeing 5000 levels on
+not reflect the full view of the order book. <br> However, for most use cases, seeing 7500 levels on
 each side is enough to understand the market and trade effectively.
 
 :::
@@ -1379,10 +1379,10 @@ To apply an event to your local order book, follow this update procedure:
 
 :::note
 
-Since depth snapshots retrieved from the API have a limit on the number of price levels (5000 on
+Since depth snapshots retrieved from the API have a limit on the number of price levels (7500 on
 each side maximum), you won't learn the quantities for the levels outside of the initial snapshot
 unless they change. <br> So be careful when using the information for those levels, since they might
-not reflect the full view of the order book. <br> However, for most use cases, seeing 5000 levels on
+not reflect the full view of the order book. <br> However, for most use cases, seeing 7500 levels on
 each side is enough to understand the market and trade effectively.
 
 :::

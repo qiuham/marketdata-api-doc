@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api
 api_type: WebSocket API
-updated_at: 2026-11-23 18:49:30.426469
+updated_at: 2026-11-24 18:49:06.372250
 ---
 
 # Futures (USDⓈ-M) WebSocket API
@@ -797,7 +797,7 @@ Operation ID: `newAlgoOrder`
 | params.side | string | 是 | Side.<br>买卖方向。<br>枚举: `BUY`, `SELL`<br>例: `BUY` |
 | params.positionSide | string |  | Default BOTH for One-way Mode ; LONG or SHORT for Hedge Mode. It must be sent in Hedge Mode.<br>单向模式默认 `BOTH`；双向模式可为 `LONG` 或 `SHORT`，双向模式必传。<br>枚举: `BOTH`, `LONG`, `SHORT`<br>例: `BOTH` |
 | params.type | string | 是 | For `CONDITIONAL` algoType, `STOP_MARKET`/`TAKE_PROFIT_MARKET`/`STOP`/`TAKE_PROFIT`/`TRAILING_STOP_MARKET` as order type<br>当 algoType=`CONDITIONAL` 时，订单类型可为 `STOP_MARKET`/`TAKE_PROFIT_MARKET`/`STOP`/`TAKE_PROFIT`/`TRAILING_STOP_MARKET` 之一。<br>枚举: `STOP_MARKET`, `TAKE_PROFIT_MARKET`, `STOP`, `TAKE_PROFIT`, `TRAILING_STOP_MARKET`<br>例: `STOP_MARKET` |
-| params.timeInForce | string |  | `IOC` or `GTC` or `FOK`, default `GTC`<br>`IOC`、`GTC` 或 `FOK`，默认 `GTC`。<br>枚举: `IOC`, `GTC`, `FOK`<br>例: `GTC` |
+| params.timeInForce | string |  | `IOC` or `GTC` or `FOK` or `GTX` or `GTD`, default `GTC`<br>`IOC`、`GTC`、`FOK`、`GTX` 或 `GTD`，默认 `GTC`。<br>枚举: `IOC`, `GTC`, `FOK`, `GTX`, `GTD`<br>例: `GTC` |
 | params.quantity | number (float) |  | Cannot be sent with `closePosition`=`true`(Close-All)<br>不可与 `closePosition=true`（全平）同时传。<br>例: `1.0` |
 | params.price | number (float) |  | Price.<br>价格。<br>例: `1.0` |
 | params.triggerPrice | number (float) |  | Trigger Price.<br>触发价格。<br>例: `1.0` |

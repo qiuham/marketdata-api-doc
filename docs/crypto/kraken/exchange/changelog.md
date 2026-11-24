@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/changelog'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Release notes
@@ -18,6 +18,13 @@ updated_at: 2026-11-23
 > A history of changes to Kraken's Exchange APIs
 
 ## 2026
+
+### 24 November 2026 — Spot REST v1
+
+* SPV entries for tokenized assets in [`Assets`](https://docs.kraken.com/api-reference/market-data/get-asset-info) and [`AssetPairs`](https://docs.kraken.com/api-reference/market-data/get-tradable-asset-pairs) now use SPV names instead of the rebased `x` names
+* `Assets`: the SPV entry (for example `AAPLSPV`) now has `altname: "AAPLSPV"` (was `"AAPLx"`)
+* `AssetPairs`: the SPV pair entry (for example `AAPLSPVUSD`) now has `altname: "AAPLSPVUSD"` (was `AAPLxUSD`), `wsname: "AAPLSPV/USD"` (was `AAPLx/USD`) and `base: "AAPLSPV"` (was `AAPLx`)
+* The rebased `x` entries (`AAPLx`, `AAPLxUSD`) and all other fields are unchanged. If you match SPV entries by `altname`, `wsname` or `base`, please update your mapping
 
 ### 19 November 2026 — Derivatives
 

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/market-data/charttradesinstrument_nameresolution
 api_type: WebSocket
-updated_at: 2026-11-23 19:00:30.519219
+updated_at: 2026-11-24 18:59:42.703816
 ---
 
 # chart.trades.(instrument_name).(resolution)

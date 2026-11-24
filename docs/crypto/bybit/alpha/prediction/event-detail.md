@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/event-detail
 api_type: REST
-updated_at: 2026-11-23 18:50:10.385725
+updated_at: 2026-11-24 18:49:49.109710
 ---
 
 # Get Event Detail

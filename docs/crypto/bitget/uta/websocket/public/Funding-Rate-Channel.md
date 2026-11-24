@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/public/Funding-Rate-Channel
 api_type: WebSocket
-updated_at: 2026-11-23 19:02:04.612798
+updated_at: 2026-11-24 19:01:31.722229
 ---
 
 # Funding Rate Channel

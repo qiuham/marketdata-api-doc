@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/liquidity-mining/order
 api_type: REST
-updated_at: 2026-11-23 18:51:07.671106
+updated_at: 2026-11-24 18:50:43.290142
 ---
 
 # Get Order Info

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/network/request
 api_type: Guide
-updated_at: 2026-11-23 18:45:29.108837
+updated_at: 2026-11-24 18:45:13.990300
 ---
 
 # bn.request

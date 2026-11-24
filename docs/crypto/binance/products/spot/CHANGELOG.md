@@ -2,12 +2,21 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/CHANGELOG
 api_type: Changelog
-updated_at: 2026-11-23 18:29:32.517353
+updated_at: 2026-11-24 18:29:34.424580
 ---
 
 # CHANGELOG for Binance's API
 
-**Last Updated: 2026-11-11**
+**Last Updated: 2026-11-24**
+
+### 2026-11-24
+
+- Order Book depth now supports additional levels. This affects the following endpoints:
+  - REST API: [`GET /api/v3/depth`](/catalog/core-trading-spot-trading/api/rest-api/market#depth)
+  - WebSocket API: [`depth`](/catalog/core-trading-spot-trading/api/ws-api/market#depth)
+  - FIX Market Data: [MarketDataRequest `<V>`](/products/spot/fix-api#marketdatarequest)
+
+---
 
 ### 2026-11-11
 
@@ -3481,7 +3490,16 @@ USER DATA STREAM
 
 # 更新日志
 
-**最近更新：2026-11-11**
+**最近更新：2026-11-24**
+
+### 2026-11-24
+
+- 订单簿深度现在支持更多价位。此变更影响以下接口：
+  - REST API：[`GET /api/v3/depth`](/catalog/core-trading-spot-trading/api/rest-api/market#depth)
+  - WebSocket API：[`depth`](/catalog/core-trading-spot-trading/api/ws-api/market#depth)
+  - FIX Market Data：[MarketDataRequest `<V>`](/products/spot/fix-api#marketdatarequest)
+
+---
 
 ### 2026-11-11
 

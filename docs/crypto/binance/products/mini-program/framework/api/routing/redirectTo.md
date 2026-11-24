@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/routing/redirectTo
 api_type: Guide
-updated_at: 2026-11-23 18:44:36.686008
+updated_at: 2026-11-24 18:44:21.826020
 ---
 
 # bn.redirectTo

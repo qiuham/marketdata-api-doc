@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/location/offLocationChange
 api_type: Guide
-updated_at: 2026-11-23 18:46:17.908727
+updated_at: 2026-11-24 18:46:01.473659
 ---
 
 # bn.offLocationChange

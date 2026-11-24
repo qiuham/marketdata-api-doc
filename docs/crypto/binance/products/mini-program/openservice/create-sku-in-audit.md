@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/openservice/create-sku-in-audit
 api_type: Guide
-updated_at: 2026-11-23 18:37:49.318494
+updated_at: 2026-11-24 18:37:36.800317
 ---
 
 # CreateSKUInAudit

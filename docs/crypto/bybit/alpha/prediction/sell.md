@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/sell
 api_type: REST
-updated_at: 2026-11-23 18:50:13.553808
+updated_at: 2026-11-24 18:49:52.153470
 ---
 
 # Execute Sell

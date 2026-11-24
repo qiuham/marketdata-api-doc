@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/sign-agreement
 api_type: REST
-updated_at: 2026-11-23 18:52:39.305550
+updated_at: 2026-11-24 18:52:16.993614
 ---
 
 # Sign Agreement

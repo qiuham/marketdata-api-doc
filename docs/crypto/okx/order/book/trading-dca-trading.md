@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-dca-trading
 anchor_id: order-book-trading-dca-trading
 api_type: API
-updated_at: 2026-11-23 18:59:15.355246
+updated_at: 2026-11-24 18:58:31.247381
 ---
 
 # DCA Trading

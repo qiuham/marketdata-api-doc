@@ -2,12 +2,44 @@
 exchange: deribit
 source_url: https://docs.deribit.com/changelogs/jsonrpc
 api_type: Changelog
-updated_at: 2026-11-23 19:00:29.852232
+updated_at: 2026-11-24 18:59:42.159095
 ---
 
 # JSON-RPC API Changelog
 
 > Release notes for the Deribit JSON-RPC API covering new endpoints, parameter changes, subscription updates, and backward-compatibility announcements.
+
+**Release 27.11.2026**
+
+**Breaking Change: Public settlement methods temporarily disabled**
+
+As a precautionary measure, the following methods have been temporarily switched off for all connections, authenticated and unauthenticated:
+
+**Affected methods:**
+
+* [`public/get_last_settlements_by_instrument`](https://docs.deribit.com/api-reference/market-data/public-get_last_settlements_by_instrument)
+* [`public/get_last_settlements_by_currency`](https://docs.deribit.com/api-reference/market-data/public-get_last_settlements_by_currency)
+
+Requests to these methods, over REST and WebSocket, are rejected with the `method_switched_off_by_admin` error (13025).
+
+To retrieve settlement, delivery and bankruptcy events that have affected your account, use the private methods instead (scope `trade:read`):
+
+* [`private/get_settlement_history_by_instrument`](https://docs.deribit.com/api-reference/trading/private-get_settlement_history_by_instrument)
+* [`private/get_settlement_history_by_currency`](https://docs.deribit.com/api-reference/trading/private-get_settlement_history_by_currency)
+
+**Minimum interval of 100 ms between ticker updates**
+
+Public ticker updates for an instrument are now sent at most once every 100 ms, including when the `raw` interval is selected.
+
+**Affected channels:**
+
+* [`ticker.{instrument_name}.raw`](https://docs.deribit.com/subscriptions/market-data/tickerinstrument_nameinterval)
+
+A change of the best bid or best ask, or of the instrument state, is still sent immediately. Other ticker changes within the 100 ms window are not sent separately; they are included in the next ticker update for the instrument.
+
+**New method: `private/get_ctn_id`**
+
+The new [`private/get_ctn_id`](https://docs.deribit.com/api-reference/wallet/private-get_ctn_id) method returns the Coinbase Transfer Network (CTN) ID of the account. Share this ID with a sending party so they can add the account as a CTN counterparty and send funds to it. The method takes no parameters, is available to institutional Coinbase wallet type accounts only and requires the `wallet:read` scope. It is already available in production.
 
 **Release 26.11.2026**
 

@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/api-reference/unified-fix/er'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Execution Report
@@ -187,7 +187,7 @@ Full description for Cancellations or status of the order.
 
 **137 - MiscFeeAmt** `float`
 
-Absolute fee value present on Fill Reports. Fees are cumulative from the previous trades.
+Absolute fee value present on Fill Reports. By default, and with ExecInst (18) `f` or `q`, this is the cumulative fee for the order so far. With ExecInst (18) `s`, it is the fee for this fill only.
 
 **138 - MiscFeeCurr** `string`
 

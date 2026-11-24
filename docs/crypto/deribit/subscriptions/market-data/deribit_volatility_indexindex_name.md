@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/market-data/deribit_volatility_indexindex_name
 api_type: WebSocket
-updated_at: 2026-11-23 19:00:30.388181
+updated_at: 2026-11-24 18:59:42.682229
 ---
 
 # deribit_volatility_index.(index_name)

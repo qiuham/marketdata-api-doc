@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/coinbase-wallet-api
 api_type: Guide
-updated_at: 2026-11-23 19:00:29.362841
+updated_at: 2026-11-24 18:59:41.856038
 ---
 
 # Coinbase Wallet API
@@ -507,7 +507,7 @@ fails with a permission error.
 ## Related topics
 
 - [Coinbase International Exchange API Migration](https://docs.deribit.com/articles/intx-api-migration.md)
+- [Managing Deposits](https://docs.deribit.com/articles/managing-deposits-api.md)
 - [private/set_coinbase_subaccount_withdrawals_allowed](https://docs.deribit.com/api-reference/wallet/private-set_coinbase_subaccount_withdrawals_allowed.md)
 - [private/coinbase/estimate_withdrawal_fee](https://docs.deribit.com/api-reference/wallet/private-estimate_withdrawal_fee.md)
 - [private/get_current_deposit_address](https://docs.deribit.com/api-reference/wallet/private-get_current_deposit_address.md)
-- [private/get_address_book](https://docs.deribit.com/api-reference/wallet/private-get_address_book.md)

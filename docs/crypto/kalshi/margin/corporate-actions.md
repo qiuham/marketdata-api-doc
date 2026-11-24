@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin/corporate-actions'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Corporate Actions
@@ -70,6 +70,8 @@ The Simple Description column describes each action in general terms, as it appl
 > Delisting / bankruptcy / liquidation: once the exchange confirms the event, trading halts and does not resume, and final settlement follows within five business days. The exchange gives at least two business days' notice before an accelerated final settlement, unless an emergency requires faster action.
 
 [`GET /margin/corporate_actions`](https://docs.kalshi.com/margin-rest/corporate-actions/get-margin-corporate-actions) returns scheduled notices and notices updated in the last seven days.
+
+[`GET /margin/corporate_action_payment_history`](https://docs.kalshi.com/margin-rest/corporate-actions/get-corporate-action-payment-history) returns the cash a dividend or spin-off paid to or collected from your account, with the position each payment was computed on.
 
 
 This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

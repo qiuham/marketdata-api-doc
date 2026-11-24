@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/order-cancel-reject
 api_type: FIX
-updated_at: 2026-11-23 19:00:32.311297
+updated_at: 2026-11-24 18:59:44.884308
 ---
 
 # Order Cancel Reject(9) (Production FIX API)

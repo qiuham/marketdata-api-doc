@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/security-status
 api_type: FIX
-updated_at: 2026-11-23 19:00:32.192627
+updated_at: 2026-11-24 18:59:44.749392
 ---
 
 # Security Status(f) (Production FIX API)

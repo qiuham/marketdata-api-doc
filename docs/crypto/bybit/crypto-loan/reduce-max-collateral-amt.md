@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/crypto-loan/reduce-max-collateral-amt
 api_type: REST
-updated_at: 2026-11-23 18:50:51.518881
+updated_at: 2026-11-24 18:50:27.759026
 ---
 
 # Get Max. Allowed Collateral Reduction Amount

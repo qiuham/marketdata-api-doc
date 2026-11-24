@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/offTabSwitched
 api_type: Guide
-updated_at: 2026-11-23 18:47:02.954071
+updated_at: 2026-11-24 18:46:47.465223
 ---
 
 # bn.offTabSwitched

@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/guides/fix/introduction'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # FIX Introduction
@@ -123,8 +123,12 @@ Connections must use **TCP SSL with TLS 1.3**.
 
 | Environment | Hostname |
 | :- | :- |
-| Production | `fix.kraken.com` |
-| UAT | `fix.uat.kraken.com` |
+| Production | `eu-west-2-<shard>.vip-fix.kraken.com` |
+| UAT | `eu-west-2-<shard>.vip-fix.uat.kraken.com` |
+| Colocation (cross-connect) | `colo-london.vip-fix.kraken.com` |
+| Broker API sessions (including Organization accounts) | `broker-fix.kraken.com` |
+
+There is no public FIX endpoint. FIX access is IP-whitelisted, and Kraken tells you your `<shard>` number during onboarding, together with your CompIDs and ports. Your UAT and Production shards can differ.
 
 > [!WARNING]
 >

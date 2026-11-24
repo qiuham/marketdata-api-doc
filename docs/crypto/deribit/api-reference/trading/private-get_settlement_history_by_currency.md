@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-get_settlement_history_by_currency
 api_type: JSON-RPC
-updated_at: 2026-11-23 19:00:40.126749
+updated_at: 2026-11-24 18:59:54.402609
 ---
 
 # private/get_settlement_history_by_currency
@@ -337,8 +337,8 @@ components:
 
 ## Related topics
 
+- [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md)
 - [Coinbase International Exchange API Migration](https://docs.deribit.com/articles/intx-api-migration.md)
 - [private/get_settlement_history_by_instrument](https://docs.deribit.com/api-reference/trading/private-get_settlement_history_by_instrument.md)
 - [private/get_order_history_by_currency](https://docs.deribit.com/api-reference/trading/private-get_order_history_by_currency.md)
 - [private/get_trigger_order_history](https://docs.deribit.com/api-reference/trading/private-get_trigger_order_history.md)
-- [private/get_broker_trades](https://docs.deribit.com/api-reference/block-trade/private-get_broker_trades.md)

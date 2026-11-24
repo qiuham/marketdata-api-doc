@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/geoblock'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # 地区限制
@@ -109,6 +109,7 @@ GET https://polymarket.com/api/geoblock
 | Singapore | SG |
 | Somalia | SO |
 | Slovakia | SK |
+| Slovenia | SI |
 | South Sudan | SS |
 | Sudan | SD |
 | Taiwan | TW |

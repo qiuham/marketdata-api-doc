@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/views/createIntersectionObserver
 api_type: Guide
-updated_at: 2026-11-23 18:44:14.447722
+updated_at: 2026-11-24 18:44:00.051935
 ---
 
 # bn.createIntersectionObserver

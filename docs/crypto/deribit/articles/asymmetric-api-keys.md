@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/asymmetric-api-keys
 api_type: Guide
-updated_at: 2026-11-23 19:00:29.500010
+updated_at: 2026-11-24 18:59:41.994695
 ---
 
 # Asymmetric API Keys

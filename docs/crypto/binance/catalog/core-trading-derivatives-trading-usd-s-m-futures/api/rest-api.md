@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api
 api_type: REST
-updated_at: 2026-11-23 18:49:29.967148
+updated_at: 2026-11-24 18:49:05.728131
 ---
 
 # Futures (USDⓈ-M) REST API
@@ -1284,7 +1284,9 @@ Get Funding Rate History
 
 查询资金费率历史
 
-权重: share 500/5min/IP rate limit with GET /fapi/v1/fundingInfo
+权重: When `limit` ≤ 200: share 500/5min/IP rate limit with `GET /fapi/v1/fundingInfo`
+
+When `limit` > 200: 100/5min/IP rate limit
 
 Operation ID: `getFundingRateHistory`
 

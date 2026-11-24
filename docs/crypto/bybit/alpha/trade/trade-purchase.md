@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/trade/trade-purchase
 api_type: Trading
-updated_at: 2026-11-23 18:50:17.952695
+updated_at: 2026-11-24 18:49:56.731128
 ---
 
 # Execute Purchase

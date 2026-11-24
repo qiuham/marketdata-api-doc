@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/earn/deallocate-earn-funds'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Deallocate Earn Funds

@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/get-margin-reports'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Get Margin Reports

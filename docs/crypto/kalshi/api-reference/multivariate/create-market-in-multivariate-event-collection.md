@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/multivariate/create-market-in-multivariate-event-collection'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Create Market In Multivariate Event Collection

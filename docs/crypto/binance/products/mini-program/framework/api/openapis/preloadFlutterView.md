@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/preloadFlutterView
 api_type: Guide
-updated_at: 2026-11-23 18:44:58.259134
+updated_at: 2026-11-24 18:44:42.865048
 ---
 
 # bn.preloadFlutterView

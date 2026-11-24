@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-spot-market
 api_type: REST
-updated_at: 2026-11-23 19:02:37.107191
+updated_at: 2026-11-24 19:02:11.185664
 ---
 
 # Classic Spot Market API

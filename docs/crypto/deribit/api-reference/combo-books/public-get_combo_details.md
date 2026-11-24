@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/combo-books/public-get_combo_details
 api_type: JSON-RPC
-updated_at: 2026-11-23 19:00:37.308206
+updated_at: 2026-11-24 18:59:51.400038
 ---
 
 # public/get_combo_details

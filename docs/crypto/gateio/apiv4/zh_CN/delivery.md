@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/delivery
 api_type: Trading
-updated_at: 2026-11-23 18:57:45.456380
+updated_at: 2026-11-24 18:57:00.439230
 ---
 
 # Delivery

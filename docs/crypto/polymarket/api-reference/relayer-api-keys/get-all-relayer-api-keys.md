@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/relayer-api-keys/get-all-relayer-api-keys'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Get all relayer API keys

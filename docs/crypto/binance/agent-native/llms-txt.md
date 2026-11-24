@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/agent-native/llms-txt
 api_type: Guide
-updated_at: 2026-11-23 18:27:14.840333
+updated_at: 2026-11-24 18:27:09.914640
 ---
 
 # llms.txt

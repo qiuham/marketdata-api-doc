@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/market-data/get-last-trade-prices-request-body'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # 获取最新成交价（请求体）

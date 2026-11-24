@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/borrow
 api_type: REST
-updated_at: 2026-11-23 18:49:53.734408
+updated_at: 2026-11-24 18:49:32.491145
 ---
 
 # Borrow

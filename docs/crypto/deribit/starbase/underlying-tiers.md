@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/underlying-tiers
 api_type: Starbase
-updated_at: 2026-11-23 19:00:34.332405
+updated_at: 2026-11-24 18:59:46.776116
 ---
 
 # Underlying Tiers

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-toggle_subaccount_login
 api_type: JSON-RPC
-updated_at: 2026-11-23 19:00:36.200453
+updated_at: 2026-11-24 18:59:49.928249
 ---
 
 # private/toggle_subaccount_login

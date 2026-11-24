@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/geoblock'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Geographic Restrictions
@@ -111,6 +111,7 @@ Users can close existing positions but cannot open new ones, on both the fronten
 | Singapore | SG |
 | Somalia | SO |
 | Slovakia | SK |
+| Slovenia | SI |
 | South Sudan | SS |
 | Sudan | SD |
 | Taiwan | TW |

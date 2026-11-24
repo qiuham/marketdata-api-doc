@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/market-data-snapshot
 api_type: FIX
-updated_at: 2026-11-23 19:00:32.106982
+updated_at: 2026-11-24 18:59:44.636508
 ---
 
 # Market Data Snapshot (W) (Production FIX API)

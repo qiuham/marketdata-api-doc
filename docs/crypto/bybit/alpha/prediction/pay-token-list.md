@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/pay-token-list
 api_type: REST
-updated_at: 2026-11-23 18:50:11.901163
+updated_at: 2026-11-24 18:49:50.564992
 ---
 
 # Get Payment Token List

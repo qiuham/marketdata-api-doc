@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/caas/markup/overview
 api_type: Guide
-updated_at: 2026-11-23 18:42:02.892599
+updated_at: 2026-11-24 18:41:51.228644
 ---
 
 # Markup

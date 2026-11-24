@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/agent-native/mcp-server/agentic
 api_type: Guide
-updated_at: 2026-11-23 18:27:42.506463
+updated_at: 2026-11-24 18:27:36.722596
 ---
 
 # Binance MCP Server
@@ -1104,9 +1104,10 @@ Disclaimer：Binance MCP Server 是 Binance 提供的一项 AI
 Tool，用于提供 AI 辅助交易能力，不构成任何建议。因 agent 生成的决策导致的损失，Binance 不承担责任。你需要自行负责监督 agent 的活动、配置权限范围，并核实每一步操作。使用 AI
 Tools 可能还需遵守额外的
 [Binance Product Terms](https://www.binance.com/en/about-legal/product-terms)（如适用）。更多信息详见我们的
-[Terms of Use](https://www.binance.com/en/terms)、[Risk Warning](https://www.binance.com/en/risk-warning) 以及
-[AI Policy and Terms](https://www.binance.com/en/about-legal/AI-Policy)。对于 Binance
+[Terms of Use](https://www.binance.com/en/terms)、[Risk Warning](https://www.binance.com/en/risk-warning)
+以及 [AI Policy and Terms](https://www.binance.com/en/about-legal/AI-Policy)。对于 Binance
 FZE 用户，使用 Binance AI 可能还需遵守额外的
 [Binance Product Terms](https://www.binance.com/en/about-legal/product-terms)（如适用）。有关适用于 Binance
-FZE 用户的条款，更多信息请参阅我们的 [Terms of Use](https://www.binance.com/en/terms)、[Risk Warning](https://www.binance.com/en/risk-warning) 以及
-[AI Policy and Terms](https://www.binance.com/en/about-legal/AI-Policy)。
+FZE 用户的条款，更多信息请参阅我们的
+[Terms of Use](https://www.binance.com/en/terms)、[Risk Warning](https://www.binance.com/en/risk-warning)
+以及 [AI Policy and Terms](https://www.binance.com/en/about-legal/AI-Policy)。

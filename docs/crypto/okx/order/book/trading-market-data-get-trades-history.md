@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-get-trades-history
 anchor_id: order-book-trading-market-data-get-trades-history
 api_type: API
-updated_at: 2026-11-23 18:59:16.174137
+updated_at: 2026-11-24 18:58:32.291571
 ---
 
 # GET / Trades history

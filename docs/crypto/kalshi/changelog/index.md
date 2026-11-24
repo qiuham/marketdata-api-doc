@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/changelog/index'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # API Changelog
@@ -26,6 +26,17 @@ Predictions and Margin exchanges. Use the entry tags to filter by API
 surface (`REST`, `WebSocket`, `FIX`) or exchange (`Predictions`, `Margin`).
 FIX API changes, previously tracked on a separate page, now live here under
 the `FIX` tag.
+
+**November 26, 2026**
+
+`GET /margin/corporate_action_payment_history` returns the cash your account received or paid
+for cash dividends, special dividends and cash spin-offs over an inclusive UTC date range,
+optionally filtered by `ticker` and `subaccount`. Each entry has the `corporate_action_id`
+(the `id` of the notice in `GET /margin/corporate_actions`), `type`, `market_ticker`,
+`payment_time`, `payment_amount` (positive when received) and `quantity`, the signed position
+the payment was computed on. Stock split adjustments are not listed. Subaccount-restricted API
+keys read their locked subaccount's payments, on the same terms as `GET /margin/funding_history`.
+See [Corporate Actions](https://docs.kalshi.com/margin/corporate-actions.md).
 
 **November 26, 2026**
 

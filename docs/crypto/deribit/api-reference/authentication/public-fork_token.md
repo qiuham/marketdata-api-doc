@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/authentication/public-fork_token
 api_type: JSON-RPC
-updated_at: 2026-11-23 19:00:34.686171
+updated_at: 2026-11-24 18:59:47.378276
 ---
 
 # public/fork_token

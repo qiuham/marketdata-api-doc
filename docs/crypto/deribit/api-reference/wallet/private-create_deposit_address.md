@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-create_deposit_address
 api_type: JSON-RPC
-updated_at: 2026-11-23 19:00:40.781251
+updated_at: 2026-11-24 18:59:55.369741
 ---
 
 # private/create_deposit_address
@@ -446,8 +446,8 @@ components:
 
 ## Related topics
 
-- [Managing Deposits](https://docs.deribit.com/articles/managing-deposits-api.md)
 - [private/get_address_book](https://docs.deribit.com/api-reference/wallet/private-get_address_book.md)
+- [Managing Deposits](https://docs.deribit.com/articles/managing-deposits-api.md)
 - [Coinbase Wallet API](https://docs.deribit.com/articles/coinbase-wallet-api.md)
 - [Coinbase International Exchange API Migration](https://docs.deribit.com/articles/intx-api-migration.md)
 - [private/get_current_deposit_address](https://docs.deribit.com/api-reference/wallet/private-get_current_deposit_address.md)

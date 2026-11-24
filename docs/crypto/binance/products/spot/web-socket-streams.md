@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/web-socket-streams
 api_type: WebSocket
-updated_at: 2026-11-23 18:29:15.923592
+updated_at: 2026-11-24 18:29:16.739510
 ---
 
 # General WebSocket Streams information
@@ -242,10 +242,10 @@ To apply an event to your local order book, follow this update procedure:
 
 :::note
 
-Since depth snapshots retrieved from the API have a limit on the number of price levels (5000 on
+Since depth snapshots retrieved from the API have a limit on the number of price levels (7500 on
 each side maximum), you won't learn the quantities for the levels outside of the initial snapshot
 unless they change. <br> So be careful when using the information for those levels, since they might
-not reflect the full view of the order book. <br> However, for most use cases, seeing 5000 levels on
+not reflect the full view of the order book. <br> However, for most use cases, seeing 7500 levels on
 each side is enough to understand the market and trade effectively.
 
 :::
@@ -492,8 +492,8 @@ each side is enough to understand the market and trade effectively.
 
 :::note
 
-由于从 API 检索的深度快照对价位的数量有限制（每侧最多 5000 个），因此除非它们发生变化，否则您将无法了解初始快照之外的价位数量。<br>
+由于从 API 检索的深度快照对价位的数量有限制（每侧最多 7500 个），因此除非它们发生变化，否则您将无法了解初始快照之外的价位数量。<br>
 因此，在使用这些级别的信息时要小心，因为它们可能无法反映订单簿的完整视图。<br>
-但是，对于大多数场景，可以每侧看到 5000 个价位就足以了解市场并进行有效交易。
+但是，对于大多数场景，可以每侧看到 7500 个价位就足以了解市场并进行有效交易。
 
 :::

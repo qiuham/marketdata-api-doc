@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_last_settlements_by_instrument
 api_type: JSON-RPC
-updated_at: 2026-11-23 19:00:38.124058
+updated_at: 2026-11-24 18:59:51.836898
 ---
 
 # public/get_last_settlements_by_instrument
@@ -332,7 +332,7 @@ components:
 ## Related topics
 
 - [Market Data Collection](https://docs.deribit.com/articles/market-data-collection-best-practices.md)
+- [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md)
 - [public/get_last_settlements_by_currency](https://docs.deribit.com/api-reference/market-data/public-get_last_settlements_by_currency.md)
 - [public/get_last_trades_by_instrument](https://docs.deribit.com/api-reference/market-data/public-get_last_trades_by_instrument.md)
 - [public/get_last_trades_by_instrument_and_time](https://docs.deribit.com/api-reference/market-data/public-get_last_trades_by_instrument_and_time.md)
-- [public/get_instrument](https://docs.deribit.com/api-reference/market-data/public-get_instrument.md)

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-mass_quote
 api_type: JSON-RPC
-updated_at: 2026-11-23 19:00:40.410340
+updated_at: 2026-11-24 18:59:55.112911
 ---
 
 # private/mass_quote

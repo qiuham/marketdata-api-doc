@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api
 api_type: WebSocket API
-updated_at: 2026-11-23 18:49:27.771803
+updated_at: 2026-11-24 18:49:04.050617
 ---
 
 # Spot WebSocket API
@@ -93,7 +93,7 @@ Operation ID: `accountCommission`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `account.commission`<br>例: `account.commission` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -102,7 +102,7 @@ Operation ID: `accountCommission`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "account.commission",
   "params": {
     "symbol": "BNBUSDT",
@@ -161,7 +161,7 @@ Operation ID: `accountRateLimitsOrders`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `account.rateLimits.orders`<br>例: `account.rateLimits.orders` |
 | params | object | 是 |  |
 | params.recvWindow | number (float) |  | Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.<br>支持最多三位小数的精度（例如 6000.346），以便可以指定微秒。<br>例: `5000` |
@@ -170,7 +170,7 @@ Operation ID: `accountRateLimitsOrders`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "account.rateLimits.orders",
   "params": {
     "recvWindow": 5000,
@@ -213,7 +213,7 @@ Operation ID: `accountStatus`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `account.status`<br>例: `account.status` |
 | params | object | 是 |  |
 | params.omitZeroBalances | boolean |  | When set to `true`, emits only the non-zero balances of an account. Default value: `false`.<br>如果`true`，将隐藏所有零余额。默认值：`false`。<br>默认: `False`<br>例: `False` |
@@ -223,7 +223,7 @@ Operation ID: `accountStatus`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "account.status",
   "params": {
     "omitZeroBalances": false,
@@ -285,7 +285,7 @@ Operation ID: `allOrderLists`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `allOrderLists`<br>例: `allOrderLists` |
 | params | object | 是 |  |
 | params.fromId | integer |  | Order list ID to begin at<br>起始的 Order list ID<br>例: `1` |
@@ -298,7 +298,7 @@ Operation ID: `allOrderLists`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "allOrderLists",
   "params": {
     "fromId": 1,
@@ -351,7 +351,7 @@ Operation ID: `allOrders`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `allOrders`<br>例: `allOrders` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -365,7 +365,7 @@ Operation ID: `allOrders`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "allOrders",
   "params": {
     "symbol": "BNBUSDT",
@@ -441,7 +441,7 @@ Operation ID: `myAllocations`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `myAllocations`<br>例: `myAllocations` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -456,7 +456,7 @@ Operation ID: `myAllocations`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "myAllocations",
   "params": {
     "symbol": "BNBUSDT",
@@ -516,7 +516,7 @@ Operation ID: `myFilters`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `myFilters`<br>例: `myFilters` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -526,7 +526,7 @@ Operation ID: `myFilters`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "myFilters",
   "params": {
     "symbol": "BNBUSDT",
@@ -661,7 +661,7 @@ Operation ID: `myPreventedMatches`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `myPreventedMatches`<br>例: `myPreventedMatches` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -675,7 +675,7 @@ Operation ID: `myPreventedMatches`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "myPreventedMatches",
   "params": {
     "symbol": "BNBUSDT",
@@ -733,7 +733,7 @@ Operation ID: `myTrades`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `myTrades`<br>例: `myTrades` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -748,7 +748,7 @@ Operation ID: `myTrades`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "myTrades",
   "params": {
     "symbol": "BNBUSDT",
@@ -815,7 +815,7 @@ Operation ID: `openOrderListsStatus`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `openOrderLists.status`<br>例: `openOrderLists.status` |
 | params | object | 是 |  |
 | params.recvWindow | number (float) |  | Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.<br>支持最多三位小数的精度（例如 6000.346），以便可以指定微秒。<br>例: `5000` |
@@ -824,7 +824,7 @@ Operation ID: `openOrderListsStatus`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "openOrderLists.status",
   "params": {
     "recvWindow": 5000,
@@ -888,7 +888,7 @@ Operation ID: `openOrdersStatus`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `openOrders.status`<br>例: `openOrders.status` |
 | params | object | 是 |  |
 | params.symbol | string |  | If omitted, open orders for all symbols are returned<br>如果省略，则返回所有交易对的挂单<br>例: `BNBUSDT` |
@@ -898,7 +898,7 @@ Operation ID: `openOrdersStatus`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "openOrders.status",
   "params": {
     "symbol": "BNBUSDT",
@@ -970,7 +970,7 @@ Operation ID: `orderAmendments`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `order.amendments`<br>例: `order.amendments` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -983,7 +983,7 @@ Operation ID: `orderAmendments`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "order.amendments",
   "params": {
     "symbol": "BNBUSDT",
@@ -1037,7 +1037,7 @@ Operation ID: `orderListStatus`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `orderList.status`<br>例: `orderList.status` |
 | params | object | 是 |  |
 | params.origClientOrderId | string |  | Query order list by `listClientOrderId`. `orderListId` or `origClientOrderId` must be provided.<br>通过 `listClientOrderId` 获取订单列表。必须提供 `orderListId` 或 `origClientOrderId`。<br>例: `08985fedd9ea2cf6b28996` |
@@ -1048,7 +1048,7 @@ Operation ID: `orderListStatus`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "orderList.status",
   "params": {
     "origClientOrderId": "08985fedd9ea2cf6b28996",
@@ -1099,7 +1099,7 @@ Operation ID: `orderStatus`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `order.status`<br>例: `order.status` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -1111,7 +1111,7 @@ Operation ID: `orderStatus`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "order.status",
   "params": {
     "symbol": "BNBUSDT",
@@ -1200,7 +1200,7 @@ Operation ID: `sessionLogon`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `session.logon`<br>例: `session.logon` |
 | params | object | 是 |  |
 | params.recvWindow | number (float) |  | The value cannot be greater than `60000`. Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.<br>最大值为 `60000` 毫秒。 支持最多三位小数的精度（例如 6000.346），以便可以指定微秒。<br>例: `5000` |
@@ -1209,7 +1209,7 @@ Operation ID: `sessionLogon`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "session.logon",
   "params": {
     "recvWindow": 5000,
@@ -1226,7 +1226,7 @@ Operation ID: `sessionLogon`
 | id | string |  | 例: `c174a2b1-3f51-4580-b200-8528bd237cb7` |
 | status | integer (int64) |  | 例: `200` |
 | result | object |  |  |
-| result.apiKey | string |  | 例: `vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A` |
+| result.apiKey | string |  | 例: `YOUR_API_KEY` |
 | result.authorizedSince | integer (int64) |  | 例: `1649729878532` |
 | result.connectedSince | integer (int64) |  | 例: `1649729873021` |
 | result.returnRateLimits | boolean |  | 例: `False` |
@@ -1253,13 +1253,13 @@ Operation ID: `sessionLogout`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `session.logout`<br>例: `session.logout` |
 | params | object |  |  |
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "session.logout"
 }
 ```
@@ -1293,13 +1293,13 @@ Operation ID: `sessionStatus`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `session.status`<br>例: `session.status` |
 | params | object |  |  |
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "session.status"
 }
 ```
@@ -1311,7 +1311,7 @@ Operation ID: `sessionStatus`
 | id | string |  | 例: `b50c16cd-62c9-4e29-89e4-37f10111f5bf` |
 | status | integer (int64) |  | 例: `200` |
 | result | object |  |  |
-| result.apiKey | string |  | `null` if the connection is not authenticated.<br>如果连接未经过身份验证，则为 `null`。<br>例: `vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A` |
+| result.apiKey | string |  | `null` if the connection is not authenticated.<br>如果连接未经过身份验证，则为 `null`。<br>例: `YOUR_API_KEY` |
 | result.authorizedSince | integer (int64) |  | `null` if the connection is not authenticated.<br>如果连接未经过身份验证，则为 `null`。<br>例: `1649729878532` |
 | result.connectedSince | integer (int64) |  | 例: `1649729873021` |
 | result.returnRateLimits | boolean |  | 例: `False` |
@@ -1333,7 +1333,7 @@ Operation ID: `exchangeInfo`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `exchangeInfo`<br>例: `exchangeInfo` |
 | params | object |  |  |
 | params.symbol | string |  | Describe a single symbol<br>描述单个交易对<br>例: `BNBUSDT` |
@@ -1344,7 +1344,7 @@ Operation ID: `exchangeInfo`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "exchangeInfo",
   "params": {
     "symbol": "BNBUSDT",
@@ -1505,7 +1505,7 @@ Operation ID: `executionRules`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `executionRules`<br>例: `executionRules` |
 | params | object |  |  |
 | params.symbol | string |  | Query for specified symbol.<br>查询指定的交易对。<br>例: `BAZUSD` |
@@ -1514,7 +1514,7 @@ Operation ID: `executionRules`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "executionRules",
   "params": {
     "symbol": "BAZUSD",
@@ -1564,13 +1564,13 @@ Operation ID: `ping`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `ping`<br>例: `ping` |
 | params | object |  |  |
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "ping"
 }
 ```
@@ -1603,13 +1603,13 @@ Operation ID: `time`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `time`<br>例: `time` |
 | params | object |  |  |
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "time"
 }
 ```
@@ -1643,14 +1643,14 @@ Operation ID: `avgPrice`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `avgPrice`<br>例: `avgPrice` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "avgPrice",
   "params": {
     "symbol": "BNBUSDT"
@@ -1707,6 +1707,7 @@ You can use `depth` request together with `<symbol>@depth` streams to [maintain 
 101-500| 25
 501-1000| 50
 1001-5000| 250
+5001-7500| 500
 
 Operation ID: `depth`
 
@@ -1714,16 +1715,16 @@ Operation ID: `depth`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `depth`<br>例: `depth` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
-| params.limit | integer |  | 默认: `100`<br>例: `1` |
+| params.limit | integer |  | If limit > 7500, only 7500 entries will be returned.<br>如果 limit > 7500, 最多返回7500条数据。<br>默认: `100`<br>例: `1` |
 | params.symbolStatus | string |  | Filters for symbols that have this `tradingStatus`.<br>A status mismatch returns error `-1220 SYMBOL_DOES_NOT_MATCH_STATUS`.<br>过滤具有此 `tradingStatus` 的交易对。<br>如果状态不匹配，将返回错误 `-1220 交易对与状态不匹配`<br>枚举: `TRADING`, `HALT`, `BREAK`, `CANCEL_ONLY`<br>例: `TRADING` |
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "depth",
   "params": {
     "symbol": "BNBUSDT",
@@ -1778,7 +1779,7 @@ Operation ID: `klines`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `klines`<br>例: `klines` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -1790,7 +1791,7 @@ Operation ID: `klines`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "klines",
   "params": {
     "symbol": "BNBUSDT",
@@ -1890,7 +1891,7 @@ Operation ID: `ticker`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `ticker`<br>例: `ticker` |
 | params | object |  |  |
 | params.symbol | string |  | Query ticker of a single symbol<br>获取单个交易对的ticker<br>例: `BNBUSDT` |
@@ -1901,7 +1902,7 @@ Operation ID: `ticker`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "ticker",
   "params": {
     "symbol": "BNBUSDT",
@@ -2030,7 +2031,7 @@ Operation ID: `ticker24hr`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `ticker.24hr`<br>例: `ticker.24hr` |
 | params | object |  |  |
 | params.symbol | string |  | 例: `BNBUSDT` |
@@ -2040,7 +2041,7 @@ Operation ID: `ticker24hr`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "ticker.24hr",
   "params": {
     "symbol": "BNBUSDT",
@@ -2170,7 +2171,7 @@ Operation ID: `tickerBook`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `ticker.book`<br>例: `ticker.book` |
 | params | object |  |  |
 | params.symbol | string |  | Query ticker for a single symbol<br>获取单个交易对的ticker<br>例: `BNBUSDT` |
@@ -2179,7 +2180,7 @@ Operation ID: `tickerBook`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "ticker.book",
   "params": {
     "symbol": "BNBUSDT",
@@ -2258,7 +2259,7 @@ Operation ID: `tickerPrice`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `ticker.price`<br>例: `ticker.price` |
 | params | object |  |  |
 | params.symbol | string |  | Query price for a single symbol<br>获取单个交易对的价格<br>例: `BNBUSDT` |
@@ -2267,7 +2268,7 @@ Operation ID: `tickerPrice`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "ticker.price",
   "params": {
     "symbol": "BNBUSDT",
@@ -2322,7 +2323,7 @@ Operation ID: `tickerTradingDay`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `ticker.tradingDay`<br>例: `ticker.tradingDay` |
 | params | object |  |  |
 | params.symbol | string |  | 例: `BNBUSDT` |
@@ -2333,7 +2334,7 @@ Operation ID: `tickerTradingDay`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "ticker.tradingDay",
   "params": {
     "symbol": "BNBUSDT",
@@ -2482,7 +2483,7 @@ Operation ID: `tradesAggregate`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `trades.aggregate`<br>例: `trades.aggregate` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -2493,7 +2494,7 @@ Operation ID: `tradesAggregate`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "trades.aggregate",
   "params": {
     "symbol": "BNBUSDT",
@@ -2541,7 +2542,7 @@ Operation ID: `tradesHistorical`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `trades.historical`<br>例: `trades.historical` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -2550,7 +2551,7 @@ Operation ID: `tradesHistorical`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "trades.historical",
   "params": {
     "symbol": "BNBUSDT",
@@ -2595,7 +2596,7 @@ Operation ID: `blockTradesHistorical`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `blockTrades.historical`<br>例: `blockTrades.historical` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBBTC` |
@@ -2604,7 +2605,7 @@ Operation ID: `blockTradesHistorical`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "blockTrades.historical",
   "params": {
     "symbol": "BNBBTC",
@@ -2657,7 +2658,7 @@ Operation ID: `tradesRecent`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `trades.recent`<br>例: `trades.recent` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -2665,7 +2666,7 @@ Operation ID: `tradesRecent`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "trades.recent",
   "params": {
     "symbol": "BNBUSDT",
@@ -2712,7 +2713,7 @@ Operation ID: `uiKlines`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `uiKlines`<br>例: `uiKlines` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -2724,7 +2725,7 @@ Operation ID: `uiKlines`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "uiKlines",
   "params": {
     "symbol": "BNBUSDT",
@@ -2765,14 +2766,14 @@ Operation ID: `referencePrice`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `referencePrice`<br>例: `referencePrice` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BAZUSD` |
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "referencePrice",
   "params": {
     "symbol": "BAZUSD"
@@ -2834,7 +2835,7 @@ Operation ID: `referencePriceCalculation`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `referencePrice.calculation`<br>例: `referencePrice.calculation` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BAZUSD` |
@@ -2842,7 +2843,7 @@ Operation ID: `referencePriceCalculation`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "referencePrice.calculation",
   "params": {
     "symbol": "BAZUSD",
@@ -2913,7 +2914,7 @@ Operation ID: `openOrdersCancelAll`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `openOrders.cancelAll`<br>例: `openOrders.cancelAll` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -2923,7 +2924,7 @@ Operation ID: `openOrdersCancelAll`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "openOrders.cancelAll",
   "params": {
     "symbol": "BNBUSDT",
@@ -3042,7 +3043,7 @@ Operation ID: `orderAmendKeepPriority`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `order.amend.keepPriority`<br>例: `order.amend.keepPriority` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -3056,7 +3057,7 @@ Operation ID: `orderAmendKeepPriority`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "order.amend.keepPriority",
   "params": {
     "symbol": "BNBUSDT",
@@ -3173,7 +3174,7 @@ Operation ID: `orderCancel`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `order.cancel`<br>例: `order.cancel` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -3187,7 +3188,7 @@ Operation ID: `orderCancel`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "order.cancel",
   "params": {
     "symbol": "BNBUSDT",
@@ -3336,7 +3337,7 @@ Operation ID: `orderCancelReplace`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `order.cancelReplace`<br>例: `order.cancelReplace` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -3370,7 +3371,7 @@ Operation ID: `orderCancelReplace`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "order.cancelReplace",
   "params": {
     "symbol": "BNBUSDT",
@@ -3665,7 +3666,7 @@ Operation ID: `orderListCancel`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `orderList.cancel`<br>例: `orderList.cancel` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -3678,7 +3679,7 @@ Operation ID: `orderListCancel`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "orderList.cancel",
   "params": {
     "symbol": "BNBUSDT",
@@ -3769,7 +3770,7 @@ Operation ID: `orderListPlace`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `orderList.place`<br>例: `orderList.place` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -3797,7 +3798,7 @@ Operation ID: `orderListPlace`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "orderList.place",
   "params": {
     "symbol": "BNBUSDT",
@@ -3925,7 +3926,7 @@ Operation ID: `orderListPlaceOco`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `orderList.place.oco`<br>例: `orderList.place.oco` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -3934,7 +3935,7 @@ Operation ID: `orderListPlaceOco`
 | params.quantity | number (float) | 是 | Quantity for both orders of the order list.<br>两个订单的数量。<br>例: `1` |
 | params.aboveType | string | 是 | 枚举: `STOP_LOSS_LIMIT`, `STOP_LOSS`, `LIMIT_MAKER`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`<br>例: `STOP_LOSS_LIMIT` |
 | params.aboveClientOrderId | string |  | Arbitrary unique ID among open orders for the above order. Automatically generated if not sent.<br>上方订单的唯一ID。 如果未发送则自动生成。<br>例: `aboveOrder1` |
-| params.aboveIcebergQty | integer (int64) |  | Note that this can only be used if `aboveTimeInForce` is `GTC`.<br>请注意，只有当 `aboveTimeInForce` 为 `GTC` 时才能使用。<br>例: `1` |
+| params.aboveIcebergQty | number (float) |  | Note that this can only be used if `aboveTimeInForce` is `GTC`.<br>请注意，只有当 `aboveTimeInForce` 为 `GTC` 时才能使用。<br>例: `1` |
 | params.abovePrice | number (float) |  | Can be used if `aboveType` is `STOP_LOSS_LIMIT`, `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.<br>当 `aboveType` 是 `STOP_LOSS_LIMIT`, `LIMIT_MAKER` 或 `TAKE_PROFIT_LIMIT` 时，可用以指定限价。<br>例: `1.5` |
 | params.aboveStopPrice | number (float) |  | Can be used if `aboveType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`. Either `aboveStopPrice` or `aboveTrailingDelta` or both, must be specified.<br>如果 `aboveType` 是 `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT` 或 `TAKE_PROFIT_LIMIT` 才能使用。 必须指定 `aboveStopPrice` 或 `aboveTrailingDelta` 或两者。<br>例: `1.50000001` |
 | params.aboveTrailingDelta | integer (int64) |  | See [Trailing Stop order FAQ](/products/spot/faqs/trailing-stop-faq)<br>请看 [追踪止盈止损(Trailing Stop)订单常见问题](/products/spot/faqs/trailing-stop-faq)<br>例: `1` |
@@ -3946,7 +3947,7 @@ Operation ID: `orderListPlaceOco`
 | params.abovePegOffsetValue | integer |  | 例: `1` |
 | params.belowType | string | 是 | Supported values: `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`<br>支持值：`STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`。<br>枚举: `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`<br>例: `STOP_LOSS` |
 | params.belowClientOrderId | string |  | Arbitrary unique ID among open orders for the below order. Automatically generated if not sent.<br>下方订单的唯一ID。 如果未发送则自动生成。<br>例: `belowOrder1` |
-| params.belowIcebergQty | integer (int64) |  | Note that this can only be used if `belowTimeInForce` is `GTC`.<br>请注意，只有当 `belowTimeInForce` 为 `GTC` 时才能使用。<br>例: `1` |
+| params.belowIcebergQty | number (float) |  | Note that this can only be used if `belowTimeInForce` is `GTC`.<br>请注意，只有当 `belowTimeInForce` 为 `GTC` 时才能使用。<br>例: `1` |
 | params.belowPrice | number (float) |  | Can be used if `belowType` is `STOP_LOSS_LIMIT`, `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.<br>当 `belowType` 是 `STOP_LOSS_LIMIT`, `LIMIT_MAKER` 或 `TAKE_PROFIT_LIMIT` 时，可用以指定限价。<br>例: `1.49999999` |
 | params.belowStopPrice | number (float) |  | Can be used if `belowType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`. Either `belowStopPrice` or `belowTrailingDelta` or both, must be specified.<br>如果 `belowType` 是 `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT` 或 `TAKE_PROFIT_LIMIT` 才能使用。 必须指定 `belowStopPrice` 或 `belowTrailingDelta` 或两者。<br>例: `1.50000001` |
 | params.belowTrailingDelta | integer (int64) |  | See [Trailing Stop order FAQ](/products/spot/faqs/trailing-stop-faq)<br>请看 [追踪止盈止损(Trailing Stop)订单常见问题](/products/spot/faqs/trailing-stop-faq)<br>例: `1` |
@@ -3966,7 +3967,7 @@ Operation ID: `orderListPlaceOco`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "orderList.place.oco",
   "params": {
     "symbol": "BNBUSDT",
@@ -4085,7 +4086,7 @@ Operation ID: `orderListPlaceOpo`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `orderList.place.opo`<br>例: `orderList.place.opo` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -4124,7 +4125,7 @@ Operation ID: `orderListPlaceOpo`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "orderList.place.opo",
   "params": {
     "symbol": "BNBUSDT",
@@ -4233,7 +4234,7 @@ Operation ID: `orderListPlaceOpoco`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `orderList.place.opoco`<br>例: `orderList.place.opoco` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -4284,7 +4285,7 @@ Operation ID: `orderListPlaceOpoco`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "orderList.place.opoco",
   "params": {
     "symbol": "BNBUSDT",
@@ -4433,7 +4434,7 @@ Operation ID: `orderListPlaceOto`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `orderList.place.oto`<br>例: `orderList.place.oto` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -4474,7 +4475,7 @@ Operation ID: `orderListPlaceOto`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "orderList.place.oto",
   "params": {
     "symbol": "BNBUSDT",
@@ -4601,7 +4602,7 @@ Operation ID: `orderListPlaceOtoco`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `orderList.place.otoco`<br>例: `orderList.place.otoco` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -4655,7 +4656,7 @@ Operation ID: `orderListPlaceOtoco`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "orderList.place.otoco",
   "params": {
     "symbol": "BNBUSDT",
@@ -4785,7 +4786,7 @@ Operation ID: `orderPlace`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `order.place`<br>例: `order.place` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -4813,7 +4814,7 @@ Operation ID: `orderPlace`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "order.place",
   "params": {
     "symbol": "BNBUSDT",
@@ -4956,7 +4957,7 @@ Operation ID: `orderTest`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `order.test`<br>例: `order.test` |
 | params | object | 是 |  |
 | params.computeCommissionRates | boolean |  | Default: `false` <br> See [Commissions FAQ](/products/spot/faqs/commission_faq#test-order-diferences) to learn more.<br>默认值: `false` <br> 请参阅[佣金常见问题解答](/products/spot/faqs/commission_faq#test-order-diferences) 了解更多信息。<br>默认: `False`<br>例: `False` |
@@ -4985,7 +4986,7 @@ Operation ID: `orderTest`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "order.test",
   "params": {
     "computeCommissionRates": false,
@@ -5072,7 +5073,7 @@ Operation ID: `sorOrderPlace`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `sor.order.place`<br>例: `sor.order.place` |
 | params | object | 是 |  |
 | params.symbol | string | 是 | 例: `BNBUSDT` |
@@ -5093,7 +5094,7 @@ Operation ID: `sorOrderPlace`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "sor.order.place",
   "params": {
     "symbol": "BNBUSDT",
@@ -5188,7 +5189,7 @@ Operation ID: `sorOrderTest`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `sor.order.test`<br>例: `sor.order.test` |
 | params | object | 是 |  |
 | params.computeCommissionRates | boolean |  | Default: `false`<br>默认值: `false`<br>默认: `False`<br>例: `False` |
@@ -5210,7 +5211,7 @@ Operation ID: `sorOrderTest`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "sor.order.test",
   "params": {
     "computeCommissionRates": false,
@@ -5285,13 +5286,13 @@ Operation ID: `sessionSubscriptions`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `session.subscriptions`<br>例: `session.subscriptions` |
 | params | object |  |  |
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "session.subscriptions"
 }
 ```
@@ -5333,14 +5334,14 @@ Operation ID: `userDataStreamSubscribe`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `userDataStream.subscribe`<br>例: `userDataStream.subscribe` |
 | params | object |  |  |
 | params.filter | object |  | Optional filter that controls which events are delivered on this subscription. See [User Data Stream Subscription Filters](#user-data-stream-subscription-filters). When omitted, all events for the subscribed account are delivered.<br>可选的过滤器，用于控制该订阅推送哪些事件。参见 [用户数据流订阅过滤器](#user-data-stream-subscription-filters)。未提供时，推送所订阅账户的所有事件。 |
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "userDataStream.subscribe",
   "params": {
     "filter": {
@@ -5371,7 +5372,7 @@ Operation ID: `userDataStreamSubscribeSignature`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `userDataStream.subscribe.signature`<br>例: `userDataStream.subscribe.signature` |
 | params | object | 是 |  |
 | params.recvWindow | number (float) |  | Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.<br>支持最多三位小数的精度（例如 6000.346），以便可以指定微秒。<br>例: `5000` |
@@ -5380,7 +5381,7 @@ Operation ID: `userDataStreamSubscribeSignature`
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "userDataStream.subscribe.signature",
   "params": {
     "recvWindow": 5000,
@@ -5422,14 +5423,14 @@ Operation ID: `userDataStreamUnsubscribe`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b` |
+| id | string | 是 | Client-generated request identifier.<br>客户端生成的请求标识符。<br>例: `5494febb-d167-46a2-996d-70533eb4d976` |
 | method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `userDataStream.unsubscribe`<br>例: `userDataStream.unsubscribe` |
 | params | object |  |  |
 | params.subscriptionId | integer |  | When called with no parameter, this will close all subscriptions. When called with the subscriptionId parameter, this will attempt to close the subscription with that subscription id, if it exists.<br>不带参数调用时，将关闭所有订阅。带 subscriptionId 参数调用时，将尝试关闭该订阅ID对应的订阅（如果存在）。<br>例: `1` |
 
 ```json
 {
-  "id": "7d3b9b46-5f4f-4c8b-9a2d-0a8f9a4a0f5b",
+  "id": "5494febb-d167-46a2-996d-70533eb4d976",
   "method": "userDataStream.unsubscribe",
   "params": {
     "subscriptionId": 1

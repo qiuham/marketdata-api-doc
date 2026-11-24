@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/staking/change-log
 api_type: Changelog
-updated_at: 2026-11-23 18:28:52.704306
+updated_at: 2026-11-24 18:29:05.294710
 ---
 
 # Change Log

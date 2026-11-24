@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/api-reference/unified-fix/nos'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # New Order Single
@@ -128,7 +128,7 @@ If more than one instruction is applicable to an order, this field may contain m
 * `v` : viqc — OrderQty (tag 38) expressed in quote currency. (Spot only)
 * `f` : Cumulative fee in base currency — base is the default for sell orders. (Spot only)
 * `q` : Cumulative fee in quote currency — quote is the default for buy orders. (Spot only)
-* `s` : Single fee — Mandatory and only supported fee option for derivatives — fee sent on the execution report are based on the trade.
+* `s` : Single fee — each Execution Report carries the fee for that fill only (MiscFeeAmt, tag 137), not the cumulative fee. Mandatory and the only supported fee option for derivatives; also supported on Spot.
 
 **99 - StopPx** `float`
 
@@ -179,7 +179,9 @@ Number of subaccount that are part of the order. Always 1 for the broker account
 
 **79 - AllocAccount** `string`
 
-Account ID of the Subaccount that this order is targeted to. Only available for Broker accounts. Please contact your AM for further questions.
+Account ID of the account this order is targeted to. Only available for Broker accounts. Please contact your AM for further questions.
+
+**Organization accounts:** required on every order. Set 78 = `1` and 79 = the Organization account ID that holds the funds (format `XXXX-XXXX-XXXX-XXXX`, shown in the Organization UI and returned by ListWalletAccounts). Without it, the order is placed against the API key's own user and is rejected with `EOrder:Insufficient funds`.
 
 **62 - ValidUntilTime** `string`
 

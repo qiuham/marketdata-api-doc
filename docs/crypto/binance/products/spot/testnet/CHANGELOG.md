@@ -2,15 +2,24 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/CHANGELOG
 api_type: Changelog
-updated_at: 2026-11-23 18:36:20.505909
+updated_at: 2026-11-24 18:36:12.217031
 ---
 
 # CHANGELOG for Binance SPOT Testnet
 
-**Last Updated: 2026-11-11**
+**Last Updated: 2026-11-24**
 
 **Note:** All features here will only apply to the [SPOT Testnet](https://testnet.binance.vision/).
 This is not always synced with the live exchange.
+
+### 2026-11-24
+
+- Order Book depth now supports additional levels. This affects the following endpoints:
+  - REST API: [`GET /api/v3/depth`](/products/spot/testnet/rest-api#order-book)
+  - WebSocket API: [`depth`](/products/spot/testnet/web-socket-api#order-book)
+  - FIX Market Data: [MarketDataRequest `<V>`](/products/spot/testnet/fix-api#marketdatarequest)
+
+---
 
 ### 2026-11-11
 
@@ -1971,10 +1980,19 @@ User Data Stream:
 
 # CHANGELOG for Binance SPOT Testnet
 
-**Last Updated: 2026-11-11**
+**Last Updated: 2026-11-24**
 
 **Note:** All features here will only apply to the [SPOT Testnet](https://testnet.binance.vision/).
 This is not always synced with the live exchange.
+
+### 2026-11-24
+
+- Order Book depth now supports additional levels. This affects the following endpoints:
+  - REST API: [`GET /api/v3/depth`](/products/spot/testnet/rest-api#order-book)
+  - WebSocket API: [`depth`](/products/spot/testnet/web-socket-api#order-book)
+  - FIX Market Data: [MarketDataRequest `<V>`](/products/spot/testnet/fix-api#marketdatarequest)
+
+---
 
 ### 2026-11-11
 

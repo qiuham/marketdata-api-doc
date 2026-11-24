@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-common-account
 api_type: REST
-updated_at: 2026-11-23 19:02:20.864089
+updated_at: 2026-11-24 19:01:50.667406
 ---
 
 # Classic Assets API

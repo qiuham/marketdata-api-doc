@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/investment-and-services-mining/api/rest-api
 api_type: REST
-updated_at: 2026-11-23 18:49:43.919125
+updated_at: 2026-11-24 18:49:21.478417
 ---
 
 # Mining REST API

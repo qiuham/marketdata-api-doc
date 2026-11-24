@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/reality-trading-guide
 api_type: Guide
-updated_at: 2026-11-23 19:01:50.885718
+updated_at: 2026-11-24 19:01:15.902492
 ---
 
 # rToken Trading Guide

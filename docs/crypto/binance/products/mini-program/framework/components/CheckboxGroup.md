@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/CheckboxGroup
 api_type: Guide
-updated_at: 2026-11-23 18:43:49.409227
+updated_at: 2026-11-24 18:43:34.999245
 ---
 
 # CheckboxGroup

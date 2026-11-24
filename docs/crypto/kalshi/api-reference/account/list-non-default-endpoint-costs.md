@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/account/list-non-default-endpoint-costs'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # List Non-Default Endpoint Costs

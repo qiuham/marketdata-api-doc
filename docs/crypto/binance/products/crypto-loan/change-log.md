@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/crypto-loan/change-log
 api_type: Changelog
-updated_at: 2026-11-23 18:32:34.816822
+updated_at: 2026-11-24 18:32:33.904979
 ---
 
 # Change Log
@@ -131,7 +131,7 @@ updated_at: 2026-11-23 18:32:34.816822
     borrow limit is shown in USD value.
   - `GET /sapi/v1/loan/collateral/data`: Get LTV information and collateral limit of collateral
     assets. The collateral limit is shown in USD value.
-  - `GET /sapi/v1/loan/repay/collateral/rate`: Get the the rate of collateral coin / loan coin when
+  - `GET /sapi/v1/loan/repay/collateral/rate`: Get the rate of collateral coin / loan coin when
     using collateral repay, the rate will be valid within 8 second.
   - `POST /sapi/v1/loan/customize/margin_call`: Customize margin call for ongoing orders only.
 

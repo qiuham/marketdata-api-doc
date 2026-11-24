@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/onchainpay-x402/change-log
 api_type: Changelog
-updated_at: 2026-11-23 18:30:06.323301
+updated_at: 2026-11-24 18:30:01.042819
 ---
 
 # Change Log

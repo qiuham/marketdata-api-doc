@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/reference/rest-auth-funding-credits-hist'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Funding Credits History

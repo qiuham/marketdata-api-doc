@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/order-groups/reset-order-group'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Reset Order Group

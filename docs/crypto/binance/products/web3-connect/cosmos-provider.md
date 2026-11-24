@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/web3-connect/cosmos-provider
 api_type: Guide
-updated_at: 2026-11-23 18:28:04.369386
+updated_at: 2026-11-24 18:27:55.618729
 ---
 
 # Cosmos Provider

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/connectors/fix-python
 api_type: FIX
-updated_at: 2026-11-23 18:27:39.233305
+updated_at: 2026-11-24 18:27:33.932613
 ---
 
 # FIX (Python)

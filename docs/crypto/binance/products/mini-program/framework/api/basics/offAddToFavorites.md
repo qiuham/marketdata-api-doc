@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/offAddToFavorites
 api_type: Guide
-updated_at: 2026-11-23 18:48:36.540038
+updated_at: 2026-11-24 18:48:14.149027
 ---
 
 # bn.offAddToFavorites

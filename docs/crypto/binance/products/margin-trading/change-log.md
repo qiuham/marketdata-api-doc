@@ -2,10 +2,26 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/margin-trading/change-log
 api_type: Changelog
-updated_at: 2026-11-23 18:30:50.412363
+updated_at: 2026-11-24 18:30:41.567828
 ---
 
 # Change Log
+
+## 2026-11-24
+
+Effective at **2026-11-24 (UTC)**
+
+- The Margin User Data Stream v2 now also pushes isolated margin account events: Account Update,
+  Balance Update and Order Update use the same format as cross margin. This applies to all users. No
+  separate isolated margin `listenKey` is needed.
+  - `POST /sapi/v2/margin/listen-key`
+  - `PUT /sapi/v2/margin/listen-key`
+  - `DELETE /sapi/v2/margin/listen-key`
+  - URL: `wss://fstream.binance.com/private/ws/<listenKey>`
+  - Note: `marginLevelChange` and `liabilityChange` are pushed for cross margin accounts only.
+    Isolated margin accounts do not receive these two events.
+
+---
 
 ## 2026-10-26
 
@@ -731,14 +747,30 @@ ISOLATED MARGIN
 
 ## 2019-11-28
 
-- New SAPI endpont to disable fast withdraw switch:  
+- New SAPI endpoint to disable fast withdraw switch:  
   `POST /sapi/v1/account/disableFastWithdrawSwitch (HMAC SHA256)`
-- New SAPI endpont to enable fast withdraw switch:  
+- New SAPI endpoint to enable fast withdraw switch:  
   `POST /sapi/v1/account/enableFastWithdrawSwitch (HMAC SHA256)`
 
 ---
 
 # 更新日志
+
+## 2026-11-24
+
+生效时间: **2026-11-24 (UTC)**
+
+- 杠杆用户数据流 v2 现支持推送逐仓杠杆账户的事件：账户更新（Account Update）、余额更新（Balance
+  Update）和订单更新（Order Update），格式与全仓一致。适用于所有用户，无需额外订阅逐仓的
+  `listenKey`。
+  - `POST /sapi/v2/margin/listen-key`
+  - `PUT /sapi/v2/margin/listen-key`
+  - `DELETE /sapi/v2/margin/listen-key`
+  - URL: `wss://fstream.binance.com/private/ws/<listenKey>`
+  - 说明：`marginLevelChange`（风险率变动）和
+    `liabilityChange`（负债变动）仅推送全仓杠杆账户，逐仓杠杆账户不推送这两类事件。
+
+---
 
 ## 2026-10-26
 

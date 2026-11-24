@@ -2,10 +2,31 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/common/derivatives-trading/change-log
 api_type: Changelog
-updated_at: 2026-11-23 18:41:48.032638
+updated_at: 2026-11-24 18:41:44.175358
 ---
 
 # Change Log
+
+## 2026-11-24
+
+**Effective Date: 2026-11-27**
+
+Portfolio Margin
+
+- New endpoint to get download id for CM futures order history:
+  - `GET /papi/v1/cm/order/asyn`
+- New endpoint to get CM futures order download link by Id:
+  - `GET /papi/v1/cm/order/asyn/id`
+- New endpoint to get download id for CM futures trade history:
+  - `GET /papi/v1/cm/trade/asyn`
+- New endpoint to get CM futures trade download link by Id:
+  - `GET /papi/v1/cm/trade/asyn/id`
+- New endpoint to get download id for CM futures transaction history:
+  - `GET /papi/v1/cm/income/asyn`
+- New endpoint to get CM futures transaction download link by Id:
+  - `GET /papi/v1/cm/income/asyn/id`
+
+---
 
 ## 2026-11-17
 
@@ -3577,7 +3598,7 @@ COIN MARGINED PERPETUAL FUTURES
 
 - New contract type ("contractType") `PERPETUAL` for coin margined perpetual futures countract.
 
-- New fields in the reponse to endpoint `GET /dapi/v1/premiumIndex`:
+- New fields in the response to endpoint `GET /dapi/v1/premiumIndex`:
   - `lastFundingRate` for the lasted funding rate of the perpetual futures contract
   - `nextFundingTime` for the next funding time of the perpetual futures contract
 
@@ -4105,6 +4126,27 @@ USDⓈ-M Futures
 ---
 
 # 更新日志
+
+## 2026-11-24
+
+**生效时间: 2026-11-27**
+
+统一账户
+
+- 新增接口获取CM合约订单历史下载Id：
+  - `GET /papi/v1/cm/order/asyn`
+- 新增接口通过下载Id获取CM合约订单历史下载链接：
+  - `GET /papi/v1/cm/order/asyn/id`
+- 新增接口获取CM合约交易历史下载Id：
+  - `GET /papi/v1/cm/trade/asyn`
+- 新增接口通过下载Id获取CM合约交易历史下载链接：
+  - `GET /papi/v1/cm/trade/asyn/id`
+- 新增接口获取CM合约资金流水历史下载Id：
+  - `GET /papi/v1/cm/income/asyn`
+- 新增接口通过下载Id获取CM合约资金流水历史下载链接：
+  - `GET /papi/v1/cm/income/asyn/id`
+
+---
 
 ## 2026-11-17
 

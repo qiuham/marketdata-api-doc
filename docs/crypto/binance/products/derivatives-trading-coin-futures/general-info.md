@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/general-info
 api_type: Guide
-updated_at: 2026-11-23 18:32:21.049648
+updated_at: 2026-11-24 18:32:19.864817
 ---
 
 # General Info

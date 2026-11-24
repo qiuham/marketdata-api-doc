@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/perps_openapi.yaml'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # perps_openapi.yaml
@@ -72,6 +72,67 @@ paths:
                 $ref: '#/components/schemas/GetMarginCorporateActionsResponse'
         '400':
           $ref: '#/components/responses/BadRequestError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /margin/corporate_action_payment_history:
+    get:
+      operationId: GetMarginCorporateActionPaymentHistory
+      summary: Get Corporate Action Payment History
+      description: 'Endpoint for retrieving the cash the authenticated user received or paid for corporate actions (cash dividends, special dividends and cash spin-offs) for a specific market, or across all markets when ticker is empty, over an inclusive UTC date range. Each entry carries the position the payment was computed on. Stock split adjustments are not included.'
+      tags:
+        - corporate-actions
+      security:
+        - kalshiAccessKey: []
+          kalshiAccessSignature: []
+          kalshiAccessTimestamp: []
+      parameters:
+        - name: ticker
+          in: query
+          required: false
+          description: Market ticker for payment history. Leave empty to query across all markets.
+          schema:
+            type: string
+            x-go-type-skip-optional-pointer: true
+        - name: start_date
+          in: query
+          required: true
+          description: Inclusive UTC start date for the payment time range (YYYY-MM-DD format)
+          schema:
+            type: string
+            format: date
+            x-go-type-skip-optional-pointer: true
+            x-oapi-codegen-extra-tags:
+              validate: required
+        - name: end_date
+          in: query
+          required: true
+          description: Inclusive UTC end date for the payment time range (YYYY-MM-DD format)
+          schema:
+            type: string
+            format: date
+            x-go-type-skip-optional-pointer: true
+            x-oapi-codegen-extra-tags:
+              validate: required
+        - name: subaccount
+          in: query
+          required: false
+          description: Subaccount number (0 for primary, 1-63 for subaccounts). If omitted, defaults to all subaccounts. Subaccount-restricted API keys must omit this or pass their locked subaccount, and read only that subaccount's payments.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Corporate action payment history retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMarginCorporateActionPaymentHistoryResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -4137,6 +4198,57 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MarginCorporateAction'
+
+    MarginCorporateActionPaymentHistoryEntry:
+      type: object
+      required:
+        - corporate_action_id
+        - type
+        - market_ticker
+        - payment_time
+        - payment_amount
+        - quantity
+        - subaccount_number
+        - subaccount_type
+      properties:
+        corporate_action_id:
+          type: string
+          description: "Corporate action id, matching `id` in `GET /margin/corporate_actions`."
+        type:
+          type: string
+          enum: [cash_dividend, special_dividend, spin_off]
+          x-enum-varnames: [MarginCorporateActionPaymentHistoryEntryTypeCashDividend, MarginCorporateActionPaymentHistoryEntryTypeSpecialDividend, MarginCorporateActionPaymentHistoryEntryTypeSpinOff]
+          description: Corporate action type
+        market_ticker:
+          type: string
+          description: Ticker of the margin market
+        payment_time:
+          type: string
+          format: date-time
+          description: The corporate action's execution time. The payment is computed on the position held just before this time; the cash can post to your balance after it.
+        payment_amount:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: Dollar amount of the payment (positive = received, negative = paid)
+        quantity:
+          $ref: '#/components/schemas/FixedPointCount'
+          description: Signed position size the payment was computed on (positive = long, negative = short) as a fixed-point count string
+        subaccount_number:
+          type: integer
+          nullable: true
+          description: Subaccount number (0 for primary)
+        subaccount_type:
+          $ref: '#/components/schemas/SubaccountType'
+
+    GetMarginCorporateActionPaymentHistoryResponse:
+      type: object
+      required:
+        - payment_history
+      properties:
+        payment_history:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarginCorporateActionPaymentHistoryEntry'
+          description: Array of corporate action payment entries, newest first
 
     MarginCorporateAction:
       type: object

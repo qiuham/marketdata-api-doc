@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/websocket-api-general-info
 api_type: WebSocket
-updated_at: 2026-11-23 18:32:16.742197
+updated_at: 2026-11-24 18:32:15.692428
 ---
 
 # WebSocket API General Info

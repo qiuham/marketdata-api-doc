@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams
 api_type: WebSocket Streams
-updated_at: 2026-11-23 18:49:33.421353
+updated_at: 2026-11-24 18:49:10.266199
 ---
 
 # Options WebSocket Market Streams
@@ -26,7 +26,7 @@ Access market data, manage accounts, and trade Binance Options.
 - `{symbol}@kline_{interval}` — Kline/Candlestick Streams
 - `{underlying}@optionMarkPrice` — Option Mark Price
 - `!optionSymbol` — New Symbol Info
-- `{underlying}@openInterest@{expirationDate}` — Open Interest
+- `{underlying}@optionOpenInterest@{expirationDate}` — Open Interest
 - `{symbol}@depth@{updateSpeed}` — Diff Book Depth Streams
 - `{symbol}@bookTicker` — Individual Symbol Book Ticker Streams
 - `{symbol}@depth{level}@{updateSpeed}` — Partial Book Depth Streams
@@ -512,11 +512,11 @@ Operation ID: `newSymbolInfo`
 
 ## Open Interest（合约持仓量）
 
-流名称: `{underlying}@openInterest@{expirationDate}`
+流名称: `{underlying}@optionOpenInterest@{expirationDate}`
 
-Option open interest for specific underlying asset on specific expiration date. E.g.[ethusdt@openInterest@221125](wss://fstream.binance.com/market/stream?streams=ethusdt@openInterest@221125)
+Option open interest for specific underlying asset on specific expiration date. E.g.[ethusdt@optionOpenInterest@221125](wss://fstream.binance.com/market/stream?streams=ethusdt@optionOpenInterest@221125)
 
-特定标的资产特定到期日的期权合约持仓量。如[ethusdt@openInterest@221125](wss://fstream.binance.com/market/stream?streams=ethusdt@openInterest@221125)
+特定标的资产特定到期日的期权合约持仓量。如[ethusdt@optionOpenInterest@221125](wss://fstream.binance.com/market/stream?streams=ethusdt@optionOpenInterest@221125)
 
 更新速度: 60s
 
@@ -542,7 +542,7 @@ Operation ID: `openInterest`
 {
   "method": "SUBSCRIBE",
   "params": [
-    "btcusdt@openInterest@220930"
+    "btcusdt@optionOpenInterest@220930"
   ],
   "id": 532601580
 }
@@ -574,7 +574,7 @@ Operation ID: `openInterest`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| stream | string | 是 | 例: `btcusdt@openInterest@220930` |
+| stream | string | 是 | 例: `btcusdt@optionOpenInterest@220930` |
 | data | object[] | 是 |  |
 | data[].e | string |  | Event type<br>事件类型<br>例: `openInterest` |
 | data[].E | integer (int64) |  | Event time<br>事件时间<br>例: `1668759300045` |
@@ -584,7 +584,7 @@ Operation ID: `openInterest`
 
 ```json
 {
-  "stream": "btcusdt@openInterest@220930",
+  "stream": "btcusdt@optionOpenInterest@220930",
   "data": [
     {
       "e": "openInterest",

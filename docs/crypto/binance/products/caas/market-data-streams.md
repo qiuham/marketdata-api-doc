@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/caas/market-data-streams
 api_type: WebSocket
-updated_at: 2026-11-23 18:33:12.519822
+updated_at: 2026-11-24 18:33:11.366850
 ---
 
 # Market Data Streams

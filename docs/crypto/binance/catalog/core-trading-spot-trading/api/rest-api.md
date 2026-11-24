@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api
 api_type: REST
-updated_at: 2026-11-23 18:49:26.055453
+updated_at: 2026-11-24 18:49:02.170159
 ---
 
 # Spot REST API
@@ -404,22 +404,78 @@ Operation ID: `deleteOpenOrders`
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| [].symbol | string |  | 例: `BTCUSDT` |
-| [].origClientOrderId | string |  | 例: `E6APeyTJvkMvLMYMqu1KQ4` |
-| [].orderId | integer (int64) |  | 例: `11` |
 | [].orderListId | integer (int64) |  | 例: `-1` |
-| [].clientOrderId | string |  | 例: `pXLV6Hz6mprAcVYpVMTGgx` |
+| [].contingencyType | string |  | 例: `OCO` |
+| [].listStatusType | string |  | 例: `ALL_DONE` |
+| [].listOrderStatus | string |  | 例: `ALL_DONE` |
+| [].listClientOrderId | string |  | 例: `iuVNVJYYrByz6C4yGOPPK0` |
+| [].transactionTime | integer (int64) |  | 例: `1660803702431` |
+| [].symbol | string |  | 例: `BTCUSDT` |
+| [].orders | object[] |  |  |
+| [].orders[].symbol | string |  | 例: `BTCUSDT` |
+| [].orders[].orderId | integer (int64) |  | 例: `12569099453` |
+| [].orders[].clientOrderId | string |  | 例: `bX5wROblo6YeDwa9iTLeyY` |
+| [].orderReports | object[] |  |  |
+| [].orderReports[].symbol | string |  | 例: `BTCUSDT` |
+| [].orderReports[].origClientOrderId | string |  | 例: `bX5wROblo6YeDwa9iTLeyY` |
+| [].orderReports[].orderId | integer (int64) |  | 例: `12569099453` |
+| [].orderReports[].orderListId | integer (int64) |  | 例: `19431` |
+| [].orderReports[].clientOrderId | string |  | 例: `OFFXQtxVFZ6Nbcg4PgE2DA` |
+| [].orderReports[].transactTime | integer (int64) |  | 例: `1684804350068` |
+| [].orderReports[].price | string |  | 例: `23450.50000000` |
+| [].orderReports[].origQty | string |  | 例: `0.00850000` |
+| [].orderReports[].executedQty | string |  | 例: `0.00000000` |
+| [].orderReports[].origQuoteOrderQty | string |  | 例: `0.000000` |
+| [].orderReports[].cummulativeQuoteQty | string |  | 例: `0.00000000` |
+| [].orderReports[].status | string |  | 例: `CANCELED` |
+| [].orderReports[].timeInForce | string |  | 例: `GTC` |
+| [].orderReports[].type | string |  | 例: `STOP_LOSS_LIMIT` |
+| [].orderReports[].side | string |  | 例: `BUY` |
+| [].orderReports[].selfTradePreventionMode | string |  | 例: `NONE` |
+| [].orderReports[].icebergQty | string |  | Appears only if the parameter icebergQty was sent in the request.<br>仅在请求中发送了 icebergQty 参数时出现。<br>例: `0.00000000` |
+| [].orderReports[].preventedMatchId | integer (int64) |  | Appears only if the order expired due to STP.<br>仅在因 STP 导致订单失效时出现。<br>例: `0` |
+| [].orderReports[].preventedQuantity | string |  | Order quantity that expired due to STP.<br>因 STP 导致订单失效的数量。<br>例: `1.200000` |
+| [].orderReports[].stopPrice | string |  | Appears for STOP_LOSS, TAKE_PROFIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT orders.<br>出现在 STOP_LOSS, TAKE_PROFIT, STOP_LOSS_LIMIT 和 TAKE_PROFIT_LIMIT 订单中。<br>例: `0.00000000` |
+| [].orderReports[].strategyId | integer (int64) |  | Appears only if the strategyId parameter was provided upon order placement.<br>仅在下单时提供了 strategyId 参数时出现。<br>例: `1` |
+| [].orderReports[].strategyType | integer (int64) |  | Appears only if the strategyType parameter was provided upon order placement.<br>仅在下单时提供了 strategyType 参数时出现。<br>例: `1000000` |
+| [].orderReports[].trailingDelta | integer (int64) |  | Delta price change required before order activation.<br>订单激活前所需的价格变动。<br>例: `10` |
+| [].orderReports[].trailingTime | integer (int64) |  | Time when the trailing order is now active and tracking price changes.<br>追踪单被激活和跟踪价格变化的时间。<br>例: `-1` |
+| [].orderReports[].usedSor | boolean |  | Field that determines whether order used SOR.<br>用于确定订单是否使用SOR的字段。<br>例: `True` |
+| [].orderReports[].workingFloor | string |  | Determines whether the order is being filled by the SOR or by the order book.<br>用以定义订单是通过 SOR 还是由订单簿成交的。<br>例: `SOR` |
+| [].orderReports[].pegPriceType | string |  | Price peg type. Only for pegged orders.<br>挂钩价格类型。仅用于挂钩订单。<br>例: `PRIMARY_PEG` |
+| [].orderReports[].pegOffsetType | string |  | Price peg offset type. Only for pegged orders, if requested.<br>挂钩价格偏移类型。如若需要，仅用于挂钩订单。<br>例: `PRICE_LEVEL` |
+| [].orderReports[].pegOffsetValue | integer (int64) |  | Price peg offset value. Only for pegged orders, if requested.<br>挂钩价格偏移值。如若需要，仅用于挂钩订单。<br>例: `5` |
+| [].orderReports[].peggedPrice | string |  | Current price order is pegged at. Only for pegged orders, once determined.<br>订单对应的当前挂钩价格。一旦确定，仅用于挂钩订单。<br>例: `87523.83710000` |
+| [].orderReports[].expiryReason | string |  | Cause of the order's expiration. Appears when an order has expired.<br>订单过期的原因。当订单过期时出现。<br>例: `INSUFFICIENT_LIQUIDITY` |
+| [].origClientOrderId | string |  | 例: `4d96324ff9d44481926157` |
+| [].orderId | integer (int64) |  | 例: `12569099453` |
+| [].clientOrderId | string |  | 例: `91fe37ce9e69c90d6358c0` |
 | [].transactTime | integer (int64) |  | 例: `1684804350068` |
-| [].price | string |  | 例: `0.089853` |
-| [].origQty | string |  | 例: `0.178622` |
-| [].executedQty | string |  | 例: `0.000000` |
+| [].price | string |  | 例: `23416.10000000` |
+| [].origQty | string |  | 例: `0.00847000` |
+| [].executedQty | string |  | 例: `0.00001000` |
 | [].origQuoteOrderQty | string |  | 例: `0.000000` |
-| [].cummulativeQuoteQty | string |  | 例: `0.000000` |
+| [].cummulativeQuoteQty | string |  | 例: `0.23416100` |
 | [].status | string |  | 例: `CANCELED` |
 | [].timeInForce | string |  | 例: `GTC` |
 | [].type | string |  | 例: `LIMIT` |
-| [].side | string |  | 例: `BUY` |
+| [].side | string |  | 例: `SELL` |
+| [].stopPrice | string |  | Appears for STOP_LOSS, TAKE_PROFIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT orders.<br>出现在 STOP_LOSS, TAKE_PROFIT, STOP_LOSS_LIMIT 和 TAKE_PROFIT_LIMIT 订单中。<br>例: `0.00000000` |
+| [].trailingDelta | integer (int64) |  | Delta price change required before order activation.<br>订单激活前所需的价格变动。<br>例: `10` |
+| [].trailingTime | integer (int64) |  | Time when the trailing order is now active and tracking price changes.<br>追踪单被激活和跟踪价格变化的时间。<br>例: `-1` |
+| [].icebergQty | string |  | Appears only if the parameter icebergQty was sent in the request.<br>仅在请求中发送了 icebergQty 参数时出现。<br>例: `0.00000000` |
+| [].strategyId | integer (int64) |  | Appears only if the strategyId parameter was provided upon order placement.<br>仅在下单时提供了 strategyId 参数时出现。<br>例: `1` |
+| [].strategyType | integer (int64) |  | Appears only if the strategyType parameter was provided upon order placement.<br>仅在下单时提供了 strategyType 参数时出现。<br>例: `1000000` |
 | [].selfTradePreventionMode | string |  | 例: `NONE` |
+| [].preventedMatchId | integer (int64) |  | Appears only if the order expired due to STP.<br>仅在因 STP 导致订单失效时出现。<br>例: `0` |
+| [].preventedQuantity | string |  | Order quantity that expired due to STP.<br>因 STP 导致订单失效的数量。<br>例: `1.200000` |
+| [].usedSor | boolean |  | Field that determines whether order used SOR.<br>用于确定订单是否使用SOR的字段。<br>例: `True` |
+| [].workingFloor | string |  | Determines whether the order is being filled by the SOR or by the order book.<br>用以定义订单是通过 SOR 还是由订单簿成交的。<br>例: `SOR` |
+| [].pegPriceType | string |  | Price peg type. Only for pegged orders.<br>挂钩价格类型。仅用于挂钩订单。<br>例: `PRIMARY_PEG` |
+| [].pegOffsetType | string |  | Price peg offset type. Only for pegged orders, if requested.<br>挂钩价格偏移类型。如若需要，仅用于挂钩订单。<br>例: `PRICE_LEVEL` |
+| [].pegOffsetValue | integer (int64) |  | Price peg offset value. Only for pegged orders, if requested.<br>挂钩价格偏移值。如若需要，仅用于挂钩订单。<br>例: `5` |
+| [].peggedPrice | string |  | Current price order is pegged at. Only for pegged orders, once determined.<br>订单对应的当前挂钩价格。一旦确定，仅用于挂钩订单。<br>例: `87523.83710000` |
+| [].expiryReason | string |  | Cause of the order's expiration. Appears when an order has expired.<br>订单过期的原因。当订单过期时出现。<br>例: `INSUFFICIENT_LIQUIDITY` |
 
 ```json
 [
@@ -668,6 +724,21 @@ Operation ID: `newOrder`
 | (oneOf 3).side | string |  | 例: `SELL` |
 | (oneOf 3).workingTime | integer (int64) |  | 例: `1507725176595` |
 | (oneOf 3).selfTradePreventionMode | string |  | 例: `NONE` |
+| (oneOf 3).stopPrice | string |  | Appears for STOP_LOSS, TAKE_PROFIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT orders.<br>出现在 STOP_LOSS, TAKE_PROFIT, STOP_LOSS_LIMIT 和 TAKE_PROFIT_LIMIT 订单中。<br>例: `0.00000000` |
+| (oneOf 3).trailingDelta | integer (int64) |  | Delta price change required before order activation.<br>订单激活前所需的价格变动。<br>例: `10` |
+| (oneOf 3).icebergQty | string |  | Appears only if the parameter icebergQty was sent in the request.<br>仅在请求中发送了 icebergQty 参数时出现。<br>例: `0.00000000` |
+| (oneOf 3).strategyId | integer (int64) |  | Appears only if the strategyId parameter was provided upon order placement.<br>仅在下单时提供了 strategyId 参数时出现。<br>例: `1` |
+| (oneOf 3).strategyType | integer (int64) |  | Appears only if the strategyType parameter was provided upon order placement.<br>仅在下单时提供了 strategyType 参数时出现。<br>例: `1000000` |
+| (oneOf 3).preventedMatchId | integer (int64) |  | Appears only if the order expired due to STP.<br>仅在因 STP 导致订单失效时出现。<br>例: `0` |
+| (oneOf 3).preventedQuantity | string |  | Order quantity that expired due to STP.<br>因 STP 导致订单失效的数量。<br>例: `1.200000` |
+| (oneOf 3).trailingTime | integer (int64) |  | Time when the trailing order is now active and tracking price changes.<br>追踪单被激活和跟踪价格变化的时间。<br>例: `-1` |
+| (oneOf 3).usedSor | boolean |  | Field that determines whether order used SOR.<br>用于确定订单是否使用SOR的字段。<br>例: `True` |
+| (oneOf 3).workingFloor | string |  | Determines whether the order is being filled by the SOR or by the order book.<br>用以定义订单是通过 SOR 还是由订单簿成交的。<br>例: `SOR` |
+| (oneOf 3).pegPriceType | string |  | Price peg type. Only for pegged orders.<br>挂钩价格类型。仅用于挂钩订单。<br>例: `PRIMARY_PEG` |
+| (oneOf 3).pegOffsetType | string |  | Price peg offset type. Only for pegged orders, if requested.<br>挂钩价格偏移类型。如若需要，仅用于挂钩订单。<br>例: `PRICE_LEVEL` |
+| (oneOf 3).pegOffsetValue | integer (int64) |  | Price peg offset value. Only for pegged orders, if requested.<br>挂钩价格偏移值。如若需要，仅用于挂钩订单。<br>例: `5` |
+| (oneOf 3).peggedPrice | string |  | Current price order is pegged at. Only for pegged orders, once determined.<br>订单对应的当前挂钩价格。一旦确定，仅用于挂钩订单。<br>例: `87523.83710000` |
+| (oneOf 3).expiryReason | string |  | Cause of the order's expiration. Appears when an order has expired.<br>订单过期的原因。当订单过期时出现。<br>例: `INSUFFICIENT_LIQUIDITY` |
 | (oneOf 3).fills | object[] |  |  |
 | (oneOf 3).fills[].price | string |  | 例: `4000.00000000` |
 | (oneOf 3).fills[].qty | string |  | 例: `1.00000000` |
@@ -1596,6 +1667,7 @@ Order book
 101-500| 25
 501-1000| 50
 1001-5000| 250
+5001-7500| 500
 
 Operation ID: `depth`
 
@@ -1604,7 +1676,7 @@ Operation ID: `depth`
 | 名称 | 位置 | 类型 | 必填 | 说明 |
 |---|---|---|---|---|
 | symbol | query | string | 是 | 例: `BNBUSDT` |
-| limit | query | integer |  | If limit > 5000, only 5000 entries will be returned.<br>如果 limit > 5000, 最多返回5000条数据。<br>默认: `100`<br>例: `1` |
+| limit | query | integer |  | If limit > 7500, only 7500 entries will be returned.<br>如果 limit > 7500, 最多返回7500条数据。<br>默认: `100`<br>例: `1` |
 | symbolStatus | query | string |  | Filters for symbols that have this `tradingStatus`.<br>A status mismatch returns error `-1220 SYMBOL_DOES_NOT_MATCH_STATUS`.<br>过滤具有此 `tradingStatus` 的交易对。<br>如果状态不匹配，将返回错误 `-1220 交易对与状态不匹配`<br>枚举: `TRADING`, `HALT`, `BREAK`, `CANCEL_ONLY`<br>例: `TRADING` |
 
 ### 响应 200：Order book / 深度信息
@@ -2502,7 +2574,7 @@ Operation ID: `orderListOco`
 | quantity | number (float) | 是 | Quantity for both orders of the order list.<br>两个订单的数量。<br>例: `1` |
 | aboveType | string | 是 | 枚举: `STOP_LOSS_LIMIT`, `STOP_LOSS`, `LIMIT_MAKER`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`<br>例: `STOP_LOSS_LIMIT` |
 | aboveClientOrderId | string |  | Arbitrary unique ID among open orders for the above order. Automatically generated if not sent.<br>上方订单的唯一ID。 如果未发送则自动生成。<br>例: `aboveOrder1` |
-| aboveIcebergQty | integer (int64) |  | Note that this can only be used if `aboveTimeInForce` is `GTC`.<br>请注意，只有当 `aboveTimeInForce` 为 `GTC` 时才能使用。<br>例: `1` |
+| aboveIcebergQty | number (float) |  | Note that this can only be used if `aboveTimeInForce` is `GTC`.<br>请注意，只有当 `aboveTimeInForce` 为 `GTC` 时才能使用。<br>例: `1` |
 | abovePrice | number (float) |  | Can be used if `aboveType` is `STOP_LOSS_LIMIT`, `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.<br>当 `aboveType` 是 `STOP_LOSS_LIMIT`, `LIMIT_MAKER` 或 `TAKE_PROFIT_LIMIT` 时，可用以指定限价。<br>例: `1.5` |
 | aboveStopPrice | number (float) |  | Can be used if `aboveType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`. Either `aboveStopPrice` or `aboveTrailingDelta` or both, must be specified.<br>如果 `aboveType` 是 `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT` 或 `TAKE_PROFIT_LIMIT` 才能使用。 必须指定 `aboveStopPrice` 或 `aboveTrailingDelta` 或两者。<br>例: `1.50000001` |
 | aboveTrailingDelta | integer (int64) |  | See [Trailing Stop order FAQ](/products/spot/faqs/trailing-stop-faq)<br>请看 [追踪止盈止损(Trailing Stop)订单常见问题](/products/spot/faqs/trailing-stop-faq)<br>例: `1` |
@@ -2514,7 +2586,7 @@ Operation ID: `orderListOco`
 | abovePegOffsetValue | integer |  | 例: `1` |
 | belowType | string | 是 | Supported values: `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`<br>支持值：`STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`。<br>枚举: `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`<br>例: `STOP_LOSS` |
 | belowClientOrderId | string |  | Arbitrary unique ID among open orders for the below order. Automatically generated if not sent.<br>下方订单的唯一ID。 如果未发送则自动生成。<br>例: `belowOrder1` |
-| belowIcebergQty | integer (int64) |  | Note that this can only be used if `belowTimeInForce` is `GTC`.<br>请注意，只有当 `belowTimeInForce` 为 `GTC` 时才能使用。<br>例: `1` |
+| belowIcebergQty | number (float) |  | Note that this can only be used if `belowTimeInForce` is `GTC`.<br>请注意，只有当 `belowTimeInForce` 为 `GTC` 时才能使用。<br>例: `1` |
 | belowPrice | number (float) |  | Can be used if `belowType` is `STOP_LOSS_LIMIT`, `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.<br>当 `belowType` 是 `STOP_LOSS_LIMIT`, `LIMIT_MAKER` 或 `TAKE_PROFIT_LIMIT` 时，可用以指定限价。<br>例: `1.49999999` |
 | belowStopPrice | number (float) |  | Can be used if `belowType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`. Either `belowStopPrice` or `belowTrailingDelta` or both, must be specified.<br>如果 `belowType` 是 `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT` 或 `TAKE_PROFIT_LIMIT` 才能使用。 必须指定 `belowStopPrice` 或 `belowTrailingDelta` 或两者。<br>例: `1.50000001` |
 | belowTrailingDelta | integer (int64) |  | See [Trailing Stop order FAQ](/products/spot/faqs/trailing-stop-faq)<br>请看 [追踪止盈止损(Trailing Stop)订单常见问题](/products/spot/faqs/trailing-stop-faq)<br>例: `1` |
@@ -3272,6 +3344,19 @@ Operation ID: `sorOrder`
 | workingFloor | string |  | 例: `SOR` |
 | selfTradePreventionMode | string |  | 例: `NONE` |
 | usedSor | boolean |  | 例: `True` |
+| stopPrice | string |  | Appears for STOP_LOSS, TAKE_PROFIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT orders.<br>出现在 STOP_LOSS, TAKE_PROFIT, STOP_LOSS_LIMIT 和 TAKE_PROFIT_LIMIT 订单中。<br>例: `0.00000000` |
+| trailingDelta | integer (int64) |  | Delta price change required before order activation.<br>订单激活前所需的价格变动。<br>例: `10` |
+| icebergQty | string |  | Appears only if the parameter icebergQty was sent in the request.<br>仅在请求中发送了 icebergQty 参数时出现。<br>例: `0.00000000` |
+| strategyId | integer (int64) |  | Appears only if the strategyId parameter was provided upon order placement.<br>仅在下单时提供了 strategyId 参数时出现。<br>例: `1` |
+| strategyType | integer (int64) |  | Appears only if the strategyType parameter was provided upon order placement.<br>仅在下单时提供了 strategyType 参数时出现。<br>例: `1000000` |
+| preventedMatchId | integer (int64) |  | Appears only if the order expired due to STP.<br>仅在因 STP 导致订单失效时出现。<br>例: `0` |
+| preventedQuantity | string |  | Order quantity that expired due to STP.<br>因 STP 导致订单失效的数量。<br>例: `1.200000` |
+| trailingTime | integer (int64) |  | Time when the trailing order is now active and tracking price changes.<br>追踪单被激活和跟踪价格变化的时间。<br>例: `-1` |
+| pegPriceType | string |  | Price peg type. Only for pegged orders.<br>挂钩价格类型。仅用于挂钩订单。<br>例: `PRIMARY_PEG` |
+| pegOffsetType | string |  | Price peg offset type. Only for pegged orders, if requested.<br>挂钩价格偏移类型。如若需要，仅用于挂钩订单。<br>例: `PRICE_LEVEL` |
+| pegOffsetValue | integer (int64) |  | Price peg offset value. Only for pegged orders, if requested.<br>挂钩价格偏移值。如若需要，仅用于挂钩订单。<br>例: `5` |
+| peggedPrice | string |  | Current price order is pegged at. Only for pegged orders, once determined.<br>订单对应的当前挂钩价格。一旦确定，仅用于挂钩订单。<br>例: `87523.83710000` |
+| expiryReason | string |  | Cause of the order's expiration. Appears when an order has expired.<br>订单过期的原因。当订单过期时出现。<br>例: `INSUFFICIENT_LIQUIDITY` |
 
 ## Test new order using SOR (TRADE)（测试 SOR 下单接口 (TRADE)）
 

@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/funding-beta/list-funding-methods'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # List Funding Methods

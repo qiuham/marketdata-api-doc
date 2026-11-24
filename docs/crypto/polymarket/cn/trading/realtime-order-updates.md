@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/trading/realtime-order-updates'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # 实时订单更新

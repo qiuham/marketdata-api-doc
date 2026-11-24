@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/order_amend_keep_priority
 api_type: Guide
-updated_at: 2026-11-23 18:36:36.761948
+updated_at: 2026-11-24 18:36:27.677929
 ---
 
 # Order Amend Keep Priority

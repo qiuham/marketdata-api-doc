@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/canIUseCustom
 api_type: Guide
-updated_at: 2026-11-23 18:49:06.537686
+updated_at: 2026-11-24 18:48:42.761002
 ---
 
 # bn.canIUseCustom

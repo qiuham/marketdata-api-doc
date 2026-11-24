@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/get-obligation-maintenance-margin-details'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Get Obligation Maintenance Margin Details
@@ -150,9 +150,11 @@ components:
         maintenance_margin_delta_centicents:
           type: integer
           format: int64
-          description: >-
-            Change in maintenance margin between the previous settlement and
-            this one.
+          description: |
+            Requirement at the previous settlement minus the requirement after
+            this one. Positive means margin released to the clearing member;
+            negative means the requirement rose and the clearing member owes
+            the increase.
     Error:
       type: object
       required:

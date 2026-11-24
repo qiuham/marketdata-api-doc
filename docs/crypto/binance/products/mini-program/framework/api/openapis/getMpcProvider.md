@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/getMpcProvider
 api_type: Guide
-updated_at: 2026-11-23 18:45:17.732135
+updated_at: 2026-11-24 18:45:01.386702
 ---
 
 # bn.getMpcProvider

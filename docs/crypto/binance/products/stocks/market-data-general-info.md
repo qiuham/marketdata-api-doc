@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/stocks/market-data-general-info
 api_type: Guide
-updated_at: 2026-11-23 18:28:58.495196
+updated_at: 2026-11-24 18:28:34.675005
 ---
 
 # Market Data — General Info

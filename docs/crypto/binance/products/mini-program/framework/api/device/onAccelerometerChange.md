@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/device/onAccelerometerChange
 api_type: Guide
-updated_at: 2026-11-23 18:47:51.542734
+updated_at: 2026-11-24 18:47:32.273443
 ---
 
 # bn.onAccelerometerChange

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/managing-deposits-api
 api_type: Guide
-updated_at: 2026-11-23 19:00:29.163792
+updated_at: 2026-11-24 18:59:41.723747
 ---
 
 # Managing Deposits
@@ -18,6 +18,12 @@ This section explains how to generate deposit addresses, check deposit history a
 ## Creating a deposit address
 
 In order to generate a new on-chain deposit address for a selected currency use the [`private/create_deposit_address`](https://docs.deribit.com/api-reference/wallet/private-create_deposit_address) method. Each subaccount has its own deposit address. Only [verified](https://support.deribit.com/hc/en-us/articles/25944487291549-Know-Your-Customer-KYC) accounts can generate deposit addresses.
+
+> [!WARNING]
+>
+> **ETH and ERC-20 deposits: Ethereum mainnet only.** Layer 2 networks and other EVM-compatible chains (for example Base, Arbitrum, Optimism, Polygon, BNB Smart Chain) are not supported, even though they use the same address format and their tokens follow the ERC-20 standard. Funds sent to a Deribit ETH or ERC-20 deposit address over any network other than Ethereum mainnet are not credited, and recovery is not guaranteed.
+>
+> This applies to standard Deribit wallets. Coinbase wallet type accounts choose the network explicitly; see [Coinbase Wallet API](https://docs.deribit.com/articles/coinbase-wallet-api.md).
 
 ### Example Request
 
@@ -128,7 +134,7 @@ When submitting originator information, you need to provide:
 ## Notes and best practices
 
 * **Supported protocols and confirmations**: Check the supported networks and the number of confirmations required for each asset on the deposit page.
-* **Always use correct chain**: Depositing via unsupported chains or wrapped tokens may result in [unrecoverable funds](https://support.deribit.com/hc/en-us/articles/360000123169).
+* **Always use correct chain**: Depositing via unsupported chains or wrapped tokens may result in [unrecoverable funds](https://support.deribit.com/hc/en-us/articles/360000123169). For ETH and ERC-20 tokens, "ERC-20" means Ethereum mainnet only: Layer 2 networks such as Base, Arbitrum and Optimism are not supported.
 * **Verification required**: You must complete account [verification](https://support.deribit.com/hc/en-us/articles/360000123169) before you can generate deposit addresses.
 * **Multiple deposits in one transaction**: Sending multiple deposits in a single transaction may delay crediting.
 * **Travel Rule compliance**: Provide accurate originator details when prompted. Incomplete or incorrect information can lead to withdrawal locks.

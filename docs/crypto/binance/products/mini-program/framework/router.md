@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/router
 api_type: Guide
-updated_at: 2026-11-23 18:38:11.326923
+updated_at: 2026-11-24 18:38:27.450959
 ---
 
 # Router

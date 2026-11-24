@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/order-mass-status-request
 api_type: FIX
-updated_at: 2026-11-23 19:00:32.437085
+updated_at: 2026-11-24 18:59:45.037884
 ---
 
 # Order Mass Status Request(AF) (Production FIX API)

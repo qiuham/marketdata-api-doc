@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/fcm/delete-fcm-subtrader-event-contract-daily-cap'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Delete FCM Subtrader Event Contract Daily Cap

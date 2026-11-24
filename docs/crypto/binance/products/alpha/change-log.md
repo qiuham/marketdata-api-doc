@@ -2,12 +2,12 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/alpha/change-log
 api_type: Changelog
-updated_at: 2026-11-23 18:35:30.893379
+updated_at: 2026-11-24 18:35:25.447273
 ---
 
-# change log
+# Change Log
 
-the latest update: 2026-09-08
+The latest update: 2026-09-08
 
 ## 2026-09-08
 
@@ -59,7 +59,7 @@ the latest update: 2026-09-08
 
 ### Websocket-market-data
 
-- init the section
+- Init the section
 
 ---
 

@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/migrate/polymarket-v2/overview'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Migrate to Polymarket Protocol V2
@@ -38,8 +38,11 @@ the planned trading dates below.
 | Phase and Trading Start | Markets |
 | - | - |
 | **Phase 1** Monday, November 23, at 8:30 AM | BNB, DOGE, HYPE, SOL, XRP, and ZEC Up/Down, each at 5-minute and 15-minute intervals. Also NYC highest temperature, Warsaw highest temperature, and Munich lowest temperature. |
-| **Phase 2** Tuesday, November 24 | BTC and ETH Up/Down at 5-minute, 15-minute, and 4-hour intervals; other crypto, remaining weather, commodities, finance, and minor sports. |
-| **Phase 3** Tuesday, December 1 | Soccer, American football (NFL and college football), basketball (including NBA and college basketball), tennis, esports, and social count. |
+| **Phases 2 and 3** TBA | Further rollout details will be announced here and on [Polymarket Developers on X](https://x.com/PolymarketDevs). |
+
+BTC 5-minute Up/Down markets will trade on Polymarket Protocol V2 on
+**November 24, from 1:00–1:15 PM ET only**. Keep your integration compatible
+with both Polymarket Protocol V2 and CTF (V1) markets.
 
 Later phases depend on successful trading and settlement, correct reward
 scoring, and sufficient liquidity in the preceding phase. No cutovers are

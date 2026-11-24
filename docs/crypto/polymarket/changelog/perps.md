@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/changelog/perps'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Perps Changelog
@@ -18,6 +18,66 @@ updated_at: 2026-11-23
 > Recent changes to the Polymarket Perps API and platform
 
 Notable changes to the Polymarket Perps API.
+
+**Nov 24, 2026**
+
+Stale-mark rejections, cancel-all for unacknowledged orders, and account self-exclusion
+
+No endpoints or required request fields are removed. Handle the new
+`mark_price_stale` and `account_self_excluded` errors and the `self_excluded`
+order status before the deploy. Every REST and WebSocket connection drops at
+least once during this window.
+
+**Changed**
+
+* **Stale mark prices.** If a market's mark price has not updated for over 60
+  seconds, an order that would grow your position is rejected with
+  `mark_price_stale`. These orders were previously rejected as if the market did
+  not exist. The condition is temporary; retry once prices resume. Reduce-only
+  orders that shrink a position are still accepted.
+* **Cancel-all covers unacknowledged orders.** A cancel-all over HTTP or
+  WebSocket, or a disconnect with cancel-on-disconnect enabled, now also cancels
+  the account's orders that were sent but not yet acknowledged. Such an order's
+  own response comes back as canceled; previously it could survive the
+  cancel-all and rest on the book. Orders sent after a cancel-all are
+  unaffected, because ordering is preserved. The cancel-all response is still
+  `200 OK`.
+* **TP/SL statuses on order history.** On `GET /v1/account/orders`, a
+  take-profit or stop-loss leg removed by a stock split now reads `stock_split`,
+  and one removed by a market settlement reads `instrument_settled`. Both
+  previously read `expired`. Regular orders and the WebSocket orders channel
+  already reported these reasons.
+* **Largest positions during a price outage.** `GET /v1/info/largest-positions`
+  now values positions at the last known mark instead of returning `503` when
+  the mark goes stale.
+* **Browser clients.** API responses now include
+  `Timing-Allow-Origin: https://polymarket.com`, and browsers may cache the CORS
+  preflight for 2 hours instead of 5 minutes. Server-side clients are
+  unaffected.
+
+**Added**
+
+* **Account self-exclusion.** An account owner can now pause their own trading.
+  While self-exclusion is active, new orders that would increase exposure and
+  new proxies are rejected with `account_self_excluded`. When it starts, the
+  account's opening orders are canceled with the new order status
+  `self_excluded`. Reduce-only orders, TP/SL triggers, cancels, and withdrawals
+  keep working. No account is excluded unless its owner turns this on, but
+  handle the new error and order status.
+
+**Clarified**
+
+* New error identifiers are documented on [Errors](https://docs.polymarket.com/perps/errors.md).
+
+**Rollout**
+
+Maintenance starts Tuesday, November 24 at 6:00 AM ET (11:00 UTC) and is
+expected to take about 60 minutes. The exchange is cancel-only during the
+upgrade: cancels keep working, new orders are
+rejected, and resting orders stay on the book. This window also upgrades the
+network layer in front of the API, so every REST and WebSocket connection drops
+at least once, including market-maker connections. Reconnect with backoff,
+resubscribe, and re-read your open orders and positions before quoting again.
 
 **Nov 20, 2026**
 

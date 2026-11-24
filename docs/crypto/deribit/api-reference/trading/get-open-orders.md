@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/get-open-orders
 api_type: JSON-RPC
-updated_at: 2026-11-23 19:00:33.741077
+updated_at: 2026-11-24 18:59:46.500626
 ---
 
 # Get Open Orders

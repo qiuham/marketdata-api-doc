@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_index_chart_data
 api_type: JSON-RPC
-updated_at: 2026-11-23 19:00:38.681144
+updated_at: 2026-11-24 18:59:52.453474
 ---
 
 # public/get_index_chart_data

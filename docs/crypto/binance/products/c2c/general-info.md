@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/c2c/general-info
 api_type: Guide
-updated_at: 2026-11-23 18:33:21.670611
+updated_at: 2026-11-24 18:33:20.503837
 ---
 
 # General Info

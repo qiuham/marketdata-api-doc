@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/institutional/api-reference/prime-websocket/user'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # User

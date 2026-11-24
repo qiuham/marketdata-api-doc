@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-stocks-trading/api/rest-api
 api_type: REST
-updated_at: 2026-11-23 18:49:38.977101
+updated_at: 2026-11-24 18:49:16.323166
 ---
 
 # Stocks Trading REST API
@@ -212,6 +212,7 @@ Operation ID: `placeEquityOrder`
 | walletType | query | string |  | Payment wallet for `BUY` orders: `CARD` (default) / `MAIN`. `SELL` orders always settle to `CARD`.<br>`BUY` 侧付款钱包：`CARD`（默认）/ `MAIN`。`SELL` 侧固定结算至 `CARD`。<br>枚举: `CARD`, `MAIN`<br>例: `CARD` |
 | clientOrderId | query | string |  | Client-supplied order id. Format `^[a-zA-Z0-9-_]{32,36}$`. Auto-generated when omitted.<br>客户端自定义订单 ID。格式 `^[a-zA-Z0-9-_]{32,36}$`。不传则服务端自动生成。<br>例: `web_2c9c92b74f1e4a7c8f3b9e1a2d3c4b5a` |
 | tokenize | query | boolean |  | Whether to tokenize the purchased stock asset upon settlement. Default `true`. Only takes effect when the symbol is tokenization-enabled (check via `/market/tokenized-assets`); silently ignored for non-tokenized symbols, which always settle as traditional underlying-equity trades.<br>结算后是否将买入的股票资产代币化。默认 `true`。仅在 symbol 已开启代币化（可通过 `/market/tokenized-assets` 查询）时生效；对于未开启代币化的 symbol 会被静默忽略，此类订单始终以传统的底层股票交易方式结算。<br>例: `True` |
+| tokenizedAssetSettleWalletType | query | string |  | Wallet that receives the tokenized asset minted after the order fills. `MAIN` = Spot wallet, `CARD` = Funding wallet. Default `CARD`. Only applies when `side` = `BUY` and `tokenize` = `true`; ignored for `SELL` or `tokenize` = `false`. If `MAIN` is sent while Spot wallet settlement is not enabled, the request is rejected as an illegal parameter.<br>订单成交后铸造的代币化资产所划入的钱包。`MAIN` = 现货钱包，`CARD` = 资金钱包。默认 `CARD`。仅在 `side` = `BUY` 且 `tokenize` = `true` 时生效；`SELL` 或 `tokenize` = `false` 时忽略。若未开启现货钱包结算而传入 `MAIN`，请求将因参数非法被拒绝。<br>枚举: `MAIN`, `CARD`<br>默认: `CARD`<br>例: `CARD` |
 | recvWindow | query | integer (int64) |  | The value cannot be greater than `60000`.<br>赋值不能大于 `60000`。<br>例: `5000` |
 | timestamp | query | integer (int64) | 是 | Timestamp in milliseconds.<br>时间戳（毫秒）。<br>例: `1770736694138` |
 
@@ -487,6 +488,7 @@ Operation ID: `tokenizedMint`
 | underlyingAsset | query | string | 是 | Underlying US-equity ticker, e.g. `AAPL`, `TSLA`. Resolved against the active-symbol list; unknown tickers return `-26004`. The target tokenized asset is looked up from this field via `/market/tokenized-assets`.<br>标的美股 ticker，例如 `AAPL`、`TSLA`。在上架 symbol 列表中解析；未知 ticker 返回 `-26004`。目标代币化资产通过 `/market/tokenized-assets` 接口根据此字段查找。<br>例: `AAPL` |
 | underlyingAssetAmount | query | string | 是 | Quantity of the underlying asset to mint from. Must be > 0.<br>铸造所需标的资产数量，必须大于 0。<br>例: `1` |
 | clientOrderId | query | string |  | Client order id for idempotency. Format `^[a-zA-Z0-9-_]{32,36}$`. Auto-generated when omitted.<br>客户端幂等 ID，格式 `^[a-zA-Z0-9-_]{32,36}$`，不传则自动生成。<br>例: `mint-client-id-32chars-0000000001` |
+| tokenizedAssetSettleWalletType | query | string |  | Wallet that receives the minted tokenized asset. `MAIN` = Spot wallet, `CARD` = Funding wallet. Default `CARD`. If `MAIN` is sent while Spot wallet settlement is not enabled, the request is rejected as an illegal parameter.<br>接收所铸造代币化资产的钱包。`MAIN` = 现货钱包，`CARD` = 资金钱包。默认 `CARD`。若未开启现货钱包结算而传入 `MAIN`，请求将因参数非法被拒绝。<br>枚举: `MAIN`, `CARD`<br>默认: `CARD`<br>例: `CARD` |
 | recvWindow | query | integer (int64) |  | The value cannot be greater than `60000`.<br>赋值不能大于 `60000`。<br>例: `5000` |
 | timestamp | query | integer (int64) | 是 | Timestamp in milliseconds.<br>时间戳（毫秒）。<br>例: `1770736694138` |
 
@@ -496,6 +498,7 @@ Operation ID: `tokenizedMint`
 |---|---|---|---|
 | issuerRequestId | string |  | Server-assigned convert request id. Use it to poll `/tokenized/convert-status`.<br>服务端分配的转换请求 ID，用于轮询 `/tokenized/convert-status`。<br>例: `mint-20260505-8f3b9e1a2d3c4b5a` |
 | status | string |  | Convert status code: `P` = processing, `S` = success, `F` = failed.<br>转换状态码：`P` = 处理中，`S` = 成功，`F` = 失败。<br>枚举: `P`, `S`, `F`<br>例: `P` |
+| tokenizedAssetSettleWalletType | string |  | The wallet the tokenized asset is settled in: `MAIN` = Spot wallet, `CARD` = Funding wallet.<br>代币化资产实际结算所用的钱包：`MAIN` = 现货钱包，`CARD` = 资金钱包。<br>例: `CARD` |
 
 ## Tokenized Redeem (TRADE)（赎回代币化资产 (TRADE)）
 
@@ -517,6 +520,7 @@ Operation ID: `tokenizedRedeem`
 | tokenizedAsset | query | string | 是 | Tokenized asset to redeem, e.g. `AAPLB`. Not a US-equity ticker — this is the on-chain tokenized asset identifier. Unknown asset returns `-1102` (the message currently says the parameter was empty/malformed, but it was in fact sent — it is simply unknown). The target underlying ticker is looked up from this field via `/market/tokenized-assets`.<br>要赎回的代币化资产，例如 `AAPLB`。这不是美股 ticker，而是链上代币化资产标识符。未知资产返回 `-1102`（当前报错信息称参数为空/畸形，但其实已发送、只是不存在）。目标标的 ticker 通过 `/market/tokenized-assets` 接口根据此字段查找。<br>例: `AAPLB` |
 | tokenizedAssetAmount | query | string | 是 | Quantity of the tokenized asset to redeem. Must be > 0.<br>要赎回的代币化资产数量，必须大于 0。<br>例: `1` |
 | clientOrderId | query | string |  | Client order id for idempotency. Format `^[a-zA-Z0-9-_]{32,36}$`. Auto-generated when omitted.<br>客户端幂等 ID，格式 `^[a-zA-Z0-9-_]{32,36}$`，不传则自动生成。<br>例: `redeem-client-id-32chars-000000001` |
+| tokenizedAssetSettleWalletType | query | string |  | Wallet the tokenized asset is deducted from on redeem. `MAIN` = Spot wallet, `CARD` = Funding wallet. Default `CARD`. If `MAIN` is sent while Spot wallet settlement is not enabled, the request is rejected as an illegal parameter.<br>赎回时扣减代币化资产的钱包。`MAIN` = 现货钱包，`CARD` = 资金钱包。默认 `CARD`。若未开启现货钱包结算而传入 `MAIN`，请求将因参数非法被拒绝。<br>枚举: `MAIN`, `CARD`<br>默认: `CARD`<br>例: `CARD` |
 | recvWindow | query | integer (int64) |  | The value cannot be greater than `60000`.<br>赋值不能大于 `60000`。<br>例: `5000` |
 | timestamp | query | integer (int64) | 是 | Timestamp in milliseconds.<br>时间戳（毫秒）。<br>例: `1770736694138` |
 
@@ -526,6 +530,7 @@ Operation ID: `tokenizedRedeem`
 |---|---|---|---|
 | issuerRequestId | string |  | Server-assigned convert request id. Use it to poll `/tokenized/convert-status`.<br>服务端分配的转换请求 ID，用于轮询 `/tokenized/convert-status`。<br>例: `redeem-20260505-a1b2c3d4e5f6` |
 | status | string |  | Convert status code: `P` = processing, `S` = success, `F` = failed.<br>转换状态码：`P` = 处理中，`S` = 成功，`F` = 失败。<br>枚举: `P`, `S`, `F`<br>例: `P` |
+| tokenizedAssetSettleWalletType | string |  | The wallet the tokenized asset is settled in: `MAIN` = Spot wallet, `CARD` = Funding wallet.<br>代币化资产实际结算所用的钱包：`MAIN` = 现货钱包，`CARD` = 资金钱包。<br>例: `CARD` |
 
 ## Tokenized Convert Status (USER_DATA)（代币化转换状态 (USER_DATA)）
 
@@ -562,6 +567,7 @@ Operation ID: `tokenizedConvertStatus`
 | status | string |  | Convert status: `P` = processing, `S` = success, `F` = failed.<br>转换状态：`P` = 处理中，`S` = 成功，`F` = 失败。<br>枚举: `P`, `S`, `F`<br>例: `S` |
 | createdAt | integer (int64) |  | Creation time (ms epoch).<br>创建时间（毫秒时间戳）。<br>例: `1735900000000` |
 | updatedAt | integer (int64) |  | Last update time (ms epoch).<br>最后更新时间（毫秒时间戳）。<br>例: `1735900060000` |
+| tokenizedAssetSettleWalletType | string |  | The wallet the tokenized asset is settled in: `MAIN` = Spot wallet, `CARD` = Funding wallet.<br>代币化资产实际结算所用的钱包：`MAIN` = 现货钱包，`CARD` = 资金钱包。<br>例: `CARD` |
 
 ## Tokenized Convert History (USER_DATA)（代币化转换历史 (USER_DATA)）
 
@@ -601,6 +607,7 @@ Operation ID: `tokenizedConvertHistory`
 | rows[].status | string |  | Convert status: `P` = processing, `S` = success, `F` = failed.<br>转换状态：`P` = 处理中，`S` = 成功，`F` = 失败。<br>枚举: `P`, `S`, `F`<br>例: `S` |
 | rows[].createdAt | integer (int64) |  | Creation time (ms epoch).<br>创建时间（毫秒时间戳）。<br>例: `1735900000000` |
 | rows[].updatedAt | integer (int64) |  | Last update time (ms epoch).<br>最后更新时间（毫秒时间戳）。<br>例: `1735900060000` |
+| rows[].tokenizedAssetSettleWalletType | string |  | The wallet the tokenized asset is settled in: `MAIN` = Spot wallet, `CARD` = Funding wallet.<br>代币化资产实际结算所用的钱包：`MAIN` = 现货钱包，`CARD` = 资金钱包。<br>例: `CARD` |
 | hasMore | boolean |  | `true` when more pages exist — pass `nextLastId` as `lastId` on the next request.<br>还有更多页时为 `true`——将 `nextLastId` 作为下次请求的 `lastId`。<br>例: `True` |
 | nextLastId | integer (int64) |  | Pass this value as `lastId` on the next request to get the following page.<br>将此值作为下次请求的 `lastId` 以获取下一页。<br>例: `10020` |
 

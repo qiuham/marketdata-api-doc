@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-technical-service-provider-create-record
 api_type: Guide
-updated_at: 2026-11-23 18:34:18.015584
+updated_at: 2026-11-24 18:34:11.177970
 ---
 
 # Create Authorization Request

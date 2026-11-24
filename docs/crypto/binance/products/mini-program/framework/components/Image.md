@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/Image
 api_type: Guide
-updated_at: 2026-11-23 18:43:14.707863
+updated_at: 2026-11-24 18:43:01.563608
 ---
 
 # image

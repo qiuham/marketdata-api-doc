@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/advanced-earn/error-code
 api_type: Guide
-updated_at: 2026-11-23 18:35:45.020993
+updated_at: 2026-11-24 18:35:39.457399
 ---
 
 # Error Codes

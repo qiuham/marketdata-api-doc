@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-move_positions
 api_type: JSON-RPC
-updated_at: 2026-11-23 19:00:40.438855
+updated_at: 2026-11-24 18:59:55.160965
 ---
 
 # private/move_positions

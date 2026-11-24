@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/api-reference/unified-fix/mdir'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Market Data Incremental Refresh
@@ -73,15 +73,10 @@ Price of the market data entry.
 
 Volume represented by the market data entry.
 
-**273 - MDEntryTime** `string` *required*
+**273 - MDEntryTime** `string`
 
 The time the entry was inserted or amended or deleted.
-
-**5060 - MDEntryTimestamp** `string`
-
-High-precision event time for this market data update.
-**Level 3 only.** When present with 5273, 5060 is the time the update was generated; 5273 is the queue entry time.
-Sample format: `2026-02-03T10:24:34.650069468Z` (ISO 8601, nanosecond fractional seconds, UTC).
+**Level 2 only.** Level 3 entries carry 5273 instead and do not include 273.
 
 **5273 - MDEntryTimeQueue** `string`
 
@@ -117,6 +112,12 @@ Checksum to verify the orderbook update. See [Checksum article](https://docs.kra
 
 Condition: MDEntryType = Bid or Offer
 
+**5060 - MDEntryTimestamp** `string`
+
+High-precision event time for this message. Sent once per message, after 5041 and before the trailer, not on each entry.
+**Level 3 only.**
+Sample format: `2026-02-03T10:24:34.650069468Z` (ISO 8601, nanosecond fractional seconds, UTC).
+
 **trailer** *required*
 
 ```text Spot L2 Example theme={null}
@@ -128,5 +129,5 @@ Condition: MDEntryType = Bid or Offer
 ```
 
 ```text Futures L3 Example theme={null}
-8=FIX.4.4|9=198|35=X|34=7|49=KRAKEN-DRV-MD|52=20250304-15:25:09.913|56=MYCOMPID_DRV|55=PF_ETHUSD|262=1|268=1|279=2|269=1|278=00bf007e-0039-00dd-0071-00ae00d700c8|270=2044.8|271=2.874|273=15:25:09.844|5041=3889519115|10=012|
+8=FIX.4.4|9=255|35=X|34=7|49=KRAKEN-DRV-MD|52=20261112-17:59:55.625|56=MYCOMPID_DRV|55=PF_XBTUSD|262=1|268=1|279=2|269=1|278=a3359b9f-d288-49dd-8284-3a174f0763a1|270=71850|271=0.0696|5273=2026-11-12T17:59:55.584045155Z|5041=4208402451|5060=2026-11-12T17:59:55.584045155Z|10=166|
 ```

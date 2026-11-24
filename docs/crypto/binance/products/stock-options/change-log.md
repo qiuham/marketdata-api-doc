@@ -2,12 +2,12 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/stock-options/change-log
 api_type: Changelog
-updated_at: 2026-11-23 18:28:46.413622
+updated_at: 2026-11-24 18:28:51.806596
 ---
 
-# change log
+# Change Log
 
-the latest update: 2026-11-18
+The latest update: 2026-11-18
 
 ## 2026-11-18
 

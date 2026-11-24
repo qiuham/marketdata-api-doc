@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-profitshare-submit-split
 api_type: Guide
-updated_at: 2026-11-23 18:34:25.599850
+updated_at: 2026-11-24 18:34:19.182991
 ---
 
 # Submit Split

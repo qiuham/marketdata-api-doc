@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-get_reward_eligibility
 api_type: JSON-RPC
-updated_at: 2026-11-23 19:00:41.002435
+updated_at: 2026-11-24 18:59:56.265099
 ---
 
 # private/get_reward_eligibility

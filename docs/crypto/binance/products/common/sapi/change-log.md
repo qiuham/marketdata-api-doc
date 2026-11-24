@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/common/sapi/change-log
 api_type: Changelog
-updated_at: 2026-11-23 18:41:57.140466
+updated_at: 2026-11-24 18:41:40.649066
 ---
 
 # Change Log
@@ -536,7 +536,7 @@ USER DATA STREAM
     borrow limit is shown in USD value.
   - `GET /sapi/v1/loan/collateral/data`: Get LTV information and collateral limit of collateral
     assets. The collateral limit is shown in USD value.
-  - `GET /sapi/v1/loan/repay/collateral/rate`: Get the the rate of collateral coin / loan coin when
+  - `GET /sapi/v1/loan/repay/collateral/rate`: Get the rate of collateral coin / loan coin when
     using collateral repay, the rate will be valid within 8 second.
   - `POST /sapi/v1/loan/customize/margin_call`: Customize margin call for ongoing orders only.
 
@@ -876,7 +876,7 @@ WEBSOCKETS
 ## 2022-05-19
 
 - Update endpoint for Mining:
-  - `GET /sapi/v1/mining/pub/algoList` and `GET /sapi/v1/mining/pub/coinList`: Need no paramter.
+  - `GET /sapi/v1/mining/pub/algoList` and `GET /sapi/v1/mining/pub/coinList`: Need no parameter.
 - Add error codes (21xxx) for Portfolio Margin Account: -21001, -21002, -21003
 
 ---
@@ -2192,9 +2192,9 @@ WEB SOCKET STREAM
 
 ## 2019-11-28
 
-- New SAPI endpont to disable fast withdraw switch:  
+- New SAPI endpoint to disable fast withdraw switch:  
   `POST /sapi/v1/account/disableFastWithdrawSwitch (HMAC SHA256)`
-- New SAPI endpont to enable fast withdraw switch:  
+- New SAPI endpoint to enable fast withdraw switch:  
   `POST /sapi/v1/account/enableFastWithdrawSwitch (HMAC SHA256)`
 
 ---
@@ -3150,7 +3150,7 @@ USER DATA STREAM
     borrow limit is shown in USD value.
   - `GET /sapi/v1/loan/collateral/data`: Get LTV information and collateral limit of collateral
     assets. The collateral limit is shown in USD value.
-  - `GET /sapi/v1/loan/repay/collateral/rate`: Get the the rate of collateral coin / loan coin when
+  - `GET /sapi/v1/loan/repay/collateral/rate`: Get the rate of collateral coin / loan coin when
     using collateral repay, the rate will be valid within 8 second.
   - `POST /sapi/v1/loan/customize/margin_call`: Customize margin call for ongoing orders only.
 
@@ -3490,7 +3490,7 @@ WEBSOCKETS
 ## 2022-05-19
 
 - Update endpoint for Mining:
-  - `GET /sapi/v1/mining/pub/algoList` and `GET /sapi/v1/mining/pub/coinList`: Need no paramter.
+  - `GET /sapi/v1/mining/pub/algoList` and `GET /sapi/v1/mining/pub/coinList`: Need no parameter.
 - Add error codes (21xxx) for Portfolio Margin Account: -21001, -21002, -21003
 
 ---
@@ -4806,9 +4806,9 @@ WEB SOCKET STREAM
 
 ## 2019-11-28
 
-- New SAPI endpont to disable fast withdraw switch:  
+- New SAPI endpoint to disable fast withdraw switch:  
   `POST /sapi/v1/account/disableFastWithdrawSwitch (HMAC SHA256)`
-- New SAPI endpont to enable fast withdraw switch:  
+- New SAPI endpoint to enable fast withdraw switch:  
   `POST /sapi/v1/account/enableFastWithdrawSwitch (HMAC SHA256)`
 
 ---

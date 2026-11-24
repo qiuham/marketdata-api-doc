@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-position-tiers
 anchor_id: public-data-rest-api-get-position-tiers
 api_type: REST
-updated_at: 2026-11-23 18:59:17.689837
+updated_at: 2026-11-24 18:58:34.280000
 ---
 
 # Get position tiers

@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/errors'
-updated_at: 2026-11-23
+updated_at: 2026-11-24
 ---
 
 # Errors
@@ -130,6 +130,24 @@ on. A cap can stop an order after a partial fill.
 | `strict_isolated_cross_exposure` | The market requires isolated margin and refuses cross exposure. |
 | `strict_isolated_margin_removal` | The market's strict isolated mode refuses this margin removal. |
 | `instrument_post_only` | The market currently accepts post-only orders only. |
+
+## Stale Mark Price Errors
+
+| Error | Condition |
+| - | - |
+| `mark_price_stale` | The market's mark price has not updated for over 60 seconds and the order would grow the position. Retry once prices resume. Reduce-only orders are still accepted. |
+
+## Self-Exclusion Errors
+
+An account owner can pause their own trading. While self-exclusion is active,
+reduce-only orders, TP/SL triggers, cancels, and withdrawals keep working.
+
+| Error | Condition |
+| - | - |
+| `account_self_excluded` | Self-exclusion is active and the order would increase exposure, or a new proxy was requested. |
+
+When self-exclusion starts, the account's opening orders are canceled with the
+order status `self_excluded`.
 
 ## Order Placement Errors
 

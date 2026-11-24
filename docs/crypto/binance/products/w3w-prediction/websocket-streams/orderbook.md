@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/w3w-prediction/websocket-streams/orderbook
 api_type: WebSocket
-updated_at: 2026-11-23 18:35:51.417335
+updated_at: 2026-11-24 18:35:50.349065
 ---
 
 # Prediction Market — Orderbook WebSocket Streams (Overview)
