@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-ws/websockets/public-trades'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Public Trades

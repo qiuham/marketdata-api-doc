@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/webhook-query-certificate-new
 api_type: Guide
-updated_at: 2026-11-24 18:33:36.906414
+updated_at: 2026-11-25 18:33:26.423903
 ---
 
 # Webhook query new certificate

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/fiat/error-code
 api_type: Guide
-updated_at: 2026-11-24 18:31:26.684933
+updated_at: 2026-11-25 18:31:12.691351
 ---
 
 # Error Codes

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/margin-coin-info
 api_type: REST
-updated_at: 2026-11-24 18:49:35.374738
+updated_at: 2026-11-25 18:49:54.083661
 ---
 
 # Get Margin Coin Info

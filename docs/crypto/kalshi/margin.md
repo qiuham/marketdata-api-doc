@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Perps API
@@ -153,6 +153,7 @@ A rejected create, amend, decrease or cancel returns the standard error body. Th
 | `409` | `trading_is_paused` / `exchange_is_paused` | Trading or the exchange is paused. |
 | `409` | `market_version_mismatch` | The `market_version` you sent is no longer current. |
 | `409` | `stock_perps_application_required` | An approved stocks application is required to open or increase an equities position. |
+| `409` | `stock_perps_confirmation_required` | The stock was listed after you submitted your stocks application. Confirm your disclosures in the Kalshi app before trading it. Reduce-only orders are not affected. |
 | `409` | `TRADING_BLOCKED` | The account is blocked from trading, or is limited to reducing positions and sent an order that could rest. Use immediate-or-cancel orders to reduce. |
 | `409` | `order_already_exists` | The `client_order_id` has already been used. |
 

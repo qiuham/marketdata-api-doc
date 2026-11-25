@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://ws-live-v2.polymarket.com/asyncapi.json'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # asyncapi.json

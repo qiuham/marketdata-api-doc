@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/portfolio-management/get-starbase-risk-limits
 api_type: JSON-RPC
-updated_at: 2026-11-24 18:59:46.515035
+updated_at: 2026-11-25 19:00:46.563062
 ---
 
 # Get Starbase Risk Limits

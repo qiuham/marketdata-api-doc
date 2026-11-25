@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/devtools/sourcemap
 api_type: Guide
-updated_at: 2026-11-24 18:38:00.232085
+updated_at: 2026-11-25 18:37:58.581633
 ---
 
 # Source Map

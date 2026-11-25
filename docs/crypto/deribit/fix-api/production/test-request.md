@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/test-request
 api_type: FIX
-updated_at: 2026-11-24 18:59:44.072199
+updated_at: 2026-11-25 19:00:45.462289
 ---
 
 # Test Request(1) (Production FIX API)

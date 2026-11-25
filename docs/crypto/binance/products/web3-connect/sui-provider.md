@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/web3-connect/sui-provider
 api_type: Guide
-updated_at: 2026-11-24 18:27:48.306557
+updated_at: 2026-11-25 18:27:35.624596
 ---
 
 # Sui Provider

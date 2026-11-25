@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/learn-about-trading/markets/compute'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Compute Perps: Asset Specifications

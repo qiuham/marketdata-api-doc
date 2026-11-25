@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api
 api_type: REST
-updated_at: 2026-11-24 18:49:12.351278
+updated_at: 2026-11-25 18:49:25.963074
 ---
 
 # Wallet REST API

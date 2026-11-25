@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/announcements/cms-log
 api_type: Guide
-updated_at: 2026-11-24 18:35:15.355209
+updated_at: 2026-11-25 18:35:04.678754
 ---
 
 # Changelog

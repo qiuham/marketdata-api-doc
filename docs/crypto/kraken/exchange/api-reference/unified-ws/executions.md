@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/api-reference/unified-ws/executions'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Executions
@@ -315,7 +315,7 @@ Describes the type of order event and determines the set of fields in the messag
 * `expired`: The order has expired.
 * `amended`: There is a user initiated amend on the order, i.e. limit price change.
 * `restated`: There is a engine initiated amend on the order for maintenance of position or book, see `reason` field, i.e. reduce non-tradable liquidity.
-* `status`: The order has a status update, i.e. trigger price has been updated.
+* `status`: The order has a status update, i.e. trigger price has been updated. For derivatives, also sent when [Maker Protection](https://docs.kraken.com/exchange/guides/futures/maker-protection.md) holds an order or amend; see `held_for_ms`.
 
 **expire\_time** `string`
 
@@ -363,6 +363,12 @@ The preferred currency for paying fees.
 **fee\_usd\_equiv** `float`
 
 The total fee paid in USD.
+
+**held\_for\_ms** `integer`
+
+Condition: Derivatives only, on orders held by [Maker Protection](https://docs.kraken.com/exchange/guides/futures/maker-protection.md)
+
+How long, in milliseconds, the order is held before it is matched. Sent on an `exec_type: status` update when the hold starts. That update carries only `order_id`, `symbol`, `held_for_ms` and `timestamp`. A snapshot row can also carry this field for an order that is held. Post-only orders are never held.
 
 **limit\_price** `float`
 

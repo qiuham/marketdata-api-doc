@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/settings/getSetting
 api_type: Guide
-updated_at: 2026-11-24 18:44:17.663103
+updated_at: 2026-11-25 18:44:20.244869
 ---
 
 # bn.getSetting

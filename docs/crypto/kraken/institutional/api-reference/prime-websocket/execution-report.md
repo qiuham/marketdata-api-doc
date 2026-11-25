@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/institutional/api-reference/prime-websocket/execution-report'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Execution Report
@@ -221,6 +221,10 @@ Request stream of Execution Reports. All order responses and updates are sent as
 > **CustomerUser** `string`
 >
 > The customer user associated with this execution report.
+>
+> **ExternalComments** `string`
+>
+> Free-text comment the trading desk set when it placed the order. Only present on orders the desk places. Up to 1000 characters. Omitted when no comment was set.
 
 > [tab] Example
 >

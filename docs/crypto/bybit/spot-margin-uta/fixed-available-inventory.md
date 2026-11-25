@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/fixed-available-inventory
 api_type: REST
-updated_at: 2026-11-24 18:51:57.695317
+updated_at: 2026-11-25 18:52:28.494748
 ---
 
 # Get Fixed-Rate Available Inventory

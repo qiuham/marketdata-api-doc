@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin/corporate-actions'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Corporate Actions
@@ -71,7 +71,11 @@ The Simple Description column describes each action in general terms, as it appl
 
 [`GET /margin/corporate_actions`](https://docs.kalshi.com/margin-rest/corporate-actions/get-margin-corporate-actions) returns scheduled notices and notices updated in the last seven days.
 
-[`GET /margin/corporate_action_payment_history`](https://docs.kalshi.com/margin-rest/corporate-actions/get-corporate-action-payment-history) returns the cash a dividend or spin-off paid to or collected from your account, with the position each payment was computed on.
+[`GET /margin/corporate_action_payment_history`](https://docs.kalshi.com/margin-rest/corporate-actions/get-corporate-action-payment-history) returns the gross payment, the amount withheld, and the position used to compute each dividend or spin-off payment. Subtract `withholding_amount` from `payment_amount` to get the net cash amount.
+
+## Dividend withholding for Kalshi Prime
+
+Kalshi Prime withholds 30% of positive regular and special dividend payments to international direct customers. For a $100 regular dividend, your statement shows a $100 **Regular Dividend** credit and a $30 **Tax Withholding** debit. You receive $70 net. For a special dividend, the credit is labeled **Special Dividend**.
 
 
 This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

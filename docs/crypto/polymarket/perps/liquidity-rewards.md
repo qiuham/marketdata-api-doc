@@ -10,19 +10,12 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/liquidity-rewards'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Liquidity Rewards
 
 > Earn pUSD rewards by providing deep, two-sided liquidity on Perps
-
-> [!NOTE]
->
-> **Upcoming changes — November 25, 2026.** Polymarket Perps trading fees,
-> liquidation fees, and liquidity rewards will change. The current rules below
-> apply until the changes go live. [See all fee and liquidity reward
-> changes](https://docs.polymarket.com/perps/fee-and-liquidity-reward-changes-november-2026.md).
 
 Every Perps account is automatically considered for daily liquidity rewards.
 There is no application or participant allowlist: the same eligibility threshold
@@ -34,122 +27,155 @@ pUSD.
 
 ## How Rewards Are Allocated
 
-The program distributes **\$75,000 per day**, split evenly across active Perps
-markets. Each market has one daily pool. Makers with a nonzero score divide that
-market's entire pool in proportion to their scores. Each newly listed market
-also gets a **\$1,000** bonus on its first day.
+The program uses fixed daily pools across 69 markets. Each firm receives one
+score per market, combining its declared and linked accounts. An account that
+is not grouped with others is scored independently.
 
-A maker's score combines three inputs:
+| Market Group | Markets | Daily Pool per Market |
+| - | -: | -: |
+| Core markets | 23 | \$325 |
+| Additional markets | 45 | \$100 |
+| ANT | 1 | \$3,000 |
+| Asset Tier 1 and Tier 4 markets | 21 | No pool |
 
-```text theme={null}
-raw_score = maker_score^0.35 × active_liquidity_score^0.65 × uptime
-```
+ANT's \$3,000 daily pool runs through **November 30, 2026**. Tier 4 markets
+remain listed and may be included in separate campaigns.
 
-| Input | What it rewards |
-| - | - |
-| Maker score | Meaningful maker participation over the trailing seven days |
-| Active liquidity score | Deep, balanced liquidity close to the midpoint while quoting |
-| Uptime | Consistent two-sided quoting throughout the reward period |
+The asset tiers below classify markets for liquidity rewards. They are
+separate from the trading-volume tiers used to determine fees.
 
-The final reward for an account is its share of all positive raw scores in that
-market multiplied by the market's daily pool.
+> [accordion] Markets by Pool, Asset Tier, and Cap Class
+>
+> The cap class identifies the per-side book caps used in scoring. RWA means
+> real-world assets. Both distance-band caps for each class are listed under
+> [Book-Level Size Caps](#liquidity-score).
+>
+> | Daily Pool | Asset Tier | Cap Class | Markets |
+> | - | - | - | - |
+> | \$325 | 3 | Tier 3 crypto | 1000PEPE, 1000SHIB, AAVE, ADA, ARB, DOGE, ENA, FARTCOIN, JUP, LDO, LIT, LTC, ONDO, TAO, UNI, VVV, XMR, ZRO |
+> | \$325 | 3 | Tier 3 RWA | BABA, CBRS, CRWV, MRVL, SOXL |
+> | \$100 | 2 | Tier 2 crypto | BNB, HYPE, SOL, XRP |
+> | \$100 | 2 | Tier 2 RWA | AAPL, AMD, AMZN, AVGO, BRENTOIL, CL, CRCL, DRAM, GOOGL, HOOD, INTC, LITE, META, MSFT, MSTR, MU, NBIS, NVDA, ORCL, PLTR, RKLB, SKHX, SKHY, SNDK, SPCX, TSLA, TSM |
+> | \$100 | 3 | Tier 3 crypto | AVAX, LINK, NEAR, PUMP, SUI, WLD, XPL, ZEC |
+> | \$100 | 3 | Tier 3 RWA | ARM, ASML, COIN, EWY, QCOM, SMSN |
+> | \$3,000 | ANT | ANT | ANT |
+> | No pool | 1 | Not applicable | BTC, ETH, GOLD, NAS100, SILVER, SP500 |
+> | No pool | 4 | Not applicable | CASHCAT, CXMT, DELL, ETHFI, KAITO, MORPHO, NCLD, PENDLE, PONS, PRL, STRC, UNITREE, USELESS, VIRTUAL, ZM |
 
-## Eligibility And Maker Score
+A firm's reward is its share of the market's total daily score multiplied by
+the market's daily pool. Open-interest rewards are not part of this program.
 
-An account must represent at least **1% of trailing seven-day maker volume** to
-qualify. For accounts in a rewards entity, the entity's combined maker share is
-used. During the first seven days of the program, the lookback begins at the
-program start rather than reaching into earlier trading.
+## Eligibility And Maker Share
 
-Maker share is capped at 25% before it is converted into the maker score:
+To qualify for rewards in a market, a firm's combined maker volume across all
+markets in that asset tier must represent at least **1% of the tier's total
+maker volume over the trailing seven days**. ANT has a separate calculation
+using ANT volume only. Maker share determines eligibility; it does not multiply
+the reward score.
 
-```text theme={null}
-maker_score = log(1 + min(maker_share, 25%) / 1%) / log(1 + 25% / 1%)
-```
+Fills against the firm's own accounts, sub-accounts, linked accounts, and
+mirrored pairs do not count toward maker share.
 
-This gives additional credit for maker participation above the 1% threshold
-without allowing historical volume to dominate the full calculation. Maker
-share above 25% receives no additional maker-score credit.
-
-Trades between the same account, or between accounts in the same known rewards
-entity, do not count toward maker share.
+Give your Polymarket representative a complete list of the accounts and
+sub-accounts your firm uses to quote. Polymarket combines accounts it identifies
+as linked and scores them as one firm.
 
 ## Liquidity Score
 
-The order book is sampled repeatedly throughout each reward period. Only
-resting liquidity within 20 basis points of the midpoint can score.
+The order book is sampled repeatedly throughout each reward period. Each
+sample is a snapshot. Resting liquidity within 50 basis points of the reference
+midpoint can score.
 
 ### Distance Tiers
 
-| Distance From Midpoint | Weight |
-| - | -: |
-| Within 5 bps | 1.00 |
-| More than 5 bps and within 10 bps | 0.25 |
-| More than 10 bps and within 20 bps | 0.10 |
-| Beyond 20 bps | 0 |
+| Distance From Midpoint | Asset Tier 2 Weight | Asset Tier 3 and ANT Weight |
+| - | -: | -: |
+| Within 5 bps | 1.00 | 1.00 |
+| More than 5 bps and within 10 bps | 0.50 | 0.60 |
+| More than 10 bps and within 20 bps | 0.25 | 0.40 |
+| More than 20 bps and within 50 bps | 0.10 | 0.20 |
+| Beyond 50 bps | 0 | 0 |
 
-The midpoint is the average of the best bid and best ask. Each tier boundary is
-rounded outward to the next valid price tick, so an order is always evaluated
-at a valid price for its market.
+The reference midpoint is the average of the highest bid and lowest ask price
+levels that each contain at least \$1,000 in aggregate resting order notional.
+The \$1,000 minimum applies to each price level separately, rather than
+cumulative depth across levels. Quoted notional is order price multiplied by
+quantity.
 
-For each account, side, market, and snapshot, resting notional in the same tier
-is added together. Scored notional is capped at **\$100,000 per tier** before the
-tier weight is applied.
-
-The same \$100,000 cap applies to every market and independently to each side
-and each of the three distance tiers. It is not one shared cap across an
-account's entire order book.
-
-```text theme={null}
-tier_score = min(resting_notional_in_tier, $100,000) × tier_weight
-```
+> [accordion] Book-Level Size Caps
+>
+> Each market has a cap shared across eligible firms. The cap applies
+> separately to each side and to two distance groups: within 10 bps, and more
+> than 10 bps through 50 bps. The market list above identifies each market's
+> cap class.
+>
+> | Cap Class | Within 10 bps per Side | More Than 10 bps Through 50 bps per Side |
+> | - | -: | -: |
+> | Tier 2 crypto | \$130,000 | \$120,000 |
+> | Tier 2 RWA | \$200,000 | \$200,000 |
+> | Tier 3 crypto | \$25,000 | \$45,000 |
+> | Tier 3 RWA | \$15,000 | \$55,000 |
+> | ANT | \$30,000 | \$110,000 |
+>
+> If eligible firms' combined size exceeds a cap, their credited size in that
+> side and distance group is reduced proportionally before the scoring weights
+> are applied. Their quoted notional counts toward the cap even in snapshots
+> where they fail the minimum two-sided size requirement.
 
 ### Two-Sided Liquidity
 
-Bid and ask tier scores are added separately, then combined with a harmonic
-mean:
+A snapshot scores only when the firm meets the minimum quoted notional on both
+sides. The minimum is measured before the book-level caps are applied.
+
+| Requirement | Asset Tier 2 | Asset Tier 3 | ANT |
+| - | - | - | - |
+| Minimum quoted notional per side | \$5,000 within 10 bps | \$1,000 within 10 bps | \$1,000 within 50 bps |
+| Minimum uptime | 70% of snapshots | 50% of snapshots | 50% of snapshots |
+
+ANT uses Asset Tier 3 scoring weights, with its minimum-size requirement
+measured within 50 bps instead of 10 bps.
+
+Weighted bid and ask sizes are added separately, then combined using the
+smaller side:
 
 ```text theme={null}
-snapshot_score = 2 × bid_score × ask_score / (bid_score + ask_score)
+snapshot_score = 2 × min(weighted_bid, weighted_ask)
 ```
 
-A snapshot scores only when both sides have nonzero liquidity within 20 bps.
-The harmonic mean penalizes an imbalanced book and produces a score of zero when
-either side is absent.
+A snapshot scores zero if the minimum two-sided quoted notional is not met.
 
 ## Uptime
 
-Uptime is the share of completed snapshots in which the account had qualifying
-liquidity on both sides:
+Uptime is the share of completed snapshots in which the firm meets the minimum
+quoted notional on both sides:
 
 ```text theme={null}
 uptime = qualifying_snapshots / completed_snapshots
 ```
 
-The active liquidity score is the account's average snapshot score across its
-qualifying snapshots. Keeping liquidity quality and uptime separate means deep
-quotes receive credit when they are live, while intermittent quoting is still
-penalized.
+It uses a trailing seven-day lookback, starting no earlier than the new
+program's launch or the market's listing. Firms must meet the minimum uptime
+for their market shown above.
+
+A firm's daily score is the average of all its snapshot scores during the
+reward period. Snapshots with no quotes count as zero.
 
 ## Summary Of Program Parameters
 
 | Parameter | Value |
 | - | - |
-| Daily program budget | \$75,000 |
-| New listing bonus | \$1,000 per market, first day |
+| Daily pools | Fixed pools across 69 markets |
 | Reward period | 12:00 UTC to 12:00 UTC |
 | Reward payouts | Weekly, in pUSD |
 | Maker-share lookback | 7 days |
-| Eligibility threshold | 1% maker share |
-| Maker-score cap | 25% maker share |
-| Maker-score exponent | 0.35 |
-| Liquidity-score exponent | 0.65 |
-| Uptime exponent | 1.0 |
-| Scoring bands | 5, 10, and 20 bps |
-| Band weights | 1.00, 0.25, and 0.10 |
-| Credited notional cap | \$100,000 per tier |
-| Reference price | Midpoint |
-| Side combination | Harmonic mean |
+| Eligibility threshold | 1% maker share within the asset tier; ANT measured separately |
+| Minimum uptime | 70% for Asset Tier 2; 50% for Asset Tier 3 and ANT |
+| Uptime lookback | 7 days, starting no earlier than program launch or market listing |
+| Scoring bands | 5, 10, 20, and 50 bps |
+| Band weights | Vary by asset tier; see Distance Tiers |
+| Credited notional cap | Shared per market, side, and distance group; varies by cap class |
+| Reference price | Midpoint of bid and ask price levels with at least \$1,000 each |
+| Side combination | Twice the smaller weighted bid or ask size |
 
 > [!NOTE]
 >

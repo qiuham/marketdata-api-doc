@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/json-rpc-overview
 api_type: Guide
-updated_at: 2026-11-24 18:59:47.278140
+updated_at: 2026-11-25 19:00:46.949966
 ---
 
 # JSON-RPC 2.0 Protocol

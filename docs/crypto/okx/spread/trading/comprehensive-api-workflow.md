@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-comprehensive-api-workflow
 anchor_id: spread-trading-comprehensive-api-workflow
 api_type: API
-updated_at: 2026-11-24 18:58:33.284348
+updated_at: 2026-11-25 18:59:36.679101
 ---
 
 # Comprehensive API Workflow

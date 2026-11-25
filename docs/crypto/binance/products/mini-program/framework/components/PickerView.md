@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/PickerView
 api_type: Guide
-updated_at: 2026-11-24 18:42:49.170310
+updated_at: 2026-11-25 18:42:51.766361
 ---
 
 # picker-view

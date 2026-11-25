@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bybit-card/point/item-list
 api_type: REST
-updated_at: 2026-11-24 18:50:25.996780
+updated_at: 2026-11-25 18:50:50.569796
 ---
 
 # Query Mall Item List

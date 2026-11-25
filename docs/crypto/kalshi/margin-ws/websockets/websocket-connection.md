@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-ws/websockets/websocket-connection'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # WebSocket Connection
@@ -101,6 +101,7 @@ operations:
                           - order_group_updates
                           - corporate_actions
                           - market_lifecycle_v2
+                          - exchange_status
                         required: false
                   - name: market_ticker
                     type: string
@@ -205,6 +206,7 @@ operations:
                       - order_group_updates
                       - corporate_actions
                       - market_lifecycle_v2
+                      - exchange_status
                     x-parser-schema-id: <anonymous-schema-4>
                   x-parser-schema-id: <anonymous-schema-3>
                 market_ticker:

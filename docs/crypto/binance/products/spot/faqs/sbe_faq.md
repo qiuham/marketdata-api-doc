@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/sbe_faq
 api_type: SBE
-updated_at: 2026-11-24 18:36:20.026578
+updated_at: 2026-11-25 18:36:15.594642
 ---
 
 # Simple Binary Encoding (SBE) FAQ

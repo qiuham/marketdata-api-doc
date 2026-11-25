@@ -10,14 +10,14 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/getting_started/fixed_point_migration'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Fixed-Point Representation
 
 > Fixed-point prices, contract quantities, and margin monetary amounts.
 
-Last Updated: November 5, 2026
+Last Updated: November 25, 2026
 
 ## Overview
 
@@ -112,7 +112,7 @@ Kalshi is building support for fractional trading with up to 2 decimal places on
 
 **Timeline**
 
-* Single Stock Perpetuals: **November 27, 2026**.
+* Fractional trading starts for all Single Stock Perpetuals (SSPs) on **November 27, 2026 at 10:00 a.m. Eastern Time**.
 * Remaining markets: **December 17, 2026**.
 
 Fractional quantities can produce dollar amounts that require more than 4 decimal places. For example, 0.01 contracts at \$0.1234 per contract produces \$0.001234 before fees. Affected balances and cash-flow amounts will support up to 6 decimal places in USD. Preserve this precision in calculations and reconciliation.

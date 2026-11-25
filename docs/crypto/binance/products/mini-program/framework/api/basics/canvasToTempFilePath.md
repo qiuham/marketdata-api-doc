@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/canvasToTempFilePath
 api_type: Guide
-updated_at: 2026-11-24 18:48:41.366009
+updated_at: 2026-11-25 18:48:48.464581
 ---
 
 # bn.canvasToTempFilePath

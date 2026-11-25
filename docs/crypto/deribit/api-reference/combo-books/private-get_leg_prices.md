@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/combo-books/private-get_leg_prices
 api_type: JSON-RPC
-updated_at: 2026-11-24 18:59:51.057027
+updated_at: 2026-11-25 19:00:48.436382
 ---
 
 # private/get_leg_prices

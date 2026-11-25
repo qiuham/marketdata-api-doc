@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mining/quick-start
 api_type: Guide
-updated_at: 2026-11-24 18:30:10.412740
+updated_at: 2026-11-25 18:29:58.299217
 ---
 
 # Quick Start

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/private/Strategy-Order-Channel
 api_type: WebSocket
-updated_at: 2026-11-24 19:01:30.542173
+updated_at: 2026-11-25 19:02:12.043195
 ---
 
 # Strategy Order Channel

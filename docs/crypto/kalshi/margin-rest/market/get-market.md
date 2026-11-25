@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-rest/market/get-market'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Get Market
@@ -335,7 +335,7 @@ components:
       enum:
         - inactive
         - active
-        - closed
+        - finalized
       description: The status of a margin market
     FixedPointCount:
       type: string

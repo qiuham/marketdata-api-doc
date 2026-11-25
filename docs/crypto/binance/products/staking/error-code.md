@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/staking/error-code
 api_type: Guide
-updated_at: 2026-11-24 18:29:03.875264
+updated_at: 2026-11-25 18:28:53.865110
 ---
 
 # Error Codes

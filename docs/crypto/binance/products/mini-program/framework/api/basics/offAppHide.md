@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/offAppHide
 api_type: Guide
-updated_at: 2026-11-24 18:48:12.749895
+updated_at: 2026-11-25 18:48:19.505882
 ---
 
 # bn.offAppHide

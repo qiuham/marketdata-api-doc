@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/markets/get-live-volume-for-an-event'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # 获取事件实时成交量

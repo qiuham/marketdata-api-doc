@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/getting_started/maintenance_and_pauses'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Maintenance and Pauses

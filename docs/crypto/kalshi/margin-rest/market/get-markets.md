@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-rest/market/get-markets'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Get Markets
@@ -73,7 +73,7 @@ paths:
           schema:
             $ref: '#/components/schemas/MarginMarketStatus'
           x-go-type-skip-optional-pointer: true
-          description: Filter by market status (e.g. active, inactive, closed)
+          description: Filter by market status (e.g. active, inactive, finalized)
       responses:
         '200':
           description: Markets retrieved successfully
@@ -94,7 +94,7 @@ components:
       enum:
         - inactive
         - active
-        - closed
+        - finalized
       description: The status of a margin market
     GetMarginMarketsResponse:
       type: object

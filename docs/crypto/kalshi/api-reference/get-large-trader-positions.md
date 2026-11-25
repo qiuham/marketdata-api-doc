@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/get-large-trader-positions'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Get Large Trader Positions

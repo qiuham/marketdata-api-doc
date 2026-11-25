@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/connectors/dotnet
 api_type: Guide
-updated_at: 2026-11-24 18:27:35.323265
+updated_at: 2026-11-25 18:27:22.158588
 ---
 
 # .NET

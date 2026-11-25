@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/private/Batch-Modify-Order-Channel
 api_type: WebSocket
-updated_at: 2026-11-24 19:01:23.336357
+updated_at: 2026-11-25 19:02:07.357495
 ---
 
 # Batch Modify Order Channel

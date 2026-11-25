@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/webhook-tech-service-provider
 api_type: Guide
-updated_at: 2026-11-24 18:33:31.276120
+updated_at: 2026-11-25 18:33:20.313210
 ---
 
 # Tech Service Provider Notification

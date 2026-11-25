@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/Lottie
 api_type: Guide
-updated_at: 2026-11-24 18:42:57.141784
+updated_at: 2026-11-25 18:42:59.574924
 ---
 
 # lottie

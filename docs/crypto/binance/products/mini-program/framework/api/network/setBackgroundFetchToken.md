@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/network/setBackgroundFetchToken
 api_type: Guide
-updated_at: 2026-11-24 18:45:10.918149
+updated_at: 2026-11-25 18:45:15.195663
 ---
 
 # bn.setBackgroundFetchToken

@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/market-data/get-asset-info'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Get Asset Info

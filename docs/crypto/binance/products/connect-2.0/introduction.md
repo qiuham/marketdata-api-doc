@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/connect-2.0/introduction
 api_type: Guide
-updated_at: 2026-11-24 18:33:01.516930
+updated_at: 2026-11-25 18:32:50.751884
 ---
 
 # Hosted Ramp & Onchain Payment APIs

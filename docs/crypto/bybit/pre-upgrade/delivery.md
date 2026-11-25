@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/pre-upgrade/delivery
 api_type: REST
-updated_at: 2026-11-24 18:51:41.711203
+updated_at: 2026-11-25 18:52:10.682613
 ---
 
 # Get Pre-upgrade Delivery Record

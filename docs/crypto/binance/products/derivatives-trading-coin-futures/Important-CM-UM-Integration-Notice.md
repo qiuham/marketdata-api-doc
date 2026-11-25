@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/Important-CM-UM-Integration-Notice
 api_type: Guide
-updated_at: 2026-11-24 18:32:27.556626
+updated_at: 2026-11-25 18:32:16.681520
 ---
 
 # Important Notice — COIN-M / USDⓈ-M Architecture Integration

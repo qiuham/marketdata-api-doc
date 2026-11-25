@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/oms/Fast-API/base-urls
 api_type: Guide
-updated_at: 2026-11-24 18:37:18.094236
+updated_at: 2026-11-25 18:37:15.078238
 ---
 
 # Environments and API base URLs

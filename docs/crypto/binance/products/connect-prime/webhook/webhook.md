@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/connect-prime/webhook/webhook
 api_type: Guide
-updated_at: 2026-11-24 18:39:51.554170
+updated_at: 2026-11-25 18:39:50.611110
 ---
 
 # Webhook

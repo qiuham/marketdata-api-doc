@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/management/management
 api_type: Guide
-updated_at: 2026-11-24 18:37:48.611167
+updated_at: 2026-11-25 18:37:46.237971
 ---
 
 # Management Portal

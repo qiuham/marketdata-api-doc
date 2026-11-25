@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/margin-trading/best-practice
 api_type: Guide
-updated_at: 2026-11-24 18:30:43.367770
+updated_at: 2026-11-25 18:30:31.454535
 ---
 
 # Best Practice

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/Label
 api_type: Guide
-updated_at: 2026-11-24 18:42:58.662294
+updated_at: 2026-11-25 18:43:01.053355
 ---
 
 # label

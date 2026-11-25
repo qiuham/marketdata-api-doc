@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/investment-and-services-c2-c/api/rest-api
 api_type: REST
-updated_at: 2026-11-24 18:49:22.328720
+updated_at: 2026-11-25 18:49:39.452990
 ---
 
 # C2C REST API

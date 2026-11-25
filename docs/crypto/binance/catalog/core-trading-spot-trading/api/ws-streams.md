@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams
 api_type: WebSocket Streams
-updated_at: 2026-11-24 18:49:04.736686
+updated_at: 2026-11-25 18:49:13.038658
 ---
 
 # Spot WebSocket Market Streams

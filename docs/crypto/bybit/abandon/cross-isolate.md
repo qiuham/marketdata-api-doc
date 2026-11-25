@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/cross-isolate
 api_type: REST
-updated_at: 2026-11-24 18:49:33.888452
+updated_at: 2026-11-25 18:49:52.266789
 ---
 
 # Switch Cross/Isolated Margin

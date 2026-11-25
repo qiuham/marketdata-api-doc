@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/faq'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # FAQ
@@ -192,7 +192,7 @@ Common questions about Polymarket Perps.
 
 > [accordion] Are there extra fees on liquidation fills?
 >
-> Yes. While flagged, every fill pays an additional liquidation fee rate on top of the maker or taker rate.
+> Yes. While flagged, every fill pays an additional 1.00% of liquidated notional on top of the maker or taker rate. 100% of liquidation fees go to the Perps insurance fund.
 >
 > ```text theme={null}
 > FillFee = Notional * (MakerOrTakerRate + LiquidationFeeRate)
@@ -208,15 +208,15 @@ Common questions about Polymarket Perps.
 >
 > | 30-Day Volume ≥ | Taker | Maker |
 > | - | - | - |
-> | \$0 | 0.0400% | 0.0125% |
-> | \$1M | 0.0370% | 0.0100% |
-> | \$5M | 0.0350% | 0.0080% |
+> | \$0 | 0.0500% | 0.0200% |
+> | \$1M | 0.0400% | 0.0200% |
+> | \$5M | 0.0350% | 0.0100% |
 > | \$25M | 0.0300% | 0.0050% |
 > | \$100M | 0.0270% | 0.0020% |
-> | \$500M | 0.0250% | 0.0000% |
-> | \$1B | 0.0200% | -0.0050% |
+> | \$500M | 0.0250% | -0.0050% |
+> | \$1B | 0.0200% | -0.0100% |
 >
-> Fees are calculated per fill as `abs(Price * Quantity) * Rate`, denominated in the instrument's quote asset (pUSD). Only the top tier earns a maker rebate; lower tiers pay a positive maker fee. See [Fees](https://docs.polymarket.com/perps/learn-about-trading/fees.md) and [Trading Fees](https://docs.polymarket.com/perps/trading.md#trading-fees).
+> Fees are calculated per fill as `abs(Price * Quantity) * Rate`, denominated in the instrument's quote asset (pUSD). The two highest tiers earn maker rebates; lower tiers pay a positive maker fee. See [Fees](https://docs.polymarket.com/perps/learn-about-trading/fees.md) and [Trading Fees](https://docs.polymarket.com/perps/trading.md#trading-fees).
 
 ## API and Integration
 

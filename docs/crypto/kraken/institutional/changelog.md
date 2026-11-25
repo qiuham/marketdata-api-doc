@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/institutional/changelog'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Release notes
@@ -18,6 +18,10 @@ updated_at: 2026-11-24
 > A history of changes to Kraken's Institutional APIs
 
 ## 2026
+
+### 25 November 2026 — Prime WebSocket
+
+* Added `ExternalComments` to `ExecutionReport`. It carries the comment the trading desk set when it placed the order. Only present on orders the desk places
 
 ### 4 November 2026 — Prime REST permissions
 

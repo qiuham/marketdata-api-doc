@@ -10,19 +10,12 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/learn-about-trading/liquidation-mechanics'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Liquidation Mechanics
 
 > Detection, execution, insurance-fund backstop, and auto-deleveraging
-
-> [!NOTE]
->
-> **Upcoming changes — November 25, 2026.** Polymarket Perps trading fees,
-> liquidation fees, and liquidity rewards will change. The current rules below
-> apply until the changes go live. [See all fee and liquidity reward
-> changes](https://docs.polymarket.com/perps/fee-and-liquidity-reward-changes-november-2026.md).
 
 When a trader's equity drops below maintenance margin, the system closes the
 position before it becomes insolvent. Normal liquidations route through the order
@@ -172,15 +165,16 @@ quote balance.
 
 ## Fees
 
-The liquidating account pays an extra liquidation fee on every fill while flagged,
-on top of its normal maker or taker rate.
+The liquidating account pays an extra liquidation fee of **1.00% of liquidated
+notional** on every fill while flagged, on top of its normal maker or taker rate.
+100% of liquidation fees go to the Perps insurance fund.
 
 ```text theme={null}
 FillFee = Notional * (MakerOrTakerRate + LiquidationFeeRate)
 ```
 
-Liquidation fee rates vary by market. If you're integrating Perps, read current
-values from [Market Data](https://docs.polymarket.com/perps/market-data.md#fetch-instruments).
+If you're integrating Perps, read current per-market rates from
+[Market Data](https://docs.polymarket.com/perps/market-data.md#fetch-instruments).
 
 Auto-deleveraging fills bypass the order book and carry no fee for either side.
 

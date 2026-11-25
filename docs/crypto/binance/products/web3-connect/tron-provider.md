@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/web3-connect/tron-provider
 api_type: Guide
-updated_at: 2026-11-24 18:27:45.216157
+updated_at: 2026-11-25 18:27:32.856582
 ---
 
 # Tron Provider

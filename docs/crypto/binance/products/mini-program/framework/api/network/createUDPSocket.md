@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/network/createUDPSocket
 api_type: Guide
-updated_at: 2026-11-24 18:45:22.730705
+updated_at: 2026-11-25 18:45:27.124831
 ---
 
 # bn.createUDPSocket

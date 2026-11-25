@@ -2,12 +2,48 @@
 exchange: deribit
 source_url: https://docs.deribit.com/changelogs/starbase
 api_type: Changelog
-updated_at: 2026-11-24 18:59:42.246440
+updated_at: 2026-11-25 19:00:44.329819
 ---
 
 # Starbase API Changelog
 
 > Release notes for the Deribit Starbase binary and REST APIs covering new messages, protocol changes, performance updates, and compatibility notes.
+
+**Starbase Testnet Update 24.11.2026**
+
+> [!NOTE]
+>
+> Available on testnet from 24 November 2026. The production release date will be announced in this changelog. Production is not affected until then.
+
+## API Changes
+
+### Order Entry
+
+**Multi-part fill messages.** Order entry messages that carry fills are now kept under a maximum message size of 60,000 bytes. When the fills of an aggressing order, amend, mass quote or speed-bump release do not fit in one message, the first message carries the final order or quote state and as many fills as fit. The remaining fills follow immediately in new continuation messages. This works like the existing `isLastMessage` flag on `OrdersCanceled` for mass cancels.
+
+This is a preventative change: no order on production has exceeded the message size limit so far.
+
+* `NewOrderResponse` (200), `AmendOrderResponse` (210) and `OrderPlaced` (312) continue in the new `OrderFillsContinued` (316), matched by `orderId`
+* `MassQuoteResponse` (230) and `MassQuoteOrdersPlaced` (314) continue in the new `MassQuoteFillsContinued` (318), matched by `mmpGroupId` (and `correlationId` after a `MassQuoteResponse`)
+* `messageFlags.isLastMessage` is set on the last message of the response. A response that fits in one message has it set on that message
+* A fill and its legs are always in the same message
+* Resting-order fills in `OrderFilled` (300) are unchanged: a large maker fill event is sent as several self-contained `OrderFilled` messages, without a flag
+
+> [!WARNING]
+>
+> **Move to schema version `24`.** Sessions below version `24` do not receive the continuation messages. If a response overflows, they receive only the first message: its order state (`totalFilled`, `status`) covers every fill, but its fills groups hold only the fills that fit. Trading is not affected otherwise. Deribit recommends that all clients move to version `24` as soon as possible.
+
+### Schema
+
+The order entry SBE schema has been updated to version `24` (`semanticVersion` remains `1.5`). The update is available as the [testnet](https://docs.deribit.com/specifications/deribit-sbe-xmls/deribit-sbe-order-api-testnet.xml) order entry XML. All changes are additive.
+
+* `NewOrderResponse` (200), `AmendOrderResponse` (210), `MassQuoteResponse` (230), `OrderPlaced` (312) and `MassQuoteOrdersPlaced` (314): new `messageFlags` field (`MultiPartEventFlags`, `uint8`, bit 0 `isLastMessage`) at the end of the root block, before the repeating groups
+* New message `OrderFillsContinued` (316)
+* New message `MassQuoteFillsContinued` (318)
+
+Schema version `23` (the `SPEED_BUMPED` reject reason) is unchanged and is released to production on 26 November 2026.
+
+See [Multi-part fill messages](https://docs.deribit.com/starbase/upcoming/binary-api-reference.md#multi-part-fill-messages), [OrderFillsContinued (316)](https://docs.deribit.com/starbase/upcoming/unsolicited-events.md#orderfillscontinued-316) and [MassQuoteFillsContinued (318)](https://docs.deribit.com/starbase/upcoming/unsolicited-events.md#massquotefillscontinued-318).
 
 **Starbase Update 26.11.2026**
 

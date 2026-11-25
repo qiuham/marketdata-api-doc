@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/caas/integration-guide
 api_type: Guide
-updated_at: 2026-11-24 18:33:12.896829
+updated_at: 2026-11-25 18:33:01.758912
 ---
 
 # Crypto-As-A-Service — Integration Guideline

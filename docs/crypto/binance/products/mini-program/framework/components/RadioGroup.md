@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/RadioGroup
 api_type: Guide
-updated_at: 2026-11-24 18:42:44.885428
+updated_at: 2026-11-25 18:42:47.096508
 ---
 
 # radio-group

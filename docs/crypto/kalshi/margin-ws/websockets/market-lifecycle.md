@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-ws/websockets/market-lifecycle'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Market Lifecycle

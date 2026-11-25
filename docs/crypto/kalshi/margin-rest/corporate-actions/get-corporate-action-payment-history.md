@@ -10,12 +10,12 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-rest/corporate-actions/get-corporate-action-payment-history'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Get Corporate Action Payment History
 
-> Endpoint for retrieving the cash the authenticated user received or paid for corporate actions (cash dividends, special dividends and cash spin-offs) for a specific market, or across all markets when ticker is empty, over an inclusive UTC date range. Each entry carries the position the payment was computed on. Stock split adjustments are not included.
+> Endpoint for retrieving the cash the authenticated user received or paid for corporate actions (cash dividends, special dividends and cash spin-offs) for a specific market, or across all markets when ticker is empty, over an inclusive UTC date range. Each entry includes the gross payment, the amount withheld, and the position used to compute the payment. Stock split adjustments are not included.
 
 
 
@@ -68,8 +68,9 @@ paths:
         Endpoint for retrieving the cash the authenticated user received or paid
         for corporate actions (cash dividends, special dividends and cash
         spin-offs) for a specific market, or across all markets when ticker is
-        empty, over an inclusive UTC date range. Each entry carries the position
-        the payment was computed on. Stock split adjustments are not included.
+        empty, over an inclusive UTC date range. Each entry includes the gross
+        payment, the amount withheld, and the position used to compute the
+        payment. Stock split adjustments are not included.
       operationId: GetMarginCorporateActionPaymentHistory
       parameters:
         - name: ticker
@@ -158,6 +159,7 @@ components:
         - quantity
         - subaccount_number
         - subaccount_type
+        - withholding_amount
       properties:
         corporate_action_id:
           type: string
@@ -187,7 +189,9 @@ components:
             balance after it.
         payment_amount:
           $ref: '#/components/schemas/FixedPointDollars'
-          description: Dollar amount of the payment (positive = received, negative = paid)
+          description: >-
+            Gross dollar amount before withholding (positive = received,
+            negative = paid)
         quantity:
           $ref: '#/components/schemas/FixedPointCount'
           description: >-
@@ -199,6 +203,11 @@ components:
           description: Subaccount number (0 for primary)
         subaccount_type:
           $ref: '#/components/schemas/SubaccountType'
+        withholding_amount:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: >-
+            Amount withheld from the payment in dollars. Subtract this from
+            payment_amount for the net cash amount.
     ErrorResponse:
       type: object
       properties:

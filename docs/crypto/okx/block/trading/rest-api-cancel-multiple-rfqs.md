@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-cancel-multiple-rfqs
 anchor_id: block-trading-rest-api-cancel-multiple-rfqs
 api_type: REST
-updated_at: 2026-11-24 18:58:32.801067
+updated_at: 2026-11-25 18:59:36.060499
 ---
 
 # Cancel multiple RFQs

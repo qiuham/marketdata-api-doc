@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/rebates/get-maker-tiers-for-addresses'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Get maker tiers for addresses

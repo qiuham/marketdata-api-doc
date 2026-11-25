@@ -10,23 +10,16 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/learn-about-trading/fees'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Fees
 
 > Tiered maker and taker trading fees for Polymarket Perps
 
-> [!NOTE]
->
-> **Upcoming changes — November 25, 2026.** Polymarket Perps trading fees,
-> liquidation fees, and liquidity rewards will change. The current rules below
-> apply until the changes go live. [See all fee and liquidity reward
-> changes](https://docs.polymarket.com/perps/fee-and-liquidity-reward-changes-november-2026.md).
-
 Perps trading fees are tiered by an account's trailing 30-day trading volume.
-Higher-volume accounts pay lower taker fees, and the top tier earns a maker
-rebate instead of paying a maker fee.
+Higher-volume accounts pay lower taker fees, and the two highest tiers earn maker
+rebates instead of paying maker fees.
 
 ## Fee Calculation
 
@@ -41,13 +34,13 @@ to a fill is set by the account's current volume tier.
 
 | 30-Day Volume ≥ | Taker | Maker |
 | - | - | - |
-| \$0 | 0.0400% | 0.0125% |
-| \$1M | 0.0370% | 0.0100% |
-| \$5M | 0.0350% | 0.0080% |
+| \$0 | 0.0500% | 0.0200% |
+| \$1M | 0.0400% | 0.0200% |
+| \$5M | 0.0350% | 0.0100% |
 | \$25M | 0.0300% | 0.0050% |
 | \$100M | 0.0270% | 0.0020% |
-| \$500M | 0.0250% | 0.0000% |
-| \$1B | 0.0200% | -0.0050% |
+| \$500M | 0.0250% | -0.0050% |
+| \$1B | 0.0200% | -0.0100% |
 
 New accounts start at the \$0 tier and move up as trailing 30-day volume crosses
 each threshold. Fee tiers are re-evaluated every UTC day.
@@ -62,7 +55,8 @@ fee recipient's internal ledger is debited by the same amount.
 > volume-based tiering applies to these accounts once the transition period
 > ends.
 
-If you're integrating Perps, read the current fee schedule from
+Account- or market-specific fee overrides may apply. If you're integrating
+Perps, read the current fee schedule from
 [Trading Fees](https://docs.polymarket.com/perps/trading.md#trading-fees) and your account's current tier
 from the [portfolio](https://docs.polymarket.com/perps/account-management.md#portfolio).
 
@@ -93,8 +87,7 @@ internal ledger:
 * Taker fees credit the recipient.
 * Maker fees credit the recipient at every tier where the maker rate is
   non-negative.
-* At the top tier the maker rate is a rebate, so it debits the recipient and
-  credits the maker.
+* Maker rebates debit the recipient and credit the maker.
 
 ## Builder Fees
 

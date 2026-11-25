@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/fastapi-integration-guide
 api_type: Guide
-updated_at: 2026-11-24 19:00:24.020071
+updated_at: 2026-11-25 19:01:15.566325
 ---
 
 # FastAPI Integration Guide

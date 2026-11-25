@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/market-data/instrumentcreationkindcurrency
 api_type: WebSocket
-updated_at: 2026-11-24 18:59:42.774603
+updated_at: 2026-11-25 19:00:44.752915
 ---
 
 # instrument.creation.(kind).(currency)

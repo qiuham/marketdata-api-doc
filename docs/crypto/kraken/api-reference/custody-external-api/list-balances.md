@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/custody-external-api/list-balances'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # List balances

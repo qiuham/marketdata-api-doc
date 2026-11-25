@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/alpha/en
 api_type: Trading
-updated_at: 2026-11-24 18:56:01.665441
+updated_at: 2026-11-25 18:56:50.362110
 ---
 
 # Gate Alpha API v1.1.1

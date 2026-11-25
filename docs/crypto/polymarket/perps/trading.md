@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/trading'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Trading
@@ -3402,23 +3402,23 @@ portfolio reads report the account's current tier; see
 > >     {
 > >       "instrument_type": "perpetual",
 > >       "category": "equity",
-> >       "taker_fee_rate": "0.0004",
-> >       "maker_fee_rate": "0.000125",
+> >       "taker_fee_rate": "0.0005",
+> >       "maker_fee_rate": "0.0002",
 > >       "tiers": [
 > >         {
 > >           "min_volume_30d": "0",
-> >           "taker_fee_rate": "0.0004",
-> >           "maker_fee_rate": "0.000125"
+> >           "taker_fee_rate": "0.0005",
+> >           "maker_fee_rate": "0.0002"
 > >         },
 > >         {
 > >           "min_volume_30d": "1000000",
-> >           "taker_fee_rate": "0.00037",
-> >           "maker_fee_rate": "0.0001"
+> >           "taker_fee_rate": "0.0004",
+> >           "maker_fee_rate": "0.0002"
 > >         },
 > >         {
 > >           "min_volume_30d": "5000000",
 > >           "taker_fee_rate": "0.00035",
-> >           "maker_fee_rate": "0.00008"
+> >           "maker_fee_rate": "0.0001"
 > >         },
 > >         {
 > >           "min_volume_30d": "25000000",
@@ -3433,12 +3433,12 @@ portfolio reads report the account's current tier; see
 > >         {
 > >           "min_volume_30d": "500000000",
 > >           "taker_fee_rate": "0.00025",
-> >           "maker_fee_rate": "0"
+> >           "maker_fee_rate": "-0.00005"
 > >         },
 > >         {
 > >           "min_volume_30d": "1000000000",
 > >           "taker_fee_rate": "0.0002",
-> >           "maker_fee_rate": "-0.00005"
+> >           "maker_fee_rate": "-0.0001"
 > >         }
 > >       ]
 > >     }

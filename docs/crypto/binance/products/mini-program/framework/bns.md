@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/bns
 api_type: Guide
-updated_at: 2026-11-24 18:38:45.562074
+updated_at: 2026-11-25 18:38:45.823885
 ---
 
 # BNS

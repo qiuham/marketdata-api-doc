@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/devtools/download-rc
 api_type: Guide
-updated_at: 2026-11-24 18:38:16.518709
+updated_at: 2026-11-25 18:38:15.814517
 ---
 
 # Download Developer Version

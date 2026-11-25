@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/perps_openapi.yaml'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # perps_openapi.yaml
@@ -79,7 +79,7 @@ paths:
     get:
       operationId: GetMarginCorporateActionPaymentHistory
       summary: Get Corporate Action Payment History
-      description: 'Endpoint for retrieving the cash the authenticated user received or paid for corporate actions (cash dividends, special dividends and cash spin-offs) for a specific market, or across all markets when ticker is empty, over an inclusive UTC date range. Each entry carries the position the payment was computed on. Stock split adjustments are not included.'
+      description: 'Endpoint for retrieving the cash the authenticated user received or paid for corporate actions (cash dividends, special dividends and cash spin-offs) for a specific market, or across all markets when ticker is empty, over an inclusive UTC date range. Each entry includes the gross payment, the amount withheld, and the position used to compute the payment. Stock split adjustments are not included.'
       tags:
         - corporate-actions
       security:
@@ -804,7 +804,7 @@ paths:
           schema:
             $ref: '#/components/schemas/MarginMarketStatus'
           x-go-type-skip-optional-pointer: true
-          description: Filter by market status (e.g. active, inactive, closed)
+          description: Filter by market status (e.g. active, inactive, finalized)
       responses:
         '200':
           description: Markets retrieved successfully
@@ -3684,7 +3684,7 @@ components:
 
     MarginMarketStatus:
       type: string
-      enum: [inactive, active, closed]
+      enum: [inactive, active, finalized]
       description: The status of a margin market
 
     OrderSource:
@@ -4210,6 +4210,7 @@ components:
         - quantity
         - subaccount_number
         - subaccount_type
+        - withholding_amount
       properties:
         corporate_action_id:
           type: string
@@ -4228,7 +4229,7 @@ components:
           description: The corporate action's execution time. The payment is computed on the position held just before this time; the cash can post to your balance after it.
         payment_amount:
           $ref: '#/components/schemas/FixedPointDollars'
-          description: Dollar amount of the payment (positive = received, negative = paid)
+          description: Gross dollar amount before withholding (positive = received, negative = paid)
         quantity:
           $ref: '#/components/schemas/FixedPointCount'
           description: Signed position size the payment was computed on (positive = long, negative = short) as a fixed-point count string
@@ -4238,6 +4239,9 @@ components:
           description: Subaccount number (0 for primary)
         subaccount_type:
           $ref: '#/components/schemas/SubaccountType'
+        withholding_amount:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: Amount withheld from the payment in dollars. Subtract this from payment_amount for the net cash amount.
 
     GetMarginCorporateActionPaymentHistoryResponse:
       type: object

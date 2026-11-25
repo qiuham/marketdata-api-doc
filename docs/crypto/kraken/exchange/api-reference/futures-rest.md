@@ -10,30 +10,10 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/api-reference/futures-rest'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Derivatives REST
-
-> Deprecated. The Derivatives REST API will be decommissioned on 1 March 2027.
-
-> [!WARNING]
->
-> **The Derivatives REST API is deprecated and will be decommissioned on 1 March 2027.**
->
-> After that date the Derivatives REST API will no longer be available. Do not
-> start new integrations on it. Use the
-> [Unified WebSocket](https://docs.kraken.com/exchange/api-reference/unified-websocket.md) for market data,
-> account updates and order entry on one connection, or the
-> [Unified FIX API](https://docs.kraken.com/exchange/api-reference/unified-fix.md) for FIX order entry.
-> Migrate before 1 March 2027.
-
-## Timeline
-
-| Date | What happens |
-| :- | :- |
-| **Today** | The Derivatives REST API keeps working. It is deprecated, so build new integrations on the Unified WebSocket or Unified FIX. |
-| **1 March 2027** | The Derivatives REST API is decommissioned and is no longer available. |
 
 ## What the Derivatives REST API is
 
@@ -66,25 +46,6 @@ The API covers these areas:
 | General, API Keys | General endpoints and API key checks |
 
 The full endpoint list is in this section of the left navigation.
-
-## Where to move
-
-> [card] [Unified WebSocket](https://docs.kraken.com/exchange/api-reference/unified-websocket.md)
->
-> Market data, account updates and order entry on one socket, with lower latency and official SDKs.
-
-> [card] [Unified FIX](https://docs.kraken.com/exchange/api-reference/unified-fix.md)
->
-> FIX 4.4 order entry across Spot and Derivatives.
-
-To use the Unified WebSocket you need a Kraken API key, not a Derivatives API
-key. See
-[Unified WebSocket authentication](https://docs.kraken.com/exchange/api-reference/unified-websocket.md#authentication).
-
-> [!NOTE]
->
-> The [Derivatives WebSocket](https://docs.kraken.com/exchange/api-reference/futures-websocket.md) is also
-> deprecated and will be decommissioned on 1 March 2027.
 
 ## Related
 

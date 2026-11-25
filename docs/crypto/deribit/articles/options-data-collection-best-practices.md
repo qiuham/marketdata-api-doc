@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/options-data-collection-best-practices
 api_type: Guide
-updated_at: 2026-11-24 18:59:41.684498
+updated_at: 2026-11-25 19:00:43.869123
 ---
 
 # Options Data Collection

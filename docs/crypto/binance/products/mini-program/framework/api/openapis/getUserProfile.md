@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/getUserProfile
 api_type: Guide
-updated_at: 2026-11-24 18:44:55.487280
+updated_at: 2026-11-25 18:44:58.801290
 ---
 
 # bn.getUserProfile

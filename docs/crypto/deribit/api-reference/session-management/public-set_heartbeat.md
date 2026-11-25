@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/session-management/public-set_heartbeat
 api_type: JSON-RPC
-updated_at: 2026-11-24 18:59:52.691176
+updated_at: 2026-11-25 19:00:49.324452
 ---
 
 # public/set_heartbeat

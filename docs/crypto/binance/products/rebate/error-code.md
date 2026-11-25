@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/rebate/error-code
 api_type: Guide
-updated_at: 2026-11-24 18:29:39.615577
+updated_at: 2026-11-25 18:29:28.437008
 ---
 
 # Error Codes

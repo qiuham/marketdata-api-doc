@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-profitshare-add-receiver
 api_type: Guide
-updated_at: 2026-11-24 18:34:26.266136
+updated_at: 2026-11-25 18:34:16.843078
 ---
 
 # Add Receiver

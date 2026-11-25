@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/pay/error-code
 api_type: Guide
-updated_at: 2026-11-24 18:29:47.311138
+updated_at: 2026-11-25 18:29:35.649940
 ---
 
 # Error Codes

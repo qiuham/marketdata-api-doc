@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/cfd/ws/zh_CN
 api_type: WebSocket
-updated_at: 2026-11-24 18:57:31.928549
+updated_at: 2026-11-25 18:58:27.338155
 ---
 
 # Gate TradFi WebSocket v1.0.0

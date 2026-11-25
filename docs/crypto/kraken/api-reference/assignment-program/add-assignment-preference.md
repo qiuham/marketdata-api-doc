@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/assignment-program/add-assignment-preference'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Add assignment preference

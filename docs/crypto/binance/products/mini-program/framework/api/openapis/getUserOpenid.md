@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/getUserOpenid
 api_type: Guide
-updated_at: 2026-11-24 18:44:56.875845
+updated_at: 2026-11-25 18:45:00.493801
 ---
 
 # bn.getUserOpenid

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/simple-earn/Introduction
 api_type: Guide
-updated_at: 2026-11-24 18:29:15.354780
+updated_at: 2026-11-25 18:29:04.747245
 ---
 
 # Introduction

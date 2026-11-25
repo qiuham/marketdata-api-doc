@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-technical-service-provider-query-config
 api_type: Guide
-updated_at: 2026-11-24 18:34:08.123482
+updated_at: 2026-11-25 18:33:58.403857
 ---
 
 # Query Scopes

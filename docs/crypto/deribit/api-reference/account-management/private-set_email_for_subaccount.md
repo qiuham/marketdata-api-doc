@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-set_email_for_subaccount
 api_type: JSON-RPC
-updated_at: 2026-11-24 18:59:48.954750
+updated_at: 2026-11-25 19:00:47.751050
 ---
 
 # private/set_email_for_subaccount

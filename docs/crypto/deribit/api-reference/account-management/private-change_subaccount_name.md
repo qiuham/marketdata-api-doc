@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-change_subaccount_name
 api_type: JSON-RPC
-updated_at: 2026-11-24 18:59:47.520920
+updated_at: 2026-11-25 19:00:47.133995
 ---
 
 # private/change_subaccount_name

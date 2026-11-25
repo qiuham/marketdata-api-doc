@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/web3-task-verification/apis
 api_type: Guide
-updated_at: 2026-11-24 18:27:39.564764
+updated_at: 2026-11-25 18:27:26.940668
 ---
 
 # Binance Web3 API Specification

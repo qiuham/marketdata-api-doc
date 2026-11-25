@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/connect-prime/integration-guideline
 api_type: Guide
-updated_at: 2026-11-24 18:32:55.625454
+updated_at: 2026-11-25 18:32:44.310996
 ---
 
 # Binance Pay Prime — Integration Guideline

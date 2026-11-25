@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/cfd-trade
 api_type: REST
-updated_at: 2026-11-24 19:01:47.202031
+updated_at: 2026-11-25 19:02:26.942796
 ---
 
 # CFD Trade

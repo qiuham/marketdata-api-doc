@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-rest-api-get-order-details
 anchor_id: spread-trading-rest-api-get-order-details
 api_type: REST
-updated_at: 2026-11-24 18:58:33.441863
+updated_at: 2026-11-25 18:59:36.882142
 ---
 
 # Get order details

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/api-usage-policy
 api_type: Guide
-updated_at: 2026-11-24 18:59:41.529485
+updated_at: 2026-11-25 19:00:43.822078
 ---
 
 # API Usage Policy

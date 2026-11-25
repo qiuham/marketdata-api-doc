@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/common/derivatives-trading/change-log
 api_type: Changelog
-updated_at: 2026-11-24 18:41:44.175358
+updated_at: 2026-11-25 18:41:43.683472
 ---
 
 # Change Log

@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/changelog/perps'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Perps Changelog
@@ -18,6 +18,16 @@ updated_at: 2026-11-24
 > Recent changes to the Polymarket Perps API and platform
 
 Notable changes to the Polymarket Perps API.
+
+**Nov 25, 2026**
+
+Perps fee and liquidity reward changes are live
+
+The new trading fee schedule, 1.00% liquidation fee, and revised liquidity
+reward program are live. See [Fees](https://docs.polymarket.com/perps/learn-about-trading/fees.md),
+[Liquidation Mechanics](https://docs.polymarket.com/perps/learn-about-trading/liquidation-mechanics.md), and
+[Liquidity Rewards](https://docs.polymarket.com/perps/liquidity-rewards.md) for the current rates, market
+pools, and quoting requirements.
 
 **Nov 24, 2026**
 
@@ -100,9 +110,10 @@ on November 25, 2026. Current rules apply until the changes go live.
   notional, and uptime. Rewards will be scored and accrued daily, with weekly
   payouts in pUSD. ANT's \$3,000 daily pool will run through November 30, 2026.
 
-See [Upcoming Fee and Liquidity Reward
-Changes](https://docs.polymarket.com/perps/fee-and-liquidity-reward-changes-november-2026.md) for the new rates,
-market pools, and quoting requirements.
+See [Fees](https://docs.polymarket.com/perps/learn-about-trading/fees.md),
+[Liquidation Mechanics](https://docs.polymarket.com/perps/learn-about-trading/liquidation-mechanics.md), and
+[Liquidity Rewards](https://docs.polymarket.com/perps/liquidity-rewards.md) for the current rates, market
+pools, and quoting requirements.
 
 **Nov 19, 2026**
 

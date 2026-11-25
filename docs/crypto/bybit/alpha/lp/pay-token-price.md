@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/lp/pay-token-price
 api_type: REST
-updated_at: 2026-11-24 18:49:47.509462
+updated_at: 2026-11-25 18:50:07.385446
 ---
 
 # Get LP Pay Token Price

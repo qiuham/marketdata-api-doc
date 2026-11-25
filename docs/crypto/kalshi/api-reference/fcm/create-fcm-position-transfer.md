@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/fcm/create-fcm-position-transfer'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Create FCM Position Transfer
@@ -61,7 +61,7 @@ prefixes `target_subtrader_id`. Contact Kalshi to enable it; until then, request
 openapi: 3.0.0
 info:
   title: Kalshi Trade API Manual Endpoints
-  version: 3.37.0
+  version: 3.38.0
   description: >-
     Manually defined OpenAPI spec for endpoints being migrated to spec-first
     approach

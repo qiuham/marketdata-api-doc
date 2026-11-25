@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/changelog/index'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # API Changelog
@@ -26,6 +26,26 @@ Predictions and Margin exchanges. Use the entry tags to filter by API
 surface (`REST`, `WebSocket`, `FIX`) or exchange (`Predictions`, `Margin`).
 FIX API changes, previously tracked on a separate page, now live here under
 the `FIX` tag.
+
+**November 27, 2026**
+
+Fractional trading starts for all Single Stock Perpetuals (SSPs) on
+**November 27, 2026 at 10:00 a.m. Eastern Time**. Orders can be placed in
+increments of 0.01 contracts. Even whole-contract orders can receive fractional fills.
+See [Fixed-Point Representation](https://docs.kalshi.com/getting_started/fixed_point_migration.md#margin-markets).
+
+**TBD**
+
+When a stock is listed after you submitted your stocks application, you
+confirm that your disclosures still stand before trading it. Until you do,
+`POST /margin/orders` and `POST /margin/orders/{order_id}/amend` on that
+stock's markets are rejected with `409` and code
+`stock_perps_confirmation_required`. Confirm in the Kalshi app; the next
+order goes through. Orders sent with `reduce_only` are not affected, so an
+existing position can always be closed, and stocks you could already trade
+stay tradable. `403 stock_perps_insider_blocked` is unchanged and takes
+precedence. This is not live yet. See
+[Order rejections](https://docs.kalshi.com/margin.md#order-rejections).
 
 **November 26, 2026**
 

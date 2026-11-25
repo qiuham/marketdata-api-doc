@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/cancelling-order
 api_type: Starbase
-updated_at: 2026-11-24 18:59:46.208420
+updated_at: 2026-11-25 19:00:46.371083
 ---
 
 # Cancelling an Order

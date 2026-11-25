@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/perps_asyncapi.yaml'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # perps_asyncapi.yaml
@@ -34,6 +34,7 @@ info:
     - `order_group_updates`
     - `corporate_actions`
     - `market_lifecycle_v2`
+    - `exchange_status`
   contact:
     name: Kalshi Support
     url: https://kalshi.com
@@ -261,6 +262,20 @@ channels:
       orderGroupUpdates:
         $ref: '#/components/messages/orderGroupUpdates'
 
+  exchange_status:
+    address: exchange_status
+    title: Exchange Status
+    description: |
+      Sent when trading is paused or resumed exchange-wide, or when the exchange status changes.
+      Trading messages carry `trading_active`. Exchange status messages carry `exchange_active`.
+      Both flags mean the same as in `GET /trade-api/v2/margin/exchange/status`,
+      and trading is open exchange-wide only while both are true. A message can repeat the current
+      value. Per-market halts and trading-hours closes are sent on `market_lifecycle_v2`, not on this
+      channel; a market is open only while both channels show it open.
+    messages:
+      exchangeStatus:
+        $ref: '#/components/messages/exchangeStatus'
+
 operations:
   receiveCorporateActions:
     action: send
@@ -280,6 +295,16 @@ operations:
       $ref: '#/channels/market_lifecycle_v2'
     messages:
       - $ref: '#/channels/market_lifecycle_v2/messages/marketLifecycleV2'
+    tags:
+      - name: market-data
+
+  receiveExchangeStatus:
+    action: send
+    title: Receive Exchange Status
+    channel:
+      $ref: '#/channels/exchange_status'
+    messages:
+      - $ref: '#/channels/exchange_status/messages/exchangeStatus'
     tags:
       - name: market-data
 
@@ -732,6 +757,24 @@ components:
               order_group_id: "og_123"
               contracts_limit_fp: "150.00"
               ts_ms: 1733047200000
+    exchangeStatus:
+      name: exchange_status
+      title: Exchange Status
+      summary: Exchange-wide trading and exchange status changes
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/marginExchangeStatusPayload'
+      examples:
+        - name: tradingPaused
+          summary: Trading paused exchange-wide
+          payload:
+            type: exchange_status
+            sending_ts_ms: 1733047200123
+            sid: 3
+            seq: 1
+            msg:
+              trading_active: false
+              ts_ms: 1733047200000
 
   schemas:
     sendingTimestampMs:
@@ -843,7 +886,7 @@ components:
               minItems: 1
               items:
                 type: string
-                enum: ["orderbook_delta", "ticker", "trade", "fill", "user_orders", "order_group_updates", "corporate_actions", "market_lifecycle_v2"]
+                enum: ["orderbook_delta", "ticker", "trade", "fill", "user_orders", "order_group_updates", "corporate_actions", "market_lifecycle_v2", "exchange_status"]
             market_ticker:
               type: string
             market_tickers:
@@ -1175,7 +1218,7 @@ components:
         ts_ms:
           type: integer
           format: int64
-          description: "Unix timestamp in milliseconds when the exchange applied the action."
+          description: "Unix timestamp in milliseconds when the exchange published the action."
         split:
           $ref: '#/components/schemas/marginCorporateActionSplitTerms'
         final_settlement:
@@ -1566,6 +1609,35 @@ components:
               type: integer
               format: int64
               description: Matching engine timestamp at which the event was processed, as Unix epoch milliseconds.
+
+        sending_ts_ms:
+          $ref: '#/components/schemas/sendingTimestampMs'
+
+    marginExchangeStatusPayload:
+      type: object
+      required: ["type", "sid", "seq", "msg"]
+      properties:
+        type:
+          type: string
+          const: "exchange_status"
+        sid:
+          $ref: '#/components/schemas/subscriptionId'
+        seq:
+          $ref: '#/components/schemas/sequenceNumber'
+        msg:
+          type: object
+          required: ["ts_ms"]
+          properties:
+            exchange_active:
+              type: boolean
+              description: False while the exchange is paused and accepts no state changes. Present on exchange status messages.
+            trading_active:
+              type: boolean
+              description: False while trading is paused exchange-wide; trading is open only while both this and `exchange_active` are true. Present on trading messages.
+            ts_ms:
+              type: integer
+              format: int64
+              description: Unix timestamp in milliseconds when the exchange published the change.
 
         sending_ts_ms:
           $ref: '#/components/schemas/sendingTimestampMs'

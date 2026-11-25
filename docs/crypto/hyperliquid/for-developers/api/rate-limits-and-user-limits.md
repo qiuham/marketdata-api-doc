@@ -10,7 +10,7 @@ provider_name: Hyperliquid
 product: api
 product_id: hyperliquid
 source_url: 'https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/rate-limits-and-user-limits'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Rate limits and user limits

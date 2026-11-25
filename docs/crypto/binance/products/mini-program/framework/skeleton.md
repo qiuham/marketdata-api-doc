@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/skeleton
 api_type: Guide
-updated_at: 2026-11-24 18:38:24.334637
+updated_at: 2026-11-25 18:38:23.043834
 ---
 
 # Skeleton

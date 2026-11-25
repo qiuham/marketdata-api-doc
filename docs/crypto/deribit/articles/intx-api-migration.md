@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/intx-api-migration
 api_type: Guide
-updated_at: 2026-11-24 18:59:42.127809
+updated_at: 2026-11-25 19:00:44.257193
 ---
 
 # Coinbase International Exchange API Migration

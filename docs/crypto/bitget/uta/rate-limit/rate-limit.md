@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/rate-limit/rate-limit
 api_type: Rate Limit
-updated_at: 2026-11-24 19:01:14.296236
+updated_at: 2026-11-25 19:01:59.208767
 ---
 
 # VIP Rate Limit Rules

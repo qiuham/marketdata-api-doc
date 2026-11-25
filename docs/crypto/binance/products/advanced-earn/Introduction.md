@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/advanced-earn/Introduction
 api_type: Guide
-updated_at: 2026-11-24 18:35:42.577386
+updated_at: 2026-11-25 18:35:32.282480
 ---
 
 # Introduction

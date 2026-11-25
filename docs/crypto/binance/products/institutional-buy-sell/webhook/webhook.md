@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/institutional-buy-sell/webhook/webhook
 api_type: Guide
-updated_at: 2026-11-24 18:38:53.953637
+updated_at: 2026-11-25 18:38:53.394971
 ---
 
 # Webhook

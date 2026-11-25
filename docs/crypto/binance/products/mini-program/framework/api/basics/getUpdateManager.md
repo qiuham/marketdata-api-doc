@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/getUpdateManager
 api_type: Guide
-updated_at: 2026-11-24 18:48:21.762032
+updated_at: 2026-11-25 18:48:28.705521
 ---
 
 # bn.getUpdateManager

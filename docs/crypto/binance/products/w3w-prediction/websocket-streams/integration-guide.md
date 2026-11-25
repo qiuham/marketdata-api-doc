@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/w3w-prediction/websocket-streams/integration-guide
 api_type: WebSocket
-updated_at: 2026-11-24 18:35:51.768034
+updated_at: 2026-11-25 18:35:42.216448
 ---
 
 # Prediction Market — WebSocket Streams (Integration Guide)

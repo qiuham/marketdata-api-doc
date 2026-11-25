@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/transfer/inter-transfer-list
 api_type: REST
-updated_at: 2026-11-24 18:50:10.105507
+updated_at: 2026-11-25 18:50:32.214745
 ---
 
 # Get Internal Transfer Records

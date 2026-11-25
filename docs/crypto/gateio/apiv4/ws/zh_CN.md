@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/ws/zh_CN
 api_type: WebSocket
-updated_at: 2026-11-24 18:56:49.202656
+updated_at: 2026-11-25 18:57:41.713292
 ---
 
 # Spot WebSocket v4.0.0

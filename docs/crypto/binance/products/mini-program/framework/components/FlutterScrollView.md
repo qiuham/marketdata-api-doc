@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/FlutterScrollView
 api_type: Guide
-updated_at: 2026-11-24 18:43:14.691260
+updated_at: 2026-11-25 18:43:18.130400
 ---
 
 # scroll-view

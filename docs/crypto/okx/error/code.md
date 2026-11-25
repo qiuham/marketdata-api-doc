@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code
 anchor_id: error-code
 api_type: API
-updated_at: 2026-11-24 18:58:36.912472
+updated_at: 2026-11-25 18:59:41.426959
 ---
 
 # Error Code
@@ -849,6 +849,7 @@ identity verification.
 58256 | 200 | You can withdraw stablecoins valued at up to {dailyLimit} {symbol} every 24 hours. You can still withdraw {quotaRemaining} {symbol}.  
 58257 | 200 | You can withdraw stablecoins valued at up to {monthlyLimit} {symbol} every month. You can still withdraw {quotaRemaining} {symbol}.  
 58258 | 200 | You can withdraw crypto valued at up to {dailyLimit} {symbol} every 24 hours. You can still withdraw {quotaRemaining} {symbol}.  
+58260 | 200 | Withdrawals are suspended due to delta risk control. Please adjust your positions to reduce your delta exposure and try again.  
 58300 | 200 | Deposit-address count exceeds the limit.  
 58301 | 200 | Deposit-address not exist.  
 58302 | 200 | Deposit-address needs tag.  
@@ -2091,6 +2092,7 @@ e.g. clOrdId 已存在
 58256 | 200 | 您每 24 小时最多可提取价值为 {dailyLimit} {symbol} 的稳定币，当前还可提取 {quotaRemaining} {symbol}。  
 58257 | 200 | 您每月最多可提取价值为 {monthlyLimit} {symbol} 的稳定币，当前还可提取 {quotaRemaining} {symbol}。  
 58258 | 200 | 您每 24 小时最多可提取价值为 {dailyLimit} {symbol} 的数字货币，当前还可提取 {quotaRemaining} {symbol}。  
+58260 | 200 | 您的账户已触发 Delta 风控限制，暂停提现。请调整持仓以降低 Delta 风险敞口，待限制解除后再试。  
 58300 | 200 | 创建充值地址超过上限  
 58301 | 200 | 充值地址不存在  
 58302 | 200 | 充值地址需要标签  

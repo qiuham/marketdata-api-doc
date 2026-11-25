@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/c2c/change-log
 api_type: Changelog
-updated_at: 2026-11-24 18:33:23.854403
+updated_at: 2026-11-25 18:33:12.380887
 ---
 
 # Change Log

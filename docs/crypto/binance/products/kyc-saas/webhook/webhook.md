@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/kyc-saas/webhook/webhook
 api_type: Guide
-updated_at: 2026-11-24 18:38:47.292367
+updated_at: 2026-11-25 18:38:47.217250
 ---
 
 # Webhook

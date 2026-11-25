@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-spot-plan
 api_type: REST
-updated_at: 2026-11-24 19:02:11.187158
+updated_at: 2026-11-25 19:02:45.874809
 ---
 
 # Classic Spot Trigger API

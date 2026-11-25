@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/elite-trading-api-guide
 api_type: Guide
-updated_at: 2026-11-24 19:01:09.404700
+updated_at: 2026-11-25 19:01:54.643266
 ---
 
 # Elite Trading API Guide

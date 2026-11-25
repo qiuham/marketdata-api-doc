@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/guides/futures/maker-protection'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # Maker Protection
@@ -200,7 +200,7 @@ This closes an evasion the hold would otherwise leave open: post-only orders are
 
 ## Behaviour by protocol
 
-There is no `held` order state anywhere in the public API. Maker Protection surfaces as extra latency on aggressive placements, not as a new state to model.
+There is no `held` order state anywhere in the public API. Maker Protection surfaces as extra latency on aggressive placements, not as a new state to model. The Unified WebSocket and FIX send an advisory message when a request is held. It does not change the order's status.
 
 > [tab] REST
 >
@@ -216,7 +216,28 @@ There is no `held` order state anywhere in the public API. Maker Protection surf
 
 > [tab] WebSocket
 >
-> Nothing is published while an order is held. You receive the normal `open_orders` and `fills` events once the order is released and the engine acts on it — the only observable difference is that they arrive about `makerProtectionMillis` later.
+> **Unified WebSocket:** when a placement or amend is held, the [`executions`](https://docs.kraken.com/exchange/api-reference/unified-ws/executions) channel sends an advisory `exec_type: status` update with the hold length in `held_for_ms`:
+>
+> ```json theme={null}
+> {
+>   "channel": "executions",
+>   "asset_class": "derivatives",
+>   "type": "update",
+>   "data": [
+>     {
+>       "exec_type": "status",
+>       "order_id": "c1a0bd2c-5c8b-4b5e-9f0e-6f7c3d2b1a90",
+>       "symbol": "PF_XBTUSD",
+>       "held_for_ms": 20,
+>       "timestamp": "2026-11-25T10:15:30.123Z"
+>     }
+>   ]
+> }
+> ```
+>
+> It is advisory only. The order's normal events — `new`, `trade`, `amended` or a rejection — follow at release. The update carries no `order_status` and no `cl_ord_id`, so match it to your order by `order_id`.
+>
+> **Derivatives WebSocket (v1):** nothing is published while an order is held. You receive the normal `open_orders` and `fills` events once the order is released and the engine acts on it — the only observable difference is that they arrive about `makerProtectionMillis` later.
 
 > [tab] FIX
 >

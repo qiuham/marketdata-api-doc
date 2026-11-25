@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/deposit/master-deposit-addr
 api_type: REST
-updated_at: 2026-11-24 18:50:03.750773
+updated_at: 2026-11-25 18:50:25.137859
 ---
 
 # Get Master Deposit Address

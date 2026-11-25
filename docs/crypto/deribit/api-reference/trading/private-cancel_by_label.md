@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-cancel_by_label
 api_type: JSON-RPC
-updated_at: 2026-11-24 18:59:53.896499
+updated_at: 2026-11-25 19:00:49.770073
 ---
 
 # private/cancel_by_label

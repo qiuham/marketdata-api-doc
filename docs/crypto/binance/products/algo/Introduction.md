@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/algo/Introduction
 api_type: Guide
-updated_at: 2026-11-24 18:35:32.913436
+updated_at: 2026-11-25 18:35:22.637527
 ---
 
 # Introduction

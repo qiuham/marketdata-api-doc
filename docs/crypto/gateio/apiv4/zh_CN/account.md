@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/account
 api_type: Account
-updated_at: 2026-11-24 18:56:52.078102
+updated_at: 2026-11-25 18:57:44.718663
 ---
 
 # Account

@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/getting_started/api_environments'
-updated_at: 2026-11-24
+updated_at: 2026-11-25
 ---
 
 # API Environments and Endpoints
@@ -57,6 +57,8 @@ These hosts serve the `fill` and `user_orders` channels today, and more per-user
 The earlier `warp-ws` and `margin-warp-ws` hosts are deprecated. They keep working and serve the same channels for now. Move to the user hosts above.
 
 ## External Feeds WebSocket
+
+To request access to live eBattles scores for eSoccer and eBasketball, contact [Kalshi Support](mailto:support@kalshi.com).
 
 > [!NOTE]
 >
