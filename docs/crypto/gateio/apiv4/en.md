@@ -2,12 +2,12 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en
 api_type: REST
-updated_at: 2026-11-25 18:56:56.477035
+updated_at: 2026-11-26 18:57:52.558307
 ---
 
-# Gate API v4.106.184
+# Gate API v4.106.187
 
-v4.106.184 · Stable
+v4.106.187 · Stable
 
 
 Welcome to Gate API APIv4 provides operations related to spot, margin, and contract trading, including public interfaces for querying market data and authenticated private interfaces for implementing API-based automated trading.
@@ -103,12 +103,46 @@ Even if you submit a problem, you should not submit the API key information to c
 
 #  Changelog
 
+**v4.106.187**
+
+2026-11-23
+
+  * `GET /futures/{settle}/trades` adds the optional request header `timeUnit: microsecond` and the optional response field `create_time_us`, an integer Unix timestamp in microseconds. The field is omitted when the header is absent or has another value.
+  * `GET /futures/{settle}/my_trades` and `GET /futures/{settle}/my_trades_timerange` add the same header and response field. The microsecond field is returned for Futures 3.0 accounts when supported by the queried data.
+  * The optional `receive_type` field on **`POST /otc/order/create`** documents `VA` for virtual account remittance for both corporate and individual accounts.
+
+**v4.106.186**
+
+2026-11-23
+
+  * **Breaking contract change** for `GET /crossex/transfers/coin`. Response fields `min_trans_amount` and `est_fee` change from JSON numbers to decimal strings. Update clients that decode them as numeric JSON values.
+  * `GET /crossex/transfers` adds the optional `status` query filter (`PENDING`, `SUCCESS`, or `FAIL`). The documented rate limit is 1,200 requests per 60 seconds.
+  * `GET /crossex/history_orders` adds optional exact-match query filters `order_id` (int64) and `text` (string). When both are supplied, both must match. The `attributes` filter accepts `REBASE`.
+  * `GET /crossex/history_trades` adds optional query filter `order_id` (int64) and optional response field `fx_rate` (decimal string) for stock and ETF trades.
+  * `GET /crossex/positions` adds optional array field `risk_limits` with position-specific tiers. `GET /crossex/accounts` adds optional field `assets[].price` for the USDT valuation price as a decimal string.
+  * `GET /crossex/rule/symbols` documents Aster futures symbols, the full Hyperliquid HIP-3 `symbol` including any DEX prefix, and `rebase` as a symbol status. For `POST /crossex/transfers`, `CROSSEX_ASTER` supports USDT transfers with `SPOT` only.
+  * `PUT /crossex/orders/{order_id}` documents the `qty` and `price` amendment rules. Supply at least one new positive value. Omit a field or send `"0"` to preserve its current value.
+
+**v4.106.185**
+
+2026-11-20
+
+  * `POST /spot/orders`: Added the optional request-only boolean `rpi_taker_access` (default `false`) to request RPI taker eligibility for the order through Speed Bump. Supports IOC/FOK only; passing `false` or omitting it preserves existing behavior. The request model is `CreateSpotOrder`; the response remains `Order`.
+  * Add the optional `tokenized_security_info` object to the responses of `GET /spot/currencies` and `GET /spot/currencies/{currency}`. It contains the underlying stock symbol (`underlying`) and, for stock tokens that have undergone a split, the latest split multiplier (`current_multiplier`), both represented as strings.
+
 **v4.106.184**
 
 2026-11-18
 
   * Add `POST /p2p/merchant/chat/pre_upload_chat_file` with required request field `content_type`, accepting only `image/jpeg`, `image/jpg`, `image/png`, `image/webp`, and `video/mp4`. The response includes `data.url`, the signed form fields in `data.fields`, and `data.file_key` for sending a file message after a successful direct upload.
   * Deprecate `POST /p2p/merchant/chat/upload_chat_file` in favor of `POST /p2p/merchant/chat/pre_upload_chat_file`.
+
+**v4.106.183**
+
+2026-11-17
+
+  * `POST /futures/{settle}/orders` and `POST /futures/{settle}/bbo_orders`: add optional request body field `rpi_taker_access` (boolean, default `false`, request-only). When enabled, the order waits before becoming eligible to match with resting RPI orders. Passing `false` or omitting the field preserves existing order placement behavior.
+  * `POST /futures/{settle}/orders`: the SDK request model is now `CreateFuturesOrder`. Update callers that pass a typed `FuturesOrder` request or use the old Python `futures_order` keyword. The response still uses `FuturesOrder`.
 
 **v4.106.182**
 
@@ -4184,6 +4218,10 @@ Every settle currency has its own contract list. Make sure the contract you spec
 
 `GET /futures/{settle}/contracts` or `GET /delivery/{settle}/contracts`
 
+  * How do spot and futures orders access RPI liquidity?
+
+See RPI liquidity access (Speed Bump) for parameters, supported orders, waiting behavior and SDK usage.
+
   * Difference between sub account and main account
 
     * Sub account API Key cannot operate transferals between main and sub account, i.e., `POST /wallet/sub_account_transfers`
@@ -4200,5 +4238,64 @@ When submitting an issue, please include the following information to help ident
       * What API key was used and where was it used, TestNet or real trading(API secret is not needed)
       * Programming language. Providing a code snippet will be better
       * Whether SDK was used. If so, which method caused the problem
+
+##  RPI liquidity access (Speed Bump)
+
+RPI (Retail Price Improvement) provides liquidity that eligible orders can match against. API users can send the JSON boolean `rpi_taker_access: true` in a supported single-order request to accept the platform wait and obtain RPI taker eligibility for that order. Passing `false` or omitting the field preserves existing order behavior without requesting this additional eligibility.
+
+###  Supported requests
+
+Supported requestsREST endpoint | Requirements when passing `true`  
+---|---  
+[Spot single order](/docs/developers/apiv4/en/spot/#opIdcreateOrder) | Market: `type=market`, with `time_in_force=ioc`, `fok`, or omitted (defaults to `ioc`); limit: `time_in_force=ioc` or `fok`  
+[Perpetual futures single order](/docs/developers/apiv4/en/futures/#opIdcreateFuturesOrder) | Market: `price=0` and `tif=ioc`; limit: `tif=ioc` or `fok`  
+[Perpetual futures BBO order](/docs/developers/apiv4/en/futures/#opIdcreateFuturesBBOOrder) | `tif=ioc` or `fok`; the original BBO rules still apply  
+  
+A limit order defaults to `gtc` when its time-in-force is omitted. Passing `true` for GTC or another unsupported type rejects the request; it does not convert the order to IOC. Placing an RPI maker order and requesting RPI taker eligibility are different operations; this parameter does not create RPI maker orders.
+
+REST batch orders do not support this feature. Omit `rpi_taker_access` from every batch item. Amendments and cancellations do not use it. For WS usage, see [Spot WS](/docs/developers/apiv4/ws/en/#rpi-taker-access) and [Perpetual futures WS](/docs/developers/futures/ws/en/#rpi-taker-access).
+
+###  Waiting and results
+
+  * The platform sets the wait, initially **20 ms**. Users cannot specify it. Total request latency also includes network and normal order processing time; allow sufficient client timeout headroom.
+  * An order requiring the wait waits as a whole, regardless of whether RPI orders are currently available. The wait does not apply only to the portion matching RPI. Prices and quantities are not reserved; matching uses the order book and original trading rules at execution time.
+  * Eligibility does not guarantee an RPI fill or a complete fill. Price, size, time-in-force, balance and existing trading rules still apply.
+  * Waiting does not change `action_mode`; results follow the selected mode. `x-gate-exptime` remains effective, so allow time for the wait and subsequent processing before expiry.
+  * If a request times out or no final result is received, query the order through the existing interfaces before deciding whether to retry, to avoid duplicate orders.
+
+###  Common errors
+
+Common errorsEndpoint | Condition | `label`  
+---|---|---  
+Spot REST | `true` with an unsupported time-in-force, such as limit GTC | `INVALID_PARAM_VALUE`  
+Perpetual futures REST | `true` with an unsupported order type or time-in-force | `RPI_TAKER_ACCESS_NOT_SUPPORTED`  
+Spot REST | Too many requests to accept this request | `TOO_MANY_REQUESTS`  
+Perpetual futures REST | Too many concurrent requests to accept this request | `CONCURRENCY_LIMIT_EXCEEDED`  
+  
+These errors mean the request did not place an order. Correct invalid parameters before resubmitting; reduce the sending rate when requests are excessive. Other authentication, rate-limit, insufficient-funds and expiry errors follow the original endpoint rules.
+
+###  SDK usage
+
+Spot single-order requests use `CreateSpotOrder`; perpetual futures single-order requests use `CreateFuturesOrder`. Responses remain `Order` and `FuturesOrder`, respectively. When upgrading the SDK, update callers that pass the old request types. The Python keyword arguments change from `order` and `futures_order` to `create_spot_order` and `create_futures_order`, respectively.
+
+When placing a spot market order with the Python SDK, explicitly set `time_in_force="ioc"`. Omitting the constructor argument sends the SDK default `gtc`; the market-order default `ioc` above applies only when `time_in_force` is absent from the JSON request.
+    
+    
+    # Use an initialized, authenticated spot_api or futures_api; these are limit IOC examples.
+    import gate_api
+    
+    spot_order = gate_api.CreateSpotOrder(
+        currency_pair="BTC_USDT", type="limit", side="buy",
+        amount="0.001", price="60000", time_in_force="ioc", rpi_taker_access=True,
+    )
+    spot_api.create_order(create_spot_order=spot_order)
+    
+    futures_order = gate_api.CreateFuturesOrder(
+        contract="BTC_USDT", size="1", price="60000", tif="ioc", rpi_taker_access=True,
+    )
+    futures_api.create_futures_order(settle="usdt", create_futures_order=futures_order)
+    
+
+Prices and sizes are illustrative; actual orders must meet the latest market limits. Use `True` in Python and the boolean `true` in JSON, not the string `"true"`.
 
 Last Updated: 1/13/2026, 8:44:29 AM

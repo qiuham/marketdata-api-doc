@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-copytrading-future-trader
 api_type: REST
-updated_at: 2026-11-25 19:02:35.737678
+updated_at: 2026-11-26 19:03:49.071335
 ---
 
 # Classic Futures Copy Trading Trader API

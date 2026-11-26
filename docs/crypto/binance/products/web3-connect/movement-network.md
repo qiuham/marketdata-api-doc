@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/web3-connect/movement-network
 api_type: Guide
-updated_at: 2026-11-25 18:27:38.410149
+updated_at: 2026-11-26 18:28:34.302058
 ---
 
 # Movement Network

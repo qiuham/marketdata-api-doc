@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/stock/ws/en
 api_type: WebSocket
-updated_at: 2026-11-25 18:58:46.373908
+updated_at: 2026-11-26 18:59:47.518067
 ---
 
 # Gate Stock WebSocket v1.0.0
@@ -208,8 +208,8 @@ Format:
 
 Name | Type | Required | Description  
 ---|---|---|---  
-`payload` | `object` | Optional | Request parameters  
-»»`markets` | `array` | Optional | Symbol list  
+`payload` | `object` | Required | Request parameters  
+»»`markets` | `array` | Required | Symbol list  
   
 To unsubscribe all ticker subscriptions on this connection, include `unsub_all` in `markets`.
 
@@ -323,9 +323,9 @@ Data format:
 
 Name | Type | Required | Description  
 ---|---|---|---  
-`payload` | `Array[String]` | Optional | `[interval, symbol, include_extended_hours]`  
-» `interval` | String | Optional | Candle interval  
-» `symbol` | String | Optional | Symbol  
+`payload` | `Array[String]` | Required | `[interval, symbol, include_extended_hours]`  
+» `interval` | String | Required | Candle interval  
+» `symbol` | String | Required | Symbol  
 » 3rd param | String | Optional | `"true"` / `"false"`, default `"false"`; US stocks only  
   
 ####  Enumerated Values
@@ -410,7 +410,7 @@ Data structure:
 
 Name | Type | Required | Description  
 ---|---|---|---  
-`payload` | `array` | Optional | Symbol list  
+`payload` | `array` | Required | Symbol list  
   
 TIP
 

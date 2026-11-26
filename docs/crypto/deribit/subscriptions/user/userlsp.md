@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/user/userlsp
 api_type: WebSocket
-updated_at: 2026-11-25 19:00:45.235435
+updated_at: 2026-11-26 19:02:02.463589
 ---
 
 # user.lsp

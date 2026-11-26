@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/flash-swap
 api_type: REST
-updated_at: 2026-11-25 18:57:59.409651
+updated_at: 2026-11-26 18:58:57.856045
 ---
 
 # Flash_swap
@@ -868,23 +868,26 @@ message | string | Required |  | 错误信息
 
 #  模型
 
-##  FlashSwapOrderRequest
+##  FlashSwapOrderPreview
 
-创建闪兑订单参数
+闪兑订单预览
 
 类型 | 约束  
 ---|---  
-object | required: ["preview_id","sell_currency","sell_amount","buy_currency","buy_amount"]  
+object |   
   
 **属性**
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-preview_id | string | Required |  | 预览结果id  
-sell_currency | string | Required |  | 卖出的资产名称，根据接口`查询支持闪兑的所有交易对列表 GET /flash_swap/currency_pairs`获取  
-sell_amount | string | Required |  | 卖出的资产数量(根据预览结果)  
-buy_currency | string | Required |  | 买入的资产名称，根据接口`查询支持闪兑的所有交易对列表 GET /flash_swap/currency_pairs`获取  
-buy_amount | string | Required |  | 买入的资产数量(根据预览结果)  
+preview_id | string | Optional |  | 预览结果id  
+sell_currency | string | Optional |  | 卖出的资产名称，  
+根据接口`查询支持闪兑的货币列表 GET /flash_swap/currencies`获取  
+sell_amount | string | Optional |  | 卖出的资产数量  
+buy_currency | string | Optional |  | 买入的资产名称，  
+根据接口`查询支持闪兑的货币列表 GET /flash_swap/currencies`获取  
+buy_amount | string | Optional |  | 买入的资产数量  
+price | string | Optional |  | 价格  
       
     
     {
@@ -892,7 +895,8 @@ buy_amount | string | Required |  | 买入的资产数量(根据预览结果)
       "sell_currency": "string",
       "sell_amount": "string",
       "buy_currency": "string",
-      "buy_amount": "string"
+      "buy_amount": "string",
+      "price": "string"
     }
     
     
@@ -930,39 +934,6 @@ buy_max_amount | string | Optional | readOnly: true | 买入最大数量
     
     
 
-##  FlashSwapOrderPreview
-
-闪兑订单预览
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-preview_id | string | Optional |  | 预览结果id  
-sell_currency | string | Optional |  | 卖出的资产名称，  
-根据接口`查询支持闪兑的货币列表 GET /flash_swap/currencies`获取  
-sell_amount | string | Optional |  | 卖出的资产数量  
-buy_currency | string | Optional |  | 买入的资产名称，  
-根据接口`查询支持闪兑的货币列表 GET /flash_swap/currencies`获取  
-buy_amount | string | Optional |  | 买入的资产数量  
-price | string | Optional |  | 价格  
-      
-    
-    {
-      "preview_id": "string",
-      "sell_currency": "string",
-      "sell_amount": "string",
-      "buy_currency": "string",
-      "buy_amount": "string",
-      "price": "string"
-    }
-    
-    
-
 ##  FlashSwapPreviewRequest
 
 创建闪兑订单参数
@@ -990,6 +961,57 @@ buy_amount | string | Optional |  | 买入的资产数量，
       "sell_amount": "string",
       "buy_currency": "string",
       "buy_amount": "string"
+    }
+    
+    
+
+##  FlashSwapV1CurrencyPairListResp
+
+FlashSwapV1CurrencyPairListResp
+
+闪兑 V1 币对列表
+
+类型 | 约束  
+---|---  
+object | required: ["currency_pair"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency_pair | array | Required |  | 可闪兑的币对列表  
+  
+**currency_pair**
+
+可闪兑的币对列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**currency_pair / items**
+
+FlashSwapV1CurrencyPair
+
+闪兑 V1 币对信息
+
+类型 | 约束  
+---|---  
+FlashSwapV1CurrencyPair | required: ["market","sell_asset","sell_min_amount","sell_max_amount","buy_asset","buy_min_amount","buy_max_amount"]  
+      
+    
+    {
+      "currency_pair": [
+        {
+          "market": "string",
+          "sell_asset": "string",
+          "sell_min_amount": "string",
+          "sell_max_amount": "string",
+          "buy_asset": "string",
+          "buy_min_amount": "string",
+          "buy_max_amount": "string"
+        }
+      ]
     }
     
     
@@ -1057,53 +1079,31 @@ status | integer | Optional | readOnly: true | 闪兑订单状态
     
     
 
-##  FlashSwapV1CurrencyPairListResp
+##  FlashSwapOrderRequest
 
-FlashSwapV1CurrencyPairListResp
-
-闪兑 V1 币对列表
+创建闪兑订单参数
 
 类型 | 约束  
 ---|---  
-object | required: ["currency_pair"]  
+object | required: ["preview_id","sell_currency","sell_amount","buy_currency","buy_amount"]  
   
 **属性**
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-currency_pair | array | Required |  | 可闪兑的币对列表  
-  
-**currency_pair**
-
-可闪兑的币对列表
-
-类型 | 约束  
----|---  
-array |   
-  
-**currency_pair / items**
-
-FlashSwapV1CurrencyPair
-
-闪兑 V1 币对信息
-
-类型 | 约束  
----|---  
-FlashSwapV1CurrencyPair | required: ["market","sell_asset","sell_min_amount","sell_max_amount","buy_asset","buy_min_amount","buy_max_amount"]  
+preview_id | string | Required |  | 预览结果id  
+sell_currency | string | Required |  | 卖出的资产名称，根据接口`查询支持闪兑的所有交易对列表 GET /flash_swap/currency_pairs`获取  
+sell_amount | string | Required |  | 卖出的资产数量(根据预览结果)  
+buy_currency | string | Required |  | 买入的资产名称，根据接口`查询支持闪兑的所有交易对列表 GET /flash_swap/currency_pairs`获取  
+buy_amount | string | Required |  | 买入的资产数量(根据预览结果)  
       
     
     {
-      "currency_pair": [
-        {
-          "market": "string",
-          "sell_asset": "string",
-          "sell_min_amount": "string",
-          "sell_max_amount": "string",
-          "buy_asset": "string",
-          "buy_min_amount": "string",
-          "buy_max_amount": "string"
-        }
-      ]
+      "preview_id": "string",
+      "sell_currency": "string",
+      "sell_amount": "string",
+      "buy_currency": "string",
+      "buy_amount": "string"
     }
     
     

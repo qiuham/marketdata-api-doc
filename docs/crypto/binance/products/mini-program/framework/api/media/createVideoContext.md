@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/media/createVideoContext
 api_type: Guide
-updated_at: 2026-11-25 18:45:45.407192
+updated_at: 2026-11-26 18:46:28.244032
 ---
 
 # bn.createVideoContext

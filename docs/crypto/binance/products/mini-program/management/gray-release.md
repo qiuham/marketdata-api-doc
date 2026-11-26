@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/management/gray-release
 api_type: Guide
-updated_at: 2026-11-25 18:37:49.010583
+updated_at: 2026-11-26 18:38:35.248054
 ---
 
 # Mini Progrram Gray Release

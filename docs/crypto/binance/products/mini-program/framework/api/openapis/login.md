@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/login
 api_type: Guide
-updated_at: 2026-11-25 18:44:48.950702
+updated_at: 2026-11-26 18:45:21.947620
 ---
 
 # bn.login

@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/rfqs/list-offers-placed-by-the-account-on-closed-rfqs'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # List offers placed by the account on closed RFQs
@@ -307,5 +307,6 @@ components:
       in: header
       name: Authent
       x-inlineDescription: true
+      x-default: <authent>
 
 ````

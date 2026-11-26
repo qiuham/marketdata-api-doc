@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/authentication/public-auth
 api_type: JSON-RPC
-updated_at: 2026-11-25 19:00:47.003598
+updated_at: 2026-11-26 19:02:03.905572
 ---
 
 # public/auth

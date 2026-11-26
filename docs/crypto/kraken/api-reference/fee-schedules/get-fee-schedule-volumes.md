@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/fee-schedules/get-fee-schedule-volumes'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Get fee schedule volumes
@@ -277,5 +277,6 @@ components:
       in: header
       name: Authent
       x-inlineDescription: true
+      x-default: <authent>
 
 ````

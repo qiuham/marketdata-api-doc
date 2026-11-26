@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/block-rfq/private-cancel_all_block_rfq_quotes
 api_type: JSON-RPC
-updated_at: 2026-11-25 19:00:47.949636
+updated_at: 2026-11-26 19:02:04.716254
 ---
 
 # private/cancel_all_block_rfq_quotes

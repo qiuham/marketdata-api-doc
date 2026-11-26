@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/staking/general-info
 api_type: Guide
-updated_at: 2026-11-25 18:28:51.902186
+updated_at: 2026-11-26 18:29:37.153462
 ---
 
 # General Info

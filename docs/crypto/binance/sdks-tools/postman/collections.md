@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/postman/collections
 api_type: Guide
-updated_at: 2026-11-25 18:27:01.130702
+updated_at: 2026-11-26 18:27:58.000446
 ---
 
 # Postman Collections

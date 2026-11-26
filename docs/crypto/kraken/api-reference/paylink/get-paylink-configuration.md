@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/paylink/get-paylink-configuration'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Get paylink configuration
@@ -127,5 +127,6 @@ components:
         payload, and URI path.
       name: API-Sign
       in: header
+      x-default: <api-sign>
 
 ````

@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-rest/risk/get-risk'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Get Risk
@@ -146,7 +146,9 @@ components:
       properties:
         subaccount:
           type: integer
-          description: The subaccount number (0 for primary, 1-63 for subaccounts)
+          description: >-
+            The subaccount number (0 for primary, 1-63 for subaccounts, 64-4095
+            for a market's isolated subaccount)
         subaccount_type:
           $ref: '#/components/schemas/SubaccountType'
         market_ticker:

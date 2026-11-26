@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/reference/rest-auth-deposit-invoice'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Generate Invoice

@@ -2,13 +2,15 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/futures/ws/en
 api_type: WebSocket
-updated_at: 2026-11-25 18:58:40.310737
+updated_at: 2026-11-26 18:59:41.229547
 ---
 
 # Gate Futures WebSocket v4.0.0
 
 * Python 
   * Golang 
+  * python µs 
+  * golang µs 
 
 v4.0.0 · Stable
 
@@ -52,6 +54,14 @@ WARNING
 If you use old server urls(`wss://fx-ws.gateio.ws/v4/ws` or `wss://fx-ws-testnet.gateio.ws/v4/ws`), we will use BTC contract for you.
 
 ##  Changelog
+
+2026-11-26
+
+  * The request header `timeUnit: microsecond` adds microsecond fields. The URL query `timeUnit=microsecond` does the same. Public channels apply to every such connection. Private channels apply only to OMS 3.0 users. See Microsecond timestamps.
+
+2026-11-20
+
+  * RPI (Retail Price Improvement) liquidity access is open to API users. A single order can set `rpi_taker_access`. See RPI liquidity access (Speed Bump).
 
 2026-11-19
 
@@ -393,6 +403,106 @@ Demo WebSocket application
 Demo WebSocket application
     
     
+    # !/usr/bin/env python
+    # coding: utf-8
+    
+    import hashlib
+    import hmac
+    import json
+    import logging
+    import time
+    import threading
+    
+    from websocket import WebSocketApp
+    
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
+    
+    event = threading.Event()
+    
+    class GateWebSocketApp(WebSocketApp):
+    
+      def __init__(self, url, api_key, api_secret, **kwargs):
+        super(GateWebSocketApp, self).__init__(url, **kwargs)
+        self._api_key = api_key
+        self._api_secret = api_secret
+    
+      def _send_ping(self):
+        while not event.wait(10):
+          self.last_ping_tm = time.time()
+          if self.sock:
+            try:
+              self.sock.ping()
+            except Exception as ex:
+              logger.warning("send_ping routine terminated: {}".format(ex))
+              break
+            try:
+              self._request("futures.ping", auth_required=False)
+            except Exception as e:
+              raise e
+    
+      def _request(self, channel, event=None, payload=None, auth_required=True):
+        current_time = int(time.time())
+        data = {
+          "time": current_time,
+          "channel": channel,
+          "event": event,
+          "payload": payload,
+        }
+        if auth_required:
+          message = 'channel=%s&event=%s&time=%d' % (channel, event, current_time)
+          data['auth'] = {
+            "method": "api_key",
+            "KEY": self._api_key,
+            "SIGN": self.get_sign(message),
+          }
+        data = json.dumps(data)
+        logger.info('request: %s', data)
+        self.send(data)
+    
+      def get_sign(self, message):
+        h = hmac.new(self._api_secret.encode("utf8"), message.encode("utf8"), hashlib.sha512)
+        return h.hexdigest()
+    
+      def subscribe(self, channel, payload=None, auth_required=True):
+        self._request(channel, "subscribe", payload, auth_required)
+    
+      def unsubscribe(self, channel, payload=None, auth_required=True):
+        self._request(channel, "unsubscribe", payload, auth_required)
+    
+    
+    def on_message(ws, message):
+      # type: (GateWebSocketApp, str) -> None
+      # handle message received
+      logger.info("message received from server: {}".format(message))
+    
+    
+    def on_open(ws):
+      # type: (GateWebSocketApp) -> None
+      # subscribe to channels interested
+      logger.info('websocket connected')
+      ws.subscribe("futures.tickers", ['BTC_USDT'], False)
+    
+    # custom header
+    custom_headers = {
+      "X-Gate-Size-Decimal": "1",
+        "timeUnit": "microsecond"
+    }
+    
+    if __name__ == "__main__":
+      logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.DEBUG)
+      app = GateWebSocketApp("wss://fx-ws.gateio.ws/v4/ws/usdt",
+                             "YOUR_API_KEY",
+                             "YOUR_API_SECRET",
+                             on_open=on_open,
+                             on_message=on_message,
+                             header=custom_headers)
+      app.run_forever(ping_interval=5)
+    
+
+Demo WebSocket application
+    
+    
     package main
     
     import (
@@ -508,6 +618,125 @@ Demo WebSocket application
     }
     
 
+Demo WebSocket application
+    
+    
+    package main
+    
+    import (
+    	"crypto/hmac"
+    	"crypto/sha512"
+    	"crypto/tls"
+    	"encoding/hex"
+    	"encoding/json"
+    	"fmt"
+    	"io"
+    	"net/url"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    type Msg struct {
+    	Time    int64    `json:"time"`
+    	Channel string   `json:"channel"`
+    	Event   string   `json:"event"`
+    	Payload []string `json:"payload"`
+    	Auth    *Auth    `json:"auth"`
+    }
+    
+    type Auth struct {
+    	Method string `json:"method"`
+    	KEY    string `json:"KEY"`
+    	SIGN   string `json:"SIGN"`
+    }
+    
+    const (
+    	Key    = "YOUR_API_KEY"
+    	Secret = "YOUR_API_SECRETY"
+    )
+    
+    func sign(channel, event string, t int64) string {
+    	message := fmt.Sprintf("channel=%s&event=%s&time=%d", channel, event, t)
+    	h2 := hmac.New(sha512.New, []byte(Secret))
+    	io.WriteString(h2, message)
+    	return hex.EncodeToString(h2.Sum(nil))
+    }
+    
+    func (msg *Msg) sign() {
+    	signStr := sign(msg.Channel, msg.Event, msg.Time)
+    	msg.Auth = &Auth{
+    		Method: "api_key",
+    		KEY:    Key,
+    		SIGN:   signStr,
+    	}
+    }
+    
+    func (msg *Msg) send(c *websocket.Conn) error {
+    	msgByte, err := json.Marshal(msg)
+    	if err != nil {
+    		return err
+    	}
+    	return c.WriteMessage(websocket.TextMessage, msgByte)
+    }
+    
+    func NewMsg(channel, event string, t int64, payload []string) *Msg {
+    	return &Msg{
+    		Time:    t,
+    		Channel: channel,
+    		Event:   event,
+    		Payload: payload,
+    	}
+    }
+    
+    func main() {
+    	u := url.URL{Scheme: "wss", Host: "fx-ws.gateio.ws", Path: "/v4/ws/usdt"}
+    	websocket.DefaultDialer.TLSClientConfig = &tls.Config{RootCAs: nil, InsecureSkipVerify: true}
+    	c, _, err := websocket.DefaultDialer.Dial(u.String(),  http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		panic(err)
+    	}
+    	c.SetPingHandler(nil)
+    
+    	// read msg
+    	go func() {
+    		for {
+    			_, message, err := c.ReadMessage()
+    			if err != nil {
+    				c.Close()
+    				panic(err)
+    			}
+    			fmt.Printf("recv: %s\n", message)
+    		}
+    	}()
+    
+    	t := time.Now().Unix()
+    	pingMsg := NewMsg("futures.ping", "", t, []string{})
+    	err = pingMsg.send(c)
+    	if err != nil {
+    		panic(err)
+    	}
+    
+    	// subscribe order book
+    	orderBookMsg := NewMsg("futures.order_book", "subscribe", t, []string{"BTC_USDT"})
+    	err = orderBookMsg.send(c)
+    	if err != nil {
+    		panic(err)
+    	}
+    
+    	// subscribe positions
+    	positionsMsg := NewMsg("futures.positions", "subscribe", t, []string{"USERID", "BTC_USDT"})
+    	positionsMsg.sign()
+    	err = positionsMsg.send(c)
+    	if err != nil {
+    		panic(err)
+    	}
+    
+    	select {}
+    }
+    
+
 ##  API Overview
 
 ###  Method
@@ -551,12 +780,57 @@ Responsefield | type | required | description
 ---|---|---|---  
 `time` | Integer | Yes | Response time  
 `time_ms` | Integer | Yes | Response time of millisecond  
+`time_us` | Integer | No | Same as the `time` field, microsecond precision  
 `channel` | String | Yes | Response channel  
 `event` | String | Yes | Response channel event (update/all)  
 `error` | Object | Yes | Response error  
 `result` | Any | Yes | New data notification from the server, or response to client requests. Null if`error` is not null.  
   
 Note: type of `result` is channel specific if it's server-initiated data update notification, but response to client subscription request always set the `result` to `{"status": "success"}`. To verify if subscription request is successful or not, you only need to check if `error` field is null. Parsing `result` field is not necessary.
+
+###  Microsecond timestamps
+
+Enable this at handshake with either of the following. It cannot be changed after the connection is established:
+
+  * Header: `timeUnit: microsecond`
+  * URL query: `timeUnit=microsecond`
+
+The value must be lowercase `microsecond`. `Microsecond`, an empty string, and a value with spaces leave the connection unchanged. The header name is case-insensitive. The query name is case-sensitive and must be `timeUnit`. Either one enables the connection. A connection without this parameter stays the same as before this release.
+
+Existing second and millisecond fields stay. Only microsecond fields are added, and they are integers. SBE does not add these fields. PB uses the same switch as JSON. A PB frame on a connection that did not enable this stays the same as before.
+
+Subscribe acknowledgements, errors, and `futures.pong` add only the outer `time_us`. Business microseconds are not added inside `result`. `time_us` is the Unix time in microseconds when the server sends that message.
+
+URL example: `wss://fx-ws.gateio.ws/v4/ws/usdt?timeUnit=microsecond`
+
+####  Public channels
+
+Every enabled connection receives these fields, whether or not the user is OMS 3.0.
+
+Public channelsChannel | Kept | Added  
+---|---|---  
+`futures.trades` | `create_time`, `create_time_ms` | `create_time_us`  
+`futures.order_book`, `futures.order_book_update`, `futures.obu`, `futures.rpi_order_book`, `futures.rpi_obu`, `futures.book_ticker` | `t` (milliseconds) | `t_us`  
+`futures.tickers` | `t` (milliseconds) | `t_us`  
+`futures.candlesticks` | `t` (seconds) | `t_us`  
+`futures.public_liquidates` | `time`, `time_ms` | `time_us`  
+`futures.contract_stats` | `time` (seconds) | `time_us`  
+  
+Microsecond examples are in each channel's notification section.
+
+####  Private channels for OMS 3.0
+
+Fields are added only when the connection is enabled and the message is handled for an OMS 3.0 user. Private updates for other users stay the same as a connection that did not enable this: no outer `time_us` and no business microsecond fields.
+
+Private channels for OMS 3.0Channel | Kept | Added  
+---|---|---  
+`futures.orders`, `futures.orders_v2` | `create_time`, `create_time_ms`, `update_time`, `update_time_ms`, `finish_time`, `finish_time_ms` | `create_time_us`, `update_time_us`, `finish_time_us`  
+`futures.usertrades` | `create_time`, `create_time_ms` | `create_time_us`  
+`futures.balances`, `futures.positions`, `futures.liquidates`, `futures.reduce_risk_limits`, `futures.auto_deleverages` | `time`, `time_ms` | `time_us`  
+  
+Microsecond examples are in each channel's notification section.
+
+When the connection is enabled and the user is OMS 3.0, order placement, cancellation, amendment, and order query responses also add the corresponding microsecond fields. `header` adds `time_us` and `response_time_us`. The order object adds `create_time_us`, `update_time_us`, and `finish_time_us`. `futures.login` does not. Examples are in each operation's response section.
 
 Channel specific description below will only give the server-initiated data update notification format for simplicity.
 
@@ -592,6 +866,58 @@ Code example
     
     
     span
+    
+
+Code example
+    
+    
+    span
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"crypto/hmac"
+    	"crypto/sha512"
+    	"encoding/hex"
+    	"encoding/json"
+    	"fmt"
+    	"time"
+    )
+    
+    func genSign(channel, event string, timestamp int64) map[string]string {
+    	apiKey := "YOUR_API_KEY"
+    	apiSecret := "YOUR_API_SECRET"
+    
+    	s := fmt.Sprintf("channel=%s&event=%s&time=%d", channel, event, timestamp)
+    	h := hmac.New(sha512.New, []byte(apiSecret))
+    	h.Write([]byte(s))
+    	sign := hex.EncodeToString(h.Sum(nil))
+    
+    	return map[string]string{
+    		"method": "api_key",
+    		"KEY":    apiKey,
+    		"SIGN":   sign,
+    	}
+    }
+    
+    func main() {
+    	timestamp := time.Now().Unix()
+    	request := map[string]interface{}{
+    		"id":      time.Now().UnixNano() / 1e3,
+    		"time":    timestamp,
+    		"channel": "futures.orders",
+    		"event":   "subscribe",
+    		"payload": []string{"20011", "BTC_USDT"},
+    	}
+    	request["auth"] = genSign(request["channel"].(string), request["event"].(string), timestamp)
+    
+    	jsonBytes, _ := json.Marshal(request)
+    	fmt.Println(string(jsonBytes))
+    }
     
 
 Code example
@@ -771,6 +1097,16 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send('{"time" : 123456, "channel" : "futures.ping"}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -813,12 +1149,101 @@ Code example
     }
     
 
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	ping := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.ping",
+    	}
+    
+    	msg, err := json.Marshal(ping)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+
 The above command returns JSON structured like this:
     
     
     {
       "time": 1545404023,
       "time_ms": 1545404023123,
+      "channel": "futures.pong",
+      "event": "",
+      "result": null
+    }
+    
+
+With the request header `timeUnit: microsecond`, pong adds only the outer `time_us`.
+
+`futures.pong`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1545404023,
+      "time_ms": 1545404023123,
+      "time_us": 1545404023123456,
+      "channel": "futures.pong",
+      "event": "",
+      "result": null
+    }
+    
+
+With the request header `timeUnit: microsecond`, pong adds only the outer `time_us`.
+
+`futures.pong`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1545404023,
+      "time_ms": 1545404023123,
+      "time_us": 1545404023123456,
       "channel": "futures.pong",
       "event": "",
       "result": null
@@ -897,6 +1322,16 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send('{"time" : 123456, "channel" : "futures.tickers","event": "subscribe", "payload" : ["BTC_USDT"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -909,6 +1344,44 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time":123456,"channel":"futures.tickers","event":"subscribe","payload":["BTC_USDT"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -988,6 +1461,7 @@ field | type | description
 `price_type` | String | Price type: `last`, `mark`, or `index`  
 `t` | Integer | Ticker generation timestamp in milliseconds  
 `event_type` | String | `snapshot` on first push after connect; omitted on live updates  
+`t_us` | Integer | Same as the `t` field, microsecond precision  
 
     
     
@@ -1019,6 +1493,178 @@ field | type | description
           "high_24h": "132.5",
           "price_type": "last",
           "t": 1541659086123
+        }
+      ]
+    }
+    
+
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.tickers`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1541659086,
+      "time_ms": 1541659086123,
+      "time_us": 1541659086123456,
+      "channel": "futures.tickers",
+      "event": "update",
+      "result": [
+        {
+          "contract": "BTC_USDT",
+          "last": "118.4",
+          "change_percentage": "0.77",
+          "change_from": "24h",
+          "change_price": "0.91",
+          "funding_rate": "-0.000114",
+          "funding_rate_indicative": "0.01875",
+          "mark_price": "118.35",
+          "index_price": "118.36",
+          "total_size": "73648.5",
+          "volume_24h": "745487577",
+          "volume_24h_btc": "117",
+          "volume_24h_usd": "419950",
+          "quanto_base_rate": "",
+          "volume_24h_quote": "1665006",
+          "volume_24h_settle": "178",
+          "volume_24h_base": "5526",
+          "low_24h": "99.2",
+          "high_24h": "132.5",
+          "price_type": "last",
+          "t": 1541659086123,
+          "t_us": 1541659086123000
+        }
+      ]
+    }
+    
+
+##  Cancel subscription
+
+**Notify subscribed contract ticker.**
+
+###  Notify
+
+  * channel
+
+`futures.tickers`
+
+  * event
+
+`update`
+
+  * params
+
+field | type | description  
+---|---|---  
+`result` | Array | Array of objects  
+field | type | description  
+---|---|---  
+`contract` | String | Futures contract name  
+`last` | String | Last price  
+`change_percentage` | String | Change percentage  
+`funding_rate` | String | Funding rate  
+`funding_rate_indicative` | String | Indicative Funding rate in next period. (deprecated. use funding_rate)  
+`mark_price` | String | Recent mark price  
+`index_price` | String | Index price  
+`total_size` | String | Total size  
+`volume_24h` | String | Volume 24h  
+`quanto_base_rate` | String | Exchange rate of base currency and settlement currency in Quanto contract. Does not exists in contracts of other types  
+`volume_24h_btc` | String | Trade volumes in recent 24h in BTC(deprecated, use`volume_24h_base`, `volume_24h_quote`, `volume_24h_settle` instead)  
+`volume_24h_usd` | String | Trade volumes in recent 24h in USD(deprecated, use`volume_24h_base`, `volume_24h_quote`, `volume_24h_settle` instead)  
+`volume_24h_quote` | String | Trade volume in recent 24h, in quote currency  
+`volume_24h_settle` | String | Trade volume in recent 24h, in settle currency  
+`volume_24h_base` | String | Trade volume in recent 24h, in base currency  
+`low_24h` | String | Lowest trading price in recent 24h  
+`high_24h` | String | Highest trading price in recent 24h  
+`change_from` | String | Change calculation window, e.g. `24h`  
+`change_price` | String | Price change amount  
+`price_type` | String | Price type: `last`, `mark`, or `index`  
+`t` | Integer | Ticker generation timestamp in milliseconds  
+`event_type` | String | `snapshot` on first push after connect; omitted on live updates  
+`t_us` | Integer | Same as the `t` field, microsecond precision  
+
+Code example
+    
+    
+    import json
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    req = {
+      "time": 123456,
+      "channel": "futures.tickers",
+      "event": "unsubscribe",
+      "payload": ["BTC_USDT"]
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    import json
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+      "time": 123456,
+      "channel": "futures.tickers",
+      "event": "unsubscribe",
+      "payload": ["BTC_USDT"]
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.tickers`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1541659086,
+      "time_ms": 1541659086123,
+      "time_us": 1541659086123456,
+      "channel": "futures.tickers",
+      "event": "update",
+      "result": [
+        {
+          "contract": "BTC_USDT",
+          "last": "118.4",
+          "change_percentage": "0.77",
+          "change_from": "24h",
+          "change_price": "0.91",
+          "funding_rate": "-0.000114",
+          "funding_rate_indicative": "0.01875",
+          "mark_price": "118.35",
+          "index_price": "118.36",
+          "total_size": "73648.5",
+          "volume_24h": "745487577",
+          "volume_24h_btc": "117",
+          "volume_24h_usd": "419950",
+          "quanto_base_rate": "",
+          "volume_24h_quote": "1665006",
+          "volume_24h_settle": "178",
+          "volume_24h_base": "5526",
+          "low_24h": "99.2",
+          "high_24h": "132.5",
+          "price_type": "last",
+          "t": 1541659086123,
+          "t_us": 1541659086123000
         }
       ]
     }
@@ -1060,6 +1706,23 @@ Code example
 Code example
     
     
+    import json
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+      "time": 123456,
+      "channel": "futures.tickers",
+      "event": "unsubscribe",
+      "payload": ["BTC_USDT"]
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -1073,6 +1736,55 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    123456,
+    		"channel": "futures.tickers",
+    		"event":   "unsubscribe",
+    		"payload": []string{"BTC_USDT"},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -1158,6 +1870,16 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send('{"time" : 123456, "channel" : "futures.trades","event": "subscribe", "payload" : ["BTC_USDT"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -1170,6 +1892,44 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time":123456,"channel":"futures.trades","event":"subscribe","payload":["BTC_USDT"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -1232,6 +1992,7 @@ field | type | description
 `id` | int | Trades id  
 `create_time` | int | Trades msg create time  
 `create_time_ms` | int | Trades msg create time in milliseconds  
+`create_time_us` | Integer | Same as the `create_time` field, microsecond precision  
 `price` | string | Trades price  
 `is_internal` | bool | Whether internal trade. Internal trade refers to the takeover of liquidation orders by the insurance fund and ADL users. Since it is not a normal matching on the market depth, the transaction price may deviate, and it will not be recorded in the K-line. If it is not an internal trade, this field will not be returned.  
 
@@ -1279,6 +2040,121 @@ Without `X-Gate-Size-Decimal: 1` header, `size` is integer (fractional size trun
     }
     
 
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.trades`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "channel": "futures.trades",
+      "event": "update",
+      "time": 1541503698,
+      "time_ms": 1541503698123,
+      "time_us": 1541503698123456,
+      "result": [
+        {
+          "size": -108,
+          "id": 27753479,
+          "create_time": 1545136464,
+          "create_time_ms": 1545136464123,
+          "create_time_us": 1545136464123000,
+          "price": "96.4",
+          "contract": "BTC_USDT",
+          "is_internal": true
+        }
+      ]
+    }
+    
+
+##  Cancel subscription
+
+###  Notify
+
+  * channel
+
+`futures.trades`
+
+  * event
+
+`update`
+
+  * params
+
+field | type | description  
+---|---|---  
+`result` | Array | Array of objects  
+field | type | description  
+---|---|---  
+`contract` | string | Futures contract name  
+`size` | string/int | Trades size  
+`id` | int | Trades id  
+`create_time` | int | Trades msg create time  
+`create_time_ms` | int | Trades msg create time in milliseconds  
+`create_time_us` | Integer | Same as the `create_time` field, microsecond precision  
+`price` | string | Trades price  
+`is_internal` | bool | Whether internal trade. Internal trade refers to the takeover of liquidation orders by the insurance fund and ADL users. Since it is not a normal matching on the market depth, the transaction price may deviate, and it will not be recorded in the K-line. If it is not an internal trade, this field will not be returned.  
+
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    ws.send(
+      '{"time" : 123456, "channel" : "futures.trades", "event": "subscribe", "payload" : ["BTC_USDT"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send(
+      '{"time" : 123456, "channel" : "futures.trades", "event": "subscribe", "payload" : ["BTC_USDT"]}')
+    print(ws.recv())
+    
+
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.trades`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "channel": "futures.trades",
+      "event": "update",
+      "time": 1541503698,
+      "time_ms": 1541503698123,
+      "time_us": 1541503698123456,
+      "result": [
+        {
+          "size": -108,
+          "id": 27753479,
+          "create_time": 1545136464,
+          "create_time_ms": 1545136464123,
+          "create_time_us": 1545136464123000,
+          "price": "96.4",
+          "contract": "BTC_USDT",
+          "is_internal": true
+        }
+      ]
+    }
+    
+
 ##  Cancel subscription
 
 Unsubscribe`trades update notification.`
@@ -1309,6 +2185,17 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send(
+      '{"time" : 123456, "channel" : "futures.trades", "event": "subscribe", "payload" : ["BTC_USDT"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -1321,6 +2208,44 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time":123456,"channel":"futures.trades","event":"subscribe","payload":["BTC_USDT"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -1434,6 +2359,16 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send('{"time" : 123456, "channel" : "futures.order_book","event": "subscribe", "payload" : ["BTC_USDT", "20", "0"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -1446,6 +2381,44 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time":123456,"channel":"futures.order_book","event":"subscribe","payload":["BTC_USDT","20","0"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -1502,6 +2475,7 @@ field | type | description
 ---|---|---  
 `result` | object | Order book info  
 »`t` | Integer | Order book generation timestamp in milliseconds  
+»`t_us` | Integer | Same as the `t` field, microsecond precision  
 »`contract` | String | Contract name  
 »`id` | Integer | OrderBook id  
 »`asks` | Array | OrderBook ask list  
@@ -1521,6 +2495,152 @@ field | type | description
       "time_ms": 1541500161123,
       "result": {
         "t": 1541500161123,
+        "contract": "BTC_USDT",
+        "id": 93973511,
+        "asks": [
+          {
+            "p": "97.1",
+            "s": "2245.5"
+          },
+          {
+            "p": "97.0",
+            "s": "1200"
+          }
+        ],
+        "bids": [
+          {
+            "p": "96.9",
+            "s": "3100.2"
+          },
+          {
+            "p": "96.8",
+            "s": "0"
+          }
+        ],
+        "l": "20"
+      }
+    }
+    
+
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.order_book`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "channel": "futures.order_book",
+      "event": "all",
+      "time": 1541500161,
+      "time_ms": 1541500161123,
+      "time_us": 1541500161123456,
+      "result": {
+        "t": 1541500161123,
+        "t_us": 1541500161123000,
+        "contract": "BTC_USDT",
+        "id": 93973511,
+        "asks": [
+          {
+            "p": "97.1",
+            "s": "2245.5"
+          },
+          {
+            "p": "97.0",
+            "s": "1200"
+          }
+        ],
+        "bids": [
+          {
+            "p": "96.9",
+            "s": "3100.2"
+          },
+          {
+            "p": "96.8",
+            "s": "0"
+          }
+        ],
+        "l": "20"
+      }
+    }
+    
+
+##  Legacy order book unsubscription
+
+**Notify contract order book update information**
+
+###  Notify
+
+  * channel
+
+`futures.order_book`
+
+  * event
+
+`all`
+
+  * params
+
+field | type | description  
+---|---|---  
+`result` | object | Order book info  
+»`t` | Integer | Order book generation timestamp in milliseconds  
+»`t_us` | Integer | Same as the `t` field, microsecond precision  
+»`contract` | String | Contract name  
+»`id` | Integer | OrderBook id  
+»`asks` | Array | OrderBook ask list  
+»»`p` | String | Ask price  
+»»`s` | String | Ask size  
+»`bids` | Array | OrderBook bid List  
+»»`p` | String | Bid price  
+»»`s` | String | Bid size  
+»`l` | String | Depth level (For example, 100 represents a depth update of 100 levels)  
+
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    ws.send('{"time" : 123456, "channel" : "futures.order_book","event": "unsubscribe", "payload" : ["BTC_USDT", "20", "0"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send('{"time" : 123456, "channel" : "futures.order_book","event": "unsubscribe", "payload" : ["BTC_USDT", "20", "0"]}')
+    print(ws.recv())
+    
+
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.order_book`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "channel": "futures.order_book",
+      "event": "all",
+      "time": 1541500161,
+      "time_ms": 1541500161123,
+      "time_us": 1541500161123456,
+      "result": {
+        "t": 1541500161123,
+        "t_us": 1541500161123000,
         "contract": "BTC_USDT",
         "id": 93973511,
         "asks": [
@@ -1577,6 +2697,16 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send('{"time" : 123456, "channel" : "futures.order_book","event": "unsubscribe", "payload" : ["BTC_USDT", "20", "0"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -1589,6 +2719,44 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time":123456,"channel":"futures.order_book","event":"unsubscribe","payload":["BTC_USDT","20","0"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -1658,6 +2826,16 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send('{"time" : 123456, "channel" : "futures.book_ticker","event": "subscribe", "payload" : ["BTC_USDT"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -1670,6 +2848,44 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time":123456,"channel":"futures.book_ticker","event":"subscribe","payload":["BTC_USDT"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -1728,6 +2944,7 @@ field | type | description
 ---|---|---  
 `result` | object | Best bid and ask  
 »`t` | Integer | Book ticker generated timestamp in milliseconds  
+»`t_us` | Integer | Same as the `t` field, microsecond precision  
 »`u` | String | Order book update ID  
 »`s` | String | Contract name  
 »`b` | String | Best bid price. If no bids, it's empty string  
@@ -1774,6 +2991,115 @@ Without `X-Gate-Size-Decimal: 1` header, `B` and `A` are integers:
     }
     
 
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.book_ticker`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1615366379,
+      "time_ms": 1615366379123,
+      "time_us": 1615366379123456,
+      "channel": "futures.book_ticker",
+      "event": "update",
+      "result": {
+        "t": 1615366379123,
+        "t_us": 1615366379123000,
+        "u": 2517661076,
+        "s": "BTC_USDT",
+        "b": "54696.6",
+        "B": 37000,
+        "a": "54696.7",
+        "A": 47061
+      }
+    }
+    
+
+##  Best ask/bid unsubscription
+
+**Notify contract order book best bid and ask**
+
+###  Notify
+
+  * channel
+
+`futures.book_ticker`
+
+  * event
+
+`update`
+
+  * params
+
+field | type | description  
+---|---|---  
+`result` | object | Best bid and ask  
+»`t` | Integer | Book ticker generated timestamp in milliseconds  
+»`t_us` | Integer | Same as the `t` field, microsecond precision  
+»`u` | String | Order book update ID  
+»`s` | String | Contract name  
+»`b` | String | Best bid price. If no bids, it's empty string  
+»`B` | String/Integer | Best bid size. If no bids, it will be 0  
+»`a` | String | Best ask price. If no asks, it's empty string  
+»`A` | String/Integer | Best ask size. If no asks, it will be 0  
+
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    ws.send('{"time" : 123456, "channel" : "futures.book_ticker","event": "unsubscribe", "payload" : ["BTC_USDT"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send('{"time" : 123456, "channel" : "futures.book_ticker","event": "unsubscribe", "payload" : ["BTC_USDT"]}')
+    print(ws.recv())
+    
+
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.book_ticker`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1615366379,
+      "time_ms": 1615366379123,
+      "time_us": 1615366379123456,
+      "channel": "futures.book_ticker",
+      "event": "update",
+      "result": {
+        "t": 1615366379123,
+        "t_us": 1615366379123000,
+        "u": 2517661076,
+        "s": "BTC_USDT",
+        "b": "54696.6",
+        "B": 37000,
+        "a": "54696.7",
+        "A": 47061
+      }
+    }
+    
+
 ##  Best ask/bid unsubscription
 
 Unsubscribe`specified contract order book.`
@@ -1803,6 +3129,16 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send('{"time" : 123456, "channel" : "futures.book_ticker","event": "unsubscribe", "payload" : ["BTC_USDT"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -1815,6 +3151,44 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time":123456,"channel":"futures.book_ticker","event":"unsubscribe","payload":["BTC_USDT"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -1888,6 +3262,16 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send('{"time" : 123456, "channel" : "futures.order_book_update","event": "subscribe", "payload" : ["BTC_USDT", "100ms", "100"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -1900,6 +3284,44 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time":123456,"channel":"futures.order_book_update","event":"subscribe","payload":["BTC_USDT", "100ms", "100"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -1956,6 +3378,7 @@ field | type | description
 ---|---|---  
 `result` | Object | Changed asks and bids since last update  
 »`t` | Integer | Order book generation timestamp in milliseconds  
+»`t_us` | Integer | Same as the `t` field, microsecond precision  
 »`full` | Boolean | `true` indicates a full depth snapshot (e.g., if the subscribed `level` is 100, the pushed data will contain 100 levels of depth). Upon receiving this, the user should replace the local order book with the provided data.`false` indicates incremental depth updates. When the value is `false`, this field is omitted from the message  
 »`s` | String | Contract name  
 »`U` | Integer | First order book update ID since last update  
@@ -2031,6 +3454,158 @@ Without `X-Gate-Size-Decimal: 1` header, level `s` is integer:
     }
     
 
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.order_book_update`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1615366381,
+      "time_ms": 1615366381123,
+      "time_us": 1615366381123456,
+      "channel": "futures.order_book_update",
+      "event": "update",
+      "result": {
+        "t": 1615366381417,
+        "t_us": 1615366381417000,
+        "s": "BTC_USDT",
+        "U": 2517661101,
+        "u": 2517661113,
+        "b": [
+          {
+            "p": "54672.1",
+            "s": 0
+          },
+          {
+            "p": "54664.5",
+            "s": 58794
+          }
+        ],
+        "a": [
+          {
+            "p": "54743.6",
+            "s": 0
+          },
+          {
+            "p": "54742",
+            "s": 95
+          }
+        ],
+        "l": "100"
+      }
+    }
+    
+
+##  Order book update unsubscription
+
+**Notify contract order book update**
+
+###  Notify
+
+  * channel
+
+`futures.order_book_update`
+
+  * event
+
+`update`
+
+  * params
+
+field | type | description  
+---|---|---  
+`result` | Object | Changed asks and bids since last update  
+»`t` | Integer | Order book generation timestamp in milliseconds  
+»`t_us` | Integer | Same as the `t` field, microsecond precision  
+»`full` | Boolean | `true` indicates a full depth snapshot (e.g., if the subscribed `level` is 100, the pushed data will contain 100 levels of depth). Upon receiving this, the user should replace the local order book with the provided data.`false` indicates incremental depth updates. When the value is `false`, this field is omitted from the message  
+»`s` | String | Contract name  
+»`U` | Integer | First order book update ID since last update  
+»`u` | Integer | Last order book update ID since last update  
+»`b` | Array | Changed bids  
+»»`p` | String | Changed price  
+»»`s` | String/Integer | Absolute size value after change. If 0, remove this price from order book  
+»`a` | Array | Changed asks  
+»»`p` | String | Changed price  
+»»`s` | String/Integer | Absolute size value after change. If 0, remove this price from order book  
+»`l` | String | Depth level (For example, 100 represents a depth update of 100 levels)  
+
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    ws.send(
+      '{"time" : 123456, "channel" : "futures.order_book_update", "event": "unsubscribe", "payload" : ["BTC_USDT", "100ms"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send(
+      '{"time" : 123456, "channel" : "futures.order_book_update", "event": "unsubscribe", "payload" : ["BTC_USDT", "100ms"]}')
+    print(ws.recv())
+    
+
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.order_book_update`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1615366381,
+      "time_ms": 1615366381123,
+      "time_us": 1615366381123456,
+      "channel": "futures.order_book_update",
+      "event": "update",
+      "result": {
+        "t": 1615366381417,
+        "t_us": 1615366381417000,
+        "s": "BTC_USDT",
+        "U": 2517661101,
+        "u": 2517661113,
+        "b": [
+          {
+            "p": "54672.1",
+            "s": 0
+          },
+          {
+            "p": "54664.5",
+            "s": 58794
+          }
+        ],
+        "a": [
+          {
+            "p": "54743.6",
+            "s": 0
+          },
+          {
+            "p": "54742",
+            "s": 95
+          }
+        ],
+        "l": "100"
+      }
+    }
+    
+
 ##  Order book update unsubscription
 
 Unsubscribe`specified contract order book.`
@@ -2061,6 +3636,17 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send(
+      '{"time" : 123456, "channel" : "futures.order_book_update", "event": "unsubscribe", "payload" : ["BTC_USDT", "100ms"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -2073,6 +3659,44 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time":123456,"channel":"futures.order_book_update","event":"unsubscribe","payload":["BTC_USDT", "100ms"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -2139,9 +3763,9 @@ Subscribe `to the RPI order book.`
 
 RequestName | Type | Required | Description  
 ---|---|---|---  
-`contract` | String | Optional | Contract name  
-`limit` | String | Optional | Depth level: 100, 50, 20, 10, 5  
-`interval` | String | Optional | Price accuracy. Only `"0"` is supported  
+`contract` | String | Required | Contract name  
+`limit` | String | Required | Depth level: 100, 50, 20, 10, 5  
+`interval` | String | Required | Price accuracy. Only `"0"` is supported  
   
 Code example
     
@@ -2149,6 +3773,16 @@ Code example
     from websocket import create_connection
     
     ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    ws.send('{"time" : 123456, "channel" : "futures.rpi_order_book","event": "subscribe", "payload" : ["BTC_USDT", "20", "0"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
     ws.send('{"time" : 123456, "channel" : "futures.rpi_order_book","event": "subscribe", "payload" : ["BTC_USDT", "20", "0"]}')
     print(ws.recv())
     
@@ -2169,6 +3803,44 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time":123456,"channel":"futures.rpi_order_book","event":"subscribe","payload":["BTC_USDT","20","0"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"net/http"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -2225,6 +3897,7 @@ Notification parametersName | Type | Description
 ---|---|---  
 `result` | object | Order book  
 »`t` | Integer | Order book generation timestamp in milliseconds  
+»`t_us` | Integer | Same as the `t` field, microsecond precision  
 »`contract` | String | Contract name  
 »`id` | Integer | Order book ID  
 »`asks` | Array | Ask levels  
@@ -2243,6 +3916,85 @@ Notification parametersName | Type | Description
       "time_ms": 1541500161123,
       "result": {
         "t": 1541500161123,
+        "contract": "BTC_USDT",
+        "id": 93973511,
+        "asks": [
+          {
+            "p": "97.1",
+            "s": "2245.5"
+          }
+        ],
+        "bids": [
+          {
+            "p": "96.9",
+            "s": "3100.2"
+          }
+        ],
+        "l": "20"
+      }
+    }
+    
+
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.rpi_order_book`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "channel": "futures.rpi_order_book",
+      "event": "all",
+      "time": 1541500161,
+      "time_ms": 1541500161123,
+      "time_us": 1541500161123456,
+      "result": {
+        "t": 1541500161123,
+        "t_us": 1541500161123000,
+        "contract": "BTC_USDT",
+        "id": 93973511,
+        "asks": [
+          {
+            "p": "97.1",
+            "s": "2245.5"
+          }
+        ],
+        "bids": [
+          {
+            "p": "96.9",
+            "s": "3100.2"
+          }
+        ],
+        "l": "20"
+      }
+    }
+    
+
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.rpi_order_book`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "channel": "futures.rpi_order_book",
+      "event": "all",
+      "time": 1541500161,
+      "time_ms": 1541500161123,
+      "time_us": 1541500161123456,
+      "result": {
+        "t": 1541500161123,
+        "t_us": 1541500161123000,
         "contract": "BTC_USDT",
         "id": 93973511,
         "asks": [
@@ -2291,6 +4043,16 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send('{"time" : 123456, "channel" : "futures.rpi_order_book","event": "unsubscribe", "payload" : ["BTC_USDT", "20", "0"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -2304,6 +4066,44 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time":123456,"channel":"futures.rpi_order_book","event":"unsubscribe","payload":["BTC_USDT","20","0"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"net/http"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -2400,6 +4200,17 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send('{"time" : 123456, "channel" : "futures.obu",
+            "event": "subscribe", "payload" : ["ob.BTC_USDT.400"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -2412,6 +4223,44 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "futures.obu", "event": "subscribe", "payload" : ["ob.BTC_USDT.400"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -2474,6 +4323,7 @@ Notifyfield | type | description
 ---|---|---  
 `result` | Object | Ask and bid price changes since the previous update  
 »`t` | Integer | Order book generation timestamp (in milliseconds)  
+»`t_us` | Integer | Same as the `t` field, microsecond precision  
 »`full` | Boolean | `true` indicates a full depth snapshot; `false` indicates incremental depth updates. When the value is `false`, this field is omitted from the message  
 »`s` | String | Name of the depth stream  
 »`U` | Integer | Starting order book update ID of this update  
@@ -2526,6 +4376,153 @@ Example of incremental push:
     }
     
 
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.obu`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "channel": "futures.obu",
+      "result": {
+        "t": 1743673027017,
+        "t_us": 1743673027017000,
+        "s": "ob.BTC_USDT.400",
+        "U": 79072179674,
+        "u": 79072179694,
+        "b": [
+          [
+            "83702.2",
+            "62"
+          ],
+          [
+            "83702.1",
+            "0"
+          ],
+          [
+            "83702",
+            "0"
+          ],
+          [
+            "83685.6",
+            "120"
+          ],
+          [
+            "83685",
+            "239"
+          ]
+        ]
+      },
+      "time_ms": 1743673027020,
+      "time_us": 1743673027020456
+    }
+    
+
+##  Order book V2 update unsubscription
+
+**Notify contract order book v2 update**
+
+###  Notify
+
+  * channel
+
+`futures.obu`
+
+  * event
+
+`update`
+
+  * params
+
+Notifyfield | type | description  
+---|---|---  
+`result` | Object | Ask and bid price changes since the previous update  
+»`t` | Integer | Order book generation timestamp (in milliseconds)  
+»`t_us` | Integer | Same as the `t` field, microsecond precision  
+»`full` | Boolean | `true` indicates a full depth snapshot; `false` indicates incremental depth updates. When the value is `false`, this field is omitted from the message  
+»`s` | String | Name of the depth stream  
+»`U` | Integer | Starting order book update ID of this update  
+»`u` | Integer | Ending order book update ID of this update  
+»`b` | `Array[OrderBookArray]` | Bids updates since the last update  
+»» OrderBookArray | `Array[String]` | An array pair [Price, Amount]; if Amount = 0, the corresponding entry should be removed from the local depth.  
+»`a` | `Array[OrderBookArray]` | Asks updates since the last update  
+»» OrderBookArray | `Array[String]` | An array pair [Price, Amount]; if Amount = 0, the corresponding entry should be removed from the local depth.  
+  
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    ws.send(
+      '{"time" : 123456, "channel" : "futures.obu", "event": "unsubscribe", "payload" : ["ob.BTC_USDT.400"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send(
+      '{"time" : 123456, "channel" : "futures.obu", "event": "unsubscribe", "payload" : ["ob.BTC_USDT.400"]}')
+    print(ws.recv())
+    
+
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.obu`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "channel": "futures.obu",
+      "result": {
+        "t": 1743673027017,
+        "t_us": 1743673027017000,
+        "s": "ob.BTC_USDT.400",
+        "U": 79072179674,
+        "u": 79072179694,
+        "b": [
+          [
+            "83702.2",
+            "62"
+          ],
+          [
+            "83702.1",
+            "0"
+          ],
+          [
+            "83702",
+            "0"
+          ],
+          [
+            "83685.6",
+            "120"
+          ],
+          [
+            "83685",
+            "239"
+          ]
+        ]
+      },
+      "time_ms": 1743673027020,
+      "time_us": 1743673027020456
+    }
+    
+
 ##  Order book V2 update unsubscription
 
 Unsubscribe`specified contract order book v2`
@@ -2556,6 +4553,17 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send(
+      '{"time" : 123456, "channel" : "futures.obu", "event": "unsubscribe", "payload" : ["ob.BTC_USDT.400"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -2568,6 +4576,44 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "futures.obu", "event": "unsubscribe", "payload" : ["ob.BTC_USDT.400"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -2652,6 +4698,17 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send('{"time" : 123456, "channel" : "futures.rpi_obu",
+            "event": "subscribe", "payload" : ["rpi_ob.BTC_USDT.400"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -2665,6 +4722,44 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "futures.rpi_obu", "event": "subscribe", "payload" : ["rpi_ob.BTC_USDT.400"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"net/http"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -2727,6 +4822,7 @@ Notification parametersName | Type | Description
 ---|---|---  
 `result` | Object | Changed asks and bids since the last update  
 »`t` | Integer | Order book generation timestamp in milliseconds  
+»`t_us` | Integer | Same as the `t` field, microsecond precision  
 »`full` | Boolean | `true` means a full snapshot. Incremental updates omit this field  
 »`s` | String | Stream name, for example `rpi_ob.BTC_USDT.400`  
 »`U` | Integer | First order book update ID in this notification  
@@ -2776,6 +4872,77 @@ Incremental update:
     }
     
 
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.rpi_obu`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "channel": "futures.rpi_obu",
+      "result": {
+        "t": 1743673027017,
+        "t_us": 1743673027017000,
+        "s": "rpi_ob.BTC_USDT.400",
+        "U": 79072179674,
+        "u": 79072179694,
+        "b": [
+          [
+            "83702.2",
+            "62"
+          ],
+          [
+            "83702.1",
+            "0"
+          ]
+        ]
+      },
+      "time_ms": 1743673027020,
+      "time_us": 1743673027020456
+    }
+    
+
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.rpi_obu`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "channel": "futures.rpi_obu",
+      "result": {
+        "t": 1743673027017,
+        "t_us": 1743673027017000,
+        "s": "rpi_ob.BTC_USDT.400",
+        "U": 79072179674,
+        "u": 79072179694,
+        "b": [
+          [
+            "83702.2",
+            "62"
+          ],
+          [
+            "83702.1",
+            "0"
+          ]
+        ]
+      },
+      "time_ms": 1743673027020,
+      "time_us": 1743673027020456
+    }
+    
+
 ##  RPI order book V2 unsubscription
 
 Unsubscribe`from the RPI order book V2 stream of a contract.`
@@ -2806,6 +4973,17 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send(
+      '{"time" : 123456, "channel" : "futures.rpi_obu", "event": "unsubscribe", "payload" : ["rpi_ob.BTC_USDT.400"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -2819,6 +4997,44 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "futures.rpi_obu", "event": "unsubscribe", "payload" : ["rpi_ob.BTC_USDT.400"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"net/http"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -2879,6 +5095,16 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send('{"time" : 123456, "channel" : "futures.candlesticks","event": "subscribe", "payload" : ["1m", "BTC_USDT"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -2891,6 +5117,44 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time":123456,"channel":"futures.candlesticks","event":"subscribe","payload":["1m", "BTC_USDT"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -2949,6 +5213,7 @@ field | type | description
 field | type | description  
 ---|---|---  
 `t` | Integer | Time  
+`t_us` | Integer | Same as the `t` field, microsecond precision  
 `o` | String | Open  
 `c` | String | Close  
 `h` | String | Highest  
@@ -3016,6 +5281,75 @@ Without `X-Gate-Size-Decimal: 1` header, `v` is integer:
     }
     
 
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.candlesticks`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1542162490,
+      "time_ms": 1542162490123,
+      "time_us": 1542162490123456,
+      "channel": "futures.candlesticks",
+      "event": "update",
+      "result": [
+        {
+          "t": 1545129300,
+          "t_us": 1545129300000000,
+          "v": 27525555,
+          "c": "95.4",
+          "h": "96.9",
+          "l": "89.5",
+          "o": "94.3",
+          "n": "1m_BTC_USDT",
+          "a": "314732.87412",
+          "w": false
+        }
+      ]
+    }
+    
+
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.candlesticks`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1542162490,
+      "time_ms": 1542162490123,
+      "time_us": 1542162490123456,
+      "channel": "futures.candlesticks",
+      "event": "update",
+      "result": [
+        {
+          "t": 1545129300,
+          "t_us": 1545129300000000,
+          "v": 27525555,
+          "c": "95.4",
+          "h": "96.9",
+          "l": "89.5",
+          "o": "94.3",
+          "n": "1m_BTC_USDT",
+          "a": "314732.87412",
+          "w": false
+        }
+      ]
+    }
+    
+
 ##  Cancel subscription
 
 Unsubscribe`specified contract kline information.`
@@ -3046,6 +5380,17 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send(
+      '{"time" : 123456, "channel" : "futures.candlesticks", "event": "unsubscribe", "payload" : ["1m", "BTC_USDT"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -3058,6 +5403,44 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time":123456,"channel":"futures.candlesticks","event":"unsubscribe","payload":["1m", "BTC_USDT"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -3116,7 +5499,7 @@ If you want to subscribe to liquidates order push in all contracts, use `!all` i
 
 name | type | required | describe  
 ---|---|---|---  
-`contract` | String | Optional | contract list  
+`contract` | String | Required | contract list  
 
 Code example
     
@@ -3125,6 +5508,23 @@ Code example
     from websocket import create_connection
     
     ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    req = {
+        "time": 123456,
+        "channel": "futures.public_liquidates",
+        "event": "subscribe",
+        "payload": ["BTC_USDT","BTC_USDT"],
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    import json
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
     req = {
         "time": 123456,
         "channel": "futures.public_liquidates",
@@ -3151,6 +5551,55 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    123456,
+    		"channel": "futures.public_liquidates",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT", "BTC_USDT"},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"encoding/json"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -3221,6 +5670,7 @@ parameter | type | description
 `price` | Float | order price  
 `size` | string/Integer | liquidate order quantity  
 `time` | Integer | liquidation time in milliseconds  
+`time_us` | Integer | Same as the `time` field, microsecond precision  
 `contract` | string | contract  
 
     
@@ -3272,6 +5722,79 @@ Without `X-Gate-Size-Decimal: 1` header, `size` is integer:
     }
     
 
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.public_liquidates`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "channel": "futures.public_liquidates",
+      "event": "update",
+      "time": 1541505434,
+      "time_ms": 1541505434123,
+      "time_us": 1541505434123456,
+      "result": [
+        {
+          "price": "215.1",
+          "size": -124,
+          "time": 1541486601123,
+          "time_us": 1541486601123000,
+          "contract": "BTC_USDT"
+        },
+        {
+          "price": "215.2",
+          "size": -10,
+          "time": 1541486601456,
+          "time_us": 1541486601456000,
+          "contract": "BTC_USDT"
+        }
+      ]
+    }
+    
+
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.public_liquidates`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "channel": "futures.public_liquidates",
+      "event": "update",
+      "time": 1541505434,
+      "time_ms": 1541505434123,
+      "time_us": 1541505434123456,
+      "result": [
+        {
+          "price": "215.1",
+          "size": -124,
+          "time": 1541486601123,
+          "time_us": 1541486601123000,
+          "contract": "BTC_USDT"
+        },
+        {
+          "price": "215.2",
+          "size": -10,
+          "time": 1541486601456,
+          "time_us": 1541486601456000,
+          "contract": "BTC_USDT"
+        }
+      ]
+    }
+    
+
 ##  Cancel subscription
 
 **public liquidate order Unsubscribe**
@@ -3306,6 +5829,23 @@ Code example
 Code example
     
     
+    import json
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+        "time": 123456,
+        "channel": "futures.public_liquidates",
+        "event": "unsubscribe",
+        "payload": ["BTC_USDT"],
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -3319,6 +5859,55 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    123456,
+    		"channel": "futures.public_liquidates",
+    		"event":   "unsubscribe",
+    		"payload": []string{"BTC_USDT"},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"encoding/json"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -3389,7 +5978,7 @@ Subscribe `to contract info push`
 
 name | type | required | describe  
 ---|---|---|---  
-`contract` | String | Optional | contract list  
+`contract` | String | Required | contract list  
 
 Code example
     
@@ -3398,6 +5987,23 @@ Code example
     from websocket import create_connection
     
     ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    req = {
+        "time": 123456,
+        "channel": "futures.contract_info",
+        "event": "subscribe",
+        "payload": ["BTC_USDT"],
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    import json
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
     req = {
         "time": 123456,
         "channel": "futures.contract_info",
@@ -3424,6 +6030,55 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    123456,
+    		"channel": "futures.contract_info",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT"},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"encoding/json"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -3592,6 +6247,23 @@ Code example
 Code example
     
     
+    import json
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+        "time": 123456,
+        "channel": "futures.contract_info",
+        "event": "unsubscribe",
+        "payload": ["BTC_USDT"],
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -3605,6 +6277,55 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    123456,
+    		"channel": "futures.contract_info",
+    		"event":   "unsubscribe",
+    		"payload": []string{"BTC_USDT"},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"encoding/json"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -3691,6 +6412,16 @@ Code example
 Code example
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send('{"time" : 123456, "channel" : "futures.contract_stats","event": "subscribe", "payload" : ["BTC_USDT","1m"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -3703,6 +6434,49 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	message := `{
+    		"time": 123456,
+    		"channel": "futures.contract_stats",
+    		"event": "subscribe",
+    		"payload": ["BTC_USDT", "1m"]
+    	}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(message))
+    	if err != nil {
+    		log.Fatal("write error:", err)
+    	}
+    
+    	_, msg, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read error:", err)
+    	}
+    
+    	fmt.Println(string(msg))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -3766,6 +6540,7 @@ field | type | description
 field | type | description  
 ---|---|---  
 `time` | Integer | Stat timestamp  
+`time_us` | Integer | Same as the `time` field, microsecond precision  
 `contract` | String | Contract Name  
 `mark_price` | Float | Current mark price  
 `lsr_taker` | Float | Long/short account number ratio  
@@ -3791,6 +6566,87 @@ field | type | description
       "result": [
         {
           "time": 1603865400,
+          "contract": "BTC_USDT",
+          "lsr_taker": 100,
+          "lsr_account": 0.5,
+          "long_liq_size": "0",
+          "short_liq_size": "0",
+          "open_interest": "124724",
+          "short_liq_usd": 0,
+          "mark_price": "8865",
+          "top_lsr_size": 1.02,
+          "short_liq_amount": 0,
+          "long_liq_amount": 0,
+          "open_interest_usd": 1511,
+          "top_lsr_account": 1.5,
+          "long_liq_usd": 0
+        }
+      ]
+    }
+    
+
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.contract_stats`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1541659086,
+      "time_ms": 1541659086123,
+      "time_us": 1541659086123456,
+      "channel": "futures.contract_stats",
+      "event": "update",
+      "result": [
+        {
+          "time": 1603865400,
+          "time_us": 1603865400000000,
+          "contract": "BTC_USDT",
+          "lsr_taker": 100,
+          "lsr_account": 0.5,
+          "long_liq_size": "0",
+          "short_liq_size": "0",
+          "open_interest": "124724",
+          "short_liq_usd": 0,
+          "mark_price": "8865",
+          "top_lsr_size": 1.02,
+          "short_liq_amount": 0,
+          "long_liq_amount": 0,
+          "open_interest_usd": 1511,
+          "top_lsr_account": 1.5,
+          "long_liq_usd": 0
+        }
+      ]
+    }
+    
+
+With the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.contract_stats`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1541659086,
+      "time_ms": 1541659086123,
+      "time_us": 1541659086123456,
+      "channel": "futures.contract_stats",
+      "event": "update",
+      "result": [
+        {
+          "time": 1603865400,
+          "time_us": 1603865400000000,
           "contract": "BTC_USDT",
           "lsr_taker": 100,
           "lsr_account": 0.5,
@@ -3855,6 +6711,23 @@ Code example
 Code example
     
     
+    import json
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+        "time": 123456,
+        "channel": "futures.contract_stats",
+        "event": "unsubscribe",
+        "payload": ["BTC_USDT","1m"]
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -3867,6 +6740,49 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := `{
+    		"time": 123456,
+    		"channel": "futures.contract_stats",
+    		"event": "unsubscribe",
+    		"payload": ["BTC_USDT", "1m"]
+    	}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(req))
+    	if err != nil {
+    		log.Fatal("write error:", err)
+    	}
+    
+    	_, msg, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read error:", err)
+    	}
+    
+    	fmt.Println(string(msg))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -4166,6 +7082,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+      "time": int(time.time()),
+      "channel": "futures.orders",
+      "event": "subscribe",
+      "payload": ["20011", "BTC_USDT"],
+      "auth": {
+        "method": "api_key",
+        "KEY": "xxxx",
+        "SIGN": "xxxx"
+      }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -4179,6 +7117,60 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.orders",
+    		"event":   "subscribe",
+    		"payload": []interface{}{"20011", "BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write error:", err)
+    	}
+    
+    	_, resp, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read error:", err)
+    	}
+    
+    	fmt.Println(string(resp))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+      "time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -4255,6 +7247,7 @@ field | type | description
 ---|---|---  
 `create_time` | Integer | Creation time of order(deprecated)  
 `create_time_ms` | Integer | Creation timestamp in milliseconds of order  
+`create_time_us` | Integer | Same as the `create_time` field, microsecond precision  
 `fill_price` | String | Fill price of the order  
 `finish_as` | String | How the order was finished:  
   
@@ -4291,6 +7284,7 @@ field | type | description
 Only ioc and fok are supported when type=market  
 `finish_time` | Integer | Order finished unix timestamp in seconds. For unfinished orders, this field returns a value of 0.  
 `finish_time_ms` | Integer | Order finished unix timestamp in milliseconds. For unfinished orders, this field returns a value of 0.  
+`finish_time_us` | Integer | Same as the `finish_time` field, microsecond precision  
 `user` | String | User ID  
 `contract` | String | Futures contract  
 `stp_id` | String | Orders between users in the same stp_id group are not allowed to be self-traded  
@@ -4306,6 +7300,7 @@ Only ioc and fok are supported when type=market
 `amend_text` | String | The custom data that the user remarked when amending the order  
 `update_id` | Integer | Update ID  
 `update_time` | Integer | Update Time (Milliseconds Timestamp)  
+`update_time_us` | Integer | Same as the `update_time` field, microsecond precision  
 `biz_info` | String | Users can annotate this modification with information.  
 `stop_profit_price` | String | Stop Profit Price  
 `stop_loss_price` | String | Stop Loss Price  
@@ -4415,6 +7410,111 @@ Without `X-Gate-Size-Decimal: 1` header, `size`, `left`, and `iceberg` are integ
     }
     
 
+On an OMS 3.0 connection with the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.orders`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "channel": "futures.orders",
+      "event": "update",
+      "time": 1541505434,
+      "time_ms": 1541505434123,
+      "time_us": 1541505434123456,
+      "result": [
+        {
+          "contract": "BTC_USDT",
+          "create_time": 1628736847,
+          "create_time_ms": 1628736847325,
+          "create_time_us": 1628736847325000,
+          "fill_price": "40000.4",
+          "finish_as": "filled",
+          "finish_time": 1628736848,
+          "finish_time_ms": 1628736848321,
+          "finish_time_us": 1628736848321000,
+          "iceberg": 0,
+          "id": 4872460,
+          "id_string": "4872460",
+          "is_close": false,
+          "is_liq": false,
+          "is_reduce_only": false,
+          "left": 0,
+          "mkfr": -0.00025,
+          "price": "40000.4",
+          "size": 1,
+          "status": "finished",
+          "text": "api",
+          "tif": "gtc",
+          "tkfr": 0.0005,
+          "user": "110xxxxx",
+          "update_id": 1,
+          "update_time": 1541505434123,
+          "update_time_us": 1541505434123000,
+          "market_order_slip_ratio": "0.03"
+        }
+      ]
+    }
+    
+
+On an OMS 3.0 connection with the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.orders`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "channel": "futures.orders",
+      "event": "update",
+      "time": 1541505434,
+      "time_ms": 1541505434123,
+      "time_us": 1541505434123456,
+      "result": [
+        {
+          "contract": "BTC_USDT",
+          "create_time": 1628736847,
+          "create_time_ms": 1628736847325,
+          "create_time_us": 1628736847325000,
+          "fill_price": "40000.4",
+          "finish_as": "filled",
+          "finish_time": 1628736848,
+          "finish_time_ms": 1628736848321,
+          "finish_time_us": 1628736848321000,
+          "iceberg": 0,
+          "id": 4872460,
+          "id_string": "4872460",
+          "is_close": false,
+          "is_liq": false,
+          "is_reduce_only": false,
+          "left": 0,
+          "mkfr": -0.00025,
+          "price": "40000.4",
+          "size": 1,
+          "status": "finished",
+          "text": "api",
+          "tif": "gtc",
+          "tkfr": 0.0005,
+          "user": "110xxxxx",
+          "update_id": 1,
+          "update_time": 1541505434123,
+          "update_time_us": 1541505434123000,
+          "market_order_slip_ratio": "0.03"
+        }
+      ]
+    }
+    
+
 ##  Cancel subscription
 
 Unsubscribe`user orders update notification, for all contract.`
@@ -4456,6 +7556,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+      "time": int(time.time()),
+      "channel": "futures.orders",
+      "event": "unsubscribe",
+      "payload": ["20011", "BTC_USDT"],
+      "auth": {
+        "method": "api_key",
+        "KEY": "xxxx",
+        "SIGN": "xxxx"
+      }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -4470,6 +7592,61 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.orders",
+    		"event":   "unsubscribe",
+    		"payload": []interface{}{"20011", "BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx", // replace with your API key
+    			"SIGN":   "xxxx", // replace with your generated signature
+    		},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write error:", err)
+    	}
+    
+    	_, resp, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read error:", err)
+    	}
+    
+    	fmt.Println(string(resp))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -4603,10 +7780,12 @@ Field | Type | Description
 `contract` | String | Futures contract name.  
 `create_time` | Integer | OMS order creation timestamp in seconds.  
 `create_time_ms` | Integer | OMS order creation timestamp in milliseconds.  
+`create_time_us` | Integer | Same as the `create_time` field, microsecond precision  
 `fill_price` | String | Order fill price, as a decimal string.  
 `finish_as` | String | `_new` for creation and `_update` for updates while the order is open. For a finished order, the completion reason, such as `filled`, `cancelled`, `ioc`, `poc`, `fok`, or `stp`; other reasons follow `futures.orders`.  
 `finish_time` | Integer | Upstream order event log timestamp in seconds; this is not a clearing completion timestamp.  
 `finish_time_ms` | Integer | Upstream order event log timestamp in milliseconds; this is not the ME update timestamp.  
+`finish_time_us` | Integer | Same as the `finish_time` field, microsecond precision  
 `iceberg` | String | Displayed iceberg order size, as a decimal string. `"0"` for a regular order.  
 `id` | Integer | Order ID. Use `id_string` if your client cannot preserve large integers.  
 `id_string` | String | Order ID as a string.  
@@ -4624,6 +7803,7 @@ Field | Type | Description
 `user` | String | User ID.  
 `update_id` | Integer | Order update ID.  
 `update_time_ms` | Integer | ME timestamp in milliseconds. For creation, when the order reaches ME; for a fill, amendment, or cancellation, when ME updates the order.  
+`update_time_us` | Integer | Same as the `update_time` field, microsecond precision  
 `biz_info` | String | Business information attached to the order update.  
 `stp_act` | String | Self-trade prevention action: `cn` (cancel newest), `co` (cancel oldest), `cb` (cancel both), or `-` if unset.  
 `stp_id` | String | Self-trade prevention group ID; `"0"` if unset.  
@@ -4667,6 +7847,129 @@ Field | Type | Description
           "user": "20011",
           "update_id": 1,
           "update_time_ms": 1628736848320,
+          "biz_info": "-",
+          "stp_act": "-",
+          "stp_id": "0",
+          "amend_text": "-",
+          "bbo": "-",
+          "pos_margin_mode": "cross",
+          "leverage": "10",
+          "stop_loss_price": "",
+          "stop_profit_price": "",
+          "market_order_slip_ratio": "0.03"
+        }
+      ]
+    }
+    
+
+On an OMS 3.0 connection with the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.orders_v2`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "channel": "futures.orders_v2",
+      "event": "update",
+      "time": 1628736848,
+      "time_ms": 1628736848325,
+      "time_us": 1628736848325456,
+      "result": [
+        {
+          "contract": "BTC_USDT",
+          "create_time": 1628736847,
+          "create_time_ms": 1628736847325,
+          "create_time_us": 1628736847325000,
+          "fill_price": "40000.4",
+          "finish_as": "filled",
+          "finish_time": 1628736848,
+          "finish_time_ms": 1628736848321,
+          "finish_time_us": 1628736848321000,
+          "iceberg": "0",
+          "id": 4872460,
+          "id_string": "4872460",
+          "is_close": false,
+          "is_liq": false,
+          "is_reduce_only": false,
+          "is_voucher": false,
+          "left": "0",
+          "mkfr": -0.00025,
+          "price": "40000.4",
+          "size": "1.5",
+          "status": "finished",
+          "text": "api",
+          "tif": "gtc",
+          "user": "20011",
+          "update_id": 1,
+          "update_time_ms": 1628736848320,
+          "update_time_us": 1628736848320000,
+          "biz_info": "-",
+          "stp_act": "-",
+          "stp_id": "0",
+          "amend_text": "-",
+          "bbo": "-",
+          "pos_margin_mode": "cross",
+          "leverage": "10",
+          "stop_loss_price": "",
+          "stop_profit_price": "",
+          "market_order_slip_ratio": "0.03"
+        }
+      ]
+    }
+    
+
+On an OMS 3.0 connection with the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.orders_v2`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "channel": "futures.orders_v2",
+      "event": "update",
+      "time": 1628736848,
+      "time_ms": 1628736848325,
+      "time_us": 1628736848325456,
+      "result": [
+        {
+          "contract": "BTC_USDT",
+          "create_time": 1628736847,
+          "create_time_ms": 1628736847325,
+          "create_time_us": 1628736847325000,
+          "fill_price": "40000.4",
+          "finish_as": "filled",
+          "finish_time": 1628736848,
+          "finish_time_ms": 1628736848321,
+          "finish_time_us": 1628736848321000,
+          "iceberg": "0",
+          "id": 4872460,
+          "id_string": "4872460",
+          "is_close": false,
+          "is_liq": false,
+          "is_reduce_only": false,
+          "is_voucher": false,
+          "left": "0",
+          "mkfr": -0.00025,
+          "price": "40000.4",
+          "size": "1.5",
+          "status": "finished",
+          "text": "api",
+          "tif": "gtc",
+          "user": "20011",
+          "update_id": 1,
+          "update_time_ms": 1628736848320,
+          "update_time_us": 1628736848320000,
           "biz_info": "-",
           "stp_act": "-",
           "stp_id": "0",
@@ -4774,6 +8077,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+      "time": int(time.time()),
+      "channel": "futures.usertrades",
+      "event": "subscribe",
+      "payload": ["20011", "BTC_USDT"],
+      "auth": {
+        "method": "api_key",
+        "KEY": "xxxx",
+        "SIGN": "xxxx"
+      }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -4788,6 +8113,61 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.usertrades",
+    		"event":   "subscribe",
+    		"payload": []interface{}{"20011", "BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write error:", err)
+    	}
+    
+    	_, resp, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read error:", err)
+    	}
+    
+    	fmt.Println(string(resp))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -4863,6 +8243,7 @@ field | type | description
 `contract` | String | Futures contract name  
 `create_time` | Integer | Create time  
 `create_time_ms` | Integer | Create time in milliseconds  
+`create_time_us` | Integer | Same as the `create_time` field, microsecond precision  
 `id` | String | Trades id  
 `order_id` | String | Order Id  
 `price` | String | Price  
@@ -4948,6 +8329,79 @@ Without `X-Gate-Size-Decimal: 1` header, `size` is integer:
     }
     
 
+On an OMS 3.0 connection with the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.usertrades`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1543205083,
+      "time_ms": 1543205083123,
+      "time_us": 1543205083123456,
+      "channel": "futures.usertrades",
+      "event": "update",
+      "result": [
+        {
+          "id": "3335259",
+          "create_time": 1628736848,
+          "create_time_ms": 1628736848321,
+          "create_time_us": 1628736848321000,
+          "contract": "BTC_USDT",
+          "order_id": "4872460",
+          "size": 1,
+          "price": "40000.4",
+          "role": "maker",
+          "text": "api",
+          "fee": 0.0009290592,
+          "point_fee": 0
+        }
+      ]
+    }
+    
+
+On an OMS 3.0 connection with the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.usertrades`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1543205083,
+      "time_ms": 1543205083123,
+      "time_us": 1543205083123456,
+      "channel": "futures.usertrades",
+      "event": "update",
+      "result": [
+        {
+          "id": "3335259",
+          "create_time": 1628736848,
+          "create_time_ms": 1628736848321,
+          "create_time_us": 1628736848321000,
+          "contract": "BTC_USDT",
+          "order_id": "4872460",
+          "size": 1,
+          "price": "40000.4",
+          "role": "maker",
+          "text": "api",
+          "fee": 0.0009290592,
+          "point_fee": 0
+        }
+      ]
+    }
+    
+
 ##  Cancel subscription
 
 Unsubscribe`user trades update.`
@@ -4989,6 +8443,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+      "time": int(time.time()),
+      "channel": "futures.usertrades",
+      "event": "unsubscribe",
+      "payload": ["20011", "BTC_USDT"],
+      "auth": {
+        "method": "api_key",
+        "KEY": "xxxx",
+        "SIGN": "xxxx"
+      }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -5003,6 +8479,61 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.usertrades",
+    		"event":   "unsubscribe",
+    		"payload": []interface{}{"20011", "BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write error:", err)
+    	}
+    
+    	_, resp, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read error:", err)
+    	}
+    
+    	fmt.Println(string(resp))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -5112,6 +8643,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+      "time": int(time.time()),
+      "channel": "futures.liquidates",
+      "event": "subscribe",
+      "payload": ["20011", "BTC_USDT"],
+      "auth": {
+        "method": "api_key",
+        "KEY": "xxxx",
+        "SIGN": "xxxx"
+      }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -5126,6 +8679,61 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.liquidates",
+    		"event":   "subscribe",
+    		"payload": []interface{}{"20011", "BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write error:", err)
+    	}
+    
+    	_, resp, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read error:", err)
+    	}
+    
+    	fmt.Println(string(resp))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -5211,6 +8819,7 @@ field | type | description
 `size` | String/Integer | Liquidation size  
 `time` | Integer | Time  
 `time_ms` | Integer | Time in milliseconds  
+`time_us` | Integer | Same as the `time` field, microsecond precision  
 `user` | String | User id  
 `contract` | String | Futures contract name  
 
@@ -5273,6 +8882,87 @@ Without `X-Gate-Size-Decimal: 1` header, `left`, `order_size`, and `size` are in
     }
     
 
+On an OMS 3.0 connection with the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.liquidates`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "channel": "futures.liquidates",
+      "event": "update",
+      "time": 1541505434,
+      "time_ms": 1541505434123,
+      "time_us": 1541505434123456,
+      "result": [
+        {
+          "entry_price": 209,
+          "fill_price": 215.1,
+          "left": 0,
+          "leverage": 0.0,
+          "liq_price": 213,
+          "margin": 0.007816722941,
+          "mark_price": 213,
+          "order_id": 4093362,
+          "order_price": 215.1,
+          "order_size": -124,
+          "size": -124,
+          "time": 1541486601,
+          "time_ms": 1541486601123,
+          "time_us": 1541486601123000,
+          "contract": "BTC_USDT",
+          "user": "1040xxxx"
+        }
+      ]
+    }
+    
+
+On an OMS 3.0 connection with the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.liquidates`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "channel": "futures.liquidates",
+      "event": "update",
+      "time": 1541505434,
+      "time_ms": 1541505434123,
+      "time_us": 1541505434123456,
+      "result": [
+        {
+          "entry_price": 209,
+          "fill_price": 215.1,
+          "left": 0,
+          "leverage": 0.0,
+          "liq_price": 213,
+          "margin": 0.007816722941,
+          "mark_price": 213,
+          "order_id": 4093362,
+          "order_price": 215.1,
+          "order_size": -124,
+          "size": -124,
+          "time": 1541486601,
+          "time_ms": 1541486601123,
+          "time_us": 1541486601123000,
+          "contract": "BTC_USDT",
+          "user": "1040xxxx"
+        }
+      ]
+    }
+    
+
 ##  Cancel subscription
 
 Unsubscribe`liquidates update.`
@@ -5314,6 +9004,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+      "time": int(time.time()),
+      "channel": "futures.liquidates",
+      "event": "unsubscribe",
+      "payload": ["20011", "BTC_USDT"],
+      "auth": {
+        "method": "api_key",
+        "KEY": "xxxx",
+        "SIGN": "xxxx"
+      }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -5328,6 +9040,61 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.liquidates",
+    		"event":   "unsubscribe",
+    		"payload": []interface{}{"20011", "BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write error:", err)
+    	}
+    
+    	_, resp, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read error:", err)
+    	}
+    
+    	fmt.Println(string(resp))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -5437,6 +9204,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+      "time": int(time.time()),
+      "channel": "futures.auto_deleverages",
+      "event": "subscribe",
+      "payload": ["20011", "BTC_USDT"],
+      "auth": {
+        "method": "api_key",
+        "KEY": "xxxx",
+        "SIGN": "xxxx"
+      }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -5451,6 +9240,61 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.auto_deleverages",
+    		"event":   "subscribe",
+    		"payload": []interface{}{"20011", "BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write error:", err)
+    	}
+    
+    	_, resp, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read error:", err)
+    	}
+    
+    	fmt.Println(string(resp))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -5529,6 +9373,7 @@ field | type | description
 `trade_size` | String/Integer | Trade size  
 `time` | Integer | Time  
 `time_ms` | Integer | Time in milliseconds  
+`time_us` | Integer | Same as the `time` field, microsecond precision  
 `user` | String | User id  
 `contract` | String | Futures contract name  
 `pos_margin_mode` | String | Position margin mode  
@@ -5581,6 +9426,73 @@ Without `X-Gate-Size-Decimal: 1` header, `position_size` and `trade_size` are in
     }
     
 
+On an OMS 3.0 connection with the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.auto_deleverages`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "channel": "futures.auto_deleverages",
+      "event": "update",
+      "time": 1541505434,
+      "time_ms": 1541505434123,
+      "time_us": 1541505434123456,
+      "result": [
+        {
+          "entry_price": 209,
+          "fill_price": 215.1,
+          "position_size": 10,
+          "trade_size": 10,
+          "time": 1541486601,
+          "time_ms": 1541486601123,
+          "time_us": 1541486601123000,
+          "contract": "BTC_USDT",
+          "user": "1040"
+        }
+      ]
+    }
+    
+
+On an OMS 3.0 connection with the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.auto_deleverages`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "channel": "futures.auto_deleverages",
+      "event": "update",
+      "time": 1541505434,
+      "time_ms": 1541505434123,
+      "time_us": 1541505434123456,
+      "result": [
+        {
+          "entry_price": 209,
+          "fill_price": 215.1,
+          "position_size": 10,
+          "trade_size": 10,
+          "time": 1541486601,
+          "time_ms": 1541486601123,
+          "time_us": 1541486601123000,
+          "contract": "BTC_USDT",
+          "user": "1040"
+        }
+      ]
+    }
+    
+
 ##  Cancel subscription
 
 Unsubscribe`auto_deleverages update.`
@@ -5622,6 +9534,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+      "time": int(time.time()),
+      "channel": "futures.auto_deleverages",
+      "event": "unsubscribe",
+      "payload": ["20011", "BTC_USDT"],
+      "auth": {
+        "method": "api_key",
+        "KEY": "xxxx",
+        "SIGN": "xxxx"
+      }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -5636,6 +9570,61 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.auto_deleverages",
+    		"event":   "unsubscribe",
+    		"payload": []interface{}{"20011", "BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write error:", err)
+    	}
+    
+    	_, resp, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read error:", err)
+    	}
+    
+    	fmt.Println(string(resp))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -5745,6 +9734,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+      "time": int(time.time()),
+      "channel": "futures.position_closes",
+      "event": "subscribe",
+      "payload": ["20011", "BTC_USDT"],
+      "auth": {
+        "method": "api_key",
+        "KEY": "xxxx",
+        "SIGN": "xxxx"
+      }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -5759,6 +9770,61 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.position_closes",
+    		"event":   "subscribe",
+    		"payload": []interface{}{"20011", "BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write error:", err)
+    	}
+    
+    	_, resp, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read error:", err)
+    	}
+    
+    	fmt.Println(string(resp))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -5901,6 +9967,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+        "time": int(time.time()),
+        "channel": "futures.position_closes",
+        "event": "unsubscribe",
+        "payload": ["20011", "BTC_USDT"],
+        "auth": {
+            "method": "api_key",
+            "KEY": "xxxx",
+            "SIGN": "xxxx"
+        }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -5915,6 +10003,61 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.position_closes",
+    		"event":   "unsubscribe",
+    		"payload": []interface{}{"20011", "BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write error:", err)
+    	}
+    
+    	_, resp, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read error:", err)
+    	}
+    
+    	fmt.Println(string(resp))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -6021,6 +10164,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+        "time": int(time.time()),
+        "channel": "futures.balances",
+        "event": "subscribe",
+        "payload": ["20011"],
+        "auth": {
+            "method": "api_key",
+            "KEY": "xxxx",
+            "SIGN": "xxxx"
+        }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -6035,6 +10200,61 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.balances",
+    		"event":   "subscribe",
+    		"payload": []interface{}{"20011"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write error:", err)
+    	}
+    
+    	_, resp, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read error:", err)
+    	}
+    
+    	fmt.Println(string(resp))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -6112,6 +10332,7 @@ field | type | description
 `text` | String | Messages  
 `time` | Integer | Time  
 `time_ms` | Integer | Time in milliseconds  
+`time_us` | Integer | Same as the `time` field, microsecond precision  
 `type` | String | change type:  
 dnw: deposit and withdrawal   
 pnl：profit and loss   
@@ -6149,6 +10370,73 @@ fee: trade fee
     }
     
 
+On an OMS 3.0 connection with the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.balances`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "channel": "futures.balances",
+      "event": "update",
+      "time": 1541505434,
+      "time_ms": 1541505434123,
+      "time_us": 1541505434123456,
+      "result": [
+        {
+          "balance": 9.998739899488,
+          "change": -2.074115e-06,
+          "text": "BTC_USDT:3914424",
+          "time": 1547199246,
+          "time_ms": 1547199246123,
+          "time_us": 1547199246123000,
+          "type": "fee",
+          "user": "211xxx",
+          "currency": "btc"
+        }
+      ]
+    }
+    
+
+On an OMS 3.0 connection with the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.balances`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "channel": "futures.balances",
+      "event": "update",
+      "time": 1541505434,
+      "time_ms": 1541505434123,
+      "time_us": 1541505434123456,
+      "result": [
+        {
+          "balance": 9.998739899488,
+          "change": -2.074115e-06,
+          "text": "BTC_USDT:3914424",
+          "time": 1547199246,
+          "time_ms": 1547199246123,
+          "time_us": 1547199246123000,
+          "type": "fee",
+          "user": "211xxx",
+          "currency": "btc"
+        }
+      ]
+    }
+    
+
 ##  Cancel subscription
 
 Code example
@@ -6158,6 +10446,28 @@ Code example
     from websocket import create_connection
     
     ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    req = {
+        "time": int(time.time()),
+        "channel": "futures.balances",
+        "event": "unsubscribe",
+        "payload": ["20011"],
+        "auth": {
+            "method": "api_key",
+            "KEY": "xxxx",
+            "SIGN": "xxxx"
+        }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
     req = {
         "time": int(time.time()),
         "channel": "futures.balances",
@@ -6190,6 +10500,61 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.balances",
+    		"event":   "unsubscribe",
+    		"payload": []interface{}{"20011"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write error:", err)
+    	}
+    
+    	_, resp, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read error:", err)
+    	}
+    
+    	fmt.Println(string(resp))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -6299,6 +10664,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+        "time": int(time.time()),
+        "channel": "futures.reduce_risk_limits",
+        "event": "subscribe",
+        "payload": ["20011", "BTC_USDT"],
+        "auth": {
+            "method": "api_key",
+            "KEY": "xxxx",
+            "SIGN": "xxxx"
+        }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -6313,6 +10700,61 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.reduce_risk_limits",
+    		"event":   "subscribe",
+    		"payload": []interface{}{"20011", "BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx", // replace with your API key
+    			"SIGN":   "xxxx", // replace with your generated signature
+    		},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write error:", err)
+    	}
+    
+    	_, resp, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read error:", err)
+    	}
+    
+    	fmt.Println(string(resp))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -6393,6 +10835,7 @@ field | type | description
 `risk_limit` | Integer | Risk limit  
 `time` | Integer | Time  
 `time_ms` | Integer | Time in milliseconds  
+`time_us` | Integer | Same as the `time` field, microsecond precision  
 `user` | String | User id  
 
     
@@ -6412,6 +10855,75 @@ field | type | description
           "risk_limit": 450,
           "time": 1551858330,
           "time_ms": 1551858330123,
+          "user": "20011"
+        }
+      ]
+    }
+    
+
+On an OMS 3.0 connection with the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.reduce_risk_limits`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1551858330,
+      "time_ms": 1551858330123,
+      "time_us": 1551858330123456,
+      "channel": "futures.reduce_risk_limits",
+      "event": "update",
+      "result": [
+        {
+          "cancel_orders": 0,
+          "contract": "BTC_USDT",
+          "leverage_max": 10,
+          "liq_price": 136.53,
+          "maintenance_rate": 0.09,
+          "risk_limit": 450,
+          "time": 1551858330,
+          "time_ms": 1551858330123,
+          "time_us": 1551858330123000,
+          "user": "20011"
+        }
+      ]
+    }
+    
+
+On an OMS 3.0 connection with the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.reduce_risk_limits`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1551858330,
+      "time_ms": 1551858330123,
+      "time_us": 1551858330123456,
+      "channel": "futures.reduce_risk_limits",
+      "event": "update",
+      "result": [
+        {
+          "cancel_orders": 0,
+          "contract": "BTC_USDT",
+          "leverage_max": 10,
+          "liq_price": 136.53,
+          "maintenance_rate": 0.09,
+          "risk_limit": 450,
+          "time": 1551858330,
+          "time_ms": 1551858330123,
+          "time_us": 1551858330123000,
           "user": "20011"
         }
       ]
@@ -6459,6 +10971,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+        "time": int(time.time()),
+        "channel": "futures.reduce_risk_limits",
+        "event": "unsubscribe",
+        "payload": ["20011", "BTC_USDT"],
+        "auth": {
+            "method": "api_key",
+            "KEY": "xxxx",
+            "SIGN": "xxxx"
+        }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -6473,6 +11007,60 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("Dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.reduce_risk_limits",
+    		"event":   "unsubscribe",
+    		"payload": []string{"20011", "BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	reqBytes, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("JSON Marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, reqBytes)
+    	if err != nil {
+    		log.Fatal("Write error:", err)
+    	}
+    
+    	_, msg, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("Read error:", err)
+    	}
+    	fmt.Println(string(msg))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"bytes"
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("Dial error:", err)
     	}
@@ -6567,6 +11155,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+        "time": int(time.time()),
+        "channel": "futures.positions",
+        "event": "subscribe",
+        "payload": ["20011", "BTC_USDT"],
+        "auth": {
+            "method": "api_key",
+            "KEY": "xxxx",
+            "SIGN": "xxxx"
+        }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -6581,6 +11191,60 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("Dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.positions",
+    		"event":   "subscribe",
+    		"payload": []string{"20011", "BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	reqBytes, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("JSON Marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, reqBytes)
+    	if err != nil {
+    		log.Fatal("Write error:", err)
+    	}
+    
+    	_, msg, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("Read error:", err)
+    	}
+    	fmt.Println(string(msg))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"bytes"
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("Dial error:", err)
     	}
@@ -6669,6 +11333,7 @@ field | type | description
 `size` | String/Integer | Contract size  
 `time` | Integer | Update unix timestamp  
 `time_ms` | Integer | Update unix timestamp in milliseconds  
+`time_us` | Integer | Same as the `time` field, microsecond precision  
 `user` | String | User id  
 `update_id` | Integer | Message sequence number  
 `pos_margin_mode` | String | Position margin mode  
@@ -6734,6 +11399,75 @@ Without `X-Gate-Size-Decimal: 1` header, `size` is integer:
     }
     
 
+On an OMS 3.0 connection with the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.positions`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1588212926,
+      "time_ms": 1588212926123,
+      "time_us": 1588212926123456,
+      "channel": "futures.positions",
+      "event": "update",
+      "result": [
+        {
+          "contract": "BTC_USDT",
+          "size": 3,
+          "user": "110xxxxx",
+          "update_id": 170919,
+          "time": 1628736848,
+          "time_ms": 1628736848321,
+          "time_us": 1628736848321000,
+          "mode": "single",
+          "leverage": 0,
+          "leverage_max": 100
+        }
+      ]
+    }
+    
+
+On an OMS 3.0 connection with the request header `timeUnit: microsecond`, microsecond fields are added alongside the original fields.
+
+`futures.positions`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1588212926,
+      "time_ms": 1588212926123,
+      "time_us": 1588212926123456,
+      "channel": "futures.positions",
+      "event": "update",
+      "result": [
+        {
+          "contract": "BTC_USDT",
+          "size": 3,
+          "user": "110xxxxx",
+          "update_id": 170919,
+          "time": 1628736848,
+          "time_ms": 1628736848321,
+          "time_us": 1628736848321000,
+          "mode": "single",
+          "leverage": 0,
+          "leverage_max": 100
+        }
+      ]
+    }
+    
+
 ##  Cancel subscription
 
 Unsubscribe`positions update.`
@@ -6775,6 +11509,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+        "time": int(time.time()),
+        "channel": "futures.positions",
+        "event": "unsubscribe",
+        "payload": ["20011", "BTC_USDT"],
+        "auth": {
+            "method": "api_key",
+            "KEY": "xxxx",
+            "SIGN": "xxxx"
+        }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -6788,6 +11544,59 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal(err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.positions",
+    		"event":   "unsubscribe",
+    		"payload": []string{"20011", "BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	reqBytes, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal(err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, reqBytes)
+    	if err != nil {
+    		log.Fatal(err)
+    	}
+    
+    	_, msg, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal(err)
+    	}
+    	fmt.Println(string(msg))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal(err)
     	}
@@ -6895,6 +11704,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+        "time": int(time.time()),
+        "channel": "futures.position_adl_rank",
+        "event": "subscribe",
+        "payload": ["BTC_USDT"],
+        "auth": {
+            "method": "api_key",
+            "KEY": "xxxx",
+            "SIGN": "xxxx"
+        }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -6909,6 +11740,60 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("Dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.position_adl_rank",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	reqBytes, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("JSON Marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, reqBytes)
+    	if err != nil {
+    		log.Fatal("Write error:", err)
+    	}
+    
+    	_, msg, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("Read error:", err)
+    	}
+    	fmt.Println(string(msg))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"bytes"
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("Dial error:", err)
     	}
@@ -7048,6 +11933,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+        "time": int(time.time()),
+        "channel": "futures.position_adl_rank",
+        "event": "unsubscribe",
+        "payload": ["BTC_USDT"],
+        "auth": {
+            "method": "api_key",
+            "KEY": "xxxx",
+            "SIGN": "xxxx"
+        }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -7061,6 +11968,59 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal(err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.position_adl_rank",
+    		"event":   "unsubscribe",
+    		"payload": []string{"BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	reqBytes, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal(err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, reqBytes)
+    	if err != nil {
+    		log.Fatal(err)
+    	}
+    
+    	_, msg, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal(err)
+    	}
+    	fmt.Println(string(msg))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal(err)
     	}
@@ -7168,6 +12128,28 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+        "time": int(time.time()),
+        "channel": "futures.autoorders",
+        "event": "subscribe",
+        "payload": ["BTC_USDT"],
+        "auth": {
+            "method": "api_key",
+            "KEY": "xxxx",
+            "SIGN": "xxxx"
+        }
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -7181,6 +12163,59 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal(err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.autoorders",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	reqBytes, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal(err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, reqBytes)
+    	if err != nil {
+    		log.Fatal(err)
+    	}
+    
+    	_, msg, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal(err)
+    	}
+    	fmt.Println(string(msg))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal(err)
     	}
@@ -7366,6 +12401,27 @@ Code example
 Code example
     
     
+    import json, time
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    req = {
+        "time": int(time.time()),
+        "channel": "futures.autoorders",
+        "event": "unsubscribe",
+        "payload": ["BTC_USDT"],
+        "auth": {
+            "method": "api_key",
+            "KEY": "xxxx",
+            "SIGN": "xxxx"
+        }}
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -7379,6 +12435,59 @@ Code example
     func main() {
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal(err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":     time.Now().Unix(),
+    		"channel": "futures.autoorders",
+    		"event":   "unsubscribe",
+    		"payload": []string{"BTC_USDT"},
+    		"auth": map[string]string{
+    			"method": "api_key",
+    			"KEY":    "xxxx",
+    			"SIGN":   "xxxx",
+    		},
+    	}
+    
+    	reqBytes, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal(err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, reqBytes)
+    	if err != nil {
+    		log.Fatal(err)
+    	}
+    
+    	_, msg, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal(err)
+    	}
+    	fmt.Println(string(msg))
+    }
+    
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+      "time"
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal(err)
     	}
@@ -7455,7 +12564,121 @@ identifying the corresponding request.
 See[Websocket API Authentication](#Websocket API Authentication) section for details  
 »`req_param` | []Byte | Yes | Request api param  
   
-Note that the type of `payload.req_param` is channel specific, Take `futures.order_place` for example, `payload.req_param` same as apiv4 [/futures/{settle}/orders ](https://www.gate.com/docs/developers/apiv4/en/#create-a-futures-order). You can place a limit order for BTC_USDT with example.
+Note that the type of `payload.req_param` is channel specific, Take `futures.order_place` for example, `payload.req_param` same as apiv4 [/futures/{settle}/orders](/docs/developers/apiv4/en/futures/#opIdcreateFuturesOrder). You can place a limit order for BTC_USDT with example.
+
+Code example
+    
+    
+    #!/usr/bin/python
+    
+    import time
+    import json
+    import hmac
+    import hashlib
+    import websocket
+    import threading
+    
+    
+    API_KEY = "xxxxx"
+    SECRET = "xxxxx"
+    WS_URL = "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    CHANNEL_LOGIN = "futures.login"
+    CHANNEL_ORDER_PLACE = "futures.order_place"
+    
+    def get_ts():
+        return int(time.time())
+    
+    def get_ts_ms():
+        return int(time.time() * 1000)
+    
+    def get_signature(secret, channel, request_param_bytes, ts):
+        key = f"api\n{channel}\n{request_param_bytes.decode()}\n{ts}"
+        return hmac.new(secret.encode(), key.encode(), hashlib.sha512).hexdigest()
+    
+    def build_login_request():
+        ts = get_ts()
+        req_id = f"{get_ts_ms()}-1"
+        request_param = b""
+    
+        sign = get_signature(SECRET, CHANNEL_LOGIN, request_param, ts)
+    
+        payload = {
+            "api_key": API_KEY,
+            "signature": sign,
+            "timestamp": str(ts),
+            "req_id": req_id
+        }
+    
+        return {
+            "time": ts,
+            "channel": CHANNEL_LOGIN,
+            "event": "api",
+            "payload": payload
+        }
+    
+    
+    def build_order_request():
+        ts = get_ts()
+        req_id = f"{get_ts_ms()}-2"
+        order_param = {
+            "contract": "BTC_USDT",
+            "size": 6024,
+            "iceberg": 0,
+            "price": "3765",
+            "tif": "gtc",
+            "text": "t-my-custom-id",
+            "stp_act": "-"
+        }
+    
+    
+        payload = {
+            "req_id": req_id,
+            "req_param": order_param
+        }
+    
+        return {
+            "time": ts,
+            "channel": CHANNEL_ORDER_PLACE,
+            "event": "api",
+            "payload": payload
+        }
+    
+    
+    def on_message(ws, message):
+        print(f"recv: {message}")
+    
+    def on_error(ws, error):
+        print(f"error: {error}")
+    
+    def on_close(ws, close_status_code, close_msg):
+        print("connection closed")
+    
+    def on_open(ws):
+        print("WebSocket opened")
+    
+        login_payload = build_login_request()
+        print("login payload:", login_payload)
+        ws.send(json.dumps(login_payload))
+    
+        def delayed_order():
+            time.sleep(2)
+            order_payload = build_order_request()
+            print("order payload:", order_payload)
+            ws.send(json.dumps(order_payload))
+    
+        threading.Thread(target=delayed_order).start()
+    
+    if __name__ == "__main__":
+        ws = websocket.WebSocketApp(
+            WS_URL,
+            on_message=on_message,
+            on_error=on_error,
+            on_close=on_close,
+            on_open=on_open
+        )
+        ws.run_forever()
+    
+    
 
 Code example
     
@@ -7713,6 +12936,149 @@ Code example
     
     
 
+Code example
+    
+    
+    package main
+    
+    import (
+    	"crypto/hmac"
+    	"crypto/sha512"
+    	"crypto/tls"
+    	"encoding/hex"
+    	"encoding/json"
+    	"fmt"
+    	"net/url"
+    	"strconv"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func GetApiSignature(secret, channel string, requestParam []byte, ts int64) string {
+    	hash := hmac.New(sha512.New, []byte(secret))
+    	key := fmt.Sprintf("%s\n%s\n%s\n%d", "api", channel, string(requestParam), ts)
+    	hash.Write([]byte(key))
+    	return hex.EncodeToString(hash.Sum(nil))
+    }
+    
+    func main() {
+    
+    	// 1. login
+    	apiKey := "xxxxx"
+    	secret := "xxxxx"
+    	requestParam := ""
+    	channel := "futures.login"
+    	ts := time.Now().Unix()
+    	requestId := fmt.Sprintf("%d-%d", time.Now().UnixMilli(), 1)
+    
+    	req := ApiRequest{
+    		Time:    ts,
+    		Channel: "futures.login",
+    		Event:   "api",
+    		Payload: ApiPayload{
+    			ApiKey:       apiKey,
+    			Signature:    GetApiSignature(secret, channel, []byte(requestParam), ts),
+    			Timestamp:    strconv.FormatInt(ts, 10),
+    			RequestId:    requestId,
+    			RequestParam: []byte(requestParam),
+    		},
+    	}
+    
+    	fmt.Println(GetApiSignature(secret, channel, []byte(requestParam), ts))
+    	marshal, _ := json.Marshal(req)
+    	fmt.Println(string(marshal))
+    
+    	// connect the ws
+    	u := url.URL{Scheme: "wss", Host: "fx-ws.gateio.ws", Path: "/v4/ws/usdt"}
+    	websocket.DefaultDialer.TLSClientConfig = &tls.Config{RootCAs: nil, InsecureSkipVerify: true}
+    	c, _, err := websocket.DefaultDialer.Dial(u.String(), http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		panic(err)
+    	}
+    	c.SetPingHandler(nil)
+    
+    	// read msg
+    	go func() {
+    		for {
+    			_, message, err := c.ReadMessage()
+    			if err != nil {
+    				c.Close()
+    				panic(err)
+    			}
+    			fmt.Printf("recv: %s\n", message)
+    		}
+    	}()
+    
+    	err = c.WriteMessage(websocket.TextMessage, marshal)
+    	if err != nil {
+    		panic(err)
+    	}
+    	time.Sleep(2 * time.Second)
+    
+    	//ws create an order
+    	orderParam := OrderParam{
+    		Contract: "BTC_USDT",
+    		Size:     6024,
+    		Iceberg:  0,
+    		Price:    "3765",
+    		Tif:      "gtc",
+    		Text:     "t-my-custom-id",
+    		StpAct:   false,
+    	}
+    	orderParamBytes, _ := json.Marshal(orderParam)
+    
+    	order_place := ApiRequest{
+    		Time:    ts,
+    		Channel: "futures.order_place",
+    		Event:   "api",
+    		Payload: ApiPayload{
+    			RequestId:    requestId,
+    			RequestParam: []byte(orderParamBytes),
+    		},
+    	}
+    	orderReqByte, _ := json.Marshal(order_place)
+    	err = c.WriteMessage(websocket.TextMessage, orderReqByte)
+    
+    	if err != nil {
+    		panic(err)
+    	}
+    
+    	select {}
+    }
+    
+    type ApiRequest struct {
+    	App     string     `json:"app,omitempty"`
+    	Time    int64      `json:"time"`
+    	Id      *int64     `json:"id,omitempty"`
+    	Channel string     `json:"channel"`
+    	Event   string     `json:"event"`
+    	Payload ApiPayload `json:"payload"`
+    }
+    type ApiPayload struct {
+    	ApiKey       string          `json:"api_key,omitempty"`
+    	Signature    string          `json:"signature,omitempty"`
+    	Timestamp    string          `json:"timestamp,omitempty"`
+    	RequestId    string          `json:"req_id,omitempty"`
+    	RequestParam json.RawMessage `json:"req_param,omitempty"`
+    }
+    
+    type OrderParam struct {
+    	Contract   string `json:"contract"`
+    	Size       int64  `json:"size,omitempty"`
+    	Iceberg    int64  `json:"iceberg,omitempty"`
+    	Price      string `json:"price,omitempty"`
+    	Close      bool   `json:"close,omitempty"`
+    	ReduceOnly bool   `json:"reduce_only,omitempty"`
+    	Tif        string `json:"tif,omitempty"`
+    	Text       string `json:"text,omitempty"`
+    	AutoSize   string `json:"auto_size,omitempty"`
+    	StpAct     bool   `json:"stp_act,omitempty"`
+    }
+    
+    
+
 Client request example
     
     
@@ -7742,6 +13108,8 @@ Field | Type | Description
 `request_id` | String | Unique identifier of the message  
 `header` | Map | Response meta info  
 »`response_time` | String | Response send time in mill  
+»`response_time_us` | Integer | Same as the `response_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
+»`time_us` | Integer | Unix time in microseconds when the server sends the message. Pushed only when `timeUnit: microsecond` is enabled  
 »`channel` | String | Request channel  
 »`event` | String | Request event  
 »`client_id` | String | Unique client id  
@@ -7755,6 +13123,8 @@ Field | Type | Description
 »`trace_id` | String | TraceId for executing order operation  
 `data` | Object | Response data of the request  
 »`result` | Object | If this is ack response, result is the payload of the request, otherwise result is the response of the api  
+»»`create_time_us` | Integer | Same as the `create_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
+»»`finish_time_us` | Integer | Same as the `finish_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
 »`errs` | Object | It is only available when the request fails  
 »»`label` | String | Denotes error type in string format  
 »»`message` | String | Detailed error message  
@@ -7840,6 +13210,197 @@ Server api response example
     }
     
 
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+
+Server ack response example
+    
+    
+    {
+      "request_id": "request-id-1",
+      "ack": true,
+      "header": {
+        "response_time": "1681195121499",
+        "response_time_us": 1681195121499000,
+        "time_us": 1681195121499456,
+        "status": "200",
+        "channel": "futures.order_place",
+        "event": "api",
+        "client_id": "::1-0x140031563c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gate_ratelimit_reset_timestamp": 1681195121499
+      },
+      "data": {
+        "result": {
+          "req_id": "request-id-1",
+          "req_param": {
+            "contract": "BTC_USDT",
+            "size": "10",
+            "price": "31503.280000",
+            "tif": "gtc",
+            "text": "t-my-custom-id"
+          }
+        }
+      }
+    }
+    
+
+Server api response example
+    
+    
+    {
+      "request_id": "request-id-1",
+      "ack": false,
+      "header": {
+        "response_time": "1681195121639",
+        "response_time_us": 1681195121639000,
+        "time_us": 1681195121639456,
+        "status": "200",
+        "channel": "futures.order_place",
+        "event": "api",
+        "client_id": "::1-0x140031563c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gate_ratelimit_reset_timestamp": 1681195121639
+      },
+      "data": {
+        "result": {
+          "id": 74046511,
+          "user": 6790020,
+          "create_time": 1681195121.754,
+          "create_time_us": 1681195121754000,
+          "finish_time": 1681195121.754,
+          "finish_time_us": 1681195121754000,
+          "finish_as": "filled",
+          "status": "finished",
+          "contract": "BTC_USDT",
+          "size": "10",
+          "price": "31503.3",
+          "tif": "gtc",
+          "fill_price": "31500",
+          "text": "t-my-custom-id",
+          "tkfr": "0.0003",
+          "mkfr": "0",
+          "stp_id": 2,
+          "stp_act": "cn",
+          "amend_text": "-"
+        }
+      }
+    }
+    
+
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+Server ack response example
+    
+    
+    {
+      "request_id": "request-id-1",
+      "ack": true,
+      "header": {
+        "response_time": "1681195121499",
+        "response_time_us": 1681195121499000,
+        "time_us": 1681195121499456,
+        "status": "200",
+        "channel": "futures.order_place",
+        "event": "api",
+        "client_id": "::1-0x140031563c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gate_ratelimit_reset_timestamp": 1681195121499
+      },
+      "data": {
+        "result": {
+          "req_id": "request-id-1",
+          "req_param": {
+            "contract": "BTC_USDT",
+            "size": "10",
+            "price": "31503.280000",
+            "tif": "gtc",
+            "text": "t-my-custom-id"
+          }
+        }
+      }
+    }
+    
+
+Server api response example
+    
+    
+    {
+      "request_id": "request-id-1",
+      "ack": false,
+      "header": {
+        "response_time": "1681195121639",
+        "response_time_us": 1681195121639000,
+        "time_us": 1681195121639456,
+        "status": "200",
+        "channel": "futures.order_place",
+        "event": "api",
+        "client_id": "::1-0x140031563c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gate_ratelimit_reset_timestamp": 1681195121639
+      },
+      "data": {
+        "result": {
+          "id": 74046511,
+          "user": 6790020,
+          "create_time": 1681195121.754,
+          "create_time_us": 1681195121754000,
+          "finish_time": 1681195121.754,
+          "finish_time_us": 1681195121754000,
+          "finish_as": "filled",
+          "status": "finished",
+          "contract": "BTC_USDT",
+          "size": "10",
+          "price": "31503.3",
+          "tif": "gtc",
+          "fill_price": "31500",
+          "text": "t-my-custom-id",
+          "tkfr": "0.0003",
+          "mkfr": "0",
+          "stp_id": 2,
+          "stp_act": "cn",
+          "amend_text": "-"
+        }
+      }
+    }
+    
+
 ###  Error
 
 Error object has the following format:
@@ -7891,6 +13452,87 @@ Error Response Notification example（rate limit）
       "request_id": "xxxx",
       "header": {
         "response_time": "1677816784084",
+        "status": "429",
+        "channel": "futures.order_place",
+        "event": "api",
+        "client_id": "::1-0x14002ba2300",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_limit": 100,
+        "x_gate_ratelimit_reset_timestamp": 1677816785084
+      },
+      "data": {
+        "errs": {
+          "label": "TOO_MANY_REQUESTS",
+          "message": "Request Rate limit Exceeded (311)"
+        }
+      }
+    }
+    
+
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+
+Error Response Notification example
+
+Error Response Notification example（rate limit）
+    
+    
+    {
+      "request_id": "xxxx",
+      "header": {
+        "response_time": "1677816784084",
+        "response_time_us": 1677816784084000,
+        "time_us": 1677816784084456,
+        "status": "429",
+        "channel": "futures.order_place",
+        "event": "api",
+        "client_id": "::1-0x14002ba2300",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_limit": 100,
+        "x_gate_ratelimit_reset_timestamp": 1677816785084
+      },
+      "data": {
+        "errs": {
+          "label": "TOO_MANY_REQUESTS",
+          "message": "Request Rate limit Exceeded (311)"
+        }
+      }
+    }
+    
+
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+Error Response Notification example
+
+Error Response Notification example（rate limit）
+    
+    
+    {
+      "request_id": "xxxx",
+      "header": {
+        "response_time": "1677816784084",
+        "response_time_us": 1677816784084000,
+        "time_us": 1677816784084456,
         "status": "429",
         "channel": "futures.order_place",
         "event": "api",
@@ -8080,6 +13722,90 @@ Code example
 Code example
     
     
+    import hmac
+    import hashlib
+    import json
+    import time
+    import websocket
+    import ssl
+    
+    def get_api_signature(secret, channel, request_param, ts):
+        key = f"api\n{channel}\n{request_param}\n{ts}"
+        hash_object = hmac.new(secret.encode(), key.encode(), hashlib.sha512)
+        return hash_object.hexdigest()
+    
+    class ApiPayload:
+        def __init__(self, api_key, signature, timestamp, req_id, request_param):
+            self.api_key = api_key
+            self.signature = signature
+            self.timestamp = timestamp
+            self.req_id = req_id
+            self.request_param = request_param
+    
+    class ApiRequest:
+        def __init__(self, ts, channel, event, payload):
+            self.time = ts
+            self.channel = channel
+            self.event = event
+            self.payload = payload
+    
+    def main():
+        api_key = "YOUR_API_KEY"
+        secret = "YOUR_API_SECRET"
+        request_param = ""
+        channel = "futures.login"
+        ts = int(time.time())
+        request_id = f"{int(time.time() * 1000)}-1"
+    
+        payload = ApiPayload(
+            api_key=api_key,
+            signature=get_api_signature(secret, channel, request_param, ts),
+            timestamp=str(ts),
+            req_id=request_id,
+            request_param=request_param
+        )
+    
+        req = ApiRequest(ts=ts, channel=channel, event="api", payload=payload)
+    
+        print(get_api_signature(secret, channel, request_param, ts))
+    
+        req_json = json.dumps(req, default=lambda o: o.__dict__)
+        print(req_json)
+    
+        # Connect to WebSocket
+        ws_url = "wss://fx-ws.gateio.ws/v4/ws/usdt"  # Replace with your WebSocket URL
+        websocket.enableTrace(False)
+        ws = websocket.create_connection(ws_url, sslopt={"cert_reqs": ssl.CERT_NONE}, header={"timeUnit": "microsecond"})
+    
+        # Function to receive messages
+        def recv_messages():
+            while True:
+                try:
+                    message = ws.recv()
+                    print(f"recv: {message}")
+                except Exception as e:
+                    print(f"Error receiving message: {e}")
+                    ws.close()
+                    break
+    
+        # Start receiving messages in a separate thread
+        import threading
+        receive_thread = threading.Thread(target=recv_messages)
+        receive_thread.start()
+    
+        # Send the request
+        ws.send(req_json)
+    
+        # Keep the main thread running
+        receive_thread.join()
+    
+    if __name__ == "__main__":
+        main()
+    
+
+Code example
+    
+    
     package main
     
     import (
@@ -8175,6 +13901,105 @@ Code example
     }
     
 
+Code example
+    
+    
+    package main
+    
+    import (
+    	"crypto/hmac"
+    	"crypto/sha512"
+    	"crypto/tls"
+    	"encoding/hex"
+    	"encoding/json"
+    	"fmt"
+    	"github.com/gorilla/websocket"
+    	"net/url"
+    	"strconv"
+    	"time"
+    	"net/http"
+    )
+    
+    func GetApiSignature(secret, channel string, requestParam []byte, ts int64) string {
+    	hash := hmac.New(sha512.New, []byte(secret))
+    	key := fmt.Sprintf("%s\n%s\n%s\n%d", "api", channel, string(requestParam), ts)
+    	hash.Write([]byte(key))
+    	return hex.EncodeToString(hash.Sum(nil))
+    }
+    
+    // example WebSocket signature calculation implementation in go
+    func main() {
+    	apiKey := "YOUR_API_KEY"
+    	secret := "YOUR_API_SECRET"
+    	requestParam := ""
+    	channel := "futures.login"
+    	ts := time.Now().Unix()
+    	requestId := fmt.Sprintf("%d-%d", time.Now().UnixMilli(), 1)
+    
+    	req := ApiRequest{
+    		Time:    ts,
+    		Channel: channel,
+    		Event:   "api",
+    		Payload: ApiPayload{
+    			ApiKey:       apiKey,
+    			Signature:    GetApiSignature(secret, channel, []byte(requestParam), ts),
+    			Timestamp:    strconv.FormatInt(ts, 10),
+    			RequestId:    requestId,
+    			RequestParam: []byte(requestParam),
+    		},
+    	}
+    
+    	fmt.Println(GetApiSignature(secret, channel, []byte(requestParam), ts))
+    
+    	marshal, _ := json.Marshal(req)
+    	fmt.Println(string(marshal))
+    
+    	// connect the ws
+    	u := url.URL{Scheme: "wss", Host: "fx-ws.gateio.ws", Path: "/v4/ws/usdt"}
+    	websocket.DefaultDialer.TLSClientConfig = &tls.Config{RootCAs: nil, InsecureSkipVerify: true}
+    	c, _, err := websocket.DefaultDialer.Dial(u.String(), http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		panic(err)
+    	}
+    	c.SetPingHandler(nil)
+    
+    	// read msg
+    	go func() {
+    		for {
+    			_, message, err := c.ReadMessage()
+    			if err != nil {
+    				c.Close()
+    				panic(err)
+    			}
+    			fmt.Printf("recv: %s\n", message)
+    		}
+    	}()
+    
+    	err = c.WriteMessage(websocket.TextMessage, marshal)
+    	if err != nil {
+    		panic(err)
+    	}
+    
+    	select {}
+    }
+    
+    type ApiRequest struct {
+    	App     string     `json:"app,omitempty"`
+    	Time    int64      `json:"time"`
+    	Id      *int64     `json:"id,omitempty"`
+    	Channel string     `json:"channel"`
+    	Event   string     `json:"event"`
+    	Payload ApiPayload `json:"payload"`
+    }
+    type ApiPayload struct {
+    	ApiKey       string          `json:"api_key,omitempty"`
+    	Signature    string          `json:"signature,omitempty"`
+    	Timestamp    string          `json:"timestamp,omitempty"`
+    	RequestId    string          `json:"req_id,omitempty"`
+    	RequestParam json.RawMessage `json:"req_param,omitempty"`
+    }
+    
+
 Request example
     
     
@@ -8216,6 +14041,65 @@ Field | Type | Description
 »»`label` | String | Denotes error type in string format  
 »»`message` | String | Detailed error message  
   
+##  RPI liquidity access (Speed Bump)
+
+API users can send the JSON boolean `rpi_taker_access: true` in a supported ordinary single-order request to accept the platform wait and obtain RPI (Retail Price Improvement) taker eligibility for that order. This parameter does not create RPI maker orders.
+
+###  Parameter
+
+Set it in `payload.req_param` of `futures.order_place`.
+
+`rpi_taker_access`: optional JSON boolean, default `false`.
+
+  * `true`: accept the platform wait to obtain RPI taker eligibility for this order.
+  * `false` or omitted: preserve existing order behavior.
+
+The platform sets the wait, initially **20 ms** ; users cannot specify it. Total request latency also includes network and normal order processing time, so allow sufficient client timeout headroom. An order requiring the wait waits as a whole, regardless of whether RPI orders are available; the wait does not apply only to the portion matching RPI.
+
+The wait does not reserve prices or quantities, or guarantee an RPI fill. The current order book, balance and original trading rules still apply. Waiting does not change `action_mode`. The protocol echo `ack: true` still does not mean that the order has been accepted or filled; its latency may also include the wait. Order results follow the existing response mode.
+
+`x-gate-exptime` remains effective and waiting consumes its validity window. A request is rejected if too little time remains to complete the wait. If a timeout occurs or no final result arrives, query the order through the existing interfaces before deciding whether to retry.
+
+Log in to the private WS API first. Replace the example `time` with the current Unix timestamp in seconds when sending the request.
+    
+    
+    {
+      "time": 1681986203,
+      "channel": "futures.order_place",
+      "event": "api",
+      "payload": {
+        "req_id": "rpi-mkt-1",
+        "req_param": {
+          "contract": "BTC_USDT",
+          "size": "1",
+          "price": "0",
+          "tif": "ioc",
+          "rpi_taker_access": true
+        }
+      }
+    }
+    
+
+###  Supported orders
+
+Supported ordersOrder | Condition  
+---|---  
+Market | `price` is `0` and `tif` is `ioc`  
+Limit IOC | A valid limit price and `tif` is `ioc`  
+Limit FOK | A valid limit price and `tif` is `fok`  
+  
+It applies only to a single `futures.order_place`. `futures.order_batch_place` ignores the field, does not return a new error, and does not wait. Amend and cancel do not use the field.
+
+###  Errors
+
+ErrorsCase | `label` | `message`  
+---|---|---  
+Limit GTC, or a limit order without `tif`, with `rpi_taker_access` `true` | `RPI_TAKER_ACCESS_NOT_SUPPORTED` | `GTC orders do not support rpi_taker_access`  
+Another unsupported order type with `true` | `RPI_TAKER_ACCESS_NOT_SUPPORTED` | `order type does not support rpi_taker_access`  
+A non-boolean value, such as `"true"` or `1` | `INVALID_PARAM` | `invalid rpi_taker_access`  
+  
+These errors are returned before the order is sent downstream.
+
 ##  Order Place
 
 `futures.order_place`
@@ -8223,10 +14107,18 @@ Field | Type | Description
 You can place orders with this channel and event `api`.
 
 **function as api below:**
-    
-    
-    POST /futures/{settle}/orders
-    
+
+These parameter errors mean that no order was placed by this request; correct the parameters before resubmitting. During the wait, the request may also return:
+
+Order Place`label` | Meaning and handling  
+---|---  
+`EXPIRED_ORDER` | The request has expired or too little time remains to complete the wait. Adjust its expiry before resubmitting  
+`REQUEST_CANCELLED` | The request was cancelled before the wait completed; the order was not submitted  
+`RPI_TAKER_ACCESS_UNAVAILABLE` | The feature is temporarily unavailable; the order was not submitted. Retry later  
+  
+Other authentication, rate-limit and insufficient-funds errors follow the original rules.
+
+For the REST equivalent, see the [order endpoint](/docs/developers/apiv4/en/futures/#opIdcreateFuturesOrder).
 
 Login Response example
     
@@ -8262,7 +14154,7 @@ Field | Type | Required | Description
 ---|---|---|---  
 `req_id` | `string` | Yes | Request id which will be sent back by the server to help you identify which request the server responds to,  
 it's different from outside's`id`  
-`req_param` | `object` | Yes | Api order model's json byte data, use api order model; api order model detail to[api ](https://www.gate.com/docs/developers/apiv4/en/#create-a-futures-order)  
+`req_param` | `object` | Yes | Api order model's json byte data, use api order model; api order model detail to[api](/docs/developers/apiv4/en/futures/#opIdcreateFuturesOrder)  
 `req_header` | `object` | No | Apiv4 custom header  
   
 `req_param` JSON byte data of the API order model:
@@ -8280,6 +14172,7 @@ Field | Type | Required | Description
 `auto_size` | `string` | false | Set the side to close a dual-mode position.`close_long` closes the long side, while `close_short` closes the short side. Note that `size` also needs to be set to 0  
 `stp_act` | `string` | false | Self-trade prevention actions. Users can set self-trade prevention strategies through this field  
 `market_order_slip_ratio` | `string` | false | The preset maximum slippage ratio (not representing actual slippage) for this market order is 0.03 representing the maximum slippage of 3%  
+`rpi_taker_access` | `bool` | false | Whether to access RPI liquidity. Single order placement only. See RPI liquidity access (Speed Bump)  
   
 `req_header` Custom header data:
 
@@ -8353,6 +14246,37 @@ Code example: Login is required before making requests
 Code example: Login is required before making requests
     
     
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    api_order = {
+          "contract": "BTC_USDT",
+          "size": 10,
+          "price": "31503.280000",
+          "tif": "gtc",
+          "text": "t-my-custom-id"
+        }
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send(json.dumps(
+        {"time": int(time.time()),
+        "channel": "futures.order_place",
+        "event": "api",
+        "payload": {
+            "req_id": "1ewq-3123w-5",
+            "req_param": api_order
+        }}
+    ))
+    
+    print(ws.recv())
+    
+
+Code example: Login is required before making requests
+    
+    
     package main
     
     import (
@@ -8376,6 +14300,84 @@ Code example: Login is required before making requests
     	u := url.URL{Scheme: "ws", Host: "xx.xx.xxx.xx:xxx", Path: "xxx"}
     	websocket.DefaultDialer.TLSClientConfig = &tls.Config{RootCAs: nil, InsecureSkipVerify: true}
     	c, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
+    	if err != nil {
+    		panic(err)
+    	}
+    	c.SetPingHandler(nil)
+    
+    	// read msg
+    	go func() {
+    		for {
+    			_, message, err := c.ReadMessage()
+    			if err != nil {
+    				c.Close()
+    				panic(err)
+    			}
+    			fmt.Printf("recv: %s\n", message)
+    		}
+    	}()
+    
+    	err = c.WriteMessage(websocket.TextMessage, marshal)
+    
+    	//ws create an order
+    	orderParam := orderParam{
+    		Contract: "BTC_USDT",
+    		size:     6024,
+    		Iceberg:  0,
+    		Price:    "3765",
+    		Tif:      "gtc",
+    		Text:     "t-my-custom-id",
+    		Stp_act:  "-",
+    	}
+    	orderParamBytes, _ := json.Marshal(orderParam)
+    	requestId := fmt.Sprintf("%d-%d", time.Now().UnixMilli(), 1)
+    	order_place := ApiRequest{
+    		Time:    time.Now().Unix(),
+    		Channel: "futures.order_place",
+    		Event:   "api",
+    		Payload: ApiPayload{
+    			RequestId:    requestId,
+    			RequestParam: []byte(orderParamBytes),
+    		},
+    	}
+    	orderReqByte, _ := json.Marshal(order_place)
+    	err = c.WriteMessage(websocket.TextMessage, orderReqByte)
+    
+    	if err != nil {
+    		panic(err)
+    	}
+    
+    	select {}
+    }
+    
+
+Code example: Login is required before making requests
+    
+    
+    package main
+    
+    import (
+        "crypto/hmac"
+        "crypto/sha512"
+        "crypto/tls"
+        "encoding/hex"
+        "encoding/json"
+        "fmt"
+        "github.com/gorilla/websocket"
+        "net/url"
+        "strconv"
+        "time"
+    	"net/http"
+    )
+    
+    func main() {
+    
+    	// warn: you should login first before order
+    
+    	// connect the ws
+    	u := url.URL{Scheme: "ws", Host: "xx.xx.xxx.xx:xxx", Path: "xxx"}
+    	websocket.DefaultDialer.TLSClientConfig = &tls.Config{RootCAs: nil, InsecureSkipVerify: true}
+    	c, _, err := websocket.DefaultDialer.Dial(u.String(), http.Header{"timeUnit": []string{"microsecond"}})
     	if err != nil {
     		panic(err)
     	}
@@ -8486,6 +14488,101 @@ Ack Notification example for an order
     }
     
 
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+
+Ack Notification example for an order
+    
+    
+    {
+      "request_id": "request-id-1",
+      "ack": true,
+      "header": {
+        "response_time": "1681195484268",
+        "response_time_us": 1681195484268000,
+        "time_us": 1681195484268456,
+        "status": "200",
+        "channel": "futures.order_place",
+        "event": "api",
+        "client_id": "::1-0x140001a2600",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "conn_id": "5e74253e9c793974",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "req_id": "request-id-1",
+          "req_header": null,
+          "req_param": {
+            "contract": "BTC_USDT",
+            "size": "10",
+            "price": "31503.280000",
+            "tif": "gtc",
+            "text": "t-my-custom-id"
+          }
+        }
+      }
+    }
+    
+
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+Ack Notification example for an order
+    
+    
+    {
+      "request_id": "request-id-1",
+      "ack": true,
+      "header": {
+        "response_time": "1681195484268",
+        "response_time_us": 1681195484268000,
+        "time_us": 1681195484268456,
+        "status": "200",
+        "channel": "futures.order_place",
+        "event": "api",
+        "client_id": "::1-0x140001a2600",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "conn_id": "5e74253e9c793974",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "req_id": "request-id-1",
+          "req_header": null,
+          "req_param": {
+            "contract": "BTC_USDT",
+            "size": "10",
+            "price": "31503.280000",
+            "tif": "gtc",
+            "text": "t-my-custom-id"
+          }
+        }
+      }
+    }
+    
+
 ###  Order Place Notification
 
 Return of order information for placing an order
@@ -8500,6 +14597,8 @@ If "ack" is false(this field will not be returned), it means that the message is
 by checking "data.errs".  
 `header` | Map | Response meta info  
 »`response_time` | String | Response send time in mill  
+»`response_time_us` | Integer | Same as the `response_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
+»`time_us` | Integer | Unix time in microseconds when the server sends the message. Pushed only when `timeUnit: microsecond` is enabled  
 »`channel` | String | Request channel  
 »`event` | String | Request event  
 »`client_id` | String | Unique client id  
@@ -8513,6 +14612,8 @@ by checking "data.errs".
 »`conn_id` | String | Connection ID established with the client (remains consistent for the same connection)  
 `data` | Object | Response data of the request  
 »`result` | Object | If this is ack response, result is the payload of the request, otherwise result is the response of the api  
+»»`create_time_us` | Integer | Same as the `create_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
+»»`finish_time_us` | Integer | Same as the `finish_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
 »`errs` | Object | It is only available when the request fails  
 »»`label` | String | Denotes error type in string format  
 »»`message` | String | Detailed error message  
@@ -8562,6 +14663,121 @@ Response Notification example
     }
     
 
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+
+Response Notification example
+    
+    
+    {
+      "request_id": "request-id-1",
+      "ack": false,
+      "header": {
+        "response_time": "1681195484360",
+        "response_time_us": 1681195484360000,
+        "time_us": 1681195484360456,
+        "status": "200",
+        "channel": "futures.order_place",
+        "event": "api",
+        "client_id": "::1-0x140001a2600",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "id": 74046514,
+          "user": 6790020,
+          "create_time": 1681195484.462,
+          "create_time_us": 1681195484462000,
+          "finish_time": 1681195484.462,
+          "finish_time_us": 1681195484462000,
+          "finish_as": "filled",
+          "status": "finished",
+          "contract": "BTC_USDT",
+          "size": "10",
+          "price": "31503.3",
+          "tif": "gtc",
+          "fill_price": "31500",
+          "text": "t-my-custom-id",
+          "tkfr": "0.0003",
+          "mkfr": "0",
+          "stp_id": 2,
+          "stp_act": "cn",
+          "amend_text": "-"
+        }
+      }
+    }
+    
+
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+Response Notification example
+    
+    
+    {
+      "request_id": "request-id-1",
+      "ack": false,
+      "header": {
+        "response_time": "1681195484360",
+        "response_time_us": 1681195484360000,
+        "time_us": 1681195484360456,
+        "status": "200",
+        "channel": "futures.order_place",
+        "event": "api",
+        "client_id": "::1-0x140001a2600",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "id": 74046514,
+          "user": 6790020,
+          "create_time": 1681195484.462,
+          "create_time_us": 1681195484462000,
+          "finish_time": 1681195484.462,
+          "finish_time_us": 1681195484462000,
+          "finish_as": "filled",
+          "status": "finished",
+          "contract": "BTC_USDT",
+          "size": "10",
+          "price": "31503.3",
+          "tif": "gtc",
+          "fill_price": "31500",
+          "text": "t-my-custom-id",
+          "tkfr": "0.0003",
+          "mkfr": "0",
+          "stp_id": 2,
+          "stp_act": "cn",
+          "amend_text": "-"
+        }
+      }
+    }
+    
+
 ##  Order Batch Place
 
 `futures.order_batch_place`
@@ -8582,7 +14798,7 @@ Field | Type | Required | Description
 ---|---|---|---  
 `req_id` | `string` | Yes | Request id which will be sent back by the server to help you identify which request the server responds to,  
 it's different from outside's`id`  
-`req_param` | `object` | Yes | Api order model's json byte data, an array with api order model; api order model detail to[api ](https://www.gate.com/docs/developers/apiv4/en/#create-a-batch-of-futures-orders)  
+`req_param` | `object` | Yes | Api order model's json byte data, an array with api order model; api order model detail to[api](/docs/developers/apiv4/en/futures/#opIdcreateBatchFuturesOrder)  
 `req_header` | `object` | No | Apiv4 custom header  
   
 `req_param` The JSON byte data for the API order model can refer to a single order placement, or an array of multiple single orders. For details, refer to the order placement documentation.
@@ -8632,6 +14848,42 @@ Code example: Login is required before making requests
 Code example: Login is required before making requests
     
     
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    api_order=[
+          {
+            "contract": "BTC_USDT",
+            "size": 10,
+            "price": "31403.180000",
+            "tif": "gtc",
+            "text": "t-my-custom-id"
+          }
+        ]
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    ws.send(json.dumps({
+        "time": int(time.time()),
+        "channel": "futures.order_batch_place",
+        "event": "api",
+        "payload": {
+            "header":{
+                "x-gate-channel-id":"xxxx",
+            },
+            "req_id": "1ewq-3123w-5",
+            "req_param": api_order
+        }
+    }))
+    
+    print(ws.recv())
+    
+
+Code example: Login is required before making requests
+    
+    
     package main
     
     import (
@@ -8656,6 +14908,70 @@ Code example: Login is required before making requests
     
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	ws, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial:", err)
+    	}
+    	defer ws.Close()
+    
+    	payload := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.order_batch_place",
+    		"event":   "api",
+    		"payload": map[string]interface{}{
+    			"header": map[string]interface{}{
+    				"x-gate-channel-id": "xxxx",
+    			},
+    			"req_id":    "1ewq-3123w-5",
+    			"req_param": apiOrder,
+    		},
+    	}
+    
+    	msg, _ := json.Marshal(payload)
+    	err = ws.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Println("write:", err)
+    		return
+    	}
+    
+    	_, message, err := ws.ReadMessage()
+    	if err != nil {
+    		log.Println("read:", err)
+    		return
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+    
+
+Code example: Login is required before making requests
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	apiOrder := []map[string]interface{}{
+    		{
+    			"contract": "BTC_USDT",
+    			"size":     10,
+    			"price":    "31403.180000",
+    			"tif":      "gtc",
+    			"text":     "t-my-custom-id",
+    		},
+    	}
+    
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	ws, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial:", err)
     	}
@@ -8755,6 +15071,105 @@ Ack Notification example
     }
     
 
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+
+Ack Notification example
+    
+    
+    {
+      "request_id": "request-id-6",
+      "ack": true,
+      "header": {
+        "response_time": "1681196536283",
+        "response_time_us": 1681196536283000,
+        "time_us": 1681196536283456,
+        "status": "200",
+        "channel": "futures.order_batch_place",
+        "event": "api",
+        "client_id": "::1-0x14002cfa0c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "req_id": "request-id-6",
+          "req_header": null,
+          "req_param": [
+            {
+              "contract": "BTC_USDT",
+              "size": "10",
+              "price": "31403.180000",
+              "tif": "gtc",
+              "text": "t-my-custom-id"
+            }
+          ]
+        }
+      }
+    }
+    
+
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+Ack Notification example
+    
+    
+    {
+      "request_id": "request-id-6",
+      "ack": true,
+      "header": {
+        "response_time": "1681196536283",
+        "response_time_us": 1681196536283000,
+        "time_us": 1681196536283456,
+        "status": "200",
+        "channel": "futures.order_batch_place",
+        "event": "api",
+        "client_id": "::1-0x14002cfa0c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "req_id": "request-id-6",
+          "req_header": null,
+          "req_param": [
+            {
+              "contract": "BTC_USDT",
+              "size": "10",
+              "price": "31403.180000",
+              "tif": "gtc",
+              "text": "t-my-custom-id"
+            }
+          ]
+        }
+      }
+    }
+    
+
 ###  Order Batch Place Notification
 
 Return of order information for batch placing order
@@ -8769,6 +15184,8 @@ If "ack" is false(this field will not be returned), it means that the message is
 by checking "data.errs".  
 `header` | Map | Response meta info  
 »`response_time` | String | Response send time in mill  
+»`response_time_us` | Integer | Same as the `response_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
+»`time_us` | Integer | Unix time in microseconds when the server sends the message. Pushed only when `timeUnit: microsecond` is enabled  
 »`channel` | String | Request channel  
 »`event` | String | Request event  
 »`client_id` | String | Unique client id  
@@ -8782,6 +15199,7 @@ by checking "data.errs".
 »`conn_id` | String | Connection ID established with the client (remains consistent for the same connection)  
 `data` | Object | Response data of the request  
 »`result` | Object | If this is ack response, result is the payload of the request, otherwise result is the response of the api  
+»»`create_time_us` | Integer | Same as the `create_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
 »`errs` | Object | It is only available when the request fails  
 »»`label` | String | Denotes error type in string format  
 »»`message` | String | Detailed error message  
@@ -8830,6 +15248,117 @@ Response Notification example
     }
     
 
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+
+Response Notification example
+    
+    
+    {
+      "request_id": "request-id-6",
+      "ack": false,
+      "header": {
+        "response_time": "1681196536532",
+        "response_time_us": 1681196536532000,
+        "time_us": 1681196536532456,
+        "status": "200",
+        "channel": "futures.order_batch_place",
+        "event": "api",
+        "client_id": "::1-0x14002cfa0c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": [
+          {
+            "succeeded": true,
+            "id": 74046545,
+            "user": 6790020,
+            "create_time": 1681196536.592,
+            "create_time_us": 1681196536592000,
+            "status": "open",
+            "contract": "BTC_USDT",
+            "size": "10",
+            "price": "31403.2",
+            "tif": "gtc",
+            "left": "10",
+            "fill_price": "0",
+            "text": "t-my-custom-id",
+            "tkfr": "0.0003",
+            "mkfr": "0"
+          }
+        ]
+      }
+    }
+    
+
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+Response Notification example
+    
+    
+    {
+      "request_id": "request-id-6",
+      "ack": false,
+      "header": {
+        "response_time": "1681196536532",
+        "response_time_us": 1681196536532000,
+        "time_us": 1681196536532456,
+        "status": "200",
+        "channel": "futures.order_batch_place",
+        "event": "api",
+        "client_id": "::1-0x14002cfa0c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": [
+          {
+            "succeeded": true,
+            "id": 74046545,
+            "user": 6790020,
+            "create_time": 1681196536.592,
+            "create_time_us": 1681196536592000,
+            "status": "open",
+            "contract": "BTC_USDT",
+            "size": "10",
+            "price": "31403.2",
+            "tif": "gtc",
+            "left": "10",
+            "fill_price": "0",
+            "text": "t-my-custom-id",
+            "tkfr": "0.0003",
+            "mkfr": "0"
+          }
+        ]
+      }
+    }
+    
+
 ##  Order Cancel
 
 `futures.order_cancel`
@@ -8850,7 +15379,7 @@ Field | Type | Required | Description
 ---|---|---|---  
 `req_id` | `string` | Yes | Request id which will be sent back by the server to help you identify which request the server responds to,  
 it's different from outside's`id`  
-`req_param` | `object` | Yes | Api cancel order, detail to[api ](https://www.gate.com/docs/developers/apiv4/en/#cancel-a-single-order-2)  
+`req_param` | `object` | Yes | Api cancel order, detail to[api](/docs/developers/apiv4/en/futures/#opIdcancelFuturesOrder)  
 `req_header` | `object` | No | apiv4 custom header  
   
 `req_param` API order model JSON data:
@@ -8877,6 +15406,32 @@ Code example: Login is required before making requests
     from websocket import create_connection
     
     ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    api_cancel_order = {
+          "order_id": "74046514"
+        }
+    ws.send(json.dumps({
+        "time": int(time.time()),
+        "channel": "futures.order_cancel",
+        "event": "api",
+        "payload": {
+            "req_id": "1ewq-3123w-5",
+            "req_param": api_cancel_order
+        }
+    }))
+    
+    print(ws.recv())
+    
+
+Code example: Login is required before making requests
+    
+    
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
     api_cancel_order = {
           "order_id": "74046514"
         }
@@ -8951,6 +15506,65 @@ Code example: Login is required before making requests
     
     
 
+Code example: Login is required before making requests
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	ws, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial:", err)
+    	}
+    	defer ws.Close()
+    
+    	apiCancelOrder := map[string]interface{}{
+    		"order_id": "74046514",
+    	}
+    
+    	payload := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.order_cancel",
+    		"event":   "api",
+    		"payload": map[string]interface{}{
+    			"req_id":    "1ewq-3123w-5",
+    			"req_param": toJSONString(apiCancelOrder),
+    		},
+    	}
+    
+    	msg, _ := json.Marshal(payload)
+    	err = ws.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Println("write:", err)
+    		return
+    	}
+    
+    	_, message, err := ws.ReadMessage()
+    	if err != nil {
+    		log.Println("read:", err)
+    		return
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    func toJSONString(data interface{}) string {
+    	bytes, _ := json.Marshal(data)
+    	return string(bytes)
+    }
+    
+    
+
 Order cancel request example
     
     
@@ -8976,6 +15590,8 @@ Field | Type | Description
 `request_id` | String | Unique identifier of the message  
 `header` | Map | Response meta info  
 »`response_time` | String | Response send time in mill  
+»`response_time_us` | Integer | Same as the `response_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
+»`time_us` | Integer | Unix time in microseconds when the server sends the message. Pushed only when `timeUnit: microsecond` is enabled  
 »`channel` | String | Request channel  
 »`event` | String | Request event  
 »`client_id` | String | Unique client id  
@@ -8988,7 +15604,9 @@ Field | Type | Description
 »`x_gat_ratelimit_reset_timestamp` | Integer | If the current rate limit has been exceeded, this indicates the timestamp (in milliseconds) of the next available time window when access can be resumed. If the limit has not been exceeded, the response returns the current server time (in milliseconds)  
 »`conn_id` | String | Connection ID established with the client (remains consistent for the same connection)  
 `data` | Object | Response data of the request  
-»`result` | Object | Single order cancel response, detail to[api ](https://www.gate.com/docs/developers/apiv4/en/#cancel-a-single-order-2)  
+»`result` | Object | Single order cancel response, detail to[api](/docs/developers/apiv4/en/futures/#opIdcancelFuturesOrder)  
+»»`create_time_us` | Integer | Same as the `create_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
+»»`finish_time_us` | Integer | Same as the `finish_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
 »`errs` | Object | It is only available when the request fails  
 »»`label` | String | Denotes error type in string format  
 »»`message` | String | Detailed error message  
@@ -9019,6 +15637,121 @@ Order status notification example
           "user": 6790020,
           "create_time": 1681196535.01,
           "finish_time": 1681196536.343,
+          "finish_as": "cancelled",
+          "status": "finished",
+          "contract": "BTC_USDT",
+          "size": "10",
+          "price": "31303.2",
+          "tif": "gtc",
+          "left": "10",
+          "fill_price": "0",
+          "text": "t-my-custom-id",
+          "tkfr": "0.0003",
+          "mkfr": "0",
+          "stp_id": 2,
+          "stp_act": "cn",
+          "amend_text": "-"
+        }
+      }
+    }
+    
+
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+
+Order status notification example
+    
+    
+    {
+      "request_id": "request-id-5",
+      "header": {
+        "response_time": "1681196536282",
+        "response_time_us": 1681196536282000,
+        "time_us": 1681196536282456,
+        "status": "200",
+        "channel": "futures.order_cancel",
+        "event": "api",
+        "client_id": "::1-0x14002cfa0c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "id": 74046543,
+          "user": 6790020,
+          "create_time": 1681196535.01,
+          "create_time_us": 1681196535010000,
+          "finish_time": 1681196536.343,
+          "finish_time_us": 1681196536343000,
+          "finish_as": "cancelled",
+          "status": "finished",
+          "contract": "BTC_USDT",
+          "size": "10",
+          "price": "31303.2",
+          "tif": "gtc",
+          "left": "10",
+          "fill_price": "0",
+          "text": "t-my-custom-id",
+          "tkfr": "0.0003",
+          "mkfr": "0",
+          "stp_id": 2,
+          "stp_act": "cn",
+          "amend_text": "-"
+        }
+      }
+    }
+    
+
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+Order status notification example
+    
+    
+    {
+      "request_id": "request-id-5",
+      "header": {
+        "response_time": "1681196536282",
+        "response_time_us": 1681196536282000,
+        "time_us": 1681196536282456,
+        "status": "200",
+        "channel": "futures.order_cancel",
+        "event": "api",
+        "client_id": "::1-0x14002cfa0c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "id": 74046543,
+          "user": 6790020,
+          "create_time": 1681196535.01,
+          "create_time_us": 1681196535010000,
+          "finish_time": 1681196536.343,
+          "finish_time_us": 1681196536343000,
           "finish_as": "cancelled",
           "status": "finished",
           "contract": "BTC_USDT",
@@ -9095,6 +15828,31 @@ Code example: Login is required before making requests
 Code example: Login is required before making requests
     
     
+    #!/usr/bin/python
+    
+    import time
+    import json
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    cancelWithIdsParam = ["1694883366","123"]
+    ws.send(json.dumps({
+        "time":int(time.time()),
+        "channel":"futures.order_cancel_ids",
+        "event":"api",
+        "payload":{
+            "req_id":"test_1",
+            "req_param": cancelWithIdsParam
+        }
+    }))
+    
+    print(ws.recv())
+    
+
+Code example: Login is required before making requests
+    
+    
     package main
     
     import (
@@ -9113,6 +15871,60 @@ Code example: Login is required before making requests
     
     	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
     	ws, _, err := websocket.DefaultDialer.Dial((url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial:", err)
+    	}
+    	defer ws.Close()
+    
+    	payload := map[string]interface{}{
+    		"time":    timestamp,
+    		"channel": channel,
+    		"event":   "api",
+    		"payload": map[string]interface{}{
+    			"req_id":    "test_1",
+    			"req_param": cancelWithIdsParam,
+    		},
+    	}
+    
+    	msg, _ := json.Marshal(payload)
+    	err = ws.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Println("write:", err)
+    		return
+    	}
+    
+    	_, message, err := ws.ReadMessage()
+    	if err != nil {
+    		log.Println("read:", err)
+    		return
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
+Code example: Login is required before making requests
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	timestamp := time.Now().Unix()
+    	cancelWithIdsParam := []string{"1694883366", "123"}
+    	channel := "futures.order_cancel_ids"
+    
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	ws, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
     	if err != nil {
     		log.Fatal("dial:", err)
     	}
@@ -9171,6 +15983,8 @@ Field | Type | Description
 `request_id` | String | Unique identifier of the message  
 `header` | Map | response meta info  
 »`response_time` | String | response send time in mill  
+»`response_time_us` | Integer | Same as the `response_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
+»`time_us` | Integer | Unix time in microseconds when the server sends the message. Pushed only when `timeUnit: microsecond` is enabled  
 »`channel` | String | request channel  
 »`event` | String | request event  
 »`client_id` | String | Unique client id  
@@ -9180,7 +15994,7 @@ Field | Type | Description
 »`conn_trace_id` | String | TraceId to establish connection with client  
 »`trace_id` | String | TraceId for executing order operation  
 `data` | Object | Response data of the request  
-»`result` | Object | response detail to[api ](https://www.gate.com/docs/developers/apiv4/en/#cancel-a-batch-of-orders-with-an-id-list-2)  
+»`result` | Object | response detail to[api](/docs/developers/apiv4/en/futures/#opIdcancelBatchFutureOrders)  
 »`errs` | Object | It is only available when the request fails  
 »»`label` | String | denotes error type in string format  
 »»`message` | String | detailed error message  
@@ -9192,6 +16006,95 @@ Order cancel notification example
       "request_id": "request-9",
       "header": {
         "response_time": "1681986208564",
+        "status": "200",
+        "channel": "futures.order_cancel_ids",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d"
+      },
+      "data": {
+        "result": [
+          {
+            "id": "1694883366",
+            "user_id": 111,
+            "succeeded": true
+          },
+          {
+            "id": "123",
+            "user_id": 111,
+            "message": "ORDER_NOT_FOUND"
+          }
+        ]
+      }
+    }
+    
+
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+
+Order cancel notification example
+    
+    
+    {
+      "request_id": "request-9",
+      "header": {
+        "response_time": "1681986208564",
+        "response_time_us": 1681986208564000,
+        "time_us": 1681986208564456,
+        "status": "200",
+        "channel": "futures.order_cancel_ids",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d"
+      },
+      "data": {
+        "result": [
+          {
+            "id": "1694883366",
+            "user_id": 111,
+            "succeeded": true
+          },
+          {
+            "id": "123",
+            "user_id": 111,
+            "message": "ORDER_NOT_FOUND"
+          }
+        ]
+      }
+    }
+    
+
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+Order cancel notification example
+    
+    
+    {
+      "request_id": "request-9",
+      "header": {
+        "response_time": "1681986208564",
+        "response_time_us": 1681986208564000,
+        "time_us": 1681986208564456,
         "status": "200",
         "channel": "futures.order_cancel_ids",
         "event": "api",
@@ -9239,7 +16142,7 @@ Field | Type | Required | Description
 ---|---|---|---  
 `req_id` | `string` | Yes | Request id which will be sent back by the server to help you identify which request the server responds to,  
 it's different from outside's`id`  
-`req_param` | `object` | Yes | Details refer to[api ](https://www.gate.com/docs/developers/apiv4/en/#cancel-all-open-orders-matched)  
+`req_param` | `object` | Yes | Details refer to[api](/docs/developers/apiv4/en/futures/#opIdcancelFuturesOrders)  
 `req_header` | `object` | No | APIV4 custom request header  
   
 `req_param` API order model JSON byte data:
@@ -9267,6 +16170,33 @@ Code example: Login is required before making requests
     from websocket import create_connection
     
     ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    api_cancel_all_order = {
+          "contract": "BTC_USDT",
+          "side": "bid"
+        }
+    ws.send(json.dumps({
+        "time": int(time.time()),
+        "channel": "futures.order_cancel_cp",
+        "event": "api",
+        "payload": {
+            "req_id": "1ewq-3123w-5",
+            "req_param": api_cancel_all_order
+        }
+    }))
+    
+    print(ws.recv())
+    
+
+Code example: Login is required before making requests
+    
+    
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
     api_cancel_all_order = {
           "contract": "BTC_USDT",
           "side": "bid"
@@ -9343,6 +16273,66 @@ Code example: Login is required before making requests
     
     
 
+Code example: Login is required before making requests
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	ws, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial:", err)
+    	}
+    	defer ws.Close()
+    
+    	apiCancelAllOrder := map[string]interface{}{
+    		"contract": "BTC_USDT",
+    		"side":     "bid",
+    	}
+    
+    	payload := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.order_cancel_cp",
+    		"event":   "api",
+    		"payload": map[string]interface{}{
+    			"req_id":    "1ewq-3123w-5",
+    			"req_param": toJSONString(apiCancelAllOrder),
+    		},
+    	}
+    
+    	msg, _ := json.Marshal(payload)
+    	err = ws.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Println("write:", err)
+    		return
+    	}
+    
+    	_, message, err := ws.ReadMessage()
+    	if err != nil {
+    		log.Println("read:", err)
+    		return
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    func toJSONString(data interface{}) string {
+    	bytes, _ := json.Marshal(data)
+    	return string(bytes)
+    }
+    
+    
+
 Client request example
     
     
@@ -9369,6 +16359,8 @@ Field | Type | Description
 `request_id` | String | Corresponding request ID  
 `header` | Map | Response meta information  
 »`response_time` | String | Response send time (in milliseconds)  
+»`response_time_us` | Integer | Same as the `response_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
+»`time_us` | Integer | Unix time in microseconds when the server sends the message. Pushed only when `timeUnit: microsecond` is enabled  
 »`channel` | String | Request channel  
 »`event` | String | Request`event`  
 »`client_id` | String | Unique client ID  
@@ -9381,7 +16373,9 @@ Field | Type | Description
 »`x_gate_ratelimit_limit` | Integer | Current rate limit cap (hidden if 0)  
 »`x_gat_ratelimit_reset_timestamp` | Integer | If the current rate limit has been exceeded, this indicates the timestamp (in milliseconds) of the next available time window when access can be resumed. If the limit has not been exceeded, the response returns the current server time (in milliseconds)  
 `data` | Object | Response data of the request  
-»`result` | Object | Details refer to[api ](https://www.gate.com/docs/developers/apiv4/en/#cancel-all-open-orders-matched)  
+»`result` | Object | Details refer to[api](/docs/developers/apiv4/en/futures/#opIdcancelFuturesOrders)  
+»»`create_time_us` | Integer | Same as the `create_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
+»»`finish_time_us` | Integer | Same as the `finish_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
 »`errs` | Object | Only available when the request fails  
 »»`label` | String | Error type  
 »»`message` | String | Detailed error message  
@@ -9433,6 +16427,125 @@ Order cancel response example
     }
     
 
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+
+Order cancel response example
+    
+    
+    {
+      "request_id": "request-id-7",
+      "header": {
+        "response_time": "1681196537567",
+        "response_time_us": 1681196537567000,
+        "time_us": 1681196537567456,
+        "status": "200",
+        "channel": "futures.order_cancel_cp",
+        "event": "api",
+        "client_id": "::1-0x14002cfa0c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": [
+          {
+            "id": 74046545,
+            "user": 6790020,
+            "create_time": 1681196536.592,
+            "create_time_us": 1681196536592000,
+            "finish_time": 1681196537.626,
+            "finish_time_us": 1681196537626000,
+            "finish_as": "cancelled",
+            "status": "finished",
+            "contract": "BTC_USDT",
+            "size": "10",
+            "price": "31403.2",
+            "tif": "gtc",
+            "left": "10",
+            "fill_price": "0",
+            "text": "t-my-custom-id",
+            "tkfr": "0.0003",
+            "mkfr": "0",
+            "stp_id": 2,
+            "stp_act": "cn",
+            "amend_text": "-"
+          }
+        ]
+      }
+    }
+    
+
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+Order cancel response example
+    
+    
+    {
+      "request_id": "request-id-7",
+      "header": {
+        "response_time": "1681196537567",
+        "response_time_us": 1681196537567000,
+        "time_us": 1681196537567456,
+        "status": "200",
+        "channel": "futures.order_cancel_cp",
+        "event": "api",
+        "client_id": "::1-0x14002cfa0c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": [
+          {
+            "id": 74046545,
+            "user": 6790020,
+            "create_time": 1681196536.592,
+            "create_time_us": 1681196536592000,
+            "finish_time": 1681196537.626,
+            "finish_time_us": 1681196537626000,
+            "finish_as": "cancelled",
+            "status": "finished",
+            "contract": "BTC_USDT",
+            "size": "10",
+            "price": "31403.2",
+            "tif": "gtc",
+            "left": "10",
+            "fill_price": "0",
+            "text": "t-my-custom-id",
+            "tkfr": "0.0003",
+            "mkfr": "0",
+            "stp_id": 2,
+            "stp_act": "cn",
+            "amend_text": "-"
+          }
+        ]
+      }
+    }
+    
+
 ##  Order Amend
 
 `futures.order_amend`
@@ -9453,7 +16566,7 @@ Field | Type | Required | Description
 ---|---|---|---  
 `req_id` | `string` | Yes | Request id which will be sent back by the server to help you identify which request the server responds to,  
 it's different from outside's`id`  
-`req_param` | `object` | Yes | Api amend order, detail to[api ](https://www.gate.com/docs/developers/apiv4/en/#amend-an-order-2)  
+`req_param` | `object` | Yes | Api amend order, detail to[api](/docs/developers/apiv4/en/futures/#opIdamendFuturesOrder)  
 `req_header` | `object` | No | apiv4 custom header  
   
 `req_header` Custom header data:
@@ -9484,6 +16597,33 @@ Code example: Login is required before making requests
     from websocket import create_connection
     
     ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    api_amend_order = {
+          "order_id": "74046543",
+          "price": "31303.180000"
+        }
+    ws.send(json.dumps({
+        "time": int(time.time()),
+        "channel": "futures.order_amend",
+        "event": "api",
+        "payload": {
+            "req_id": "1ewq-3123w-5",
+            "req_param": api_amend_order
+        }
+    }))
+    
+    print(ws.recv())
+    
+
+Code example: Login is required before making requests
+    
+    
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
     api_amend_order = {
           "order_id": "74046543",
           "price": "31303.180000"
@@ -9560,6 +16700,66 @@ Code example: Login is required before making requests
     
     
 
+Code example: Login is required before making requests
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	ws, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial:", err)
+    	}
+    	defer ws.Close()
+    
+    	apiAmendOrder := map[string]interface{}{
+    		"order_id": "74046543",
+    		"price":    "31303.180000",
+    	}
+    
+    	payload := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.order_amend",
+    		"event":   "api",
+    		"payload": map[string]interface{}{
+    			"req_id":    "1ewq-3123w-5",
+    			"req_param": toJSONString(apiAmendOrder),
+    		},
+    	}
+    
+    	msg, _ := json.Marshal(payload)
+    	err = ws.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Println("write:", err)
+    		return
+    	}
+    
+    	_, message, err := ws.ReadMessage()
+    	if err != nil {
+    		log.Println("read:", err)
+    		return
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    func toJSONString(data interface{}) string {
+    	bytes, _ := json.Marshal(data)
+    	return string(bytes)
+    }
+    
+    
+
 Client request example
     
     
@@ -9586,6 +16786,8 @@ Field | Type | Description
 `request_id` | String | Unique identifier of the message  
 `header` | Map | Response meta info  
 »`response_time` | String | Response send time in mill  
+»`response_time_us` | Integer | Same as the `response_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
+»`time_us` | Integer | Unix time in microseconds when the server sends the message. Pushed only when `timeUnit: microsecond` is enabled  
 »`channel` | String | Request channel  
 »`event` | String | Request event  
 »`client_id` | String | Unique client id  
@@ -9598,7 +16800,8 @@ Field | Type | Description
 »`x_gat_ratelimit_reset_timestamp` | Integer | If the current rate limit has been exceeded, this indicates the timestamp (in milliseconds) of the next available time window when access can be resumed. If the limit has not been exceeded, the response returns the current server time (in milliseconds)  
 »`conn_id` | String | Connection ID established with the client (remains consistent for the same connection)  
 `data` | Object | Response data of the request  
-»`result` | Object | Response detail to[api ](https://www.gate.com/docs/developers/apiv4/en/#amend-an-order-2)  
+»`result` | Object | Response detail to[api](/docs/developers/apiv4/en/futures/#opIdamendFuturesOrder)  
+»»`create_time_us` | Integer | Same as the `create_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
 »`errs` | Object | It is only available when the request fails  
 »»`label` | String | Denotes error type in string format  
 »»`message` | String | Detailed error message  
@@ -9646,6 +16849,115 @@ Order amend notification example
     }
     
 
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+
+Order amend notification example
+    
+    
+    {
+      "request_id": "request-id-4",
+      "header": {
+        "response_time": "1681196536251",
+        "response_time_us": 1681196536251000,
+        "time_us": 1681196536251456,
+        "status": "200",
+        "channel": "futures.order_amend",
+        "event": "api",
+        "client_id": "::1-0x14002cfa0c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "id": 74046543,
+          "user": 6790020,
+          "create_time": 1681196535.01,
+          "create_time_us": 1681196535010000,
+          "status": "open",
+          "contract": "BTC_USDT",
+          "size": "10",
+          "price": "31303.2",
+          "tif": "gtc",
+          "left": "10",
+          "fill_price": "0",
+          "text": "t-my-custom-id",
+          "tkfr": "0.0003",
+          "mkfr": "0",
+          "stp_id": 2,
+          "stp_act": "cn",
+          "amend_text": "-"
+        }
+      }
+    }
+    
+
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+Order amend notification example
+    
+    
+    {
+      "request_id": "request-id-4",
+      "header": {
+        "response_time": "1681196536251",
+        "response_time_us": 1681196536251000,
+        "time_us": 1681196536251456,
+        "status": "200",
+        "channel": "futures.order_amend",
+        "event": "api",
+        "client_id": "::1-0x14002cfa0c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 99,
+        "x_gate_ratelimit_limit": 100,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "id": 74046543,
+          "user": 6790020,
+          "create_time": 1681196535.01,
+          "create_time_us": 1681196535010000,
+          "status": "open",
+          "contract": "BTC_USDT",
+          "size": "10",
+          "price": "31303.2",
+          "tif": "gtc",
+          "left": "10",
+          "fill_price": "0",
+          "text": "t-my-custom-id",
+          "tkfr": "0.0003",
+          "mkfr": "0",
+          "stp_id": 2,
+          "stp_act": "cn",
+          "amend_text": "-"
+        }
+      }
+    }
+    
+
 ##  Order List
 
 `futures.order_list`
@@ -9666,7 +16978,7 @@ Field | Type | Required | Description
 ---|---|---|---  
 `req_id` | `string` | Yes | Request id which will be sent back by the server to help you identify which request the server responds to,  
 it's different from outside's`id`  
-`req_param` | `object` | Yes | Api list order, detail to[api ](https://www.gate.com/docs/developers/apiv4/en/#list-futures-orders)  
+`req_param` | `object` | Yes | Api list order, detail to[api](/docs/developers/apiv4/en/futures/#opIdlistFuturesOrders)  
   
 Code example: Login is required before making requests
     
@@ -9678,6 +16990,34 @@ Code example: Login is required before making requests
     from websocket import create_connection
     
     ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    api_list_order = {
+          "contract": "BTC_USDT",
+          "status": "open"
+        }
+    ws.send(json.dumps({
+        "time": int(time.time()),
+        "channel": "futures.order_list",
+        "event": "api",
+        "payload": {
+            "req_id": "1ewq-3123w-5",
+            "req_param": api_list_order
+        }
+    }
+    ))
+    
+    print(ws.recv())
+    
+
+Code example: Login is required before making requests
+    
+    
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
     api_list_order = {
           "contract": "BTC_USDT",
           "status": "open"
@@ -9755,6 +17095,66 @@ Code example: Login is required before making requests
     
     
 
+Code example: Login is required before making requests
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	ws, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial:", err)
+    	}
+    	defer ws.Close()
+    
+    	apiListOrder := map[string]interface{}{
+    		"contract": "BTC_USDT",
+    		"status":   "open",
+    	}
+    
+    	payload := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.order_list",
+    		"event":   "api",
+    		"payload": map[string]interface{}{
+    			"req_id":    "1ewq-3123w-5",
+    			"req_param": toJSONString(apiListOrder),
+    		},
+    	}
+    
+    	msg, _ := json.Marshal(payload)
+    	err = ws.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Println("write:", err)
+    		return
+    	}
+    
+    	_, message, err := ws.ReadMessage()
+    	if err != nil {
+    		log.Println("read:", err)
+    		return
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    func toJSONString(data interface{}) string {
+    	bytes, _ := json.Marshal(data)
+    	return string(bytes)
+    }
+    
+    
+
 Client request example
     
     
@@ -9781,6 +17181,8 @@ Field | Type | Description
 `request_id` | String | Unique identifier of the message  
 `header` | Map | Response meta info  
 »`response_time` | String | Response send time in mill  
+»`response_time_us` | Integer | Same as the `response_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
+»`time_us` | Integer | Unix time in microseconds when the server sends the message. Pushed only when `timeUnit: microsecond` is enabled  
 »`channel` | String | Request channel  
 »`event` | String | Request event  
 »`client_id` | String | Unique client id  
@@ -9790,7 +17192,10 @@ Field | Type | Description
 »`conn_trace_id` | String | TraceId to establish connection with client  
 »`trace_id` | String | TraceId for executing order operation  
 `data` | Object | Signature time in seconds  
-»`result` | Object | Response detail to[api ](https://www.gate.com/docs/developers/apiv4/en/#list-futures-orders)  
+»`result` | Object | Response detail to[api](/docs/developers/apiv4/en/futures/#opIdlistFuturesOrders)  
+»»`create_time_us` | Integer | Same as the `create_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
+»»`update_time_us` | Integer | Same as the `update_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
+»»`finish_time_us` | Integer | Same as the `finish_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
 »`errs` | Object | It is only available when the request fails  
 »»`label` | String | Denotes error type in string format  
 »»`message` | String | Detailed error message  
@@ -9840,6 +17245,123 @@ Order list notification example
     }
     
 
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+
+Order list notification example
+    
+    
+    {
+      "request_id": "request-id-3",
+      "header": {
+        "response_time": "1681196536017",
+        "response_time_us": 1681196536017000,
+        "time_us": 1681196536017456,
+        "status": "200",
+        "channel": "futures.order_list",
+        "event": "api",
+        "client_id": "::1-0x14002cfa0c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d"
+      },
+      "data": {
+        "result": [
+          {
+            "id": 74046543,
+            "user": 6790020,
+            "create_time": 1681196535.01,
+            "create_time_us": 1681196535010000,
+            "finish_time": 1681196535.01,
+            "finish_time_us": 1681196535010000,
+            "update_time": 1681196535.01,
+            "update_time_us": 1681196535010000,
+            "finish_as": "filled",
+            "status": "open",
+            "contract": "BTC_USDT",
+            "size": "10",
+            "price": "31403.2",
+            "tif": "gtc",
+            "left": "10",
+            "fill_price": "0",
+            "text": "t-my-custom-id",
+            "tkfr": "0.0003",
+            "mkfr": "0",
+            "stp_id": 2,
+            "stp_act": "cn",
+            "amend_text": "-"
+          }
+        ]
+      }
+    }
+    
+
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+Order list notification example
+    
+    
+    {
+      "request_id": "request-id-3",
+      "header": {
+        "response_time": "1681196536017",
+        "response_time_us": 1681196536017000,
+        "time_us": 1681196536017456,
+        "status": "200",
+        "channel": "futures.order_list",
+        "event": "api",
+        "client_id": "::1-0x14002cfa0c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d"
+      },
+      "data": {
+        "result": [
+          {
+            "id": 74046543,
+            "user": 6790020,
+            "create_time": 1681196535.01,
+            "create_time_us": 1681196535010000,
+            "finish_time": 1681196535.01,
+            "finish_time_us": 1681196535010000,
+            "update_time": 1681196535.01,
+            "update_time_us": 1681196535010000,
+            "finish_as": "filled",
+            "status": "open",
+            "contract": "BTC_USDT",
+            "size": "10",
+            "price": "31403.2",
+            "tif": "gtc",
+            "left": "10",
+            "fill_price": "0",
+            "text": "t-my-custom-id",
+            "tkfr": "0.0003",
+            "mkfr": "0",
+            "stp_id": 2,
+            "stp_act": "cn",
+            "amend_text": "-"
+          }
+        ]
+      }
+    }
+    
+
 ##  Order Status
 
 `futures.order_status`
@@ -9860,7 +17382,7 @@ Field | Type | Required | Description
 ---|---|---|---  
 `req_id` | `string` | Yes | Request id which will be sent back by the server to help you identify which request the server responds to,  
 it's different from outside's`id`  
-`req_param` | `object` | Yes | Detail to[api ](https://www.gate.com/docs/developers/apiv4/en/#get-a-single-order-2)  
+`req_param` | `object` | Yes | Detail to[api](/docs/developers/apiv4/en/futures/#opIdgetFuturesOrder)  
   
 `req_param` API order model JSON data:
 
@@ -9878,6 +17400,34 @@ Code example: Login is required before making requests
     from websocket import create_connection
     
     ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    
+    api_status_order = {
+          "order_id": "74046543"
+        }
+    
+    ws.send(json.dumps({
+        "time": int(time.time()),
+        "channel": "futures.order_status",
+        "event": "api",
+        "payload": {
+            "req_id": "1ewq-3123w-5",
+            "req_param": api_status_order
+        }
+    }))
+    
+    print(ws.recv())
+    
+
+Code example: Login is required before making requests
+    
+    
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
     
     api_status_order = {
           "order_id": "74046543"
@@ -9954,6 +17504,65 @@ Code example: Login is required before making requests
     
     
 
+Code example: Login is required before making requests
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	ws, _, err := websocket.DefaultDialer.Dial((url, http.Header{"timeUnit": []string{"microsecond"}, "X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial:", err)
+    	}
+    	defer ws.Close()
+    
+    	apiStatusOrder := map[string]interface{}{
+    		"order_id": "74046543",
+    	}
+    
+    	payload := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "futures.order_status",
+    		"event":   "api",
+    		"payload": map[string]interface{}{
+    			"req_id":    "1ewq-3123w-5",
+    			"req_param": toJSONString(apiStatusOrder),
+    		},
+    	}
+    
+    	msg, _ := json.Marshal(payload)
+    	err = ws.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Println("write:", err)
+    		return
+    	}
+    
+    	_, message, err := ws.ReadMessage()
+    	if err != nil {
+    		log.Println("read:", err)
+    		return
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    func toJSONString(data interface{}) string {
+    	bytes, _ := json.Marshal(data)
+    	return string(bytes)
+    }
+    
+    
+
 Client request example
     
     
@@ -9979,6 +17588,8 @@ Field | Type | Description
 `request_id` | String | Unique identifier of the message  
 `header` | Map | Response meta info  
 »`response_time` | String | Response send time in mill  
+»`response_time_us` | Integer | Same as the `response_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
+»`time_us` | Integer | Unix time in microseconds when the server sends the message. Pushed only when `timeUnit: microsecond` is enabled  
 »`channel` | String | Request channel  
 »`event` | String | Request event  
 »`client_id` | String | Unique client id  
@@ -9988,7 +17599,8 @@ Field | Type | Description
 »`conn_trace_id` | String | TraceId to establish connection with client  
 »`trace_id` | String | TraceId for executing order operation  
 `data` | Object | Signature time in seconds  
-»`result` | Object | Response detail to[api ](https://www.gate.com/docs/developers/apiv4/en/#get-a-single-order-2)  
+»`result` | Object | Response detail to[api](/docs/developers/apiv4/en/futures/#opIdgetFuturesOrder)  
+»»`create_time_us` | Integer | Same as the `create_time` field, microsecond precision. Pushed only when `timeUnit: microsecond` is enabled  
 »`errs` | Object | It is only available when the request fails  
 »»`label` | String | Denotes error type in string format  
 »»`message` | String | Detailed error message  
@@ -10033,4 +17645,107 @@ Order status notification example
     }
     
 
-Last Updated: 11/19/2026, 2:06:06 AM
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt", header={"timeUnit": "microsecond"})
+    
+
+Order status notification example
+    
+    
+    {
+      "request_id": "request-id-2",
+      "header": {
+        "response_time": "1681196535985",
+        "response_time_us": 1681196535985000,
+        "time_us": 1681196535985456,
+        "status": "200",
+        "channel": "futures.order_status",
+        "event": "api",
+        "client_id": "::1-0x14002cfa0c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d"
+      },
+      "data": {
+        "result": {
+          "id": 74046543,
+          "user": 6790020,
+          "create_time": 1681196535.01,
+          "create_time_us": 1681196535010000,
+          "status": "open",
+          "contract": "BTC_USDT",
+          "size": "10",
+          "price": "31403.2",
+          "tif": "gtc",
+          "left": "10",
+          "fill_price": "0",
+          "text": "t-my-custom-id",
+          "tkfr": "0.0003",
+          "mkfr": "0",
+          "stp_id": 2,
+          "stp_act": "cn",
+          "amend_text": "-"
+        }
+      }
+    }
+    
+
+For an OMS 3.0 connection, request header `timeUnit: microsecond` adds microsecond fields alongside the original fields.
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://fx-ws.gateio.ws/v4/ws/usdt",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+Order status notification example
+    
+    
+    {
+      "request_id": "request-id-2",
+      "header": {
+        "response_time": "1681196535985",
+        "response_time_us": 1681196535985000,
+        "time_us": 1681196535985456,
+        "status": "200",
+        "channel": "futures.order_status",
+        "event": "api",
+        "client_id": "::1-0x14002cfa0c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d"
+      },
+      "data": {
+        "result": {
+          "id": 74046543,
+          "user": 6790020,
+          "create_time": 1681196535.01,
+          "create_time_us": 1681196535010000,
+          "status": "open",
+          "contract": "BTC_USDT",
+          "size": "10",
+          "price": "31403.2",
+          "tif": "gtc",
+          "left": "10",
+          "fill_price": "0",
+          "text": "t-my-custom-id",
+          "tkfr": "0.0003",
+          "mkfr": "0",
+          "stp_id": 2,
+          "stp_act": "cn",
+          "amend_text": "-"
+        }
+      }
+    }
+    
+
+Last Updated: 11/26/2026, 4:00:54 PM

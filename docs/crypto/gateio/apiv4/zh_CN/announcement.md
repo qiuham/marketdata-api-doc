@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/announcement
 api_type: REST
-updated_at: 2026-11-25 18:57:46.187959
+updated_at: 2026-11-26 18:58:44.389695
 ---
 
 # Announcement
@@ -272,6 +272,51 @@ AnnouncementArticleListData | required: ["list","total"]
     
     
 
+##  AnnouncementArticleListRequest
+
+AnnouncementArticleListRequest
+
+公告文章列表查询条件
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+title_query | string | Optional |  | 用于查询公告文章的标题。  
+page | string | Optional |  | 页码，可选，以字符串传递，例如 "1"。  
+size | string | Optional |  | 每页返回的文章数量，可选，以字符串传递，例如 "5"。  
+tags | string | Optional |  | 文章标签  
+timer | string | Optional |  | 查询最近 N 天的公告，N 以字符串传递。例如，今天为 10 号时，传入 "10" 查询 1 号至 10 号的公告。  
+cate_name | string | Optional |  | 公告分类名称。  
+cate_level | string | Optional |  | 分类等级，以字符串传递："1" 或 "2"。  
+sub_website_id | string | Optional | default: "0" | 分站 ID，以字符串传递："0" 为主站，"177" 为土耳其站。默认 "0"。  
+pinned | integer | Optional | default: 1 | 是否展示置顶文章：1 为展示，0 为不展示。默认 1。  
+update_after | integer | Optional |  | 查询此时间戳之后更新的公告文章。  
+lang | string | Optional |  | 语言代码，例如 "cn"。  
+filter_empty_content | integer | Optional | default: 1 | 是否排除当前语言内容为空的文章：0 为不排除，1 为排除。默认 1。  
+      
+    
+    {
+      "title_query": "string",
+      "page": "1",
+      "size": "5",
+      "tags": "string",
+      "timer": "string",
+      "cate_name": "string",
+      "cate_level": "string",
+      "sub_website_id": "0",
+      "pinned": 1,
+      "update_after": 0,
+      "lang": "cn",
+      "filter_empty_content": 1
+    }
+    
+    
+
 ##  AnnouncementArticleListData
 
 AnnouncementArticleListData
@@ -329,51 +374,6 @@ AnnouncementArticle | required: ["id","title","brief","created","updated","relea
         }
       ],
       "total": 0
-    }
-    
-    
-
-##  AnnouncementArticleListRequest
-
-AnnouncementArticleListRequest
-
-公告文章列表查询条件
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-title_query | string | Optional |  | 用于查询公告文章的标题。  
-page | string | Optional |  | 页码，可选，以字符串传递，例如 "1"。  
-size | string | Optional |  | 每页返回的文章数量，可选，以字符串传递，例如 "5"。  
-tags | string | Optional |  | 文章标签  
-timer | string | Optional |  | 查询最近 N 天的公告，N 以字符串传递。例如，今天为 10 号时，传入 "10" 查询 1 号至 10 号的公告。  
-cate_name | string | Optional |  | 公告分类名称。  
-cate_level | string | Optional |  | 分类等级，以字符串传递："1" 或 "2"。  
-sub_website_id | string | Optional | default: "0" | 分站 ID，以字符串传递："0" 为主站，"177" 为土耳其站。默认 "0"。  
-pinned | integer | Optional | default: 1 | 是否展示置顶文章：1 为展示，0 为不展示。默认 1。  
-update_after | integer | Optional |  | 查询此时间戳之后更新的公告文章。  
-lang | string | Optional |  | 语言代码，例如 "cn"。  
-filter_empty_content | integer | Optional | default: 1 | 是否排除当前语言内容为空的文章：0 为不排除，1 为排除。默认 1。  
-      
-    
-    {
-      "title_query": "string",
-      "page": "1",
-      "size": "5",
-      "tags": "string",
-      "timer": "string",
-      "cate_name": "string",
-      "cate_level": "string",
-      "sub_website_id": "0",
-      "pinned": 1,
-      "update_after": 0,
-      "lang": "cn",
-      "filter_empty_content": 1
     }
     
     

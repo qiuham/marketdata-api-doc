@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/options
 api_type: Trading
-updated_at: 2026-11-25 18:57:19.533171
+updated_at: 2026-11-26 18:58:16.302031
 ---
 
 # Options
@@ -4057,308 +4057,6 @@ Code samples
 
 #  Schemas
 
-##  OptionsTicker
-
-Options contract details
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-name | string | Optional |  | Options contract name  
-last_price | string | Optional |  | Last trade price (quote currency)  
-mark_price | string | Optional |  | Current mark price (quote currency)  
-index_price | string | Optional |  | Current index price (quote currency)  
-ask1_size | integer(int64) | Optional |  | Best ask size  
-ask1_price | string | Optional |  | Best ask price  
-bid1_size | integer(int64) | Optional |  | Best bid size  
-bid1_price | string | Optional |  | Best bid price  
-position_size | integer(int64) | Optional |  | Current total long position size  
-mark_iv | string | Optional |  | Implied volatility  
-bid_iv | string | Optional |  | Bid side implied volatility  
-ask_iv | string | Optional |  | Ask side implied volatility  
-leverage | string | Optional |  | Leverage = underlying_price / (mark_price * delta). This value is for reference only.  
-delta | string | Optional |  | Greek letter delta  
-gamma | string | Optional |  | Greek letter gamma  
-vega | string | Optional |  | Greek letter vega  
-theta | string | Optional |  | Greek letter theta  
-rho | string | Optional |  | Rho  
-      
-    
-    {
-      "name": "string",
-      "last_price": "string",
-      "mark_price": "string",
-      "index_price": "string",
-      "ask1_size": 0,
-      "ask1_price": "string",
-      "bid1_size": 0,
-      "bid1_price": "string",
-      "position_size": 0,
-      "mark_iv": "string",
-      "bid_iv": "string",
-      "ask_iv": "string",
-      "leverage": "string",
-      "delta": "string",
-      "gamma": "string",
-      "vega": "string",
-      "theta": "string",
-      "rho": "string"
-    }
-    
-    
-
-##  OptionsTrade
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-id | integer(int64) | Optional |  | Fill ID  
-create_time | integer(int64) | Optional |  | Fill Time  
-contract | string | Optional |  | Options contract name  
-size | integer(int64) | Optional |  | Trading size  
-price | string | Optional |  | Transaction Price (Quoted Currency, Unit: Underlying Option Price)  
-      
-    
-    {
-      "id": 0,
-      "create_time": 0,
-      "contract": "string",
-      "size": 0,
-      "price": "string"
-    }
-    
-    
-
-##  OptionsMySettlements
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-time | number(double) | Optional |  | Settlement time  
-underlying | string | Optional |  | Underlying  
-contract | string | Optional |  | Options contract name  
-strike_price | string | Optional |  | Strike price (quote currency)  
-settle_price | string | Optional |  | Settlement price (quote currency)  
-size | integer(int64) | Optional |  | Settlement size  
-settle_profit | string | Optional |  | Settlement profit (quote currency)  
-fee | string | Optional |  | Settlement fee (quote currency)  
-realised_pnl | string | Optional |  | Accumulated profit and loss from opening positions, including premium, fees, settlement profit, etc. (quote currency)  
-      
-    
-    {
-      "time": 0,
-      "underlying": "string",
-      "contract": "string",
-      "strike_price": "string",
-      "settle_price": "string",
-      "size": 0,
-      "settle_profit": "string",
-      "fee": "string",
-      "realised_pnl": "string"
-    }
-    
-    
-
-##  OptionsPosition
-
-Options contract position details
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-user | integer | Optional | readOnly: true | User ID  
-underlying | string | Optional | readOnly: true | Underlying  
-underlying_price | string | Optional | readOnly: true | The forward futures price corresponding to the delivery date  
-contract | string | Optional | readOnly: true | Options contract name  
-size | integer(int64) | Optional | readOnly: true | Position size (contract quantity)  
-entry_price | string | Optional | readOnly: true | Entry size (quote currency)  
-mark_price | string | Optional | readOnly: true | Current mark price (quote currency)  
-mark_iv | string | Optional | readOnly: true | Implied volatility  
-realised_pnl | string | Optional | readOnly: true | Realized PnL  
-unrealised_pnl | string | Optional | readOnly: true | Unrealised PnL = (mark price - entry price) * position size. For long postion, size is positive; for short positon, size is negative.This value is for reference only.  
-pending_orders | integer | Optional | readOnly: true | Current pending order quantity  
-close_order | object|null | Optional | nullable: true  
-readOnly: true | Current close order information, or `null` if no close order  
-delta | string | Optional | readOnly: true | Greek letter delta  
-gamma | string | Optional | readOnly: true | Greek letter gamma  
-vega | string | Optional | readOnly: true | Greek letter vega  
-theta | string | Optional | readOnly: true | Greek letter theta  
-  
-**close_order**
-
-Current close order information, or `null` if no close order
-
-Type | Constraints  
----|---  
-object|null | nullable: true  
-readOnly: true  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-id | integer(int64) | Optional |  | Order ID  
-price | string | Optional |  | Order price (quote currency)  
-is_liq | boolean | Optional |  | Whether the close order is from liquidation  
-      
-    
-    {
-      "user": 0,
-      "underlying": "string",
-      "underlying_price": "string",
-      "contract": "string",
-      "size": 0,
-      "entry_price": "string",
-      "mark_price": "string",
-      "mark_iv": "string",
-      "realised_pnl": "string",
-      "unrealised_pnl": "string",
-      "pending_orders": 0,
-      "close_order": {
-        "id": 0,
-        "price": "string",
-        "is_liq": true
-      },
-      "delta": "string",
-      "gamma": "string",
-      "vega": "string",
-      "theta": "string"
-    }
-    
-    
-
-##  OptionsSettlement
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-time | number(double) | Optional |  | Last configuration update time  
-contract | string | Optional |  | Options contract name  
-profit | string | Optional |  | Settlement profit per contract (quote currency)  
-fee | string | Optional |  | Settlement fee per contract (quote currency)  
-strike_price | string | Optional |  | Strike price (quote currency)  
-settle_price | string | Optional |  | Settlement price (quote currency)  
-      
-    
-    {
-      "time": 0,
-      "contract": "string",
-      "profit": "string",
-      "fee": "string",
-      "strike_price": "string",
-      "settle_price": "string"
-    }
-    
-    
-
-##  OptionsOrderBook
-
-Type | Constraints  
----|---  
-object | required: ["asks","bids"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-id | integer(int64) | Optional |  | Order Book ID. Increases by 1 on every order book change. Set `with_id=true` to include this field in response  
-current | number(double) | Optional |  | Response data generation timestamp  
-update | number(double) | Optional |  | Order book changed timestamp  
-asks | array | Required |  | Ask Depth  
-bids | array | Required |  | Bid Depth  
-  
-**asks**
-
-Ask Depth
-
-Type | Constraints  
----|---  
-array |   
-  
-**asks / items**
-
-options_order_book_item
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-p | string | Optional |  | Price (quote currency)  
-s | integer(int64) | Optional |  | Size  
-  
-**bids**
-
-Bid Depth
-
-Type | Constraints  
----|---  
-array |   
-  
-**bids / items**
-
-options_order_book_item
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-p | string | Optional |  | Price (quote currency)  
-s | integer(int64) | Optional |  | Size  
-      
-    
-    {
-      "id": 0,
-      "current": 0,
-      "update": 0,
-      "asks": [
-        {
-          "p": "string",
-          "s": 0
-        }
-      ],
-      "bids": [
-        {
-          "p": "string",
-          "s": 0
-        }
-      ]
-    }
-    
-    
-
 ##  OptionsMMPReset
 
 MMP Reset
@@ -4392,9 +4090,7 @@ frozen_until_ms | integer(int64) | Optional | readOnly: true | Unfreeze time (mi
     
     
 
-##  OptionsContract
-
-Options contract details
+##  OptionsSettlement
 
 Type | Constraints  
 ---|---  
@@ -4404,192 +4100,21 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-name | string | Optional |  | Options contract name  
-tag | string | Optional |  | Expiry periods include day, week, and month.  
-create_time | number(double) | Optional |  | Created time  
-expiration_time | number(double) | Optional |  | Expiration time  
-is_call | boolean | Optional |  | `true` means call options, `false` means put options  
-multiplier | string | Optional |  | The option contract multiplier indicates how many units of the underlying asset the face value of one contract represents.  
-underlying | string | Optional |  | Underlying  
-underlying_price | string | Optional |  | The forward futures price corresponding to the delivery date  
-last_price | string | Optional |  | Last trading price  
-mark_price | string | Optional |  | Current mark price (quote currency)  
-index_price | string | Optional |  | Current index price (quote currency)  
-maker_fee_rate | string | Optional |  | Maker fee rate, negative values indicate rebates  
-taker_fee_rate | string | Optional |  | Taker fee rate  
-order_price_round | string | Optional |  | Minimum order price increment  
-mark_price_round | string | Optional |  | Minimum mark price increment  
-order_size_min | integer(int64) | Optional |  | Minimum order quantity  
-order_size_max | integer(int64) | Optional |  | Maximum order quantity  
-order_price_deviate | string | Optional |  | Deprecated  
-ref_discount_rate | string | Optional |  | Trading fee discount for referred users  
-ref_rebate_rate | string | Optional |  | Commission rate for referrers  
-orderbook_id | integer(int64) | Optional |  | Orderbook update ID  
-trade_id | integer(int64) | Optional |  | Deprecated  
-trade_size | integer(int64) | Optional |  | Historical cumulative trading volume  
-position_size | integer(int64) | Optional |  | Current total long position size  
-orders_limit | integer | Optional |  | The maximum number of open orders each user can place in this order book.  
+time | number(double) | Optional |  | Last configuration update time  
+contract | string | Optional |  | Options contract name  
+profit | string | Optional |  | Settlement profit per contract (quote currency)  
+fee | string | Optional |  | Settlement fee per contract (quote currency)  
+strike_price | string | Optional |  | Strike price (quote currency)  
+settle_price | string | Optional |  | Settlement price (quote currency)  
       
     
     {
-      "name": "string",
-      "tag": "string",
-      "create_time": 0,
-      "expiration_time": 0,
-      "is_call": true,
-      "multiplier": "string",
-      "underlying": "string",
-      "underlying_price": "string",
-      "last_price": "string",
-      "mark_price": "string",
-      "index_price": "string",
-      "maker_fee_rate": "string",
-      "taker_fee_rate": "string",
-      "order_price_round": "string",
-      "mark_price_round": "string",
-      "order_size_min": 0,
-      "order_size_max": 0,
-      "order_price_deviate": "string",
-      "ref_discount_rate": "string",
-      "ref_rebate_rate": "string",
-      "orderbook_id": 0,
-      "trade_id": 0,
-      "trade_size": 0,
-      "position_size": 0,
-      "orders_limit": 0
-    }
-    
-    
-
-##  OptionsAccount
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-user | integer(int64) | Optional |  | User ID  
-total | string | Optional |  | Account balance, invalid for unified account  
-position_value | string | Optional |  | Position value, long position value is positive, short position value is negative  
-equity | string | Optional |  | Account equity = balance + option position value, invalid for unified account  
-short_enabled | boolean | Optional |  | If the account is allowed to short  
-mmp_enabled | boolean | Optional |  | Whether to enable MMP  
-liq_triggered | boolean | Optional |  | Whether the account is in a liquidation state  
-margin_mode | integer(int32) | Optional | enum: [0,1,2,3] | This field indicates the margin mode used by the unified account:  
-  
-\- 0: Classic Spot Margin Mode  
-\- 1: Cross-Currency Margin Mode  
-\- 2: Portfolio Margin Mode  
-\- 3: Single-Currency Margin Mode  
-unrealised_pnl | string | Optional |  | Unrealized PnL, for reference only. Position unrealized PnL = (mark price - average entry price) × position quantity. Position quantity is measured in currency units, negative for shorts and positive for longs.  
-init_margin | string | Optional |  | Initial position margin  
-maint_margin | string | Optional |  | Position maintenance margin  
-order_margin | string | Optional |  | Order margin of unfinished orders  
-ask_order_margin | string | Optional |  | Margin for outstanding sell orders  
-bid_order_margin | string | Optional |  | Margin for outstanding buy orders  
-available | string | Optional |  | Available balance to transfer out or trade  
-point | string | Optional |  | Point card amount  
-currency | string | Optional |  | Settlement currency  
-orders_limit | integer(int32) | Optional |  | Maximum number of outstanding orders  
-position_notional_limit | string | Optional |  | Notional value upper limit, including the nominal value of positions and outstanding orders  
-      
-    
-    {
-      "user": 0,
-      "total": "string",
-      "position_value": "string",
-      "equity": "string",
-      "short_enabled": true,
-      "mmp_enabled": true,
-      "liq_triggered": true,
-      "margin_mode": 0,
-      "unrealised_pnl": "string",
-      "init_margin": "string",
-      "maint_margin": "string",
-      "order_margin": "string",
-      "ask_order_margin": "string",
-      "bid_order_margin": "string",
-      "available": "string",
-      "point": "string",
-      "currency": "string",
-      "orders_limit": 0,
-      "position_notional_limit": "string"
-    }
-    
-    
-
-##  OptionsUnderlyingTicker
-
-Options underlying detail
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-trade_put | integer(int64) | Optional |  | Total put options trades amount in last 24h  
-trade_call | integer(int64) | Optional |  | Total call options trades amount in last 24h  
-index_price | string | Optional |  | Index price (quote currency)  
-      
-    
-    {
-      "trade_put": 0,
-      "trade_call": 0,
-      "index_price": "string"
-    }
-    
-    
-
-##  AmendOptionsOrderRequest
-
-AmendOptionsOrderRequest
-
-Order Modification Request Body
-
-Type | Constraints  
----|---  
-object | required: ["contract","price","size"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-contract | string | Required |  | Options contract name  
-price | string | Required |  | Order Price  
-size | integer(int64) | Required |  | Trade amount  
-      
-    
-    {
+      "time": 0,
       "contract": "string",
-      "price": "string",
-      "size": 0
-    }
-    
-    
-
-##  TriggerTime
-
-triggerTime
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-triggerTime | integer(int64) | Optional |  | Timestamp when countdown ends, in milliseconds  
-      
-    
-    {
-      "triggerTime": "1660039145000"
+      "profit": "string",
+      "fee": "string",
+      "strike_price": "string",
+      "settle_price": "string"
     }
     
     
@@ -4698,6 +4223,110 @@ refr | string | Optional | readOnly: true | Referrer rebate
     
     
 
+##  OptionsOrderBook
+
+Type | Constraints  
+---|---  
+object | required: ["asks","bids"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | Order Book ID. Increases by 1 on every order book change. Set `with_id=true` to include this field in response  
+current | number(double) | Optional |  | Response data generation timestamp  
+update | number(double) | Optional |  | Order book changed timestamp  
+asks | array | Required |  | Ask Depth  
+bids | array | Required |  | Bid Depth  
+  
+**asks**
+
+Ask Depth
+
+Type | Constraints  
+---|---  
+array |   
+  
+**asks / items**
+
+options_order_book_item
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+p | string | Optional |  | Price (quote currency)  
+s | integer(int64) | Optional |  | Size  
+  
+**bids**
+
+Bid Depth
+
+Type | Constraints  
+---|---  
+array |   
+  
+**bids / items**
+
+options_order_book_item
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+p | string | Optional |  | Price (quote currency)  
+s | integer(int64) | Optional |  | Size  
+      
+    
+    {
+      "id": 0,
+      "current": 0,
+      "update": 0,
+      "asks": [
+        {
+          "p": "string",
+          "s": 0
+        }
+      ],
+      "bids": [
+        {
+          "p": "string",
+          "s": 0
+        }
+      ]
+    }
+    
+    
+
+##  TriggerTime
+
+triggerTime
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+triggerTime | integer(int64) | Optional |  | Timestamp when countdown ends, in milliseconds  
+      
+    
+    {
+      "triggerTime": "1660039145000"
+    }
+    
+    
+
 ##  CountdownCancelAllOptionsTask
 
 CountdownCancelAllOptionsTask
@@ -4722,39 +4351,6 @@ underlying | string | Optional |  | Underlying
       "timeout": 0,
       "contract": "string",
       "underlying": "string"
-    }
-    
-    
-
-##  OptionsPositionClose
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-time | number(double) | Optional | readOnly: true | Position close time  
-contract | string | Optional | readOnly: true | Options contract name  
-side | string | Optional | enum: ["long","short"]  
-readOnly: true | Position side  
-  
-\- `long`: Long position  
-\- `short`: Short position  
-pnl | string | Optional | readOnly: true | PnL  
-text | string | Optional | readOnly: true | Source of close order. See `order.text` field for specific values  
-settle_size | string | Optional | readOnly: true | Settlement size  
-      
-    
-    {
-      "time": 0,
-      "contract": "string",
-      "side": "long",
-      "pnl": "string",
-      "text": "string",
-      "settle_size": "string"
     }
     
     
@@ -4793,6 +4389,166 @@ text | string | Optional |  | Remark
     
     
 
+##  OptionsPosition
+
+Options contract position details
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user | integer | Optional | readOnly: true | User ID  
+underlying | string | Optional | readOnly: true | Underlying  
+underlying_price | string | Optional | readOnly: true | The forward futures price corresponding to the delivery date  
+contract | string | Optional | readOnly: true | Options contract name  
+size | integer(int64) | Optional | readOnly: true | Position size (contract quantity)  
+entry_price | string | Optional | readOnly: true | Entry size (quote currency)  
+mark_price | string | Optional | readOnly: true | Current mark price (quote currency)  
+mark_iv | string | Optional | readOnly: true | Implied volatility  
+realised_pnl | string | Optional | readOnly: true | Realized PnL  
+unrealised_pnl | string | Optional | readOnly: true | Unrealised PnL = (mark price - entry price) * position size. For long postion, size is positive; for short positon, size is negative.This value is for reference only.  
+pending_orders | integer | Optional | readOnly: true | Current pending order quantity  
+close_order | object|null | Optional | nullable: true  
+readOnly: true | Current close order information, or `null` if no close order  
+delta | string | Optional | readOnly: true | Greek letter delta  
+gamma | string | Optional | readOnly: true | Greek letter gamma  
+vega | string | Optional | readOnly: true | Greek letter vega  
+theta | string | Optional | readOnly: true | Greek letter theta  
+  
+**close_order**
+
+Current close order information, or `null` if no close order
+
+Type | Constraints  
+---|---  
+object|null | nullable: true  
+readOnly: true  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | Order ID  
+price | string | Optional |  | Order price (quote currency)  
+is_liq | boolean | Optional |  | Whether the close order is from liquidation  
+      
+    
+    {
+      "user": 0,
+      "underlying": "string",
+      "underlying_price": "string",
+      "contract": "string",
+      "size": 0,
+      "entry_price": "string",
+      "mark_price": "string",
+      "mark_iv": "string",
+      "realised_pnl": "string",
+      "unrealised_pnl": "string",
+      "pending_orders": 0,
+      "close_order": {
+        "id": 0,
+        "price": "string",
+        "is_liq": true
+      },
+      "delta": "string",
+      "gamma": "string",
+      "vega": "string",
+      "theta": "string"
+    }
+    
+    
+
+##  OptionsAccount
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user | integer(int64) | Optional |  | User ID  
+total | string | Optional |  | Account balance, invalid for unified account  
+position_value | string | Optional |  | Position value, long position value is positive, short position value is negative  
+equity | string | Optional |  | Account equity = balance + option position value, invalid for unified account  
+short_enabled | boolean | Optional |  | If the account is allowed to short  
+mmp_enabled | boolean | Optional |  | Whether to enable MMP  
+liq_triggered | boolean | Optional |  | Whether the account is in a liquidation state  
+margin_mode | integer(int32) | Optional | enum: [0,1,2,3] | This field indicates the margin mode used by the unified account:  
+  
+\- 0: Classic Spot Margin Mode  
+\- 1: Cross-Currency Margin Mode  
+\- 2: Portfolio Margin Mode  
+\- 3: Single-Currency Margin Mode  
+unrealised_pnl | string | Optional |  | Unrealized PnL, for reference only. Position unrealized PnL = (mark price - average entry price) × position quantity. Position quantity is measured in currency units, negative for shorts and positive for longs.  
+init_margin | string | Optional |  | Initial position margin  
+maint_margin | string | Optional |  | Position maintenance margin  
+order_margin | string | Optional |  | Order margin of unfinished orders  
+ask_order_margin | string | Optional |  | Margin for outstanding sell orders  
+bid_order_margin | string | Optional |  | Margin for outstanding buy orders  
+available | string | Optional |  | Available balance to transfer out or trade  
+point | string | Optional |  | Point card amount  
+currency | string | Optional |  | Settlement currency  
+orders_limit | integer(int32) | Optional |  | Maximum number of outstanding orders  
+position_notional_limit | string | Optional |  | Notional value upper limit, including the nominal value of positions and outstanding orders  
+      
+    
+    {
+      "user": 0,
+      "total": "string",
+      "position_value": "string",
+      "equity": "string",
+      "short_enabled": true,
+      "mmp_enabled": true,
+      "liq_triggered": true,
+      "margin_mode": 0,
+      "unrealised_pnl": "string",
+      "init_margin": "string",
+      "maint_margin": "string",
+      "order_margin": "string",
+      "ask_order_margin": "string",
+      "bid_order_margin": "string",
+      "available": "string",
+      "point": "string",
+      "currency": "string",
+      "orders_limit": 0,
+      "position_notional_limit": "string"
+    }
+    
+    
+
+##  OptionsTrade
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional |  | Fill ID  
+create_time | integer(int64) | Optional |  | Fill Time  
+contract | string | Optional |  | Options contract name  
+size | integer(int64) | Optional |  | Trading size  
+price | string | Optional |  | Transaction Price (Quoted Currency, Unit: Underlying Option Price)  
+      
+    
+    {
+      "id": 0,
+      "create_time": 0,
+      "contract": "string",
+      "size": 0,
+      "price": "string"
+    }
+    
+    
+
 ##  OptionsMMP
 
 MMP Settings
@@ -4822,6 +4578,54 @@ frozen_until_ms | integer(int64) | Optional | readOnly: true | Unfreeze time (mi
       "delta_limit": "string",
       "trigger_time_ms": 0,
       "frozen_until_ms": 0
+    }
+    
+    
+
+##  OptionsUnderlying
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+name | string | Optional |  | Underlying name  
+index_price | string | Optional |  | Spot index price (quote currency)  
+      
+    
+    {
+      "name": "string",
+      "index_price": "string"
+    }
+    
+    
+
+##  AmendOptionsOrderRequest
+
+AmendOptionsOrderRequest
+
+Order Modification Request Body
+
+Type | Constraints  
+---|---  
+object | required: ["contract","price","size"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+contract | string | Required |  | Options contract name  
+price | string | Required |  | Order Price  
+size | integer(int64) | Required |  | Trade amount  
+      
+    
+    {
+      "contract": "string",
+      "price": "string",
+      "size": 0
     }
     
     
@@ -4890,7 +4694,7 @@ role | string | Optional | enum: ["taker","maker"] | Trade role. taker - taker, 
     
     
 
-##  OptionsUnderlying
+##  OptionsPositionClose
 
 Type | Constraints  
 ---|---  
@@ -4900,11 +4704,207 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-name | string | Optional |  | Underlying name  
-index_price | string | Optional |  | Spot index price (quote currency)  
+time | number(double) | Optional | readOnly: true | Position close time  
+contract | string | Optional | readOnly: true | Options contract name  
+side | string | Optional | enum: ["long","short"]  
+readOnly: true | Position side  
+  
+\- `long`: Long position  
+\- `short`: Short position  
+pnl | string | Optional | readOnly: true | PnL  
+text | string | Optional | readOnly: true | Source of close order. See `order.text` field for specific values  
+settle_size | string | Optional | readOnly: true | Settlement size  
+      
+    
+    {
+      "time": 0,
+      "contract": "string",
+      "side": "long",
+      "pnl": "string",
+      "text": "string",
+      "settle_size": "string"
+    }
+    
+    
+
+##  OptionsMySettlements
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+time | number(double) | Optional |  | Settlement time  
+underlying | string | Optional |  | Underlying  
+contract | string | Optional |  | Options contract name  
+strike_price | string | Optional |  | Strike price (quote currency)  
+settle_price | string | Optional |  | Settlement price (quote currency)  
+size | integer(int64) | Optional |  | Settlement size  
+settle_profit | string | Optional |  | Settlement profit (quote currency)  
+fee | string | Optional |  | Settlement fee (quote currency)  
+realised_pnl | string | Optional |  | Accumulated profit and loss from opening positions, including premium, fees, settlement profit, etc. (quote currency)  
+      
+    
+    {
+      "time": 0,
+      "underlying": "string",
+      "contract": "string",
+      "strike_price": "string",
+      "settle_price": "string",
+      "size": 0,
+      "settle_profit": "string",
+      "fee": "string",
+      "realised_pnl": "string"
+    }
+    
+    
+
+##  OptionsContract
+
+Options contract details
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+name | string | Optional |  | Options contract name  
+tag | string | Optional |  | Expiry periods include day, week, and month.  
+create_time | number(double) | Optional |  | Created time  
+expiration_time | number(double) | Optional |  | Expiration time  
+is_call | boolean | Optional |  | `true` means call options, `false` means put options  
+multiplier | string | Optional |  | The option contract multiplier indicates how many units of the underlying asset the face value of one contract represents.  
+underlying | string | Optional |  | Underlying  
+underlying_price | string | Optional |  | The forward futures price corresponding to the delivery date  
+last_price | string | Optional |  | Last trading price  
+mark_price | string | Optional |  | Current mark price (quote currency)  
+index_price | string | Optional |  | Current index price (quote currency)  
+maker_fee_rate | string | Optional |  | Maker fee rate, negative values indicate rebates  
+taker_fee_rate | string | Optional |  | Taker fee rate  
+order_price_round | string | Optional |  | Minimum order price increment  
+mark_price_round | string | Optional |  | Minimum mark price increment  
+order_size_min | integer(int64) | Optional |  | Minimum order quantity  
+order_size_max | integer(int64) | Optional |  | Maximum order quantity  
+order_price_deviate | string | Optional |  | Deprecated  
+ref_discount_rate | string | Optional |  | Trading fee discount for referred users  
+ref_rebate_rate | string | Optional |  | Commission rate for referrers  
+orderbook_id | integer(int64) | Optional |  | Orderbook update ID  
+trade_id | integer(int64) | Optional |  | Deprecated  
+trade_size | integer(int64) | Optional |  | Historical cumulative trading volume  
+position_size | integer(int64) | Optional |  | Current total long position size  
+orders_limit | integer | Optional |  | The maximum number of open orders each user can place in this order book.  
       
     
     {
       "name": "string",
+      "tag": "string",
+      "create_time": 0,
+      "expiration_time": 0,
+      "is_call": true,
+      "multiplier": "string",
+      "underlying": "string",
+      "underlying_price": "string",
+      "last_price": "string",
+      "mark_price": "string",
+      "index_price": "string",
+      "maker_fee_rate": "string",
+      "taker_fee_rate": "string",
+      "order_price_round": "string",
+      "mark_price_round": "string",
+      "order_size_min": 0,
+      "order_size_max": 0,
+      "order_price_deviate": "string",
+      "ref_discount_rate": "string",
+      "ref_rebate_rate": "string",
+      "orderbook_id": 0,
+      "trade_id": 0,
+      "trade_size": 0,
+      "position_size": 0,
+      "orders_limit": 0
+    }
+    
+    
+
+##  OptionsTicker
+
+Options contract details
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+name | string | Optional |  | Options contract name  
+last_price | string | Optional |  | Last trade price (quote currency)  
+mark_price | string | Optional |  | Current mark price (quote currency)  
+index_price | string | Optional |  | Current index price (quote currency)  
+ask1_size | integer(int64) | Optional |  | Best ask size  
+ask1_price | string | Optional |  | Best ask price  
+bid1_size | integer(int64) | Optional |  | Best bid size  
+bid1_price | string | Optional |  | Best bid price  
+position_size | integer(int64) | Optional |  | Current total long position size  
+mark_iv | string | Optional |  | Implied volatility  
+bid_iv | string | Optional |  | Bid side implied volatility  
+ask_iv | string | Optional |  | Ask side implied volatility  
+leverage | string | Optional |  | Leverage = underlying_price / (mark_price * delta). This value is for reference only.  
+delta | string | Optional |  | Greek letter delta  
+gamma | string | Optional |  | Greek letter gamma  
+vega | string | Optional |  | Greek letter vega  
+theta | string | Optional |  | Greek letter theta  
+rho | string | Optional |  | Rho  
+      
+    
+    {
+      "name": "string",
+      "last_price": "string",
+      "mark_price": "string",
+      "index_price": "string",
+      "ask1_size": 0,
+      "ask1_price": "string",
+      "bid1_size": 0,
+      "bid1_price": "string",
+      "position_size": 0,
+      "mark_iv": "string",
+      "bid_iv": "string",
+      "ask_iv": "string",
+      "leverage": "string",
+      "delta": "string",
+      "gamma": "string",
+      "vega": "string",
+      "theta": "string",
+      "rho": "string"
+    }
+    
+    
+
+##  OptionsUnderlyingTicker
+
+Options underlying detail
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+trade_put | integer(int64) | Optional |  | Total put options trades amount in last 24h  
+trade_call | integer(int64) | Optional |  | Total call options trades amount in last 24h  
+index_price | string | Optional |  | Index price (quote currency)  
+      
+    
+    {
+      "trade_put": 0,
+      "trade_call": 0,
       "index_price": "string"
     }

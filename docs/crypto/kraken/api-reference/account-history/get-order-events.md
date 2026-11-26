@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/account-history/get-order-events'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Get order events
@@ -466,5 +466,6 @@ components:
       in: header
       name: Authent
       x-inlineDescription: true
+      x-default: <authent>
 
 ````

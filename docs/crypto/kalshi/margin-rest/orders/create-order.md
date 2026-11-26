@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-rest/orders/create-order'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Create Order
@@ -135,7 +135,11 @@ components:
           description: String representation of the order quantity in contracts.
         price:
           $ref: '#/components/schemas/FixedPointDollars'
-          description: Price for the order in fixed-point dollars.
+          description: >-
+            Price for the order in fixed-point dollars per contract, not per
+            unit of the underlying. See Prices and contract size in the Perps
+            API overview
+            (https://docs.kalshi.com/margin#prices-and-contract-size).
           x-go-type-skip-optional-pointer: true
         expiration_time:
           type: integer

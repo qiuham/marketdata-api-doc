@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/wallet/list-combo-positions'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # 列出组合仓位
@@ -223,6 +223,20 @@ paths:
         so a mirror never reads rows that may still move. Pair with
 
         `sortBy=UPDATED&sortDirection=ASC` for the stable sync order.
+
+
+        Resolved positions are history: when `status` names `RESOLVED_WIN`,
+
+        `RESOLVED_LOSS` or `RESOLVED_PARTIAL` and `user` is the active wallet of
+        a
+
+        Polymarket account that owns other wallets, the page also holds the
+        other
+
+        wallets' positions in those resolved statuses; each row's `proxy_wallet`
+
+        names its wallet. Open positions, and the sync window, read `user`
+        alone.
 
 
         A malformed `condition` combo condition id is a `400` naming the value;

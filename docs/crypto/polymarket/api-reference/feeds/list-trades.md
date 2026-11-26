@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/feeds/list-trades'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # List trades
@@ -21,6 +21,10 @@ updated_at: 2026-11-25
 Pass `?cursor=` from a prior response's `next_cursor` to fetch the next page;
 it carries both the page size and the `(block_timestamp, sequence_id)` seek
 anchor, so deep pages cost the same as shallow ones.
+
+When `user` is the active wallet of a Polymarket account that owns other
+wallets, the feed holds every wallet's trades; each row's `proxy_wallet`
+names the wallet it belongs to.
 
 A malformed `condition` id is a `400` naming the value; a
 well-formed one that matches nothing serves an empty `data` array, which
@@ -162,6 +166,13 @@ paths:
         seek
 
         anchor, so deep pages cost the same as shallow ones.
+
+
+        When `user` is the active wallet of a Polymarket account that owns other
+
+        wallets, the feed holds every wallet's trades; each row's `proxy_wallet`
+
+        names the wallet it belongs to.
 
 
         A malformed `condition` id is a `400` naming the value; a

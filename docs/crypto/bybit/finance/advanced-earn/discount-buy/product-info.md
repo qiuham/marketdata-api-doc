@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/discount-buy/product-info
 api_type: REST
-updated_at: 2026-11-25 18:51:02.964485
+updated_at: 2026-11-26 18:51:55.783935
 ---
 
 # Get Product Info

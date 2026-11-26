@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/w3w-prediction/websocket-streams/wallet-events
 api_type: WebSocket
-updated_at: 2026-11-25 18:35:38.833462
+updated_at: 2026-11-26 18:36:32.011614
 ---
 
 # Wallet Events WebSocket Streams

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-websocket-subscribe
 anchor_id: overview-websocket-subscribe
 api_type: WebSocket
-updated_at: 2026-11-25 18:59:29.027925
+updated_at: 2026-11-26 19:00:29.949707
 ---
 
 # Subscribe

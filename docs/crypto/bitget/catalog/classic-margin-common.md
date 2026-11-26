@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-margin-common
 api_type: REST
-updated_at: 2026-11-25 19:02:39.174375
+updated_at: 2026-11-26 19:03:52.313853
 ---
 
 # Classic Margin Common API

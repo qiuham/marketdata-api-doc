@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/recipes/wspython-authenticated-connection-example'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # [WS][Python] Authenticated connection example

@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/portfolio/get-positions'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Get Positions
@@ -109,6 +109,16 @@ paths:
         - $ref: '#/components/parameters/PositionsLimitQuery'
         - $ref: '#/components/parameters/CountFilterQuery'
         - $ref: '#/components/parameters/PositionSettlementStatusQuery'
+        - name: sort_by
+          in: query
+          required: false
+          description: >-
+            Order event groups by ticker ascending. Omit to use the default
+            ordering.
+          schema:
+            type: string
+            enum:
+              - event_ticker
         - $ref: '#/components/parameters/TickerQuery'
         - $ref: '#/components/parameters/SingleEventTickerQuery'
         - $ref: '#/components/parameters/SubaccountQueryDefaultPrimary'
@@ -137,9 +147,8 @@ components:
       name: cursor
       in: query
       description: >-
-        The Cursor represents a pointer to the next page of records in the
-        pagination. Use the value returned from the previous response to get the
-        next page.
+        Cursor returned by the previous page. Keep filters and sort_by unchanged
+        while paginating.
       schema:
         type: string
     PositionsLimitQuery:
@@ -272,7 +281,9 @@ components:
             current market value or realized loss.
         realized_pnl_dollars:
           $ref: '#/components/schemas/FixedPointDollars'
-          description: Locked in profit and loss, in dollars
+          description: >-
+            Locked in profit and loss, in dollars, before fees. Fees are
+            reported separately in `fees_paid_dollars`.
         fees_paid_dollars:
           $ref: '#/components/schemas/FixedPointDollars'
           description: Fees paid on fill orders, in dollars
@@ -311,7 +322,9 @@ components:
           description: Cost of the aggregate event position in dollars
         realized_pnl_dollars:
           $ref: '#/components/schemas/FixedPointDollars'
-          description: Locked in profit and loss, in dollars
+          description: >-
+            Locked in profit and loss, in dollars, before fees. Fees are
+            reported separately in `fees_paid_dollars`.
         fees_paid_dollars:
           $ref: '#/components/schemas/FixedPointDollars'
           description: Fees paid on fill orders, in dollars

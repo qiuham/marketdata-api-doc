@@ -10,7 +10,7 @@
   "status": "active",
   "docs_dir": "docs/crypto/bitget",
   "total": 219,
-  "updated_at": "2026-11-25 19:02:56.513660",
+  "updated_at": "2026-11-26 19:04:09.894572",
   "documents_by_type": {
     "REST": [
       {
@@ -23,7 +23,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/account",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:23.669376"
+        "updated_at": "2026-11-26 19:03:37.178561"
       },
       {
         "id": "affiliate",
@@ -35,7 +35,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/affiliate",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:24.356617"
+        "updated_at": "2026-11-26 19:03:37.958060"
       },
       {
         "id": "broker",
@@ -47,7 +47,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/broker",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:24.785896"
+        "updated_at": "2026-11-26 19:03:38.247551"
       },
       {
         "id": "cfd-account",
@@ -59,7 +59,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/cfd-account",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:25.863647"
+        "updated_at": "2026-11-26 19:03:39.296497"
       },
       {
         "id": "cfd-market",
@@ -71,7 +71,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/cfd-market",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:26.584514"
+        "updated_at": "2026-11-26 19:03:40.203249"
       },
       {
         "id": "cfd-trade",
@@ -83,7 +83,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/cfd-trade",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:26.942796"
+        "updated_at": "2026-11-26 19:03:40.345846"
       },
       {
         "id": "cfd",
@@ -95,7 +95,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/cfd",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:25.492700"
+        "updated_at": "2026-11-26 19:03:39.077853"
       },
       {
         "id": "classic-affiliate-customer-info",
@@ -107,7 +107,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-affiliate-customer-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:27.666030"
+        "updated_at": "2026-11-26 19:03:41.330338"
       },
       {
         "id": "classic-broker-apikey",
@@ -119,7 +119,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-broker-apikey",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:28.022644"
+        "updated_at": "2026-11-26 19:03:41.438696"
       },
       {
         "id": "classic-broker-commission",
@@ -131,7 +131,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-broker-commission",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:28.738456"
+        "updated_at": "2026-11-26 19:03:42.427604"
       },
       {
         "id": "classic-broker-subaccount",
@@ -143,7 +143,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-broker-subaccount",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:29.125377"
+        "updated_at": "2026-11-26 19:03:42.532363"
       },
       {
         "id": "classic-common-account",
@@ -155,7 +155,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-common-account",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:29.807920"
+        "updated_at": "2026-11-26 19:03:43.480463"
       },
       {
         "id": "classic-common-apidata",
@@ -167,7 +167,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-common-apidata",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:30.232200"
+        "updated_at": "2026-11-26 19:03:43.642130"
       },
       {
         "id": "classic-common-notice",
@@ -179,7 +179,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-common-notice",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:30.870924"
+        "updated_at": "2026-11-26 19:03:44.537887"
       },
       {
         "id": "classic-common-public",
@@ -191,7 +191,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-common-public",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:31.329400"
+        "updated_at": "2026-11-26 19:03:44.689466"
       },
       {
         "id": "classic-common-vsubaccount",
@@ -203,7 +203,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-common-vsubaccount",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:31.947231"
+        "updated_at": "2026-11-26 19:03:45.654805"
       },
       {
         "id": "classic-contract-account",
@@ -215,7 +215,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-contract-account",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:32.442512"
+        "updated_at": "2026-11-26 19:03:45.781051"
       },
       {
         "id": "classic-contract-market",
@@ -227,7 +227,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-contract-market",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:33.050153"
+        "updated_at": "2026-11-26 19:03:46.747907"
       },
       {
         "id": "classic-contract-plan",
@@ -239,7 +239,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-contract-plan",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:33.532826"
+        "updated_at": "2026-11-26 19:03:46.857483"
       },
       {
         "id": "classic-contract-position",
@@ -251,7 +251,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-contract-position",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:34.131497"
+        "updated_at": "2026-11-26 19:03:47.846822"
       },
       {
         "id": "classic-contract-trade",
@@ -263,7 +263,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-contract-trade",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:34.660728"
+        "updated_at": "2026-11-26 19:03:47.987601"
       },
       {
         "id": "classic-copytrading-future-follower",
@@ -275,7 +275,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-copytrading-future-follower",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:35.255615"
+        "updated_at": "2026-11-26 19:03:48.930820"
       },
       {
         "id": "classic-copytrading-future-trader",
@@ -287,7 +287,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-copytrading-future-trader",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:35.737678"
+        "updated_at": "2026-11-26 19:03:49.071335"
       },
       {
         "id": "classic-copytrading-spot-follower",
@@ -299,7 +299,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-copytrading-spot-follower",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:36.426331"
+        "updated_at": "2026-11-26 19:03:50.095325"
       },
       {
         "id": "classic-copytrading-spot-trader",
@@ -311,7 +311,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-copytrading-spot-trader",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:36.964634"
+        "updated_at": "2026-11-26 19:03:50.184622"
       },
       {
         "id": "classic-instloan-account",
@@ -323,7 +323,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-instloan-account",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:37.493959"
+        "updated_at": "2026-11-26 19:03:51.153606"
       },
       {
         "id": "classic-instloan-orders",
@@ -335,7 +335,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-instloan-orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:38.097473"
+        "updated_at": "2026-11-26 19:03:51.245988"
       },
       {
         "id": "classic-instloan-public",
@@ -347,7 +347,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-instloan-public",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:38.578152"
+        "updated_at": "2026-11-26 19:03:52.196658"
       },
       {
         "id": "classic-margin-common",
@@ -359,7 +359,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-margin-common",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:39.174375"
+        "updated_at": "2026-11-26 19:03:52.313853"
       },
       {
         "id": "classic-margin-cross-account",
@@ -371,7 +371,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-margin-cross-account",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:39.650190"
+        "updated_at": "2026-11-26 19:03:53.306969"
       },
       {
         "id": "classic-margin-cross-record",
@@ -383,7 +383,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-margin-cross-record",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:40.255252"
+        "updated_at": "2026-11-26 19:03:53.367904"
       },
       {
         "id": "classic-margin-cross-trade",
@@ -395,7 +395,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-margin-cross-trade",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:40.752617"
+        "updated_at": "2026-11-26 19:03:54.382748"
       },
       {
         "id": "classic-margin-isolated-account",
@@ -407,7 +407,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-margin-isolated-account",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:41.332445"
+        "updated_at": "2026-11-26 19:03:54.458520"
       },
       {
         "id": "classic-margin-isolated-record",
@@ -419,7 +419,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-margin-isolated-record",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:41.836513"
+        "updated_at": "2026-11-26 19:03:55.406033"
       },
       {
         "id": "classic-margin-isolated-trade",
@@ -431,7 +431,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-margin-isolated-trade",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:42.401033"
+        "updated_at": "2026-11-26 19:03:55.537142"
       },
       {
         "id": "classic-p2p-p2p",
@@ -443,7 +443,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-p2p-p2p",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:42.932062"
+        "updated_at": "2026-11-26 19:03:56.434256"
       },
       {
         "id": "classic-spot-account",
@@ -455,7 +455,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-spot-account",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:43.580672"
+        "updated_at": "2026-11-26 19:03:56.703420"
       },
       {
         "id": "classic-spot-bgb-convert",
@@ -467,7 +467,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-spot-bgb-convert",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:44.100245"
+        "updated_at": "2026-11-26 19:03:57.551584"
       },
       {
         "id": "classic-spot-convert",
@@ -479,7 +479,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-spot-convert",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:44.718105"
+        "updated_at": "2026-11-26 19:03:57.810779"
       },
       {
         "id": "classic-spot-market",
@@ -491,7 +491,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-spot-market",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:45.235580"
+        "updated_at": "2026-11-26 19:03:58.669441"
       },
       {
         "id": "classic-spot-plan",
@@ -503,7 +503,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-spot-plan",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:45.874809"
+        "updated_at": "2026-11-26 19:03:58.889760"
       },
       {
         "id": "classic-spot-trade",
@@ -515,7 +515,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-spot-trade",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:46.381358"
+        "updated_at": "2026-11-26 19:03:59.791556"
       },
       {
         "id": "classic-tax-tax-records",
@@ -527,7 +527,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/classic-tax-tax-records",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:46.967501"
+        "updated_at": "2026-11-26 19:03:59.945653"
       },
       {
         "id": "copy-trading",
@@ -539,7 +539,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/copy-trading",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:47.509035"
+        "updated_at": "2026-11-26 19:04:00.886735"
       },
       {
         "id": "crypto-loans",
@@ -551,7 +551,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/crypto-loans",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:48.127298"
+        "updated_at": "2026-11-26 19:04:01.079924"
       },
       {
         "id": "earn-classic-account",
@@ -563,7 +563,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/earn-classic-account",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:49.219340"
+        "updated_at": "2026-11-26 19:04:02.140058"
       },
       {
         "id": "earn-classic-elite",
@@ -575,7 +575,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/earn-classic-elite",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:49.749593"
+        "updated_at": "2026-11-26 19:04:03.111053"
       },
       {
         "id": "earn-classic-loan",
@@ -587,7 +587,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/earn-classic-loan",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:50.281020"
+        "updated_at": "2026-11-26 19:04:03.235906"
       },
       {
         "id": "earn-classic-savings",
@@ -599,7 +599,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/earn-classic-savings",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:50.813307"
+        "updated_at": "2026-11-26 19:04:04.177670"
       },
       {
         "id": "earn-classic-sharkfin",
@@ -611,7 +611,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/earn-classic-sharkfin",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:51.341798"
+        "updated_at": "2026-11-26 19:04:04.296102"
       },
       {
         "id": "earn",
@@ -623,7 +623,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/earn",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:48.618654"
+        "updated_at": "2026-11-26 19:04:02.018041"
       },
       {
         "id": "institutional-loan",
@@ -635,7 +635,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/institutional-loan",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:52.001939"
+        "updated_at": "2026-11-26 19:04:05.244085"
       },
       {
         "id": "institutional-rate-limit",
@@ -647,7 +647,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/institutional-rate-limit",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:52.579328"
+        "updated_at": "2026-11-26 19:04:05.342506"
       },
       {
         "id": "market",
@@ -659,7 +659,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/market",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:53.151677"
+        "updated_at": "2026-11-26 19:04:06.348754"
       },
       {
         "id": "p2p",
@@ -671,7 +671,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/p2p",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:53.661267"
+        "updated_at": "2026-11-26 19:04:06.420485"
       },
       {
         "id": "reality",
@@ -683,7 +683,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/reality",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:54.258821"
+        "updated_at": "2026-11-26 19:04:07.445976"
       },
       {
         "id": "stock-plus",
@@ -695,7 +695,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/stock-plus",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:54.774120"
+        "updated_at": "2026-11-26 19:04:07.516731"
       },
       {
         "id": "stp-group",
@@ -707,7 +707,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/stp-group",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:55.318891"
+        "updated_at": "2026-11-26 19:04:08.634681"
       },
       {
         "id": "tax",
@@ -719,7 +719,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/tax",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:55.895393"
+        "updated_at": "2026-11-26 19:04:08.687903"
       },
       {
         "id": "trading",
@@ -731,7 +731,7 @@
         "source_url": "https://www.bitget.com/docs/catalog/trading",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:56.513660"
+        "updated_at": "2026-11-26 19:04:09.894572"
       }
     ],
     "Guide": [
@@ -745,7 +745,7 @@
         "source_url": "https://www.bitget.com/docs/classic/Introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:00:52.862454"
+        "updated_at": "2026-11-26 19:02:08.930654"
       },
       {
         "id": "agent-hub",
@@ -757,7 +757,7 @@
         "source_url": "https://www.bitget.com/docs/classic/agent-hub",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:00:52.888752"
+        "updated_at": "2026-11-26 19:02:08.934795"
       },
       {
         "id": "rest-api",
@@ -769,7 +769,7 @@
         "source_url": "https://www.bitget.com/docs/classic/demo-trading/rest-api",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:12.177965"
+        "updated_at": "2026-11-26 19:02:27.846053"
       },
       {
         "id": "faq",
@@ -781,7 +781,7 @@
         "source_url": "https://www.bitget.com/docs/classic/faq",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:14.455163"
+        "updated_at": "2026-11-26 19:02:30.430090"
       },
       {
         "id": "fastapi-integration-guide",
@@ -793,7 +793,7 @@
         "source_url": "https://www.bitget.com/docs/classic/fastapi-integration-guide",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:15.566325"
+        "updated_at": "2026-11-26 19:02:30.983558"
       },
       {
         "id": "rest-api",
@@ -805,7 +805,7 @@
         "source_url": "https://www.bitget.com/docs/classic/rest-api",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:16.637728"
+        "updated_at": "2026-11-26 19:02:32.068601"
       },
       {
         "id": "golang",
@@ -817,7 +817,7 @@
         "source_url": "https://www.bitget.com/docs/classic/sdk/golang",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:16.740066"
+        "updated_at": "2026-11-26 19:02:32.629011"
       },
       {
         "id": "java",
@@ -829,7 +829,7 @@
         "source_url": "https://www.bitget.com/docs/classic/sdk/java",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:17.769640"
+        "updated_at": "2026-11-26 19:02:33.167604"
       },
       {
         "id": "node",
@@ -841,7 +841,7 @@
         "source_url": "https://www.bitget.com/docs/classic/sdk/node",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:17.879506"
+        "updated_at": "2026-11-26 19:02:33.801970"
       },
       {
         "id": "overview",
@@ -853,7 +853,7 @@
         "source_url": "https://www.bitget.com/docs/classic/sdk/overview",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:18.896677"
+        "updated_at": "2026-11-26 19:02:34.266220"
       },
       {
         "id": "php",
@@ -865,7 +865,7 @@
         "source_url": "https://www.bitget.com/docs/classic/sdk/php",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:18.990850"
+        "updated_at": "2026-11-26 19:02:34.892565"
       },
       {
         "id": "python",
@@ -877,7 +877,7 @@
         "source_url": "https://www.bitget.com/docs/classic/sdk/python",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:20.033562"
+        "updated_at": "2026-11-26 19:02:35.407709"
       },
       {
         "id": "uta-api-upgrade-guide",
@@ -889,7 +889,7 @@
         "source_url": "https://www.bitget.com/docs/classic/uta-api-upgrade-guide",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:20.049879"
+        "updated_at": "2026-11-26 19:02:36.008960"
       },
       {
         "id": "Introduction",
@@ -901,7 +901,7 @@
         "source_url": "https://www.bitget.com/docs/uta/Introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:38.686022"
+        "updated_at": "2026-11-26 19:02:53.909023"
       },
       {
         "id": "agent-hub",
@@ -913,7 +913,7 @@
         "source_url": "https://www.bitget.com/docs/uta/agent-hub",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:39.832343"
+        "updated_at": "2026-11-26 19:02:54.488454"
       },
       {
         "id": "best-practices-guide",
@@ -925,7 +925,7 @@
         "source_url": "https://www.bitget.com/docs/uta/best-practices-guide",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:39.833440"
+        "updated_at": "2026-11-26 19:02:55.019215"
       },
       {
         "id": "api-broker",
@@ -937,7 +937,7 @@
         "source_url": "https://www.bitget.com/docs/uta/broker/api-broker",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:40.927126"
+        "updated_at": "2026-11-26 19:02:55.621610"
       },
       {
         "id": "cfd-trading-guide",
@@ -949,7 +949,7 @@
         "source_url": "https://www.bitget.com/docs/uta/cfd-trading-guide",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:40.945965"
+        "updated_at": "2026-11-26 19:02:56.091453"
       },
       {
         "id": "data-download-center",
@@ -961,7 +961,7 @@
         "source_url": "https://www.bitget.com/docs/uta/data-download-center",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:52.687822"
+        "updated_at": "2026-11-26 19:03:07.054406"
       },
       {
         "id": "rest-api",
@@ -973,7 +973,7 @@
         "source_url": "https://www.bitget.com/docs/uta/demo-trading/rest-api",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:53.488752"
+        "updated_at": "2026-11-26 19:03:07.744248"
       },
       {
         "id": "elite-trading-api-guide",
@@ -985,7 +985,7 @@
         "source_url": "https://www.bitget.com/docs/uta/elite-trading-api-guide",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:54.643266"
+        "updated_at": "2026-11-26 19:03:08.840535"
       },
       {
         "id": "enum",
@@ -997,7 +997,7 @@
         "source_url": "https://www.bitget.com/docs/uta/enum",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:54.982279"
+        "updated_at": "2026-11-26 19:03:09.380983"
       },
       {
         "id": "fastapi-integration-guide",
@@ -1009,7 +1009,7 @@
         "source_url": "https://www.bitget.com/docs/uta/fastapi-integration-guide",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:57.247841"
+        "updated_at": "2026-11-26 19:03:11.658642"
       },
       {
         "id": "quick-start",
@@ -1021,7 +1021,7 @@
         "source_url": "https://www.bitget.com/docs/uta/quick-start",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:58.069029"
+        "updated_at": "2026-11-26 19:03:12.320449"
       },
       {
         "id": "reality-trading-guide",
@@ -1033,7 +1033,7 @@
         "source_url": "https://www.bitget.com/docs/uta/reality-trading-guide",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:59.638586"
+        "updated_at": "2026-11-26 19:03:13.920995"
       },
       {
         "id": "rest-api",
@@ -1045,7 +1045,7 @@
         "source_url": "https://www.bitget.com/docs/uta/rest-api",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:00.387300"
+        "updated_at": "2026-11-26 19:03:14.604347"
       },
       {
         "id": "golang",
@@ -1057,7 +1057,7 @@
         "source_url": "https://www.bitget.com/docs/uta/sdk/golang",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:00.766283"
+        "updated_at": "2026-11-26 19:03:15.038045"
       },
       {
         "id": "java",
@@ -1069,7 +1069,7 @@
         "source_url": "https://www.bitget.com/docs/uta/sdk/java",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:01.543838"
+        "updated_at": "2026-11-26 19:03:15.746598"
       },
       {
         "id": "node",
@@ -1081,7 +1081,7 @@
         "source_url": "https://www.bitget.com/docs/uta/sdk/node",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:01.883803"
+        "updated_at": "2026-11-26 19:03:16.150178"
       },
       {
         "id": "overview",
@@ -1093,7 +1093,7 @@
         "source_url": "https://www.bitget.com/docs/uta/sdk/overview",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:02.661303"
+        "updated_at": "2026-11-26 19:03:16.835669"
       },
       {
         "id": "php",
@@ -1105,7 +1105,7 @@
         "source_url": "https://www.bitget.com/docs/uta/sdk/php",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:02.996809"
+        "updated_at": "2026-11-26 19:03:17.259334"
       },
       {
         "id": "python",
@@ -1117,7 +1117,7 @@
         "source_url": "https://www.bitget.com/docs/uta/sdk/python",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:03.775196"
+        "updated_at": "2026-11-26 19:03:17.923068"
       },
       {
         "id": "update-preview",
@@ -1129,7 +1129,7 @@
         "source_url": "https://www.bitget.com/docs/uta/update-preview",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:04.047500"
+        "updated_at": "2026-11-26 19:03:18.318140"
       },
       {
         "id": "uta-intro",
@@ -1141,7 +1141,7 @@
         "source_url": "https://www.bitget.com/docs/uta/uta-intro",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:04.871174"
+        "updated_at": "2026-11-26 19:03:18.992585"
       }
     ],
     "Changelog": [
@@ -1155,7 +1155,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2023-11",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:00:53.999641"
+        "updated_at": "2026-11-26 19:02:10.012460"
       },
       {
         "id": "2023-12",
@@ -1167,7 +1167,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2023-12",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:00:54.024160"
+        "updated_at": "2026-11-26 19:02:10.094175"
       },
       {
         "id": "2024-01",
@@ -1179,7 +1179,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2024-01",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:00:55.143058"
+        "updated_at": "2026-11-26 19:02:11.139774"
       },
       {
         "id": "2024-02",
@@ -1191,7 +1191,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2024-02",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:00:55.217680"
+        "updated_at": "2026-11-26 19:02:11.209747"
       },
       {
         "id": "2024-03",
@@ -1203,7 +1203,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2024-03",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:00:56.248228"
+        "updated_at": "2026-11-26 19:02:12.261018"
       },
       {
         "id": "2024-06",
@@ -1215,7 +1215,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2024-06",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:00:56.316690"
+        "updated_at": "2026-11-26 19:02:12.312760"
       },
       {
         "id": "2024-07",
@@ -1227,7 +1227,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2024-07",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:00:57.401346"
+        "updated_at": "2026-11-26 19:02:13.360720"
       },
       {
         "id": "2024-08",
@@ -1239,7 +1239,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2024-08",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:00:57.447200"
+        "updated_at": "2026-11-26 19:02:13.403732"
       },
       {
         "id": "2024-09",
@@ -1251,7 +1251,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2024-09",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:00:58.526152"
+        "updated_at": "2026-11-26 19:02:14.504551"
       },
       {
         "id": "2024-10",
@@ -1263,7 +1263,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2024-10",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:00:58.655512"
+        "updated_at": "2026-11-26 19:02:14.505314"
       },
       {
         "id": "2024-11",
@@ -1275,7 +1275,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2024-11",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:00:59.674383"
+        "updated_at": "2026-11-26 19:02:15.608746"
       },
       {
         "id": "2024-12",
@@ -1287,7 +1287,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2024-12",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:00:59.761832"
+        "updated_at": "2026-11-26 19:02:15.659776"
       },
       {
         "id": "2025-01",
@@ -1299,7 +1299,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2025-01",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:00.781957"
+        "updated_at": "2026-11-26 19:02:16.686807"
       },
       {
         "id": "2025-02",
@@ -1311,7 +1311,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2025-02",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:00.921781"
+        "updated_at": "2026-11-26 19:02:16.774419"
       },
       {
         "id": "2025-03",
@@ -1323,7 +1323,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2025-03",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:01.948859"
+        "updated_at": "2026-11-26 19:02:17.851197"
       },
       {
         "id": "2025-04",
@@ -1335,7 +1335,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2025-04",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:02.102294"
+        "updated_at": "2026-11-26 19:02:17.873217"
       },
       {
         "id": "2025-05",
@@ -1347,7 +1347,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2025-05",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:03.071587"
+        "updated_at": "2026-11-26 19:02:18.946746"
       },
       {
         "id": "2025-06",
@@ -1359,7 +1359,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2025-06",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:03.257608"
+        "updated_at": "2026-11-26 19:02:18.974713"
       },
       {
         "id": "2025-07",
@@ -1371,7 +1371,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2025-07",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:04.204825"
+        "updated_at": "2026-11-26 19:02:20.106053"
       },
       {
         "id": "2025-08",
@@ -1383,7 +1383,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2025-08",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:04.359006"
+        "updated_at": "2026-11-26 19:02:20.106837"
       },
       {
         "id": "2025-09",
@@ -1395,7 +1395,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2025-09",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:05.422650"
+        "updated_at": "2026-11-26 19:02:21.256660"
       },
       {
         "id": "2025-10",
@@ -1407,7 +1407,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2025-10",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:05.491293"
+        "updated_at": "2026-11-26 19:02:21.257407"
       },
       {
         "id": "2025-11",
@@ -1419,7 +1419,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2025-11",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:06.536990"
+        "updated_at": "2026-11-26 19:02:22.273726"
       },
       {
         "id": "2026-01",
@@ -1431,7 +1431,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2026-01",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:06.613932"
+        "updated_at": "2026-11-26 19:02:22.370038"
       },
       {
         "id": "2026-03",
@@ -1443,7 +1443,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2026-03",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:07.648937"
+        "updated_at": "2026-11-26 19:02:23.350080"
       },
       {
         "id": "2026-04",
@@ -1455,7 +1455,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2026-04",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:07.767474"
+        "updated_at": "2026-11-26 19:02:23.499122"
       },
       {
         "id": "2026-05",
@@ -1467,7 +1467,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2026-05",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:08.828992"
+        "updated_at": "2026-11-26 19:02:24.429992"
       },
       {
         "id": "2026-06",
@@ -1479,7 +1479,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2026-06",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:08.877457"
+        "updated_at": "2026-11-26 19:02:24.529238"
       },
       {
         "id": "2026-07",
@@ -1491,7 +1491,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2026-07",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:09.952033"
+        "updated_at": "2026-11-26 19:02:25.504335"
       },
       {
         "id": "2026-08",
@@ -1503,7 +1503,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2026-08",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:09.965110"
+        "updated_at": "2026-11-26 19:02:25.646205"
       },
       {
         "id": "2026-09",
@@ -1515,7 +1515,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2026-09",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:11.036693"
+        "updated_at": "2026-11-26 19:02:26.573950"
       },
       {
         "id": "2026-10",
@@ -1527,7 +1527,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2026-10",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:11.047702"
+        "updated_at": "2026-11-26 19:02:26.718380"
       },
       {
         "id": "2026-11",
@@ -1539,7 +1539,7 @@
         "source_url": "https://www.bitget.com/docs/classic/changelog/2026-11",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:12.104918"
+        "updated_at": "2026-11-26 19:02:27.609546"
       },
       {
         "id": "2025-05",
@@ -1551,7 +1551,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2025-05",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:42.474762"
+        "updated_at": "2026-11-26 19:02:56.685875"
       },
       {
         "id": "2025-06",
@@ -1563,7 +1563,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2025-06",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:42.475508"
+        "updated_at": "2026-11-26 19:02:57.187997"
       },
       {
         "id": "2025-07",
@@ -1575,7 +1575,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2025-07",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:43.258467"
+        "updated_at": "2026-11-26 19:02:57.812836"
       },
       {
         "id": "2025-08",
@@ -1587,7 +1587,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2025-08",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:43.586313"
+        "updated_at": "2026-11-26 19:02:58.345258"
       },
       {
         "id": "2025-09",
@@ -1599,7 +1599,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2025-09",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:44.375697"
+        "updated_at": "2026-11-26 19:02:58.939342"
       },
       {
         "id": "2025-10",
@@ -1611,7 +1611,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2025-10",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:44.783270"
+        "updated_at": "2026-11-26 19:02:59.406559"
       },
       {
         "id": "2025-11",
@@ -1623,7 +1623,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2025-11",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:45.510620"
+        "updated_at": "2026-11-26 19:03:00.037087"
       },
       {
         "id": "2025-12",
@@ -1635,7 +1635,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2025-12",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:45.893519"
+        "updated_at": "2026-11-26 19:03:00.531654"
       },
       {
         "id": "2026-01",
@@ -1647,7 +1647,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2026-01",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:46.707994"
+        "updated_at": "2026-11-26 19:03:01.163736"
       },
       {
         "id": "2026-02",
@@ -1659,7 +1659,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2026-02",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:47.031837"
+        "updated_at": "2026-11-26 19:03:01.633310"
       },
       {
         "id": "2026-03",
@@ -1671,7 +1671,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2026-03",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:47.832933"
+        "updated_at": "2026-11-26 19:03:02.243594"
       },
       {
         "id": "2026-04",
@@ -1683,7 +1683,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2026-04",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:48.150113"
+        "updated_at": "2026-11-26 19:03:02.734973"
       },
       {
         "id": "2026-05",
@@ -1695,7 +1695,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2026-05",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:48.958150"
+        "updated_at": "2026-11-26 19:03:03.359732"
       },
       {
         "id": "2026-06",
@@ -1707,7 +1707,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2026-06",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:49.298600"
+        "updated_at": "2026-11-26 19:03:03.791548"
       },
       {
         "id": "2026-07",
@@ -1719,7 +1719,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2026-07",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:50.071006"
+        "updated_at": "2026-11-26 19:03:04.543681"
       },
       {
         "id": "2026-08",
@@ -1731,7 +1731,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2026-08",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:50.377986"
+        "updated_at": "2026-11-26 19:03:04.882208"
       },
       {
         "id": "2026-09",
@@ -1743,7 +1743,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2026-09",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:51.178873"
+        "updated_at": "2026-11-26 19:03:05.572563"
       },
       {
         "id": "2026-10",
@@ -1755,7 +1755,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2026-10",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:51.501007"
+        "updated_at": "2026-11-26 19:03:05.941773"
       },
       {
         "id": "2026-11",
@@ -1767,7 +1767,7 @@
         "source_url": "https://www.bitget.com/docs/uta/changelog/2026-11",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:52.401465"
+        "updated_at": "2026-11-26 19:03:06.640710"
       }
     ],
     "WebSocket": [
@@ -1781,7 +1781,7 @@
         "source_url": "https://www.bitget.com/docs/classic/demo-trading/websocket",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:13.217633"
+        "updated_at": "2026-11-26 19:02:28.679839"
       },
       {
         "id": "websocket",
@@ -1793,7 +1793,7 @@
         "source_url": "https://www.bitget.com/docs/classic/error-code/websocket",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:14.433666"
+        "updated_at": "2026-11-26 19:02:29.875830"
       },
       {
         "id": "ADL-Notification-Channel",
@@ -1805,7 +1805,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/ADL-Notification-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:21.343655"
+        "updated_at": "2026-11-26 19:02:36.525532"
       },
       {
         "id": "Account-Channel",
@@ -1817,7 +1817,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/Account-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:21.344538"
+        "updated_at": "2026-11-26 19:02:37.107088"
       },
       {
         "id": "Cancel-Order-Channel",
@@ -1829,7 +1829,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/Cancel-Order-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:22.347605"
+        "updated_at": "2026-11-26 19:02:37.642387"
       },
       {
         "id": "Equity-Channel",
@@ -1841,7 +1841,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/Equity-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:22.528101"
+        "updated_at": "2026-11-26 19:02:38.202205"
       },
       {
         "id": "Fill-Channel",
@@ -1853,7 +1853,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/Fill-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:23.548379"
+        "updated_at": "2026-11-26 19:02:38.817128"
       },
       {
         "id": "History-Positions-Channel",
@@ -1865,7 +1865,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/History-Positions-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:23.650853"
+        "updated_at": "2026-11-26 19:02:39.301631"
       },
       {
         "id": "Order-Channel",
@@ -1877,7 +1877,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/Order-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:24.737008"
+        "updated_at": "2026-11-26 19:02:39.945522"
       },
       {
         "id": "Place-Order-Channel",
@@ -1889,7 +1889,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/Place-Order-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:24.773499"
+        "updated_at": "2026-11-26 19:02:40.445606"
       },
       {
         "id": "Plan-Order-Channel",
@@ -1901,7 +1901,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/Plan-Order-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:26.051827"
+        "updated_at": "2026-11-26 19:02:41.045336"
       },
       {
         "id": "Positions-Channel",
@@ -1913,7 +1913,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/Positions-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:26.052730"
+        "updated_at": "2026-11-26 19:02:41.542763"
       },
       {
         "id": "Candlesticks-Channel",
@@ -1925,7 +1925,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/contract/public/Candlesticks-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:27.090886"
+        "updated_at": "2026-11-26 19:02:42.149907"
       },
       {
         "id": "New-Trades-Channel",
@@ -1937,7 +1937,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/contract/public/New-Trades-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:27.178046"
+        "updated_at": "2026-11-26 19:02:42.683547"
       },
       {
         "id": "Order-Book-Channel",
@@ -1949,7 +1949,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/contract/public/Order-Book-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:28.186824"
+        "updated_at": "2026-11-26 19:02:43.264575"
       },
       {
         "id": "Tickers-Channel",
@@ -1961,7 +1961,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/contract/public/Tickers-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:28.358128"
+        "updated_at": "2026-11-26 19:02:43.803488"
       },
       {
         "id": "intro",
@@ -1973,7 +1973,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/intro",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:29.362964"
+        "updated_at": "2026-11-26 19:02:44.353249"
       },
       {
         "id": "Cross-Orders",
@@ -1985,7 +1985,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/margin/cross/private/Cross-Orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:29.480214"
+        "updated_at": "2026-11-26 19:02:44.942724"
       },
       {
         "id": "Margin-Cross-Account-Assets",
@@ -1997,7 +1997,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/margin/cross/private/Margin-Cross-Account-Assets",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:30.505357"
+        "updated_at": "2026-11-26 19:02:45.468680"
       },
       {
         "id": "Margin-Index-Price",
@@ -2009,7 +2009,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/margin/cross/public/Margin-Index-Price",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:30.605891"
+        "updated_at": "2026-11-26 19:02:46.114784"
       },
       {
         "id": "Isolate-Orders",
@@ -2021,7 +2021,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/margin/isolated/private/Isolate-Orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:31.629193"
+        "updated_at": "2026-11-26 19:02:46.561778"
       },
       {
         "id": "Margin-isolated-account-assets",
@@ -2033,7 +2033,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/margin/isolated/private/Margin-isolated-account-assets",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:31.785364"
+        "updated_at": "2026-11-26 19:02:47.206885"
       },
       {
         "id": "Account-Channel",
@@ -2045,7 +2045,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/spot/private/Account-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:32.731869"
+        "updated_at": "2026-11-26 19:02:47.733393"
       },
       {
         "id": "Cancel-Order-Channel",
@@ -2057,7 +2057,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/spot/private/Cancel-Order-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:32.925066"
+        "updated_at": "2026-11-26 19:02:48.305201"
       },
       {
         "id": "Fill-Channel",
@@ -2069,7 +2069,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/spot/private/Fill-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:34.182618"
+        "updated_at": "2026-11-26 19:02:48.851716"
       },
       {
         "id": "Order-Channel",
@@ -2081,7 +2081,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/spot/private/Order-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:34.183476"
+        "updated_at": "2026-11-26 19:02:49.442174"
       },
       {
         "id": "Place-Order-Channel",
@@ -2093,7 +2093,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/spot/private/Place-Order-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:35.246501"
+        "updated_at": "2026-11-26 19:02:49.983602"
       },
       {
         "id": "Plan-Order-Channel",
@@ -2105,7 +2105,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/spot/private/Plan-Order-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:35.315598"
+        "updated_at": "2026-11-26 19:02:50.508299"
       },
       {
         "id": "Auction-Channel",
@@ -2117,7 +2117,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/spot/public/Auction-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:36.401201"
+        "updated_at": "2026-11-26 19:02:51.063245"
       },
       {
         "id": "Candlesticks-Channel",
@@ -2129,7 +2129,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/spot/public/Candlesticks-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:36.439547"
+        "updated_at": "2026-11-26 19:02:51.580015"
       },
       {
         "id": "Depth-Channel",
@@ -2141,7 +2141,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/spot/public/Depth-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:37.545276"
+        "updated_at": "2026-11-26 19:02:52.189367"
       },
       {
         "id": "Tickers-Channel",
@@ -2153,7 +2153,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/spot/public/Tickers-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:37.579519"
+        "updated_at": "2026-11-26 19:02:52.763757"
       },
       {
         "id": "Trades-Channel",
@@ -2165,7 +2165,7 @@
         "source_url": "https://www.bitget.com/docs/classic/websocket/spot/public/Trades-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:38.685230"
+        "updated_at": "2026-11-26 19:02:53.377800"
       },
       {
         "id": "websocket",
@@ -2177,7 +2177,7 @@
         "source_url": "https://www.bitget.com/docs/uta/demo-trading/websocket",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:53.840709"
+        "updated_at": "2026-11-26 19:03:08.306817"
       },
       {
         "id": "websocket",
@@ -2189,7 +2189,7 @@
         "source_url": "https://www.bitget.com/docs/uta/error-code/websocket",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:56.952956"
+        "updated_at": "2026-11-26 19:03:11.144533"
       },
       {
         "id": "ADL-Notification-Channel",
@@ -2201,7 +2201,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/private/ADL-Notification-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:05.198614"
+        "updated_at": "2026-11-26 19:03:19.416723"
       },
       {
         "id": "Account-Channel",
@@ -2213,7 +2213,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/private/Account-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:06.216271"
+        "updated_at": "2026-11-26 19:03:20.116708"
       },
       {
         "id": "Batch-Cancel-Order-Channel",
@@ -2225,7 +2225,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/private/Batch-Cancel-Order-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:06.372907"
+        "updated_at": "2026-11-26 19:03:20.518003"
       },
       {
         "id": "Batch-Modify-Order-Channel",
@@ -2237,7 +2237,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/private/Batch-Modify-Order-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:07.357495"
+        "updated_at": "2026-11-26 19:03:21.241881"
       },
       {
         "id": "Batch-Place-Order-Channel",
@@ -2249,7 +2249,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/private/Batch-Place-Order-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:07.490114"
+        "updated_at": "2026-11-26 19:03:21.594571"
       },
       {
         "id": "Cancel-Order-Channel",
@@ -2261,7 +2261,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/private/Cancel-Order-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:08.480760"
+        "updated_at": "2026-11-26 19:03:22.384336"
       },
       {
         "id": "Fast-Fill-Channel",
@@ -2273,7 +2273,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/private/Fast-Fill-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:08.598492"
+        "updated_at": "2026-11-26 19:03:22.725610"
       },
       {
         "id": "Fill-Channel",
@@ -2285,7 +2285,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/private/Fill-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:09.575838"
+        "updated_at": "2026-11-26 19:03:23.469023"
       },
       {
         "id": "Modify-Order-Channel",
@@ -2297,7 +2297,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/private/Modify-Order-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:09.717819"
+        "updated_at": "2026-11-26 19:03:23.840939"
       },
       {
         "id": "Order-Channel",
@@ -2309,7 +2309,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/private/Order-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:10.796948"
+        "updated_at": "2026-11-26 19:03:24.606711"
       },
       {
         "id": "Place-Order-Channel",
@@ -2321,7 +2321,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/private/Place-Order-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:10.850065"
+        "updated_at": "2026-11-26 19:03:24.957888"
       },
       {
         "id": "Positions-Channel",
@@ -2333,7 +2333,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/private/Positions-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:11.967462"
+        "updated_at": "2026-11-26 19:03:25.754859"
       },
       {
         "id": "Strategy-Order-Channel",
@@ -2345,7 +2345,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/private/Strategy-Order-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:12.043195"
+        "updated_at": "2026-11-26 19:03:26.130355"
       },
       {
         "id": "Candlesticks-Channel",
@@ -2357,7 +2357,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/public/Candlesticks-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:13.120603"
+        "updated_at": "2026-11-26 19:03:26.855244"
       },
       {
         "id": "Funding-Rate-Channel",
@@ -2369,7 +2369,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/public/Funding-Rate-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:13.483846"
+        "updated_at": "2026-11-26 19:03:27.198919"
       },
       {
         "id": "Instruments-Channel",
@@ -2381,7 +2381,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/public/Instruments-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:14.235091"
+        "updated_at": "2026-11-26 19:03:27.967299"
       },
       {
         "id": "Liquidation-Channel",
@@ -2393,7 +2393,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/public/Liquidation-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:14.684540"
+        "updated_at": "2026-11-26 19:03:28.315084"
       },
       {
         "id": "Margin-Coins-Channel",
@@ -2405,7 +2405,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/public/Margin-Coins-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:15.360701"
+        "updated_at": "2026-11-26 19:03:29.082864"
       },
       {
         "id": "Margin-Loan-Channel",
@@ -2417,7 +2417,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/public/Margin-Loan-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:15.841224"
+        "updated_at": "2026-11-26 19:03:29.409474"
       },
       {
         "id": "New-Trades-Channel",
@@ -2429,7 +2429,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/public/New-Trades-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:16.519355"
+        "updated_at": "2026-11-26 19:03:30.302092"
       },
       {
         "id": "Open-Interest-Limit-Channel",
@@ -2441,7 +2441,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/public/Open-Interest-Limit-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:16.988211"
+        "updated_at": "2026-11-26 19:03:30.504074"
       },
       {
         "id": "Order-Book-Channel",
@@ -2453,7 +2453,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/public/Order-Book-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:17.626076"
+        "updated_at": "2026-11-26 19:03:31.395898"
       },
       {
         "id": "Position-Tier-Channel",
@@ -2465,7 +2465,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/public/Position-Tier-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:18.093058"
+        "updated_at": "2026-11-26 19:03:31.631529"
       },
       {
         "id": "RPI-OrderBook-Channel",
@@ -2477,7 +2477,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/public/RPI-OrderBook-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:18.750727"
+        "updated_at": "2026-11-26 19:03:32.491406"
       },
       {
         "id": "Tickers-Channel",
@@ -2489,7 +2489,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/public/Tickers-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:19.243504"
+        "updated_at": "2026-11-26 19:03:32.748611"
       },
       {
         "id": "Reality-Fills-Channel",
@@ -2501,7 +2501,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/reality/public/Reality-Fills-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:19.910399"
+        "updated_at": "2026-11-26 19:03:33.611183"
       },
       {
         "id": "Reality-OrderBook-Channel",
@@ -2513,7 +2513,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/reality/public/Reality-OrderBook-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:20.333861"
+        "updated_at": "2026-11-26 19:03:33.851350"
       },
       {
         "id": "Reality-OrderBook-Segmented-Channel",
@@ -2525,7 +2525,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/reality/public/Reality-OrderBook-Segmented-Channel",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:21.064991"
+        "updated_at": "2026-11-26 19:03:34.739519"
       }
     ],
     "Error Code": [
@@ -2539,7 +2539,7 @@
         "source_url": "https://www.bitget.com/docs/classic/error-code/restapi",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:13.359711"
+        "updated_at": "2026-11-26 19:02:28.987816"
       },
       {
         "id": "common-error-handling",
@@ -2551,7 +2551,7 @@
         "source_url": "https://www.bitget.com/docs/uta/error-code/common-error-handling",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:55.759812"
+        "updated_at": "2026-11-26 19:03:09.969661"
       },
       {
         "id": "restapi",
@@ -2563,7 +2563,7 @@
         "source_url": "https://www.bitget.com/docs/uta/error-code/restapi",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:56.126372"
+        "updated_at": "2026-11-26 19:03:10.487529"
       }
     ],
     "Rate Limit": [
@@ -2577,7 +2577,7 @@
         "source_url": "https://www.bitget.com/docs/classic/rate-limit/rate-limit",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:15.605746"
+        "updated_at": "2026-11-26 19:02:31.503634"
       },
       {
         "id": "institutional-rate-limit",
@@ -2589,7 +2589,7 @@
         "source_url": "https://www.bitget.com/docs/uta/rate-limit/institutional/institutional-rate-limit",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:58.405508"
+        "updated_at": "2026-11-26 19:03:12.745705"
       },
       {
         "id": "rate-limit",
@@ -2601,7 +2601,7 @@
         "source_url": "https://www.bitget.com/docs/uta/rate-limit/rate-limit",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:01:59.208767"
+        "updated_at": "2026-11-26 19:03:13.420727"
       }
     ],
     "SBE": [
@@ -2615,7 +2615,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/sbe/sbe-bbo",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:21.463688"
+        "updated_at": "2026-11-26 19:03:34.926657"
       },
       {
         "id": "sbe-depth50",
@@ -2627,7 +2627,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/sbe/sbe-depth50",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:22.180635"
+        "updated_at": "2026-11-26 19:03:35.844929"
       },
       {
         "id": "sbe-intro",
@@ -2639,7 +2639,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/sbe/sbe-intro",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:22.597366"
+        "updated_at": "2026-11-26 19:03:36.025983"
       },
       {
         "id": "sbe-trade",
@@ -2651,7 +2651,7 @@
         "source_url": "https://www.bitget.com/docs/uta/websocket/sbe/sbe-trade",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-25 19:02:23.273836"
+        "updated_at": "2026-11-26 19:03:36.899493"
       }
     ]
   },
@@ -2666,7 +2666,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2025-04",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:02.102294"
+      "updated_at": "2026-11-26 19:02:17.873217"
     },
     {
       "id": "2026-04",
@@ -2678,7 +2678,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2026-04",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:07.767474"
+      "updated_at": "2026-11-26 19:02:23.499122"
     },
     {
       "id": "2026-04",
@@ -2690,7 +2690,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2026-04",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:48.150113"
+      "updated_at": "2026-11-26 19:03:02.734973"
     },
     {
       "id": "2024-08",
@@ -2702,7 +2702,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2024-08",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:00:57.447200"
+      "updated_at": "2026-11-26 19:02:13.403732"
     },
     {
       "id": "2025-08",
@@ -2714,7 +2714,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2025-08",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:04.359006"
+      "updated_at": "2026-11-26 19:02:20.106837"
     },
     {
       "id": "2025-08",
@@ -2726,7 +2726,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2025-08",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:43.586313"
+      "updated_at": "2026-11-26 19:02:58.345258"
     },
     {
       "id": "2026-08",
@@ -2738,7 +2738,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2026-08",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:09.965110"
+      "updated_at": "2026-11-26 19:02:25.646205"
     },
     {
       "id": "2026-08",
@@ -2750,7 +2750,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2026-08",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:50.377986"
+      "updated_at": "2026-11-26 19:03:04.882208"
     },
     {
       "id": "2023-12",
@@ -2762,7 +2762,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2023-12",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:00:54.024160"
+      "updated_at": "2026-11-26 19:02:10.094175"
     },
     {
       "id": "2024-12",
@@ -2774,7 +2774,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2024-12",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:00:59.761832"
+      "updated_at": "2026-11-26 19:02:15.659776"
     },
     {
       "id": "2025-12",
@@ -2786,7 +2786,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2025-12",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:45.893519"
+      "updated_at": "2026-11-26 19:03:00.531654"
     },
     {
       "id": "2024-02",
@@ -2798,7 +2798,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2024-02",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:00:55.217680"
+      "updated_at": "2026-11-26 19:02:11.209747"
     },
     {
       "id": "2025-02",
@@ -2810,7 +2810,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2025-02",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:00.921781"
+      "updated_at": "2026-11-26 19:02:16.774419"
     },
     {
       "id": "2026-02",
@@ -2822,7 +2822,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2026-02",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:47.031837"
+      "updated_at": "2026-11-26 19:03:01.633310"
     },
     {
       "id": "2024-01",
@@ -2834,7 +2834,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2024-01",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:00:55.143058"
+      "updated_at": "2026-11-26 19:02:11.139774"
     },
     {
       "id": "2025-01",
@@ -2846,7 +2846,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2025-01",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:00.781957"
+      "updated_at": "2026-11-26 19:02:16.686807"
     },
     {
       "id": "2026-01",
@@ -2858,7 +2858,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2026-01",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:06.613932"
+      "updated_at": "2026-11-26 19:02:22.370038"
     },
     {
       "id": "2026-01",
@@ -2870,7 +2870,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2026-01",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:46.707994"
+      "updated_at": "2026-11-26 19:03:01.163736"
     },
     {
       "id": "2024-07",
@@ -2882,7 +2882,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2024-07",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:00:57.401346"
+      "updated_at": "2026-11-26 19:02:13.360720"
     },
     {
       "id": "2025-07",
@@ -2894,7 +2894,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2025-07",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:04.204825"
+      "updated_at": "2026-11-26 19:02:20.106053"
     },
     {
       "id": "2025-07",
@@ -2906,7 +2906,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2025-07",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:43.258467"
+      "updated_at": "2026-11-26 19:02:57.812836"
     },
     {
       "id": "2026-07",
@@ -2918,7 +2918,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2026-07",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:09.952033"
+      "updated_at": "2026-11-26 19:02:25.504335"
     },
     {
       "id": "2026-07",
@@ -2930,7 +2930,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2026-07",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:50.071006"
+      "updated_at": "2026-11-26 19:03:04.543681"
     },
     {
       "id": "2024-06",
@@ -2942,7 +2942,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2024-06",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:00:56.316690"
+      "updated_at": "2026-11-26 19:02:12.312760"
     },
     {
       "id": "2025-06",
@@ -2954,7 +2954,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2025-06",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:03.257608"
+      "updated_at": "2026-11-26 19:02:18.974713"
     },
     {
       "id": "2025-06",
@@ -2966,7 +2966,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2025-06",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:42.475508"
+      "updated_at": "2026-11-26 19:02:57.187997"
     },
     {
       "id": "2026-06",
@@ -2978,7 +2978,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2026-06",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:08.877457"
+      "updated_at": "2026-11-26 19:02:24.529238"
     },
     {
       "id": "2026-06",
@@ -2990,7 +2990,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2026-06",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:49.298600"
+      "updated_at": "2026-11-26 19:03:03.791548"
     },
     {
       "id": "2024-03",
@@ -3002,7 +3002,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2024-03",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:00:56.248228"
+      "updated_at": "2026-11-26 19:02:12.261018"
     },
     {
       "id": "2025-03",
@@ -3014,7 +3014,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2025-03",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:01.948859"
+      "updated_at": "2026-11-26 19:02:17.851197"
     },
     {
       "id": "2026-03",
@@ -3026,7 +3026,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2026-03",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:07.648937"
+      "updated_at": "2026-11-26 19:02:23.350080"
     },
     {
       "id": "2026-03",
@@ -3038,7 +3038,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2026-03",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:47.832933"
+      "updated_at": "2026-11-26 19:03:02.243594"
     },
     {
       "id": "2025-05",
@@ -3050,7 +3050,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2025-05",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:03.071587"
+      "updated_at": "2026-11-26 19:02:18.946746"
     },
     {
       "id": "2025-05",
@@ -3062,7 +3062,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2025-05",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:42.474762"
+      "updated_at": "2026-11-26 19:02:56.685875"
     },
     {
       "id": "2026-05",
@@ -3074,7 +3074,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2026-05",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:08.828992"
+      "updated_at": "2026-11-26 19:02:24.429992"
     },
     {
       "id": "2026-05",
@@ -3086,7 +3086,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2026-05",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:48.958150"
+      "updated_at": "2026-11-26 19:03:03.359732"
     },
     {
       "id": "2023-11",
@@ -3098,7 +3098,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2023-11",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:00:53.999641"
+      "updated_at": "2026-11-26 19:02:10.012460"
     },
     {
       "id": "2024-11",
@@ -3110,7 +3110,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2024-11",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:00:59.674383"
+      "updated_at": "2026-11-26 19:02:15.608746"
     },
     {
       "id": "2025-11",
@@ -3122,7 +3122,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2025-11",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:06.536990"
+      "updated_at": "2026-11-26 19:02:22.273726"
     },
     {
       "id": "2025-11",
@@ -3134,7 +3134,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2025-11",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:45.510620"
+      "updated_at": "2026-11-26 19:03:00.037087"
     },
     {
       "id": "2026-11",
@@ -3146,7 +3146,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2026-11",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:12.104918"
+      "updated_at": "2026-11-26 19:02:27.609546"
     },
     {
       "id": "2026-11",
@@ -3158,7 +3158,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2026-11",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:52.401465"
+      "updated_at": "2026-11-26 19:03:06.640710"
     },
     {
       "id": "2024-10",
@@ -3170,7 +3170,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2024-10",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:00:58.655512"
+      "updated_at": "2026-11-26 19:02:14.505314"
     },
     {
       "id": "2025-10",
@@ -3182,7 +3182,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2025-10",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:05.491293"
+      "updated_at": "2026-11-26 19:02:21.257407"
     },
     {
       "id": "2025-10",
@@ -3194,7 +3194,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2025-10",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:44.783270"
+      "updated_at": "2026-11-26 19:02:59.406559"
     },
     {
       "id": "2026-10",
@@ -3206,7 +3206,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2026-10",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:11.047702"
+      "updated_at": "2026-11-26 19:02:26.718380"
     },
     {
       "id": "2026-10",
@@ -3218,7 +3218,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2026-10",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:51.501007"
+      "updated_at": "2026-11-26 19:03:05.941773"
     },
     {
       "id": "2024-09",
@@ -3230,7 +3230,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2024-09",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:00:58.526152"
+      "updated_at": "2026-11-26 19:02:14.504551"
     },
     {
       "id": "2025-09",
@@ -3242,7 +3242,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2025-09",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:05.422650"
+      "updated_at": "2026-11-26 19:02:21.256660"
     },
     {
       "id": "2025-09",
@@ -3254,7 +3254,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2025-09",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:44.375697"
+      "updated_at": "2026-11-26 19:02:58.939342"
     },
     {
       "id": "2026-09",
@@ -3266,7 +3266,7 @@
       "source_url": "https://www.bitget.com/docs/classic/changelog/2026-09",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:11.036693"
+      "updated_at": "2026-11-26 19:02:26.573950"
     },
     {
       "id": "2026-09",
@@ -3278,7 +3278,7 @@
       "source_url": "https://www.bitget.com/docs/uta/changelog/2026-09",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:51.178873"
+      "updated_at": "2026-11-26 19:03:05.572563"
     },
     {
       "id": "common-error-handling",
@@ -3290,7 +3290,7 @@
       "source_url": "https://www.bitget.com/docs/uta/error-code/common-error-handling",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:55.759812"
+      "updated_at": "2026-11-26 19:03:09.969661"
     },
     {
       "id": "restapi",
@@ -3302,7 +3302,7 @@
       "source_url": "https://www.bitget.com/docs/classic/error-code/restapi",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:13.359711"
+      "updated_at": "2026-11-26 19:02:28.987816"
     },
     {
       "id": "restapi",
@@ -3314,7 +3314,7 @@
       "source_url": "https://www.bitget.com/docs/uta/error-code/restapi",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:56.126372"
+      "updated_at": "2026-11-26 19:03:10.487529"
     },
     {
       "id": "api-broker",
@@ -3326,7 +3326,7 @@
       "source_url": "https://www.bitget.com/docs/uta/broker/api-broker",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:40.927126"
+      "updated_at": "2026-11-26 19:02:55.621610"
     },
     {
       "id": "agent-hub",
@@ -3338,7 +3338,7 @@
       "source_url": "https://www.bitget.com/docs/classic/agent-hub",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:00:52.888752"
+      "updated_at": "2026-11-26 19:02:08.934795"
     },
     {
       "id": "agent-hub",
@@ -3350,7 +3350,7 @@
       "source_url": "https://www.bitget.com/docs/uta/agent-hub",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:39.832343"
+      "updated_at": "2026-11-26 19:02:54.488454"
     },
     {
       "id": "best-practices-guide",
@@ -3362,7 +3362,7 @@
       "source_url": "https://www.bitget.com/docs/uta/best-practices-guide",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:39.833440"
+      "updated_at": "2026-11-26 19:02:55.019215"
     },
     {
       "id": "cfd-trading-guide",
@@ -3374,7 +3374,7 @@
       "source_url": "https://www.bitget.com/docs/uta/cfd-trading-guide",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:40.945965"
+      "updated_at": "2026-11-26 19:02:56.091453"
     },
     {
       "id": "data-download-center",
@@ -3386,7 +3386,7 @@
       "source_url": "https://www.bitget.com/docs/uta/data-download-center",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:52.687822"
+      "updated_at": "2026-11-26 19:03:07.054406"
     },
     {
       "id": "rest-api",
@@ -3398,7 +3398,7 @@
       "source_url": "https://www.bitget.com/docs/classic/demo-trading/rest-api",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:12.177965"
+      "updated_at": "2026-11-26 19:02:27.846053"
     },
     {
       "id": "rest-api",
@@ -3410,7 +3410,7 @@
       "source_url": "https://www.bitget.com/docs/uta/demo-trading/rest-api",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:53.488752"
+      "updated_at": "2026-11-26 19:03:07.744248"
     },
     {
       "id": "elite-trading-api-guide",
@@ -3422,7 +3422,7 @@
       "source_url": "https://www.bitget.com/docs/uta/elite-trading-api-guide",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:54.643266"
+      "updated_at": "2026-11-26 19:03:08.840535"
     },
     {
       "id": "enum",
@@ -3434,7 +3434,7 @@
       "source_url": "https://www.bitget.com/docs/uta/enum",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:54.982279"
+      "updated_at": "2026-11-26 19:03:09.380983"
     },
     {
       "id": "faq",
@@ -3446,7 +3446,7 @@
       "source_url": "https://www.bitget.com/docs/classic/faq",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:14.455163"
+      "updated_at": "2026-11-26 19:02:30.430090"
     },
     {
       "id": "fastapi-integration-guide",
@@ -3458,7 +3458,7 @@
       "source_url": "https://www.bitget.com/docs/classic/fastapi-integration-guide",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:15.566325"
+      "updated_at": "2026-11-26 19:02:30.983558"
     },
     {
       "id": "fastapi-integration-guide",
@@ -3470,7 +3470,7 @@
       "source_url": "https://www.bitget.com/docs/uta/fastapi-integration-guide",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:57.247841"
+      "updated_at": "2026-11-26 19:03:11.658642"
     },
     {
       "id": "golang",
@@ -3482,7 +3482,7 @@
       "source_url": "https://www.bitget.com/docs/classic/sdk/golang",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:16.740066"
+      "updated_at": "2026-11-26 19:02:32.629011"
     },
     {
       "id": "golang",
@@ -3494,7 +3494,7 @@
       "source_url": "https://www.bitget.com/docs/uta/sdk/golang",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:00.766283"
+      "updated_at": "2026-11-26 19:03:15.038045"
     },
     {
       "id": "Introduction",
@@ -3506,7 +3506,7 @@
       "source_url": "https://www.bitget.com/docs/classic/Introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:00:52.862454"
+      "updated_at": "2026-11-26 19:02:08.930654"
     },
     {
       "id": "Introduction",
@@ -3518,7 +3518,7 @@
       "source_url": "https://www.bitget.com/docs/uta/Introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:38.686022"
+      "updated_at": "2026-11-26 19:02:53.909023"
     },
     {
       "id": "java",
@@ -3530,7 +3530,7 @@
       "source_url": "https://www.bitget.com/docs/classic/sdk/java",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:17.769640"
+      "updated_at": "2026-11-26 19:02:33.167604"
     },
     {
       "id": "java",
@@ -3542,7 +3542,7 @@
       "source_url": "https://www.bitget.com/docs/uta/sdk/java",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:01.543838"
+      "updated_at": "2026-11-26 19:03:15.746598"
     },
     {
       "id": "node",
@@ -3554,7 +3554,7 @@
       "source_url": "https://www.bitget.com/docs/classic/sdk/node",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:17.879506"
+      "updated_at": "2026-11-26 19:02:33.801970"
     },
     {
       "id": "node",
@@ -3566,7 +3566,7 @@
       "source_url": "https://www.bitget.com/docs/uta/sdk/node",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:01.883803"
+      "updated_at": "2026-11-26 19:03:16.150178"
     },
     {
       "id": "php",
@@ -3578,7 +3578,7 @@
       "source_url": "https://www.bitget.com/docs/classic/sdk/php",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:18.990850"
+      "updated_at": "2026-11-26 19:02:34.892565"
     },
     {
       "id": "php",
@@ -3590,7 +3590,7 @@
       "source_url": "https://www.bitget.com/docs/uta/sdk/php",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:02.996809"
+      "updated_at": "2026-11-26 19:03:17.259334"
     },
     {
       "id": "python",
@@ -3602,7 +3602,7 @@
       "source_url": "https://www.bitget.com/docs/classic/sdk/python",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:20.033562"
+      "updated_at": "2026-11-26 19:02:35.407709"
     },
     {
       "id": "python",
@@ -3614,7 +3614,7 @@
       "source_url": "https://www.bitget.com/docs/uta/sdk/python",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:03.775196"
+      "updated_at": "2026-11-26 19:03:17.923068"
     },
     {
       "id": "quick-start",
@@ -3626,7 +3626,7 @@
       "source_url": "https://www.bitget.com/docs/uta/quick-start",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:58.069029"
+      "updated_at": "2026-11-26 19:03:12.320449"
     },
     {
       "id": "rest-api",
@@ -3638,7 +3638,7 @@
       "source_url": "https://www.bitget.com/docs/classic/rest-api",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:16.637728"
+      "updated_at": "2026-11-26 19:02:32.068601"
     },
     {
       "id": "rest-api",
@@ -3650,7 +3650,7 @@
       "source_url": "https://www.bitget.com/docs/uta/rest-api",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:00.387300"
+      "updated_at": "2026-11-26 19:03:14.604347"
     },
     {
       "id": "overview",
@@ -3662,7 +3662,7 @@
       "source_url": "https://www.bitget.com/docs/classic/sdk/overview",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:18.896677"
+      "updated_at": "2026-11-26 19:02:34.266220"
     },
     {
       "id": "overview",
@@ -3674,7 +3674,7 @@
       "source_url": "https://www.bitget.com/docs/uta/sdk/overview",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:02.661303"
+      "updated_at": "2026-11-26 19:03:16.835669"
     },
     {
       "id": "uta-intro",
@@ -3686,7 +3686,7 @@
       "source_url": "https://www.bitget.com/docs/uta/uta-intro",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:04.871174"
+      "updated_at": "2026-11-26 19:03:18.992585"
     },
     {
       "id": "update-preview",
@@ -3698,7 +3698,7 @@
       "source_url": "https://www.bitget.com/docs/uta/update-preview",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:04.047500"
+      "updated_at": "2026-11-26 19:03:18.318140"
     },
     {
       "id": "uta-api-upgrade-guide",
@@ -3710,7 +3710,7 @@
       "source_url": "https://www.bitget.com/docs/classic/uta-api-upgrade-guide",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:20.049879"
+      "updated_at": "2026-11-26 19:02:36.008960"
     },
     {
       "id": "reality-trading-guide",
@@ -3722,7 +3722,7 @@
       "source_url": "https://www.bitget.com/docs/uta/reality-trading-guide",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:59.638586"
+      "updated_at": "2026-11-26 19:03:13.920995"
     },
     {
       "id": "account",
@@ -3734,7 +3734,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/account",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:23.669376"
+      "updated_at": "2026-11-26 19:03:37.178561"
     },
     {
       "id": "affiliate",
@@ -3746,7 +3746,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/affiliate",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:24.356617"
+      "updated_at": "2026-11-26 19:03:37.958060"
     },
     {
       "id": "broker",
@@ -3758,7 +3758,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/broker",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:24.785896"
+      "updated_at": "2026-11-26 19:03:38.247551"
     },
     {
       "id": "cfd",
@@ -3770,7 +3770,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/cfd",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:25.492700"
+      "updated_at": "2026-11-26 19:03:39.077853"
     },
     {
       "id": "cfd-account",
@@ -3782,7 +3782,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/cfd-account",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:25.863647"
+      "updated_at": "2026-11-26 19:03:39.296497"
     },
     {
       "id": "cfd-market",
@@ -3794,7 +3794,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/cfd-market",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:26.584514"
+      "updated_at": "2026-11-26 19:03:40.203249"
     },
     {
       "id": "cfd-trade",
@@ -3806,7 +3806,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/cfd-trade",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:26.942796"
+      "updated_at": "2026-11-26 19:03:40.345846"
     },
     {
       "id": "classic-affiliate-customer-info",
@@ -3818,7 +3818,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-affiliate-customer-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:27.666030"
+      "updated_at": "2026-11-26 19:03:41.330338"
     },
     {
       "id": "classic-common-account",
@@ -3830,7 +3830,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-common-account",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:29.807920"
+      "updated_at": "2026-11-26 19:03:43.480463"
     },
     {
       "id": "classic-broker-apikey",
@@ -3842,7 +3842,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-broker-apikey",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:28.022644"
+      "updated_at": "2026-11-26 19:03:41.438696"
     },
     {
       "id": "classic-broker-commission",
@@ -3854,7 +3854,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-broker-commission",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:28.738456"
+      "updated_at": "2026-11-26 19:03:42.427604"
     },
     {
       "id": "classic-broker-subaccount",
@@ -3866,7 +3866,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-broker-subaccount",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:29.125377"
+      "updated_at": "2026-11-26 19:03:42.532363"
     },
     {
       "id": "classic-contract-account",
@@ -3878,7 +3878,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-contract-account",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:32.442512"
+      "updated_at": "2026-11-26 19:03:45.781051"
     },
     {
       "id": "classic-contract-market",
@@ -3890,7 +3890,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-contract-market",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:33.050153"
+      "updated_at": "2026-11-26 19:03:46.747907"
     },
     {
       "id": "classic-contract-position",
@@ -3902,7 +3902,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-contract-position",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:34.131497"
+      "updated_at": "2026-11-26 19:03:47.846822"
     },
     {
       "id": "classic-contract-trade",
@@ -3914,7 +3914,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-contract-trade",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:34.660728"
+      "updated_at": "2026-11-26 19:03:47.987601"
     },
     {
       "id": "classic-contract-plan",
@@ -3926,7 +3926,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-contract-plan",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:33.532826"
+      "updated_at": "2026-11-26 19:03:46.857483"
     },
     {
       "id": "classic-margin-cross-account",
@@ -3938,7 +3938,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-margin-cross-account",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:39.650190"
+      "updated_at": "2026-11-26 19:03:53.306969"
     },
     {
       "id": "classic-margin-cross-record",
@@ -3950,7 +3950,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-margin-cross-record",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:40.255252"
+      "updated_at": "2026-11-26 19:03:53.367904"
     },
     {
       "id": "classic-margin-cross-trade",
@@ -3962,7 +3962,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-margin-cross-trade",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:40.752617"
+      "updated_at": "2026-11-26 19:03:54.382748"
     },
     {
       "id": "earn-classic-account",
@@ -3974,7 +3974,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/earn-classic-account",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:49.219340"
+      "updated_at": "2026-11-26 19:04:02.140058"
     },
     {
       "id": "earn-classic-loan",
@@ -3986,7 +3986,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/earn-classic-loan",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:50.281020"
+      "updated_at": "2026-11-26 19:04:03.235906"
     },
     {
       "id": "earn-classic-sharkfin",
@@ -3998,7 +3998,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/earn-classic-sharkfin",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:51.341798"
+      "updated_at": "2026-11-26 19:04:04.296102"
     },
     {
       "id": "classic-copytrading-future-follower",
@@ -4010,7 +4010,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-copytrading-future-follower",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:35.255615"
+      "updated_at": "2026-11-26 19:03:48.930820"
     },
     {
       "id": "classic-copytrading-future-trader",
@@ -4022,7 +4022,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-copytrading-future-trader",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:35.737678"
+      "updated_at": "2026-11-26 19:03:49.071335"
     },
     {
       "id": "classic-instloan-account",
@@ -4034,7 +4034,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-instloan-account",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:37.493959"
+      "updated_at": "2026-11-26 19:03:51.153606"
     },
     {
       "id": "classic-instloan-orders",
@@ -4046,7 +4046,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-instloan-orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:38.097473"
+      "updated_at": "2026-11-26 19:03:51.245988"
     },
     {
       "id": "classic-instloan-public",
@@ -4058,7 +4058,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-instloan-public",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:38.578152"
+      "updated_at": "2026-11-26 19:03:52.196658"
     },
     {
       "id": "classic-margin-isolated-account",
@@ -4070,7 +4070,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-margin-isolated-account",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:41.332445"
+      "updated_at": "2026-11-26 19:03:54.458520"
     },
     {
       "id": "classic-margin-isolated-record",
@@ -4082,7 +4082,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-margin-isolated-record",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:41.836513"
+      "updated_at": "2026-11-26 19:03:55.406033"
     },
     {
       "id": "classic-margin-isolated-trade",
@@ -4094,7 +4094,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-margin-isolated-trade",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:42.401033"
+      "updated_at": "2026-11-26 19:03:55.537142"
     },
     {
       "id": "classic-margin-common",
@@ -4106,7 +4106,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-margin-common",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:39.174375"
+      "updated_at": "2026-11-26 19:03:52.313853"
     },
     {
       "id": "classic-common-notice",
@@ -4118,7 +4118,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-common-notice",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:30.870924"
+      "updated_at": "2026-11-26 19:03:44.537887"
     },
     {
       "id": "earn-classic-elite",
@@ -4130,7 +4130,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/earn-classic-elite",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:49.749593"
+      "updated_at": "2026-11-26 19:04:03.111053"
     },
     {
       "id": "classic-p2p-p2p",
@@ -4142,7 +4142,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-p2p-p2p",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:42.932062"
+      "updated_at": "2026-11-26 19:03:56.434256"
     },
     {
       "id": "classic-common-public",
@@ -4154,7 +4154,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-common-public",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:31.329400"
+      "updated_at": "2026-11-26 19:03:44.689466"
     },
     {
       "id": "earn-classic-savings",
@@ -4166,7 +4166,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/earn-classic-savings",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:50.813307"
+      "updated_at": "2026-11-26 19:04:04.177670"
     },
     {
       "id": "classic-spot-account",
@@ -4178,7 +4178,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-spot-account",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:43.580672"
+      "updated_at": "2026-11-26 19:03:56.703420"
     },
     {
       "id": "classic-spot-bgb-convert",
@@ -4190,7 +4190,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-spot-bgb-convert",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:44.100245"
+      "updated_at": "2026-11-26 19:03:57.551584"
     },
     {
       "id": "classic-spot-convert",
@@ -4202,7 +4202,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-spot-convert",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:44.718105"
+      "updated_at": "2026-11-26 19:03:57.810779"
     },
     {
       "id": "classic-copytrading-spot-follower",
@@ -4214,7 +4214,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-copytrading-spot-follower",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:36.426331"
+      "updated_at": "2026-11-26 19:03:50.095325"
     },
     {
       "id": "classic-copytrading-spot-trader",
@@ -4226,7 +4226,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-copytrading-spot-trader",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:36.964634"
+      "updated_at": "2026-11-26 19:03:50.184622"
     },
     {
       "id": "classic-spot-market",
@@ -4238,7 +4238,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-spot-market",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:45.235580"
+      "updated_at": "2026-11-26 19:03:58.669441"
     },
     {
       "id": "classic-spot-trade",
@@ -4250,7 +4250,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-spot-trade",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:46.381358"
+      "updated_at": "2026-11-26 19:03:59.791556"
     },
     {
       "id": "classic-spot-plan",
@@ -4262,7 +4262,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-spot-plan",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:45.874809"
+      "updated_at": "2026-11-26 19:03:58.889760"
     },
     {
       "id": "classic-tax-tax-records",
@@ -4274,7 +4274,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-tax-tax-records",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:46.967501"
+      "updated_at": "2026-11-26 19:03:59.945653"
     },
     {
       "id": "classic-common-apidata",
@@ -4286,7 +4286,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-common-apidata",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:30.232200"
+      "updated_at": "2026-11-26 19:03:43.642130"
     },
     {
       "id": "classic-common-vsubaccount",
@@ -4298,7 +4298,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/classic-common-vsubaccount",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:31.947231"
+      "updated_at": "2026-11-26 19:03:45.654805"
     },
     {
       "id": "copy-trading",
@@ -4310,7 +4310,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/copy-trading",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:47.509035"
+      "updated_at": "2026-11-26 19:04:00.886735"
     },
     {
       "id": "crypto-loans",
@@ -4322,7 +4322,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/crypto-loans",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:48.127298"
+      "updated_at": "2026-11-26 19:04:01.079924"
     },
     {
       "id": "earn",
@@ -4334,7 +4334,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/earn",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:48.618654"
+      "updated_at": "2026-11-26 19:04:02.018041"
     },
     {
       "id": "institutional-loan",
@@ -4346,7 +4346,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/institutional-loan",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:52.001939"
+      "updated_at": "2026-11-26 19:04:05.244085"
     },
     {
       "id": "institutional-rate-limit",
@@ -4358,7 +4358,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/institutional-rate-limit",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:52.579328"
+      "updated_at": "2026-11-26 19:04:05.342506"
     },
     {
       "id": "market",
@@ -4370,7 +4370,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/market",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:53.151677"
+      "updated_at": "2026-11-26 19:04:06.348754"
     },
     {
       "id": "p2p",
@@ -4382,7 +4382,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/p2p",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:53.661267"
+      "updated_at": "2026-11-26 19:04:06.420485"
     },
     {
       "id": "reality",
@@ -4394,7 +4394,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/reality",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:54.258821"
+      "updated_at": "2026-11-26 19:04:07.445976"
     },
     {
       "id": "stp-group",
@@ -4406,7 +4406,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/stp-group",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:55.318891"
+      "updated_at": "2026-11-26 19:04:08.634681"
     },
     {
       "id": "stock-plus",
@@ -4418,7 +4418,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/stock-plus",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:54.774120"
+      "updated_at": "2026-11-26 19:04:07.516731"
     },
     {
       "id": "tax",
@@ -4430,7 +4430,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/tax",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:55.895393"
+      "updated_at": "2026-11-26 19:04:08.687903"
     },
     {
       "id": "trading",
@@ -4442,7 +4442,7 @@
       "source_url": "https://www.bitget.com/docs/catalog/trading",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:56.513660"
+      "updated_at": "2026-11-26 19:04:09.894572"
     },
     {
       "id": "institutional-rate-limit",
@@ -4454,7 +4454,7 @@
       "source_url": "https://www.bitget.com/docs/uta/rate-limit/institutional/institutional-rate-limit",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:58.405508"
+      "updated_at": "2026-11-26 19:03:12.745705"
     },
     {
       "id": "rate-limit",
@@ -4466,7 +4466,7 @@
       "source_url": "https://www.bitget.com/docs/classic/rate-limit/rate-limit",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:15.605746"
+      "updated_at": "2026-11-26 19:02:31.503634"
     },
     {
       "id": "rate-limit",
@@ -4478,7 +4478,7 @@
       "source_url": "https://www.bitget.com/docs/uta/rate-limit/rate-limit",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:59.208767"
+      "updated_at": "2026-11-26 19:03:13.420727"
     },
     {
       "id": "sbe-bbo",
@@ -4490,7 +4490,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/sbe/sbe-bbo",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:21.463688"
+      "updated_at": "2026-11-26 19:03:34.926657"
     },
     {
       "id": "sbe-intro",
@@ -4502,7 +4502,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/sbe/sbe-intro",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:22.597366"
+      "updated_at": "2026-11-26 19:03:36.025983"
     },
     {
       "id": "sbe-depth50",
@@ -4514,7 +4514,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/sbe/sbe-depth50",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:22.180635"
+      "updated_at": "2026-11-26 19:03:35.844929"
     },
     {
       "id": "sbe-trade",
@@ -4526,7 +4526,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/sbe/sbe-trade",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:23.273836"
+      "updated_at": "2026-11-26 19:03:36.899493"
     },
     {
       "id": "ADL-Notification-Channel",
@@ -4538,7 +4538,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/ADL-Notification-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:21.343655"
+      "updated_at": "2026-11-26 19:02:36.525532"
     },
     {
       "id": "ADL-Notification-Channel",
@@ -4550,7 +4550,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/private/ADL-Notification-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:05.198614"
+      "updated_at": "2026-11-26 19:03:19.416723"
     },
     {
       "id": "Account-Channel",
@@ -4562,7 +4562,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/spot/private/Account-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:32.731869"
+      "updated_at": "2026-11-26 19:02:47.733393"
     },
     {
       "id": "Account-Channel",
@@ -4574,7 +4574,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/private/Account-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:06.216271"
+      "updated_at": "2026-11-26 19:03:20.116708"
     },
     {
       "id": "Account-Channel",
@@ -4586,7 +4586,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/Account-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:21.344538"
+      "updated_at": "2026-11-26 19:02:37.107088"
     },
     {
       "id": "Auction-Channel",
@@ -4598,7 +4598,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/spot/public/Auction-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:36.401201"
+      "updated_at": "2026-11-26 19:02:51.063245"
     },
     {
       "id": "Batch-Cancel-Order-Channel",
@@ -4610,7 +4610,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/private/Batch-Cancel-Order-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:06.372907"
+      "updated_at": "2026-11-26 19:03:20.518003"
     },
     {
       "id": "Batch-Modify-Order-Channel",
@@ -4622,7 +4622,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/private/Batch-Modify-Order-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:07.357495"
+      "updated_at": "2026-11-26 19:03:21.241881"
     },
     {
       "id": "Batch-Place-Order-Channel",
@@ -4634,7 +4634,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/private/Batch-Place-Order-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:07.490114"
+      "updated_at": "2026-11-26 19:03:21.594571"
     },
     {
       "id": "Cancel-Order-Channel",
@@ -4646,7 +4646,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/Cancel-Order-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:22.347605"
+      "updated_at": "2026-11-26 19:02:37.642387"
     },
     {
       "id": "Cancel-Order-Channel",
@@ -4658,7 +4658,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/spot/private/Cancel-Order-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:32.925066"
+      "updated_at": "2026-11-26 19:02:48.305201"
     },
     {
       "id": "Cancel-Order-Channel",
@@ -4670,7 +4670,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/private/Cancel-Order-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:08.480760"
+      "updated_at": "2026-11-26 19:03:22.384336"
     },
     {
       "id": "Candlesticks-Channel",
@@ -4682,7 +4682,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/contract/public/Candlesticks-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:27.090886"
+      "updated_at": "2026-11-26 19:02:42.149907"
     },
     {
       "id": "Candlesticks-Channel",
@@ -4694,7 +4694,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/spot/public/Candlesticks-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:36.439547"
+      "updated_at": "2026-11-26 19:02:51.580015"
     },
     {
       "id": "Candlesticks-Channel",
@@ -4706,7 +4706,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/public/Candlesticks-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:13.120603"
+      "updated_at": "2026-11-26 19:03:26.855244"
     },
     {
       "id": "Margin-Cross-Account-Assets",
@@ -4718,7 +4718,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/margin/cross/private/Margin-Cross-Account-Assets",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:30.505357"
+      "updated_at": "2026-11-26 19:02:45.468680"
     },
     {
       "id": "Cross-Orders",
@@ -4730,7 +4730,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/margin/cross/private/Cross-Orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:29.480214"
+      "updated_at": "2026-11-26 19:02:44.942724"
     },
     {
       "id": "websocket",
@@ -4742,7 +4742,7 @@
       "source_url": "https://www.bitget.com/docs/classic/demo-trading/websocket",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:13.217633"
+      "updated_at": "2026-11-26 19:02:28.679839"
     },
     {
       "id": "websocket",
@@ -4754,7 +4754,7 @@
       "source_url": "https://www.bitget.com/docs/uta/demo-trading/websocket",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:53.840709"
+      "updated_at": "2026-11-26 19:03:08.306817"
     },
     {
       "id": "Order-Book-Channel",
@@ -4766,7 +4766,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/contract/public/Order-Book-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:28.186824"
+      "updated_at": "2026-11-26 19:02:43.264575"
     },
     {
       "id": "Depth-Channel",
@@ -4778,7 +4778,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/spot/public/Depth-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:37.545276"
+      "updated_at": "2026-11-26 19:02:52.189367"
     },
     {
       "id": "Order-Book-Channel",
@@ -4790,7 +4790,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/public/Order-Book-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:17.626076"
+      "updated_at": "2026-11-26 19:03:31.395898"
     },
     {
       "id": "Equity-Channel",
@@ -4802,7 +4802,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/Equity-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:22.528101"
+      "updated_at": "2026-11-26 19:02:38.202205"
     },
     {
       "id": "Fast-Fill-Channel",
@@ -4814,7 +4814,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/private/Fast-Fill-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:08.598492"
+      "updated_at": "2026-11-26 19:03:22.725610"
     },
     {
       "id": "Fill-Channel",
@@ -4826,7 +4826,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/Fill-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:23.548379"
+      "updated_at": "2026-11-26 19:02:38.817128"
     },
     {
       "id": "Fill-Channel",
@@ -4838,7 +4838,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/spot/private/Fill-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:34.182618"
+      "updated_at": "2026-11-26 19:02:48.851716"
     },
     {
       "id": "Fill-Channel",
@@ -4850,7 +4850,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/private/Fill-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:09.575838"
+      "updated_at": "2026-11-26 19:03:23.469023"
     },
     {
       "id": "Funding-Rate-Channel",
@@ -4862,7 +4862,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/public/Funding-Rate-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:13.483846"
+      "updated_at": "2026-11-26 19:03:27.198919"
     },
     {
       "id": "History-Positions-Channel",
@@ -4874,7 +4874,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/History-Positions-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:23.650853"
+      "updated_at": "2026-11-26 19:02:39.301631"
     },
     {
       "id": "Instruments-Channel",
@@ -4886,7 +4886,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/public/Instruments-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:14.235091"
+      "updated_at": "2026-11-26 19:03:27.967299"
     },
     {
       "id": "Margin-isolated-account-assets",
@@ -4898,7 +4898,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/margin/isolated/private/Margin-isolated-account-assets",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:31.785364"
+      "updated_at": "2026-11-26 19:02:47.206885"
     },
     {
       "id": "Isolate-Orders",
@@ -4910,7 +4910,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/margin/isolated/private/Isolate-Orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:31.629193"
+      "updated_at": "2026-11-26 19:02:46.561778"
     },
     {
       "id": "Liquidation-Channel",
@@ -4922,7 +4922,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/public/Liquidation-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:14.684540"
+      "updated_at": "2026-11-26 19:03:28.315084"
     },
     {
       "id": "Margin-Coins-Channel",
@@ -4934,7 +4934,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/public/Margin-Coins-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:15.360701"
+      "updated_at": "2026-11-26 19:03:29.082864"
     },
     {
       "id": "Margin-Index-Price",
@@ -4946,7 +4946,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/margin/cross/public/Margin-Index-Price",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:30.605891"
+      "updated_at": "2026-11-26 19:02:46.114784"
     },
     {
       "id": "Margin-Loan-Channel",
@@ -4958,7 +4958,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/public/Margin-Loan-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:15.841224"
+      "updated_at": "2026-11-26 19:03:29.409474"
     },
     {
       "id": "Tickers-Channel",
@@ -4970,7 +4970,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/contract/public/Tickers-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:28.358128"
+      "updated_at": "2026-11-26 19:02:43.803488"
     },
     {
       "id": "Tickers-Channel",
@@ -4982,7 +4982,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/spot/public/Tickers-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:37.579519"
+      "updated_at": "2026-11-26 19:02:52.763757"
     },
     {
       "id": "Modify-Order-Channel",
@@ -4994,7 +4994,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/private/Modify-Order-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:09.717819"
+      "updated_at": "2026-11-26 19:03:23.840939"
     },
     {
       "id": "Open-Interest-Limit-Channel",
@@ -5006,7 +5006,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/public/Open-Interest-Limit-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:16.988211"
+      "updated_at": "2026-11-26 19:03:30.504074"
     },
     {
       "id": "Order-Channel",
@@ -5018,7 +5018,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/Order-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:24.737008"
+      "updated_at": "2026-11-26 19:02:39.945522"
     },
     {
       "id": "Order-Channel",
@@ -5030,7 +5030,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/spot/private/Order-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:34.183476"
+      "updated_at": "2026-11-26 19:02:49.442174"
     },
     {
       "id": "Order-Channel",
@@ -5042,7 +5042,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/private/Order-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:10.796948"
+      "updated_at": "2026-11-26 19:03:24.606711"
     },
     {
       "id": "Place-Order-Channel",
@@ -5054,7 +5054,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/Place-Order-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:24.773499"
+      "updated_at": "2026-11-26 19:02:40.445606"
     },
     {
       "id": "Place-Order-Channel",
@@ -5066,7 +5066,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/spot/private/Place-Order-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:35.246501"
+      "updated_at": "2026-11-26 19:02:49.983602"
     },
     {
       "id": "Place-Order-Channel",
@@ -5078,7 +5078,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/private/Place-Order-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:10.850065"
+      "updated_at": "2026-11-26 19:03:24.957888"
     },
     {
       "id": "Positions-Channel",
@@ -5090,7 +5090,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/Positions-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:26.052730"
+      "updated_at": "2026-11-26 19:02:41.542763"
     },
     {
       "id": "Position-Tier-Channel",
@@ -5102,7 +5102,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/public/Position-Tier-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:18.093058"
+      "updated_at": "2026-11-26 19:03:31.631529"
     },
     {
       "id": "Positions-Channel",
@@ -5114,7 +5114,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/private/Positions-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:11.967462"
+      "updated_at": "2026-11-26 19:03:25.754859"
     },
     {
       "id": "New-Trades-Channel",
@@ -5126,7 +5126,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/contract/public/New-Trades-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:27.178046"
+      "updated_at": "2026-11-26 19:02:42.683547"
     },
     {
       "id": "New-Trades-Channel",
@@ -5138,7 +5138,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/public/New-Trades-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:16.519355"
+      "updated_at": "2026-11-26 19:03:30.302092"
     },
     {
       "id": "RPI-OrderBook-Channel",
@@ -5150,7 +5150,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/public/RPI-OrderBook-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:18.750727"
+      "updated_at": "2026-11-26 19:03:32.491406"
     },
     {
       "id": "Reality-Fills-Channel",
@@ -5162,7 +5162,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/reality/public/Reality-Fills-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:19.910399"
+      "updated_at": "2026-11-26 19:03:33.611183"
     },
     {
       "id": "Reality-OrderBook-Channel",
@@ -5174,7 +5174,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/reality/public/Reality-OrderBook-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:20.333861"
+      "updated_at": "2026-11-26 19:03:33.851350"
     },
     {
       "id": "Reality-OrderBook-Segmented-Channel",
@@ -5186,7 +5186,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/reality/public/Reality-OrderBook-Segmented-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:21.064991"
+      "updated_at": "2026-11-26 19:03:34.739519"
     },
     {
       "id": "Strategy-Order-Channel",
@@ -5198,7 +5198,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/private/Strategy-Order-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:12.043195"
+      "updated_at": "2026-11-26 19:03:26.130355"
     },
     {
       "id": "Tickers-Channel",
@@ -5210,7 +5210,7 @@
       "source_url": "https://www.bitget.com/docs/uta/websocket/public/Tickers-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:02:19.243504"
+      "updated_at": "2026-11-26 19:03:32.748611"
     },
     {
       "id": "Trades-Channel",
@@ -5222,7 +5222,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/spot/public/Trades-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:38.685230"
+      "updated_at": "2026-11-26 19:02:53.377800"
     },
     {
       "id": "Plan-Order-Channel",
@@ -5234,7 +5234,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/contract/private/Plan-Order-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:26.051827"
+      "updated_at": "2026-11-26 19:02:41.045336"
     },
     {
       "id": "Plan-Order-Channel",
@@ -5246,7 +5246,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/spot/private/Plan-Order-Channel",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:35.315598"
+      "updated_at": "2026-11-26 19:02:50.508299"
     },
     {
       "id": "websocket",
@@ -5258,7 +5258,7 @@
       "source_url": "https://www.bitget.com/docs/classic/error-code/websocket",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:14.433666"
+      "updated_at": "2026-11-26 19:02:29.875830"
     },
     {
       "id": "websocket",
@@ -5270,7 +5270,7 @@
       "source_url": "https://www.bitget.com/docs/uta/error-code/websocket",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:56.952956"
+      "updated_at": "2026-11-26 19:03:11.144533"
     },
     {
       "id": "intro",
@@ -5282,7 +5282,7 @@
       "source_url": "https://www.bitget.com/docs/classic/websocket/intro",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-25 19:01:29.362964"
+      "updated_at": "2026-11-26 19:02:44.353249"
     }
   ]
 }

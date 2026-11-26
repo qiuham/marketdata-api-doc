@@ -10,7 +10,7 @@ provider_name: Hyperliquid
 product: api
 product_id: hyperliquid
 source_url: 'https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/asset-ids'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Asset IDs

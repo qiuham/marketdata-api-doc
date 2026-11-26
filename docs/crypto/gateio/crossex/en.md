@@ -2,15 +2,15 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/crossex/en
 api_type: Trading
-updated_at: 2026-11-25 18:58:29.527564
+updated_at: 2026-11-26 18:59:29.362912
 ---
 
-# Gate CrossEx API v1.0.8
+# Gate CrossEx API v1.0.9
 
 * Python 
   * Shell 
 
-v1.0.8 · Stable
+v1.0.9 · Stable
 
 
 The API fully supports core capabilities of cross-exchange accounts, covering full-process operations such as fund transfers, queries, trading, account information modifications, subscriptions, and push notifications.
@@ -72,6 +72,18 @@ DANGER
 Even if you submit a problem, you should not submit the API key information to customer service or others, otherwise there will be serious asset risk. If it has been accidentally leaked, please delete the existing API and rebuild it.
 
 #  Changelog
+
+**v1.0.9**
+
+2026-11-23
+
+  * **Breaking contract change** for `GET /crossex/transfers/coin`. Response fields `min_trans_amount` and `est_fee` change from JSON numbers to decimal strings. Update clients that decode them as numeric JSON values.
+  * `GET /crossex/transfers` adds the optional `status` query filter (`PENDING`, `SUCCESS`, or `FAIL`). The documented rate limit is 1,200 requests per 60 seconds.
+  * `GET /crossex/history_orders` adds optional exact-match query filters `order_id` (int64) and `text` (string). When both are supplied, both must match. The `attributes` filter accepts `REBASE`.
+  * `GET /crossex/history_trades` adds optional query filter `order_id` (int64) and optional response field `fx_rate` (decimal string) for stock and ETF trades.
+  * `GET /crossex/positions` adds optional array field `risk_limits` with position-specific tiers. `GET /crossex/accounts` adds optional field `assets[].price` for the USDT valuation price as a decimal string.
+  * `GET /crossex/rule/symbols` documents Aster futures symbols, the full Hyperliquid HIP-3 `symbol` including any DEX prefix, and `rebase` as a symbol status. For `POST /crossex/transfers`, `CROSSEX_ASTER` supports USDT transfers with `SPOT` only.
+  * `PUT /crossex/orders/{order_id}` documents the `qty` and `price` amendment rules. Supply at least one new positive value. Omit a field or send `"0"` to preserve its current value.
 
 **v1.0.8**
 
@@ -653,12 +665,12 @@ Exchange-specific restrictions`label` | `message` | `tips`
   
 #  CrossEx
 
-CrossEx is a cross-exchange trading platform that allows users to trade on multiple exchanges (Binance, OKX, Gate, Bybit, Kraken, Hyperliquid, Deribit, and Lighter) through a unified account, with access to stocks in US, Hong Kong, South Korean, and Japanese markets. The CrossEx API provides account management, asset transfers, order placement, and position management across exchanges.
+CrossEx is a cross-exchange trading platform that lets you trade through one account on Binance, OKX, Gate, Bybit, Kraken, Hyperliquid, Deribit, Lighter, and Aster. It also provides access to US, Hong Kong, South Korean, and Japanese equities. The CrossEx API covers account management, asset transfers, order placement, and position management.
 
-  * Stocks and ETFs support only cross-exchange account mode. Stock markets use US, HK, KR, and JP as exchange_type, and STOCK or ETF as business_type
-  * REST API BaseURL for live trading: `https://api.gateio.ws/api/v4`
+  * Stocks and ETFs are available only in cross-exchange account mode (`CROSS_EXCHANGE`). Use the listing market (`US`, `HK`, `KR`, or `JP`) as `exchange_type` and `STOCK` or `ETF` as `business_type`.
+  * Production REST API base URL: `https://api.gateio.ws/api/v4`
   * [Help Center ](https://www.gate.com/help/crossex/functional)
-  * [Cross-exchange Trading ](https://www.gate.com/crossex)
+  * [CrossEx Trading ](https://www.gate.com/crossex)
 
 ##  Query symbol information
 
@@ -668,7 +680,13 @@ GET `/crossex/rule/symbols`
 
 _Query symbol information_
 
-List trading pair information. Stock and ETF symbols use `{market}_{business_type}_{security_code}_USDT`, for example `US_STOCK_AAPL_USDT`, `HK_STOCK_00700_USDT`, or `US_ETF_SPY_USDT`.
+Query trading symbols and their rules.
+
+Stock and ETF symbols use `{market}_{business_type}_{security_code}_USDT`. Examples include `US_STOCK_AAPL_USDT`, `HK_STOCK_00700_USDT`, and `US_ETF_SPY_USDT`.
+
+Aster futures symbols use `ASTER_FUTURE_{Base}_{Counter}`.
+
+Hyperliquid HIP-3 (builder-deployed perpetual) symbols can include a DEX prefix. For example, the `xyz:` prefix is part of `HYPERLIQUID_FUTURE_xyz:XYZ100_USDC`. Use the full `symbol` returned by this endpoint for order placement, queries, and subscriptions.
 
 ### Parameters
 
@@ -710,9 +728,9 @@ Name | Type | Required | Constraints | Description
 ---|---|---|---|---  
 symbol | string | Required |  | Unique trading pair identifier in the format ExchangeType_BusinessType_Base_Counter.  
 Stocks and ETFs use the market as ExchangeType (US/HK/KR/JP) and STOCK or ETF as the business type, for example US_STOCK_AAPL_USDT, HK_STOCK_00700_USDT, or US_ETF_SPY_USDT.  
-exchange_type | string | Required |  | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
+exchange_type | string | Required |  | Trading venue (`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, or `ASTER`). For stocks and ETFs, returns the listing market (`US`, `HK`, `KR`, or `JP`).  
 business_type | string | Required |  | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / STOCK: stocks / ETF: exchange-traded funds)  
-state | string | Required |  | Status (`live` running / `suspend` paused).  
+state | string | Required |  | Trading status (`live`: active, `suspend`: suspended, `rebase`: contract position adjustment has started)  
 min_size | string | Required |  | Minimum order quantity  
 min_notional | string | Required |  | Minimum Order Value  
 lot_size | string | Required |  | Quantity Step  
@@ -741,7 +759,7 @@ string |
 
 Exchange
 
-Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)
+Trading venue (`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, or `ASTER`). For stocks and ETFs, returns the listing market (`US`, `HK`, `KR`, or `JP`).
 
 Type | Constraints  
 ---|---  
@@ -761,7 +779,7 @@ string |
 
 availablestatus
 
-Status (`live` running / `suspend` paused).
+Trading status (`live`: active, `suspend`: suspended, `rebase`: contract position adjustment has started)
 
 Type | Constraints  
 ---|---  
@@ -1248,8 +1266,8 @@ object | required: ["coin","is_disabled","precision","est_fee","min_trans_amount
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
 coin | string | Required |  | Currency  
-min_trans_amount | number | Required |  | Minimum transfer amount (estimated fee included)  
-est_fee | number | Required |  | Estimated Fee  
+min_trans_amount | string | Required |  | Minimum transfer amount, including the estimated fee, as a decimal string  
+est_fee | string | Required |  | Estimated fee as a decimal string  
 precision | integer | Required |  | Precision  
 is_disabled | integer | Required |  | If it is disabled. 0 means NOT being disabled  
   
@@ -1285,10 +1303,10 @@ Code samples
     
     [
       {
-        "coin": "string",
-        "min_trans_amount": 0,
-        "est_fee": 0,
-        "precision": 0,
+        "coin": "USDT",
+        "min_trans_amount": "10.1",
+        "est_fee": "0.1",
+        "precision": 6,
         "is_disabled": 0
       }
     ]
@@ -1302,7 +1320,15 @@ POST `/crossex/transfers`
 
 _Fund Transfer_
 
-Rate limit: 10 requests per 10 seconds
+Rate limit: 10 requests per 10 seconds.
+
+  * USDT in cross-exchange account mode (`CROSS_EXCHANGE`): one of `from` or `to` must be `SPOT`, and the other must be `CROSSEX`. The API treats a venue-specific account such as `CROSSEX_GATE` as `CROSSEX` in this mode.
+  * USDT in exchange-specific account mode (`ISOLATED_EXCHANGE`): specify `CROSSEX_${exchange_type}` on one side and `SPOT` or a `CROSSEX_${exchange_type}` account on the other. If you specify `CROSSEX`, the API treats it as `CROSSEX_GATE`.
+  * Currencies other than USDT: specify a venue-specific account (`CROSSEX_${exchange_type}`) for any CrossEx side. Transfers can also be made between venue-specific accounts, for example from `CROSSEX_BINANCE` to `CROSSEX_GATE`.
+  * If either account is `CROSSEX_KRAKEN`, only USDT is supported.
+  * If either account is `CROSSEX_DERIBIT`, only USDC is supported.
+  * For `CROSSEX_HYPERLIQUID` or `CROSSEX_LIGHTER`, only USDC transfers to or from `SPOT` are supported.
+  * For `CROSSEX_ASTER`, only USDT transfers to or from `SPOT` are supported.
 
 ### Parameters
 
@@ -1311,8 +1337,8 @@ ParametersName | In | Type | Required | Description
 body | body | CrossexTransferRequest | Optional | none  
 coin | body | string | Required | Currency  
 amount | body | string | Required | Transfer amount  
-from | body | string | Required | `from` debit account (funds withdrawn from): `CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`  
-to | body | string | Required | `to` receiving account (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
+from | body | string | Required | Source account: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT  
+to | body | string | Required | Destination account: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT  
 text | body | string | Optional | User-defined ID  
   
 ####  Request Body Schema
@@ -1329,8 +1355,8 @@ Request Body SchemaName | Type | Required | Constraints | Description
 ---|---|---|---|---  
 coin | string | Required |  | Currency  
 amount | string | Required |  | Transfer amount  
-from | string | Required |  | `from` debit account (funds withdrawn from): `CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`  
-to | string | Required |  | `to` receiving account (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
+from | string | Required |  | Source account: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT  
+to | string | Required |  | Destination account: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT  
 text | string | Optional |  | User-defined ID  
   
 ### Responses
@@ -1434,18 +1460,27 @@ GET `/crossex/transfers`
 
 _Query Fund Transfer History_
 
-Rate Limit: 200 requests per 10 seconds
+Rate limit: 1,200 requests per 60 seconds.
 
 ### Parameters
 
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 coin | query | string | Optional | Query by specified currency name  
+status | query | string | Optional | Filter by transfer status  
 order_id | query | string | Optional | Supports querying by the order ID returned when creating an order (tx_id), as well as a user-defined custom ID specified at creation (text)  
 from | query | integer | Optional | Start timestamp for the query  
 to | query | integer | Optional | End timestamp for the query, defaults to current time if not specified  
 page | query | integer | Optional | Page number  
 limit | query | integer | Optional | Maximum number returned by list, max 1000  
+  
+####  Enumerated Values
+
+Enumerated ValuesParameter | Value  
+---|---  
+status | PENDING  
+status | SUCCESS  
+status | FAIL  
   
 ### Responses
 
@@ -1475,8 +1510,8 @@ Name | Type | Required | Constraints | Description
 ---|---|---|---|---  
 id | string | Required |  | Order ID  
 text | string | Required |  | Client Custom ID  
-from_account_type | string | Required |  | Source account for this operation (`from`) (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
-to_account_type | string | Required |  | Destination account for this operation (`to`) (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
+from_account_type | string | Required |  | Source account (CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT)  
+to_account_type | string | Required |  | Destination account (CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT)  
 coin | string | Required |  | Currency  
 amount | string | Required |  | Transfer amount, the amount requested for the transfer  
 actual_receive | string | Optional |  | Actual credited amount (has a value when status = SUCCESS; empty for other statuses)  
@@ -1578,7 +1613,17 @@ POST `/crossex/orders`
 
 _Create order_
 
-Rate limit: 100 requests per 10 seconds; each user may have up to 1,000 open orders. Stocks and ETFs have an additional per-user limit of one request per second and support only cross-exchange account mode and GTC. Stock and ETF orders must use qty; quote_qty is not supported. Stock and ETF order prices use the listing market currency: USD for US markets, HKD for Hong Kong, KRW for South Korea, and JPY for Japan.
+Rate limit: 100 requests per 10 seconds. Each user can have at most 1,000 open orders.
+
+Stock and ETF orders have an additional per-user limit of one request per second. Use cross-exchange account mode (`CROSS_EXCHANGE`), `GTC`, and `qty`. These orders do not support `quote_qty`. Prices use the listing market's quote currency (`USD` for US, `HKD` for Hong Kong, `KRW` for South Korea, and `JPY` for Japan).
+
+For a stock or ETF buy order, CrossEx uses the order price and the current market exchange rate to calculate how much USDT to reserve for the purchase. The API returns `COMMON_FAIL_ORDER_ERROR` if the exchange rate is unavailable or if a market buy lacks the latest price it needs.
+
+A stock or ETF order in exchange-specific account mode returns `SECURITY_ORDER_NOT_SUPPORT`. A stock or ETF order with a time-in-force other than `GTC` returns `SECURITY_ORDER_ONLY_SUPPORT_GTC`.
+
+Hyperliquid, Lighter, and Aster futures do not support `FOK`.
+
+Once a futures contract begins its position adjustment (rebase), order placement returns HTTP `422` with `label` set to `TRADE_REBASE_TASK_STARTED`.
 
 ### Parameters
 
@@ -1586,29 +1631,31 @@ ParametersName | In | Type | Required | Description
 ---|---|---|---|---  
 body | body | CrossexOrderRequest | Optional | none  
 text | body | string | Optional | Client-defined Order ID, supports letters (a-z), numbers (0-9), symbols (-, _) only  
-symbol | body | string | Required | Unique identifier Exchange_Business_Base_Counter  
+symbol | body | string | Required | Unique symbol in `Exchange_Business_Base_Counter` format.  
 Examples:  
-To place a spot order for ADA/USDT on BINANCE, use `BINANCE_SPOT_ADA_USDT`;  
-To place a USDT-margined perpetual futures order for ADA/USDT on OKX, use `OKX_FUTURE_ADA_USDT`;  
-To place a spot margin order for ADA/USDT on GATE, use `GATE_MARGIN_ADA_USDT`;  
-To place a spot order for ADA/USDT on BYBIT, use `BYBIT_SPOT_ADA_USDT`;  
-To place a futures order for ADA/USD on KRAKEN, use `KRAKEN_FUTURE_ADA_USD`;  
-To place a futures order for ADA/USDC on HYPERLIQUID, use `HYPERLIQUID_FUTURE_ADA_USDC`;  
-To place a futures order for ADA/USDC on DERIBIT, use `DERIBIT_FUTURE_ADA_USDC`;  
-To place a futures order for ADA/USDC on LIGHTER, use `LIGHTER_FUTURE_ADA_USDC`;  
-To trade US stock AAPL, use `US_STOCK_AAPL_USDT`;  
-To trade Hong Kong stock 00700, use `HK_STOCK_00700_USDT`;  
-To trade US ETF SPY, use `US_ETF_SPY_USDT`;  
-Spot, USDT-margined perpetual futures, spot margin, stock, and ETF orders are supported. BYBIT/DERIBIT do not currently support spot margin orders. KRAKEN, HYPERLIQUID, and LIGHTER do not currently support spot or margin orders. Stocks and ETFs support only cross-exchange account mode  
+\- Binance ADA/USDT spot: `BINANCE_SPOT_ADA_USDT`  
+\- OKX ADA/USDT USDT-margined perpetual: `OKX_FUTURE_ADA_USDT`  
+\- Gate ADA/USDT spot margin: `GATE_MARGIN_ADA_USDT`  
+\- Bybit ADA/USDT spot: `BYBIT_SPOT_ADA_USDT`  
+\- Kraken ADA/USD futures: `KRAKEN_FUTURE_ADA_USD`  
+\- Hyperliquid ADA/USDC futures: `HYPERLIQUID_FUTURE_ADA_USDC`  
+\- Deribit ADA/USDC futures: `DERIBIT_FUTURE_ADA_USDC`  
+\- Lighter ADA/USDC futures: `LIGHTER_FUTURE_ADA_USDC`  
+\- US stock AAPL: `US_STOCK_AAPL_USDT`  
+\- Hong Kong stock 00700: `HK_STOCK_00700_USDT`  
+\- US ETF SPY: `US_ETF_SPY_USDT`  
+CrossEx supports spot, USDT-margined perpetual futures, spot margin, stock, and ETF orders. Bybit and Deribit do not currently support spot margin. Kraken, Hyperliquid, Lighter, and Aster do not currently support spot or spot margin. Stocks and ETFs are available only in cross-exchange account mode.  
 side | body | string | Required | BUY, SELL  
 type | body | string | Optional | Order type (default: `LIMIT`; supported types: `LIMIT`, `MARKET`)  
-time_in_force | body | string | Optional | Defaults to GTC. Supported values: `GTC`, `IOC`, `FOK`, `POC`, `RPI`  
-`GTC`: GoodTillCancelled  
-`IOC`: ImmediateOrCancelled  
-`FOK`: FillOrKill  
-`POC`: PendingOrCancelled or PostOnly  
-`RPI`: RPI  
-Stocks and ETFs support only `GTC`  
+time_in_force | body | string | Optional | Time-in-force policy. Defaults to `GTC`.  
+  
+\- `GTC`: Good Till Cancelled  
+\- `IOC`: Immediate Or Cancel  
+\- `FOK`: Fill Or Kill  
+\- `POC`: Post Only (Pending or Cancelled)  
+\- `RPI`: Retail Price Improvement  
+  
+Stock and ETF orders support only `GTC`. Hyperliquid, Lighter, and Aster futures do not support `FOK`.  
 qty | body | string | Optional | Order quantity (required except for spot and margin market buys; qty is required for stocks and ETFs)  
 price | body | string | Optional | Limit order price (required for limit orders). Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
 quote_qty | body | string | Optional | Order quote quantity, required for spot and margin market buys. Stock and ETF orders do not support quote_qty  
@@ -1618,28 +1665,30 @@ Defaults to `NONE` (single position mode) if not specified
   
 ####  Detailed descriptions
 
-** symbol**: Unique identifier Exchange_Business_Base_Counter  
+** symbol**: Unique symbol in `Exchange_Business_Base_Counter` format.  
 Examples:  
-To place a spot order for ADA/USDT on BINANCE, use `BINANCE_SPOT_ADA_USDT`;  
-To place a USDT-margined perpetual futures order for ADA/USDT on OKX, use `OKX_FUTURE_ADA_USDT`;  
-To place a spot margin order for ADA/USDT on GATE, use `GATE_MARGIN_ADA_USDT`;  
-To place a spot order for ADA/USDT on BYBIT, use `BYBIT_SPOT_ADA_USDT`;  
-To place a futures order for ADA/USD on KRAKEN, use `KRAKEN_FUTURE_ADA_USD`;  
-To place a futures order for ADA/USDC on HYPERLIQUID, use `HYPERLIQUID_FUTURE_ADA_USDC`;  
-To place a futures order for ADA/USDC on DERIBIT, use `DERIBIT_FUTURE_ADA_USDC`;  
-To place a futures order for ADA/USDC on LIGHTER, use `LIGHTER_FUTURE_ADA_USDC`;  
-To trade US stock AAPL, use `US_STOCK_AAPL_USDT`;  
-To trade Hong Kong stock 00700, use `HK_STOCK_00700_USDT`;  
-To trade US ETF SPY, use `US_ETF_SPY_USDT`;  
-Spot, USDT-margined perpetual futures, spot margin, stock, and ETF orders are supported. BYBIT/DERIBIT do not currently support spot margin orders. KRAKEN, HYPERLIQUID, and LIGHTER do not currently support spot or margin orders. Stocks and ETFs support only cross-exchange account mode
+\- Binance ADA/USDT spot: `BINANCE_SPOT_ADA_USDT`  
+\- OKX ADA/USDT USDT-margined perpetual: `OKX_FUTURE_ADA_USDT`  
+\- Gate ADA/USDT spot margin: `GATE_MARGIN_ADA_USDT`  
+\- Bybit ADA/USDT spot: `BYBIT_SPOT_ADA_USDT`  
+\- Kraken ADA/USD futures: `KRAKEN_FUTURE_ADA_USD`  
+\- Hyperliquid ADA/USDC futures: `HYPERLIQUID_FUTURE_ADA_USDC`  
+\- Deribit ADA/USDC futures: `DERIBIT_FUTURE_ADA_USDC`  
+\- Lighter ADA/USDC futures: `LIGHTER_FUTURE_ADA_USDC`  
+\- US stock AAPL: `US_STOCK_AAPL_USDT`  
+\- Hong Kong stock 00700: `HK_STOCK_00700_USDT`  
+\- US ETF SPY: `US_ETF_SPY_USDT`  
+CrossEx supports spot, USDT-margined perpetual futures, spot margin, stock, and ETF orders. Bybit and Deribit do not currently support spot margin. Kraken, Hyperliquid, Lighter, and Aster do not currently support spot or spot margin. Stocks and ETFs are available only in cross-exchange account mode.
 
-** time_in_force**: Defaults to GTC. Supported values: `GTC`, `IOC`, `FOK`, `POC`, `RPI`  
-`GTC`: GoodTillCancelled  
-`IOC`: ImmediateOrCancelled  
-`FOK`: FillOrKill  
-`POC`: PendingOrCancelled or PostOnly  
-`RPI`: RPI  
-Stocks and ETFs support only `GTC`
+** time_in_force**: Time-in-force policy. Defaults to `GTC`.  
+  
+\- `GTC`: Good Till Cancelled  
+\- `IOC`: Immediate Or Cancel  
+\- `FOK`: Fill Or Kill  
+\- `POC`: Post Only (Pending or Cancelled)  
+\- `RPI`: Retail Price Improvement  
+  
+Stock and ETF orders support only `GTC`. Hyperliquid, Lighter, and Aster futures do not support `FOK`.
 
 ** position_side**: Position side: `NONE`, `LONG`, `SHORT`  
 Defaults to `NONE` (single position mode) if not specified
@@ -1676,31 +1725,33 @@ CrossexOrderRequest | required: ["symbol","side"]
 Request Body SchemaName | Type | Required | Constraints | Description  
 ---|---|---|---|---  
 text | string | Optional |  | Client-defined Order ID, supports letters (a-z), numbers (0-9), symbols (-, _) only  
-symbol | string | Required |  | Unique identifier Exchange_Business_Base_Counter  
+symbol | string | Required |  | Unique symbol in `Exchange_Business_Base_Counter` format.  
 Examples:  
-To place a spot order for ADA/USDT on BINANCE, use `BINANCE_SPOT_ADA_USDT`;  
-To place a USDT-margined perpetual futures order for ADA/USDT on OKX, use `OKX_FUTURE_ADA_USDT`;  
-To place a spot margin order for ADA/USDT on GATE, use `GATE_MARGIN_ADA_USDT`;  
-To place a spot order for ADA/USDT on BYBIT, use `BYBIT_SPOT_ADA_USDT`;  
-To place a futures order for ADA/USD on KRAKEN, use `KRAKEN_FUTURE_ADA_USD`;  
-To place a futures order for ADA/USDC on HYPERLIQUID, use `HYPERLIQUID_FUTURE_ADA_USDC`;  
-To place a futures order for ADA/USDC on DERIBIT, use `DERIBIT_FUTURE_ADA_USDC`;  
-To place a futures order for ADA/USDC on LIGHTER, use `LIGHTER_FUTURE_ADA_USDC`;  
-To trade US stock AAPL, use `US_STOCK_AAPL_USDT`;  
-To trade Hong Kong stock 00700, use `HK_STOCK_00700_USDT`;  
-To trade US ETF SPY, use `US_ETF_SPY_USDT`;  
-Spot, USDT-margined perpetual futures, spot margin, stock, and ETF orders are supported. BYBIT/DERIBIT do not currently support spot margin orders. KRAKEN, HYPERLIQUID, and LIGHTER do not currently support spot or margin orders. Stocks and ETFs support only cross-exchange account mode  
+\- Binance ADA/USDT spot: `BINANCE_SPOT_ADA_USDT`  
+\- OKX ADA/USDT USDT-margined perpetual: `OKX_FUTURE_ADA_USDT`  
+\- Gate ADA/USDT spot margin: `GATE_MARGIN_ADA_USDT`  
+\- Bybit ADA/USDT spot: `BYBIT_SPOT_ADA_USDT`  
+\- Kraken ADA/USD futures: `KRAKEN_FUTURE_ADA_USD`  
+\- Hyperliquid ADA/USDC futures: `HYPERLIQUID_FUTURE_ADA_USDC`  
+\- Deribit ADA/USDC futures: `DERIBIT_FUTURE_ADA_USDC`  
+\- Lighter ADA/USDC futures: `LIGHTER_FUTURE_ADA_USDC`  
+\- US stock AAPL: `US_STOCK_AAPL_USDT`  
+\- Hong Kong stock 00700: `HK_STOCK_00700_USDT`  
+\- US ETF SPY: `US_ETF_SPY_USDT`  
+CrossEx supports spot, USDT-margined perpetual futures, spot margin, stock, and ETF orders. Bybit and Deribit do not currently support spot margin. Kraken, Hyperliquid, Lighter, and Aster do not currently support spot or spot margin. Stocks and ETFs are available only in cross-exchange account mode.  
 side | string | Required | enum: ["BUY","SELL"] | BUY, SELL  
 type | string | Optional | enum: ["LIMIT","MARKET"]  
 default: "LIMIT" | Order type (default: `LIMIT`; supported types: `LIMIT`, `MARKET`)  
 time_in_force | string | Optional | enum: ["GTC","IOC","FOK","POC","RPI"]  
-default: "GTC" | Defaults to GTC. Supported values: `GTC`, `IOC`, `FOK`, `POC`, `RPI`  
-`GTC`: GoodTillCancelled  
-`IOC`: ImmediateOrCancelled  
-`FOK`: FillOrKill  
-`POC`: PendingOrCancelled or PostOnly  
-`RPI`: RPI  
-Stocks and ETFs support only `GTC`  
+default: "GTC" | Time-in-force policy. Defaults to `GTC`.  
+  
+\- `GTC`: Good Till Cancelled  
+\- `IOC`: Immediate Or Cancel  
+\- `FOK`: Fill Or Kill  
+\- `POC`: Post Only (Pending or Cancelled)  
+\- `RPI`: Retail Price Improvement  
+  
+Stock and ETF orders support only `GTC`. Hyperliquid, Lighter, and Aster futures do not support `FOK`.  
 qty | string | Optional |  | Order quantity (required except for spot and margin market buys; qty is required for stocks and ETFs)  
 price | string | Optional |  | Limit order price (required for limit orders). Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
 quote_qty | string | Optional |  | Order quote quantity, required for spot and margin market buys. Stock and ETF orders do not support quote_qty  
@@ -2075,7 +2126,11 @@ PUT `/crossex/orders/{order_id}`
 
 _Modify Order_
 
-Rate Limit: 100 requests per 10 seconds
+Rate limit: 100 requests per 10 seconds.
+
+You can amend the quantity, the price, or both. Provide at least one new positive value. Omit `qty` or `price`, or send `"0"` for that field, to keep its current value.
+
+Once the contract begins its position adjustment (rebase), this endpoint returns HTTP `422` with `label` set to `TRADE_REBASE_TASK_STARTED`.
 
 ### Parameters
 
@@ -2083,8 +2138,8 @@ ParametersName | In | Type | Required | Description
 ---|---|---|---|---  
 order_id | path | string | Required | Support Order ID or Text for Modify Order  
 body | body | CrossexOrderUpdateRequest | Optional | none  
-qty | body | string | Optional | modify amount  
-price | body | string | Optional | modify price  
+qty | body | string | Optional | New quantity. Omit this field or send `"0"` to keep the current quantity.  
+price | body | string | Optional | New price. Omit this field or send `"0"` to keep the current price.  
   
 ####  Request Body Schema
 
@@ -2098,8 +2153,8 @@ CrossexOrderUpdateRequest |
 
 Request Body SchemaName | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-qty | string | Optional |  | modify amount  
-price | string | Optional |  | modify price  
+qty | string | Optional |  | New quantity. Omit this field or send `"0"` to keep the current quantity.  
+price | string | Optional |  | New price. Omit this field or send `"0"` to keep the current price.  
   
 ### Responses
 
@@ -2249,8 +2304,12 @@ symbol | string | Required |  | Unique trading pair identifiers, e.g.
 `BINANCE_SPOT_BTC_USDT`, `BINANCE_FUTURE_BTC_USDT`.  
 side | string | Required |  | Side (`BUY` buy / `SELL` sell).  
 type | string | Required |  | Order type (`LIMIT` limit / `MARKET` market).  
-attribute | string | Required |  | Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).  
-exchange_type | string | Required |  | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
+attribute | string | Required |  | Order attribute (`COMMON`: regular order, `LIQ`: liquidation takeover order, `REDUCE`: position reduction during liquidation, `ADL`: auto-deleveraging order, `SETTLEMENT`: delisting settlement order, `REBASE`: system-generated rebase order).  
+  
+When a contract rebase converts a position, the system creates one order that closes the original position and one that opens the adjusted position. Both orders have status `FILLED` and attribute `REBASE`.  
+  
+If the venue's rules only allow the original position to be closed, CrossEx does not open a replacement position automatically. The closing order has status `FILLED` and attribute `SETTLEMENT`.  
+exchange_type | string | Required |  | Trading venue (`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, or `ASTER`). For stocks and ETFs, returns the listing market (`US`, `HK`, `KR`, or `JP`).  
 business_type | string | Required |  | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / CONVERT: flash swap / STOCK: stocks / ETF: exchange-traded funds)  
 qty | string | Required |  | Order quantity in the base currency.  
 quote_qty | string | Required |  | Order quantity in the quote currency.  
@@ -2263,7 +2322,7 @@ fee_coin | string | Required |  | Fee currency
 fee | string | Required |  | Fee amount.  
 reduce_only | string | Required |  | Reduce-only order (`"true"` or `"false"`).  
 leverage | string | Required |  | Order leverage multiplier.  
-reason | string | Required |  | Failure reason description.  
+reason | string | Required |  | Reason for an order failure or cancellation. A system-generated `REBASE` order uses this field for the position adjustment ratio, such as `POSITION_REBASE_RATIO=10`.  
 last_executed_qty | string | Required |  | Base quantity of the latest fill.  
 last_executed_price | string | Required |  | Price of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
 last_executed_amount | string | Required |  | Amount of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
@@ -2343,9 +2402,13 @@ string |
   
 **attribute**
 
-Attribute COMMON: Normal Order, LIQ: Liquidation Takeover Order, REDUCE: Liquidation Reduce Order, ADL: Auto-Reduce
+Order attribute
 
-Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).
+Order attribute (`COMMON`: regular order, `LIQ`: liquidation takeover order, `REDUCE`: position reduction during liquidation, `ADL`: auto-deleveraging order, `SETTLEMENT`: delisting settlement order, `REBASE`: system-generated rebase order).
+
+When a contract rebase converts a position, the system creates one order that closes the original position and one that opens the adjusted position. Both orders have status `FILLED` and attribute `REBASE`.
+
+If the venue's rules only allow the original position to be closed, CrossEx does not open a replacement position automatically. The closing order has status `FILLED` and attribute `SETTLEMENT`.
 
 Type | Constraints  
 ---|---  
@@ -2355,7 +2418,7 @@ string |
 
 Exchange
 
-Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)
+Trading venue (`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, or `ASTER`). For stocks and ETFs, returns the listing market (`US`, `HK`, `KR`, or `JP`).
 
 Type | Constraints  
 ---|---  
@@ -2485,7 +2548,7 @@ string |
 
 Reason
 
-Failure reason description.
+Reason for an order failure or cancellation. A system-generated `REBASE` order uses this field for the position adjustment ratio, such as `POSITION_REBASE_RATIO=10`.
 
 Type | Constraints  
 ---|---  
@@ -2937,7 +3000,7 @@ ParametersName | In | Type | Required | Description
 body | body | CrossexAccountUpdateRequest | Optional | none  
 position_mode | body | string | Optional | Futures position mode (SINGLE/DUAL)  
 account_mode | body | string | Optional | Account mode (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
-exchange_type | body | string | Optional | Exchange (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to adjust futures position mode.  
+exchange_type | body | string | Optional | Exchange whose futures position mode to change (`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, `ASTER`, or `CROSSEX`). This field is required for a position-mode change when the current account mode is `ISOLATED_EXCHANGE`.  
   
 ####  Request Body Schema
 
@@ -2953,7 +3016,7 @@ Request Body SchemaName | Type | Required | Constraints | Description
 ---|---|---|---|---  
 position_mode | string | Optional |  | Futures position mode (SINGLE/DUAL)  
 account_mode | string | Optional |  | Account mode (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
-exchange_type | string | Optional |  | Exchange (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to adjust futures position mode.  
+exchange_type | string | Optional |  | Exchange whose futures position mode to change (`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, `ASTER`, or `CROSSEX`). This field is required for a position-mode change when the current account mode is `ISOLATED_EXCHANGE`.  
   
 ### Responses
 
@@ -2977,7 +3040,7 @@ Name | Type | Required | Constraints | Description
 ---|---|---|---|---  
 position_mode | string | Optional |  | Requested futures position mode to modify (SINGLE/DUAL)  
 account_mode | string | Optional |  | Requested account mode to modify (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
-exchange_type | string | Optional |  | Exchange targeted by the requested change (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to change futures position mode.  
+exchange_type | string | Optional |  | Exchange specified in the update request (`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, `ASTER`, or `CROSSEX`). The request must specify this exchange when changing the futures position mode of an account in `ISOLATED_EXCHANGE` mode.  
   
 WARNING
 
@@ -3059,7 +3122,7 @@ Rate limit: 200 requests per 10 seconds If 100% <= initial_margin_rate < 110%, t
 
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
-exchange_type | query | string | Optional | Trading venue identifier. Omit in cross-exchange mode; required in isolated-per-venue mode (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER`).  
+exchange_type | query | string | Optional | Trading venue identifier. Omit this parameter in cross-exchange account mode (`CROSS_EXCHANGE`). In exchange-specific account mode (`ISOLATED_EXCHANGE`), specify one of `BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, or `ASTER`.  
   
 ### Responses
 
@@ -3119,6 +3182,7 @@ Name | Type | Required | Constraints | Description
 user_id | string | Optional |  | User ID  
 coin | string | Optional |  | Currency  
 exchange_type | string | Optional |  | Exchange  
+price | string | Optional |  | Asset valuation price in USDT. Returns `"1"` for USDT. For other assets, returns the index price if available, or the latest price for the corresponding spot pair if no index price is available.  
 balance | string | Optional |  | Balance  
 upnl | string | Optional |  | Unrealized P&L  
 equity | string | Optional |  | Net margin equity for the currency  
@@ -3200,6 +3264,7 @@ Code samples
           "user_id": "123456789",
           "coin": "USDT",
           "exchange_type": "BINANCE",
+          "price": "1",
           "balance": "1000",
           "upnl": "200",
           "equity": "1200",
@@ -3222,7 +3287,9 @@ POST `/crossex/positions/leverage`
 
 _Modify Contract Trading Pair Leverage Multiplier_
 
-Rate Limit: 100 requests per 10 seconds
+Rate limit: 100 requests per 10 seconds.
+
+Once the contract begins its position adjustment (rebase), a request to change leverage returns HTTP `422` with `label` set to `TRADE_REBASE_TASK_STARTED`.
 
 ### Parameters
 
@@ -3668,16 +3735,11 @@ POST `/crossex/position`
 
 _Close a position in full._
 
-Rate limit: 100 requests per day. Automatic position-closing rules. FUTURE and MARGIN positions are supported.
+Rate limit: 100 requests per day. This endpoint fully closes small futures (`FUTURE`) or margin (`MARGIN`) positions.
 
-Before using this endpoint, ensure that the following prerequisite is met:
+The account must have no open orders for the `symbol`. If the position's notional value is below `minNotional` or its size is below `minSize`, the system submits an order to close the entire position immediately. This handles positions that are too small to close through a regular order on the venue.
 
-  * There are no open orders for the symbol in the current account.
-  * Once the prerequisite is met, the system checks whether the position meets either of the following conditions:
-  * Less than the minimum notional amount (minNotional)
-  * Less than the minimum order size (minSize)
-
-When either condition is met, the system automatically creates a closing order and immediately closes the entire position. This endpoint prevents positions that are too small to be submitted to an exchange from becoming stranded and ensures that small positions can be closed when they fall below the threshold.
+Once the contract begins its position adjustment (rebase), this endpoint returns HTTP `422` with `label` set to `TRADE_REBASE_TASK_STARTED`.
 
 ### Parameters
 
@@ -4047,7 +4109,9 @@ POST `/crossex/positions/margin`
 
 _Increase or decrease isolated margin_
 
-Rate limit: 100 requests per 10 seconds. Only Hyperliquid isolated futures positions are supported. Positive values increase margin, while negative values decrease margin
+Rate limit: 100 requests per 10 seconds. This endpoint adjusts isolated margin on Hyperliquid futures positions only.
+
+Once the contract begins its position adjustment (rebase), this endpoint returns HTTP `422` with `label` set to `TRADE_REBASE_TASK_STARTED`.
 
 ### Parameters
 
@@ -4055,8 +4119,8 @@ ParametersName | In | Type | Required | Description
 ---|---|---|---|---  
 body | body | CrossexIsolatedMarginRequest | Optional | none  
 symbol | body | string | Required | Hyperliquid futures trading pair  
-margin | body | string | Required | Margin adjustment amount. Positive values increase margin, while negative values decrease margin. Values with more than two decimal places are truncated to two decimal places  
-position_side | body | string | Optional | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
+margin | body | string | Required | Isolated margin adjustment amount. A positive value adds margin, and a negative value removes it. Values with more than two decimal places are truncated toward zero. When adding margin, the USDT equivalent of the added amount must be at most 80% of the account's available margin.  
+position_side | body | string | Optional | Position side. In one-way mode (`SINGLE`), omitting this field uses `NONE`. In hedge mode (`DUAL`), specify `LONG` or `SHORT`.  
   
 ####  Enumerated Values
 
@@ -4079,8 +4143,8 @@ CrossexIsolatedMarginRequest | required: ["symbol","margin"]
 Request Body SchemaName | Type | Required | Constraints | Description  
 ---|---|---|---|---  
 symbol | string | Required |  | Hyperliquid futures trading pair  
-margin | string | Required |  | Margin adjustment amount. Positive values increase margin, while negative values decrease margin. Values with more than two decimal places are truncated to two decimal places  
-position_side | string | Optional | enum: ["NONE","LONG","SHORT"] | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
+margin | string | Required |  | Isolated margin adjustment amount. A positive value adds margin, and a negative value removes it. Values with more than two decimal places are truncated toward zero. When adding margin, the USDT equivalent of the added amount must be at most 80% of the account's available margin.  
+position_side | string | Optional | enum: ["NONE","LONG","SHORT"] | Position side. In one-way mode (`SINGLE`), omitting this field uses `NONE`. In hedge mode (`DUAL`), specify `LONG` or `SHORT`.  
   
 ### Responses
 
@@ -4341,9 +4405,20 @@ spot_rpi_maker_fee | string | Optional |  | Spot RPI order maker fee rate
 future_maker_fee | string | Required |  | contractMakerfee rate  
 future_taker_fee | string | Required |  | contractTakerfee rate  
 future_rpi_maker_fee | string | Optional |  | Futures RPI order maker fee rate  
-special_fee_list | array | Required |  |   
+special_fee_list | array | Required |  | Special fee rates by trading pair.  
+\- Binance TradFi futures use a zero maker fee rate and half the user's futures taker fee rate.  
+\- Bybit TradFi futures use a zero maker fee rate. The taker fee rate is the user's futures taker fee rate multiplied by the configured factor.  
+\- Gate TradFi futures use the applicable VIP tier and fee configuration. Market-maker fee settings affect when the maker fee rate applies.  
+\- An entry may include `rpi_fee_rate` when the user is eligible for RPI and the trading pair supports it.  
   
 **items / special_fee_list**
+
+Special fee rates by trading pair.
+
+  * Binance TradFi futures use a zero maker fee rate and half the user's futures taker fee rate.
+  * Bybit TradFi futures use a zero maker fee rate. The taker fee rate is the user's futures taker fee rate multiplied by the configured factor.
+  * Gate TradFi futures use the applicable VIP tier and fee configuration. Market-maker fee settings affect when the maker fee rate applies.
+  * An entry may include `rpi_fee_rate` when the user is eligible for RPI and the trading pair supports it.
 
 Type | Constraints  
 ---|---  
@@ -4518,7 +4593,9 @@ GET `/crossex/positions`
 
 _Query Contract Positions_
 
-Rate Limit: 200 requests per 10 seconds
+Rate limit: 200 requests per 10 seconds.
+
+While the contract's position adjustment (rebase) is in progress, recalculation of mark price, position value, and unrealized PnL is paused. The response may still show the last calculated values.
 
 ### Parameters
 
@@ -4577,6 +4654,53 @@ funding_time | string | Optional |  | Position funding fee collection time (0 in
 create_time | string | Optional |  | Position Creation Time  
 update_time | string | Optional |  | Position Update Time  
 closed_pnl | string | Optional |  | Realized PnL  
+risk_limits | array | Optional |  | Position-specific risk limits. An empty array indicates that no position-specific tiers apply. When tiers apply, the array contains one object with the position's `symbol` and its `tiers`.  
+  
+**items / risk_limits**
+
+Position-specific risk limits. An empty array indicates that no position-specific tiers apply. When tiers apply, the array contains one object with the position's `symbol` and its `tiers`.
+
+Type | Constraints  
+---|---  
+array |   
+  
+**items / risk_limits / items**
+
+Type | Constraints  
+---|---  
+CrossexPositionRiskLimit | required: ["symbol","tiers"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Position symbol  
+tiers | array | Required |  | Risk limit tiers for this position  
+  
+**items / risk_limits / items / tiers**
+
+Risk limit tiers for this position
+
+Type | Constraints  
+---|---  
+array |   
+  
+**items / risk_limits / items / tiers / items**
+
+Type | Constraints  
+---|---  
+CrossexPositionRiskLimitTier | required: ["min_risk_limit_value","max_risk_limit_value","quick_cal_amount","leverage_max","maintenance_rate","tier"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+min_risk_limit_value | string | Required |  | Lower bound on the position's notional value for this tier  
+max_risk_limit_value | string | Required |  | Upper bound on the position's notional value for this tier  
+quick_cal_amount | string | Required |  | Amount deducted when calculating maintenance margin for this tier  
+leverage_max | string | Required |  | Maximum leverage for this tier  
+maintenance_rate | string | Required |  | Maintenance margin rate for this tier  
+tier | string | Required |  | Tier number  
   
 WARNING
 
@@ -4655,7 +4779,22 @@ Code samples
         "funding_time": "0",
         "create_time": "1750682334273",
         "update_time": "1750730699867",
-        "closed_pnl": "12"
+        "closed_pnl": "12",
+        "risk_limits": [
+          {
+            "symbol": "OKX_FUTURE_ADA_USDT",
+            "tiers": [
+              {
+                "min_risk_limit_value": "0",
+                "max_risk_limit_value": "50000",
+                "quick_cal_amount": "0",
+                "leverage_max": "18",
+                "maintenance_rate": "0.01",
+                "tier": "1"
+              }
+            ]
+          }
+        ]
       }
     ]
     
@@ -5090,8 +5229,12 @@ symbol | string | Required |  | Unique trading pair identifiers, e.g.
 `BINANCE_SPOT_BTC_USDT`, `BINANCE_FUTURE_BTC_USDT`.  
 side | string | Required |  | Side (`BUY` buy / `SELL` sell).  
 type | string | Required |  | Order type (`LIMIT` limit / `MARKET` market).  
-attribute | string | Required |  | Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).  
-exchange_type | string | Required |  | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
+attribute | string | Required |  | Order attribute (`COMMON`: regular order, `LIQ`: liquidation takeover order, `REDUCE`: position reduction during liquidation, `ADL`: auto-deleveraging order, `SETTLEMENT`: delisting settlement order, `REBASE`: system-generated rebase order).  
+  
+When a contract rebase converts a position, the system creates one order that closes the original position and one that opens the adjusted position. Both orders have status `FILLED` and attribute `REBASE`.  
+  
+If the venue's rules only allow the original position to be closed, CrossEx does not open a replacement position automatically. The closing order has status `FILLED` and attribute `SETTLEMENT`.  
+exchange_type | string | Required |  | Trading venue (`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, or `ASTER`). For stocks and ETFs, returns the listing market (`US`, `HK`, `KR`, or `JP`).  
 business_type | string | Required |  | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / CONVERT: flash swap / STOCK: stocks / ETF: exchange-traded funds)  
 qty | string | Required |  | Order quantity in the base currency.  
 quote_qty | string | Required |  | Order quantity in the quote currency.  
@@ -5104,7 +5247,7 @@ fee_coin | string | Required |  | Fee currency
 fee | string | Required |  | Fee amount.  
 reduce_only | string | Required |  | Reduce-only order (`"true"` or `"false"`).  
 leverage | string | Required |  | Order leverage multiplier.  
-reason | string | Required |  | Failure reason description.  
+reason | string | Required |  | Reason for an order failure or cancellation. A system-generated `REBASE` order uses this field for the position adjustment ratio, such as `POSITION_REBASE_RATIO=10`.  
 last_executed_qty | string | Required |  | Base quantity of the latest fill.  
 last_executed_price | string | Required |  | Price of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
 last_executed_amount | string | Required |  | Amount of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
@@ -5184,9 +5327,13 @@ string |
   
 **items / attribute**
 
-Attribute COMMON: Normal Order, LIQ: Liquidation Takeover Order, REDUCE: Liquidation Reduce Order, ADL: Auto-Reduce
+Order attribute
 
-Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).
+Order attribute (`COMMON`: regular order, `LIQ`: liquidation takeover order, `REDUCE`: position reduction during liquidation, `ADL`: auto-deleveraging order, `SETTLEMENT`: delisting settlement order, `REBASE`: system-generated rebase order).
+
+When a contract rebase converts a position, the system creates one order that closes the original position and one that opens the adjusted position. Both orders have status `FILLED` and attribute `REBASE`.
+
+If the venue's rules only allow the original position to be closed, CrossEx does not open a replacement position automatically. The closing order has status `FILLED` and attribute `SETTLEMENT`.
 
 Type | Constraints  
 ---|---  
@@ -5196,7 +5343,7 @@ string |
 
 Exchange
 
-Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)
+Trading venue (`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, or `ASTER`). For stocks and ETFs, returns the listing market (`US`, `HK`, `KR`, or `JP`).
 
 Type | Constraints  
 ---|---  
@@ -5326,7 +5473,7 @@ string |
 
 Reason
 
-Failure reason description.
+Reason for an order failure or cancellation. A system-generated `REBASE` order uses this field for the position adjustment ratio, such as `POSITION_REBASE_RATIO=10`.
 
 Type | Constraints  
 ---|---  
@@ -5497,7 +5644,9 @@ limit | query | integer | Optional | Maximum number of records returned in a sin
 symbol | query | string | Optional | Currency pair  
 from | query | integer | Optional | Start Millisecond Timestamp  
 to | query | integer | Optional | End Millisecond Timestamp  
-attributes | query | string | Optional | Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement). Multiple values, comma-separated.  
+attributes | query | string | Optional | Filter by order attribute. Separate multiple values with commas. Supported values are `COMMON` (regular order), `LIQ` (liquidation takeover order), `REDUCE` (position reduction during liquidation), `ADL` (auto-deleveraging order), `SETTLEMENT` (delisting settlement order), and `REBASE` (system-generated rebase order).  
+order_id | query | integer(int64) | Optional | Filter by exact platform order ID. If `text` is also provided, records must match both filters.  
+text | query | string | Optional | Filter by an exact match on the client order ID (`text`).  
   
 ### Responses
 
@@ -5540,8 +5689,12 @@ symbol | string | Required |  | Unique trading pair identifiers, e.g.
 `BINANCE_SPOT_BTC_USDT`, `BINANCE_FUTURE_BTC_USDT`.  
 side | string | Required |  | Side (`BUY` buy / `SELL` sell).  
 type | string | Required |  | Order type (`LIMIT` limit / `MARKET` market).  
-attribute | string | Required |  | Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).  
-exchange_type | string | Required |  | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
+attribute | string | Required |  | Order attribute (`COMMON`: regular order, `LIQ`: liquidation takeover order, `REDUCE`: position reduction during liquidation, `ADL`: auto-deleveraging order, `SETTLEMENT`: delisting settlement order, `REBASE`: system-generated rebase order).  
+  
+When a contract rebase converts a position, the system creates one order that closes the original position and one that opens the adjusted position. Both orders have status `FILLED` and attribute `REBASE`.  
+  
+If the venue's rules only allow the original position to be closed, CrossEx does not open a replacement position automatically. The closing order has status `FILLED` and attribute `SETTLEMENT`.  
+exchange_type | string | Required |  | Trading venue (`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, or `ASTER`). For stocks and ETFs, returns the listing market (`US`, `HK`, `KR`, or `JP`).  
 business_type | string | Required |  | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / CONVERT: flash swap / STOCK: stocks / ETF: exchange-traded funds)  
 qty | string | Required |  | Order quantity in the base currency.  
 quote_qty | string | Required |  | Order quantity in the quote currency.  
@@ -5554,7 +5707,7 @@ fee_coin | string | Required |  | Fee currency
 fee | string | Required |  | Fee amount.  
 reduce_only | string | Required |  | Reduce-only order (`"true"` or `"false"`).  
 leverage | string | Required |  | Order leverage multiplier.  
-reason | string | Required |  | Failure reason description.  
+reason | string | Required |  | Reason for an order failure or cancellation. A system-generated `REBASE` order uses this field for the position adjustment ratio, such as `POSITION_REBASE_RATIO=10`.  
 last_executed_qty | string | Required |  | Base quantity of the latest fill.  
 last_executed_price | string | Required |  | Price of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
 last_executed_amount | string | Required |  | Amount of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
@@ -5634,9 +5787,13 @@ string |
   
 **items / attribute**
 
-Attribute COMMON: Normal Order, LIQ: Liquidation Takeover Order, REDUCE: Liquidation Reduce Order, ADL: Auto-Reduce
+Order attribute
 
-Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).
+Order attribute (`COMMON`: regular order, `LIQ`: liquidation takeover order, `REDUCE`: position reduction during liquidation, `ADL`: auto-deleveraging order, `SETTLEMENT`: delisting settlement order, `REBASE`: system-generated rebase order).
+
+When a contract rebase converts a position, the system creates one order that closes the original position and one that opens the adjusted position. Both orders have status `FILLED` and attribute `REBASE`.
+
+If the venue's rules only allow the original position to be closed, CrossEx does not open a replacement position automatically. The closing order has status `FILLED` and attribute `SETTLEMENT`.
 
 Type | Constraints  
 ---|---  
@@ -5646,7 +5803,7 @@ string |
 
 Exchange
 
-Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)
+Trading venue (`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, or `ASTER`). For stocks and ETFs, returns the listing market (`US`, `HK`, `KR`, or `JP`).
 
 Type | Constraints  
 ---|---  
@@ -5776,7 +5933,7 @@ string |
 
 Reason
 
-Failure reason description.
+Reason for an order failure or cancellation. A system-generated `REBASE` order uses this field for the position adjustment ratio, such as `POSITION_REBASE_RATIO=10`.
 
 Type | Constraints  
 ---|---  
@@ -6368,7 +6525,11 @@ GET `/crossex/history_trades`
 
 _Query filled history_
 
-Rate Limit: 200 requests per 10 seconds
+Rate limit: 200 requests per 10 seconds.
+
+For stock and ETF fills, `price` is in the listing market's quote currency. Calculate the trade value in USDT before fees as `qty × price × fx_rate`. The response reports the fee amount in `fee` and the fee currency in `fee_coin`.
+
+Trade history also includes system-generated fills from futures position adjustments (rebase). Use `order_id` to retrieve fills for a specific order.
 
 ### Parameters
 
@@ -6379,6 +6540,7 @@ limit | query | integer | Optional | Maximum number returned by list, max 1000
 symbol | query | string | Optional | Currency pair  
 from | query | integer | Optional | Start Millisecond Timestamp  
 to | query | integer | Optional | End Millisecond Timestamp  
+order_id | query | integer(int64) | Optional | Return fills for the specified platform order ID.  
   
 ### Responses
 
@@ -6411,11 +6573,12 @@ transaction_id | string | Optional |  | filledrecordsID
 order_id | string | Optional |  | Order ID  
 text | string | Optional |  | User Order ID  
 symbol | string | Optional |  | Currency pair  
-exchange_type | string | Optional |  | Exchange  
-business_type | string | Optional |  | Business Type  
+exchange_type | string | Optional |  | Trading venue. For a stock or ETF fill, returns the listing market (`US`, `HK`, `KR`, or `JP`).  
+business_type | string | Optional |  | Business type. The value is `STOCK` for a stock or `ETF` for an ETF.  
 side | string | Optional |  | Buy/Sell Direction  
 qty | string | Optional |  | Trading size  
 price | string | Optional |  | Fill price. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+fx_rate | string | Optional |  | Settlement exchange rate used for this stock or ETF fill, as a decimal string. The value is the amount of USDT per unit of the listing market's quote currency. This field may be absent from older fills.  
 fee | string | Optional |  | fee  
 fee_coin | string | Optional |  | Fee currency  
 fee_rate | string | Optional |  | Fee Rate  
@@ -6497,6 +6660,27 @@ Code samples
         "position_mode": "DUAL",
         "position_side": "LONG",
         "create_time": "1750941402661"
+      },
+      {
+        "user_id": "3511316454450547",
+        "transaction_id": "2069614605858560",
+        "order_id": "2069614605857536",
+        "text": "stock-buy-1",
+        "symbol": "HK_STOCK_00700_USDT",
+        "exchange_type": "HK",
+        "business_type": "STOCK",
+        "side": "BUY",
+        "qty": "2",
+        "price": "100",
+        "fx_rate": "0.127",
+        "fee": "0.0254",
+        "fee_coin": "USDT",
+        "fee_rate": "0.001",
+        "match_role": "TAKER",
+        "rpnl": "0",
+        "position_mode": "SINGLE",
+        "position_side": "NONE",
+        "create_time": "1795392000000"
       }
     ]
     
@@ -7062,9 +7246,9 @@ Name | Type | Required | Constraints | Description
 ---|---|---|---|---  
 symbol | string | Required |  | Unique trading pair identifier in the format ExchangeType_BusinessType_Base_Counter.  
 Stocks and ETFs use the market as ExchangeType (US/HK/KR/JP) and STOCK or ETF as the business type, for example US_STOCK_AAPL_USDT, HK_STOCK_00700_USDT, or US_ETF_SPY_USDT.  
-exchange_type | string | Required |  | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
+exchange_type | string | Required |  | Trading venue (`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, or `ASTER`). For stocks and ETFs, returns the listing market (`US`, `HK`, `KR`, or `JP`).  
 business_type | string | Required |  | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / STOCK: stocks / ETF: exchange-traded funds)  
-state | string | Required |  | Status (`live` running / `suspend` paused).  
+state | string | Required |  | Trading status (`live`: active, `suspend`: suspended, `rebase`: contract position adjustment has started)  
 min_size | string | Required |  | Minimum order quantity  
 min_notional | string | Required |  | Minimum Order Value  
 lot_size | string | Required |  | Quantity Step  
@@ -7093,7 +7277,7 @@ string |
 
 Exchange
 
-Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)
+Trading venue (`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, or `ASTER`). For stocks and ETFs, returns the listing market (`US`, `HK`, `KR`, or `JP`).
 
 Type | Constraints  
 ---|---  
@@ -7113,7 +7297,7 @@ string |
 
 availablestatus
 
-Status (`live` running / `suspend` paused).
+Trading status (`live`: active, `suspend`: suspended, `rebase`: contract position adjustment has started)
 
 Type | Constraints  
 ---|---  
@@ -7272,6 +7456,50 @@ string |
     
     
 
+##  CrossexPositionRiskLimit
+
+Type | Constraints  
+---|---  
+object | required: ["symbol","tiers"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+symbol | string | Required |  | Position symbol  
+tiers | array | Required |  | Risk limit tiers for this position  
+  
+**tiers**
+
+Risk limit tiers for this position
+
+Type | Constraints  
+---|---  
+array |   
+  
+**tiers / items**
+
+Type | Constraints  
+---|---  
+CrossexPositionRiskLimitTier | required: ["min_risk_limit_value","max_risk_limit_value","quick_cal_amount","leverage_max","maintenance_rate","tier"]  
+      
+    
+    {
+      "symbol": "string",
+      "tiers": [
+        {
+          "min_risk_limit_value": "string",
+          "max_risk_limit_value": "string",
+          "quick_cal_amount": "string",
+          "leverage_max": "string",
+          "maintenance_rate": "string",
+          "tier": "string"
+        }
+      ]
+    }
+    
+    
+
 ##  CrossexOrder
 
 CrossexOrder
@@ -7299,8 +7527,12 @@ symbol | string | Required |  | Unique trading pair identifiers, e.g.
 `BINANCE_SPOT_BTC_USDT`, `BINANCE_FUTURE_BTC_USDT`.  
 side | string | Required |  | Side (`BUY` buy / `SELL` sell).  
 type | string | Required |  | Order type (`LIMIT` limit / `MARKET` market).  
-attribute | string | Required |  | Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).  
-exchange_type | string | Required |  | Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)  
+attribute | string | Required |  | Order attribute (`COMMON`: regular order, `LIQ`: liquidation takeover order, `REDUCE`: position reduction during liquidation, `ADL`: auto-deleveraging order, `SETTLEMENT`: delisting settlement order, `REBASE`: system-generated rebase order).  
+  
+When a contract rebase converts a position, the system creates one order that closes the original position and one that opens the adjusted position. Both orders have status `FILLED` and attribute `REBASE`.  
+  
+If the venue's rules only allow the original position to be closed, CrossEx does not open a replacement position automatically. The closing order has status `FILLED` and attribute `SETTLEMENT`.  
+exchange_type | string | Required |  | Trading venue (`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, or `ASTER`). For stocks and ETFs, returns the listing market (`US`, `HK`, `KR`, or `JP`).  
 business_type | string | Required |  | Business type (SPOT: spot / FUTURE: futures / MARGIN: margin / CONVERT: flash swap / STOCK: stocks / ETF: exchange-traded funds)  
 qty | string | Required |  | Order quantity in the base currency.  
 quote_qty | string | Required |  | Order quantity in the quote currency.  
@@ -7313,7 +7545,7 @@ fee_coin | string | Required |  | Fee currency
 fee | string | Required |  | Fee amount.  
 reduce_only | string | Required |  | Reduce-only order (`"true"` or `"false"`).  
 leverage | string | Required |  | Order leverage multiplier.  
-reason | string | Required |  | Failure reason description.  
+reason | string | Required |  | Reason for an order failure or cancellation. A system-generated `REBASE` order uses this field for the position adjustment ratio, such as `POSITION_REBASE_RATIO=10`.  
 last_executed_qty | string | Required |  | Base quantity of the latest fill.  
 last_executed_price | string | Required |  | Price of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
 last_executed_amount | string | Required |  | Amount of the latest fill. Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
@@ -7393,9 +7625,13 @@ string |
   
 **attribute**
 
-Attribute COMMON: Normal Order, LIQ: Liquidation Takeover Order, REDUCE: Liquidation Reduce Order, ADL: Auto-Reduce
+Order attribute
 
-Order attributes (`COMMON` normal / `LIQ` liquidation takeover / `REDUCE` liquidation reduction / `ADL` auto-deleverage / `SETTLEMENT` delisting settlement).
+Order attribute (`COMMON`: regular order, `LIQ`: liquidation takeover order, `REDUCE`: position reduction during liquidation, `ADL`: auto-deleveraging order, `SETTLEMENT`: delisting settlement order, `REBASE`: system-generated rebase order).
+
+When a contract rebase converts a position, the system creates one order that closes the original position and one that opens the adjusted position. Both orders have status `FILLED` and attribute `REBASE`.
+
+If the venue's rules only allow the original position to be closed, CrossEx does not open a replacement position automatically. The closing order has status `FILLED` and attribute `SETTLEMENT`.
 
 Type | Constraints  
 ---|---  
@@ -7405,7 +7641,7 @@ string |
 
 Exchange
 
-Exchange type (BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER). Stocks and ETFs return the listing market (US / HK / KR / JP)
+Trading venue (`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, or `ASTER`). For stocks and ETFs, returns the listing market (`US`, `HK`, `KR`, or `JP`).
 
 Type | Constraints  
 ---|---  
@@ -7535,7 +7771,7 @@ string |
 
 Reason
 
-Failure reason description.
+Reason for an order failure or cancellation. A system-generated `REBASE` order uses this field for the position adjustment ratio, such as `POSITION_REBASE_RATIO=10`.
 
 Type | Constraints  
 ---|---  
@@ -7808,8 +8044,8 @@ Name | Type | Required | Constraints | Description
 ---|---|---|---|---  
 coin | string | Required |  | Currency  
 amount | string | Required |  | Transfer amount  
-from | string | Required |  | `from` debit account (funds withdrawn from): `CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`  
-to | string | Required |  | `to` receiving account (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
+from | string | Required |  | Source account: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT  
+to | string | Required |  | Destination account: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT  
 text | string | Optional |  | User-defined ID  
       
     
@@ -7836,31 +8072,33 @@ object | required: ["symbol","side"]
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
 text | string | Optional |  | Client-defined Order ID, supports letters (a-z), numbers (0-9), symbols (-, _) only  
-symbol | string | Required |  | Unique identifier Exchange_Business_Base_Counter  
+symbol | string | Required |  | Unique symbol in `Exchange_Business_Base_Counter` format.  
 Examples:  
-To place a spot order for ADA/USDT on BINANCE, use `BINANCE_SPOT_ADA_USDT`;  
-To place a USDT-margined perpetual futures order for ADA/USDT on OKX, use `OKX_FUTURE_ADA_USDT`;  
-To place a spot margin order for ADA/USDT on GATE, use `GATE_MARGIN_ADA_USDT`;  
-To place a spot order for ADA/USDT on BYBIT, use `BYBIT_SPOT_ADA_USDT`;  
-To place a futures order for ADA/USD on KRAKEN, use `KRAKEN_FUTURE_ADA_USD`;  
-To place a futures order for ADA/USDC on HYPERLIQUID, use `HYPERLIQUID_FUTURE_ADA_USDC`;  
-To place a futures order for ADA/USDC on DERIBIT, use `DERIBIT_FUTURE_ADA_USDC`;  
-To place a futures order for ADA/USDC on LIGHTER, use `LIGHTER_FUTURE_ADA_USDC`;  
-To trade US stock AAPL, use `US_STOCK_AAPL_USDT`;  
-To trade Hong Kong stock 00700, use `HK_STOCK_00700_USDT`;  
-To trade US ETF SPY, use `US_ETF_SPY_USDT`;  
-Spot, USDT-margined perpetual futures, spot margin, stock, and ETF orders are supported. BYBIT/DERIBIT do not currently support spot margin orders. KRAKEN, HYPERLIQUID, and LIGHTER do not currently support spot or margin orders. Stocks and ETFs support only cross-exchange account mode  
+\- Binance ADA/USDT spot: `BINANCE_SPOT_ADA_USDT`  
+\- OKX ADA/USDT USDT-margined perpetual: `OKX_FUTURE_ADA_USDT`  
+\- Gate ADA/USDT spot margin: `GATE_MARGIN_ADA_USDT`  
+\- Bybit ADA/USDT spot: `BYBIT_SPOT_ADA_USDT`  
+\- Kraken ADA/USD futures: `KRAKEN_FUTURE_ADA_USD`  
+\- Hyperliquid ADA/USDC futures: `HYPERLIQUID_FUTURE_ADA_USDC`  
+\- Deribit ADA/USDC futures: `DERIBIT_FUTURE_ADA_USDC`  
+\- Lighter ADA/USDC futures: `LIGHTER_FUTURE_ADA_USDC`  
+\- US stock AAPL: `US_STOCK_AAPL_USDT`  
+\- Hong Kong stock 00700: `HK_STOCK_00700_USDT`  
+\- US ETF SPY: `US_ETF_SPY_USDT`  
+CrossEx supports spot, USDT-margined perpetual futures, spot margin, stock, and ETF orders. Bybit and Deribit do not currently support spot margin. Kraken, Hyperliquid, Lighter, and Aster do not currently support spot or spot margin. Stocks and ETFs are available only in cross-exchange account mode.  
 side | string | Required | enum: ["BUY","SELL"] | BUY, SELL  
 type | string | Optional | enum: ["LIMIT","MARKET"]  
 default: "LIMIT" | Order type (default: `LIMIT`; supported types: `LIMIT`, `MARKET`)  
 time_in_force | string | Optional | enum: ["GTC","IOC","FOK","POC","RPI"]  
-default: "GTC" | Defaults to GTC. Supported values: `GTC`, `IOC`, `FOK`, `POC`, `RPI`  
-`GTC`: GoodTillCancelled  
-`IOC`: ImmediateOrCancelled  
-`FOK`: FillOrKill  
-`POC`: PendingOrCancelled or PostOnly  
-`RPI`: RPI  
-Stocks and ETFs support only `GTC`  
+default: "GTC" | Time-in-force policy. Defaults to `GTC`.  
+  
+\- `GTC`: Good Till Cancelled  
+\- `IOC`: Immediate Or Cancel  
+\- `FOK`: Fill Or Kill  
+\- `POC`: Post Only (Pending or Cancelled)  
+\- `RPI`: Retail Price Improvement  
+  
+Stock and ETF orders support only `GTC`. Hyperliquid, Lighter, and Aster futures do not support `FOK`.  
 qty | string | Optional |  | Order quantity (required except for spot and margin market buys; qty is required for stocks and ETFs)  
 price | string | Optional |  | Limit order price (required for limit orders). Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
 quote_qty | string | Optional |  | Order quote quantity, required for spot and margin market buys. Stock and ETF orders do not support quote_qty  
@@ -7896,8 +8134,8 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-qty | string | Optional |  | modify amount  
-price | string | Optional |  | modify price  
+qty | string | Optional |  | New quantity. Omit this field or send `"0"` to keep the current quantity.  
+price | string | Optional |  | New price. Omit this field or send `"0"` to keep the current price.  
       
     
     {
@@ -7975,7 +8213,7 @@ Name | Type | Required | Constraints | Description
 ---|---|---|---|---  
 position_mode | string | Optional |  | Futures position mode (SINGLE/DUAL)  
 account_mode | string | Optional |  | Account mode (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
-exchange_type | string | Optional |  | Exchange (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to adjust futures position mode.  
+exchange_type | string | Optional |  | Exchange whose futures position mode to change (`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, `ASTER`, or `CROSSEX`). This field is required for a position-mode change when the current account mode is `ISOLATED_EXCHANGE`.  
       
     
     {
@@ -8045,8 +8283,8 @@ object | required: ["symbol","margin"]
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
 symbol | string | Required |  | Hyperliquid futures trading pair  
-margin | string | Required |  | Margin adjustment amount. Positive values increase margin, while negative values decrease margin. Values with more than two decimal places are truncated to two decimal places  
-position_side | string | Optional | enum: ["NONE","LONG","SHORT"] | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
+margin | string | Required |  | Isolated margin adjustment amount. A positive value adds margin, and a negative value removes it. Values with more than two decimal places are truncated toward zero. When adding margin, the USDT equivalent of the added amount must be at most 80% of the account's available margin.  
+position_side | string | Optional | enum: ["NONE","LONG","SHORT"] | Position side. In one-way mode (`SINGLE`), omitting this field uses `NONE`. In hedge mode (`DUAL`), specify `LONG` or `SHORT`.  
       
     
     {
@@ -8213,6 +8451,7 @@ Name | Type | Required | Constraints | Description
 user_id | string | Optional |  | User ID  
 coin | string | Optional |  | Currency  
 exchange_type | string | Optional |  | Exchange  
+price | string | Optional |  | Asset valuation price in USDT. Returns `"1"` for USDT. For other assets, returns the index price if available, or the latest price for the corresponding spot pair if no index price is available.  
 balance | string | Optional |  | Balance  
 upnl | string | Optional |  | Unrealized P&L  
 equity | string | Optional |  | Net margin equity for the currency  
@@ -8243,6 +8482,7 @@ liability | string | Optional |  | Liability for the currency. This value is pop
           "user_id": "string",
           "coin": "string",
           "exchange_type": "string",
+          "price": "string",
           "balance": "string",
           "upnl": "string",
           "equity": "string",
@@ -8272,13 +8512,42 @@ Name | Type | Required | Constraints | Description
 ---|---|---|---|---  
 position_mode | string | Optional |  | Requested futures position mode to modify (SINGLE/DUAL)  
 account_mode | string | Optional |  | Requested account mode to modify (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
-exchange_type | string | Optional |  | Exchange targeted by the requested change (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to change futures position mode.  
+exchange_type | string | Optional |  | Exchange specified in the update request (`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, `ASTER`, or `CROSSEX`). The request must specify this exchange when changing the futures position mode of an account in `ISOLATED_EXCHANGE` mode.  
       
     
     {
       "position_mode": "string",
       "account_mode": "string",
       "exchange_type": "string"
+    }
+    
+    
+
+##  CrossexPositionRiskLimitTier
+
+Type | Constraints  
+---|---  
+object | required: ["min_risk_limit_value","max_risk_limit_value","quick_cal_amount","leverage_max","maintenance_rate","tier"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+min_risk_limit_value | string | Required |  | Lower bound on the position's notional value for this tier  
+max_risk_limit_value | string | Required |  | Upper bound on the position's notional value for this tier  
+quick_cal_amount | string | Required |  | Amount deducted when calculating maintenance margin for this tier  
+leverage_max | string | Required |  | Maximum leverage for this tier  
+maintenance_rate | string | Required |  | Maintenance margin rate for this tier  
+tier | string | Required |  | Tier number  
+      
+    
+    {
+      "min_risk_limit_value": "string",
+      "max_risk_limit_value": "string",
+      "quick_cal_amount": "string",
+      "leverage_max": "string",
+      "maintenance_rate": "string",
+      "tier": "string"
     }
     
     

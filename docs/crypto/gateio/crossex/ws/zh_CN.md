@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/crossex/ws/zh_CN
 api_type: WebSocket
-updated_at: 2026-11-25 18:58:32.872462
+updated_at: 2026-11-26 18:59:32.709604
 ---
 
 # CrossEx WebSocket v1.0.0
@@ -20,8 +20,9 @@ CrossEx 提供简单而强大的 Websocket API，将交易状态集成到您的�
   * 线上地址： 
     * 公有行情：wss://api.gateio.ws/ws/crossex/public
     * 私有推送：wss://api.gateio.ws/ws/crossex
-  * 心跳机制：客户端需每隔 30 秒内向 WebSocket 服务器发送一次**协议层** Ping帧以维持连接，若服务器超过 30 秒未收到该帧，将自动断开连接。
-  * ws连接数量限制：每个uid+channel限制20个连接
+  * 心跳：客户端应每 30 秒内发送一次协议层 Ping 帧。公有连接也接受内容为 `ping` 的文本帧并返回 `pong` 文本帧。私有连接另有应用层心跳。
+  * 私有连接数量限制：每个 UID 和频道最多 20 个连接。
+  * 公有连接限额按服务器配置执行。默认每 IP 最多 100 个连接、每 IP 每分钟最多 60 次操作、每个连接的每个频道最多订阅 1000 个交易对。
 
 ##  变更日志
 
@@ -108,37 +109,32 @@ CrossEx 提供简单而强大的 Websocket API，将交易状态集成到您的�
 
 ###  请求参数
 
-每个请求都遵循通用格式，其中包含 `time`, `channel`, `event` 和 `payload`。
+公有连接用于订阅和退订行情，`payload` 是交易对数组。私有连接还支持登录、交易请求和应用层心跳。
+
+请使用 REST 币对查询返回的完整 `symbol`。Aster 合约使用 `ASTER_FUTURE_{Base}_{Counter}`。Hyperliquid HIP-3 币对可能带有 DEX 前缀，例如 `HYPERLIQUID_FUTURE_xyz:XYZ100_USDC`。
 
 请求参数名称 | 类型 | 必选 | 描述  
 ---|---|---|---  
-`time` | Integer | 是 | 请求时间  
-`channel` | String | 是 | 请求 subscribe/unsubscribe 频道  
-`auth` | Object | 否 | 请求身份验证信息，请参阅身份验证部分了解详细信息  
-`event` | String | 是 | 请求 event (subscribe/unsubscribe/api/login)  
-`payload` | Array/Object | 是 | 请求详细参数  
+`time` | Integer | 见各频道 | 请求时间戳（秒），私有连接必填  
+`channel` | String | 见各频道 | 请求频道，登录请求可以省略  
+`event` | String | 是 | 请求事件，取值参见相应频道  
+`payload` | Array/Object | 见各频道 | 订阅、鉴权或交易参数  
+`request_id` | String | 否 | 私有连接的可选请求 ID，最长 128 字符。支持回传的请求见各频道说明  
   
 ###  推送参数
 
-与请求类似，推送参数遵循以下通用格式，其中包含： `time`, `channel`, `event`, `error` 和 `result`.
+消息中的 `time` 和 `time_ms` 分别是秒和毫秒时间戳。根据连接类型及消息事件读取相应字段。
 
-推送参数名称 | 类型 | 必选 | 描述  
----|---|---|---  
-`time` | Integer | 是 | 推送时间  
-`channel` | String | 是 | 推送频道  
-`event` | String | 是 | 推送频道事件 (subscribe/update)  
-`error` | Object | 否 | 推送错误  
-`result` | Any | 是 | 返回来自服务端的新数据通知 或 对客户端请求的响应。如果有错误返回则 `error` 不为空，没有错误则此字段为空。  
+推送参数消息 | `event` | 业务数据及结果  
+---|---|---  
+公有行情订阅或退订回执 | `subscribe` / `unsubscribe` | `result.status` 为 `success` 或 `failed`。失败详情见 `error.code` 和 `error.message`  
+公有行情更新 | `update` | 行情数据在 `result`。订阅成功后，如果服务端有可用的初始数据，也通过此事件发送  
+私有请求回执 | 与请求事件对应 | `result.code` 为字符串，`"100000"` 表示成功。失败原因见 `result.message`，可用时还会返回 `result.label`。具体请求的响应数据在 `payload`  
+私有业务推送 | `subscribe` | 订单、成交、仓位等业务数据在 `payload`  
   
-注意：如果它是服务端发起的数据更新通知 那么 `result` 的类型是基于 channel 的，不同 channel 的 `result` 类型有所不同。
-
-但如果是对客户端订阅请求的响应，那么 `result` 为固定的 `{"code": "100000", "message": "success"}`。 验证订阅请求是否成功，您只需要检查 `error` 字段是否为空即可，不需要再解析 `result` 字段。
-
-为了简单起见，下面的频道（channel）描述只给出对应频道的 payload 格式。
-
 ###  错误
 
-如果出现错误，您会收到 error 字段，其中包含错误代码和错误的类型。
+以下为私有 WebSocket 的 `result.code`。公有行情错误见公有行情错误码。
 
 错误Code | Message  
 ---|---  
@@ -263,6 +259,35 @@ api
       },
       "time": 1756434168,
       "time_ms": 1756434168928
+    }
+    
+
+#  私有连接心跳
+
+私有 WebSocket 支持应用层心跳。发送 `event=ping`、`channel=crossex.ping` 和当前秒级时间戳。无需登录，也无需传 `payload`。此请求会刷新连接活跃时间。
+
+请求示例
+    
+    
+    {
+      "time": 1795392000,
+      "event": "ping",
+      "channel": "crossex.ping"
+    }
+    
+
+响应示例
+    
+    
+    {
+      "time": 1795392000,
+      "time_ms": 1795392000000,
+      "event": "ping",
+      "channel": "crossex.pong",
+      "result": {
+        "code": "100000",
+        "message": "success"
+      }
     }
     
 
@@ -522,9 +547,11 @@ WARNING
     * FUTURE：[1, 5, 10, 20, 50, 100]
   * BYBIT：[1]
   * KRAKEN：不支持 `order_book_x` 快照档位，请使用 `order_book_update`
-  * HYPERLIQUID：[1, 5, 10, 20, 30, 50, 100, 400]
+  * HYPERLIQUID：[1, 5, 10, 20]
   * DERIBIT：[1, 5, 10, 20]
   * LIGHTER：[1, 5, 10, 20, 30, 50, 100, 400]
+  * ASTER：[1, 5, 10, 20]
+  * 股票及 ETF：[1, 5, 10, 20, 30, 50, 100, 400]
 
 全量有限档订单簿频道提供各大交易所的现货/合约订单簿深度全量有限档推送，并支持股票及ETF。股票及ETF盘口价格使用上市市场原生计价币种（USD/HKD/KRW/JPY）。
 
@@ -651,7 +678,7 @@ WARNING
 
 `order_book_update`
 
-增量订单簿频道提供各大交易所的现货/合约的订单簿深度增量推送
+增量订单簿频道提供各大交易所的现货和合约订单簿深度更新。股票及 ETF 仅支持有限档订单簿快照。若订阅股票或 ETF 的 `order_book_update`，将返回错误码 `1000119`。
 
 **推送类型** : `continuous`
 
@@ -758,7 +785,7 @@ WARNING
 
 `ticker`
 
-ticker频道提供各大交易所的现货/合约的ticker推送，并支持股票及ETF。股票及ETF价格使用上市市场原生计价币种（USD/HKD/KRW/JPY）。
+ticker频道提供各大交易所的现货/合约的ticker推送，并支持股票及ETF。股票及 ETF 价格使用上市市场原生计价币种（USD、HKD、KRW 或 JPY）。股票 ticker 的盘口和成交量字段可能没有可用值。可订阅有限档订单簿获取最优买卖价。
 
 **推送类型** : `continuous`
 
@@ -816,14 +843,14 @@ WARNING
 » result | object | true | none | 结果 | none  
 »» s | string | true | none | 交易对 | Symbol  
 »» lp | string | true | none | 最新成交价 | LastPrice  
-»» bp | string | true | none | 最优买价 | BidPrice  
-»» bs | string | true | none | 最优买量 | BidSize  
-»» ap | string | true | none | 最优卖价 | AskPrice  
-»» as | string | true | none | 最优卖量 | AskSize  
-»» o | string | true | none | 24h开盘价 | Open24h  
-»» h | string | true | none | 24h最高价 | High24h  
-»» l | string | true | none | 24h最低价 | Low24h  
-»» v | string | true | none | 24h成交量(base) | Volume24h  
+»» bp | string | false | none | 最优买价 | 随数据源提供  
+»» bs | string | false | none | 最优买量 | 随数据源提供  
+»» ap | string | false | none | 最优卖价 | 随数据源提供  
+»» as | string | false | none | 最优卖量 | 随数据源提供  
+»» o | string | false | none | 24 小时开盘价，股票及 ETF 为当日开盘价 | 随数据源提供  
+»» h | string | false | none | 24 小时最高价 | 随数据源提供  
+»» l | string | false | none | 24 小时最低价 | 随数据源提供  
+»» v | string | false | none | 24 小时基础币种成交量 | 随数据源提供  
 »» q | string | false | none | 24h成交量(quote) | QuoteVolume24h  
 »» ts | long | true | none | 交易所毫秒时间戳 | Timestamp  
   
@@ -849,6 +876,83 @@ WARNING
         "ts": 1710001234567
       },
       "time_ms": 1770709567032
+    }
+    
+
+股票推送示例（价格单位为 HKD）
+    
+    
+    {
+      "time": 1795392000,
+      "time_ms": 1795392000000,
+      "channel": "ticker",
+      "event": "update",
+      "result": {
+        "s": "HK_STOCK_00700_USDT",
+        "lp": "424.8",
+        "o": "428",
+        "h": "430",
+        "l": "423",
+        "ts": 1795392000000
+      }
+    }
+    
+
+#  行情列表订阅
+
+`market_list`
+
+公有行情频道，无需认证。使用 `event=subscribe` 或 `event=unsubscribe`，在 `payload` 中传入交易对数组。现货、合约、股票及 ETF 的可用交易对与 `ticker` 一致。
+
+订阅请求
+    
+    
+    {
+      "time": 1795392000,
+      "event": "subscribe",
+      "channel": "market_list",
+      "payload": ["BINANCE_FUTURE_BTC_USDT"]
+    }
+    
+
+订阅回执
+    
+    
+    {
+      "time": 1795392000,
+      "time_ms": 1795392000000,
+      "event": "subscribe",
+      "channel": "market_list",
+      "payload": ["BINANCE_FUTURE_BTC_USDT"],
+      "result": {"status": "success"}
+    }
+    
+
+##  行情列表推送
+
+`result` 字段 | 类型 | 必选 | 说明  
+---|---|---|---  
+`symbol` | string | 是 | 交易对  
+`last_price` | string | 否 | 最新价。Hyperliquid 在此频道返回中间价。股票及 ETF 使用原生计价币种  
+`change_rate_24h` | string | 否 | 24 小时涨跌幅的百分数数值，例如 `"6.78"` 表示上涨 6.78%  
+`quote_volume_24h` | string | 否 | 按报价币种计的 24 小时成交额  
+  
+数据源暂无相应值时，推送会省略对应的可选字段。
+
+行情更新
+    
+    
+    {
+      "time": 1795392000,
+      "time_ms": 1795392000000,
+      "event": "update",
+      "channel": "market_list",
+      "result": {
+        "symbol": "BINANCE_FUTURE_BTC_USDT",
+        "last_price": "67280.50",
+        "change_rate_24h": "6.78",
+        "quote_volume_24h": "5523487123.55"
+      }
     }
     
 
@@ -1116,7 +1220,7 @@ WARNING
 
 `open_interest`
 
-open_interest频道提供除BINANCE外各大交易所的合约的持仓总量推送
+`open_interest` 提供合约持仓总量更新。Binance 和 Aster 不支持此频道，订阅时分别返回错误码 `1000104` 和 `1000115`。
 
 **推送类型** : `continuous`
 
@@ -1198,6 +1302,8 @@ WARNING
 
 订单频道提供了一种接收用户订单更新的方式，包括股票及ETF订单。股票及ETF的 `exchange_type` 为 `US/HK/KR/JP`，`business_type` 为 `STOCK/ETF`，价格和成交额使用上市市场原生计价币种。
 
+合约 Rebase 调整仓位时，会推送一笔平旧仓订单和一笔开新仓订单。两笔订单的 `state` 均为 `FILLED`，`attribute` 为 `REBASE`。成交频道会推送对应的成交记录。
+
 **推送类型** : `continuous`
 
 **更新频率** : `real-time`
@@ -1269,24 +1375,24 @@ REJECT：The order was rejected by the exchange. Please check the order reason
 BINANCE_SPOT_BTC_USDT, BINANCE_FUTURE_BTC_USDT  
 »» side | string | true | none | 方向 | Side(BUY,SELL)  
 »» type | string | true | none | 类型 | Type(LIMIT, MARKET)  
-»» attribute | string | true | none | 属性 | Attribute(COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算)  
-»» exchange_type | string | true | none | 交易所 | Exchange type(BINANCE,OKX,GATE,BYBIT,KRAKEN,HYPERLIQUID,DERIBIT,LIGHTER)  
-»» business_type | string | true | none | 业务类型 | Business type(SPOT,FUTURE)  
+»» attribute | string | true | none | 订单属性 | `COMMON` 普通单、`LIQ` 强平接管单、`REDUCE` 强平减仓单、`ADL` 自动减仓、`SETTLEMENT` 下架清算、`REBASE` Rebase 系统订单  
+»» exchange_type | string | true | none | 交易所或上市市场 | `BINANCE`、`OKX`、`GATE`、`BYBIT`、`KRAKEN`、`HYPERLIQUID`、`DERIBIT`、`LIGHTER`、`ASTER`。股票及 ETF 返回 `US`、`HK`、`KR` 或 `JP`  
+»» business_type | string | true | none | 业务类型 | `SPOT`、`FUTURE`、`MARGIN`、`CONVERT`、`STOCK`、`ETF`  
 »» qty | string | true | none | 基础货币数量 | Order base quantity  
 »» quote_qty | string | true | none | 报价币种数量 | Order quote quantity  
-»» price | string | true | none | 价格 | Order price  
+»» price | string | true | none | 委托价格 | 股票及 ETF 使用上市市场原生计价币种  
 »» time_in_force | string | true | none | Time in force 策略 | Timeinforce (default GTC, enums:GTC,IOC,FOK,POC,RPI)  
 »» executed_qty | string | true | none | 已成交数量 | Executed quantity  
-»» executed_amount | string | true | none | 已成交金额 | Executed quote quantity  
-»» executed_avg_price | string | true | none | 已成交均价 | Average transaction price  
+»» executed_amount | string | true | none | 已成交金额 | 股票及 ETF 使用上市市场原生计价币种  
+»» executed_avg_price | string | true | none | 已成交均价 | 股票及 ETF 使用上市市场原生计价币种  
 »» fee_coin | string | true | none | 手续费币种 | Transaction fee coin  
 »» fee | string | true | none | 手续费 | Transaction fee amount  
 »» reduce_only | string | true | none | 只减仓 | Reduce position orders only, "true" or "false"  
 »» leverage | string | true | none | 杠杆 | Order leverage  
-»» reason | string | true | none | 原因 | Fail message  
+»» reason | string | true | none | 订单原因 | 拒单或撤单原因。Rebase 系统订单会返回 `POSITION_REBASE_RATIO=<比例>`  
 »» last_executed_qty | string | true | none | 最新已成交量 | Last transaction quantity  
-»» last_executed_price | string | true | none | 最新已成交价 | Last transaction price  
-»» last_executed_amount | string | true | none | 最新已成交金额 | Last transaction amount  
+»» last_executed_price | string | true | none | 最新已成交价 | 股票及 ETF 使用上市市场原生计价币种  
+»» last_executed_amount | string | true | none | 最新已成交金额 | 股票及 ETF 使用上市市场原生计价币种  
 »» position_side | string | true | none | 仓位方向 | Position side(NONE/LONG/SHORT)  
 »» create_time | string | true | none | 创建时间 | Create time  
 »» update_time | string | true | none | 更新时间 | Update time  
@@ -1520,11 +1626,12 @@ WARNING
 »» order_id | string | false | none | 订单ID | none  
 »» text | string | false | none | 用户订单号 | none  
 »» symbol | string | false | none | 交易对 | none  
-»» exchange_type | string | false | none | 交易所 | none  
-»» business_type | string | false | none | 业务类型 | none  
+»» exchange_type | string | false | none | 交易所或上市市场 | 股票及 ETF 返回 `US`、`HK`、`KR` 或 `JP`  
+»» business_type | string | false | none | 业务类型 | 股票及 ETF 分别为 `STOCK` 和 `ETF`  
 »» side | string | false | none | 买卖方向 | none  
 »» qty | string | false | none | 成交数量 | none  
-»» price | string | false | none | 成交价格 | none  
+»» price | string | false | none | 成交价格 | 股票及 ETF 使用上市市场原生计价币种（USD、HKD、KRW 或 JPY）  
+»» fx_rate | string | false | none | 该笔成交的结算汇率 | 1 单位原生计价币种折合的 USDT。无可用汇率时为 `""`  
 »» fee | string | false | none | 手续费 | none  
 »» fee_coin | string | false | none | 手续费币种 | none  
 »» fee_rate | string | false | none | 手续费率 | none  
@@ -1538,6 +1645,8 @@ WARNING
 » time | integer | true | none | 时间戳（秒） |   
 » time_ms | integer | true | none | 时间戳（毫秒） |   
   
+该例中的成交本金折合 25.4 USDT，计算方式为 `qty × price × fx_rate`。手续费单独通过 `fee` 和 `fee_coin` 表示。
+
 推送示例
     
     
@@ -1555,6 +1664,7 @@ WARNING
         "side": "BUY",
         "qty": "13.36",
         "price": "0.8228",
+        "fx_rate": "",
         "fee": "0.004008000000000000",
         "fee_coin": "ADA",
         "fee_rate": "0.0003",
@@ -1573,9 +1683,47 @@ WARNING
     }
     
 
+股票成交推送示例
+    
+    
+    {
+      "time": 1795392000,
+      "time_ms": 1795392000000,
+      "channel": "usertrades",
+      "event": "subscribe",
+      "payload": {
+        "user_id": "59138103",
+        "transaction_id": "2072784922594048",
+        "order_id": "2072784922592768",
+        "text": "stock-buy-1",
+        "symbol": "HK_STOCK_00700_USDT",
+        "exchange_type": "HK",
+        "business_type": "STOCK",
+        "side": "BUY",
+        "qty": "2",
+        "price": "100",
+        "fx_rate": "0.127",
+        "fee": "0.0254",
+        "fee_coin": "USDT",
+        "fee_rate": "0.001",
+        "match_role": "TAKER",
+        "rpnl": "0",
+        "position_mode": "SINGLE",
+        "position_side": "NONE",
+        "create_time": "1795392000000"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      }
+    }
+    
+
 #  仓位订阅/取消订阅
 
 `position`
+
+合约进入 Rebase 后，仓位的标记价格、市值和未结盈亏等指标暂停重算，可能保留上次计算值。
 
 仓位频道提供了一种接收用户仓位更新的方式。
 
@@ -1987,6 +2135,7 @@ WARNING
 » payload | object | true | none | 数据集 | none  
 »» user_id | string | false | none | 用户id | none  
 »» symbol | string | false | none | 交易对 | none  
+»» exchange_type | string | false | none | 扣息所属交易所 | 例如 `OKX`  
 »» interest_id | string | false | none | 扣息Id | none  
 »» liability_id | string | false | none | 负债源id 可以是订单Id/仓位Id | none  
 »» liability | string | false | none | 负债 | none  
@@ -2013,6 +2162,7 @@ WARNING
       "payload": {
         "user_id": "20251115",
         "symbol": "OKX_MARGIN_DOGE_USDT",
+        "exchange_type": "OKX",
         "interest_id": "2101724189861376",
         "liability_id": "2101724189861120",
         "liability": "10",
@@ -2133,6 +2283,10 @@ WARNING
 限频: 每10秒100次请求（同REST下单共享限频）。股票及ETF额外按用户共享每秒1次下单限频。
 
 股票及ETF仅支持跨所账户模式和GTC，必须使用 `qty` 下单，不支持 `quote_qty`；委托价格使用上市市场原生计价币种。
+
+股票及 ETF 买单按委托价格及当时的行情汇率计算 USDT 冻结本金。缺少可用的行情汇率或市价单所需的最新价时，`result.label` 为 `COMMON_FAIL_ORDER_ERROR`。
+
+Hyperliquid、Lighter 和 Aster 合约不支持 `FOK`。
 
 ##  请求参数
 
@@ -2426,7 +2580,7 @@ api
 
 `update_order`
 
-提供了一种通过 WebSocket 修改订单的方式。
+可以只修改数量或价格。省略某项或传入 `"0"` 表示沿用该项原值。至少提供一个新的正数值。
 
 限频: 每10秒100次请求（同REST下单共享限频）
 
@@ -2442,9 +2596,8 @@ api
 » request_id | body | string | 否 |  | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | body | object | 是 |  | none  
 »» order_id | body | string | 是 | 订单ID | 支持订单id或text  
-»» qty | body | string | 是 | 数量 | none  
-»» price | body | string | 是 |  | none  
-»» symbol | body | string | 否 |  | none  
+»» qty | body | string | 否 | 修改后的数量 | 省略或传 `"0"` 时沿用原值  
+»» price | body | string | 否 | 修改后的价格 | 省略或传 `"0"` 时沿用原值  
   
 ###  详细说明
 
@@ -2480,8 +2633,6 @@ api
       "request_id": "request-1",
       "payload": {
         "order_id": "2065057827622656",
-        "qty": "0.01",
-        "symbol": "GATE_SPOT_BTC_USDT",
         "price": "2801"
       }
     }
@@ -2690,7 +2841,7 @@ api
 » payload | body | object | 是 | none  
 »» position_mode | body | string | 否 | 仓位模式  
 »» account_mode | body | string | 否 | 账户模式  
-»» exchange_type | body | string | 否 | 交易所，默认还是跨所  
+»» exchange_type | body | string | 否 | 交易所。分所模式修改合约仓位模式时必填，支持 `ASTER` 等交易所  
   
 ###  详细说明
 
@@ -2941,7 +3092,7 @@ api
 » request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | body | object | 是 | none  
 »» symbol | body | string | 是 | Hyperliquid合约交易币对  
-»» margin | body | string | 是 | 保证金调整金额，正数为增加，负数为减少，超过两位小数时向下截断  
+»» margin | body | string | 是 | 保证金调整金额，正数为增加，负数为减少，超过两位小数时向零截断  
 »» position_side | body | string | 否 | 仓位方向（NONE/LONG/SHORT），单向持仓不传时默认为NONE  
   
 ##  详细说明
@@ -2949,6 +3100,8 @@ api
 **» event** : api
 
 **» channel** : update_isolated_margin
+
+追加金额折合 USDT 后不得超过账户可用保证金的 80%。双向持仓必须在 `position_side` 中传入 `LONG` 或 `SHORT`。单向持仓省略该字段时使用 `NONE`。
 
 ##  返回结果
 
@@ -3039,7 +3192,9 @@ code 说明返回码 | 说明
   
 ##  `label` 说明
 
-当请求无效时，响应的 `result` 中会返回 `label`。`label` 的含义与 REST API 文档一致，详情请参阅 REST API 文档。
+私有请求失败时，`result.label` 的含义与 [REST 错误说明](/docs/developers/crossex/zh_CN/#异常-label-列表)一致。股票及 ETF 下单常见的错误包括 `SECURITY_ORDER_NOT_SUPPORT`（账户模式不支持）、`SECURITY_ORDER_ONLY_SUPPORT_GTC`（只允许 `GTC`）和 `COMMON_FAIL_ORDER_ERROR`（例如缺少行情汇率）。
+
+合约 Rebase 期间，`place_order`、`update_order`、`set_leverage`、`update_isolated_margin`、`close_position` 对受影响交易对返回 `result.label=TRADE_REBASE_TASK_STARTED`。客户端可通过 REST 的币对查询查看 `state` 是否为 `rebase`。
 
 包含 `label` 的响应示例
     
@@ -3053,9 +3208,44 @@ code 说明返回码 | 说明
         "label": "COMMON_PARAM_BIND_ERROR",
         "message": "Invalid Parameter, please check api doc"
       },
-      "time_ms": 1787560400000,
+      "time_ms": 1787560434000,
       "request_id": "xxx"
     }
     
 
-Last Updated: 10/12/2026, 12:27:31 PM
+##  公有行情错误码
+
+公有订阅或退订失败时，`result.status` 为 `failed`，`error.code` 为整数，`error.message` 提供具体原因。
+
+`error.code` | 说明  
+---|---  
+`1000000` | 存在不支持的交易对，详情见 `error.message`  
+`1000001` | Binance 有限档盘口仅支持 5、10、20 档  
+`1000002` | OKX 有限档盘口仅支持 1、5 档  
+`1000003` | Gate 合约有限档盘口仅支持 1、5、10、20、50、100 档  
+`1000004` | Gate 现货有限档盘口仅支持 5、10、20、30、50、100 档  
+`1000005` | `index_price` 只支持 `MARGIN` 币对  
+`1000006` | 频道无效，或 `mark_price` 请求中含非合约币对。通过 `error.message` 区分  
+`1000007` | 请求事件无效  
+`1000008` | `payload` 无效  
+`1000100` | 请求消息格式无效  
+`1000101` | Bybit 有限档盘口仅支持 1 档  
+`1000102` | 当前连接在该频道已达到订阅交易对数量上限  
+`1000103` | 当前 IP 达到公有 WS 连接数上限  
+`1000104` | Binance 合约不支持 `open_interest`  
+`1000105` | `funding_rate` 和 `open_interest` 只支持合约币对  
+`1000106` | Kraken 不提供有限档盘口，使用 `order_book_update`  
+`1000107` | Kraken 不支持 WebSocket K 线  
+`1000108` | Hyperliquid 现货交易对缺少原生币种映射  
+`1000109` | Deribit 有限档盘口仅支持 1、5、10、20 档  
+`1000110` | Deribit K 线仅支持 1m、5m、15m、30m、1h、1d  
+`1000111` | Hyperliquid 有限档盘口仅支持 1、5、10、20 档  
+`1000112` | 当前 IP 达到每分钟操作次数上限  
+`1000113` | Lighter 合约交易对缺少原生市场 ID 映射  
+`1000114` | Aster 有限档盘口仅支持 1、5、10、20 档  
+`1000115` | Aster 合约不支持 `open_interest`  
+`1000116` | 连接的发送缓冲已满  
+`1000117` | 订阅未能完成，可稍后重试  
+`1000119` | 股票和 ETF 不支持 `order_book_update`  
+  
+Last Updated: 11/26/2026, 4:46:36 PM

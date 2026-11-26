@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-options/quick-start
 api_type: Guide
-updated_at: 2026-11-25 18:31:53.993610
+updated_at: 2026-11-26 18:32:49.743099
 ---
 
 # Quick Start

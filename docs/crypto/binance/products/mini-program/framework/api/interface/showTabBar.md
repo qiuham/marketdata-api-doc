@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/showTabBar
 api_type: Guide
-updated_at: 2026-11-25 18:46:25.182815
+updated_at: 2026-11-26 18:46:55.466088
 ---
 
 # bn.showTabBar

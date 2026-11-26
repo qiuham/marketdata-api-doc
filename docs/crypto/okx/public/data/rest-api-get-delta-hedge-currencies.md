@@ -3,13 +3,13 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-delta-hedge-currencies
 anchor_id: public-data-rest-api-get-delta-hedge-currencies
 api_type: REST
-updated_at: 2026-11-25 18:59:38.158865
+updated_at: 2026-11-26 19:00:40.326972
 ---
 
 # Get Delta hedge currencies
 
-Retrieve the currencies that share the same underlying asset and can therefore form a Delta hedge relationship, e.g. `ETH` and `BETH`, or `AAPL` and `XAAPL`.  
-  
+Retrieve the currencies that share the same underlying asset and can therefore form a Delta hedge relationship, e.g. `ETH` and `BETH`, or `AAPL` and `XAAPL`.
+
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: IP
@@ -82,8 +82,8 @@ hedgeCcy | Array of strings | Currencies that share the same underlying asset as
 
 # 获取 Delta 对冲币种
 
-获取具有相同标的资产、可构成 Delta 对冲关系的币种，如 `ETH` 与 `BETH`、`AAPL` 与 `XAAPL`。  
-  
+获取具有相同标的资产、可构成 Delta 对冲关系的币种，如 `ETH` 与 `BETH`、`AAPL` 与 `XAAPL`。
+
 #### 限速：每2秒20次请求
 
 #### 限速规则：IP

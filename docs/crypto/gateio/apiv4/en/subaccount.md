@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/subaccount
 api_type: Account
-updated_at: 2026-11-25 18:57:32.361656
+updated_at: 2026-11-26 18:58:28.991494
 ---
 
 # SubAccount
@@ -1586,6 +1586,66 @@ Code samples
 
 #  Schemas
 
+##  SubUserMode
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | User ID  
+is_unified | boolean | Optional |  | Whether it is a unified account  
+mode | string | Optional |  | Unified account mode:  
+\- `classic`: Classic account mode  
+\- `multi_currency`: Cross-currency margin mode  
+\- `portfolio`: Portfolio margin mode  
+\- `single_currency`: Single-currency margin mode  
+      
+    
+    {
+      "user_id": 0,
+      "is_unified": true,
+      "mode": "string"
+    }
+    
+    
+
+##  SubAccount
+
+Type | Constraints  
+---|---  
+object | required: ["login_name"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+remark | string | Optional |  | Remark  
+login_name | string | Required |  | Sub-account login name: Only letters, numbers and underscores are supported, cannot contain other invalid characters  
+password | string | Optional |  | The sub-account's password. (Default: the same as main account's password)  
+email | string | Optional |  | The sub-account's email address. (Default: the same as main account's email address)  
+state | integer(int32) | Optional | readOnly: true | Sub-account status: 1-normal, 2-locked  
+type | integer(int32) | Optional | readOnly: true | Sub-account type: 1-Regular sub-account, 3-Cross margin sub-account  
+user_id | integer(int64) | Optional | readOnly: true | Sub-account user ID  
+create_time | integer(int64) | Optional | readOnly: true | Created time  
+      
+    
+    {
+      "remark": "string",
+      "login_name": "string",
+      "password": "string",
+      "email": "string",
+      "state": 0,
+      "type": 0,
+      "user_id": 0,
+      "create_time": 0
+    }
+    
+    
+
 ##  SubAccountKey
 
 Type | Constraints  
@@ -1672,64 +1732,4 @@ string |
       "created_at": 0,
       "updated_at": 0,
       "last_access": 0
-    }
-    
-    
-
-##  SubAccount
-
-Type | Constraints  
----|---  
-object | required: ["login_name"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-remark | string | Optional |  | Remark  
-login_name | string | Required |  | Sub-account login name: Only letters, numbers and underscores are supported, cannot contain other invalid characters  
-password | string | Optional |  | The sub-account's password. (Default: the same as main account's password)  
-email | string | Optional |  | The sub-account's email address. (Default: the same as main account's email address)  
-state | integer(int32) | Optional | readOnly: true | Sub-account status: 1-normal, 2-locked  
-type | integer(int32) | Optional | readOnly: true | Sub-account type: 1-Regular sub-account, 3-Cross margin sub-account  
-user_id | integer(int64) | Optional | readOnly: true | Sub-account user ID  
-create_time | integer(int64) | Optional | readOnly: true | Created time  
-      
-    
-    {
-      "remark": "string",
-      "login_name": "string",
-      "password": "string",
-      "email": "string",
-      "state": 0,
-      "type": 0,
-      "user_id": 0,
-      "create_time": 0
-    }
-    
-    
-
-##  SubUserMode
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-user_id | integer(int64) | Optional |  | User ID  
-is_unified | boolean | Optional |  | Whether it is a unified account  
-mode | string | Optional |  | Unified account mode:  
-\- `classic`: Classic account mode  
-\- `multi_currency`: Cross-currency margin mode  
-\- `portfolio`: Portfolio margin mode  
-\- `single_currency`: Single-currency margin mode  
-      
-    
-    {
-      "user_id": 0,
-      "is_unified": true,
-      "mode": "string"
     }

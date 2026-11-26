@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/crossex/ws/en
 api_type: WebSocket
-updated_at: 2026-11-25 18:58:30.651122
+updated_at: 2026-11-26 18:59:30.448451
 ---
 
 # CrossEx WebSocket v1.0.0
@@ -20,8 +20,9 @@ CrossEx provides a simple and powerful Websocket API to integrate trading status
   * Production: 
     * Public Market: wss://api.gateio.ws/ws/crossex/public
     * Private Push: wss://api.gateio.ws/ws/crossex
-  * Heartbeat: Clients must send a **protocol-level** Ping frame to the WebSocket server every 30 seconds to maintain the connection. If the server does not receive this frame for more than 30 seconds, it will automatically disconnect.
-  * Connection limit: Maximum 20 connections per uid+channel
+  * Heartbeat: Clients should send a protocol-level Ping frame at least once every 30 seconds. Public connections also accept a text frame containing `ping` and reply with a `pong` text frame. Private connections also support an application-level heartbeat.
+  * Private connection limit: Up to 20 connections per UID and channel.
+  * Public connection limits are configured on the server. By default, each IP can open up to 100 connections and perform up to 60 operations per minute. Each connection can subscribe to up to 1,000 trading pairs per channel.
 
 ##  Changelog
 
@@ -108,37 +109,32 @@ If unsubscribed, the server will not send new data pushes.
 
 ###  Request Parameters
 
-Each request follows a common format containing `time`, `channel`, `event` and `payload`.
+Public connections subscribe to and unsubscribe from market data. The `payload` is an array of trading pairs. Private connections also support login, trading requests, and application-level heartbeats.
+
+Use the full `symbol` returned by the REST trading pair lookup. Aster futures use `ASTER_FUTURE_{Base}_{Counter}`. Hyperliquid HIP-3 symbols may include a DEX prefix, for example `HYPERLIQUID_FUTURE_xyz:XYZ100_USDC`.
 
 Request ParametersName | Type | Required | Description  
 ---|---|---|---  
-`time` | Integer | Optional | Request time  
-`channel` | String | Optional | Request subscribe/unsubscribe channel  
-`auth` | Object | Optional | Request authentication information, see Authentication section for details  
-`event` | String | Optional | Request event (subscribe/unsubscribe/api/login)  
-`payload` | Array/Object | Optional | Request detailed parameters  
+`time` | Integer | See each channel | Request timestamp in seconds. Required on private connections.  
+`channel` | String | See each channel | Request channel. May be omitted for login.  
+`event` | String | Required | Request event. See each channel for supported values.  
+`payload` | Array/Object | See each channel | Subscription, authentication, or trading parameters.  
+`request_id` | String | Optional | Optional request ID for private connections, up to 128 characters. See each channel for requests that echo it.  
   
 ###  Push Parameters
 
-Similar to requests, push parameters follow the following common format containing: `time`, `channel`, `event`, `error` and `result`.
+`time` and `time_ms` are timestamps in seconds and milliseconds, respectively. The fields to read depend on the connection type and event.
 
-Push ParametersName | Type | Required | Description  
----|---|---|---  
-`time` | Integer | Optional | Push time  
-`channel` | String | Optional | Push channel  
-`event` | String | Optional | Push channel event (subscribe/update)  
-`error` | Object | Optional | Push error  
-`result` | Any | Optional | Returns new data notification from the server or response to client request. If there is an error, `error` is not empty, otherwise this field is empty.  
+Push ParametersMessage | `event` | Data and outcome  
+---|---|---  
+Public market data subscription or unsubscription acknowledgment | `subscribe` / `unsubscribe` | `result.status` is `success` or `failed`. See `error.code` and `error.message` for failure details.  
+Public market data update | `update` | Market data is in `result`. If initial data is available after a successful subscription, it is also sent as an `update` event.  
+Private request acknowledgment | Matches the request event | `result.code` is a string. `"100000"` indicates success. See `result.message` and, when available, `result.label` for failure details. Response data for the specific request is in `payload`.  
+Private data push | `subscribe` | Business data such as orders, trades, and positions is in `payload`.  
   
-Note: If it is a data update notification initiated by the server, then the type of `result` is based on the channel, and the `result` type varies for different channels.
-
-But if it is a response to a client subscription request, then `result` is fixed as `{"code": "100000", "message": "success"}`. To verify whether the subscription request is successful, you only need to check whether the `error` field is empty, and you don't need to parse the `result` field.
-
-For simplicity, the channel descriptions below only give the payload format for the corresponding channel.
-
 ###  Errors
 
-If an error occurs, you will receive an error field containing the error code and error type.
+The following values are private WebSocket `result.code` values. For public market data errors, see Public Market Data Error Codes.
 
 ErrorsCode | Message  
 ---|---  
@@ -210,13 +206,13 @@ You can log in to your account to obtain the api_key and secret for your CrossEx
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event login  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event login  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | object | Optional | none  
-»» method | body | string | Optional | Authentication method  
-»» api_key | body | string | Optional | api key  
-»» sign | body | string | Optional | Signature  
+» payload | body | object | Required | none  
+»» method | body | string | Required | Authentication method  
+»» api_key | body | string | Required | api key  
+»» sign | body | string | Required | Signature  
   
 ##  Response Data Structure
 
@@ -266,6 +262,35 @@ Response example
     }
     
 
+#  Private Connection Heartbeat
+
+The private WebSocket supports an application-level heartbeat. Send `event=ping`, `channel=crossex.ping`, and the current timestamp in seconds. You can send this heartbeat before authentication and omit `payload`. This request refreshes the connection's activity timestamp.
+
+Request example
+    
+    
+    {
+      "time": 1795392000,
+      "event": "ping",
+      "channel": "crossex.ping"
+    }
+    
+
+Response example
+    
+    
+    {
+      "time": 1795392000,
+      "time_ms": 1795392000000,
+      "event": "ping",
+      "channel": "crossex.pong",
+      "result": {
+        "code": "100000",
+        "message": "success"
+      }
+    }
+    
+
 #  Last Price Subscription
 
 `last_price`
@@ -282,10 +307,10 @@ The last price channel provides real-time last trade price updates from major ex
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
-» payload | body | [string] | Optional | Subscribe/Unsubscribe trading pairs, subscribe all not supported  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
+» payload | body | [string] | Required | Subscribe/Unsubscribe trading pairs, subscribe all not supported  
   
 ###  Details
 
@@ -297,7 +322,7 @@ Payload format:
 
 DetailsName | Type | Required | Description  
 ---|---|---|---  
-`payload` | `Array[String]` | Optional | Trading pair list  
+`payload` | `Array[String]` | Required | Trading pair list  
   
 You can subscribe/unsubscribe multiple times. Trading pairs subscribed earlier will not be overridden unless explicitly unsubscribed to.
 
@@ -363,10 +388,10 @@ The index price channel provides real-time index price updates from major exchan
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
-» payload | body | [string] | Optional | Subscribe/Unsubscribe trading pairs, subscribe all not supported  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
+» payload | body | [string] | Required | Subscribe/Unsubscribe trading pairs, subscribe all not supported  
   
 ###  Details
 
@@ -378,7 +403,7 @@ Payload format:
 
 DetailsName | Type | Required | Description  
 ---|---|---|---  
-`payload` | `Array[String]` | Optional | Trading pair list  
+`payload` | `Array[String]` | Required | Trading pair list  
   
 You can subscribe/unsubscribe multiple times. Trading pairs subscribed earlier will not be overridden unless explicitly unsubscribed to.
 
@@ -444,10 +469,10 @@ The mark price channel provides real-time mark price updates from major exchange
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
-» payload | body | [string] | Optional | Subscribe/Unsubscribe trading pairs, subscribe all not supported  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
+» payload | body | [string] | Required | Subscribe/Unsubscribe trading pairs, subscribe all not supported  
   
 ###  Details
 
@@ -459,7 +484,7 @@ Payload format:
 
 DetailsName | Type | Required | Description  
 ---|---|---|---  
-`payload` | `Array[String]` | Optional | Trading pair list  
+`payload` | `Array[String]` | Required | Trading pair list  
   
 You can subscribe/unsubscribe multiple times. Trading pairs subscribed earlier will not be overridden unless explicitly unsubscribed to.
 
@@ -522,9 +547,11 @@ Where `x` indicates the order book snapshot depth level. The depth levels suppor
     * FUTURE: [1, 5, 10, 20, 50, 100]
   * BYBIT: [1]
   * KRAKEN: `order_book_x` snapshot depth levels are not supported, please use `order_book_update`
-  * HYPERLIQUID: [1, 5, 10, 20, 30, 50, 100, 400]
+  * HYPERLIQUID: [1, 5, 10, 20]
   * DERIBIT: [1, 5, 10, 20]
   * LIGHTER: [1, 5, 10, 20, 30, 50, 100, 400]
+  * ASTER: [1, 5, 10, 20]
+  * Stocks and ETFs: [1, 5, 10, 20, 30, 50, 100, 400]
 
 The full limited-level order book channel provides full limited-level order book depth push from major exchanges for spot/futures trading pairs. Stocks and ETFs are also supported. Stock and ETF order book prices use the native currency of the listing market (USD/HKD/KRW/JPY).
 
@@ -538,10 +565,10 @@ The full limited-level order book channel provides full limited-level order book
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
-» payload | body | [string] | Optional | Subscribe/Unsubscribe trading pairs, subscribe all not supported  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
+» payload | body | [string] | Required | Subscribe/Unsubscribe trading pairs, subscribe all not supported  
   
 ###  Details
 
@@ -553,7 +580,7 @@ Payload format:
 
 DetailsName | Type | Required | Description  
 ---|---|---|---  
-`payload` | `Array[String]` | Optional | Trading pair list  
+`payload` | `Array[String]` | Required | Trading pair list  
   
 You can subscribe/unsubscribe multiple times. Trading pairs subscribed earlier will not be overridden unless explicitly unsubscribed to.
 
@@ -651,7 +678,7 @@ Push example
 
 `order_book_update`
 
-The incremental order book channel provides real-time order book depth updates from major exchanges for spot/futures trading pairs.
+The incremental order book channel provides real-time depth updates for spot and futures pairs from major exchanges. Stocks and ETFs support only limited-level order book snapshots. Subscribing to `order_book_update` for a stock or ETF returns error code `1000119`.
 
 **Push Type** : `continuous`
 
@@ -663,10 +690,10 @@ The incremental order book channel provides real-time order book depth updates f
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
-» payload | body | [string] | Optional | Subscribe/Unsubscribe trading pairs, subscribe all not supported  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
+» payload | body | [string] | Required | Subscribe/Unsubscribe trading pairs, subscribe all not supported  
   
 ###  Details
 
@@ -678,7 +705,7 @@ Payload format:
 
 DetailsName | Type | Required | Description  
 ---|---|---|---  
-`payload` | `Array[String]` | Optional | Trading pair list  
+`payload` | `Array[String]` | Required | Trading pair list  
   
 You can subscribe/unsubscribe multiple times. Trading pairs subscribed earlier will not be overridden unless explicitly unsubscribed to.
 
@@ -758,7 +785,7 @@ Push example
 
 `ticker`
 
-The ticker channel provides ticker updates for spot/futures markets from major exchanges and supports stocks and ETFs. Stock and ETF prices use the native currency of the listing market (USD/HKD/KRW/JPY).
+The ticker channel provides ticker updates for spot/futures markets from major exchanges and supports stocks and ETFs. Stock and ETF prices use the native currency of the listing market (USD, HKD, KRW, or JPY). Order book and volume fields may be unavailable for stock tickers. Subscribe to the limited-level order book for the best bid and ask prices.
 
 **Push Type** : `continuous`
 
@@ -770,10 +797,10 @@ The ticker channel provides ticker updates for spot/futures markets from major e
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
-» payload | body | [string] | Optional | Subscribe/Unsubscribe trading pairs, subscription to all is not supported yet  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
+» payload | body | [string] | Required | Subscribe/Unsubscribe trading pairs, subscription to all is not supported yet  
   
 ###  Details
 
@@ -785,7 +812,7 @@ Format:
 
 DetailsName | Type | Required | Description  
 ---|---|---|---  
-`payload` | `Array[String]` | Optional | Trading pair list  
+`payload` | `Array[String]` | Required | Trading pair list  
   
 You can subscribe/unsubscribe multiple times. Trading pairs subscribed earlier will not be overridden unless explicitly unsubscribed to.
 
@@ -816,14 +843,14 @@ Name | Type | Required | Constraint | Description | Remarks
 » result | object | Required | none | Result | none  
 »» s | string | Required | none | Trading pair | Symbol  
 »» lp | string | Required | none | Latest trade price | LastPrice  
-»» bp | string | Required | none | Best bid price | BidPrice  
-»» bs | string | Required | none | Best bid size | BidSize  
-»» ap | string | Required | none | Best ask price | AskPrice  
-»» as | string | Required | none | Best ask size | AskSize  
-»» o | string | Required | none | 24h open price | Open24h  
-»» h | string | Required | none | 24h high price | High24h  
-»» l | string | Required | none | 24h low price | Low24h  
-»» v | string | Required | none | 24h volume (base) | Volume24h  
+»» bp | string | Optional | none | Best bid price | Included when available from the data source  
+»» bs | string | Optional | none | Best bid size | Included when available from the data source  
+»» ap | string | Optional | none | Best ask price | Included when available from the data source  
+»» as | string | Optional | none | Best ask size | Included when available from the data source  
+»» o | string | Optional | none | 24-hour open price, or the current day's open price for stocks and ETFs | Included when available from the data source  
+»» h | string | Optional | none | 24-hour high price | Included when available from the data source  
+»» l | string | Optional | none | 24-hour low price | Included when available from the data source  
+»» v | string | Optional | none | 24-hour base currency volume | Included when available from the data source  
 »» q | string | Optional | none | 24h volume (quote) | QuoteVolume24h  
 »» ts | long | Required | none | Exchange timestamp (milliseconds) | Timestamp  
   
@@ -852,6 +879,83 @@ Push example
     }
     
 
+Stock update example (prices in HKD)
+    
+    
+    {
+      "time": 1795392000,
+      "time_ms": 1795392000000,
+      "channel": "ticker",
+      "event": "update",
+      "result": {
+        "s": "HK_STOCK_00700_USDT",
+        "lp": "424.8",
+        "o": "428",
+        "h": "430",
+        "l": "423",
+        "ts": 1795392000000
+      }
+    }
+    
+
+#  Market List Subscription
+
+`market_list`
+
+This public market data channel requires no authentication. To subscribe or unsubscribe, send `event=subscribe` or `event=unsubscribe` with an array of trading pairs in `payload`. The available spot, futures, stock, and ETF trading pairs are the same as for `ticker`.
+
+Subscription request
+    
+    
+    {
+      "time": 1795392000,
+      "event": "subscribe",
+      "channel": "market_list",
+      "payload": ["BINANCE_FUTURE_BTC_USDT"]
+    }
+    
+
+Subscription acknowledgment
+    
+    
+    {
+      "time": 1795392000,
+      "time_ms": 1795392000000,
+      "event": "subscribe",
+      "channel": "market_list",
+      "payload": ["BINANCE_FUTURE_BTC_USDT"],
+      "result": {"status": "success"}
+    }
+    
+
+##  Market List Updates
+
+`result` field | Type | Required | Description  
+---|---|---|---  
+`symbol` | string | Yes | Trading pair  
+`last_price` | string | No | Latest price. Hyperliquid returns the mid-price on this channel. Stocks and ETFs use their native currency.  
+`change_rate_24h` | string | No | 24-hour percentage change. For example, `"6.78"` represents an increase of 6.78%.  
+`quote_volume_24h` | string | No | 24-hour traded value in the quote currency.  
+  
+Updates omit optional fields when the data source has no value for them.
+
+Market data update
+    
+    
+    {
+      "time": 1795392000,
+      "time_ms": 1795392000000,
+      "event": "update",
+      "channel": "market_list",
+      "result": {
+        "symbol": "BINANCE_FUTURE_BTC_USDT",
+        "last_price": "67280.50",
+        "change_rate_24h": "6.78",
+        "quote_volume_24h": "5523487123.55"
+      }
+    }
+    
+
 #  Public Trade Subscription
 
 `trade`
@@ -868,10 +972,10 @@ The trade channel provides tick-by-tick public trade updates for spot/futures ma
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
-» payload | body | [string] | Optional | Subscribe/Unsubscribe trading pairs, subscription to all is not supported yet  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
+» payload | body | [string] | Required | Subscribe/Unsubscribe trading pairs, subscription to all is not supported yet  
   
 ###  Details
 
@@ -883,7 +987,7 @@ Format:
 
 DetailsName | Type | Required | Description  
 ---|---|---|---  
-`payload` | `Array[String]` | Optional | Trading pair list  
+`payload` | `Array[String]` | Required | Trading pair list  
   
 You can subscribe/unsubscribe multiple times. Trading pairs subscribed earlier will not be overridden unless explicitly unsubscribed to.
 
@@ -957,10 +1061,10 @@ The kline channel provides kline updates for spot/futures markets from major exc
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
-» payload | body | [string] | Optional | Subscribe/Unsubscribe trading pairs, subscription to all is not supported yet  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
+» payload | body | [string] | Required | Subscribe/Unsubscribe trading pairs, subscription to all is not supported yet  
   
 ###  Details
 
@@ -972,7 +1076,7 @@ Format:
 
 DetailsName | Type | Required | Description  
 ---|---|---|---  
-`payload` | `Array[String]` | Optional | Trading pair list  
+`payload` | `Array[String]` | Required | Trading pair list  
   
 You can subscribe/unsubscribe multiple times. Trading pairs subscribed earlier will not be overridden unless explicitly unsubscribed to.
 
@@ -1048,10 +1152,10 @@ The funding_rate channel provides funding rate updates for futures markets from 
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
-» payload | body | [string] | Optional | Subscribe/Unsubscribe trading pairs, subscription to all is not supported yet  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
+» payload | body | [string] | Required | Subscribe/Unsubscribe trading pairs, subscription to all is not supported yet  
   
 ###  Details
 
@@ -1063,7 +1167,7 @@ Format:
 
 DetailsName | Type | Required | Description  
 ---|---|---|---  
-`payload` | `Array[String]` | Optional | Trading pair list  
+`payload` | `Array[String]` | Required | Trading pair list  
   
 You can subscribe/unsubscribe multiple times. Trading pairs subscribed earlier will not be overridden unless explicitly unsubscribed to.
 
@@ -1116,7 +1220,7 @@ Push example
 
 `open_interest`
 
-The open_interest channel provides open interest updates for futures markets from major exchanges (excluding BINANCE)
+`open_interest` provides futures open interest updates. CrossEx does not offer this WebSocket channel for Binance or Aster futures. A subscription for Binance futures returns error code `1000104`. A subscription for Aster futures returns `1000115`.
 
 **Push Type** : `continuous`
 
@@ -1128,10 +1232,10 @@ The open_interest channel provides open interest updates for futures markets fro
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
-» payload | body | [string] | Optional | Subscribe/Unsubscribe trading pairs, subscription to all is not supported yet  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
+» payload | body | [string] | Required | Subscribe/Unsubscribe trading pairs, subscription to all is not supported yet  
   
 ###  Details
 
@@ -1143,7 +1247,7 @@ Format:
 
 DetailsName | Type | Required | Description  
 ---|---|---|---  
-`payload` | `Array[String]` | Optional | Trading pair list  
+`payload` | `Array[String]` | Required | Trading pair list  
   
 You can subscribe/unsubscribe multiple times. Trading pairs subscribed earlier will not be overridden unless explicitly unsubscribed to.
 
@@ -1198,6 +1302,8 @@ Push example
 
 The order channel provides a way to receive user order updates, including stock and ETF orders. For stocks and ETFs, `exchange_type` is `US/HK/KR/JP`, `business_type` is `STOCK/ETF`, and prices and executed amounts use the native currency of the listing market.
 
+When CrossEx rebases a futures position, it sends two system-generated order updates, one for the order that closed the original position and one for the order that opened the rebased position. Both orders have `state=FILLED` and `attribute=REBASE`. The trade channel pushes the corresponding trades.
+
 **Push Type** : `continuous`
 
 **Update Frequency** : `real-time`
@@ -1208,11 +1314,11 @@ The order channel provides a way to receive user order updates, including stock 
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | [string] | Optional | Subscribe/Unsubscribe trading pairs !all means all  
+» payload | body | [string] | Required | Subscribe/Unsubscribe trading pairs !all means all  
   
 ###  Details
 
@@ -1224,7 +1330,7 @@ Payload format:
 
 DetailsName | Type | Required | Description  
 ---|---|---|---  
-`payload` | `Array[String]` | Optional | Trading pair list  
+`payload` | `Array[String]` | Required | Trading pair list  
   
 You can subscribe/unsubscribe multiple times. Trading pairs subscribed earlier will not be overridden unless explicitly unsubscribed to.
 
@@ -1262,24 +1368,33 @@ Name | Type | Required | Constraint | Description
 »» symbol | string | Required | none | Trading pair  
 »» side | string | Required | none | Direction  
 »» type | string | Required | none | Type  
-»» attribute | string | Required | none | Attribute  
-»» exchange_type | string | Required | none | Exchange type  
+»» attribute | string | Required | none | Order attribute  
+`COMMON` regular order, `LIQ` liquidation takeover, `REDUCE` liquidation position reduction, `ADL` auto-deleveraging, `SETTLEMENT` delisting settlement, `REBASE` Rebase system order  
+»» exchange_type | string | Required | none | Exchange or listing market  
+`BINANCE`, `OKX`, `GATE`, `BYBIT`, `KRAKEN`, `HYPERLIQUID`, `DERIBIT`, `LIGHTER`, `ASTER`. Stocks and ETFs return `US`, `HK`, `KR`, or `JP`.  
 »» business_type | string | Required | none | Business type  
+`SPOT`, `FUTURE`, `MARGIN`, `CONVERT`, `STOCK`, `ETF`  
 »» qty | string | Required | none | Base currency quantity  
 »» quote_qty | string | Required | none | Quote currency quantity  
-»» price | string | Required | none | Price  
+»» price | string | Required | none | Order price  
+Stocks and ETFs use the native currency of the listing market.  
 »» time_in_force | string | Required | none | Time in force strategy  
 »» executed_qty | string | Required | none | Executed quantity  
 »» executed_amount | string | Required | none | Executed amount  
-»» executed_avg_price | string | Required | none | Executed average price  
+Stocks and ETFs use the native currency of the listing market.  
+»» executed_avg_price | string | Required | none | Average execution price  
+Stocks and ETFs use the native currency of the listing market.  
 »» fee_coin | string | Required | none | Fee coin  
 »» fee | string | Required | none | Fee  
 »» reduce_only | string | Required | none | Reduce only  
 »» leverage | string | Required | none | Leverage  
-»» reason | string | Required | none | Reason  
+»» reason | string | Required | none | Order reason  
+Reason for rejection or cancellation. Rebase system orders return `POSITION_REBASE_RATIO=<ratio>`.  
 »» last_executed_qty | string | Required | none | Last executed quantity  
-»» last_executed_price | string | Required | none | Last executed price  
-»» last_executed_amount | string | Required | none | Last executed amount  
+»» last_executed_price | string | Required | none | Last execution price  
+Stocks and ETFs use the native currency of the listing market.  
+»» last_executed_amount | string | Required | none | Last execution amount  
+Stocks and ETFs use the native currency of the listing market.  
 »» position_side | string | Required | none | Position side  
 »» create_time | string | Required | none | Create time  
 »» update_time | string | Required | none | Update time  
@@ -1349,11 +1464,11 @@ The asset channel provides a way to receive user asset updates.
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | [string] | Optional | Subscribe/Unsubscribe coin set !all means all  
+» payload | body | [string] | Required | Subscribe/Unsubscribe coin set !all means all  
   
 ###  Details
 
@@ -1365,7 +1480,7 @@ Payload format:
 
 DetailsName | Type | Required | Description  
 ---|---|---|---  
-`payload` | `Array[String]` | Optional | Coin list  
+`payload` | `Array[String]` | Required | Coin list  
   
 You can subscribe/unsubscribe multiple times. Coins subscribed earlier will not be overridden unless explicitly unsubscribed to.
 
@@ -1461,11 +1576,11 @@ The trade channel provides a way to receive user trade updates.
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | [string] | Optional | Subscribe/Unsubscribe coin set !all means all  
+» payload | body | [string] | Required | Subscribe/Unsubscribe coin set !all means all  
   
 ###  Details
 
@@ -1493,7 +1608,7 @@ Payload format:
 
 Response ResultName | Type | Required | Description  
 ---|---|---|---  
-`payload` | `Array[String]` | Optional | Trading pair list  
+`payload` | `Array[String]` | Required | Trading pair list  
   
 You can subscribe/unsubscribe multiple times. Trading pairs subscribed earlier will not be overridden unless explicitly unsubscribed to.
 
@@ -1547,11 +1662,16 @@ Name | Type | Required | Constraint | Description
 »» order_id | string | Optional | none | Order ID  
 »» text | string | Optional | none | User order ID  
 »» symbol | string | Optional | none | Trading pair  
-»» exchange_type | string | Optional | none | Exchange type  
+»» exchange_type | string | Optional | none | Exchange or listing market  
+Stocks and ETFs return `US`, `HK`, `KR`, or `JP`.  
 »» business_type | string | Optional | none | Business type  
+Stocks and ETFs return `STOCK` and `ETF`, respectively.  
 »» side | string | Optional | none | Buy/Sell direction  
 »» qty | string | Optional | none | Trade quantity  
 »» price | string | Optional | none | Trade price  
+Stocks and ETFs use the native currency of the listing market (USD, HKD, KRW, or JPY).  
+»» fx_rate | string | Optional | none | Settlement exchange rate for this trade  
+USDT per unit of the native currency. An empty string (`""`) indicates that the rate is unavailable.  
 »» fee | string | Optional | none | Fee  
 »» fee_coin | string | Optional | none | Fee coin  
 »» fee_rate | string | Optional | none | Fee rate  
@@ -1565,6 +1685,8 @@ Name | Type | Required | Constraint | Description
 » time | integer | Required | none | Timestamp (seconds)  
 » time_ms | integer | Required | none | Timestamp (milliseconds)  
   
+The trade value in this example is 25.4 USDT, excluding fees, calculated as `qty × price × fx_rate`. The fee is reported separately in `fee` and `fee_coin`.
+
 Push example
     
     
@@ -1582,6 +1704,7 @@ Push example
         "side": "BUY",
         "qty": "13.36",
         "price": "0.8228",
+        "fx_rate": "",
         "fee": "0.004008000000000000",
         "fee_coin": "ADA",
         "fee_rate": "0.0003",
@@ -1600,9 +1723,47 @@ Push example
     }
     
 
+Stock trade update example
+    
+    
+    {
+      "time": 1795392000,
+      "time_ms": 1795392000000,
+      "channel": "usertrades",
+      "event": "subscribe",
+      "payload": {
+        "user_id": "59138103",
+        "transaction_id": "2072784922594048",
+        "order_id": "2072784922592768",
+        "text": "stock-buy-1",
+        "symbol": "HK_STOCK_00700_USDT",
+        "exchange_type": "HK",
+        "business_type": "STOCK",
+        "side": "BUY",
+        "qty": "2",
+        "price": "100",
+        "fx_rate": "0.127",
+        "fee": "0.0254",
+        "fee_coin": "USDT",
+        "fee_rate": "0.001",
+        "match_role": "TAKER",
+        "rpnl": "0",
+        "position_mode": "SINGLE",
+        "position_side": "NONE",
+        "create_time": "1795392000000"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      }
+    }
+    
+
 #  Position Subscription/Unsubscription
 
 `position`
+
+Once a futures contract enters Rebase, the system suspends recalculation of position metrics such as mark price, market value, and unrealized PnL. These metrics may retain their last calculated values.
 
 The position channel provides a way to receive user position updates.
 
@@ -1616,11 +1777,11 @@ The position channel provides a way to receive user position updates.
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | [string] | Optional | !all means all  
+» payload | body | [string] | Required | !all means all  
   
 ###  Details
 
@@ -1648,7 +1809,7 @@ Payload format:
 
 Response ResultName | Type | Required | Description  
 ---|---|---|---  
-`payload` | `Array[String]` | Optional | Trading pair list, `!all` means subscribe to all trading pairs  
+`payload` | `Array[String]` | Required | Trading pair list, `!all` means subscribe to all trading pairs  
   
 You can subscribe/unsubscribe multiple times. Trading pairs subscribed earlier will not be overridden unless explicitly unsubscribed to.
 
@@ -1783,11 +1944,11 @@ The security position channel provides stock and ETF position updates. Prices, p
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | subscribe, unsubscribe  
-» channel | body | string | Optional | security_position  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | subscribe, unsubscribe  
+» channel | body | string | Required | security_position  
 » request_id | body | string | Optional | Request ID echoed by the server to help identify the response  
-» payload | body | [string] | Optional | List of stock or ETF trading pairs; `!all` means all pairs  
+» payload | body | [string] | Required | List of stock or ETF trading pairs; `!all` means all pairs  
   
 You can subscribe or unsubscribe multiple times. Previously subscribed trading pairs will not be overwritten unless explicitly unsubscribed.
 
@@ -1872,11 +2033,11 @@ The margin position channel provides a way to receive user margin position updat
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | [string] | Optional | !all means all  
+» payload | body | [string] | Required | !all means all  
   
 ###  Details
 
@@ -2019,11 +2180,11 @@ The margin interest channel provides a way to receive user margin interest updat
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | [string] | Optional | !all means all  
+» payload | body | [string] | Required | !all means all  
   
 ###  Details
 
@@ -2056,6 +2217,8 @@ Push Message ResponseName | Type | Required | Constraint | Description
 » payload | object | Required | none | Data set  
 »» user_id | string | Optional | none | User ID  
 »» symbol | string | Optional | none | Trading pair  
+»» exchange_type | string | Optional | none | Exchange associated with the interest charge  
+For example, `OKX`.  
 »» interest_id | string | Optional | none | Interest deduction ID  
 »» liability_id | string | Optional | none | Liability source ID, can be order ID/position ID  
 »» liability | string | Optional | none | Liability  
@@ -2114,6 +2277,7 @@ Push message response example
       "payload": {
         "user_id": "20251115",
         "symbol": "OKX_MARGIN_DOGE_USDT",
+        "exchange_type": "OKX",
         "interest_id": "2101724189861376",
         "liability_id": "2101724189861120",
         "liability": "10",
@@ -2148,11 +2312,11 @@ The ADL rank channel provides a way to receive user ADL rank updates.
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | [string] | Optional | !all means all  
+» payload | body | [string] | Required | !all means all  
   
 ###  Details
 
@@ -2164,7 +2328,7 @@ Payload format:
 
 DetailsName | Type | Required | Description  
 ---|---|---|---  
-`payload` | `Array[String]` | Optional | Trading pair list, `!all` means subscribe to all trading pairs  
+`payload` | `Array[String]` | Required | Trading pair list, `!all` means subscribe to all trading pairs  
   
 You can subscribe/unsubscribe multiple times. Trading pairs subscribed earlier will not be overridden unless explicitly unsubscribed from.
 
@@ -2235,22 +2399,26 @@ Rate Limit: 100 requests per 10 seconds (shared with REST order placement). Stoc
 
 Stocks and ETFs support only cross-exchange account mode and GTC, require `qty`, and do not support `quote_qty`. Order prices use the native currency of the listing market.
 
+When a stock or ETF buy order is placed, CrossEx holds the purchase amount in USDT. The amount is based on the order price and the market FX rate at order placement. If the FX rate is unavailable or the latest price required for a market order is unavailable, the request fails with `result.label=COMMON_FAIL_ORDER_ERROR`.
+
+Hyperliquid, Lighter, and Aster futures do not support `FOK`.
+
 ##  Client Request
 
 ##  Request Parameters
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | none  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
+» time | body | integer | Required | none  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | object | Optional | none  
+» payload | body | object | Required | none  
 »» header | body | object | Optional | Request header information  
 »»» X-Gate-Channel-Id | body | string | Optional | Broker rebate channel ID  
 »» text | body | string¦null | Optional | User-defined ID  
-»» symbol | body | string | Optional | Unique identifier: Exchange_Business_Base_Counter  
-»» side | body | string | Optional | Trading direction  
+»» symbol | body | string | Required | Unique identifier: Exchange_Business_Base_Counter  
+»» side | body | string | Required | Trading direction  
 »» qty | body | string¦null | Optional | Base currency quantity  
 »» price | body | string¦null | Optional | Price  
 »» type | body | string¦null | Optional | Order type (default LIMIT, supported types: LIMIT, MARKET)  
@@ -2370,11 +2538,11 @@ Rate Limit: 100 requests per 10 seconds (shared with REST order placement)
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | string | Optional | Order ID (supports order ID or text)  
+» payload | body | string | Required | Order ID (supports order ID or text)  
   
 ###  Details
 
@@ -2439,11 +2607,11 @@ Rate Limit: 100 requests per 10 seconds (shared with the REST order cancellation
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | array | Optional | List of orders to cancel  
+» payload | body | array | Required | List of orders to cancel  
 »» order_id | body | string | Optional | Order ID; either this field or text is required  
 »» text | body | string | Optional | User-defined ID specified when the order was created; either this field or order_id is required  
   
@@ -2529,7 +2697,7 @@ Response example
 
 `update_order`
 
-Provides a way to update orders via WebSocket.
+You can update the quantity or price independently. Omit a field or send `"0"` to keep its current value. Provide at least one new positive value.
 
 Rate Limit: 100 requests per 10 seconds (shared with REST order placement)
 
@@ -2539,15 +2707,16 @@ Rate Limit: 100 requests per 10 seconds (shared with REST order placement)
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | object | Optional | none  
-»» order_id | body | string | Optional | Order ID  
-»» qty | body | string | Optional | Quantity  
-»» price | body | string | Optional | none  
-»» symbol | body | string | Optional | none  
+» payload | body | object | Required | none  
+»» order_id | body | string | Required | Order ID  
+»» qty | body | string | Optional | New quantity  
+Omit or send `"0"` to keep the current value.  
+»» price | body | string | Optional | New price  
+Omit or send `"0"` to keep the current value.  
   
 ###  Details
 
@@ -2583,8 +2752,6 @@ Request example
       "request_id": "request-1",
       "payload": {
         "order_id": "2065057827622656",
-        "qty": "0.01",
-        "symbol": "GATE_SPOT_BTC_USDT",
         "price": "2801"
       }
     }
@@ -2624,13 +2791,13 @@ Rate Limit: 100 requests per 10 seconds (shared with REST order placement)
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | object | Optional | none  
-»» symbol | body | string | Optional | Trading pair  
-»» leverage | body | string | Optional | Leverage  
+» payload | body | object | Required | none  
+»» symbol | body | string | Required | Trading pair  
+»» leverage | body | string | Required | Leverage  
   
 ##  Details
 
@@ -2705,13 +2872,13 @@ Rate Limit: 100 requests per 10 seconds (shared with REST order placement)
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | object | Optional | none  
-»» symbol | body | string | Optional | Trading pair  
-»» leverage | body | string | Optional | Leverage  
+» payload | body | object | Required | none  
+»» symbol | body | string | Required | Trading pair  
+»» leverage | body | string | Required | Leverage  
   
 ##  Details
 
@@ -2786,14 +2953,14 @@ Rate Limit: 100 requests per 60 seconds
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | object | Optional | none  
+» payload | body | object | Required | none  
 »» position_mode | body | string | Optional | Position mode  
 »» account_mode | body | string | Optional | Account mode  
-»» exchange_type | body | string | Optional | Exchange, default is cross-exchange  
+»» exchange_type | body | string | Optional | Exchange. Required when changing the futures position mode in isolated-exchange account mode (`ISOLATED_EXCHANGE`). Supported exchanges include `ASTER`.  
   
 ###  Details
 
@@ -2877,12 +3044,12 @@ Rate Limit: 100 requests per day
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | object | Optional | none  
-»» symbol | body | string | Optional | Trading pair  
+» payload | body | object | Required | none  
+»» symbol | body | string | Required | Trading pair  
 »» position_side | body | string | Optional | Position side  
   
 ##  Details
@@ -2955,13 +3122,13 @@ Rate Limit: 100 requests per 10 seconds (shared with the corresponding REST API 
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | object | Optional | none  
-»» symbol | body | string | Optional | Hyperliquid futures trading pair  
-»» margin_mode | body | string | Optional | Margin mode (`CROSS` or `ISOLATED`)  
+» payload | body | object | Required | none  
+»» symbol | body | string | Required | Hyperliquid futures trading pair  
+»» margin_mode | body | string | Required | Margin mode (`CROSS` or `ISOLATED`)  
   
 ##  Details
 
@@ -3038,13 +3205,13 @@ Rate Limit: 100 requests per 10 seconds (shared with the corresponding REST API 
 
 Request ParametersName | Location | Type | Required | Description  
 ---|---|---|---|---  
-» time | body | integer | Optional | Timestamp (seconds)  
-» event | body | string | Optional | Event  
-» channel | body | string | Optional | Channel name  
+» time | body | integer | Required | Timestamp (seconds)  
+» event | body | string | Required | Event  
+» channel | body | string | Required | Channel name  
 » request_id | body | string | Optional | Request id which will be sent back by the server to help you identify which request the server responds to  
-» payload | body | object | Optional | none  
-»» symbol | body | string | Optional | Hyperliquid futures trading pair  
-»» margin | body | string | Optional | Margin adjustment amount. A positive value adds margin, while a negative value reduces margin. Values with more than two decimal places are truncated to two decimal places  
+» payload | body | object | Required | none  
+»» symbol | body | string | Required | Hyperliquid futures trading pair  
+»» margin | body | string | Required | Margin adjustment amount. A positive value adds margin, while a negative value reduces margin. Values with more than two decimal places are truncated toward zero to two decimal places  
 »» position_side | body | string | Optional | Position side (`NONE`, `LONG`, or `SHORT`). In one-way mode, it defaults to `NONE` when omitted  
   
 ##  Details
@@ -3052,6 +3219,8 @@ Request ParametersName | Location | Type | Required | Description
 **» event** : api
 
 **» channel** : update_isolated_margin
+
+The additional margin, converted to USDT, must be at most 80% of the account's available margin. In hedge mode, set `position_side` to `LONG` or `SHORT`. In one-way mode, the default is `NONE` when this field is omitted.
 
 ##  Response Result
 
@@ -3142,7 +3311,9 @@ code DescriptionResponse Code | Description
   
 ##  `label` Description
 
-For invalid requests, the response `result` includes a `label`. Its value has the same meaning as the corresponding REST API error label. See the REST API documentation for details.
+For failed private requests, `result.label` has the same meaning as the corresponding [REST error label](/docs/developers/crossex/en/#label-list). Common labels for stock and ETF orders include `SECURITY_ORDER_NOT_SUPPORT` (unsupported account mode), `SECURITY_ORDER_ONLY_SUPPORT_GTC` (only `GTC` is allowed), and `COMMON_FAIL_ORDER_ERROR` (for example, when the market exchange rate is unavailable).
+
+During a futures Rebase, `place_order`, `update_order`, `set_leverage`, `update_isolated_margin`, and `close_position` return `result.label=TRADE_REBASE_TASK_STARTED` for affected trading pairs. Use the REST trading pair lookup to check whether `state` is `rebase`.
 
 Response example with `label`
     
@@ -3156,9 +3327,44 @@ Response example with `label`
         "label": "COMMON_PARAM_BIND_ERROR",
         "message": "Invalid Parameter, please check api doc"
       },
-      "time_ms": 1787560400000,
+      "time_ms": 1787560434000,
       "request_id": "xxx"
     }
     
 
-Last Updated: 10/13/2026, 1:22:04 AM
+##  Public Market Data Error Codes
+
+When a public subscription or unsubscription fails, `result.status` is `failed`. `error.code` is an integer and `error.message` provides the reason.
+
+`error.code` | Description  
+---|---  
+`1000000` | At least one trading pair is unsupported. See `error.message` for details.  
+`1000001` | Binance limited-level order book supports only 5, 10, and 20 levels.  
+`1000002` | OKX limited-level order book supports only 1 and 5 levels.  
+`1000003` | Gate futures limited-level order book supports only 1, 5, 10, 20, 50, and 100 levels.  
+`1000004` | Gate spot limited-level order book supports only 5, 10, 20, 30, 50, and 100 levels.  
+`1000005` | `index_price` supports only `MARGIN` trading pairs.  
+`1000006` | The channel is invalid or the `mark_price` request includes a non-futures pair. See `error.message` to distinguish the cases.  
+`1000007` | Invalid request event.  
+`1000008` | Invalid `payload`.  
+`1000100` | Invalid request message format.  
+`1000101` | Bybit limited-level order book supports only 1 level.  
+`1000102` | The connection has reached the trading-pair subscription limit for this channel.  
+`1000103` | The IP has reached its public WebSocket connection limit.  
+`1000104` | CrossEx does not offer the `open_interest` channel for Binance futures.  
+`1000105` | `funding_rate` and `open_interest` support only futures pairs.  
+`1000106` | Kraken does not provide a limited-level order book. Use `order_book_update`.  
+`1000107` | Kraken does not support WebSocket Klines.  
+`1000108` | The Hyperliquid spot pair is missing a native currency mapping.  
+`1000109` | Deribit limited-level order book supports only 1, 5, 10, and 20 levels.  
+`1000110` | Deribit Klines support only 1m, 5m, 15m, 30m, 1h, and 1d intervals.  
+`1000111` | Hyperliquid limited-level order book supports only 1, 5, 10, and 20 levels.  
+`1000112` | The IP has reached its per-minute operation limit.  
+`1000113` | The Lighter futures pair is missing a native market ID mapping.  
+`1000114` | Aster limited-level order book supports only 1, 5, 10, and 20 levels.  
+`1000115` | CrossEx does not offer the `open_interest` channel for Aster futures.  
+`1000116` | The connection's send buffer is full.  
+`1000117` | The subscription did not complete. Retry later.  
+`1000119` | Stocks and ETFs do not support `order_book_update`.  
+  
+Last Updated: 11/26/2026, 4:46:36 PM

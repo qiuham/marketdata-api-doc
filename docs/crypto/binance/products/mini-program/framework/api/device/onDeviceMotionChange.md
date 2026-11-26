@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/device/onDeviceMotionChange
 api_type: Guide
-updated_at: 2026-11-25 18:47:34.804644
+updated_at: 2026-11-26 18:48:06.216741
 ---
 
 # bn.onDeviceMotionChange

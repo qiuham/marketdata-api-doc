@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/logout
 api_type: FIX
-updated_at: 2026-11-25 19:00:45.349609
+updated_at: 2026-11-26 19:02:02.576734
 ---
 
 # Logout(5) (Production FIX API)

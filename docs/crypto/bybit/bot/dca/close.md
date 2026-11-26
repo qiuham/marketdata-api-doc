@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bot/dca/close
 api_type: REST
-updated_at: 2026-11-25 18:50:35.948240
+updated_at: 2026-11-26 18:51:30.875557
 ---
 
 # Close DCA Bot

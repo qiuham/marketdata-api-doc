@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/openservice/appendix
 api_type: Guide
-updated_at: 2026-11-25 18:37:37.943167
+updated_at: 2026-11-26 18:38:23.584637
 ---
 
 # Appendix

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-payout-query
 api_type: Guide
-updated_at: 2026-11-25 18:34:22.057701
+updated_at: 2026-11-26 18:35:18.402984
 ---
 
 # Payout Query

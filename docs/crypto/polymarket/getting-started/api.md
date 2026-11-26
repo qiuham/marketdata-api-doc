@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/getting-started/api'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # API
@@ -65,11 +65,11 @@ Each API serves a distinct part of an integration.
 > >
 > > Follow authenticated order and trade updates for an account.
 >
-> > [card] [RTDS](https://docs.polymarket.com/market-data/realtime-data.md)
+> > [card] [PolyBolt WebSocket](https://docs.polymarket.com/api-reference/live-data/overview.md)
 > >
-> > **`wss://ws-live-data.polymarket.com`**
+> > **`wss://ws-live-v2.polymarket.com/ws`**
 > >
-> > Stream public reference prices, comments, and trade activity.
+> > Stream crypto, equity, and TWAP reference prices.
 >
 > > [card] [Sports WebSocket](https://docs.polymarket.com/api-reference/wss/sports.md)
 > >

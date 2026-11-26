@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/portfolio-margin-endpoints/General-Info
 api_type: Guide
-updated_at: 2026-11-25 18:39:49.232346
+updated_at: 2026-11-26 18:40:30.675739
 ---
 
 # Classic Portfolio Margin Endpoints

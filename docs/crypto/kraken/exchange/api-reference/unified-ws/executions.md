@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/api-reference/unified-ws/executions'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Executions
@@ -182,6 +182,15 @@ The snapshot message content can be adjusted with the subscription parameters.
 
 `new` and the `filled` order status apply to both asset classes. Examples illustrate ordinary limit orders, not a mandatory sequence for every order type.
 
+> [!WARNING]
+>
+> **Derivatives trade events changed.** If you already consume `derivatives` executions, update your client:
+>
+> * The execution UUID moved from `trade_id` to `exec_id`.
+> * `sequence_id` (string) is replaced by `trade_id` (integer).
+> * `fee` (number) is replaced by `fees`, an array of `{asset, qty}` objects.
+> * Snapshots and updates now carry a top-level `sequence`.
+
 **channel** `string`
 
 Value: `executions`
@@ -298,7 +307,7 @@ Scheduled start time of the order.
 
 Condition: trade events only
 
-Execution identifier.
+Execution identifier. For `derivatives`, this is a UUID.
 
 **exec\_type** `string`
 
@@ -341,7 +350,11 @@ An optional, external partner execution identifier shown on trade events.
 
 Condition: trade events only
 
-The fees paid on this trade event. Currently, the fees are expressed in the quote currency only.
+The fees paid on this trade event.
+
+For `spot`, the fees are currently expressed in the quote currency only.
+
+For `derivatives`, the array has one element: the maker or taker fee for this side of the fill. The fee is in the contract's settlement currency. This is the quote currency for linear contracts (for example, `USD` on `PF_XBTUSD`) and the base currency for inverse contracts (for example, `BTC` on `PI_XBTUSD`). `qty` is signed: a rebate is negative, and a fill with no fee reports `0`. If the engine reports no fee amount, `fees` is omitted, but the trade event is still sent.
 
 **properties**
 
@@ -361,6 +374,8 @@ The preferred currency for paying fees.
 * `fciq`: prefer fee in quote currency.
 
 **fee\_usd\_equiv** `float`
+
+Condition: `spot` only
 
 The total fee paid in USD.
 
@@ -473,16 +488,6 @@ Indicates a reduce only order.
 
 For institutional accounts, identifies underlying sub-account/trader for Self Trade Prevention (STP).
 
-**sequence\_id** `string`
-
-Condition: `derivatives` trade events only\\
-
-Example: `"987654321"`
-
-Per-market monotonic sequential trade identifier assigned by the matching engine, sent as a decimal string to preserve full 64-bit precision.
-
-Both sides of a fill carry the same `sequence_id`, so the maker and taker events for one execution share a value. Use it to order fills within a single `symbol`; values are not comparable across symbols and are not guaranteed to be contiguous. A value of `"0"` means the engine did not assign a sequence to the fill.
-
 **side** `string`
 
 One of: `buy`, `sell`
@@ -516,7 +521,11 @@ Time of the event.
 
 **trade\_id** `integer`
 
-The trade identifier.
+Condition: trade events only
+
+The trade identifier. For `derivatives`, this is the per-market sequential trade identifier assigned by the matching engine. It is the same value as `trade_id` on the public [`trade`](https://docs.kraken.com/exchange/api-reference/unified-ws/trade) channel.
+
+For `derivatives`, the maker and taker events for one fill share the same `trade_id`. Use it to order fills within a single `symbol`. Values are not comparable across symbols and are not guaranteed to be contiguous. `trade_id` is omitted when the engine did not assign one.
 
 **triggers** `object`
 
@@ -598,7 +607,7 @@ Price which triggered the order.
 
 **sequence** `integer`
 
-The subscription message sequence number.
+The message sequence number for this connection, sent on snapshots and updates. It continues across unsubscribe and resubscribe on the same connection and resets when you reconnect. Snapshot error messages (`snapshot_too_large`, `snapshot_unavailable`) do not carry a `sequence`.
 
 ## Unsubscribe
 
@@ -817,7 +826,8 @@ The subscription message sequence number.
 >             "limit_price": 50000,
 >             "timestamp": "2024-03-31T15:46:39.000000Z"
 >         }
->     ]
+>     ],
+>     "sequence": 1
 > }
 > ```
 >
@@ -830,9 +840,9 @@ The subscription message sequence number.
 >         {
 >             "exec_type": "trade",
 >             "order_status": "partially_filled",
->             "trade_id": "8f1a2b3c-4d5e-6f70-8192-a3b4c5d6e7f8",
+>             "exec_id": "8f1a2b3c-4d5e-6f70-8192-a3b4c5d6e7f8",
 >             "order_id": "1c2d3e4f-5a6b-7c8d-9e0f-1a2b3c4d5e6f",
->             "sequence_id": "987654321",
+>             "trade_id": 987654321,
 >             "symbol": "PF_XBTUSD",
 >             "side": "buy",
 >             "last_qty": 0.5,
@@ -841,12 +851,18 @@ The subscription message sequence number.
 >             "cum_qty": 0.5,
 >             "liquidity_ind": "m",
 >             "order_type": "limit",
->             "fee": 1.25,
+>             "fees": [
+>                 {
+>                     "asset": "USD",
+>                     "qty": 1.25
+>                 }
+>             ],
 >             "timestamp": "2024-03-31T15:46:40.000000Z",
 >             "order_qty": 0.8,
 >             "time_in_force": "GTC"
 >         }
->     ]
+>     ],
+>     "sequence": 2
 > }
 > ```
 >
@@ -859,9 +875,9 @@ The subscription message sequence number.
 >         {
 >             "exec_type": "trade",
 >             "order_status": "filled",
->             "trade_id": "9f1a2b3c-4d5e-4f70-8192-a3b4c5d6e7f8",
+>             "exec_id": "9f1a2b3c-4d5e-4f70-8192-a3b4c5d6e7f8",
 >             "order_id": "1c2d3e4f-5a6b-7c8d-9e0f-1a2b3c4d5e6f",
->             "sequence_id": "987654322",
+>             "trade_id": 987654322,
 >             "symbol": "PF_XBTUSD",
 >             "side": "buy",
 >             "last_qty": 0.3,
@@ -870,12 +886,18 @@ The subscription message sequence number.
 >             "cum_qty": 0.8,
 >             "liquidity_ind": "m",
 >             "order_type": "limit",
->             "fee": 0.75,
+>             "fees": [
+>                 {
+>                     "asset": "USD",
+>                     "qty": 0.75
+>                 }
+>             ],
 >             "timestamp": "2024-03-31T15:46:41.000000Z",
 >             "order_qty": 0.8,
 >             "time_in_force": "GTC"
 >         }
->     ]
+>     ],
+>     "sequence": 3
 > }
 > ```
 

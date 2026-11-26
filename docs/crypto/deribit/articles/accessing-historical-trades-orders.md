@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/accessing-historical-trades-orders
 api_type: Guide
-updated_at: 2026-11-25 19:00:44.202491
+updated_at: 2026-11-26 19:02:01.652878
 ---
 
 # Accessing Historical Trades and Orders Using API

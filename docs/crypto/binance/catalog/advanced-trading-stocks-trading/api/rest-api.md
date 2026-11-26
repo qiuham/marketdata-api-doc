@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-stocks-trading/api/rest-api
 api_type: REST
-updated_at: 2026-11-25 18:49:31.104754
+updated_at: 2026-11-26 18:50:00.184094
 ---
 
 # Stocks Trading REST API
@@ -35,6 +35,8 @@ Binance 股票交易 REST API。所有接口位于 `/sapi/v1/equity/*`。
 - `POST /sapi/v1/equity/tokenized/redeem` — Tokenized Redeem (TRADE)
 - `GET /sapi/v1/equity/tokenized/convert-status` — Tokenized Convert Status (USER_DATA)
 - `GET /sapi/v1/equity/tokenized/history` — Tokenized Convert History (USER_DATA)
+- `GET /sapi/v1/equity/corp-action` — Corporate Action Records (USER_DATA)
+- `GET /sapi/v1/bstocks/corp-action` — Bstocks Corporate Action Records (USER_DATA)
 - `POST /sapi/v1/equity/account/disclaimer` — Sign US Equity Disclaimer (TRADE)
 - `POST /sapi/v1/equity/listenKey` — Create / Renew Listen Key (USER_STREAM)
 
@@ -610,6 +612,80 @@ Operation ID: `tokenizedConvertHistory`
 | rows[].tokenizedAssetSettleWalletType | string |  | The wallet the tokenized asset is settled in: `MAIN` = Spot wallet, `CARD` = Funding wallet.<br>代币化资产实际结算所用的钱包：`MAIN` = 现货钱包，`CARD` = 资金钱包。<br>例: `CARD` |
 | hasMore | boolean |  | `true` when more pages exist — pass `nextLastId` as `lastId` on the next request.<br>还有更多页时为 `true`——将 `nextLastId` 作为下次请求的 `lastId`。<br>例: `True` |
 | nextLastId | integer (int64) |  | Pass this value as `lastId` on the next request to get the following page.<br>将此值作为下次请求的 `lastId` 以获取下一页。<br>例: `10020` |
+
+## Corporate Action Records (USER_DATA)（公司行动记录 (USER_DATA)）
+
+`GET /sapi/v1/equity/corp-action`
+
+Query the asset balance changes caused by corporate actions (for example stock splits and cash dividends) on the caller's account. Cursor-style pagination — supply the `nextTime` and `nextId` from the previous page's response as `lastTime` and `lastId` to fetch the next page. Records are returned in descending order of modification time. This endpoint is equivalent to `/sapi/v1/bstocks/corp-action`.
+
+查询调用方账户因公司行动（例如拆股、现金分红）产生的资产变动记录。游标分页——将上一页响应中的 `nextTime` 和 `nextId` 分别作为 `lastTime` 和 `lastId` 传入即可获取下一页。记录按修改时间倒序返回。本接口与 `/sapi/v1/bstocks/corp-action` 等价。
+
+权重: 1
+
+Operation ID: `corporateActionRecords`
+
+### 参数
+
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| X-MBX-APIKEY | header | string | 是 | An API Key is required to access this endpoint and must be included in the request headers. To create an API Key, refer to: [https://www.binance.com/en/support/faq/detail/360002502072](https://www.binance.com/en/support/faq/detail/360002502072).<br>访问此接口需要 API Key，并且必须在请求头中携带。关于如何创建 API Key，请参考：[https://www.binance.com/cn/support/faq/detail/360002502072](https://www.binance.com/cn/support/faq/detail/360002502072)。<br>例: `API_KEY` |
+| limit | query | integer | 是 | Number of records to return. Default `20`, range `1` to `100`.<br>返回的记录数。默认 `20`，范围 `1` 至 `100`。<br>默认: `20`<br>例: `20` |
+| lastTime | query | integer (int64) |  | The `nextTime` returned by the previous page, in milliseconds. Must be sent together with `lastId`.<br>上一页响应返回的 `nextTime`，单位毫秒。必须与 `lastId` 同时传入。<br>例: `1795593600000` |
+| lastId | query | integer (int64) |  | The `nextId` returned by the previous page. Must be sent together with `lastTime`.<br>上一页响应返回的 `nextId`。必须与 `lastTime` 同时传入。<br>例: `123456` |
+| recvWindow | query | integer (int64) |  | The value cannot be greater than `60000`.<br>赋值不能大于 `60000`。<br>例: `5000` |
+| timestamp | query | integer (int64) | 是 | Timestamp in milliseconds.<br>时间戳（毫秒）。<br>例: `1770736694138` |
+
+### 响应 200：Corporate Action Records / 公司行动记录
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| items | object[] |  | Corporate action asset change records on this page.<br>本页公司行动资产变动记录。 |
+| items[].id | integer (int64) |  | Unique record ID.<br>记录唯一 ID。<br>例: `123456` |
+| items[].userId | integer (int64) |  | User ID.<br>用户 ID。<br>例: `100001` |
+| items[].assetCode | string |  | Asset code, the unique identifier of the stock in the system, for example `EQ_AAPL`. Currently all asset codes carry the `EQ_` prefix.<br>资产代码，即股票在系统中的唯一编号，例如 `EQ_AAPL`。目前所有资产代码均带 `EQ_` 前缀。<br>例: `EQ_AAPL` |
+| items[].eventType | string |  | Corporate action event type. Values include `CASH_DIVIDEND`, `STOCK_DIVIDEND`, `FORWARD_SPLIT`, `REVERSE_SPLIT`, `SPIN_OFF`, `CASH_MERGER`, `STOCK_MERGER`, `STOCK_AND_CASH_MERGER`, `WORTHLESS_REMOVAL`, `NAME_CHANGE` and `RIGHTS_DISTRIBUTION`.<br>公司行动事件类型。取值包括：`CASH_DIVIDEND`（现金分红）、`STOCK_DIVIDEND`（股票分红）、`FORWARD_SPLIT`（拆股）、`REVERSE_SPLIT`（合股）、`SPIN_OFF`（分拆）、`CASH_MERGER`（现金合并）、`STOCK_MERGER`（换股合并）、`STOCK_AND_CASH_MERGER`（现金加换股合并）、`WORTHLESS_REMOVAL`（无价值注销）、`NAME_CHANGE`（更名）、`RIGHTS_DISTRIBUTION`（配权分发）。<br>例: `FORWARD_SPLIT` |
+| items[].amount | string |  | Signed change of the asset quantity, including free and frozen balances.<br>带符号的资产数量变动，包含可用和冻结余额。<br>例: `10.50000000` |
+| items[].dbModifyTime | integer (int64) |  | Last modification time (ms epoch).<br>最后修改时间（毫秒时间戳）。<br>例: `1795593600000` |
+| nextTime | integer (int64) |  | Pass this value as `lastTime` on the next request. Not returned on the last page.<br>作为下次请求的 `lastTime` 传入。最后一页不返回。<br>例: `1795593600000` |
+| nextId | integer (int64) |  | Pass this value as `lastId` on the next request. Not returned on the last page.<br>作为下次请求的 `lastId` 传入。最后一页不返回。<br>例: `123456` |
+
+## Bstocks Corporate Action Records (USER_DATA)（公司行动记录（bstocks） (USER_DATA)）
+
+`GET /sapi/v1/bstocks/corp-action`
+
+Query the asset balance changes caused by corporate actions (for example stock splits and cash dividends) on the caller's account. Cursor-style pagination — supply the `nextTime` and `nextId` from the previous page's response as `lastTime` and `lastId` to fetch the next page. Records are returned in descending order of modification time. This endpoint is equivalent to `/sapi/v1/equity/corp-action`.
+
+查询调用方账户因公司行动（例如拆股、现金分红）产生的资产变动记录。游标分页——将上一页响应中的 `nextTime` 和 `nextId` 分别作为 `lastTime` 和 `lastId` 传入即可获取下一页。记录按修改时间倒序返回。本接口与 `/sapi/v1/equity/corp-action` 等价。
+
+权重: 1
+
+Operation ID: `bstocksCorporateActionRecords`
+
+### 参数
+
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| X-MBX-APIKEY | header | string | 是 | An API Key is required to access this endpoint and must be included in the request headers. To create an API Key, refer to: [https://www.binance.com/en/support/faq/detail/360002502072](https://www.binance.com/en/support/faq/detail/360002502072).<br>访问此接口需要 API Key，并且必须在请求头中携带。关于如何创建 API Key，请参考：[https://www.binance.com/cn/support/faq/detail/360002502072](https://www.binance.com/cn/support/faq/detail/360002502072)。<br>例: `API_KEY` |
+| limit | query | integer | 是 | Number of records to return. Default `20`, range `1` to `100`.<br>返回的记录数。默认 `20`，范围 `1` 至 `100`。<br>默认: `20`<br>例: `20` |
+| lastTime | query | integer (int64) |  | The `nextTime` returned by the previous page, in milliseconds. Must be sent together with `lastId`.<br>上一页响应返回的 `nextTime`，单位毫秒。必须与 `lastId` 同时传入。<br>例: `1795593600000` |
+| lastId | query | integer (int64) |  | The `nextId` returned by the previous page. Must be sent together with `lastTime`.<br>上一页响应返回的 `nextId`。必须与 `lastTime` 同时传入。<br>例: `123456` |
+| recvWindow | query | integer (int64) |  | The value cannot be greater than `60000`.<br>赋值不能大于 `60000`。<br>例: `5000` |
+| timestamp | query | integer (int64) | 是 | Timestamp in milliseconds.<br>时间戳（毫秒）。<br>例: `1770736694138` |
+
+### 响应 200：Corporate Action Records / 公司行动记录
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| items | object[] |  | Corporate action asset change records on this page.<br>本页公司行动资产变动记录。 |
+| items[].id | integer (int64) |  | Unique record ID.<br>记录唯一 ID。<br>例: `123456` |
+| items[].userId | integer (int64) |  | User ID.<br>用户 ID。<br>例: `100001` |
+| items[].assetCode | string |  | Asset code, the unique identifier of the stock in the system, for example `EQ_AAPL`. Currently all asset codes carry the `EQ_` prefix.<br>资产代码，即股票在系统中的唯一编号，例如 `EQ_AAPL`。目前所有资产代码均带 `EQ_` 前缀。<br>例: `EQ_AAPL` |
+| items[].eventType | string |  | Corporate action event type. Values include `CASH_DIVIDEND`, `STOCK_DIVIDEND`, `FORWARD_SPLIT`, `REVERSE_SPLIT`, `SPIN_OFF`, `CASH_MERGER`, `STOCK_MERGER`, `STOCK_AND_CASH_MERGER`, `WORTHLESS_REMOVAL`, `NAME_CHANGE` and `RIGHTS_DISTRIBUTION`.<br>公司行动事件类型。取值包括：`CASH_DIVIDEND`（现金分红）、`STOCK_DIVIDEND`（股票分红）、`FORWARD_SPLIT`（拆股）、`REVERSE_SPLIT`（合股）、`SPIN_OFF`（分拆）、`CASH_MERGER`（现金合并）、`STOCK_MERGER`（换股合并）、`STOCK_AND_CASH_MERGER`（现金加换股合并）、`WORTHLESS_REMOVAL`（无价值注销）、`NAME_CHANGE`（更名）、`RIGHTS_DISTRIBUTION`（配权分发）。<br>例: `FORWARD_SPLIT` |
+| items[].amount | string |  | Signed change of the asset quantity, including free and frozen balances.<br>带符号的资产数量变动，包含可用和冻结余额。<br>例: `10.50000000` |
+| items[].dbModifyTime | integer (int64) |  | Last modification time (ms epoch).<br>最后修改时间（毫秒时间戳）。<br>例: `1795593600000` |
+| nextTime | integer (int64) |  | Pass this value as `lastTime` on the next request. Not returned on the last page.<br>作为下次请求的 `lastTime` 传入。最后一页不返回。<br>例: `1795593600000` |
+| nextId | integer (int64) |  | Pass this value as `lastId` on the next request. Not returned on the last page.<br>作为下次请求的 `lastId` 传入。最后一页不返回。<br>例: `123456` |
 
 ## Sign US Equity Disclaimer (TRADE)（签署美股免责声明 (TRADE)）
 

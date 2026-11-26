@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_supported_index_names
 api_type: JSON-RPC
-updated_at: 2026-11-25 19:00:49.077106
+updated_at: 2026-11-26 19:02:05.557995
 ---
 
 # public/get_supported_index_names

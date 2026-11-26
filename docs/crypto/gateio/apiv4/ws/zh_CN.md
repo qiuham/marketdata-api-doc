@@ -2,13 +2,15 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/ws/zh_CN
 api_type: WebSocket
-updated_at: 2026-11-25 18:57:41.713292
+updated_at: 2026-11-26 18:58:40.323765
 ---
 
 # Spot WebSocket v4.0.0
 
 * Python 
   * Golang 
+  * python µs 
+  * golang µs 
 
 
 Gate 提供了一个简单而健壮的 Websocket API 来集成现货交易状态信息为您的业务或应用提供支持。
@@ -17,7 +19,7 @@ Gate 提供了一个简单而健壮的 Websocket API 来集成现货交易状态
 
 代码示例位于右侧深色区域，您可以点击右上方的标签切换示例的编程语言。
 
-###  服务地址
+##  服务地址
 
 Websocket 链接地址：
 
@@ -36,7 +38,16 @@ TIP
 
 SDK 的源代码 在 [gatews ](https://github.com/gate/gatews) GitHub 仓库。
 
-###  变更历史
+##  变更历史
+
+2026-11-26
+
+  * OMS 3.0 用户可在 `spot.order_place` 单笔、`spot.order_cancel`、`spot.order_amend`、`spot.order_cancel_cp` 的 `payload.req_header` 传入 `X-Gate-Client-Send-Us` 和 `X-Gate-Timeout-Window-Us`。详见 3.0 用户请求超时。
+  * 请求 Header `timeUnit: microsecond` 可追加微秒字段，URL Query `timeUnit=microsecond` 同样生效。公有通道对所有连接生效，私有通道仅 OMS 3.0 生效。详见 微秒时间戳。
+
+2026-11-20
+
+  * 向 API 用户开放 RPI（Retail Price Improvement）流动性接入功能。普通单笔下单可传 `rpi_taker_access`。详见 RPI 流动性接入（Speed Bump）。
 
 2026-10-14
 
@@ -250,6 +261,102 @@ WebSocket 应用示例
 WebSocket 应用示例
     
     
+    # !/usr/bin/env python
+    # coding: utf-8
+    
+    import hashlib
+    import hmac
+    import json
+    import logging
+    import time
+    import threading
+    
+    # pip install -U websocket_client
+    from websocket import WebSocketApp
+    
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
+    
+    event = threading.Event()
+    
+    class GateWebSocketApp(WebSocketApp):
+    
+        def __init__(self, url, api_key, api_secret, **kwargs):
+            super(GateWebSocketApp, self).__init__(url, **kwargs)
+            self._api_key = api_key
+            self._api_secret = api_secret
+    
+        def _send_ping(self):
+            while not event.wait(10):
+                self.last_ping_tm = time.time()
+                if self.sock:
+                    try:
+                        self.sock.ping()
+                    except Exception as ex:
+                        logger.warning("send_ping routine terminated: {}".format(ex))
+                        break
+                    try:
+                        self._request("spot.ping", auth_required=False)
+                    except Exception as e:
+                        raise e
+    
+        def _request(self, channel, event=None, payload=None, auth_required=True):
+            current_time = int(time.time())
+            data = {
+                "time": current_time,
+                "channel": channel,
+                "event": event,
+                "payload": payload,
+            }
+            if auth_required:
+                message = 'channel=%s&event=%s&time=%d' % (channel, event, current_time)
+                data['auth'] = {
+                    "method": "api_key",
+                    "KEY": self._api_key,
+                    "SIGN": self.get_sign(message),
+                }
+            data = json.dumps(data)
+            logger.info('request: %s', data)
+            self.send(data)
+    
+        def get_sign(self, message):
+            h = hmac.new(self._api_secret.encode("utf8"), message.encode("utf8"), hashlib.sha512)
+            return h.hexdigest()
+    
+        def subscribe(self, channel, payload=None, auth_required=True):
+            self._request(channel, "subscribe", payload, auth_required)
+    
+        def unsubscribe(self, channel, payload=None, auth_required=True):
+            self._request(channel, "unsubscribe", payload, auth_required)
+    
+    
+    def on_message(ws, message):
+        # type: (GateWebSocketApp, str) -> None
+        # handle whatever message you received
+        logger.info("message received from server: {}".format(message))
+    
+    
+    def on_open(ws):
+        # type: (GateWebSocketApp) -> None
+        # subscribe to channels interested
+        logger.info('websocket connected')
+        ws.subscribe("spot.trades", ['BTC_USDT'], False)
+    
+    
+    if __name__ == "__main__":
+        logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.DEBUG)
+        app = GateWebSocketApp("wss://api.gateio.ws/ws/v4/",
+                               "YOUR_API_KEY",
+                               "YOUR_API_SECRET",
+                               on_open=on_open,
+                               on_message=on_message,
+                               header={"timeUnit": "microsecond"})
+        app.run_forever(ping_interval=5)
+    
+
+WebSocket 应用示例
+    
+    
     package main
     
     import (
@@ -365,6 +472,125 @@ WebSocket 应用示例
     }
     
 
+WebSocket 应用示例
+    
+    
+    package main
+    
+    import (
+    	"crypto/hmac"
+    	"crypto/sha512"
+    	"crypto/tls"
+    	"encoding/hex"
+    	"encoding/json"
+    	"fmt"
+    	"io"
+    	"net/url"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    type Msg struct {
+    	Time    int64    `json:"time"`
+    	Channel string   `json:"channel"`
+    	Event   string   `json:"event"`
+    	Payload []string `json:"payload"`
+    	Auth    *Auth    `json:"auth"`
+    }
+    
+    type Auth struct {
+    	Method string `json:"method"`
+    	KEY    string `json:"KEY"`
+    	SIGN   string `json:"SIGN"`
+    }
+    
+    const (
+    	Key    = "YOUR_API_KEY"
+    	Secret = "YOUR_API_SECRETY"
+    )
+    
+    func sign(channel, event string, t int64) string {
+    	message := fmt.Sprintf("channel=%s&event=%s&time=%d", channel, event, t)
+    	h2 := hmac.New(sha512.New, []byte(Secret))
+    	io.WriteString(h2, message)
+    	return hex.EncodeToString(h2.Sum(nil))
+    }
+    
+    func (msg *Msg) sign() {
+    	signStr := sign(msg.Channel, msg.Event, msg.Time)
+    	msg.Auth = &Auth{
+    		Method: "api_key",
+    		KEY:    Key,
+    		SIGN:   signStr,
+    	}
+    }
+    
+    func (msg *Msg) send(c *websocket.Conn) error {
+    	msgByte, err := json.Marshal(msg)
+    	if err != nil {
+    		return err
+    	}
+    	return c.WriteMessage(websocket.TextMessage, msgByte)
+    }
+    
+    func NewMsg(channel, event string, t int64, payload []string) *Msg {
+    	return &Msg{
+    		Time:    t,
+    		Channel: channel,
+    		Event:   event,
+    		Payload: payload,
+    	}
+    }
+    
+    func main() {
+    	u := url.URL{Scheme: "wss", Host: "api.gateio.ws", Path: "/ws/v4/"}
+    	websocket.DefaultDialer.TLSClientConfig = &tls.Config{RootCAs: nil, InsecureSkipVerify: true}
+    	c, _, err := websocket.DefaultDialer.Dial(u.String(), http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		panic(err)
+    	}
+    	c.SetPingHandler(nil)
+    
+    	// read msg
+    	go func() {
+    		for {
+    			_, message, err := c.ReadMessage()
+    			if err != nil {
+    				c.Close()
+    				panic(err)
+    			}
+    			fmt.Printf("recv: %s\n", message)
+    		}
+    	}()
+    
+    	t := time.Now().Unix()
+    	pingMsg := NewMsg("spot.ping", "", t, []string{})
+    	err = pingMsg.send(c)
+    	if err != nil {
+    		panic(err)
+    	}
+    
+    	// subscribe order book
+    	orderBookMsg := NewMsg("spot.order_book", "subscribe", t, []string{"BTC_USDT", "5", "100ms"})
+    	err = orderBookMsg.send(c)
+    	if err != nil {
+    		panic(err)
+    	}
+    
+    	// subscribe positions
+    	ordersMsg := NewMsg("spot.orders", "subscribe", t, []string{"BTC_USDT"})
+    	ordersMsg.sign()
+    	err = ordersMsg.send(c)
+    	if err != nil {
+    		panic(err)
+    	}
+    
+    	select {}
+    }
+    
+
 ##  Websocket API 概述
 
 WebSocket 操作分为不同的频道。频道可以是公共的或私有的。 公共频道可以直接订阅，而私有频道需要使用 Gate APIv4 密钥对进行身份验证（有关详细信息，请参阅下面的[身份验证 ](https://chat.openai.com/c/7b212ca5-e8b9-40df-af12-899e9c902460#authentication)）。
@@ -427,6 +653,7 @@ WebSocket 操作分为不同的频道。频道可以是公共的或私有的。 
 ---|---|---  
 `time` | Integer | 精确到秒的响应时间  
 `time_ms` | Integer | 精确到毫秒的响应时间  
+`time_us` | Integer | 同 `time` 字段，微秒精度  
 `id` | Integer | 从客户端请求 payload 中提取的请求 ID （如果请求参数中有的话）  
 `channel` | String | WebSocket 频道名称  
 `event` | String | 服务端频道事件（即，`update`）或 用于从客户端发起的请求的 `event`  
@@ -436,6 +663,48 @@ WebSocket 操作分为不同的频道。频道可以是公共的或私有的。 
 注意：如果它是服务端发起的数据更新通知 那么 `result` 的类型是基于 channel 的，不同 channel 的 `result` 类型有所不同。
 
 但如果是对客户端订阅请求的响应，那么 `result` 为固定的 `{"status": "success"}`。 验证订阅请求是否成功，您只需要检查 `error` 字段是否为空即可，不需要再解析 `result` 字段。
+
+###  微秒时间戳
+
+握手时用下面任一方式开启，连接建立后不能修改：
+
+  * Header：`timeUnit: microsecond`
+  * URL Query：`timeUnit=microsecond`
+
+值必须是全小写 `microsecond`。`Microsecond`、空字符串、带空格都等于未开启。Header 的键名不区分大小写，Query 的键名区分大小写，必须是 `timeUnit`。两者任一命中即开启。不带该参数的连接与升级前一致。
+
+原有的秒、毫秒字段保留，只追加微秒字段。新增字段是整数。SBE 不追加这些字段。现货没有 PB 推送。
+
+订阅确认、错误和 `spot.pong` 只在外层追加 `time_us`，`result` 里不补业务微秒。`time_us` 是服务端发出该条消息时的 Unix 微秒。仅 `timeUnit: microsecond` 开启后推送。
+
+URL 示例：`wss://api.gateio.ws/ws/v4/?timeUnit=microsecond`
+
+####  公有通道
+
+已开启的连接都会追加，不区分是不是 OMS 3.0 用户。
+
+公有通道通道 | 保留 | 新增  
+---|---|---  
+`spot.trades`、`spot.trades_v2` | `create_time`、`create_time_ms` | `create_time_us`。`create_time_ms` 带小数时按小数换算，原字符串不变  
+`spot.order_book`、`spot.rpi_order_book`、`spot.order_book_update`、`spot.obu`、`spot.rpi_obu`、`spot.book_ticker`、`spot.tickers` | `t`（毫秒） | `t_us`  
+`spot.candlesticks` | `t`（秒，字符串） | `t_us`。`t` 仍是字符串  
+  
+各通道的微秒示例写在对应频道的推送说明中。
+
+####  OMS 3.0 的私有通道
+
+已开启，并且该条消息处理时判定为 OMS 3.0，才追加。非 3.0 用户的私有推送与未开启时一致，没有外层 `time_us`，也没有业务微秒字段。
+
+OMS 3.0 的私有通道通道 | 保留 | 新增  
+---|---|---  
+`spot.orders`、`spot.orders_v2` | `create_time`、`create_time_ms`、`update_time`、`update_time_ms` | `create_time_us`、`update_time_us`  
+`spot.usertrades`、`spot.usertrades_v2` | `create_time`、`create_time_ms` | `create_time_us`  
+`spot.balances`、`spot.margin_balances`、`spot.funding_balances`、`spot.cross_balances` | `timestamp`（秒，字符串）、`timestamp_ms` | `timestamp_us`。`timestamp` 原字符串不变  
+`spot.cross_loan` | `timestamp`（毫秒） | `timestamp_us`。不补 `timestamp_ms`  
+  
+各通道的微秒示例写在对应频道的推送说明中。
+
+已开启且为 OMS 3.0 时，下单、撤单、改单、查单的响应也会追加对应微秒字段。`header` 追加 `time_us`、`response_time_us`。订单对象追加 `create_time_us`、`update_time_us`。`spot.login` 不追加。示例写在各接口的响应说明中。
 
 为了简单起见，下面的频道（channel）描述只给出对应频道的 payload 格式。
 
@@ -520,6 +789,81 @@ WebSocket 认证使用与 Gate APIv4 API 相同的签名计算方法，即: `Hex
     }
     request['auth'] = gen_sign(request['channel'], request['event'], request['time'])
     print(json.dumps(request))
+    
+
+代码示例
+    
+    
+    # example WebSocket signature calculation implementation in Python
+    import hmac, hashlib, json, time
+    
+    
+    def gen_sign(channel, event, timestamp):
+        # GateAPIv4 key pair
+        api_key = 'YOUR_API_KEY'
+        api_secret = 'YOUR_API_SECRET'
+    
+        s = 'channel=%s&event=%s&time=%d' % (channel, event, timestamp)
+        sign = hmac.new(api_secret.encode('utf-8'), s.encode('utf-8'), hashlib.sha512).hexdigest()
+        return {'method': 'api_key', 'KEY': api_key, 'SIGN': sign}
+    
+    
+    request = {
+        'id': int(time.time() * 1e6),
+        'time': int(time.time()),
+        'channel': 'spot.orders',
+        'event': 'subscribe',
+        'payload': ["BTC_USDT", "GT_USDT"]
+    }
+    request['auth'] = gen_sign(request['channel'], request['event'], request['time'])
+    print(json.dumps(request))
+    
+
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"crypto/hmac"
+    	"crypto/sha512"
+    	"encoding/hex"
+    	"encoding/json"
+    	"fmt"
+    	"time"
+    )
+    
+    func genSign(channel, event string, timestamp int64) map[string]string {
+    	apiKey := "YOUR_API_KEY"
+    	apiSecret := "YOUR_API_SECRET"
+    
+    	s := fmt.Sprintf("channel=%s&event=%s&time=%d", channel, event, timestamp)
+    	h := hmac.New(sha512.New, []byte(apiSecret))
+    	h.Write([]byte(s))
+    	sign := hex.EncodeToString(h.Sum(nil))
+    
+    	return map[string]string{
+    		"method": "api_key",
+    		"KEY":    apiKey,
+    		"SIGN":   sign,
+    	}
+    }
+    
+    func main() {
+    	timestamp := time.Now().Unix()
+    	request := map[string]interface{}{
+    		"id":      time.Now().UnixNano() / 1e3,
+    		"time":    timestamp,
+    		"channel": "spot.orders",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT", "GT_USDT"},
+    	}
+    	request["auth"] = genSign(request["channel"].(string), request["event"].(string), timestamp)
+    
+    	jsonBytes, _ := json.Marshal(request)
+    	fmt.Println(string(jsonBytes))
+    }
+    
     
 
 代码示例
@@ -727,6 +1071,18 @@ TIP
 代码示例
     
     
+    import time
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    ws.send('{"time": %d, "channel" : "spot.ping"}' % int(time.time()))
+    print(ws.recv())
+    
+
+代码示例
+    
+    
     package main
     
     import (
@@ -770,11 +1126,101 @@ TIP
     
     
 
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	ping := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "spot.ping",
+    	}
+    
+    	msg, err := json.Marshal(ping)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 响应示例
     
     
     {
       "time": 1545404023,
+      "channel": "spot.pong",
+      "event": "",
+      "error": null,
+      "result": null
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，pong 只追加外层 `time_us`。
+
+`spot.pong`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1545404023,
+      "time_us": 1545404023123456,
+      "channel": "spot.pong",
+      "event": "",
+      "error": null,
+      "result": null
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，pong 只追加外层 `time_us`。
+
+`spot.pong`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1545404023,
+      "time_us": 1545404023123456,
       "channel": "spot.pong",
       "event": "",
       "error": null,
@@ -859,6 +1305,25 @@ TIP
 代码示例：
     
     
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    ws.send(json.dumps({
+        "time": int(time.time()),
+        "channel": "spot.tickers",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+        "payload": ["BTC_USDT"]
+    }))
+    print(ws.recv())
+    
+
+代码示例：
+    
+    
     package main
     
     import (
@@ -873,6 +1338,55 @@ TIP
     func main() {
     	url := "wss://api.gateio.ws/ws/v4/"
     	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	subscribe := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "spot.tickers",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT"},
+    	}
+    
+    	msg, err := json.Marshal(subscribe)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
+代码示例：
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -926,6 +1440,70 @@ TIP
     
     {
       "time": 1606291803,
+      "time_ms": 1606291803123,
+      "channel": "spot.tickers",
+      "event": "update",
+      "result": {
+        "currency_pair": "BTC_USDT",
+        "last": "19106.55",
+        "lowest_ask": "19108.71",
+        "highest_bid": "19106.55",
+        "change_percentage": "3.66",
+        "base_volume": "2811.3042155865",
+        "quote_volume": "53441606.52411221454674732293",
+        "high_24h": "19417.74",
+        "low_24h": "18434.21"
+      }
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.tickers`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1606291803,
+      "time_ms": 1606291803123,
+      "time_us": 1606291803123456,
+      "channel": "spot.tickers",
+      "event": "update",
+      "result": {
+        "currency_pair": "BTC_USDT",
+        "last": "19106.55",
+        "lowest_ask": "19108.71",
+        "highest_bid": "19106.55",
+        "change_percentage": "3.66",
+        "base_volume": "2811.3042155865",
+        "quote_volume": "53441606.52411221454674732293",
+        "high_24h": "19417.74",
+        "low_24h": "18434.21"
+      }
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.tickers`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1606291803,
+      "time_ms": 1606291803123,
+      "time_us": 1606291803123456,
       "channel": "spot.tickers",
       "event": "update",
       "result": {
@@ -990,6 +1568,25 @@ TIP
 代码示例：
     
     
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    ws.send(json.dumps({
+        "time": int(time.time()),
+        "channel": "spot.trades",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+        "payload": ["BTC_USDT"]
+    }))
+    print(ws.recv())
+    
+
+代码示例：
+    
+    
     package main
     
     import (
@@ -1034,6 +1631,54 @@ TIP
     }
     
 
+代码示例：
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	subscribe := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "spot.trades",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT"},
+    	}
+    
+    	msg, err := json.Marshal(subscribe)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+
 ##  服务端推送
 
 请注意，公共交易频道只通知交易中的吃单方。下面的私有用户交易频道将通知所有与用户相关的交易。
@@ -1046,6 +1691,7 @@ TIP
 » `id` | Integer | 成交 ID  
 » `create_time` | Integer | 成交时间，精确到秒  
 » `create_time_ms` | String | 成交时间，毫秒精度  
+» `create_time_us` | Integer | 同 `create_time` 字段，微秒精度  
 » `side` | String | 买单或者卖单  
 » `currency_pair` | String | 交易货币对  
 » `amount` | String | 交易数量  
@@ -1070,12 +1716,84 @@ side | sell
     
     {
       "time": 1606292218,
+      "time_ms": 1606292218123,
       "channel": "spot.trades",
       "event": "update",
       "result": {
         "id": 309143071,
         "create_time": 1606292218,
         "create_time_ms": "1606292218213.4578",
+        "side": "sell",
+        "currency_pair": "BTC_USD",
+        "amount": "16.4700000000",
+        "price": "0.4705000000",
+        "range": "2390902-2390902",
+        "id_market": 917144,
+        "stock": "BTC",
+        "money": "USDC",
+        "trade_mode": 1
+      }
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.trades`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1606292218,
+      "time_ms": 1606292218123,
+      "time_us": 1606292218123456,
+      "channel": "spot.trades",
+      "event": "update",
+      "result": {
+        "id": 309143071,
+        "create_time": 1606292218,
+        "create_time_ms": "1606292218213.4578",
+        "create_time_us": 1606292218213457,
+        "side": "sell",
+        "currency_pair": "BTC_USD",
+        "amount": "16.4700000000",
+        "price": "0.4705000000",
+        "range": "2390902-2390902",
+        "id_market": 917144,
+        "stock": "BTC",
+        "money": "USDC",
+        "trade_mode": 1
+      }
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.trades`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1606292218,
+      "time_ms": 1606292218123,
+      "time_us": 1606292218123456,
+      "channel": "spot.trades",
+      "event": "update",
+      "result": {
+        "id": 309143071,
+        "create_time": 1606292218,
+        "create_time_ms": "1606292218213.4578",
+        "create_time_us": 1606292218213457,
         "side": "sell",
         "currency_pair": "BTC_USD",
         "amount": "16.4700000000",
@@ -1135,6 +1853,25 @@ TIP
 代码示例：
     
     
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    ws.send(json.dumps({
+        "time": int(time.time()),
+        "channel": "spot.trades_v2",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+        "payload": ["BTC_USDT"]
+    }))
+    print(ws.recv())
+    
+
+代码示例：
+    
+    
     package main
     
     import (
@@ -1179,6 +1916,54 @@ TIP
     }
     
 
+代码示例：
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	subscribe := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "spot.trades_v2",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT"},
+    	}
+    
+    	msg, err := json.Marshal(subscribe)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+
 ##  服务端推送
 
 请注意，公共交易频道只通知交易中的吃单方。下面的私有用户交易频道将通知所有与用户相关的交易。
@@ -1191,6 +1976,7 @@ TIP
 » `id` | Integer | 成交 ID  
 » `create_time` | Integer | 成交时间，精确到秒  
 » `create_time_ms` | String | 成交时间，毫秒精度  
+» `create_time_us` | Integer | 同 `create_time` 字段，微秒精度  
 » `side` | String | 买单或者卖单  
 » `currency_pair` | String | 交易货币对  
 » `amount` | String | 交易数量  
@@ -1215,12 +2001,84 @@ side | sell
     
     {
       "time": 1606292218,
+      "time_ms": 1606292218123,
       "channel": "spot.trades_v2",
       "event": "update",
       "result": {
         "id": 309143071,
         "create_time": 1606292218,
         "create_time_ms": "1606292218213.4578",
+        "side": "sell",
+        "currency_pair": "BTC_USD",
+        "amount": "16.4700000000",
+        "price": "0.4705000000",
+        "range": "2390902-2390902",
+        "id_market": 917144,
+        "stock": "BTC",
+        "money": "USDC",
+        "trade_mode": 1
+      }
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.trades_v2`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1606292218,
+      "time_ms": 1606292218123,
+      "time_us": 1606292218123456,
+      "channel": "spot.trades_v2",
+      "event": "update",
+      "result": {
+        "id": 309143071,
+        "create_time": 1606292218,
+        "create_time_ms": "1606292218213.4578",
+        "create_time_us": 1606292218213457,
+        "side": "sell",
+        "currency_pair": "BTC_USD",
+        "amount": "16.4700000000",
+        "price": "0.4705000000",
+        "range": "2390902-2390902",
+        "id_market": 917144,
+        "stock": "BTC",
+        "money": "USDC",
+        "trade_mode": 1
+      }
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.trades_v2`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1606292218,
+      "time_ms": 1606292218123,
+      "time_us": 1606292218123456,
+      "channel": "spot.trades_v2",
+      "event": "update",
+      "result": {
+        "id": 309143071,
+        "create_time": 1606292218,
+        "create_time_ms": "1606292218213.4578",
+        "create_time_us": 1606292218213457,
         "side": "sell",
         "currency_pair": "BTC_USD",
         "amount": "16.4700000000",
@@ -1301,6 +2159,25 @@ TIP
 代码示例：
     
     
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    ws.send(json.dumps({
+        "time": int(time.time()),
+        "channel": "spot.candlesticks",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+        "payload": ["1m", "BTC_USDT"]
+    }))
+    print(ws.recv())
+    
+
+代码示例：
+    
+    
     package main
     
     import (
@@ -1346,6 +2223,55 @@ TIP
     
     
 
+代码示例：
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	subscribe := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "spot.candlesticks",
+    		"event":   "subscribe",
+    		"payload": []string{"1m", "BTC_USDT"},
+    	}
+    
+    	msg, err := json.Marshal(subscribe)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 ##  服务端推送
 
 通知结果格式：
@@ -1354,6 +2280,7 @@ TIP
 ---|---|---  
 `result` | Object | K 线数  
 »`t` | String | Unix 时间戳，精确到秒  
+»`t_us` | Integer | 同 `t` 字段，微秒精度  
 »`v` | String | 交易量，只有市场行情的 K 线数据里有该值  
 »`c` | String | 收盘价  
 »`h` | String | 最高价  
@@ -1368,10 +2295,76 @@ TIP
     
     {
       "time": 1606292600,
+      "time_ms": 1606292600123,
       "channel": "spot.candlesticks",
       "event": "update",
       "result": {
         "t": "1606292580",
+        "v": "2362.32035",
+        "c": "19128.1",
+        "h": "19128.1",
+        "l": "19128.1",
+        "o": "19128.1",
+        "n": "1m_BTC_USDT",
+        "a": "3.8283",
+        "w": true
+      }
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.candlesticks`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1606292600,
+      "time_ms": 1606292600123,
+      "time_us": 1606292600123456,
+      "channel": "spot.candlesticks",
+      "event": "update",
+      "result": {
+        "t": "1606292580",
+        "t_us": 1606292580000000,
+        "v": "2362.32035",
+        "c": "19128.1",
+        "h": "19128.1",
+        "l": "19128.1",
+        "o": "19128.1",
+        "n": "1m_BTC_USDT",
+        "a": "3.8283",
+        "w": true
+      }
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.candlesticks`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1606292600,
+      "time_ms": 1606292600123,
+      "time_us": 1606292600123456,
+      "channel": "spot.candlesticks",
+      "event": "update",
+      "result": {
+        "t": "1606292580",
+        "t_us": 1606292580000000,
         "v": "2362.32035",
         "c": "19128.1",
         "h": "19128.1",
@@ -1466,6 +2459,25 @@ TIP
 代码示例：
     
     
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    ws.send(json.dumps({
+        "time": int(time.time()),
+        "channel": "spot.book_ticker",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+        "payload": ["BTC_USDT"]
+    }))
+    print(ws.recv())
+    
+
+代码示例：
+    
+    
     package main
     
     import (
@@ -1511,6 +2523,55 @@ TIP
     
     
 
+代码示例：
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	subscribe := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "spot.book_ticker",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT"},
+    	}
+    
+    	msg, err := json.Marshal(subscribe)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 ###  服务端推送
 
 通知结果格式：
@@ -1519,6 +2580,7 @@ TIP
 ---|---|---  
 `result` | Object | Order book ticker object  
 » `t` | Integer | 深度更新毫秒时间戳  
+» `t_us` | Integer | 同 `t` 字段，微秒精度  
 » `u` | Integer | 深度更新 ID  
 » `s` | String | 货币对  
 » `b` | String | 最优买单价  
@@ -1531,10 +2593,72 @@ TIP
     
     {
       "time": 1606293275,
+      "time_ms": 1606293275123,
       "channel": "spot.book_ticker",
       "event": "update",
       "result": {
         "t": 1606293275123,
+        "u": 48733182,
+        "s": "BTC_USDT",
+        "b": "19177.79",
+        "B": "0.0003341504",
+        "a": "19179.38",
+        "A": "0.09"
+      }
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.book_ticker`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1606293275,
+      "time_ms": 1606293275123,
+      "time_us": 1606293275123456,
+      "channel": "spot.book_ticker",
+      "event": "update",
+      "result": {
+        "t": 1606293275123,
+        "t_us": 1606293275123000,
+        "u": 48733182,
+        "s": "BTC_USDT",
+        "b": "19177.79",
+        "B": "0.0003341504",
+        "a": "19179.38",
+        "A": "0.09"
+      }
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.book_ticker`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1606293275,
+      "time_ms": 1606293275123,
+      "time_us": 1606293275123456,
+      "channel": "spot.book_ticker",
+      "event": "update",
+      "result": {
+        "t": 1606293275123,
+        "t_us": 1606293275123000,
         "u": 48733182,
         "s": "BTC_USDT",
         "b": "19177.79",
@@ -1596,6 +2720,25 @@ TIP
 代码示例
     
     
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    ws.send(json.dumps({
+        "time": int(time.time()),
+        "channel": "spot.order_book_update",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+        "payload": ["BTC_USDT", "100ms"]
+    }))
+    print(ws.recv())
+    
+
+代码示例
+    
+    
     package main
     
     import (
@@ -1641,6 +2784,55 @@ TIP
     
     
 
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	subscribe := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "spot.order_book_update",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT", "100ms"},
+    	}
+    
+    	msg, err := json.Marshal(subscribe)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 ###  服务端推送
 
 通知结果格式：
@@ -1649,6 +2841,7 @@ TIP
 ---|---|---  
 `result` | Object | 自从上次更新变化后的卖买单列表（asks/bids）  
 » `t` | Integer | 深度更新变化毫秒时间戳  
+» `t_us` | Integer | 同 `t` 字段，微秒精度  
 » `full` | Boolean | `true` 代表全量的深度（假设订阅 100ms，推送出来则是 100 层的深度）；用户接收到之后需要替换本地深度；`false` 代表增量的深度，为 `false` 时，不传输该字段  
 » `l` | String | 深度层级（例如 100 即代表 100 层的深度更新）  
 » `e` | String | 忽略这个参数  
@@ -1683,6 +2876,101 @@ TIP
           ["19088.37", "0"]
         ],
         "a": [["19137.75", "0.6135"]]
+      }
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.order_book_update`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1606294781,
+      "time_ms": 1606294781236,
+      "time_us": 1606294781236456,
+      "channel": "spot.order_book_update",
+      "event": "update",
+      "result": {
+        "t": 1606294781123,
+        "t_us": 1606294781123000,
+        "full": true,
+        "l": "100",
+        "e": "depthUpdate",
+        "E": 1606294781,
+        "s": "BTC_USDT",
+        "U": 48776301,
+        "u": 48776306,
+        "b": [
+          [
+            "19137.74",
+            "0.0001"
+          ],
+          [
+            "19088.37",
+            "0"
+          ]
+        ],
+        "a": [
+          [
+            "19137.75",
+            "0.6135"
+          ]
+        ]
+      }
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.order_book_update`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1606294781,
+      "time_ms": 1606294781236,
+      "time_us": 1606294781236456,
+      "channel": "spot.order_book_update",
+      "event": "update",
+      "result": {
+        "t": 1606294781123,
+        "t_us": 1606294781123000,
+        "full": true,
+        "l": "100",
+        "e": "depthUpdate",
+        "E": 1606294781,
+        "s": "BTC_USDT",
+        "U": 48776301,
+        "u": 48776306,
+        "b": [
+          [
+            "19137.74",
+            "0.0001"
+          ],
+          [
+            "19088.37",
+            "0"
+          ]
+        ],
+        "a": [
+          [
+            "19137.75",
+            "0.6135"
+          ]
+        ]
       }
     }
     
@@ -1743,6 +3031,25 @@ TIP
 代码示例：
     
     
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    ws.send(json.dumps({
+        "time": int(time.time()),
+        "channel": "spot.order_book",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+        "payload": ["BTC_USDT", "5", "100ms"]
+    }))
+    print(ws.recv())
+    
+
+代码示例：
+    
+    
     package main
     
     import (
@@ -1788,6 +3095,55 @@ TIP
     
     
 
+代码示例：
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	subscribe := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "spot.order_book",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT", "5", "100ms"},
+    	}
+    
+    	msg, err := json.Marshal(subscribe)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 ###  服务端推送
 
 通知结果格式：
@@ -1796,6 +3152,7 @@ TIP
 ---|---|---  
 `result` | Object | 深度信息  
 » `t` | Integer | 深度更新毫秒时间戳  
+» `t_us` | Integer | 同 `t` 字段，微秒精度  
 » `lastUpdateId` | Integer | 深度副本当前的深度 ID  
 » `s` | String | 货币对  
 » `l` | String | 深度层级（例如 100 即代表 100 层的深度更新）  
@@ -1830,6 +3187,149 @@ TIP
           ["19080.92", "0.01"],
           ["19081.29", "0.01"],
           ["19083.8", "0.097"]
+        ]
+      }
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.order_book`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1606295412,
+      "time_ms": 1606295412213,
+      "time_us": 1606295412213456,
+      "channel": "spot.order_book",
+      "event": "update",
+      "result": {
+        "t": 1606295412123,
+        "t_us": 1606295412123000,
+        "lastUpdateId": 48791820,
+        "s": "BTC_USDT",
+        "l": "5",
+        "bids": [
+          [
+            "19079.55",
+            "0.0195"
+          ],
+          [
+            "19079.07",
+            "0.7341"
+          ],
+          [
+            "19076.23",
+            "0.00011808"
+          ],
+          [
+            "19073.9",
+            "0.105"
+          ],
+          [
+            "19068.83",
+            "0.1009"
+          ]
+        ],
+        "asks": [
+          [
+            "19080.24",
+            "0.1638"
+          ],
+          [
+            "19080.91",
+            "0.1366"
+          ],
+          [
+            "19080.92",
+            "0.01"
+          ],
+          [
+            "19081.29",
+            "0.01"
+          ],
+          [
+            "19083.8",
+            "0.097"
+          ]
+        ]
+      }
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.order_book`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1606295412,
+      "time_ms": 1606295412213,
+      "time_us": 1606295412213456,
+      "channel": "spot.order_book",
+      "event": "update",
+      "result": {
+        "t": 1606295412123,
+        "t_us": 1606295412123000,
+        "lastUpdateId": 48791820,
+        "s": "BTC_USDT",
+        "l": "5",
+        "bids": [
+          [
+            "19079.55",
+            "0.0195"
+          ],
+          [
+            "19079.07",
+            "0.7341"
+          ],
+          [
+            "19076.23",
+            "0.00011808"
+          ],
+          [
+            "19073.9",
+            "0.105"
+          ],
+          [
+            "19068.83",
+            "0.1009"
+          ]
+        ],
+        "asks": [
+          [
+            "19080.24",
+            "0.1638"
+          ],
+          [
+            "19080.91",
+            "0.1366"
+          ],
+          [
+            "19080.92",
+            "0.01"
+          ],
+          [
+            "19081.29",
+            "0.01"
+          ],
+          [
+            "19083.8",
+            "0.097"
+          ]
         ]
       }
     }
@@ -1896,6 +3396,25 @@ interval | 1000ms
 代码示例：
     
     
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    ws.send(json.dumps({
+        "time": int(time.time()),
+        "channel": "spot.rpi_order_book",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+        "payload": ["BTC_USDT", "20", "100ms"]
+    }))
+    print(ws.recv())
+    
+
+代码示例：
+    
+    
     package main
     
     import (
@@ -1941,6 +3460,55 @@ interval | 1000ms
     
     
 
+代码示例：
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	subscribe := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "spot.rpi_order_book",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT", "20", "100ms"},
+    	}
+    
+    	msg, err := json.Marshal(subscribe)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 ##  服务端推送
 
 通知结果格式：
@@ -1949,6 +3517,7 @@ interval | 1000ms
 ---|---|---  
 `result` | Object | 深度信息  
 » `t` | Integer | 深度更新毫秒时间戳  
+» `t_us` | Integer | 同 `t` 字段，微秒精度  
 » `lastUpdateId` | Integer | 深度副本当前的深度 ID  
 » `s` | String | 货币对  
 » `l` | String | 深度层级（例如 20 即代表 20 层的深度更新）  
@@ -1979,6 +3548,101 @@ interval | 1000ms
         "asks": [
           ["19080.24", "0.1638"],
           ["19080.91", "0.1366"]
+        ]
+      }
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.rpi_order_book`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1606295412,
+      "time_ms": 1606295412213,
+      "time_us": 1606295412213456,
+      "channel": "spot.rpi_order_book",
+      "event": "update",
+      "result": {
+        "t": 1606295412123,
+        "t_us": 1606295412123000,
+        "lastUpdateId": 48791820,
+        "s": "BTC_USDT",
+        "l": "20",
+        "bids": [
+          [
+            "19079.55",
+            "0.0195"
+          ],
+          [
+            "19079.07",
+            "0.7341"
+          ]
+        ],
+        "asks": [
+          [
+            "19080.24",
+            "0.1638"
+          ],
+          [
+            "19080.91",
+            "0.1366"
+          ]
+        ]
+      }
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.rpi_order_book`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1606295412,
+      "time_ms": 1606295412213,
+      "time_us": 1606295412213456,
+      "channel": "spot.rpi_order_book",
+      "event": "update",
+      "result": {
+        "t": 1606295412123,
+        "t_us": 1606295412123000,
+        "lastUpdateId": 48791820,
+        "s": "BTC_USDT",
+        "l": "20",
+        "bids": [
+          [
+            "19079.55",
+            "0.0195"
+          ],
+          [
+            "19079.07",
+            "0.7341"
+          ]
+        ],
+        "asks": [
+          [
+            "19080.24",
+            "0.1638"
+          ],
+          [
+            "19080.91",
+            "0.1366"
+          ]
         ]
       }
     }
@@ -2058,6 +3722,17 @@ interval | 1000ms
 代码示例
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    ws.send('{"time" : 123456, "channel" : "spot.obu",
+            "event": "subscribe", "payload" : ["ob.BTC_USDT.50"]}')
+    print(ws.recv())
+    
+
+代码示例
+    
+    
     package main
     
     import (
@@ -2070,6 +3745,44 @@ interval | 1000ms
     func main() {
     	url := "wss://api.gateio.ws/ws/v4/"
     	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "spot.obu", "event": "subscribe", "payload" : ["ob.BTC_USDT.50"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -2131,6 +3844,7 @@ interval | 1000ms
 ---|---|---  
 `result` | Object | 自上次更新以来发生变更要价和出价  
 »`t` | Integer | 订单簿生成时间戳（以毫秒为单位）  
+»`t_us` | Integer | 同 `t` 字段，微秒精度  
 »`full` | Boolean | `true` 代表全量的深度；`false` 代表增量的深度，为 `false` 时，不传输该字段  
 »`s` | String | 深度流的名称  
 »`U` | Integer | 本次更新开始的订单簿更新 ID  
@@ -2186,6 +3900,149 @@ interval | 1000ms
     }
     
 
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.obu`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "channel": "spot.obu",
+      "result": {
+        "t": 1747054612695,
+        "t_us": 1747054612695000,
+        "s": "ob.BTC_USDT.50",
+        "U": 73777715169,
+        "u": 73777715212,
+        "b": [
+          [
+            "104024.5",
+            "10343"
+          ],
+          [
+            "104014.5",
+            "509392"
+          ]
+        ],
+        "a": [
+          [
+            "104027.2",
+            "0"
+          ],
+          [
+            "104027.4",
+            "0"
+          ]
+        ]
+      },
+      "time_ms": 1747054612925,
+      "time_us": 1747054612925456
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.obu`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "channel": "spot.obu",
+      "result": {
+        "t": 1747054612695,
+        "t_us": 1747054612695000,
+        "s": "ob.BTC_USDT.50",
+        "U": 73777715169,
+        "u": 73777715212,
+        "b": [
+          [
+            "104024.5",
+            "10343"
+          ],
+          [
+            "104014.5",
+            "509392"
+          ]
+        ],
+        "a": [
+          [
+            "104027.2",
+            "0"
+          ],
+          [
+            "104027.4",
+            "0"
+          ]
+        ]
+      },
+      "time_ms": 1747054612925,
+      "time_us": 1747054612925456
+    }
+    
+
+##  深度频道V2取消订阅
+
+**深度频道V2的消息推送**
+
+###  推送参数
+
+  * channel
+
+`spot.obu`
+
+  * event
+
+`update`
+
+  * params
+
+推送参数名称 | 类型 | 描述  
+---|---|---  
+`result` | Object | 自上次更新以来发生变更要价和出价  
+»`t` | Integer | 订单簿生成时间戳（以毫秒为单位）  
+»`t_us` | Integer | 同 `t` 字段，微秒精度  
+»`full` | Boolean | `true` 代表全量的深度；`false` 代表增量的深度，为 `false` 时，不传输该字段  
+»`s` | String | 深度流的名称  
+»`U` | Integer | 本次更新开始的订单簿更新 ID  
+»`u` | Integer | 本次更新结束的订单簿更新 ID  
+»`b` | `Array[OrderBookArray]` | 自上次更新以来的 bids 更新  
+»» OrderBookArray | `Array[String]` | [Price, Amount] 数组对, Amount=0应当从本地深度中移除  
+»`a` | `Array[OrderBookArray]` | 自上次更新以来的 asks 更新  
+»» OrderBookArray | `Array[String]` | [Price, Amount] 数组对, Amount=0应当从本地深度中移除  
+  
+代码示例
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    ws.send(
+      '{"time" : 123456, "channel" : "spot.obu", "event": "unsubscribe", "payload" : ["ob.BTC_USDT.50"]}')
+    print(ws.recv())
+    
+
+代码示例
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    ws.send(
+      '{"time" : 123456, "channel" : "spot.obu", "event": "unsubscribe", "payload" : ["ob.BTC_USDT.50"]}')
+    print(ws.recv())
+    
+
 ##  深度频道V2取消订阅
 
 **取消指定合约的市场的深度频道V2订阅**
@@ -2214,6 +4071,17 @@ interval | 1000ms
 代码示例
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    ws.send(
+      '{"time" : 123456, "channel" : "spot.obu", "event": "unsubscribe", "payload" : ["ob.BTC_USDT.50"]}')
+    print(ws.recv())
+    
+
+代码示例
+    
+    
     package main
     
     import (
@@ -2226,6 +4094,44 @@ interval | 1000ms
     func main() {
     	url := "wss://api.gateio.ws/ws/v4/"
     	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "spot.obu", "event": "unsubscribe", "payload" : ["ob.BTC_USDT.50"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -2312,6 +4218,17 @@ SBE 复用 `obu` 模板（templateId=`3`），帧里的 `channel` 为 `spot.rpi_
 代码示例
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    ws.send('{"time" : 123456, "channel" : "spot.rpi_obu",
+            "event": "subscribe", "payload" : ["rpi_ob.BTC_USDT.50"]}')
+    print(ws.recv())
+    
+
+代码示例
+    
+    
     package main
     
     import (
@@ -2324,6 +4241,44 @@ SBE 复用 `obu` 模板（templateId=`3`），帧里的 `channel` 为 `spot.rpi_
     func main() {
     	url := "wss://api.gateio.ws/ws/v4/"
     	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "spot.rpi_obu", "event": "subscribe", "payload" : ["rpi_ob.BTC_USDT.50"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -2385,6 +4340,7 @@ SBE 复用 `obu` 模板（templateId=`3`），帧里的 `channel` 为 `spot.rpi_
 ---|---|---  
 `result` | Object | 自上次更新以来发生变更的卖单和买单  
 »`t` | Integer | 订单簿生成时间戳（以毫秒为单位）  
+»`t_us` | Integer | 同 `t` 字段，微秒精度  
 »`full` | Boolean | `true` 代表全量的深度；`false` 代表增量的深度，为 `false` 时，不传输该字段  
 »`s` | String | 深度流的名称，例如 `rpi_ob.BTC_USDT.50`  
 »`U` | Integer | 本次更新开始的订单簿更新 ID  
@@ -2438,6 +4394,81 @@ SBE 复用 `obu` 模板（templateId=`3`），帧里的 `channel` 为 `spot.rpi_
     }
     
 
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.rpi_obu`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "channel": "spot.rpi_obu",
+      "result": {
+        "t": 1747054612695,
+        "t_us": 1747054612695000,
+        "s": "rpi_ob.BTC_USDT.50",
+        "U": 73777715169,
+        "u": 73777715212,
+        "b": [
+          [
+            "104024.5",
+            "10343"
+          ]
+        ],
+        "a": [
+          [
+            "104027.2",
+            "0"
+          ]
+        ]
+      },
+      "time_ms": 1747054612925,
+      "time_us": 1747054612925456
+    }
+    
+
+请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.rpi_obu`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "channel": "spot.rpi_obu",
+      "result": {
+        "t": 1747054612695,
+        "t_us": 1747054612695000,
+        "s": "rpi_ob.BTC_USDT.50",
+        "U": 73777715169,
+        "u": 73777715212,
+        "b": [
+          [
+            "104024.5",
+            "10343"
+          ]
+        ],
+        "a": [
+          [
+            "104027.2",
+            "0"
+          ]
+        ]
+      },
+      "time_ms": 1747054612925,
+      "time_us": 1747054612925456
+    }
+    
+
 ##  RPI 深度频道V2取消订阅
 
 ###  请求参数
@@ -2464,6 +4495,17 @@ SBE 复用 `obu` 模板（templateId=`3`），帧里的 `channel` 为 `spot.rpi_
 代码示例
     
     
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    ws.send(
+      '{"time" : 123456, "channel" : "spot.rpi_obu", "event": "unsubscribe", "payload" : ["rpi_ob.BTC_USDT.50"]}')
+    print(ws.recv())
+    
+
+代码示例
+    
+    
     package main
     
     import (
@@ -2476,6 +4518,44 @@ SBE 复用 `obu` 模板（templateId=`3`），帧里的 `channel` 为 `spot.rpi_
     func main() {
     	url := "wss://api.gateio.ws/ws/v4/"
     	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "spot.rpi_obu", "event": "unsubscribe", "payload" : ["rpi_ob.BTC_USDT.50"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -2547,6 +4627,28 @@ WARNING
 代码示例：
     
     
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    request = {
+        "time": int(time.time()),
+        "channel": "spot.orders",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+        "payload": ["BTC_USDT"]
+    }
+    # refer to Authentication section for gen_sign implementation
+    request['auth'] = gen_sign(request['channel'], request['event'], request['time'])
+    ws.send(json.dumps(request))
+    print(ws.recv())
+    
+
+代码示例：
+    
+    
     package main
     
     import (
@@ -2561,6 +4663,59 @@ WARNING
     func main() {
     	url := "wss://api.gateio.ws/ws/v4/"
     	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	timestamp := time.Now().Unix()
+    	request := map[string]interface{}{
+    		"time":    timestamp,
+    		"channel": "spot.orders",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT"},
+    	}
+    
+    	// refer to Authentication section for gen_sign implementation
+    	request["auth"] = genSign(request["channel"].(string), request["event"].(string), timestamp)
+    
+    	msg, err := json.Marshal(request)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
+代码示例：
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -2612,8 +4767,10 @@ WARNING
 » `text` | String | 用户自定义订单信息  
 » `create_time` | String | 订单创建时间，精确到秒  
 » `create_time_ms` | String | 订单创建时间，精确到毫秒  
+» `create_time_us` | Integer | 同 `create_time` 字段，微秒精度  
 » `update_time` | String | 订单最新更新时间，精确到秒  
 » `update_time_ms` | String | 订单最新更新时间，精确到毫秒  
+» `update_time_us` | Integer | 同 `update_time` 字段，微秒精度  
 » `event` | String | 订单事件  
 \- `put`: 订单创建  
 \- `update`: 订单成交更新  
@@ -2736,6 +4893,127 @@ time_in_force | poc | 被动委托，只挂单不吃单
     }
     
 
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.orders`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1694655225,
+      "time_ms": 1694655225315,
+      "time_us": 1694655225315456,
+      "channel": "spot.orders",
+      "event": "update",
+      "result": [
+        {
+          "id": "399123456",
+          "text": "t-testtext",
+          "create_time": "1694655225",
+          "update_time": "1694655225",
+          "currency_pair": "BTC_USD",
+          "stock": "BTC",
+          "money": "USDC",
+          "trade_mode": 1,
+          "type": "limit",
+          "account": "spot",
+          "side": "sell",
+          "amount": "0.0001",
+          "price": "26253.3",
+          "time_in_force": "gtc",
+          "left": "0.0001",
+          "filled_total": "0",
+          "filled_amount": "812.8",
+          "avg_deal_price": "0",
+          "fee": "0",
+          "fee_currency": "USDC",
+          "point_fee": "0",
+          "gt_fee": "0",
+          "rebated_fee": "0",
+          "rebated_fee_currency": "USDC",
+          "create_time_ms": "1694655225315",
+          "create_time_us": 1694655225315000,
+          "update_time_ms": "1694655225315",
+          "update_time_us": 1694655225315000,
+          "user": 3497082,
+          "event": "put",
+          "stp_id": 0,
+          "stp_act": "-",
+          "finish_as": "open",
+          "biz_info": "-",
+          "amend_text": "-",
+          "slippage": "0.05"
+        }
+      ]
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.orders`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1694655225,
+      "time_ms": 1694655225315,
+      "time_us": 1694655225315456,
+      "channel": "spot.orders",
+      "event": "update",
+      "result": [
+        {
+          "id": "399123456",
+          "text": "t-testtext",
+          "create_time": "1694655225",
+          "update_time": "1694655225",
+          "currency_pair": "BTC_USD",
+          "stock": "BTC",
+          "money": "USDC",
+          "trade_mode": 1,
+          "type": "limit",
+          "account": "spot",
+          "side": "sell",
+          "amount": "0.0001",
+          "price": "26253.3",
+          "time_in_force": "gtc",
+          "left": "0.0001",
+          "filled_total": "0",
+          "filled_amount": "812.8",
+          "avg_deal_price": "0",
+          "fee": "0",
+          "fee_currency": "USDC",
+          "point_fee": "0",
+          "gt_fee": "0",
+          "rebated_fee": "0",
+          "rebated_fee_currency": "USDC",
+          "create_time_ms": "1694655225315",
+          "create_time_us": 1694655225315000,
+          "update_time_ms": "1694655225315",
+          "update_time_us": 1694655225315000,
+          "user": 3497082,
+          "event": "put",
+          "stp_id": 0,
+          "stp_act": "-",
+          "finish_as": "open",
+          "biz_info": "-",
+          "amend_text": "-",
+          "slippage": "0.05"
+        }
+      ]
+    }
+    
+
 #  订单频道V2（轻量级通道）
 
 `spot.orders_v2`
@@ -2772,6 +5050,28 @@ WARNING
     from websocket import create_connection
     
     ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    request = {
+        "time": int(time.time()),
+        "channel": "spot.orders_v2",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+        "payload": ["BTC_USDT"]
+    }
+    # refer to Authentication section for gen_sign implementation
+    request['auth'] = gen_sign(request['channel'], request['event'], request['time'])
+    ws.send(json.dumps(request))
+    print(ws.recv())
+    
+
+代码示例：
+    
+    
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
     request = {
         "time": int(time.time()),
         "channel": "spot.orders_v2",
@@ -2836,6 +5136,59 @@ WARNING
     
     
 
+代码示例：
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	timestamp := time.Now().Unix()
+    	request := map[string]interface{}{
+    		"time":    timestamp,
+    		"channel": "spot.orders_v2",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT"},
+    	}
+    
+    	// refer to Authentication section for gen_sign implementation
+    	request["auth"] = genSign(request["channel"].(string), request["event"].(string), timestamp)
+    
+    	msg, err := json.Marshal(request)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 ##  服务端推送
 
 更新的订单列表。请注意，可能会在一条通知中更新多个货币对的订单。
@@ -2852,8 +5205,10 @@ WARNING
 » `text` | String | 用户自定义订单信息  
 » `create_time` | String | 订单创建时间，精确到秒  
 » `create_time_ms` | String | 订单创建时间，精确到毫秒  
+» `create_time_us` | Integer | 同 `create_time` 字段，微秒精度  
 » `update_time` | String | 订单最新更新时间，精确到秒  
 » `update_time_ms` | String | 订单最新更新时间，精确到毫秒  
+» `update_time_us` | Integer | 同 `update_time` 字段，微秒精度  
 » `event` | String | 订单事件  
 \- `put`: 订单创建  
 \- `update`: 订单成交更新  
@@ -2969,6 +5324,121 @@ time_in_force | poc | 被动委托，只挂单不吃单
     }
     
 
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.orders_v2`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1736238443,
+      "time_ms": 1736238443516,
+      "time_us": 1736238443516456,
+      "channel": "spot.orders_v2",
+      "event": "update",
+      "result": [
+        {
+          "id": "769689142776",
+          "text": "t-poc1736238443494",
+          "create_time": "1736238443",
+          "update_time": "1736238443",
+          "currency_pair": "BTC_USD",
+          "stock": "BTC",
+          "money": "USDC",
+          "trade_mode": 1,
+          "type": "limit",
+          "account": "spot",
+          "side": "buy",
+          "amount": "0.78",
+          "price": "3.9147",
+          "time_in_force": "poc",
+          "left": "0",
+          "filled_total": "3.053466",
+          "filled_amount": "812.8",
+          "avg_deal_price": "3.9147",
+          "fee_currency": "USDC",
+          "gt_discount": true,
+          "rebated_fee_currency": "USDC",
+          "create_time_ms": "1736238443503",
+          "create_time_us": 1736238443503000,
+          "update_time_ms": "1736238443506",
+          "update_time_us": 1736238443506000,
+          "user": 3128780,
+          "event": "finish",
+          "stp_id": 0,
+          "stp_act": "-",
+          "finish_as": "filled",
+          "biz_info": "-",
+          "amend_text": "-",
+          "slippage": "0.05"
+        }
+      ]
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.orders_v2`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1736238443,
+      "time_ms": 1736238443516,
+      "time_us": 1736238443516456,
+      "channel": "spot.orders_v2",
+      "event": "update",
+      "result": [
+        {
+          "id": "769689142776",
+          "text": "t-poc1736238443494",
+          "create_time": "1736238443",
+          "update_time": "1736238443",
+          "currency_pair": "BTC_USD",
+          "stock": "BTC",
+          "money": "USDC",
+          "trade_mode": 1,
+          "type": "limit",
+          "account": "spot",
+          "side": "buy",
+          "amount": "0.78",
+          "price": "3.9147",
+          "time_in_force": "poc",
+          "left": "0",
+          "filled_total": "3.053466",
+          "filled_amount": "812.8",
+          "avg_deal_price": "3.9147",
+          "fee_currency": "USDC",
+          "gt_discount": true,
+          "rebated_fee_currency": "USDC",
+          "create_time_ms": "1736238443503",
+          "create_time_us": 1736238443503000,
+          "update_time_ms": "1736238443506",
+          "update_time_us": 1736238443506000,
+          "user": 3128780,
+          "event": "finish",
+          "stp_id": 0,
+          "stp_act": "-",
+          "finish_as": "filled",
+          "biz_info": "-",
+          "amend_text": "-",
+          "slippage": "0.05"
+        }
+      ]
+    }
+    
+
 #  用户私有成交频道
 
 `spot.usertrades`
@@ -3003,6 +5473,28 @@ WARNING
     from websocket import create_connection
     
     ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    request = {
+        "time": int(time.time()),
+        "channel": "spot.usertrades",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+        "payload": ["BTC_USDT"]
+    }
+    # refer to Authentication section for gen_sign implementation
+    request['auth'] = gen_sign(request['channel'], request['event'], request['time'])
+    ws.send(json.dumps(request))
+    print(ws.recv())
+    
+
+代码示例：
+    
+    
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
     request = {
         "time": int(time.time()),
         "channel": "spot.usertrades",
@@ -3067,6 +5559,59 @@ WARNING
     
     
 
+代码示例：
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	timestamp := time.Now().Unix()
+    	request := map[string]interface{}{
+    		"time":    timestamp,
+    		"channel": "spot.usertrades",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT"},
+    	}
+    
+    	// refer to Authentication section for gen_sign implementation
+    	request["auth"] = genSign(request["channel"].(string), request["event"].(string), timestamp)
+    
+    	msg, err := json.Marshal(request)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 ##  服务端推送
 
 更新的用户交易列表。
@@ -3084,6 +5629,7 @@ WARNING
 » `currency_pair` | String | 交易货币对  
 » `create_time` | Integer | 成交时间，精确到秒  
 » `create_time_ms` | String | 成交时间，毫秒精度  
+» `create_time_us` | Integer | 同 `create_time` 字段，微秒精度  
 » `side` | String | 买单或者卖单  
 » `amount` | String | 交易数量  
 » `role` | String | 交易角色 (maker/taker)  
@@ -3112,6 +5658,7 @@ role | taker
     
     {
       "time": 1605176741,
+      "time_ms": 1605176741123,
       "channel": "spot.usertrades",
       "event": "update",
       "result": [
@@ -3122,6 +5669,93 @@ role | taker
           "currency_pair": "BTC_USD",
           "create_time": 1605176741,
           "create_time_ms": "1605176741123.456",
+          "side": "sell",
+          "amount": "1.00000000",
+          "role": "taker",
+          "price": "10000.00000000",
+          "fee": "0.00200000000000",
+          "point_fee": "0",
+          "gt_fee": "0",
+          "text": "apiv4",
+          "id_market": 917144,
+          "stock": "BTC",
+          "money": "USDC",
+          "trade_mode": 1
+        }
+      ]
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.usertrades`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1605176741,
+      "time_ms": 1605176741123,
+      "time_us": 1605176741123456,
+      "channel": "spot.usertrades",
+      "event": "update",
+      "result": [
+        {
+          "id": 5736713,
+          "user_id": 1000001,
+          "order_id": "30784428",
+          "currency_pair": "BTC_USD",
+          "create_time": 1605176741,
+          "create_time_ms": "1605176741123.456",
+          "create_time_us": 1605176741123456,
+          "side": "sell",
+          "amount": "1.00000000",
+          "role": "taker",
+          "price": "10000.00000000",
+          "fee": "0.00200000000000",
+          "point_fee": "0",
+          "gt_fee": "0",
+          "text": "apiv4",
+          "id_market": 917144,
+          "stock": "BTC",
+          "money": "USDC",
+          "trade_mode": 1
+        }
+      ]
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.usertrades`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1605176741,
+      "time_ms": 1605176741123,
+      "time_us": 1605176741123456,
+      "channel": "spot.usertrades",
+      "event": "update",
+      "result": [
+        {
+          "id": 5736713,
+          "user_id": 1000001,
+          "order_id": "30784428",
+          "currency_pair": "BTC_USD",
+          "create_time": 1605176741,
+          "create_time_ms": "1605176741123.456",
+          "create_time_us": 1605176741123456,
           "side": "sell",
           "amount": "1.00000000",
           "role": "taker",
@@ -3190,6 +5824,28 @@ WARNING
 代码示例：
     
     
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    request = {
+        "time": int(time.time()),
+        "channel": "spot.usertrades_v2",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+        "payload": ["BTC_USDT"]
+    }
+    # refer to Authentication section for gen_sign implementation
+    request['auth'] = gen_sign(request['channel'], request['event'], request['time'])
+    ws.send(json.dumps(request))
+    print(ws.recv())
+    
+
+代码示例：
+    
+    
     package main
     
     import (
@@ -3204,6 +5860,59 @@ WARNING
     func main() {
     	url := "wss://api.gateio.ws/ws/v4/"
     	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	timestamp := time.Now().Unix()
+    	request := map[string]interface{}{
+    		"time":    timestamp,
+    		"channel": "spot.usertrades_v2",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT"},
+    	}
+    
+    	// refer to Authentication section for gen_sign implementation
+      request["auth"] = genSign(request["channel"].(string), request["event"].(string), timestamp)
+    
+    	msg, err := json.Marshal(request)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
+代码示例：
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -3256,6 +5965,7 @@ WARNING
 » `currency_pair` | String | 交易货币对  
 » `create_time` | Integer | 成交时间，精确到秒  
 » `create_time_ms` | String | 成交时间，毫秒精度  
+» `create_time_us` | Integer | 同 `create_time` 字段，微秒精度  
 » `side` | String | 买单或者卖单  
 » `amount` | String | 交易数量  
 » `role` | String | 交易角色 (maker/taker)  
@@ -3308,6 +6018,91 @@ role | taker
     }
     
 
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.usertrades_v2`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1736237480,
+      "time_ms": 1736237480397,
+      "time_us": 1736237480397456,
+      "channel": "spot.usertrades_v2",
+      "event": "update",
+      "result": [
+        {
+          "id": 12855056637,
+          "user_id": 3128780,
+          "order_id": "769683030088",
+          "currency_pair": "BTC_USD",
+          "create_time": 1736237480,
+          "create_time_ms": "1736237480369.211",
+          "create_time_us": 1736237480369211,
+          "side": "sell",
+          "amount": "32462.7",
+          "role": "maker",
+          "price": "0.041828",
+          "text": "t-poc1736237480359",
+          "amend_text": "-",
+          "biz_info": "-",
+          "id_market": 917144,
+          "stock": "BTC",
+          "money": "USDC",
+          "trade_mode": 1
+        }
+      ]
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.usertrades_v2`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1736237480,
+      "time_ms": 1736237480397,
+      "time_us": 1736237480397456,
+      "channel": "spot.usertrades_v2",
+      "event": "update",
+      "result": [
+        {
+          "id": 12855056637,
+          "user_id": 3128780,
+          "order_id": "769683030088",
+          "currency_pair": "BTC_USD",
+          "create_time": 1736237480,
+          "create_time_ms": "1736237480369.211",
+          "create_time_us": 1736237480369211,
+          "side": "sell",
+          "amount": "32462.7",
+          "role": "maker",
+          "price": "0.041828",
+          "text": "t-poc1736237480359",
+          "amend_text": "-",
+          "biz_info": "-",
+          "id_market": 917144,
+          "stock": "BTC",
+          "money": "USDC",
+          "trade_mode": 1
+        }
+      ]
+    }
+    
+
 #  现货余额频道
 
 `spot.balances`
@@ -3334,6 +6129,27 @@ WARNING
     from websocket import create_connection
     
     ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    request = {
+        "time": int(time.time()),
+        "channel": "spot.balances",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+    }
+    # refer to Authentication section for gen_sign implementation
+    request['auth'] = gen_sign(request['channel'], request['event'], request['time'])
+    ws.send(json.dumps(request))
+    print(ws.recv())
+    
+
+代码示例：
+    
+    
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
     request = {
         "time": int(time.time()),
         "channel": "spot.balances",
@@ -3396,6 +6212,58 @@ WARNING
     
     
 
+代码示例：
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	timestamp := time.Now().Unix()
+    	request := map[string]interface{}{
+    		"time":    timestamp,
+    		"channel": "spot.balances",
+    		"event":   "subscribe",
+    	}
+    
+    	// refer to Authentication section for gen_sign implementation
+    	request["auth"] = genSign(request["channel"].(string), request["event"].(string), timestamp)
+    
+    	msg, err := json.Marshal(request)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 ##  服务端推送
 
 通知结果格式：
@@ -3405,6 +6273,7 @@ WARNING
 `result` | `Array[SpotBalance]` | 新的余额更新列表  
 » `timestamp` | String | 余额更新时间戳戳，精确到秒  
 » `timestamp_ms` | String | 余额更新时间戳戳，精确到毫秒  
+» `timestamp_us` | Integer | 同 `timestamp` 字段，微秒精度  
 » `user` | String | 用户 ID  
 » `currency` | String | 变更的货币  
 » `change` | String | 变更数量  
@@ -3452,6 +6321,77 @@ WARNING
     }
     
 
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.balances`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1605248616,
+      "time_ms": 1605248616763,
+      "time_us": 1605248616763456,
+      "channel": "spot.balances",
+      "event": "update",
+      "result": [
+        {
+          "timestamp": "1667556323",
+          "timestamp_ms": "1667556323730",
+          "timestamp_us": 1667556323730000,
+          "user": "1000001",
+          "currency": "USDT",
+          "change": "0",
+          "total": "222244.3827652",
+          "available": "222244.3827",
+          "freeze": "5",
+          "freeze_change": "5.000000",
+          "change_type": "order-create"
+        }
+      ]
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.balances`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1605248616,
+      "time_ms": 1605248616763,
+      "time_us": 1605248616763456,
+      "channel": "spot.balances",
+      "event": "update",
+      "result": [
+        {
+          "timestamp": "1667556323",
+          "timestamp_ms": "1667556323730",
+          "timestamp_us": 1667556323730000,
+          "user": "1000001",
+          "currency": "USDT",
+          "change": "0",
+          "total": "222244.3827652",
+          "available": "222244.3827",
+          "freeze": "5",
+          "freeze_change": "5.000000",
+          "change_type": "order-create"
+        }
+      ]
+    }
+    
+
 #  保证金余额频道
 
 `spot.margin_balances`
@@ -3478,6 +6418,27 @@ WARNING
     from websocket import create_connection
     
     ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    request = {
+        "time": int(time.time()),
+        "channel": "spot.margin_balances",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+    }
+    # refer to Authentication section for gen_sign implementation
+    request['auth'] = gen_sign(request['channel'], request['event'], request['time'])
+    ws.send(json.dumps(request))
+    print(ws.recv())
+    
+
+代码示例：
+    
+    
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
     request = {
         "time": int(time.time()),
         "channel": "spot.margin_balances",
@@ -3540,6 +6501,58 @@ WARNING
     
     
 
+代码示例：
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	timestamp := time.Now().Unix()
+    	request := map[string]interface{}{
+    		"time":    timestamp,
+    		"channel": "spot.margin_balances",
+    		"event":   "subscribe",
+    	}
+    
+    	// refer to Authentication section for gen_sign implementation
+    	request["auth"] = genSign(request["channel"].(string), request["event"].(string), timestamp)
+    
+    	msg, err := json.Marshal(request)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 ##  服务端推送
 
 通知结果格式：
@@ -3549,6 +6562,7 @@ WARNING
 `result` | `Array[MarginBalance]` | 保证金余额更新列表  
 » `timestamp` | String | 保证金更新时间戳戳，精确到秒  
 » `timestamp_ms` | String | 保证金更新时间戳戳，精确到毫秒  
+» `timestamp_us` | Integer | 同 `timestamp` 字段，微秒精度  
 » `user` | String | 用户 ID  
 » `currency_pair` | String | 货币对  
 » `currency` | String | 变化货币  
@@ -3563,12 +6577,84 @@ WARNING
     
     {
       "time": 1605248616,
+      "time_ms": 1605248616123,
       "channel": "spot.margin_balances",
       "event": "update",
       "result": [
         {
           "timestamp": "1605248812",
           "timestamp_ms": "1605248812123",
+          "user": "1000001",
+          "currency_pair": "BTC_USDT",
+          "currency": "BTC",
+          "change": "-0.002",
+          "available": "999.999836",
+          "freeze": "1",
+          "borrowed": "0",
+          "interest": "0"
+        }
+      ]
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.margin_balances`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1605248616,
+      "time_ms": 1605248616123,
+      "time_us": 1605248616123456,
+      "channel": "spot.margin_balances",
+      "event": "update",
+      "result": [
+        {
+          "timestamp": "1605248812",
+          "timestamp_ms": "1605248812123",
+          "timestamp_us": 1605248812123000,
+          "user": "1000001",
+          "currency_pair": "BTC_USDT",
+          "currency": "BTC",
+          "change": "-0.002",
+          "available": "999.999836",
+          "freeze": "1",
+          "borrowed": "0",
+          "interest": "0"
+        }
+      ]
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.margin_balances`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1605248616,
+      "time_ms": 1605248616123,
+      "time_us": 1605248616123456,
+      "channel": "spot.margin_balances",
+      "event": "update",
+      "result": [
+        {
+          "timestamp": "1605248812",
+          "timestamp_ms": "1605248812123",
+          "timestamp_us": 1605248812123000,
           "user": "1000001",
           "currency_pair": "BTC_USDT",
           "currency": "BTC",
@@ -3608,6 +6694,27 @@ WARNING
     from websocket import create_connection
     
     ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    request = {
+        "time": int(time.time()),
+        "channel": "spot.funding_balances",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+    }
+    # refer to Authentication section for gen_sign implementation
+    request['auth'] = gen_sign(request['channel'], request['event'], request['time'])
+    ws.send(json.dumps(request))
+    print(ws.recv())
+    
+
+代码示例：
+    
+    
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
     request = {
         "time": int(time.time()),
         "channel": "spot.funding_balances",
@@ -3670,6 +6777,58 @@ WARNING
     
     
 
+代码示例：
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	timestamp := time.Now().Unix()
+    	request := map[string]interface{}{
+    		"time":    timestamp,
+    		"channel": "spot.funding_balances",
+    		"event":   "subscribe",
+    	}
+    
+    	// refer to Authentication section for gen_sign implementation
+    	request["auth"] = genSign(request["channel"].(string), request["event"].(string), timestamp)
+    
+    	msg, err := json.Marshal(request)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 ##  服务端推送
 
 通知结果格式：
@@ -3679,6 +6838,7 @@ WARNING
 `result` | `Array[FundingBalance]` | 借贷余额更新列表  
 » `timestamp` | String | 更新时间戳，精确到秒  
 » `timestamp_ms` | String | 更新时间戳，精确到毫秒  
+» `timestamp_us` | Integer | 同 `timestamp` 字段，微秒精度  
 » `user` | String | 用户 ID  
 » `currency` | String | 变更货币  
 » `change` | String | 变更数量  
@@ -3690,12 +6850,78 @@ WARNING
     
     {
       "time": 1605248616,
+      "time_ms": 1605248616123,
       "channel": "spot.funding_balances",
       "event": "update",
       "result": [
         {
           "timestamp": "1605248616",
           "timestamp_ms": "1605248616123",
+          "user": "1000001",
+          "currency": "USDT",
+          "change": "100",
+          "freeze": "100",
+          "lent": "0"
+        }
+      ]
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.funding_balances`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1605248616,
+      "time_ms": 1605248616123,
+      "time_us": 1605248616123456,
+      "channel": "spot.funding_balances",
+      "event": "update",
+      "result": [
+        {
+          "timestamp": "1605248616",
+          "timestamp_ms": "1605248616123",
+          "timestamp_us": 1605248616123000,
+          "user": "1000001",
+          "currency": "USDT",
+          "change": "100",
+          "freeze": "100",
+          "lent": "0"
+        }
+      ]
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.funding_balances`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1605248616,
+      "time_ms": 1605248616123,
+      "time_us": 1605248616123456,
+      "channel": "spot.funding_balances",
+      "event": "update",
+      "result": [
+        {
+          "timestamp": "1605248616",
+          "timestamp_ms": "1605248616123",
+          "timestamp_us": 1605248616123000,
           "user": "1000001",
           "currency": "USDT",
           "change": "100",
@@ -3734,6 +6960,27 @@ WARNING
     from websocket import create_connection
     
     ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    request = {
+        "time": int(time.time()),
+        "channel": "spot.cross_balances",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+    }
+    # refer to Authentication section for gen_sign implementation
+    request['auth'] = gen_sign(request['channel'], request['event'], request['time'])
+    ws.send(json.dumps(request))
+    print(ws.recv())
+    
+
+代码示例：
+    
+    
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
     request = {
         "time": int(time.time()),
         "channel": "spot.cross_balances",
@@ -3796,6 +7043,58 @@ WARNING
     
     
 
+代码示例：
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	timestamp := time.Now().Unix()
+    	request := map[string]interface{}{
+    		"time":    timestamp,
+    		"channel": "spot.cross_balances",
+    		"event":   "subscribe",
+    	}
+    
+    	// refer to Authentication section for gen_sign implementation
+    	request["auth"] = genSign(request["channel"].(string), request["event"].(string), timestamp)
+    
+    	msg, err := json.Marshal(request)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 ##  服务端推送
 
 通知结果格式：
@@ -3805,6 +7104,7 @@ WARNING
 `result` | `Array[SpotBalance]` | 余额更新列表  
 » `timestamp` | String | 更新时间戳，精确到秒  
 » `timestamp_ms` | String | 更新时间戳，精确到毫秒  
+» `timestamp_us` | Integer | 同 `timestamp` 字段，微秒精度  
 » `user` | String | 用户 ID  
 » `currency` | String | 变更货币  
 » `change` | String | 变更数量  
@@ -3836,6 +7136,77 @@ WARNING
         {
           "timestamp": "1605248616",
           "timestamp_ms": "1605248616123",
+          "user": "1000001",
+          "currency": "USDT",
+          "change": "100",
+          "total": "1032951.325075926",
+          "available": "1022943.325075926",
+          "freeze": "0",
+          "freeze_change": "0",
+          "change_type": "cross-margin-transfer"
+        }
+      ]
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.cross_balances`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1605248616,
+      "time_ms": 1605248616763,
+      "time_us": 1605248616763456,
+      "channel": "spot.cross_balances",
+      "event": "update",
+      "result": [
+        {
+          "timestamp": "1605248616",
+          "timestamp_ms": "1605248616123",
+          "timestamp_us": 1605248616123000,
+          "user": "1000001",
+          "currency": "USDT",
+          "change": "100",
+          "total": "1032951.325075926",
+          "available": "1022943.325075926",
+          "freeze": "0",
+          "freeze_change": "0",
+          "change_type": "cross-margin-transfer"
+        }
+      ]
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.cross_balances`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1605248616,
+      "time_ms": 1605248616763,
+      "time_us": 1605248616763456,
+      "channel": "spot.cross_balances",
+      "event": "update",
+      "result": [
+        {
+          "timestamp": "1605248616",
+          "timestamp_ms": "1605248616123",
+          "timestamp_us": 1605248616123000,
           "user": "1000001",
           "currency": "USDT",
           "change": "100",
@@ -3882,6 +7253,27 @@ WARNING
     from websocket import create_connection
     
     ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    request = {
+        "time": int(time.time()),
+        "channel": "spot.cross_loan",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+    }
+    # refer to Authentication section for gen_sign implementation
+    request['auth'] = gen_sign(request['channel'], request['event'], request['time'])
+    ws.send(json.dumps(request))
+    print(ws.recv())
+    
+
+代码示例
+    
+    
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
     request = {
         "time": int(time.time()),
         "channel": "spot.cross_loan",
@@ -3944,6 +7336,58 @@ WARNING
     
     
 
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	timestamp := time.Now().Unix()
+    	request := map[string]interface{}{
+    		"time":    timestamp,
+    		"channel": "spot.cross_loan",
+    		"event":   "subscribe",
+    	}
+    
+    	// refer to Authentication section for gen_sign implementation
+    	request["auth"] = genSign(request["channel"].(string), request["event"].(string), timestamp)
+    
+    	msg, err := json.Marshal(request)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 ##  服务端推送
 
 推送格式:
@@ -3951,7 +7395,8 @@ WARNING
 字段 | 类型 | 描述  
 ---|---|---  
 `result` | Object | 新的全仓保证金借款和利息更新消息  
-»`timestamp` | int64 | 秒级时间戳  
+»`timestamp` | int64 | 毫秒时间戳  
+»`timestamp_us` | Integer | 同 `timestamp` 字段，微秒精度  
 »`user` | String | 用户 ID  
 »`currency` | String | 变更的货币  
 »`change` | String | 变更数量  
@@ -3970,6 +7415,69 @@ WARNING
       "event": "update",
       "result": {
         "timestamp": 1658289372338,
+        "user": "1000001",
+        "currency": "BTC",
+        "change": "0.01",
+        "total": "4.992341029566",
+        "available": "0.078054772536",
+        "borrowed": "0.01",
+        "interest": "0.00001375"
+      }
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.cross_loan`
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+    
+    
+    {
+      "time": 1658289372,
+      "time_ms": 1658289372763,
+      "time_us": 1658289372763456,
+      "channel": "spot.cross_loan",
+      "event": "update",
+      "result": {
+        "timestamp": 1658289372338,
+        "timestamp_us": 1658289372338000,
+        "user": "1000001",
+        "currency": "BTC",
+        "change": "0.01",
+        "total": "4.992341029566",
+        "available": "0.078054772536",
+        "borrowed": "0.01",
+        "interest": "0.00001375"
+      }
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+
+`spot.cross_loan`
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+    
+    
+    {
+      "time": 1658289372,
+      "time_ms": 1658289372763,
+      "time_us": 1658289372763456,
+      "channel": "spot.cross_loan",
+      "event": "update",
+      "result": {
+        "timestamp": 1658289372338,
+        "timestamp_us": 1658289372338000,
         "user": "1000001",
         "currency": "BTC",
         "change": "0.01",
@@ -4030,6 +7538,28 @@ WARNING
 代码示例
     
     
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    request = {
+        "time": int(time.time()),
+        "channel": "spot.priceorders",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+        "payload" : ["!all"],
+    }
+    # refer to Authentication section for gen_sign implementation
+    request['auth'] = gen_sign(request['channel'], request['event'], request['time'])
+    ws.send(json.dumps(request))
+    print(ws.recv())
+    
+
+代码示例
+    
+    
     package main
     
     import (
@@ -4044,6 +7574,59 @@ WARNING
     func main() {
     	url := "wss://api.gateio.ws/ws/v4/"
     	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	timestamp := time.Now().Unix()
+    	request := map[string]interface{}{
+    		"time":    timestamp,
+    		"channel": "spot.priceorders",
+    		"event":   "subscribe",
+    		"payload": []string{"!all"},
+    	}
+    
+    	// refer to Authentication section for gen_sign implementation
+    	request["auth"] = genSign(request["channel"].(string), request["event"].(string), timestamp)
+    
+    	msg, err := json.Marshal(request)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
     	if err != nil {
     		log.Fatal("dial error:", err)
     	}
@@ -4170,7 +7753,124 @@ WebSocket API 允许通过 WebSocket 连接下单、取消、修改和查询订�
 »`req_id` | String | 是 | 由客户端提供的消息的唯一标识符。它将在响应消息中返回，用于识别相应的请求。  
 »`req_param` | []Byte | 是 | 请求的 API 参数  
   
-请注意，`payload.req_param`的类型与频道相关。以`spot.order_place`为例，`payload.req_param` 与 apiv4 的 [/spot/orders ](https://www.gate.com/docs/developers/apiv4/en/#create-an-order) 或 [/spot/batch_orders ](https://www.gate.com/docs/developers/apiv4/en/#create-a-batch-of-orders) 相同。 您可以参考例子使用示例在 GT_USDT 上下一个限价订单。
+请注意，`payload.req_param`的类型与频道相关。以`spot.order_place`为例，`payload.req_param` 与 apiv4 的 [/spot/orders](/docs/developers/apiv4/en/spot/#opIdcreateOrder) 或 [/spot/batch_orders](/docs/developers/apiv4/en/spot/#opIdcreateBatchOrders) 相同。 您可以参考例子使用示例在 GT_USDT 上下一个限价订单。
+
+代码示例
+    
+    
+    #!/usr/bin/python
+    
+    import time
+    import json
+    import hmac
+    import hashlib
+    import websocket
+    import threading
+    
+    
+    API_KEY = "YOUR_API_KEY"
+    SECRET = "YOUR_API_SECRET"
+    WS_URL = "wss://api.gateio.ws/ws/v4/"
+    CHANNEL_LOGIN = "spot.login"
+    CHANNEL_ORDER_PLACE = "spot.order_place"
+    
+    def get_ts():
+        return int(time.time())
+    
+    def get_ts_ms():
+        return int(time.time() * 1000)
+    
+    def get_signature(secret, channel, request_param_bytes, ts):
+        key = f"api\n{channel}\n{request_param_bytes.decode()}\n{ts}"
+        return hmac.new(secret.encode(), key.encode(), hashlib.sha512).hexdigest()
+    
+    def build_login_request():
+        ts = get_ts()
+        req_id = f"{get_ts_ms()}-1"
+        request_param = b""
+    
+        sign = get_signature(SECRET, CHANNEL_LOGIN, request_param, ts)
+    
+        payload = {
+            "api_key": API_KEY,
+            "signature": sign,
+            "timestamp": str(ts),
+            "req_id": req_id
+        }
+    
+        return {
+            "time": ts,
+            "channel": CHANNEL_LOGIN,
+            "event": "api",
+            "payload": payload
+        }
+    
+    
+    def build_order_request():
+        ts = get_ts()
+        req_id = f"{get_ts_ms()}-2"
+        order_param = {
+            "text": "t-123456",
+            "currency_pair": "ETH_BTC",
+            "type": "limit",
+            "account": "spot",
+            "side": "buy",
+            "iceberg": "0",
+            "amount": "1",
+            "price": "0.00032",
+            "time_in_force": "gtc",
+            "auto_borrow": False
+        }
+    
+        payload = {
+            "req_id": req_id,
+            "req_param": order_param
+        }
+    
+        return {
+            "time": ts,
+            "channel": CHANNEL_ORDER_PLACE,
+            "event": "api",
+            "payload": payload
+        }
+    
+    
+    def on_message(ws, message):
+        print(f"recv: {message}")
+    
+    def on_error(ws, error):
+        print(f"error: {error}")
+    
+    def on_close(ws, close_status_code, close_msg):
+        print("connection closed")
+    
+    def on_open(ws):
+        print("WebSocket opened")
+    
+        login_payload = build_login_request()
+        print("login payload:", login_payload)
+        ws.send(json.dumps(login_payload))
+    
+        def delayed_order():
+            time.sleep(2)
+            order_payload = build_order_request()
+            print("order payload:", order_payload)
+            ws.send(json.dumps(order_payload))
+    
+        threading.Thread(target=delayed_order).start()
+    
+    if __name__ == "__main__":
+        ws = websocket.WebSocketApp(
+            WS_URL,
+            on_message=on_message,
+            on_error=on_error,
+            on_close=on_close,
+            on_open=on_open
+        )
+        ws.run_forever()
+    
+    
+    
 
 代码示例
     
@@ -4436,6 +8136,154 @@ WebSocket API 允许通过 WebSocket 连接下单、取消、修改和查询订�
     
     
 
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"crypto/hmac"
+    	"crypto/sha512"
+    	"crypto/tls"
+    	"encoding/hex"
+    	"encoding/json"
+    	"fmt"
+    	"net/url"
+    	"strconv"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func GetApiSignature(secret, channel string, requestParam []byte, ts int64) string {
+    	hash := hmac.New(sha512.New, []byte(secret))
+    	key := fmt.Sprintf("%s\n%s\n%s\n%d", "api", channel, string(requestParam), ts)
+    	hash.Write([]byte(key))
+    	return hex.EncodeToString(hash.Sum(nil))
+    }
+    
+    func main() {
+    
+    	// 1. login
+    	apiKey := "xxxxx"
+    	secret := "xxxxx"
+    	requestParam := ""
+    	channel := "spot.login"
+    	ts := time.Now().Unix()
+    	requestId := fmt.Sprintf("%d-%d", time.Now().UnixMilli(), 1)
+    
+    	req := ApiRequest{
+    		Time:    ts,
+    		Channel: "spot.login",
+    		Event:   "api",
+    		Payload: ApiPayload{
+    			ApiKey:       apiKey,
+    			Signature:    GetApiSignature(secret, channel, []byte(requestParam), ts),
+    			Timestamp:    strconv.FormatInt(ts, 10),
+    			RequestId:    requestId,
+    			RequestParam: []byte(requestParam),
+    		},
+    	}
+    
+    	fmt.Println(GetApiSignature(secret, channel, []byte(requestParam), ts))
+    	marshal, _ := json.Marshal(req)
+    	fmt.Println(string(marshal))
+    
+    	// connect the ws
+    	u := url.URL{Scheme: "ws", Host: "xx.xx.xxx.xx:xxx", Path: "xxx"}
+    	websocket.DefaultDialer.TLSClientConfig = &tls.Config{RootCAs: nil, InsecureSkipVerify: true}
+    	c, _, err := websocket.DefaultDialer.Dial(u.String(), http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		panic(err)
+    	}
+    	c.SetPingHandler(nil)
+    
+    	// read msg
+    	go func() {
+    		for {
+    			_, message, err := c.ReadMessage()
+    			if err != nil {
+    				c.Close()
+    				panic(err)
+    			}
+    			fmt.Printf("recv: %s\n", message)
+    		}
+    	}()
+    
+    	err = c.WriteMessage(websocket.TextMessage, marshal)
+    	if err != nil {
+    		panic(err)
+    	}
+    	time.Sleep(2 * time.Second)
+    
+    	//ws create an order
+    	orderParam := OrderParam{
+    		Text:         "t-123456",
+    		CurrencyPair: "ETH_BTC",
+    		Type:         "limit",
+    		Account:      "spot",
+    		Side:         "buy",
+    		Iceberg:      "0",
+    		Amount:       "1",
+    		Price:        "0.00032",
+    		TimeInForce:  "gtc",
+    		AutoBorrow:   false,
+    	}
+    	orderParamBytes, _ := json.Marshal(orderParam)
+    
+    	//warn: if you want create batch_orders, the `RequestParam` : []byte([{orderParam},{orderParam},...])
+    	order_place := ApiRequest{
+    		Time:    ts,
+    		Channel: "spot.order_place",
+    		Event:   "api",
+    		Payload: ApiPayload{
+    			RequestId:    requestId,
+    			RequestParam: []byte(orderParamBytes),
+    		},
+    	}
+    	orderReqByte, _ := json.Marshal(order_place)
+    	err = c.WriteMessage(websocket.TextMessage, orderReqByte)
+    
+    	if err != nil {
+    		panic(err)
+    	}
+    
+    	select {}
+    }
+    
+    type ApiRequest struct {
+    	App     string     `json:"app,omitempty"`
+    	Time    int64      `json:"time"`
+    	Id      *int64     `json:"id,omitempty"`
+    	Channel string     `json:"channel"`
+    	Event   string     `json:"event"`
+    	Payload ApiPayload `json:"payload"`
+    }
+    type ApiPayload struct {
+    	ApiKey       string          `json:"api_key,omitempty"`
+    	Signature    string          `json:"signature,omitempty"`
+    	Timestamp    string          `json:"timestamp,omitempty"`
+    	RequestId    string          `json:"req_id,omitempty"`
+    	RequestParam json.RawMessage `json:"req_param,omitempty"`
+    }
+    
+    type OrderParam struct {
+    	Text         string `json:"text,omitempty"`
+    	CurrencyPair string `json:"currency_pair,omitempty"`
+    	Type         string `json:"type,omitempty"`
+    	Account      string `json:"account,omitempty"`
+    	Side         string `json:"side,omitempty"`
+    	Iceberg      string `json:"iceberg,omitempty"`
+    	Amount       string `json:"amount,omitempty"`
+    	Price        string `json:"price,omitempty"`
+    	TimeInForce  string `json:"time_in_force,omitempty"`
+    	AutoBorrow   bool   `json:"auto_borrow,omitempty"`
+    	StpAct       string `json:"stp_act,omitempty"`
+    }
+    
+    
+
 ###  Websocket API 服务端推送
 
 服务器响应包括对客户端请求的确认响应和 API 结果的回调消息更新。 服务器响应遵循通用的 JSON 格式，包含以下字段：
@@ -4445,6 +8293,8 @@ WebSocket API 允许通过 WebSocket 连接下单、取消、修改和查询订�
 `request_id` | String | 消息的唯一标识符  
 `header` | Map | 响应的元信息  
 »`response_time` | String | 响应发送时间（以毫秒为单位）  
+»`response_time_us` | Integer | 同 `response_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
+»`time_us` | Integer | 服务端发出该条消息时的 Unix 微秒。仅 `timeUnit: microsecond` 开启后推送  
 »`channel` | String | 请求的频道  
 »`event` | String | 请求事件  
 »`client_id` | String | 唯一客户端标识 ID  
@@ -4458,6 +8308,8 @@ WebSocket API 允许通过 WebSocket 连接下单、取消、修改和查询订�
 »`trace_id` | String | 执行下单操作的TraceId  
 `data` | Object | 请求响应的数据  
 »`result` | Object | 如果这是一个"ack"响应，那么"result"是请求的有效载荷（payload），否则"result"是 API 的响应。  
+»»`create_time_us` | Integer | 同 `create_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
+»»`update_time_us` | Integer | 同 `update_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
 »`errs` | Object | 这只在请求失败时可用  
 »»`label` | String | 以字符串格式表示错误类型  
 »»`message` | String | 错误消息详情  
@@ -4560,6 +8412,231 @@ WebSocket API 允许通过 WebSocket 连接下单、取消、修改和查询订�
     }
     
 
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+
+服务端 ack 推送示例
+    
+    
+    {
+      "request_id": "request-2",
+      "ack": true,
+      "header": {
+        "response_time": "1681985856667",
+        "response_time_us": 1681985856667000,
+        "time_us": 1681985856667456,
+        "status": "200",
+        "channel": "spot.order_place",
+        "event": "api",
+        "client_id": "::1-0x140033dc0c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 9,
+        "x_gate_ratelimit_limit": 10,
+        "x_gate_ratelimit_reset_timestamp": 1681985856667
+      },
+      "data": {
+        "result": {
+          "req_id": "request-2",
+          "req_header": null,
+          "req_param": {
+            "text": "t-my-custom-id",
+            "currency_pair": "BTC_USD",
+            "trade_quote": "USDC",
+            "type": "limit",
+            "account": "spot",
+            "side": "buy",
+            "amount": "1",
+            "price": "1"
+          }
+        }
+      }
+    }
+    
+
+服务端 api 推送示例
+    
+    
+    {
+      "request_id": "request-2",
+      "header": {
+        "response_time": "1681986204784",
+        "response_time_us": 1681986204784000,
+        "time_us": 1681986204784456,
+        "status": "200",
+        "channel": "spot.order_place",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 9,
+        "x_gate_ratelimit_limit": 10,
+        "x_gate_ratelimit_reset_timestamp": 1681986204784
+      },
+      "data": {
+        "result": {
+          "id": "1700664330",
+          "text": "t-my-custom-id",
+          "amend_text": "-",
+          "create_time": "1681986204",
+          "update_time": "1681986204",
+          "create_time_ms": 1681986204832,
+          "create_time_us": 1681986204832000,
+          "update_time_ms": 1681986204832,
+          "update_time_us": 1681986204832000,
+          "status": "open",
+          "currency_pair": "GT_USDT",
+          "type": "limit",
+          "account": "spot",
+          "side": "buy",
+          "amount": "1",
+          "price": "1",
+          "time_in_force": "gtc",
+          "iceberg": "0",
+          "left": "1",
+          "fill_price": "0",
+          "filled_total": "0",
+          "fee": "0",
+          "fee_currency": "GT",
+          "point_fee": "0",
+          "gt_fee": "0",
+          "gt_maker_fee": "0.0015",
+          "gt_taker_fee": "0.0015",
+          "gt_discount": true,
+          "rebated_fee": "0",
+          "rebated_fee_currency": "USDT",
+          "stp_id": 1,
+          "stp_act": "cn",
+          "finish_as": "open"
+        }
+      }
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+服务端 ack 推送示例
+    
+    
+    {
+      "request_id": "request-2",
+      "ack": true,
+      "header": {
+        "response_time": "1681985856667",
+        "response_time_us": 1681985856667000,
+        "time_us": 1681985856667456,
+        "status": "200",
+        "channel": "spot.order_place",
+        "event": "api",
+        "client_id": "::1-0x140033dc0c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 9,
+        "x_gate_ratelimit_limit": 10,
+        "x_gate_ratelimit_reset_timestamp": 1681985856667
+      },
+      "data": {
+        "result": {
+          "req_id": "request-2",
+          "req_header": null,
+          "req_param": {
+            "text": "t-my-custom-id",
+            "currency_pair": "BTC_USD",
+            "trade_quote": "USDC",
+            "type": "limit",
+            "account": "spot",
+            "side": "buy",
+            "amount": "1",
+            "price": "1"
+          }
+        }
+      }
+    }
+    
+
+服务端 api 推送示例
+    
+    
+    {
+      "request_id": "request-2",
+      "header": {
+        "response_time": "1681986204784",
+        "response_time_us": 1681986204784000,
+        "time_us": 1681986204784456,
+        "status": "200",
+        "channel": "spot.order_place",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 9,
+        "x_gate_ratelimit_limit": 10,
+        "x_gate_ratelimit_reset_timestamp": 1681986204784
+      },
+      "data": {
+        "result": {
+          "id": "1700664330",
+          "text": "t-my-custom-id",
+          "amend_text": "-",
+          "create_time": "1681986204",
+          "update_time": "1681986204",
+          "create_time_ms": 1681986204832,
+          "create_time_us": 1681986204832000,
+          "update_time_ms": 1681986204832,
+          "update_time_us": 1681986204832000,
+          "status": "open",
+          "currency_pair": "GT_USDT",
+          "type": "limit",
+          "account": "spot",
+          "side": "buy",
+          "amount": "1",
+          "price": "1",
+          "time_in_force": "gtc",
+          "iceberg": "0",
+          "left": "1",
+          "fill_price": "0",
+          "filled_total": "0",
+          "fee": "0",
+          "fee_currency": "GT",
+          "point_fee": "0",
+          "gt_fee": "0",
+          "gt_maker_fee": "0.0015",
+          "gt_taker_fee": "0.0015",
+          "gt_discount": true,
+          "rebated_fee": "0",
+          "rebated_fee_currency": "USDT",
+          "stp_id": 1,
+          "stp_act": "cn",
+          "finish_as": "open"
+        }
+      }
+    }
+    
+
 ###  Error
 
 错误对象的格式如下：
@@ -4631,6 +8708,83 @@ Error 推送示例（限速）
     }
     
 
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+
+Error 推送示例（限速）
+    
+    
+    {
+      "request_id": "xxxx",
+      "header": {
+        "response_time": "1677816784084",
+        "response_time_us": 1677816784084000,
+        "time_us": 1677816784084456,
+        "status": "429",
+        "channel": "spot.order_place",
+        "event": "api",
+        "client_id": "::1-0x14002ba2300",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_limit": 10,
+        "x_gate_ratelimit_reset_timestamp": 1677816785084
+      },
+      "data": {
+        "errs": {
+          "label": "TOO_MANY_REQUESTS",
+          "message": "Request Rate limit Exceeded (211)"
+        }
+      }
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+Error 推送示例（限速）
+    
+    
+    {
+      "request_id": "xxxx",
+      "header": {
+        "response_time": "1677816784084",
+        "response_time_us": 1677816784084000,
+        "time_us": 1677816784084456,
+        "status": "429",
+        "channel": "spot.order_place",
+        "event": "api",
+        "client_id": "::1-0x14002ba2300",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_limit": 10,
+        "x_gate_ratelimit_reset_timestamp": 1677816785084
+      },
+      "data": {
+        "errs": {
+          "label": "TOO_MANY_REQUESTS",
+          "message": "Request Rate limit Exceeded (211)"
+        }
+      }
+    }
+    
+
 ##  Login
 
 WARNING
@@ -4652,6 +8806,83 @@ WebSocket API 的操作身份验证使用与 Gate APIv4 API 相同的签名计�
   1. 签名字符串的连接方法：`"<event>\n<channel>\n<req_param>\n<timestamp>"` ，其中`<event>`、`<channel>`、`<req_param>`、`<timestamp>` 是对应的请求信息。
   2. `login`频道中的`req_param`始终为空字符串。
   3. 认证信息在请求体中以字段`payload`发送。
+
+代码示例
+    
+    
+    #!/usr/bin/python
+    
+    import time
+    import json
+    import hmac
+    import hashlib
+    import websocket
+    import threading
+    
+    
+    API_KEY = "YOUR_API_KEY"
+    SECRET = "YOUR_API_SECRET"
+    WS_URL = "wss://api.gateio.ws/ws/v4/"
+    CHANNEL_LOGIN = "spot.login"
+    
+    def get_ts():
+        return int(time.time())
+    
+    def get_ts_ms():
+        return int(time.time() * 1000)
+    
+    def get_signature(secret, channel, request_param_bytes, ts):
+        key = f"api\n{channel}\n{request_param_bytes.decode()}\n{ts}"
+        return hmac.new(secret.encode(), key.encode(), hashlib.sha512).hexdigest()
+    
+    def build_login_request():
+        ts = get_ts()
+        req_id = f"{get_ts_ms()}-1"
+        request_param = b""
+    
+        sign = get_signature(SECRET, CHANNEL_LOGIN, request_param, ts)
+    
+        payload = {
+            "api_key": API_KEY,
+            "signature": sign,
+            "timestamp": str(ts),
+            "req_id": req_id
+        }
+    
+        return {
+            "time": ts,
+            "channel": CHANNEL_LOGIN,
+            "event": "api",
+            "payload": payload
+        }
+    
+    def on_message(ws, message):
+        print(f"recv: {message}")
+    
+    def on_error(ws, error):
+        print(f"error: {error}")
+    
+    def on_close(ws, close_status_code, close_msg):
+        print("connection closed")
+    
+    def on_open(ws):
+        print("WebSocket opened")
+    
+        login_payload = build_login_request()
+        print("login payload:", login_payload)
+        ws.send(json.dumps(login_payload))
+    
+    if __name__ == "__main__":
+        ws = websocket.WebSocketApp(
+            WS_URL,
+            on_message=on_message,
+            on_error=on_error,
+            on_close=on_close,
+            on_open=on_open
+        )
+        ws.run_forever()
+    
+    
 
 代码示例
     
@@ -4824,6 +9055,101 @@ WebSocket API 的操作身份验证使用与 Gate APIv4 API 相同的签名计�
     
     
 
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"crypto/hmac"
+    	"crypto/sha512"
+    	"encoding/hex"
+    	"encoding/json"
+    	"fmt"
+    	"strconv"
+    	"time"
+    	"net/http"
+    )
+    
+    func GetApiSignature(secret, channel string, requestParam []byte, ts int64) string {
+    	hash := hmac.New(sha512.New, []byte(secret))
+    	key := fmt.Sprintf("%s\n%s\n%s\n%d", "api", channel, string(requestParam), ts)
+    	hash.Write([]byte(key))
+    	return hex.EncodeToString(hash.Sum(nil))
+    }
+    
+    // example WebSocket signature calculation implementation in go
+    func main() {
+    	apiKey := "YOUR_API_KEY"
+    	secret := "YOUR_API_SECRET"
+    	requestParam := ""
+    	channel := "spot.login"
+    	ts := time.Now().Unix()
+    	requestId := fmt.Sprintf("%d-%d", time.Now().UnixMilli(), 1)
+    
+    	req := ApiRequest{
+    		Time:    ts,
+    		Channel: channel,
+    		Event:   "api",
+    		Payload: ApiPayload{
+    			ApiKey:       apiKey,
+    			Signature:    GetApiSignature(secret, channel, []byte(requestParam), ts),
+    			Timestamp:    strconv.FormatInt(ts, 10),
+    			RequestId:    requestId,
+    			RequestParam: []byte(requestParam),
+    		},
+    	}
+    
+    	marshal, _ := json.Marshal(req)
+    	fmt.Println(string(marshal))
+    
+    	// connect ws service
+    	u := url.URL{Scheme: "ws", Host: "xxxx", Path: "xxxx"}
+    	websocket.DefaultDialer.TLSClientConfig = &tls.Config{RootCAs: nil, InsecureSkipVerify: true}
+    	c, _, err := websocket.DefaultDialer.Dial(u.String(), http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		panic(err)
+    	}
+    	c.SetPingHandler(nil)
+    
+    	// read msg
+    	go func() {
+    		for {
+    			_, message, err := c.ReadMessage()
+    			if err != nil {
+    				c.Close()
+    				panic(err)
+    			}
+    			fmt.Printf("recv: %s\n", message)
+    		}
+    	}()
+    
+    	err = c.WriteMessage(websocket.TextMessage, marshal)
+    	if err != nil {
+    		panic(err)
+    	}
+    
+    	select {}
+    }
+    
+    type ApiRequest struct {
+    	App     string     `json:"app,omitempty"`
+    	Time    int64      `json:"time"`
+    	Id      *int64     `json:"id,omitempty"`
+    	Channel string     `json:"channel"`
+    	Event   string     `json:"event"`
+    	Payload ApiPayload `json:"payload"`
+    }
+    type ApiPayload struct {
+    	ApiKey       string          `json:"api_key,omitempty"`
+    	Signature    string          `json:"signature,omitempty"`
+    	Timestamp    string          `json:"timestamp,omitempty"`
+    	RequestId    string          `json:"req_id,omitempty"`
+    	RequestParam json.RawMessage `json:"req_param,omitempty"`
+    }
+    
+    
+
 请求示例
     
     
@@ -4891,6 +9217,133 @@ Login 推送示例
     }
     
 
+##  3.0 用户请求超时
+
+OMS 3.0 用户可以在部分交易请求里声明客户端发送时间和允许的超时窗口，用来拒绝发出后已经过期的请求。
+
+这两个字段只写在 `payload.req_header`。不要写到 WebSocket 握手请求头，也不要写到 `req_param`。键名区分大小写，必须与下表一致。值必须是十进制整数字符串，单位是微秒。`abc`、`12.5`、`1e6` 这类非十进制整数直接返回 `INVALID_PARAM`。空字符串，以及去掉首尾空格后为空的值，视为未传。首尾空格会被去掉。
+
+字段 | 类型 | 必选 | 描述  
+---|---|---|---  
+`X-Gate-Client-Send-Us` | `string` | 否 | 客户端发出该请求的 Unix 时间戳，单位微秒。例如 `1700000000123456`  
+`X-Gate-Timeout-Window-Us` | `string` | 否 | 超时窗口，单位微秒。例如 `500000` 表示 500 毫秒  
+  
+这两个参数在撮合引擎生效。两个字段都传入有效值时，撮合引擎按下面的条件判断请求是否仍然有效：
+
+`当前时间（微秒） - X-Gate-Client-Send-Us <= X-Gate-Timeout-Window-Us`
+
+超出窗口后，OMS 返回 `273` / `REQUEST_MESSAGE_OVER_TIME` 时，WebSocket 回 `400` / `EXPIRED_ORDER`，message 为 `the current time has exceeded the order expiration time(273).`。按币对撤单遇到这个错误时，不再回 HTTP 200 空数组。
+
+适用频道：
+
+  * `spot.order_place`（仅单笔）
+  * `spot.order_cancel`
+  * `spot.order_amend`
+  * `spot.order_cancel_cp`
+
+`spot.order_place` 批量、`spot.order_cancel_ids`、查单和订单列表不支持这两个字段。
+
+  * 仅 OMS 3.0 用户生效。其他用户传入这两个字段时不生效，也不会因此报错。
+  * 窗口判断需要两个字段同时有效。只传入其中一个时，不能用来判断请求是否过期。
+  * 这与 `x-gate-exptime` 不是同一个字段。`x-gate-exptime` 仍是毫秒绝对时间，由 WebSocket 服务在收到请求时判断是否过期。
+
+下单时携带超时字段。撤单、改单、按币对撤单使用同一组 `req_header`，替换 `channel` 和 `req_param` 即可。登录方式不变。
+    
+    
+    {
+      "time": 1681195484,
+      "channel": "spot.order_place",
+      "event": "api",
+      "payload": {
+        "req_id": "request-id-1",
+        "req_header": {
+          "X-Gate-Client-Send-Us": "1700000000123456",
+          "X-Gate-Timeout-Window-Us": "500000"
+        },
+        "req_param": {
+          "currency_pair": "BTC_USDT",
+          "side": "buy",
+          "amount": "0.001",
+          "price": "50000",
+          "type": "limit",
+          "time_in_force": "gtc"
+        }
+      }
+    }
+    
+
+##  RPI 流动性接入（Speed Bump）
+
+API 用户可在支持的普通单笔请求中传入 JSON 布尔值 `rpi_taker_access: true`，接受平台等待后获取本笔订单的 RPI（Retail Price Improvement）吃单资格。该参数不用于创建 RPI 挂单。
+
+###  参数
+
+写在 `spot.order_place` 单笔请求的 `payload.req_param` 里。`req_param` 为数组时是批量下单，不处理该字段。
+
+`rpi_taker_access`：可选，JSON 布尔值，默认 `false`。
+
+  * `true`：接受平台等待后获取本笔订单的 RPI 吃单资格。
+  * `false` 或省略：沿用原下单行为。
+
+等待时长由平台设置，初始为 **20 ms** ，用户不能指定。请求总耗时还包括网络和原有下单处理时间，客户端超时应留出余量。需要等待的订单整笔等待，不根据盘口中是否存在 RPI 挂单来决定，也不只延迟与 RPI 成交的部分。
+
+等待不锁定价格或数量，不保证与 RPI 成交；实际成交仍受当时的盘口、余额和原有交易规则约束。等待不改变 `action_mode` 的含义；协议回声 `ack: true` 仍不代表订单已受理或成交，其返回时间也可能包含等待。订单结果仍按原有模式返回。
+
+`x-gate-exptime` 继续有效，等待会消耗请求的有效时间；剩余时间不足以完成等待时，请求会被拒绝。若超时或未收到最终结果，按原有方式查询订单状态，确认结果后再处理重试。
+
+请求前先完成私有 WS 登录；示例中的 `time` 需替换为发送请求时的 Unix 时间戳（秒）。
+    
+    
+    {
+      "time": 1681986203,
+      "channel": "spot.order_place",
+      "event": "api",
+      "payload": {
+        "req_id": "rpi-mkt-1",
+        "req_param": {
+          "currency_pair": "BTC_USDT",
+          "type": "market",
+          "side": "buy",
+          "amount": "100",
+          "time_in_force": "ioc",
+          "rpi_taker_access": true
+        }
+      }
+    }
+    
+
+示例是市价买入，`amount: "100"` 表示花费 100 USDT，不是买入 100 BTC。实际金额需满足交易对的最新最小下单金额等限制。
+
+###  支持的订单
+
+支持的订单订单 | 条件  
+---|---  
+市价 | `type` 为 `market`，`time_in_force` 为 `ioc`、`fok` 或不传  
+限价 IOC | `type` 为 `limit`，`time_in_force` 为 `ioc`  
+限价 FOK | `type` 为 `limit`，`time_in_force` 为 `fok`  
+  
+只作用于 `spot.order_place` 单笔。批量下单不处理该字段，不因此报错，也不等待。改单、撤单不使用该字段。
+
+###  错误
+
+错误场景 | `label` | `message`  
+---|---|---  
+限价 GTC，或限价未传 `time_in_force`，同时 `rpi_taker_access` 为 `true` | `RPI_TAKER_ACCESS_NOT_SUPPORTED` | `GTC orders do not support rpi_taker_access`  
+其他不支持的订单类型，同时为 `true` | `RPI_TAKER_ACCESS_NOT_SUPPORTED` | `order type does not support rpi_taker_access`  
+值不是布尔类型，例如 `"true"` 或 `1` | `INVALID_PARAM` | `invalid rpi_taker_access`  
+  
+以上参数错误表示本次请求未成功下单，应修正后再发送。等待期间还可能返回：
+
+错误`label` | 含义与处理  
+---|---  
+`EXPIRED_ORDER` | 请求已过期或剩余有效时间不足以完成等待，调整有效期后再发送  
+`REQUEST_CANCELLED` | 请求在等待结束前已取消，本次下单未提交  
+`RPI_TAKER_ACCESS_UNAVAILABLE` | 此功能暂不可用，本次下单未提交，可稍后重试  
+  
+其他鉴权、限频、资金不足等错误沿用原有规则。
+
+相同参数的 REST 用法见[现货 REST](/docs/developers/apiv4/zh_CN/spot/#opIdcreateOrder)。
+
 ##  下单
 
 `spot.order_place`
@@ -4911,7 +9364,7 @@ Payload 格式:
 字段 | 类型 | 必选 | 描述  
 ---|---|---|---  
 `req_id` | `string` | 是 | 服务器将发送回的请求 ID，用于帮助您识别服务器响应的是哪个请求，它与外部的`id`不同  
-`req_param` | `object` | 是 | API 订单模型的 JSON 字节数据，可以是包含 API 订单模型的数组；API 订单模型的详细信息请参考[API ](https://www.gate.com/docs/developers/apiv4/zh_CN/#%E4%B8%8B%E5%8D%95)  
+`req_param` | `object` | 是 | API 订单模型的 JSON 字节数据，可以是包含 API 订单模型的数组；API 订单模型的详细信息请参考[API](/docs/developers/apiv4/zh_CN/spot/#opIdcreateOrder)  
 `req_header` | `object` | 否 | apiv4 自定义 header  
   
 `req_param` API 订单模型的 JSON 字节数据:
@@ -4933,6 +9386,7 @@ Payload 格式:
 `stp_act` | `string` | 否 | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
 `action_mode` | `string` | 否 | 处理模式  
 `slippage` | `string` | 否 | 滑点，默认范围为0.0001-0.05，0.05代表5%，代表市价单能接受的最大滑点  
+`rpi_taker_access` | `bool` | 否 | 是否接入 RPI 流动性。仅普通单笔下单，见 RPI 流动性接入（Speed Bump）  
   
 `trade_quote` 在 WebSocket 层按原值透传。WebSocket 只校验 JSON 类型是否为字符串，不转换大小写、不做别名转换、不维护币种白名单。币种是否存在及市场是否支持，由下游交易服务按与 REST 相同的业务规则和错误语义校验。批量下单时，每个订单需分别设置 `trade_quote`。本期只对外提供计价侧选择，`trade_base`、`tqa` 和 `tba` 不是公开 WebSocket 参数。`spot.order_amend`、`spot.order_cancel` 和 `spot.order_cancel_ids` 不支持 `trade_quote`。
 
@@ -4941,6 +9395,8 @@ Payload 格式:
 字段 | 类型 | 必选 | 描述  
 ---|---|---|---  
 `x-gate-exptime` | `string` | 否 | 指定过期的时间戳（毫秒）。如果 ws 收到请求的时间大于过期时间，请求将被拒绝  
+`X-Gate-Client-Send-Us` | `string` | 否 | OMS 3.0 用户的客户端发送时间，单位微秒。须与 `X-Gate-Timeout-Window-Us` 同时传入，见 3.0 用户请求超时  
+`X-Gate-Timeout-Window-Us` | `string` | 否 | OMS 3.0 用户的超时窗口，单位微秒。见 3.0 用户请求超时  
   
 ####  详细描述
 
@@ -5040,6 +9496,48 @@ Payload 格式:
 代码示例：请求前要先登录
     
     
+    #!/usr/bin/python
+    
+    import time
+    import json
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    
+    placeParam = {"text":"t-my-custom-id","currency_pair":"BTC_USD","trade_quote":"USDC","type":"limit","account":"spot","side":"buy","amount":"1","price":"1"}
+    batchPlaceParam = [
+                        {"text":"t-my-custom-id-1","currency_pair":"BTC_USD","trade_quote":"USDC","type":"limit","account":"spot","side":"buy","amount":"1","price":"1"},
+                        {"text":"t-my-custom-id-2","currency_pair":"ETH_USD","trade_quote":"USDG","type":"limit","account":"spot","side":"buy","amount":"1","price":"1.1"}
+                      ]
+    
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    channel = "spot.order_place"
+    
+    # refer to the Authentication section for a WebSocket API code example
+    
+    # create a order
+    ws.send(json.dumps({
+        "time":int(time.time()),
+        "channel":channel,
+        "event":"api",
+        "payload":{
+            "req_id":"test_1",
+            # create a order
+            "req_param": placeParam
+            # batch orders
+            # "req_param": batchPlaceParam
+        }
+    }))
+    
+    for i in range(2):
+        data = ws.recv()
+        print("data: ", data)
+    
+
+代码示例：请求前要先登录
+    
+    
     package main
     
     import (
@@ -5061,6 +9559,120 @@ Payload 格式:
     	u := url.URL{Scheme: "ws", Host: "xxxx", Path: "xxx"}
     	websocket.DefaultDialer.TLSClientConfig = &tls.Config{RootCAs: nil, InsecureSkipVerify: true}
     	c, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
+    	if err != nil {
+    		panic(err)
+    	}
+    	c.SetPingHandler(nil)
+    
+    	// read msg
+    	go func() {
+    		for {
+    			_, message, err := c.ReadMessage()
+    			if err != nil {
+    				c.Close()
+    				panic(err)
+    			}
+    			fmt.Printf("recv: %s\n", message)
+    		}
+    	}()
+    
+    	// warn: before order, you should login first, pls refer to the channel `spot.login`;
+    	// order_place
+    	orderParam := OrderParam{
+    		Text:         "t-123456",
+    		CurrencyPair: "BTC_USD",
+    		TradeQuote:   "USDC",
+    		Type:         "limit",
+    		Account:      "spot",
+    		Side:         "buy",
+    		Iceberg:      "0",
+    		Amount:       "1",
+    		Price:        "5.00032",
+    		TimeInForce:  "gtc",
+    		AutoBorrow:   false,
+    		StpAct:       "cn",
+    	}
+    	requestParam := interface{}(orderParam)
+    	// 批量下单时改为序列化 []OrderParam；每个订单分别携带自己的 trade_quote。
+    	// requestParam = []OrderParam{orderParam, {CurrencyPair: "ETH_USD", TradeQuote: "USDG", Type: "limit", Account: "spot", Side: "sell", Amount: "1", Price: "3000"}}
+    	paramBytes, _ := json.Marshal(requestParam)
+    	requestId := fmt.Sprintf("%d-%d", time.Now().UnixMilli(), 1)
+    	order_place := ApiRequest{
+    		Time:    time.Now().Unix(),
+    		Channel: "spot.order_place",
+    		Event:   "api",
+    		Payload: ApiPayload{
+    			RequestId:    requestId,
+    			RequestParam: []byte(paramBytes),
+    		},
+    	}
+    	orderPlaceReqByte, _ := json.Marshal(order_place)
+    	err = c.WriteMessage(websocket.TextMessage, orderPlaceReqByte)
+    
+    	if err != nil {
+    		panic(err)
+    	}
+    
+    	select {}
+    }
+    
+    type ApiRequest struct {
+    	App     string     `json:"app,omitempty"`
+    	Time    int64      `json:"time"`
+    	Id      *int64     `json:"id,omitempty"`
+    	Channel string     `json:"channel"`
+    	Event   string     `json:"event"`
+    	Payload ApiPayload `json:"payload"`
+    }
+    type ApiPayload struct {
+    	ApiKey       string          `json:"api_key,omitempty"`
+    	Signature    string          `json:"signature,omitempty"`
+    	Timestamp    string          `json:"timestamp,omitempty"`
+    	RequestId    string          `json:"req_id,omitempty"`
+    	RequestParam json.RawMessage `json:"req_param,omitempty"`
+    }
+    
+    type OrderParam struct {
+    	Text         string `json:"text,omitempty"`
+    	CurrencyPair string `json:"currency_pair,omitempty"`
+    	TradeQuote   string `json:"trade_quote,omitempty"`
+    	Type         string `json:"type,omitempty"`
+    	Account      string `json:"account,omitempty"`
+    	Side         string `json:"side,omitempty"`
+    	Iceberg      string `json:"iceberg,omitempty"`
+    	Amount       string `json:"amount,omitempty"`
+    	Price        string `json:"price,omitempty"`
+    	TimeInForce  string `json:"time_in_force,omitempty"`
+    	AutoBorrow   bool   `json:"auto_borrow,omitempty"`
+    	StpAct       string `json:"stp_act,omitempty"`
+    }
+    
+
+代码示例：请求前要先登录
+    
+    
+    package main
+    
+    import (
+    	"crypto/hmac"
+    	"crypto/sha512"
+    	"crypto/tls"
+    	"encoding/hex"
+    	"encoding/json"
+    	"fmt"
+    	"github.com/gorilla/websocket"
+    	"net/url"
+    	"strconv"
+    	"time"
+    	"net/http"
+    )
+    
+    // example WebSocket create order in go
+    func main() {
+    
+    	u := url.URL{Scheme: "ws", Host: "xxxx", Path: "xxx"}
+    	websocket.DefaultDialer.TLSClientConfig = &tls.Config{RootCAs: nil, InsecureSkipVerify: true}
+    	c, _, err := websocket.DefaultDialer.Dial(u.String(), http.Header{"timeUnit": []string{"microsecond"}})
     	if err != nil {
     		panic(err)
     	}
@@ -5304,6 +9916,215 @@ Payload 格式:
     }
     
 
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+
+单笔订单的 "ack" 推送示例
+    
+    
+    {
+      "request_id": "request-2",
+      "ack": true,
+      "header": {
+        "response_time": "1681986203814",
+        "response_time_us": 1681986203814000,
+        "time_us": 1681986203814456,
+        "status": "200",
+        "channel": "spot.order_place",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 9,
+        "x_gate_ratelimit_limit": 10,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "req_id": "request-2",
+          "req_header": null,
+          "req_param": {
+            "text": "t-my-custom-id",
+            "currency_pair": "GT_USDT",
+            "type": "limit",
+            "account": "spot",
+            "side": "buy",
+            "amount": "1",
+            "price": "1"
+          },
+          "api_key": "",
+          "timestamp": "",
+          "signature": ""
+        }
+      }
+    }
+    
+
+**订单数组** 的 "ack" 推送示例
+    
+    
+    {
+      "request_id": "xxxx",
+      "ack": true,
+      "header": {
+        "response_time": "1677810708738",
+        "response_time_us": 1677810708738000,
+        "time_us": 1677810708738456,
+        "status": "200",
+        "channel": "spot.order_place",
+        "event": "api",
+        "client_id": "::1-0x140002f63c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 9,
+        "x_gate_ratelimit_limit": 10,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "req_id": "xxxx",
+          "req_header": null,
+          "req_param": [
+            {
+              "text": "t-my-custom-id",
+              "currency_pair": "GT_USDT",
+              "type": "limit",
+              "account": "spot",
+              "side": "buy",
+              "amount": "1",
+              "price": "1"
+            },
+            {
+              "text": "t-my-custom-id",
+              "currency_pair": "GT_USDT",
+              "type": "limit",
+              "account": "spot",
+              "side": "buy",
+              "amount": "1",
+              "price": "1"
+            }
+          ]
+        }
+      }
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+单笔订单的 "ack" 推送示例
+    
+    
+    {
+      "request_id": "request-2",
+      "ack": true,
+      "header": {
+        "response_time": "1681986203814",
+        "response_time_us": 1681986203814000,
+        "time_us": 1681986203814456,
+        "status": "200",
+        "channel": "spot.order_place",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 9,
+        "x_gate_ratelimit_limit": 10,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "req_id": "request-2",
+          "req_header": null,
+          "req_param": {
+            "text": "t-my-custom-id",
+            "currency_pair": "GT_USDT",
+            "type": "limit",
+            "account": "spot",
+            "side": "buy",
+            "amount": "1",
+            "price": "1"
+          },
+          "api_key": "",
+          "timestamp": "",
+          "signature": ""
+        }
+      }
+    }
+    
+
+**订单数组** 的 "ack" 推送示例
+    
+    
+    {
+      "request_id": "xxxx",
+      "ack": true,
+      "header": {
+        "response_time": "1677810708738",
+        "response_time_us": 1677810708738000,
+        "time_us": 1677810708738456,
+        "status": "200",
+        "channel": "spot.order_place",
+        "event": "api",
+        "client_id": "::1-0x140002f63c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 9,
+        "x_gate_ratelimit_limit": 10,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "req_id": "xxxx",
+          "req_header": null,
+          "req_param": [
+            {
+              "text": "t-my-custom-id",
+              "currency_pair": "GT_USDT",
+              "type": "limit",
+              "account": "spot",
+              "side": "buy",
+              "amount": "1",
+              "price": "1"
+            },
+            {
+              "text": "t-my-custom-id",
+              "currency_pair": "GT_USDT",
+              "type": "limit",
+              "account": "spot",
+              "side": "buy",
+              "amount": "1",
+              "price": "1"
+            }
+          ]
+        }
+      }
+    }
+    
+
 ###  下单推送
 
 下游返回非空值时，`trade_quote` 会出现在 RESULT 和 FULL 结果中；ACK 保持原有结果结构且不返回 `trade_quote`。请求直接校验失败时返回 API 错误且不产生订单 ID；订单被引擎接收后又因统一市场校验失败时，订单状态为 `cancelled`，且 `finish_as=unified_check_failed`。
@@ -5318,6 +10139,8 @@ Payload 格式:
 `ack` | Bool | "ack"消息的返回表示 WebSocket 的确认消息(目前在下单接口中存在)。如果"ack"为 false(false 该字段不会出现在响应中)，这意味着该消息是一个响应消息，您可以通过检查"data.errs"来确定请求是否成功。  
 `header` | Map | 响应的元信息  
 »`response_time` | String | 响应发送时间（以毫秒为单位）  
+»`response_time_us` | Integer | 同 `response_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
+»`time_us` | Integer | 服务端发出该条消息时的 Unix 微秒。仅 `timeUnit: microsecond` 开启后推送  
 »`channel` | String | 请求的频道  
 »`event` | String | 请求事件  
 »`client_id` | String | 唯一客户端标识 ID  
@@ -5331,6 +10154,8 @@ Payload 格式:
 »`x_gat_ratelimit_reset_timestamp` | Integer | 已超过当前窗口频率限制，表示下个可用时间窗口的时间戳（毫秒），即什么时候可以恢复访问；未超过当前窗口频率限制，表示返回的是当前服务器时间（毫秒）  
 `data` | Object | 请求响应的数据  
 »`result` | Object | 如果这是"ack"响应，则"result"是请求的有效载荷，否则"result"是 API 的响应  
+»»`create_time_us` | Integer | 同 `create_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
+»»`update_time_us` | Integer | 同 `update_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
 »`errs` | Object | 只有在请求失败时才可用  
 »»`label` | String | 以字符串格式表示错误类型  
 »»`message` | String | 错误信息详情  
@@ -5478,6 +10303,329 @@ Payload 格式:
     }
     
 
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+
+下单 推送示例
+
+单笔订单的推送示例
+
+> action_mode: ACK
+    
+    
+    {
+      "request_id": "request-2",
+      "header": {
+        "response_time": "1681986204784",
+        "response_time_us": 1681986204784000,
+        "time_us": 1681986204784456,
+        "status": "200",
+        "channel": "spot.order_place",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 9,
+        "x_gate_ratelimit_limit": 10,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "id": "12332324",
+          "text": "t-123456",
+          "amend_text": "test2"
+        }
+      }
+    }
+    
+
+> action_mode: RESULT
+    
+    
+    {
+      "request_id": "request-2",
+      "header": {
+        "response_time": "1681986204784",
+        "response_time_us": 1681986204784000,
+        "time_us": 1681986204784456,
+        "status": "200",
+        "channel": "spot.order_place",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 9,
+        "x_gate_ratelimit_limit": 10,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "id": "12332324",
+          "text": "t-123456",
+          "create_time": "1548000000",
+          "update_time": "1548000100",
+          "create_time_ms": 1548000000123,
+          "create_time_us": 1548000000123000,
+          "update_time_ms": 1548000100123,
+          "update_time_us": 1548000100123000,
+          "currency_pair": "BTC_USD",
+          "trade_quote": "USDC",
+          "status": "cancelled",
+          "type": "limit",
+          "account": "spot",
+          "side": "buy",
+          "iceberg": "0",
+          "amount": "1",
+          "price": "5.00032",
+          "time_in_force": "gtc",
+          "auto_borrow": false,
+          "left": "0.5",
+          "filled_total": "2.50016",
+          "avg_deal_price": "5.00032",
+          "stp_act": "cn",
+          "finish_as": "stp",
+          "stp_id": 10240
+        }
+      }
+    }
+    
+
+> action_mode: FULL
+    
+    
+    {
+      "request_id": "request-2",
+      "header": {
+        "response_time": "1681986204784",
+        "response_time_us": 1681986204784000,
+        "time_us": 1681986204784456,
+        "status": "200",
+        "channel": "spot.order_place",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 9,
+        "x_gate_ratelimit_limit": 10,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "id": "1852454420",
+          "text": "t-abc123",
+          "amend_text": "-",
+          "create_time": "1710488334",
+          "update_time": "1710488334",
+          "create_time_ms": 1710488334073,
+          "create_time_us": 1710488334073000,
+          "update_time_ms": 1710488334074,
+          "update_time_us": 1710488334074000,
+          "status": "closed",
+          "currency_pair": "BTC_USD",
+          "trade_quote": "USDC",
+          "type": "limit",
+          "account": "spot",
+          "side": "buy",
+          "amount": "0.001",
+          "price": "65000",
+          "time_in_force": "gtc",
+          "iceberg": "0",
+          "left": "0",
+          "filled_amount": "0.001",
+          "fill_price": "63.4693",
+          "filled_total": "63.4693",
+          "avg_deal_price": "63469.3",
+          "fee": "0.00000022",
+          "fee_currency": "BTC",
+          "point_fee": "0",
+          "gt_fee": "0",
+          "gt_maker_fee": "0",
+          "gt_taker_fee": "0",
+          "gt_discount": false,
+          "rebated_fee": "0",
+          "rebated_fee_currency": "USDC",
+          "finish_as": "filled"
+        }
+      }
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+下单 推送示例
+
+单笔订单的推送示例
+
+> action_mode: ACK
+    
+    
+    {
+      "request_id": "request-2",
+      "header": {
+        "response_time": "1681986204784",
+        "response_time_us": 1681986204784000,
+        "time_us": 1681986204784456,
+        "status": "200",
+        "channel": "spot.order_place",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 9,
+        "x_gate_ratelimit_limit": 10,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "id": "12332324",
+          "text": "t-123456",
+          "amend_text": "test2"
+        }
+      }
+    }
+    
+
+> action_mode: RESULT
+    
+    
+    {
+      "request_id": "request-2",
+      "header": {
+        "response_time": "1681986204784",
+        "response_time_us": 1681986204784000,
+        "time_us": 1681986204784456,
+        "status": "200",
+        "channel": "spot.order_place",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 9,
+        "x_gate_ratelimit_limit": 10,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "id": "12332324",
+          "text": "t-123456",
+          "create_time": "1548000000",
+          "update_time": "1548000100",
+          "create_time_ms": 1548000000123,
+          "create_time_us": 1548000000123000,
+          "update_time_ms": 1548000100123,
+          "update_time_us": 1548000100123000,
+          "currency_pair": "BTC_USD",
+          "trade_quote": "USDC",
+          "status": "cancelled",
+          "type": "limit",
+          "account": "spot",
+          "side": "buy",
+          "iceberg": "0",
+          "amount": "1",
+          "price": "5.00032",
+          "time_in_force": "gtc",
+          "auto_borrow": false,
+          "left": "0.5",
+          "filled_total": "2.50016",
+          "avg_deal_price": "5.00032",
+          "stp_act": "cn",
+          "finish_as": "stp",
+          "stp_id": 10240
+        }
+      }
+    }
+    
+
+> action_mode: FULL
+    
+    
+    {
+      "request_id": "request-2",
+      "header": {
+        "response_time": "1681986204784",
+        "response_time_us": 1681986204784000,
+        "time_us": 1681986204784456,
+        "status": "200",
+        "channel": "spot.order_place",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 9,
+        "x_gate_ratelimit_limit": 10,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "id": "1852454420",
+          "text": "t-abc123",
+          "amend_text": "-",
+          "create_time": "1710488334",
+          "update_time": "1710488334",
+          "create_time_ms": 1710488334073,
+          "create_time_us": 1710488334073000,
+          "update_time_ms": 1710488334074,
+          "update_time_us": 1710488334074000,
+          "status": "closed",
+          "currency_pair": "BTC_USD",
+          "trade_quote": "USDC",
+          "type": "limit",
+          "account": "spot",
+          "side": "buy",
+          "amount": "0.001",
+          "price": "65000",
+          "time_in_force": "gtc",
+          "iceberg": "0",
+          "left": "0",
+          "filled_amount": "0.001",
+          "fill_price": "63.4693",
+          "filled_total": "63.4693",
+          "avg_deal_price": "63469.3",
+          "fee": "0.00000022",
+          "fee_currency": "BTC",
+          "point_fee": "0",
+          "gt_fee": "0",
+          "gt_maker_fee": "0",
+          "gt_taker_fee": "0",
+          "gt_discount": false,
+          "rebated_fee": "0",
+          "rebated_fee_currency": "USDC",
+          "finish_as": "filled"
+        }
+      }
+    }
+    
+
 ##  取消订单
 
 您可以使用此频道和事件`cancel`取消一个未成交的订单
@@ -5497,7 +10645,7 @@ Payload 格式:
 字段 | 类型 | 必选 | 描述  
 ---|---|---|---  
 `req_id` | `string` | 是 | 服务器将发送回的请求 ID，用于帮助您识别服务器响应的是哪个请求，它与外部的 id 不同。  
-`req_param` | `object` | 是 | 有关 API 取消订单的详细信息，请查看[API ](https://www.gate.com/docs/developers/apiv4/en/#cancel-a-single-order)。  
+`req_param` | `object` | 是 | 有关 API 取消订单的详细信息，请查看[API](/docs/developers/apiv4/en/spot/#opIdcancelOrder)。  
 `req_header` | `object` | 否 | apiv4 自定义 header  
   
 `req_param` API 订单模型的 JSON 字节数据:
@@ -5530,6 +10678,38 @@ Payload 格式:
     channel = "spot.order_cancel"
     
     ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    
+    # refer to the Authentication section for a WebSocket API code example
+    
+    ws.send(json.dumps({
+        "time":time,
+        "channel":channel,
+        "event":"api",
+        "payload":{
+            "req_id":"test_1",
+            "req_param": cancelParam
+        }
+    }))
+    
+    print(ws.recv())
+    
+
+代码示例：请求前要先登录
+    
+    
+    #!/usr/bin/python
+    
+    import time
+    import json
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    
+    time = int(time.time())
+    cancelParam = {"order_id":"1694883366","currency_pair":"GT_USDT"}
+    channel = "spot.order_cancel"
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
     
     # refer to the Authentication section for a WebSocket API code example
     
@@ -5606,6 +10786,67 @@ Payload 格式:
     
     
 
+代码示例：请求前要先登录
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	timestamp := time.Now().Unix()
+    	cancelParam := map[string]interface{}{
+    		"order_id":    "1694883366",
+    		"currency_pair": "GT_USDT",
+    	}
+    	channel := "spot.order_cancel"
+    
+    	request := map[string]interface{}{
+    		"time":    timestamp,
+    		"channel": channel,
+    		"event":   "api",
+    		"payload": map[string]interface{}{
+    			"req_id":    "test_1",
+    			"req_param": cancelParam,
+    		},
+    	}
+    
+    	// refer to the Authentication section for a WebSocket API code example
+    
+    	msg, err := json.Marshal(request)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 取消订单请求示例
     
     
@@ -5632,6 +10873,8 @@ Payload 格式:
 `request_id` | String | 消息的唯一标识符  
 `header` | Map | 响应的元信息  
 »`response_time` | String | 响应发送时间（以毫秒为单位）  
+»`response_time_us` | Integer | 同 `response_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
+»`time_us` | Integer | 服务端发出该条消息时的 Unix 微秒。仅 `timeUnit: microsecond` 开启后推送  
 »`channel` | String | 请求的频道  
 »`event` | String | 请求事件  
 »`client_id` | String | 唯一客户端标识 ID  
@@ -5641,7 +10884,9 @@ Payload 格式:
 »`conn_trace_id` | String | 与客户端建立连接的TraceId  
 »`trace_id` | String | 执行下单操作的TraceId  
 `data` | Object | 请求响应的数据  
-»`result` | Object | 单个订单取消的响应详细信息，请查看[API ](https://www.gate.com/docs/developers/apiv4/en/#cancel-a-single-order)。  
+»`result` | Object | 单个订单取消的响应详细信息，请查看[API](/docs/developers/apiv4/en/spot/#opIdcancelOrder)。  
+»»`create_time_us` | Integer | 同 `create_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
+»»`update_time_us` | Integer | 同 `update_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
 »`errs` | Object | 只有在请求失败时才可用  
 »»`label` | String | 以字符串格式表示错误类型  
 »»`message` | String | 错误信息详情  
@@ -5701,6 +10946,141 @@ Payload 格式:
     }
     
 
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+
+取消订单推送示例
+    
+    
+    {
+      "request_id": "request-5",
+      "header": {
+        "response_time": "1681986206282",
+        "response_time_us": 1681986206282000,
+        "time_us": 1681986206282456,
+        "status": "200",
+        "channel": "spot.order_cancel",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d"
+      },
+      "data": {
+        "result": {
+          "id": "1700664330",
+          "text": "t-my-custom-id",
+          "amend_text": "-",
+          "create_time": "1681986204",
+          "update_time": "1681986206",
+          "create_time_ms": 1681986204832,
+          "create_time_us": 1681986204832000,
+          "update_time_ms": 1681986206330,
+          "update_time_us": 1681986206330000,
+          "status": "cancelled",
+          "currency_pair": "GT_USDT",
+          "type": "limit",
+          "account": "spot",
+          "side": "buy",
+          "amount": "1",
+          "price": "2",
+          "time_in_force": "gtc",
+          "iceberg": "0",
+          "left": "1",
+          "fill_price": "0",
+          "filled_total": "0",
+          "fee": "0",
+          "fee_currency": "GT",
+          "point_fee": "0",
+          "gt_fee": "0",
+          "gt_maker_fee": "0.0015",
+          "gt_taker_fee": "0.0015",
+          "gt_discount": true,
+          "rebated_fee": "0",
+          "rebated_fee_currency": "USDT",
+          "stp_id": 1,
+          "stp_act": "cn",
+          "finish_as": "cancelled"
+        }
+      }
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+取消订单推送示例
+    
+    
+    {
+      "request_id": "request-5",
+      "header": {
+        "response_time": "1681986206282",
+        "response_time_us": 1681986206282000,
+        "time_us": 1681986206282456,
+        "status": "200",
+        "channel": "spot.order_cancel",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d"
+      },
+      "data": {
+        "result": {
+          "id": "1700664330",
+          "text": "t-my-custom-id",
+          "amend_text": "-",
+          "create_time": "1681986204",
+          "update_time": "1681986206",
+          "create_time_ms": 1681986204832,
+          "create_time_us": 1681986204832000,
+          "update_time_ms": 1681986206330,
+          "update_time_us": 1681986206330000,
+          "status": "cancelled",
+          "currency_pair": "GT_USDT",
+          "type": "limit",
+          "account": "spot",
+          "side": "buy",
+          "amount": "1",
+          "price": "2",
+          "time_in_force": "gtc",
+          "iceberg": "0",
+          "left": "1",
+          "fill_price": "0",
+          "filled_total": "0",
+          "fee": "0",
+          "fee_currency": "GT",
+          "point_fee": "0",
+          "gt_fee": "0",
+          "gt_maker_fee": "0.0015",
+          "gt_taker_fee": "0.0015",
+          "gt_discount": true,
+          "rebated_fee": "0",
+          "rebated_fee_currency": "USDT",
+          "stp_id": 1,
+          "stp_act": "cn",
+          "finish_as": "cancelled"
+        }
+      }
+    }
+    
+
 ##  取消所有 ID 列表内的订单
 
 您可以使用此频道和事件`cancel_ids`取消所有未成交的订单。
@@ -5718,7 +11098,7 @@ Payload 格式:
 字段 | 类型 | 必选 | 描述  
 ---|---|---|---  
 `req_id` | `string` | 是 | 服务器将发送回的请求 ID，用于帮助您识别服务器响应的是哪个请求，它与外部的 id 不同。  
-`req_param` | `object` | 是 | 详情见 [api ](https://www.gate.com/docs/developers/apiv4/en/#cancel-a-batch-of-orders-with-an-id-list)  
+`req_param` | `object` | 是 | 详情见 [api](/docs/developers/apiv4/en/spot/#opIdcancelBatchOrders)  
 `req_header` | `object` | 否 | apiv4 自定义 header  
   
 `req_param` API 订单模型的 JSON 字节数据:
@@ -5751,6 +11131,38 @@ Payload 格式:
     channel = "spot.order_cancel_ids"
     
     ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    
+    # refer to the Authentication section for a WebSocket API code example
+    
+    ws.send(json.dumps({
+        "time":time,
+        "channel":channel,
+        "event":"api",
+        "payload":{
+            "req_id":"test_1",
+            "req_param": cancelWithIdsParam
+        }
+    }))
+    
+    print(ws.recv())
+    
+
+代码示例：请求前要先登录
+    
+    
+    #!/usr/bin/python
+    
+    import time
+    import json
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    
+    time = int(time.time())
+    cancelWithIdsParam = [{"id":"1694883366","currency_pair":"GT_USDT"}]
+    channel = "spot.order_cancel_ids"
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
     
     # refer to the Authentication section for a WebSocket API code example
     
@@ -5829,6 +11241,69 @@ Payload 格式:
     
     
 
+代码示例：请求前要先登录
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	timestamp := time.Now().Unix()
+    	cancelWithIdsParam := []map[string]interface{}{
+    		{
+    			"id":            "1694883366",
+    			"currency_pair": "GT_USDT",
+    		},
+    	}
+    	channel := "spot.order_cancel_ids"
+    
+    	request := map[string]interface{}{
+    		"time":    timestamp,
+    		"channel": channel,
+    		"event":   "api",
+    		"payload": map[string]interface{}{
+    			"req_id":    "test_1",
+    			"req_param": cancelWithIdsParam,
+    		},
+    	}
+    
+    	// refer to the Authentication section for a WebSocket API code example
+    
+    	msg, err := json.Marshal(request)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 客户端请求示例
     
     
@@ -5857,6 +11332,8 @@ Payload 格式:
 `request_id` | String | 消息的唯一标识符  
 `header` | Map | 响应的元信息  
 »`response_time` | String | 响应发送时间（以毫秒为单位）  
+»`response_time_us` | Integer | 同 `response_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
+»`time_us` | Integer | 服务端发出该条消息时的 Unix 微秒。仅 `timeUnit: microsecond` 开启后推送  
 »`channel` | String | 请求的频道  
 »`event` | String | 请求事件  
 »`client_id` | String | 唯一客户端标识 ID  
@@ -5866,7 +11343,7 @@ Payload 格式:
 »`conn_trace_id` | String | 与客户端建立连接的TraceId  
 »`trace_id` | String | 执行下单操作的TraceId  
 `data` | Object | 请求响应的数据  
-»`result` | Object | 响应详见[api ](https://www.gate.com/docs/developers/apiv4/en/#cancel-a-batch-of-orders-with-an-id-list)  
+»`result` | Object | 响应详见[api](/docs/developers/apiv4/en/spot/#opIdcancelBatchOrders)  
 »`errs` | Object | 只有在请求失败时才可用  
 »»`label` | String | 以字符串格式表示错误类型  
 »»`message` | String | 错误信息详情  
@@ -5878,6 +11355,85 @@ Payload 格式:
       "request_id": "request-9",
       "header": {
         "response_time": "1681986208564",
+        "status": "200",
+        "channel": "spot.order_cancel_ids",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d"
+      },
+      "data": {
+        "result": [
+          {
+            "currency_pair": "GT_USDT",
+            "id": "1700664343",
+            "succeeded": true
+          }
+        ]
+      }
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+
+取消订单推送示例
+    
+    
+    {
+      "request_id": "request-9",
+      "header": {
+        "response_time": "1681986208564",
+        "response_time_us": 1681986208564000,
+        "time_us": 1681986208564456,
+        "status": "200",
+        "channel": "spot.order_cancel_ids",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d"
+      },
+      "data": {
+        "result": [
+          {
+            "currency_pair": "GT_USDT",
+            "id": "1700664343",
+            "succeeded": true
+          }
+        ]
+      }
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+取消订单推送示例
+    
+    
+    {
+      "request_id": "request-9",
+      "header": {
+        "response_time": "1681986208564",
+        "response_time_us": 1681986208564000,
+        "time_us": 1681986208564456,
         "status": "200",
         "channel": "spot.order_cancel_ids",
         "event": "api",
@@ -5917,7 +11473,7 @@ Payload 格式:
 字段 | 类型 | 必选 | 描述  
 ---|---|---|---  
 `req_id` | `string` | 是 | 服务器将发送回的请求 ID，用于帮助您识别服务器响应的是哪个请求，它与外部的 id 不同。  
-`req_param` | `object` | 是 | detail to[api ](https://www.gate.com/docs/developers/apiv4/en/#cancel-all-open-orders-in-specified-currency-pair)  
+`req_param` | `object` | 是 | detail to[api](/docs/developers/apiv4/en/spot/#opIdcancelOrders)  
 `req_header` | `object` | 否 | apiv4 自定义 header  
   
 `req_param` API 订单模型的 JSON 字节数据:
@@ -5953,6 +11509,38 @@ Payload 格式:
     channel = "spot.order_cancel_cp"
     
     ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    
+    # refer to the Authentication section for a WebSocket API code example
+    
+    ws.send(json.dumps({
+        "time":time,
+        "channel":channel,
+        "event":"api",
+        "payload":{
+            "req_id":"test_1",
+            "req_param": cancelParam
+        }
+    }))
+    
+    print(ws.recv())
+    
+
+代码示例：请求前要先登录
+    
+    
+    #!/usr/bin/python
+    
+    import time
+    import json
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    
+    time = int(time.time())
+    cancelParam = {"side":"buy","currency_pair":"BTC_USD","trade_quote":"USDC"}
+    channel = "spot.order_cancel_cp"
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
     
     # refer to the Authentication section for a WebSocket API code example
     
@@ -6029,6 +11617,68 @@ Payload 格式:
     }
     
     
+
+代码示例：请求前要先登录
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	timestamp := time.Now().Unix()
+    	cancelParam := map[string]interface{}{
+    		"side":          "buy",
+    		"currency_pair": "BTC_USD",
+    		"trade_quote":   "USDC",
+    	}
+    	channel := "spot.order_cancel_cp"
+    
+    	request := map[string]interface{}{
+    		"time":    timestamp,
+    		"channel": channel,
+    		"event":   "api",
+    		"payload": map[string]interface{}{
+    			"req_id":    "test_1",
+    			"req_param": cancelParam,
+    		},
+    	}
+    
+    	// refer to the Authentication section for a WebSocket API code example
+    
+    	msg, err := json.Marshal(request)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
     
     
     {
@@ -6055,6 +11705,8 @@ Payload 格式:
 `request_id` | String | 消息的唯一标识符  
 `header` | Map | 响应的元信息  
 »`response_time` | String | 响应发送时间（以毫秒为单位）  
+»`response_time_us` | Integer | 同 `response_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
+»`time_us` | Integer | 服务端发出该条消息时的 Unix 微秒。仅 `timeUnit: microsecond` 开启后推送  
 »`channel` | String | 请求的频道  
 »`event` | String | 请求事件  
 »`client_id` | String | 唯一客户端标识 ID  
@@ -6064,7 +11716,9 @@ Payload 格式:
 »`conn_trace_id` | String | 与客户端建立连接的TraceId  
 »`trace_id` | String | 执行下单操作的TraceId  
 `data` | Object | 请求响应的数据  
-»`result` | Object | 响应详情见[api ](https://www.gate.com/docs/developers/apiv4/en/#cancel-all-open-orders-in-specified-currency-pair)  
+»`result` | Object | 响应详情见[api](/docs/developers/apiv4/en/spot/#opIdcancelOrders)  
+»»`create_time_us` | Integer | 同 `create_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
+»»`update_time_us` | Integer | 同 `update_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
 »`errs` | Object | 只有在请求失败时才可用  
 »»`label` | String | 以字符串格式表示错误类型  
 »»`message` | String | 错误信息详情  
@@ -6126,6 +11780,145 @@ Payload 格式:
     }
     
 
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+
+取消订单推送示例
+    
+    
+    {
+      "request_id": "request-7",
+      "header": {
+        "response_time": "1681986207412",
+        "response_time_us": 1681986207412000,
+        "time_us": 1681986207412456,
+        "status": "200",
+        "channel": "spot.order_cancel_cp",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d"
+      },
+      "data": {
+        "result": [
+          {
+            "id": "1700664337",
+            "text": "t-my-custom-id",
+            "amend_text": "-",
+            "create_time": "1681986206",
+            "update_time": "1681986207",
+            "create_time_ms": 1681986206384,
+            "create_time_us": 1681986206384000,
+            "update_time_ms": 1681986207444,
+            "update_time_us": 1681986207444000,
+            "status": "cancelled",
+            "currency_pair": "GT_USDT",
+            "type": "limit",
+            "account": "spot",
+            "side": "buy",
+            "amount": "1",
+            "price": "1",
+            "time_in_force": "gtc",
+            "iceberg": "0",
+            "left": "1",
+            "fill_price": "0",
+            "filled_total": "0",
+            "fee": "0",
+            "fee_currency": "GT",
+            "point_fee": "0",
+            "gt_fee": "0",
+            "gt_maker_fee": "0.0015",
+            "gt_taker_fee": "0.0015",
+            "gt_discount": true,
+            "rebated_fee": "0",
+            "rebated_fee_currency": "USDT",
+            "stp_id": 1,
+            "stp_act": "cn",
+            "finish_as": "cancelled"
+          }
+        ]
+      }
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+取消订单推送示例
+    
+    
+    {
+      "request_id": "request-7",
+      "header": {
+        "response_time": "1681986207412",
+        "response_time_us": 1681986207412000,
+        "time_us": 1681986207412456,
+        "status": "200",
+        "channel": "spot.order_cancel_cp",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d"
+      },
+      "data": {
+        "result": [
+          {
+            "id": "1700664337",
+            "text": "t-my-custom-id",
+            "amend_text": "-",
+            "create_time": "1681986206",
+            "update_time": "1681986207",
+            "create_time_ms": 1681986206384,
+            "create_time_us": 1681986206384000,
+            "update_time_ms": 1681986207444,
+            "update_time_us": 1681986207444000,
+            "status": "cancelled",
+            "currency_pair": "GT_USDT",
+            "type": "limit",
+            "account": "spot",
+            "side": "buy",
+            "amount": "1",
+            "price": "1",
+            "time_in_force": "gtc",
+            "iceberg": "0",
+            "left": "1",
+            "fill_price": "0",
+            "filled_total": "0",
+            "fee": "0",
+            "fee_currency": "GT",
+            "point_fee": "0",
+            "gt_fee": "0",
+            "gt_maker_fee": "0.0015",
+            "gt_taker_fee": "0.0015",
+            "gt_discount": true,
+            "rebated_fee": "0",
+            "rebated_fee_currency": "USDT",
+            "stp_id": 1,
+            "stp_act": "cn",
+            "finish_as": "cancelled"
+          }
+        ]
+      }
+    }
+    
+
 ##  修改订单
 
 您可以使用此频道和事件`amend`来修改一个未成交的订单。
@@ -6143,7 +11936,7 @@ Payload 格式:
 字段 | 类型 | 必选 | 描述  
 ---|---|---|---  
 `req_id` | `string` | 是 | 服务器将发送回的请求 ID，用于帮助您识别服务器响应的是哪个请求，它与外部的 id 不同。  
-`req_param` | `object` | 是 | API 修改订单，详细信息请参考[api ](https://www.gate.com/docs/developers/apiv4/en/#amend-an-order)  
+`req_param` | `object` | 是 | API 修改订单，详细信息请参考[api](/docs/developers/apiv4/en/spot/#opIdamendOrder)  
 `req_header` | `object` | 否 | apiv4 自定义 header  
   
 `req_param` API 订单模型的 JSON 字节数据:
@@ -6179,6 +11972,38 @@ Payload 格式:
     channel = "spot.order_amend"
     
     ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    
+    # refer to the Authentication section for a WebSocket API code example
+    
+    ws.send(json.dumps({
+        "time":time,
+        "channel":channel,
+        "event":"api",
+        "payload":{
+            "req_id":"test_1",
+            "req_param": amendParam
+        }
+    }))
+    
+    print(ws.recv())
+    
+
+代码示例：请求前要先登录
+    
+    
+    #!/usr/bin/python
+    
+    import time
+    import json
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    
+    time = int(time.time())
+    amendParam = {"order_id":"1694883366","currency_pair":"GT_USDT","price":"2"}
+    channel = "spot.order_amend"
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
     
     # refer to the Authentication section for a WebSocket API code example
     
@@ -6256,6 +12081,68 @@ Payload 格式:
     
     
 
+代码示例：请求前要先登录
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	timestamp := time.Now().Unix()
+    	amendParam := map[string]interface{}{
+    		"order_id":     "1694883366",
+    		"currency_pair": "GT_USDT",
+    		"price":        "2",
+    	}
+    	channel := "spot.order_amend"
+    
+    	request := map[string]interface{}{
+    		"time":    timestamp,
+    		"channel": channel,
+    		"event":   "api",
+    		"payload": map[string]interface{}{
+    			"req_id":    "test_1",
+    			"req_param": amendParam,
+    		},
+    	}
+    
+    	// refer to the Authentication section for a WebSocket API code example
+    
+    	msg, err := json.Marshal(request)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 客户端请求示例
     
     
@@ -6283,6 +12170,8 @@ Payload 格式:
 `request_id` | String | 消息的唯一标识符  
 `header` | Map | 响应的元信息  
 »`response_time` | String | 响应发送时间（以毫秒为单位）  
+»`response_time_us` | Integer | 同 `response_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
+»`time_us` | Integer | 服务端发出该条消息时的 Unix 微秒。仅 `timeUnit: microsecond` 开启后推送  
 »`channel` | String | 请求的频道  
 »`event` | String | 请求事件  
 »`client_id` | String | 唯一客户端标识 ID  
@@ -6295,7 +12184,9 @@ Payload 格式:
 »`x_gate_ratelimit_limit` | Integer | 当前频率限制上限(为0不展示)  
 »`x_gat_ratelimit_reset_timestamp` | Integer | 已超过当前窗口频率限制，表示下个可用时间窗口的时间戳（毫秒），即什么时候可以恢复访问；未超过当前窗口频率限制，表示返回的是当前服务器时间（毫秒）  
 `data` | Object | 请求响应的数据  
-»`result` | Object | 响应详见[api ](https://www.gate.com/docs/developers/apiv4/en/#amend-an-order)  
+»`result` | Object | 响应详见[api](/docs/developers/apiv4/en/spot/#opIdamendOrder)  
+»»`create_time_us` | Integer | 同 `create_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
+»»`update_time_us` | Integer | 同 `update_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
 »`errs` | Object | 只有在请求失败时才可用  
 »»`label` | String | 以字符串格式表示错误类型  
 »»`message` | String | 错误信息详情  
@@ -6358,6 +12249,147 @@ Payload 格式:
     }
     
 
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+
+修改订单 推送示例
+    
+    
+    {
+      "request_id": "request-4",
+      "header": {
+        "response_time": "1681986206145",
+        "response_time_us": 1681986206145000,
+        "time_us": 1681986206145456,
+        "status": "200",
+        "channel": "spot.order_amend",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 9,
+        "x_gate_ratelimit_limit": 10,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "id": "1700664330",
+          "text": "t-my-custom-id",
+          "amend_text": "-",
+          "create_time": "1681986204",
+          "update_time": "1681986206",
+          "create_time_ms": 1681986204832,
+          "create_time_us": 1681986204832000,
+          "update_time_ms": 1681986206176,
+          "update_time_us": 1681986206176000,
+          "status": "open",
+          "currency_pair": "GT_USDT",
+          "type": "limit",
+          "account": "spot",
+          "side": "buy",
+          "amount": "1",
+          "price": "2",
+          "time_in_force": "gtc",
+          "iceberg": "0",
+          "left": "1",
+          "fill_price": "0",
+          "filled_total": "0",
+          "fee": "0",
+          "fee_currency": "GT",
+          "point_fee": "0",
+          "gt_fee": "0",
+          "gt_maker_fee": "0.0015",
+          "gt_taker_fee": "0.0015",
+          "gt_discount": true,
+          "rebated_fee": "0",
+          "rebated_fee_currency": "USDT",
+          "stp_id": 1,
+          "stp_act": "cn",
+          "finish_as": "open"
+        }
+      }
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+修改订单 推送示例
+    
+    
+    {
+      "request_id": "request-4",
+      "header": {
+        "response_time": "1681986206145",
+        "response_time_us": 1681986206145000,
+        "time_us": 1681986206145456,
+        "status": "200",
+        "channel": "spot.order_amend",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d",
+        "x_gate_ratelimit_requests_remain": 9,
+        "x_gate_ratelimit_limit": 10,
+        "x_gat_ratelimit_reset_timestamp": 1736408263764
+      },
+      "data": {
+        "result": {
+          "id": "1700664330",
+          "text": "t-my-custom-id",
+          "amend_text": "-",
+          "create_time": "1681986204",
+          "update_time": "1681986206",
+          "create_time_ms": 1681986204832,
+          "create_time_us": 1681986204832000,
+          "update_time_ms": 1681986206176,
+          "update_time_us": 1681986206176000,
+          "status": "open",
+          "currency_pair": "GT_USDT",
+          "type": "limit",
+          "account": "spot",
+          "side": "buy",
+          "amount": "1",
+          "price": "2",
+          "time_in_force": "gtc",
+          "iceberg": "0",
+          "left": "1",
+          "fill_price": "0",
+          "filled_total": "0",
+          "fee": "0",
+          "fee_currency": "GT",
+          "point_fee": "0",
+          "gt_fee": "0",
+          "gt_maker_fee": "0.0015",
+          "gt_taker_fee": "0.0015",
+          "gt_discount": true,
+          "rebated_fee": "0",
+          "rebated_fee_currency": "USDT",
+          "stp_id": 1,
+          "stp_act": "cn",
+          "finish_as": "open"
+        }
+      }
+    }
+    
+
 ##  订单状态
 
 您可以使用此频道和事件`status`来查询一个订单。
@@ -6375,7 +12407,7 @@ Payload 格式:
 字段 | 类型 | 必选 | 描述  
 ---|---|---|---  
 `req_id` | `string` | 是 | 服务器将发送回的请求 ID，用于帮助您识别服务器响应的是哪个请求，它与外部的 id 不同。  
-`req_param` | `object` | 是 | 详见[api ](https://www.gate.com/docs/developers/apiv4/en/#get-a-single-order)  
+`req_param` | `object` | 是 | 详见[api](/docs/developers/apiv4/en/spot/#opIdgetOrder)  
   
 `req_param` API 订单模型的 JSON 字节数据:
 
@@ -6407,6 +12439,38 @@ _account_ : 指定查询账户。不指定默认现货，保证金和逐仓杠�
     channel = "spot.order_status"
     
     ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    
+    # refer to the Authentication section for a WebSocket API code example
+    
+    ws.send(json.dumps({
+        "time":time,
+        "channel":channel,
+        "event":"api",
+        "payload":{
+            "req_id":"test_1",
+            "req_param": statusParam
+        }
+    }))
+    
+    print(ws.recv())
+    
+
+代码示例：请求前要先登录
+    
+    
+    #!/usr/bin/python
+    
+    import time
+    import json
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    
+    time = int(time.time())
+    statusParam = {"order_id":"1694883366","currency_pair":"GT_USDT"}
+    channel = "spot.order_status"
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
     
     # refer to the Authentication section for a WebSocket API code example
     
@@ -6483,6 +12547,67 @@ _account_ : 指定查询账户。不指定默认现货，保证金和逐仓杠�
     
     
 
+代码示例：请求前要先登录
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	timestamp := time.Now().Unix()
+    	statusParam := map[string]interface{}{
+    		"order_id":     "1694883366",
+    		"currency_pair": "GT_USDT",
+    	}
+    	channel := "spot.order_status"
+    
+    	request := map[string]interface{}{
+    		"time":    timestamp,
+    		"channel": channel,
+    		"event":   "api",
+    		"payload": map[string]interface{}{
+    			"req_id":    "test_1",
+    			"req_param": statusParam,
+    		},
+    	}
+    
+    	// refer to the Authentication section for a WebSocket API code example
+    
+    	msg, err := json.Marshal(request)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 客户端请求示例
     
     
@@ -6511,6 +12636,8 @@ _account_ : 指定查询账户。不指定默认现货，保证金和逐仓杠�
 `request_id` | String | 消息的唯一标识符  
 `header` | Map | 响应的元信息  
 »`response_time` | String | 响应发送时间（以毫秒为单位）  
+»`response_time_us` | Integer | 同 `response_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
+»`time_us` | Integer | 服务端发出该条消息时的 Unix 微秒。仅 `timeUnit: microsecond` 开启后推送  
 »`channel` | String | 请求的频道  
 »`event` | String | 请求事件  
 »`client_id` | String | 唯一客户端标识 ID  
@@ -6520,7 +12647,9 @@ _account_ : 指定查询账户。不指定默认现货，保证金和逐仓杠�
 »`conn_trace_id` | String | 与客户端建立连接的TraceId  
 »`trace_id` | String | 执行下单操作的TraceId  
 `data` | Object | 请求响应的数据  
-»`result` | Object | 响应详见[api ](https://www.gate.com/docs/developers/apiv4/en/#get-a-single-order)  
+»`result` | Object | 响应详见[api](/docs/developers/apiv4/en/spot/#opIdgetOrder)  
+»»`create_time_us` | Integer | 同 `create_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
+»»`update_time_us` | Integer | 同 `update_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
 »`errs` | Object | 只有在请求失败时才可用  
 »»`label` | String | 以字符串格式表示错误类型  
 »»`message` | String | 错误信息详情  
@@ -6580,6 +12709,141 @@ _account_ : 指定查询账户。不指定默认现货，保证金和逐仓杠�
     }
     
 
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+
+订单状态 推送示例
+    
+    
+    {
+      "request_id": "request-3",
+      "header": {
+        "response_time": "1681986205829",
+        "response_time_us": 1681986205829000,
+        "time_us": 1681986205829456,
+        "status": "200",
+        "channel": "spot.order_status",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d"
+      },
+      "data": {
+        "result": {
+          "id": "1700664330",
+          "text": "t-my-custom-id",
+          "amend_text": "-",
+          "create_time": "1681986204",
+          "update_time": "1681986204",
+          "create_time_ms": 1681986204939,
+          "create_time_us": 1681986204939000,
+          "update_time_ms": 1681986204939,
+          "update_time_us": 1681986204939000,
+          "status": "open",
+          "currency_pair": "GT_USDT",
+          "type": "limit",
+          "account": "spot",
+          "side": "buy",
+          "amount": "1",
+          "price": "1",
+          "time_in_force": "gtc",
+          "iceberg": "0",
+          "left": "1",
+          "fill_price": "0",
+          "filled_total": "0",
+          "fee": "0",
+          "fee_currency": "GT",
+          "point_fee": "0",
+          "gt_fee": "0",
+          "gt_maker_fee": "0.0015",
+          "gt_taker_fee": "0.0015",
+          "gt_discount": true,
+          "rebated_fee": "0",
+          "rebated_fee_currency": "USDT",
+          "stp_id": 1,
+          "stp_act": "cn",
+          "finish_as": "open"
+        }
+      }
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+订单状态 推送示例
+    
+    
+    {
+      "request_id": "request-3",
+      "header": {
+        "response_time": "1681986205829",
+        "response_time_us": 1681986205829000,
+        "time_us": 1681986205829456,
+        "status": "200",
+        "channel": "spot.order_status",
+        "event": "api",
+        "client_id": "::1-0x140001623c0",
+        "x_in_time": 1681985856667508,
+        "x_out_time": 1681985856667598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d"
+      },
+      "data": {
+        "result": {
+          "id": "1700664330",
+          "text": "t-my-custom-id",
+          "amend_text": "-",
+          "create_time": "1681986204",
+          "update_time": "1681986204",
+          "create_time_ms": 1681986204939,
+          "create_time_us": 1681986204939000,
+          "update_time_ms": 1681986204939,
+          "update_time_us": 1681986204939000,
+          "status": "open",
+          "currency_pair": "GT_USDT",
+          "type": "limit",
+          "account": "spot",
+          "side": "buy",
+          "amount": "1",
+          "price": "1",
+          "time_in_force": "gtc",
+          "iceberg": "0",
+          "left": "1",
+          "fill_price": "0",
+          "filled_total": "0",
+          "fee": "0",
+          "fee_currency": "GT",
+          "point_fee": "0",
+          "gt_fee": "0",
+          "gt_maker_fee": "0.0015",
+          "gt_taker_fee": "0.0015",
+          "gt_discount": true,
+          "rebated_fee": "0",
+          "rebated_fee_currency": "USDT",
+          "stp_id": 1,
+          "stp_act": "cn",
+          "finish_as": "open"
+        }
+      }
+    }
+    
+
 ##  查询订单列表
 
 `spot.order_list`
@@ -6599,7 +12863,7 @@ Payload 格式:
 字段 | 类型 | 必选 | 描述  
 ---|---|---|---  
 `req_id` | `string` | 是 | 服务器将发送回的请求 ID，用于帮助您识别服务器响应的是哪个请求，它与外部的 id 不同。  
-`req_param` | `object` | 是 | 详见[api ](https://www.gate.com/docs/developers/apiv4/zh_CN/#%E6%9F%A5%E8%AF%A2%E8%AE%A2%E5%8D%95%E5%88%97%E8%A1%A8)  
+`req_param` | `object` | 是 | 详见[api](/docs/developers/apiv4/zh_CN/spot/#opIdlistOrders)  
   
 `req_param` API 订单模型的 JSON 字节数据:
 
@@ -6641,6 +12905,38 @@ Payload 格式:
     channel = "spot.order_list"
     
     ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    
+    # refer to the Authentication section for a WebSocket API code example
+    
+    ws.send(json.dumps({
+        "time":time,
+        "channel":channel,
+        "event":"api",
+        "payload":{
+            "req_id":"1734081140-1",
+            "req_param": statusParam
+        }
+    }))
+    
+    print(ws.recv())
+    
+
+代码示例：请求前要先登录
+    
+    
+    #!/usr/bin/python
+    
+    import time
+    import json
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    
+    time = int(time.time())
+    statusParam = {"currency_pair": "BTC_USDT","status": "finished","limit": 3,"page": 1}
+    channel = "spot.order_list"
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
     
     # refer to the Authentication section for a WebSocket API code example
     
@@ -6719,6 +13015,69 @@ Payload 格式:
     
     
 
+代码示例：请求前要先登录
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    	"net/http"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"timeUnit": []string{"microsecond"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	timestamp := time.Now().Unix()
+    	statusParam := map[string]interface{}{
+    		"currency_pair": "BTC_USDT",
+    		"status":        "finished",
+    		"limit":         3,
+    		"page":          1,
+    	}
+    	channel := "spot.order_list"
+    
+    	request := map[string]interface{}{
+    		"time":    timestamp,
+    		"channel": channel,
+    		"event":   "api",
+    		"payload": map[string]interface{}{
+    			"req_id":    "1734081140-1",
+    			"req_param": statusParam,
+    		},
+    	}
+    
+    	// refer to the Authentication section for a WebSocket API code example
+    
+    	msg, err := json.Marshal(request)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
 客户端请求示例
     
     
@@ -6747,6 +13106,8 @@ Payload 格式:
 `request_id` | String | 消息的唯一标识符  
 `header` | Map | 响应的元信息  
 »`response_time` | String | 响应发送时间（以毫秒为单位）  
+»`response_time_us` | Integer | 同 `response_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
+»`time_us` | Integer | 服务端发出该条消息时的 Unix 微秒。仅 `timeUnit: microsecond` 开启后推送  
 »`channel` | String | 请求的频道  
 »`event` | String | 请求事件  
 »`client_id` | String | 唯一客户端标识 ID  
@@ -6756,7 +13117,9 @@ Payload 格式:
 »`conn_trace_id` | String | 与客户端建立连接的TraceId  
 »`trace_id` | String | 执行下单操作的TraceId  
 `data` | Object | 请求响应的数据  
-»`result` | Array | 响应详见[api ](https://www.gate.com/docs/developers/apiv4/zh_CN/#order)  
+»`result` | Array | 响应详见[api](/docs/developers/apiv4/zh_CN/spot/#schemaorder)  
+»»`create_time_us` | Integer | 同 `create_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
+»»`update_time_us` | Integer | 同 `update_time` 字段，微秒精度。仅 `timeUnit: microsecond` 开启后推送  
 »`errs` | Object | 只有在请求失败时才可用  
 »»`label` | String | 以字符串格式表示错误类型  
 »»`message` | String | 错误信息详情  
@@ -6881,4 +13244,277 @@ Payload 格式:
     }
     
 
-Last Updated: 10/14/2026, 3:12:02 AM
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/", header={"timeUnit": "microsecond"})
+    
+
+订单列表 推送示例
+    
+    
+    {
+      "header": {
+        "response_time": "1734486677912",
+        "response_time_us": 1734486677912000,
+        "time_us": 1734486677912456,
+        "status": "200",
+        "channel": "spot.order_list",
+        "event": "api",
+        "client_id": "35.79.119.197-0xc00a13a1a0",
+        "x_in_time": 1734486677912508,
+        "x_out_time": 1734486677912598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d"
+      },
+      "data": {
+        "result": [
+          {
+            "id": "20874890569",
+            "text": "web",
+            "amend_text": "-",
+            "create_time": "1734081653",
+            "update_time": "1734081653",
+            "create_time_ms": 1734081653247,
+            "create_time_us": 1734081653247000,
+            "update_time_ms": 1734081653249,
+            "update_time_us": 1734081653249000,
+            "status": "closed",
+            "currency_pair": "BTC_USDT",
+            "type": "market",
+            "account": "spot",
+            "side": "buy",
+            "amount": "70.0",
+            "price": "0.0",
+            "time_in_force": "ioc",
+            "iceberg": "0.0",
+            "left": "0.143511",
+            "filled_amount": "0.00299",
+            "fill_price": "69.856489",
+            "filled_total": "69.856489",
+            "avg_deal_price": "23363.3742475",
+            "fee": "0.0000028704",
+            "fee_currency": "BTC",
+            "point_fee": "0.0",
+            "gt_fee": "0.0",
+            "gt_maker_fee": "0.0",
+            "gt_taker_fee": "0.0",
+            "rebated_fee": "0.0",
+            "rebated_fee_currency": "USDT",
+            "finish_as": "filled"
+          },
+          {
+            "id": "20884808760",
+            "text": "web",
+            "amend_text": "-",
+            "create_time": "1734081534",
+            "update_time": "1734081534",
+            "create_time_ms": 1734081534822,
+            "create_time_us": 1734081534822000,
+            "update_time_ms": 1734081534824,
+            "update_time_us": 1734081534824000,
+            "status": "closed",
+            "currency_pair": "BTC_USDT",
+            "type": "market",
+            "account": "spot",
+            "side": "buy",
+            "amount": "100.0",
+            "price": "0.0",
+            "time_in_force": "ioc",
+            "iceberg": "0.0",
+            "left": "0.088092",
+            "filled_amount": "0.00433",
+            "fill_price": "99.911908",
+            "filled_total": "99.911908",
+            "avg_deal_price": "23074.34364897",
+            "fee": "0.0000041568",
+            "fee_currency": "BTC",
+            "point_fee": "0.0",
+            "gt_fee": "0.0",
+            "gt_maker_fee": "0.0",
+            "gt_taker_fee": "0.0",
+            "rebated_fee": "0.0",
+            "rebated_fee_currency": "USDT",
+            "finish_as": "filled"
+          },
+          {
+            "id": "20870148234",
+            "text": "t-123456",
+            "amend_text": "-",
+            "create_time": "1733900250",
+            "update_time": "1733900250",
+            "create_time_ms": 1733900250750,
+            "create_time_us": 1733900250750000,
+            "update_time_ms": 1733900250755,
+            "update_time_us": 1733900250755000,
+            "status": "closed",
+            "currency_pair": "BTC_USDT",
+            "type": "market",
+            "account": "spot",
+            "side": "buy",
+            "amount": "10.0",
+            "price": "0.0",
+            "time_in_force": "ioc",
+            "iceberg": "0.0",
+            "left": "0.144492",
+            "filled_amount": "0.00013",
+            "fill_price": "9.855508",
+            "filled_total": "9.855508",
+            "avg_deal_price": "75811.6",
+            "fee": "0.0000001248",
+            "fee_currency": "BTC",
+            "point_fee": "0.0",
+            "gt_fee": "0.0",
+            "gt_maker_fee": "0.0",
+            "gt_taker_fee": "0.0",
+            "rebated_fee": "0.0",
+            "rebated_fee_currency": "USDT",
+            "finish_as": "filled"
+          }
+        ]
+      },
+      "request_id": "1734081140-1"
+    }
+    
+
+OMS 3.0 连接在请求 Header `timeUnit: microsecond` 开启后，在原有字段之外追加微秒字段。
+    
+    
+    conn, _, err := websocket.DefaultDialer.Dial(
+    	"wss://api.gateio.ws/ws/v4/",
+    	http.Header{"timeUnit": []string{"microsecond"}},
+    )
+    
+
+订单列表 推送示例
+    
+    
+    {
+      "header": {
+        "response_time": "1734486677912",
+        "response_time_us": 1734486677912000,
+        "time_us": 1734486677912456,
+        "status": "200",
+        "channel": "spot.order_list",
+        "event": "api",
+        "client_id": "35.79.119.197-0xc00a13a1a0",
+        "x_in_time": 1734486677912508,
+        "x_out_time": 1734486677912598,
+        "conn_id": "5e74253e9c793974",
+        "conn_trace_id": "1bde5aaa0acf2f5f48edfd4392e1fa68",
+        "trace_id": "e410abb5f74b4afc519e67920548838d"
+      },
+      "data": {
+        "result": [
+          {
+            "id": "20874890569",
+            "text": "web",
+            "amend_text": "-",
+            "create_time": "1734081653",
+            "update_time": "1734081653",
+            "create_time_ms": 1734081653247,
+            "create_time_us": 1734081653247000,
+            "update_time_ms": 1734081653249,
+            "update_time_us": 1734081653249000,
+            "status": "closed",
+            "currency_pair": "BTC_USDT",
+            "type": "market",
+            "account": "spot",
+            "side": "buy",
+            "amount": "70.0",
+            "price": "0.0",
+            "time_in_force": "ioc",
+            "iceberg": "0.0",
+            "left": "0.143511",
+            "filled_amount": "0.00299",
+            "fill_price": "69.856489",
+            "filled_total": "69.856489",
+            "avg_deal_price": "23363.3742475",
+            "fee": "0.0000028704",
+            "fee_currency": "BTC",
+            "point_fee": "0.0",
+            "gt_fee": "0.0",
+            "gt_maker_fee": "0.0",
+            "gt_taker_fee": "0.0",
+            "rebated_fee": "0.0",
+            "rebated_fee_currency": "USDT",
+            "finish_as": "filled"
+          },
+          {
+            "id": "20884808760",
+            "text": "web",
+            "amend_text": "-",
+            "create_time": "1734081534",
+            "update_time": "1734081534",
+            "create_time_ms": 1734081534822,
+            "create_time_us": 1734081534822000,
+            "update_time_ms": 1734081534824,
+            "update_time_us": 1734081534824000,
+            "status": "closed",
+            "currency_pair": "BTC_USDT",
+            "type": "market",
+            "account": "spot",
+            "side": "buy",
+            "amount": "100.0",
+            "price": "0.0",
+            "time_in_force": "ioc",
+            "iceberg": "0.0",
+            "left": "0.088092",
+            "filled_amount": "0.00433",
+            "fill_price": "99.911908",
+            "filled_total": "99.911908",
+            "avg_deal_price": "23074.34364897",
+            "fee": "0.0000041568",
+            "fee_currency": "BTC",
+            "point_fee": "0.0",
+            "gt_fee": "0.0",
+            "gt_maker_fee": "0.0",
+            "gt_taker_fee": "0.0",
+            "rebated_fee": "0.0",
+            "rebated_fee_currency": "USDT",
+            "finish_as": "filled"
+          },
+          {
+            "id": "20870148234",
+            "text": "t-123456",
+            "amend_text": "-",
+            "create_time": "1733900250",
+            "update_time": "1733900250",
+            "create_time_ms": 1733900250750,
+            "create_time_us": 1733900250750000,
+            "update_time_ms": 1733900250755,
+            "update_time_us": 1733900250755000,
+            "status": "closed",
+            "currency_pair": "BTC_USDT",
+            "type": "market",
+            "account": "spot",
+            "side": "buy",
+            "amount": "10.0",
+            "price": "0.0",
+            "time_in_force": "ioc",
+            "iceberg": "0.0",
+            "left": "0.144492",
+            "filled_amount": "0.00013",
+            "fill_price": "9.855508",
+            "filled_total": "9.855508",
+            "avg_deal_price": "75811.6",
+            "fee": "0.0000001248",
+            "fee_currency": "BTC",
+            "point_fee": "0.0",
+            "gt_fee": "0.0",
+            "gt_maker_fee": "0.0",
+            "gt_taker_fee": "0.0",
+            "rebated_fee": "0.0",
+            "rebated_fee_currency": "USDT",
+            "finish_as": "filled"
+          }
+        ]
+      },
+      "request_id": "1734081140-1"
+    }
+    
+
+Last Updated: 11/26/2026, 4:00:54 PM

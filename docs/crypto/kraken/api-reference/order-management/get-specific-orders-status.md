@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/order-management/get-specific-orders-status'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Get Specific Orders' Status
@@ -471,5 +471,6 @@ components:
       in: header
       name: Authent
       x-inlineDescription: true
+      x-default: <authent>
 
 ````

@@ -10,12 +10,19 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/wallet/get-a-users-pnl-series'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Get a user's PnL series
 
 > Complete cumulative native-PnL atoms and compositions.
+
+When `user` is the active wallet of a Polymarket account that owns other
+wallets, the series describes the person: each point adds every wallet's
+newest observation at or before it, so PnL made on a former wallet keeps
+counting after the user moves to a new one, and the final point equals
+`/v2/user-stats` `all_time_pnl`. A field one wallet does not cover is
+`null` on the point. Any other wallet reads alone.
 
 
 
@@ -139,7 +146,15 @@ paths:
       tags:
         - wallet
       summary: Get a user's PnL series
-      description: Complete cumulative native-PnL atoms and compositions.
+      description: |-
+        Complete cumulative native-PnL atoms and compositions.
+
+        When `user` is the active wallet of a Polymarket account that owns other
+        wallets, the series describes the person: each point adds every wallet's
+        newest observation at or before it, so PnL made on a former wallet keeps
+        counting after the user moves to a new one, and the final point equals
+        `/v2/user-stats` `all_time_pnl`. A field one wallet does not cover is
+        `null` on the point. Any other wallet reads alone.
       operationId: get_user_pnl_v2
       parameters:
         - name: user

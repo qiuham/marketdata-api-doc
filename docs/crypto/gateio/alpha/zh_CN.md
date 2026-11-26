@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/alpha/zh_CN
 api_type: Trading
-updated_at: 2026-11-25 18:56:50.629875
+updated_at: 2026-11-26 18:57:47.300073
 ---
 
 # Gate Alpha API v1.1.1
@@ -2196,4 +2196,4 @@ status | integer(int32) | Optional |  | 币种交易状态
     
     
 
-Last Updated: 10/17/2025, 10:29:26 AM
+Last Updated: 11/20/2026, 10:11:32 AM

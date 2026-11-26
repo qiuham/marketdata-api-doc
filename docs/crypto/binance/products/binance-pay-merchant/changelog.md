@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/changelog
 api_type: Changelog
-updated_at: 2026-11-25 18:33:46.952105
+updated_at: 2026-11-26 18:34:44.087446
 ---
 
 # Binance Pay API: Changelog

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/private/ADL-Notification-Channel
 api_type: WebSocket
-updated_at: 2026-11-25 19:02:05.198614
+updated_at: 2026-11-26 19:03:19.416723
 ---
 
 # ADL Notification Channel

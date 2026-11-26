@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/api-user-keys/update-prime-api-user-key'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Update Prime API User Key
@@ -202,5 +202,6 @@ components:
         payload, and URI path.
       name: API-Sign
       in: header
+      x-default: <api-sign>
 
 ````

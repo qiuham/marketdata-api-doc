@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/multi-collateral/set-leverage-settings'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Set leverage settings
@@ -298,5 +298,6 @@ components:
       in: header
       name: Authent
       x-inlineDescription: true
+      x-default: <authent>
 
 ````

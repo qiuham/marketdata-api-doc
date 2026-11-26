@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/keyboard/getSelectedTextRange
 api_type: Guide
-updated_at: 2026-11-25 18:46:13.969388
+updated_at: 2026-11-26 18:46:47.182630
 ---
 
 # bn.getSelectedTextRange

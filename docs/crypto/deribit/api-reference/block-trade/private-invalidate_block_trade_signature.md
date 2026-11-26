@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/block-trade/private-invalidate_block_trade_signature
 api_type: JSON-RPC
-updated_at: 2026-11-25 19:00:48.334741
+updated_at: 2026-11-26 19:02:05.009412
 ---
 
 # private/invalidate_block_trade_signature

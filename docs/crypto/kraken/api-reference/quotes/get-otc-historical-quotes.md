@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/quotes/get-otc-historical-quotes'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Get OTC Historical Quotes
@@ -244,5 +244,6 @@ components:
         payload, and URI path.
       name: API-Sign
       in: header
+      x-default: <api-sign>
 
 ````

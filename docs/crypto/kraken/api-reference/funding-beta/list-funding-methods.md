@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/funding-beta/list-funding-methods'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # List Funding Methods
@@ -577,6 +577,7 @@ components:
         payload, and URI path.
       name: API-Sign
       in: header
+      x-default: <api-sign>
     API-Nonce:
       type: apiKey
       description: >-
@@ -586,6 +587,7 @@ components:
         with the same API key.
       name: API-Nonce
       in: header
+      x-default: <api-nonce>
     API-OTP:
       type: apiKey
       description: >-
@@ -593,5 +595,6 @@ components:
         one-time password. Required only if 2FA is configured for the API key.
       name: API-OTP
       in: header
+      x-default: <api-otp>
 
 ````

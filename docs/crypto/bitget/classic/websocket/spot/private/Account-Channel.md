@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/spot/private/Account-Channel
 api_type: WebSocket
-updated_at: 2026-11-25 19:01:32.731869
+updated_at: 2026-11-26 19:02:47.733393
 ---
 
 # Account Channel

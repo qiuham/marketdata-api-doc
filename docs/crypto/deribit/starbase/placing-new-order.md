@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/placing-new-order
 api_type: Starbase
-updated_at: 2026-11-25 19:00:46.293019
+updated_at: 2026-11-26 19:02:03.407841
 ---
 
 # Placing a New Order

@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/feeds/list-combo-activity'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # List combo activity
@@ -21,6 +21,10 @@ feed for a user, in the standard `{ data, pagination }` envelope.
 Pass `?cursor=` from a prior response's `next_cursor` to fetch the next page.
 Unlike the activity feed, the anchor behind the cursor is
 `(block_number, log_index)`; this endpoint's total order.
+
+When `user` is the active wallet of a Polymarket account that owns other
+wallets, the feed holds every wallet's combo activity; each row's
+`proxy_wallet` names the wallet it belongs to.
 
 A malformed `condition` combo condition id is a `400` naming the value; a
 well-formed one that matches nothing serves an empty `data` array, which
@@ -160,6 +164,13 @@ paths:
         Unlike the activity feed, the anchor behind the cursor is
 
         `(block_number, log_index)`; this endpoint's total order.
+
+
+        When `user` is the active wallet of a Polymarket account that owns other
+
+        wallets, the feed holds every wallet's combo activity; each row's
+
+        `proxy_wallet` names the wallet it belongs to.
 
 
         A malformed `condition` combo condition id is a `400` naming the value;

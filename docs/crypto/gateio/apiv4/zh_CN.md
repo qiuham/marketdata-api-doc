@@ -2,12 +2,12 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN
 api_type: REST
-updated_at: 2026-11-25 18:57:43.151672
+updated_at: 2026-11-26 18:58:41.426256
 ---
 
-# Gate API v4.106.184
+# Gate API v4.106.187
 
-v4.106.184 · Stable
+v4.106.187 · Stable
 
 
 欢迎使用 Gate API APIv4 接口提供了现货、杠杆、合约交易相关的操作，包括公共接口查询市场行情，以及需要认证的私有接口， 实现基于 API 的自动交易。
@@ -105,12 +105,46 @@ DANGER
 
 #  Changelog
 
+**v4.106.187**
+
+2026-11-23
+
+  * `GET /futures/{settle}/trades` 新增可选请求头 `timeUnit: microsecond` 和可选响应字段 `create_time_us`，字段为整数 Unix 微秒时间戳。未传该请求头或取其他值时省略该字段。
+  * `GET /futures/{settle}/my_trades` 和 `GET /futures/{settle}/my_trades_timerange` 新增相同的请求头和响应字段。合约 3.0 账户在查询数据支持微秒精度时可收到该字段。
+  * **`POST /otc/order/create`** 的可选字段 `receive_type` 补充枚举值 `VA`，企业和个人账户均可使用该值表示通过虚拟账户汇款。
+
+**v4.106.186**
+
+2026-11-23
+
+  * **不兼容的契约变更。** `GET /crossex/transfers/coin` 响应字段 `min_trans_amount` 和 `est_fee` 由 JSON 数字改为十进制字符串。按 JSON 数字解析的客户端需要适配。
+  * `GET /crossex/transfers` 新增可选查询参数 `status`，可取 `PENDING`、`SUCCESS` 或 `FAIL`。文档限频为每 60 秒 1,200 次请求。
+  * `GET /crossex/history_orders` 新增可选精确查询参数 `order_id`（int64）和 `text`（字符串）。同时传入时须同时匹配两项。查询参数 `attributes` 支持 `REBASE`。
+  * `GET /crossex/history_trades` 新增可选查询参数 `order_id`（int64），并为股票及 ETF 成交新增可选响应字段 `fx_rate`（十进制字符串）。
+  * `GET /crossex/positions` 新增可选数组字段 `risk_limits`，返回仓位专属风险限额档位。`GET /crossex/accounts` 新增可选字段 `assets[].price`，以十进制字符串返回 USDT 估值价格。
+  * `GET /crossex/rule/symbols` 补充 Aster 合约交易对格式、可含 DEX 前缀的完整 Hyperliquid HIP-3 `symbol` 及 `rebase` 交易对状态。`POST /crossex/transfers` 的 `CROSSEX_ASTER` 仅支持与 `SPOT` 互划 USDT。
+  * `PUT /crossex/orders/{order_id}` 补充 `qty` 和 `price` 的改单规则。至少提供一项新的正数值，省略某字段或传入 `"0"` 时保留原值。
+
+**v4.106.185**
+
+2026-11-20
+
+  * `POST /spot/orders`：新增可选请求体字段 `rpi_taker_access`（boolean，默认 `false`，仅请求），用于通过 Speed Bump 申请本笔订单的 RPI 吃单资格。仅支持 IOC/FOK；传 `false` 或省略时沿用原下单行为。请求体模型为 `CreateSpotOrder`，响应仍为 `Order`。
+  * `GET /spot/currencies` 和 `GET /spot/currencies/{currency}` 的响应新增可选对象 `tokenized_security_info`，包含股票标的代码 `underlying`。已发生拆分的股票代币还可返回最新拆分系数 `current_multiplier`。两个字段均为字符串。
+
 **v4.106.184**
 
 2026-11-18
 
   * 新增 `POST /p2p/merchant/chat/pre_upload_chat_file`，请求必填字段为 `content_type`，仅支持 `image/jpeg`、`image/jpg`、`image/png`、`image/webp` 和 `video/mp4`。响应包含 `data.url`、签名表单字段 `data.fields` 和 `data.file_key`，用于直传成功后发送文件消息。
   * 废弃 `POST /p2p/merchant/chat/upload_chat_file`，改用 `POST /p2p/merchant/chat/pre_upload_chat_file`。
+
+**v4.106.183**
+
+2026-11-17
+
+  * `POST /futures/{settle}/orders` 与 `POST /futures/{settle}/bbo_orders`：新增可选请求体字段 `rpi_taker_access`（boolean，默认 `false`，仅请求）。启用后，订单等待一段时间，再获得与 RPI 挂单成交的资格。传 `false` 或省略该字段时，沿用原下单行为。
+  * `POST /futures/{settle}/orders`：SDK 请求模型变更为 `CreateFuturesOrder`。使用 `FuturesOrder` 类型传参或使用旧 Python 关键字参数 `futures_order` 的调用方需更新。响应仍使用 `FuturesOrder`。
 
 **v4.106.182**
 
@@ -4193,6 +4227,10 @@ _没有_ 使用 URL 编码的请求参数，请求参数在参与计算签名时
 
 `GET /futures/{settle}/contracts` 和 `GET /delivery/{settle}/contracts`
 
+  * 现货和合约如何接入 RPI 流动性？
+
+见 RPI 流动性接入（Speed Bump），包含参数、支持类型、等待行为和 SDK 用法。
+
   * 主子账号的区别
 
     * 子账号 API Key 不能操作主子账户互转API， 即 `POST /wallet/sub_account_transfers`
@@ -4209,5 +4247,64 @@ _没有_ 使用 URL 编码的请求参数，请求参数在参与计算签名时
       * 使用的 API Key 是实盘还是模拟的，具体的 Key 是什么（不需要提供 Secret）
       * 编程语言，最好提供一段发送请求的代码片段
       * 是否使用了 SDK ，如果使用了 SDK ，具体是调用哪个方法
+
+##  RPI 流动性接入（Speed Bump）
+
+RPI（Retail Price Improvement）提供可供符合条件的订单成交的流动性。API 用户可在支持的单笔请求中传入 JSON 布尔值 `rpi_taker_access: true`，接受平台等待后获取本笔订单的 RPI 吃单资格。传 `false` 或省略时，沿用原下单行为，不额外申请该资格。
+
+###  支持范围
+
+支持范围REST 接口 | 传 `true` 时的要求  
+---|---  
+[现货单笔下单](/docs/developers/apiv4/zh_CN/spot/#opIdcreateOrder) | 市价单：`type=market`，`time_in_force=ioc`、`fok` 或省略（默认 `ioc`）；限价单：`time_in_force=ioc` 或 `fok`  
+[永续合约单笔下单](/docs/developers/apiv4/zh_CN/futures/#opIdcreateFuturesOrder) | 市价单：`price=0`、`tif=ioc`；限价单：`tif=ioc` 或 `fok`  
+[永续合约 BBO 下单](/docs/developers/apiv4/zh_CN/futures/#opIdcreateFuturesBBOOrder) | `tif=ioc` 或 `fok`；仍需满足 BBO 接口的原有规则  
+  
+限价单未传有效期策略时默认为 `gtc`。GTC 和其他不支持的类型传 `true` 会被拒绝，不会自动转换成 IOC。RPI 挂单与申请 RPI 吃单资格是不同的用法，不能用此参数创建 RPI 挂单。
+
+REST 批量下单不支持此功能，每笔订单都应省略 `rpi_taker_access`。改单、撤单不使用此参数。WS 用法分别见[现货 WS](/docs/developers/apiv4/ws/zh_CN/#rpi-taker-access)和[永续合约 WS](/docs/developers/futures/ws/zh_CN/#rpi-taker-access)。
+
+###  等待与结果
+
+  * 等待时长由平台设置，初始为 **20 ms** ，用户不能指定。请求总耗时还包括网络和原有下单处理时间，客户端超时应留出相应余量。
+  * 需要等待的订单整笔等待，不根据当前盘口是否存在 RPI 挂单来决定，也不只延迟与 RPI 成交的部分。等待期间不锁定价格或数量，到实际撮合时按当时的盘口和原有订单规则执行。
+  * 获得资格不保证与 RPI 成交，也不保证全部成交；订单仍受价格、数量、有效期、余额和原有交易规则约束。
+  * 等待不改变 `action_mode` 的含义，结果仍按所选模式返回。`x-gate-exptime` 继续有效，等待会消耗请求的有效时间，应为等待和后续处理预留时间。
+  * 请求超时或没有收到最终结果时，按原有方式查询订单状态，确认结果后再处理重试，避免重复下单。
+
+###  常见错误
+
+常见错误接口 | 场景 | `label`  
+---|---|---  
+现货 REST | 传 `true`，但有效期策略不支持，例如限价 GTC | `INVALID_PARAM_VALUE`  
+永续合约 REST | 传 `true`，但订单类型或有效期策略不支持 | `RPI_TAKER_ACCESS_NOT_SUPPORTED`  
+现货 REST | 请求过多，暂时无法接受本次请求 | `TOO_MANY_REQUESTS`  
+永续合约 REST | 并发请求过多，暂时无法接受本次请求 | `CONCURRENCY_LIMIT_EXCEEDED`  
+  
+以上错误表示本次请求未成功下单；参数错误需先修正，请求过多时应降低发送频率。其他鉴权、限频、资金不足、过期等错误沿用各接口原有规则。
+
+###  SDK 用法
+
+现货单笔请求使用 `CreateSpotOrder`，永续合约单笔请求使用 `CreateFuturesOrder`，响应仍分别为 `Order` 和 `FuturesOrder`。使用新 SDK 时，原来直接传旧请求类型的调用方需要更新。Python 关键字参数分别由 `order`、`futures_order` 改为 `create_spot_order`、`create_futures_order`。
+
+使用 Python SDK 下现货市价单时，请显式设置 `time_in_force="ioc"`。省略构造参数会发送 SDK 默认的 `gtc`；上表的“省略默认 `ioc`”仅指实际 JSON 请求未包含 `time_in_force` 字段。
+    
+    
+    # 使用已初始化并完成鉴权的 spot_api 或 futures_api；示例使用限价 IOC。
+    import gate_api
+    
+    spot_order = gate_api.CreateSpotOrder(
+        currency_pair="BTC_USDT", type="limit", side="buy",
+        amount="0.001", price="60000", time_in_force="ioc", rpi_taker_access=True,
+    )
+    spot_api.create_order(create_spot_order=spot_order)
+    
+    futures_order = gate_api.CreateFuturesOrder(
+        contract="BTC_USDT", size="1", price="60000", tif="ioc", rpi_taker_access=True,
+    )
+    futures_api.create_futures_order(settle="usdt", create_futures_order=futures_order)
+    
+
+示例价格、数量仅用于说明参数；实际请求需满足交易对或合约的最新交易限制。Python 中用 `True`，实际 JSON 中是布尔值 `true`，不要传字符串 `"true"`。
 
 Last Updated: 4/27/2026, 10:15:14 AM

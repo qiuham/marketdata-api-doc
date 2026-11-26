@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/api-rate-limits
 api_type: Starbase
-updated_at: 2026-11-25 19:00:46.778177
+updated_at: 2026-11-26 19:02:03.759619
 ---
 
 # Starbase API Rate Limits

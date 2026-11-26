@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/funding/get-deposit-methods'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Get Deposit Methods
@@ -292,5 +292,6 @@ components:
         payload, and URI path.
       name: API-Sign
       in: header
+      x-default: <api-sign>
 
 ````

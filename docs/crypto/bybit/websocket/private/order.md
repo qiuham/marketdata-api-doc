@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/private/order
 api_type: WebSocket
-updated_at: 2026-11-25 18:52:53.215812
+updated_at: 2026-11-26 18:53:43.773398
 ---
 
 # Order

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/vip-and-institutional-link-plus/api/rest-api
 api_type: REST
-updated_at: 2026-11-25 18:49:34.689241
+updated_at: 2026-11-26 18:50:03.798901
 ---
 
 # Link Plus REST API

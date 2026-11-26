@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/network/getPrefetchCacheSync
 api_type: Guide
-updated_at: 2026-11-25 18:45:21.297888
+updated_at: 2026-11-26 18:45:52.779069
 ---
 
 # bn.getPrefetchCacheSync

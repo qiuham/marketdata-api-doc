@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/feeds/list-trades'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # 列出交易
@@ -162,6 +162,13 @@ paths:
         seek
 
         anchor, so deep pages cost the same as shallow ones.
+
+
+        When `user` is the active wallet of a Polymarket account that owns other
+
+        wallets, the feed holds every wallet's trades; each row's `proxy_wallet`
+
+        names the wallet it belongs to.
 
 
         A malformed `condition` id is a `400` naming the value; a

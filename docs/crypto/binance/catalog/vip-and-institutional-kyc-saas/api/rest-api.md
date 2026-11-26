@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/vip-and-institutional-kyc-saas/api/rest-api
 api_type: REST
-updated_at: 2026-11-25 18:49:36.320860
+updated_at: 2026-11-26 18:50:04.893928
 ---
 
 # KYC SaaS REST API

@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/rfqs/create-a-new-rfq'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Create a new RFQ
@@ -369,5 +369,6 @@ components:
       in: header
       name: Authent
       x-inlineDescription: true
+      x-default: <authent>
 
 ````

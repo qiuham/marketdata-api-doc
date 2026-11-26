@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/storage/clearStorageSync
 api_type: Guide
-updated_at: 2026-11-25 18:44:15.500946
+updated_at: 2026-11-26 18:44:49.402528
 ---
 
 # bn.clearStorageSync

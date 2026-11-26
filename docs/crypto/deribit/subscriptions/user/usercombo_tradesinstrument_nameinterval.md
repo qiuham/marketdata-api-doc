@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/user/usercombo_tradesinstrument_nameinterval
 api_type: WebSocket
-updated_at: 2026-11-25 19:00:44.952182
+updated_at: 2026-11-26 19:02:02.265823
 ---
 
 # user.combo_trades.(instrument_name).(interval)

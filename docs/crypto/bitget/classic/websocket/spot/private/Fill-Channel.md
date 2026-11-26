@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/spot/private/Fill-Channel
 api_type: WebSocket
-updated_at: 2026-11-25 19:01:34.182618
+updated_at: 2026-11-26 19:02:48.851716
 ---
 
 # Fill Channel

@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/guides/futures/assignment-program'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Assignment Program

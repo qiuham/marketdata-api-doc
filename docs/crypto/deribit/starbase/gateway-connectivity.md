@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/gateway-connectivity
 api_type: Starbase
-updated_at: 2026-11-25 19:00:46.873416
+updated_at: 2026-11-26 19:02:03.837959
 ---
 
 # Gateway Connectivity

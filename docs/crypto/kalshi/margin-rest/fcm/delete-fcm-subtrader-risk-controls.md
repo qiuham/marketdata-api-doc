@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-rest/fcm/delete-fcm-subtrader-risk-controls'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Delete FCM Subtrader Risk Controls

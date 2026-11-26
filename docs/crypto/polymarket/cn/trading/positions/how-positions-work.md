@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/trading/positions/how-positions-work'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # 持仓运作方式

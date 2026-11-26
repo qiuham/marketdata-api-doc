@@ -2,15 +2,15 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/crossex/zh_CN
 api_type: Trading
-updated_at: 2026-11-25 18:58:34.571815
+updated_at: 2026-11-26 18:59:34.729229
 ---
 
-# Gate CrossEx API v1.0.8
+# Gate CrossEx API v1.0.9
 
 * Python 
   * Shell 
 
-v1.0.8 · Stable
+v1.0.9 · Stable
 
 
 API 全面支持跨所账户核心能力，覆盖资金划转、查询、交易、账户信息更改、订阅及推送等全流程操作。
@@ -72,6 +72,18 @@ DANGER
 即使您提交问题，也不应向客服或他人提交 API key 信息，否则将存在严重的资产风险。如果已经意外泄露，请删除现有 API 并重新创建。
 
 #  更新日志
+
+**v1.0.9**
+
+2026-11-23
+
+  * **不兼容的契约变更。** `GET /crossex/transfers/coin` 响应字段 `min_trans_amount` 和 `est_fee` 由 JSON 数字改为十进制字符串。按 JSON 数字解析的客户端需要适配。
+  * `GET /crossex/transfers` 新增可选查询参数 `status`，可取 `PENDING`、`SUCCESS` 或 `FAIL`。文档限频为每 60 秒 1,200 次请求。
+  * `GET /crossex/history_orders` 新增可选精确查询参数 `order_id`（int64）和 `text`（字符串）。同时传入时须同时匹配两项。查询参数 `attributes` 支持 `REBASE`。
+  * `GET /crossex/history_trades` 新增可选查询参数 `order_id`（int64），并为股票及 ETF 成交新增可选响应字段 `fx_rate`（十进制字符串）。
+  * `GET /crossex/positions` 新增可选数组字段 `risk_limits`，返回仓位专属风险限额档位。`GET /crossex/accounts` 新增可选字段 `assets[].price`，以十进制字符串返回 USDT 估值价格。
+  * `GET /crossex/rule/symbols` 补充 Aster 合约交易对格式、可含 DEX 前缀的完整 Hyperliquid HIP-3 `symbol` 及 `rebase` 交易对状态。`POST /crossex/transfers` 的 `CROSSEX_ASTER` 仅支持与 `SPOT` 互划 USDT。
+  * `PUT /crossex/orders/{order_id}` 补充 `qty` 和 `price` 的改单规则。至少提供一项新的正数值，省略某字段或传入 `"0"` 时保留原值。
 
 **v1.0.8**
 
@@ -655,7 +667,7 @@ RPI 订单类`label` | `message` | `tips`
   
 #  跨所交易
 
-CrossEx是一个跨交易所交易平台,允许用户通过统一账户在多个交易所(Binance、OKX、Gate、Bybit、Kraken、Hyperliquid、Deribit、Lighter)进行交易，并接入美股、港股、韩股和日股。CrossEx API提供完整的账户管理、资产划转、下单和仓位管理功能,支持跨交易所操作。
+CrossEx是一个跨交易所交易平台,允许用户通过统一账户在多个交易所(Binance、OKX、Gate、Bybit、Kraken、Hyperliquid、Deribit、Lighter、Aster)进行交易，并接入美股、港股、韩股和日股。CrossEx API提供完整的账户管理、资产划转、下单和仓位管理功能,支持跨交易所操作。
 
   * 股票及ETF仅支持跨所账户模式；股票市场使用US、HK、KR、JP作为exchange_type，使用STOCK、ETF作为business_type
   * REST API BaseURL 实盘交易: `https://api.gateio.ws/api/v4`
@@ -670,7 +682,7 @@ GET `/crossex/rule/symbols`
 
 _查询币对信息_
 
-查询交易对信息。 股票及ETF的交易对格式为 `{市场}_{业务类型}_{证券代码}_USDT`，例如 `US_STOCK_AAPL_USDT`、`HK_STOCK_00700_USDT`、`US_ETF_SPY_USDT`。
+查询交易对信息。 股票及ETF的交易对格式为 `{市场}_{业务类型}_{证券代码}_USDT`，例如 `US_STOCK_AAPL_USDT`、`HK_STOCK_00700_USDT`、`US_ETF_SPY_USDT`。 Aster 合约的交易对格式为 `ASTER_FUTURE_{Base}_{Counter}`。 Hyperliquid HIP-3 合约的交易对可包含 DEX 前缀，例如 `HYPERLIQUID_FUTURE_xyz:XYZ100_USDC`。下单、查询和订阅时使用本接口返回的完整 `symbol`。
 
 ### 参数
 
@@ -713,9 +725,9 @@ Symbol | required: ["symbol","exchange_type","business_type","state","min_size",
 ---|---|---|---|---  
 symbol | string | Required |  | 交易对唯一标识，格式为 ExchangeType_BusinessType_Base_Counter。  
 股票及ETF使用市场作为ExchangeType（US/HK/KR/JP），业务类型为STOCK或ETF，例如US_STOCK_AAPL_USDT、HK_STOCK_00700_USDT、US_ETF_SPY_USDT。  
-exchange_type | string | Required |  | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
+exchange_type | string | Required |  | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER / ASTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
 business_type | string | Required |  | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆 / STOCK 股票 / ETF 交易所交易基金）  
-state | string | Required |  | 状态（live 在线 / suspend 暂停）  
+state | string | Required |  | 状态（live 在线 / suspend 暂停 / rebase 合约 Rebase 任务已开始）  
 min_size | string | Required |  | 最小下单数量  
 min_notional | string | Required |  | 最小下单价值  
 lot_size | string | Required |  | 数量步长  
@@ -744,7 +756,7 @@ string |
 
 交易所
 
-交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）
+交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER / ASTER）；股票及ETF返回上市市场（US / HK / KR / JP）
 
 类型 | 约束  
 ---|---  
@@ -764,7 +776,7 @@ string |
 
 可用状态
 
-状态（live 在线 / suspend 暂停）
+状态（live 在线 / suspend 暂停 / rebase 合约 Rebase 任务已开始）
 
 类型 | 约束  
 ---|---  
@@ -1252,8 +1264,8 @@ object | required: ["coin","is_disabled","precision","est_fee","min_trans_amount
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
 coin | string | Required |  | 币种  
-min_trans_amount | number | Required |  | 最小划转数量(已经包含预估手续费)  
-est_fee | number | Required |  | 预估手续费  
+min_trans_amount | string | Required |  | 最小划转数量，已包含预估手续费，以十进制字符串表示  
+est_fee | string | Required |  | 预估手续费，以十进制字符串表示  
 precision | integer | Required |  | 精度  
 is_disabled | integer | Required |  | 是否禁用，0 表示未禁用  
   
@@ -1289,10 +1301,10 @@ is_disabled | integer | Required |  | 是否禁用，0 表示未禁用
     
     [
       {
-        "coin": "string",
-        "min_trans_amount": 0,
-        "est_fee": 0,
-        "precision": 0,
+        "coin": "USDT",
+        "min_trans_amount": "10.1",
+        "est_fee": "0.1",
+        "precision": 6,
         "is_disabled": 0
       }
     ]
@@ -1316,6 +1328,7 @@ _资金划转_
   * 划转任意一侧为 `CROSSEX_DERIBIT`时, 暂时只支持USDC
   * 划转任意一侧为 `CROSSEX_HYPERLIQUID`时, 另一侧只能为`SPOT`, coin只支持USDC
   * 划转任意一侧为 `CROSSEX_LIGHTER`时, 另一侧只能为`SPOT`, coin只支持USDC
+  * 划转任意一侧为 `CROSSEX_ASTER` 时，另一侧必须为 `SPOT`，币种只支持 USDT
 
 ### 参数
 
@@ -1324,17 +1337,17 @@ _资金划转_
 body | body | CrossexTransferRequest | 否 |   
 coin | body | string | 是 | 币种  
 amount | body | string | 是 | 转账数量  
-from | body | string | 是 | 转出账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX, SPOT  
+from | body | string | 是 | 转出账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT  
   
-to | body | string | 是 | 转入账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX, SPOT  
+to | body | string | 是 | 转入账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT  
   
 text | body | string | 否 | 用户自定义id  
   
 ####  详细描述
 
-** from**: 转出账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX, SPOT  
+** from**: 转出账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT  
 
-** to**: 转入账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX, SPOT  
+** to**: 转入账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT  
 
 ####  请求体结构
 
@@ -1350,8 +1363,8 @@ CrossexTransferRequest | required: ["amount","from","coin","to"]
 ---|---|---|---|---  
 coin | string | Required |  | 币种  
 amount | string | Required |  | 转账数量  
-from | string | Required |  | 转出账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX, SPOT  
-to | string | Required |  | 转入账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX, SPOT  
+from | string | Required |  | 转出账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT  
+to | string | Required |  | 转入账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT  
 text | string | Optional |  | 用户自定义id  
   
 ### 返回
@@ -1455,13 +1468,14 @@ GET `/crossex/transfers`
 
 _查询资金划转历史_
 
-限频：每10秒200次请求
+限频：每60秒1200次请求
 
 ### 参数
 
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 coin | 请求参数 | string | 否 | 指定币种名称查询  
+status | 请求参数 | string | 否 | 按划转状态筛选  
 order_id | 请求参数 | string | 否 | 支持查询创建订单时返回的订单ID即tx_id字段，支持用户创建时指定的自定义ID即text字段  
   
 from | 请求参数 | integer | 否 | 查询记录的起始时间  
@@ -1473,6 +1487,14 @@ limit | 请求参数 | integer | 否 | 列表返回的最大数量，最大1000
 
 **order_id** : 支持查询创建订单时返回的订单ID即tx_id字段，支持用户创建时指定的自定义ID即text字段  
 
+####  枚举值列表
+
+枚举值列表参数 | 值  
+---|---  
+status | PENDING  
+status | SUCCESS  
+status | FAIL  
+  
 ### 返回
 
 返回状态码 | 含义 | 描述 | 格式  
@@ -1501,8 +1523,8 @@ object | required: ["id","text","create_time","update_time","status","from_accou
 ---|---|---|---|---  
 id | string | Required |  | 订单 ID  
 text | string | Required |  | 客户自定义Id  
-from_account_type | string | Required |  | 操作的from账户（CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX, SPOT）  
-to_account_type | string | Required |  | 操作的to账户（CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX, SPOT）  
+from_account_type | string | Required |  | 转出账户（CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT）  
+to_account_type | string | Required |  | 转入账户（CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT）  
 coin | string | Required |  | 币种  
 amount | string | Required |  | 转账数量，发起请求转账的数量  
 actual_receive | string | Optional |  | 真实到帐金额（当 status = SUCCESS 时有值，其余状态时为空）  
@@ -1604,7 +1626,7 @@ POST `/crossex/orders`
 
 _下单_
 
-限频：每10秒100次请求，单个用户的最大挂单数为1,000个。 股票及ETF额外单用户1次/1s，仅支持跨所账户模式和GTC；股票及ETF必须使用qty下单，不支持quote_qty下单。 股票及ETF的委托价格使用上市市场原生计价币种：美股为USD、港股为HKD、韩股为KRW、日股为JPY。
+限频：每10秒100次请求，单个用户的最大挂单数为1,000个。 股票及ETF额外单用户1次/1s，仅支持跨所账户模式和GTC；股票及ETF必须使用qty下单，不支持quote_qty下单。 股票及ETF的委托价格使用上市市场原生计价币种：美股为USD、港股为HKD、韩股为KRW、日股为JPY。 股票及 ETF 买单按委托价格和当时的行情汇率计算 USDT 冻结本金。缺少行情汇率或市价单所需的最新价时，返回 `COMMON_FAIL_ORDER_ERROR`。 股票及 ETF 不支持分所账户模式或非 GTC 委托，分别返回 `SECURITY_ORDER_NOT_SUPPORT` 和 `SECURITY_ORDER_ONLY_SUPPORT_GTC`。 Hyperliquid、Lighter 和 Aster 合约不支持 `FOK`。 合约币对进入 Rebase 后，下单返回 HTTP `422`，`label` 为 `TRADE_REBASE_TASK_STARTED`。
 
 ### 参数
 
@@ -1625,7 +1647,7 @@ symbol | body | string | 是 | 唯一标识 Exchange_Business_Base_Counter
 如果您想交易美股AAPL，可以使用这样的唯一标识符：`US_STOCK_AAPL_USDT`;  
 如果您想交易港股00700，可以使用这样的唯一标识符：`HK_STOCK_00700_USDT`;  
 如果您想交易美股ETF SPY，可以使用这样的唯一标识符：`US_ETF_SPY_USDT`;  
-目前支持现货订单、U本位永续合约订单、现货杠杆订单、股票订单和ETF订单。BYBIT/DERIBIT暂不支持现货杠杆订单，KRAKEN、HYPERLIQUID、LIGHTER暂不支持现货与杠杆订单；股票及ETF仅支持跨所账户模式  
+目前支持现货订单、U本位永续合约订单、现货杠杆订单、股票订单和ETF订单。BYBIT/DERIBIT暂不支持现货杠杆订单，KRAKEN、HYPERLIQUID、LIGHTER、ASTER暂不支持现货与杠杆订单；股票及ETF仅支持跨所账户模式  
   
 side | body | string | 是 | BUY, SELL  
 type | body | string | 否 | 订单类型（默认`LIMIT`，支持类型列举：`LIMIT`、`MARKET`）  
@@ -1636,6 +1658,7 @@ time_in_force | body | string | 否 | 默认GTC，支持类型枚举，`GTC`，`
 `POC`: PendingOrCancelled or PostOnly  
 `RPI`: RPI  
 股票及ETF仅支持`GTC`  
+Hyperliquid、Lighter 和 Aster 合约不支持 `FOK`  
   
 qty | body | string | 否 | 订单数量（强制性，除非现货和杠杆市价买入；股票及ETF必须传qty）  
 price | body | string | 否 | 限价订单价格（限价订单必须）。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
@@ -1660,7 +1683,7 @@ position_side | body | string | 否 | 仓位方向：`NONE`, `LONG`, `SHORT`
 如果您想交易美股AAPL，可以使用这样的唯一标识符：`US_STOCK_AAPL_USDT`;  
 如果您想交易港股00700，可以使用这样的唯一标识符：`HK_STOCK_00700_USDT`;  
 如果您想交易美股ETF SPY，可以使用这样的唯一标识符：`US_ETF_SPY_USDT`;  
-目前支持现货订单、U本位永续合约订单、现货杠杆订单、股票订单和ETF订单。BYBIT/DERIBIT暂不支持现货杠杆订单，KRAKEN、HYPERLIQUID、LIGHTER暂不支持现货与杠杆订单；股票及ETF仅支持跨所账户模式  
+目前支持现货订单、U本位永续合约订单、现货杠杆订单、股票订单和ETF订单。BYBIT/DERIBIT暂不支持现货杠杆订单，KRAKEN、HYPERLIQUID、LIGHTER、ASTER暂不支持现货与杠杆订单；股票及ETF仅支持跨所账户模式  
 
 ** time_in_force**: 默认GTC，支持类型枚举，`GTC`，`IOC`，`FOK`，`POC`, `RPI`  
 `GTC`: GoodTillCancelled  
@@ -1669,6 +1692,7 @@ position_side | body | string | 否 | 仓位方向：`NONE`, `LONG`, `SHORT`
 `POC`: PendingOrCancelled or PostOnly  
 `RPI`: RPI  
 股票及ETF仅支持`GTC`  
+Hyperliquid、Lighter 和 Aster 合约不支持 `FOK`  
 
 ** position_side**: 仓位方向：`NONE`, `LONG`, `SHORT`  
 不传默认单向持仓`NONE`  
@@ -1718,7 +1742,7 @@ symbol | string | Required |  | 唯一标识 Exchange_Business_Base_Counter
 如果您想交易美股AAPL，可以使用这样的唯一标识符：`US_STOCK_AAPL_USDT`;  
 如果您想交易港股00700，可以使用这样的唯一标识符：`HK_STOCK_00700_USDT`;  
 如果您想交易美股ETF SPY，可以使用这样的唯一标识符：`US_ETF_SPY_USDT`;  
-目前支持现货订单、U本位永续合约订单、现货杠杆订单、股票订单和ETF订单。BYBIT/DERIBIT暂不支持现货杠杆订单，KRAKEN、HYPERLIQUID、LIGHTER暂不支持现货与杠杆订单；股票及ETF仅支持跨所账户模式  
+目前支持现货订单、U本位永续合约订单、现货杠杆订单、股票订单和ETF订单。BYBIT/DERIBIT暂不支持现货杠杆订单，KRAKEN、HYPERLIQUID、LIGHTER、ASTER暂不支持现货与杠杆订单；股票及ETF仅支持跨所账户模式  
 side | string | Required | enum: ["BUY","SELL"] | BUY, SELL  
 type | string | Optional | enum: ["LIMIT","MARKET"]  
 default: "LIMIT" | 订单类型（默认`LIMIT`，支持类型列举：`LIMIT`、`MARKET`）  
@@ -1730,6 +1754,7 @@ default: "GTC" | 默认GTC，支持类型枚举，`GTC`，`IOC`，`FOK`，`POC`,
 `POC`: PendingOrCancelled or PostOnly  
 `RPI`: RPI  
 股票及ETF仅支持`GTC`  
+Hyperliquid、Lighter 和 Aster 合约不支持 `FOK`  
 qty | string | Optional |  | 订单数量（强制性，除非现货和杠杆市价买入；股票及ETF必须传qty）  
 price | string | Optional |  | 限价订单价格（限价订单必须）。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
 quote_qty | string | Optional |  | 订单报价数量，现货和杠杆市价买单必传；股票及ETF不支持quote_qty下单  
@@ -2104,7 +2129,7 @@ PUT `/crossex/orders/{order_id}`
 
 _改单_
 
-限频：每10秒100次请求
+限频：每10秒100次请求。 可只改数量或只改价格。省略某项或传入 `"0"` 时沿用原值。至少提供一个新的正数值。 币对进入 Rebase 后，改单返回 HTTP `422`，`label` 为 `TRADE_REBASE_TASK_STARTED`。
 
 ### 参数
 
@@ -2112,8 +2137,8 @@ _改单_
 ---|---|---|---|---  
 order_id | URL | string | 是 | 支持订单id或text改单  
 body | body | CrossexOrderUpdateRequest | 否 |   
-qty | body | string | 否 | 修改数量  
-price | body | string | 否 | 修改价格  
+qty | body | string | 否 | 修改后的数量。省略或传入 `"0"` 时沿用原数量  
+price | body | string | 否 | 修改后的价格。省略或传入 `"0"` 时沿用原价格  
   
 ####  请求体结构
 
@@ -2127,8 +2152,8 @@ CrossexOrderUpdateRequest |
 
 请求体结构名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-qty | string | Optional |  | 修改数量  
-price | string | Optional |  | 修改价格  
+qty | string | Optional |  | 修改后的数量。省略或传入 `"0"` 时沿用原数量  
+price | string | Optional |  | 修改后的价格。省略或传入 `"0"` 时沿用原价格  
   
 ### 返回
 
@@ -2279,8 +2304,10 @@ symbol | string | Required |  | 交易对唯一标识，示例：
 BINANCE_SPOT_BTC_USDT、BINANCE_FUTURE_BTC_USDT  
 side | string | Required |  | 方向（BUY 买入 / SELL 卖出）  
 type | string | Required |  | 订单类型（LIMIT 限价 / MARKET 市价）  
-attribute | string | Required |  | 订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算）  
-exchange_type | string | Required |  | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
+attribute | string | Required |  | 订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算 / REBASE Rebase 系统订单）。  
+合约 Rebase 执行仓位转换时，系统生成一笔平掉原仓位的订单和一笔开立调整后仓位的订单。两笔订单的状态均为 FILLED，属性为 REBASE。  
+如果交易所规则仅支持平掉原仓位，系统不会自动开立新仓位。该平仓订单的状态为 FILLED，属性为 SETTLEMENT。  
+exchange_type | string | Required |  | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER / ASTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
 business_type | string | Required |  | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆 / CONVERT 闪兑 / STOCK 股票 / ETF 交易所交易基金）  
 qty | string | Required |  | 基础货币下单数量  
 quote_qty | string | Required |  | 报价币种下单数量  
@@ -2293,7 +2320,7 @@ fee_coin | string | Required |  | 手续费币种
 fee | string | Required |  | 手续费金额  
 reduce_only | string | Required |  | 是否仅减仓订单（"true" 或 "false"）  
 leverage | string | Required |  | 订单杠杆倍数  
-reason | string | Required |  | 失败原因描述  
+reason | string | Required |  | 订单失败或取消的原因。Rebase 系统订单会返回调整比例，例如 `POSITION_REBASE_RATIO=10`  
 last_executed_qty | string | Required |  | 最新一次成交数量  
 last_executed_price | string | Required |  | 最新一次成交价格。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
 last_executed_amount | string | Required |  | 最新一次成交金额。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
@@ -2373,9 +2400,9 @@ string |
   
 **attribute**
 
-属性COMMON: 普通单 LIQ: 强平接管单 REDUCE: 强平减仓单 ADL:自动减仓
+订单属性
 
-订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算）
+订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算 / REBASE Rebase 系统订单）。 合约 Rebase 执行仓位转换时，系统生成一笔平掉原仓位的订单和一笔开立调整后仓位的订单。两笔订单的状态均为 FILLED，属性为 REBASE。 如果交易所规则仅支持平掉原仓位，系统不会自动开立新仓位。该平仓订单的状态为 FILLED，属性为 SETTLEMENT。
 
 类型 | 约束  
 ---|---  
@@ -2385,7 +2412,7 @@ string |
 
 交易所
 
-交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）
+交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER / ASTER）；股票及ETF返回上市市场（US / HK / KR / JP）
 
 类型 | 约束  
 ---|---  
@@ -2515,7 +2542,7 @@ string |
 
 原因
 
-失败原因描述
+订单失败或取消的原因。Rebase 系统订单会返回调整比例，例如 `POSITION_REBASE_RATIO=10`
 
 类型 | 约束  
 ---|---  
@@ -2969,7 +2996,7 @@ _更改账户合约仓位模式或账户模式_
 body | body | CrossexAccountUpdateRequest | 否 |   
 position_mode | body | string | 否 | 合约仓位模式（SINGLE/DUAL）  
 account_mode | body | string | 否 | 账户模式（CROSS_EXCHANGE/ISOLATED_EXCHANGE，默认：CROSS_EXCHANGE）  
-exchange_type | body | string | 否 | 交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
+exchange_type | body | string | 否 | 交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER/ASTER/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
   
 ####  请求体结构
 
@@ -2985,7 +3012,7 @@ CrossexAccountUpdateRequest |
 ---|---|---|---|---  
 position_mode | string | Optional |  | 合约仓位模式（SINGLE/DUAL）  
 account_mode | string | Optional |  | 账户模式（CROSS_EXCHANGE/ISOLATED_EXCHANGE，默认：CROSS_EXCHANGE）  
-exchange_type | string | Optional |  | 交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
+exchange_type | string | Optional |  | 交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER/ASTER/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
   
 ### 返回
 
@@ -3009,7 +3036,7 @@ CrossexAccountUpdateResponse |
 ---|---|---|---|---  
 position_mode | string | Optional |  | 请求修改的合约仓位模式（SINGLE/DUAL）  
 account_mode | string | Optional |  | 请求修改的账户模式（CROSS_EXCHANGE/ISOLATED_EXCHANGE，默认：CROSS_EXCHANGE）  
-exchange_type | string | Optional |  | 请求修改的交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
+exchange_type | string | Optional |  | 请求修改的交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER/ASTER/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
   
 WARNING
 
@@ -3091,7 +3118,7 @@ _查询账户资产_
 
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
-exchange_type | 请求参数 | string | 否 | 交易所。当跨所模式下不用传，当分所模式下必传(BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER)  
+exchange_type | 请求参数 | string | 否 | 交易所。当跨所模式下不用传，当分所模式下必传(BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER/ASTER)  
   
 ### 返回
 
@@ -3151,6 +3178,7 @@ object | required: ["borrowing_initial_margin","borrowing_maintenance_margin"]
 user_id | string | Optional |  | 用户id  
 coin | string | Optional |  | 币种  
 exchange_type | string | Optional |  | 交易所  
+price | string | Optional |  | 按 USDT 计价的资产估值价格。USDT 返回 `"1"`，其他币种优先使用指数价，缺少指数价时使用对应现货最新价  
 balance | string | Optional |  | 余额  
 upnl | string | Optional |  | 未结盈亏  
 equity | string | Optional |  | 币种的保证金净资产权益  
@@ -3232,6 +3260,7 @@ WARNING
           "user_id": "123456789",
           "coin": "USDT",
           "exchange_type": "BINANCE",
+          "price": "1",
           "balance": "1000",
           "upnl": "200",
           "equity": "1200",
@@ -3254,7 +3283,7 @@ POST `/crossex/positions/leverage`
 
 _更改合约交易币对的杠杆倍数_
 
-限频：每10秒100次请求
+限频：每10秒100次请求。 币对进入 Rebase 后，修改杠杆返回 HTTP `422`，`label` 为 `TRADE_REBASE_TASK_STARTED`。
 
 ### 参数
 
@@ -3709,7 +3738,7 @@ _完全平仓_
   * 小于最小名义金额（minNotional）
   * 小于最小下单数量（minSize）
 
-满足条件后，系统将自动生成一笔平仓委托，并对该仓位进行立即的完全平仓处理。 该接口用于避免因订单规模过小而触发无法在交易所下单的问题，确保小额仓位在达到阈值时能够顺利被平掉。
+满足条件后，系统将自动生成一笔平仓委托，并对该仓位进行立即的完全平仓处理。 该接口用于避免因订单规模过小而触发无法在交易所下单的问题，确保小额仓位在达到阈值时能够顺利被平掉。 币对进入 Rebase 后，完全平仓返回 HTTP `422`，`label` 为 `TRADE_REBASE_TASK_STARTED`。
 
 ### 参数
 
@@ -4081,7 +4110,7 @@ POST `/crossex/positions/margin`
 
 _增加或减少逐仓保证金_
 
-限频：每10秒100次请求。仅支持Hyperliquid逐仓合约仓位，正数为增加保证金，负数为减少保证金
+限频：每10秒100次请求。仅支持 Hyperliquid 逐仓合约仓位。 币对进入 Rebase 后，调整逐仓保证金返回 HTTP `422`，`label` 为 `TRADE_REBASE_TASK_STARTED`。
 
 ### 参数
 
@@ -4089,8 +4118,8 @@ _增加或减少逐仓保证金_
 ---|---|---|---|---  
 body | body | CrossexIsolatedMarginRequest | 否 |   
 symbol | body | string | 是 | Hyperliquid合约交易币对  
-margin | body | string | 是 | 保证金调整金额，正数为增加，负数为减少，超过两位小数时向下截断  
-position_side | body | string | 否 | 仓位方向（NONE/LONG/SHORT），单向持仓不传时默认为NONE  
+margin | body | string | 是 | 保证金调整金额。正数为增加，负数为减少，超过两位小数时向零截断。追加金额折合 USDT 后不得超过账户可用保证金的 80%  
+position_side | body | string | 否 | 仓位方向。单向持仓省略该字段时使用 NONE，双向持仓必须指定 LONG 或 SHORT  
   
 ####  枚举值列表
 
@@ -4113,8 +4142,8 @@ CrossexIsolatedMarginRequest | required: ["symbol","margin"]
 请求体结构名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
 symbol | string | Required |  | Hyperliquid合约交易币对  
-margin | string | Required |  | 保证金调整金额，正数为增加，负数为减少，超过两位小数时向下截断  
-position_side | string | Optional | enum: ["NONE","LONG","SHORT"] | 仓位方向（NONE/LONG/SHORT），单向持仓不传时默认为NONE  
+margin | string | Required |  | 保证金调整金额。正数为增加，负数为减少，超过两位小数时向零截断。追加金额折合 USDT 后不得超过账户可用保证金的 80%  
+position_side | string | Optional | enum: ["NONE","LONG","SHORT"] | 仓位方向。单向持仓省略该字段时使用 NONE，双向持仓必须指定 LONG 或 SHORT  
   
 ### 返回
 
@@ -4375,9 +4404,15 @@ spot_rpi_maker_fee | string | Optional |  | 现货RPI订单Maker费率
 future_maker_fee | string | Required |  | 合约Maker费率  
 future_taker_fee | string | Required |  | 合约Taker费率  
 future_rpi_maker_fee | string | Optional |  | 合约RPI订单Maker费率  
-special_fee_list | array | Required |  |   
+special_fee_list | array | Required |  | 按交易对返回适用的特殊费率。  
+Binance TradFi 合约的 Maker 费率为零，Taker 费率为用户合约 Taker 费率的一半。  
+Bybit TradFi 合约的 Maker 费率为零，Taker 费率按用户合约 Taker 费率与配置乘数计算。  
+Gate TradFi 合约按适用的 VIP 档位和费率配置返回 Maker 或 Taker 费率，做市费率配置会影响 Maker 适用条件。  
+用户具备 RPI 资格且币对支持 RPI 时，相应条目可包含 `rpi_fee_rate`。  
   
 **items / special_fee_list**
+
+按交易对返回适用的特殊费率。 Binance TradFi 合约的 Maker 费率为零，Taker 费率为用户合约 Taker 费率的一半。 Bybit TradFi 合约的 Maker 费率为零，Taker 费率按用户合约 Taker 费率与配置乘数计算。 Gate TradFi 合约按适用的 VIP 档位和费率配置返回 Maker 或 Taker 费率，做市费率配置会影响 Maker 适用条件。 用户具备 RPI 资格且币对支持 RPI 时，相应条目可包含 `rpi_fee_rate`。
 
 类型 | 约束  
 ---|---  
@@ -4552,7 +4587,7 @@ GET `/crossex/positions`
 
 _查询合约仓位_
 
-限频：每10秒200次请求
+限频：每10秒200次请求。 币对进入 Rebase 后，仓位的标记价格、市值和未结盈亏等指标暂停重算，可能保留上次计算值。
 
 ### 参数
 
@@ -4611,6 +4646,53 @@ funding_time | string | Optional |  | 仓位资金费收取时间（0代表还�
 create_time | string | Optional |  | 仓位创建时间  
 update_time | string | Optional |  | 仓位更新时间  
 closed_pnl | string | Optional |  | 已结盈亏  
+risk_limits | array | Optional |  | 仓位专属风险限额档位。无专属档位时返回空数组，有档位时返回包含该仓位交易对和档位列表的单元素数组  
+  
+**items / risk_limits**
+
+仓位专属风险限额档位。无专属档位时返回空数组，有档位时返回包含该仓位交易对和档位列表的单元素数组
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items / risk_limits / items**
+
+类型 | 约束  
+---|---  
+CrossexPositionRiskLimit | required: ["symbol","tiers"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+symbol | string | Required |  | 仓位交易对  
+tiers | array | Required |  | 该仓位的风险限额档位列表  
+  
+**items / risk_limits / items / tiers**
+
+该仓位的风险限额档位列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**items / risk_limits / items / tiers / items**
+
+类型 | 约束  
+---|---  
+CrossexPositionRiskLimitTier | required: ["min_risk_limit_value","max_risk_limit_value","quick_cal_amount","leverage_max","maintenance_rate","tier"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+min_risk_limit_value | string | Required |  | 档位的名义价值下限  
+max_risk_limit_value | string | Required |  | 档位的名义价值上限  
+quick_cal_amount | string | Required |  | 维持保证金速算扣除额  
+leverage_max | string | Required |  | 档位允许的最大杠杆倍数  
+maintenance_rate | string | Required |  | 档位的维持保证金率  
+tier | string | Required |  | 档位编号  
   
 WARNING
 
@@ -4689,7 +4771,22 @@ WARNING
         "funding_time": "0",
         "create_time": "1750682334273",
         "update_time": "1750730699867",
-        "closed_pnl": "12"
+        "closed_pnl": "12",
+        "risk_limits": [
+          {
+            "symbol": "OKX_FUTURE_ADA_USDT",
+            "tiers": [
+              {
+                "min_risk_limit_value": "0",
+                "max_risk_limit_value": "50000",
+                "quick_cal_amount": "0",
+                "leverage_max": "18",
+                "maintenance_rate": "0.01",
+                "tier": "1"
+              }
+            ]
+          }
+        ]
       }
     ]
     
@@ -5124,8 +5221,10 @@ symbol | string | Required |  | 交易对唯一标识，示例：
 BINANCE_SPOT_BTC_USDT、BINANCE_FUTURE_BTC_USDT  
 side | string | Required |  | 方向（BUY 买入 / SELL 卖出）  
 type | string | Required |  | 订单类型（LIMIT 限价 / MARKET 市价）  
-attribute | string | Required |  | 订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算）  
-exchange_type | string | Required |  | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
+attribute | string | Required |  | 订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算 / REBASE Rebase 系统订单）。  
+合约 Rebase 执行仓位转换时，系统生成一笔平掉原仓位的订单和一笔开立调整后仓位的订单。两笔订单的状态均为 FILLED，属性为 REBASE。  
+如果交易所规则仅支持平掉原仓位，系统不会自动开立新仓位。该平仓订单的状态为 FILLED，属性为 SETTLEMENT。  
+exchange_type | string | Required |  | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER / ASTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
 business_type | string | Required |  | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆 / CONVERT 闪兑 / STOCK 股票 / ETF 交易所交易基金）  
 qty | string | Required |  | 基础货币下单数量  
 quote_qty | string | Required |  | 报价币种下单数量  
@@ -5138,7 +5237,7 @@ fee_coin | string | Required |  | 手续费币种
 fee | string | Required |  | 手续费金额  
 reduce_only | string | Required |  | 是否仅减仓订单（"true" 或 "false"）  
 leverage | string | Required |  | 订单杠杆倍数  
-reason | string | Required |  | 失败原因描述  
+reason | string | Required |  | 订单失败或取消的原因。Rebase 系统订单会返回调整比例，例如 `POSITION_REBASE_RATIO=10`  
 last_executed_qty | string | Required |  | 最新一次成交数量  
 last_executed_price | string | Required |  | 最新一次成交价格。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
 last_executed_amount | string | Required |  | 最新一次成交金额。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
@@ -5218,9 +5317,9 @@ string |
   
 **items / attribute**
 
-属性COMMON: 普通单 LIQ: 强平接管单 REDUCE: 强平减仓单 ADL:自动减仓
+订单属性
 
-订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算）
+订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算 / REBASE Rebase 系统订单）。 合约 Rebase 执行仓位转换时，系统生成一笔平掉原仓位的订单和一笔开立调整后仓位的订单。两笔订单的状态均为 FILLED，属性为 REBASE。 如果交易所规则仅支持平掉原仓位，系统不会自动开立新仓位。该平仓订单的状态为 FILLED，属性为 SETTLEMENT。
 
 类型 | 约束  
 ---|---  
@@ -5230,7 +5329,7 @@ string |
 
 交易所
 
-交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）
+交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER / ASTER）；股票及ETF返回上市市场（US / HK / KR / JP）
 
 类型 | 约束  
 ---|---  
@@ -5360,7 +5459,7 @@ string |
 
 原因
 
-失败原因描述
+订单失败或取消的原因。Rebase 系统订单会返回调整比例，例如 `POSITION_REBASE_RATIO=10`
 
 类型 | 约束  
 ---|---  
@@ -5531,7 +5630,9 @@ limit | 请求参数 | integer | 否 | 列表返回的最大数量
 symbol | 请求参数 | string | 否 | 交易对  
 from | 请求参数 | integer | 否 | 起始毫秒时间戳  
 to | 请求参数 | integer | 否 | 终止毫秒时间戳  
-attributes | 请求参数 | string | 否 | 订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算）多个以逗号分隔  
+attributes | 请求参数 | string | 否 | 订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算 / REBASE Rebase 系统订单），多个值以逗号分隔  
+order_id | 请求参数 | integer(int64) | 否 | 按平台订单 ID 精确筛选。与 text 同时传入时，记录必须同时匹配两项  
+text | 请求参数 | string | 否 | 按客户自定义订单号精确筛选  
   
 ### 返回
 
@@ -5574,8 +5675,10 @@ symbol | string | Required |  | 交易对唯一标识，示例：
 BINANCE_SPOT_BTC_USDT、BINANCE_FUTURE_BTC_USDT  
 side | string | Required |  | 方向（BUY 买入 / SELL 卖出）  
 type | string | Required |  | 订单类型（LIMIT 限价 / MARKET 市价）  
-attribute | string | Required |  | 订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算）  
-exchange_type | string | Required |  | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
+attribute | string | Required |  | 订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算 / REBASE Rebase 系统订单）。  
+合约 Rebase 执行仓位转换时，系统生成一笔平掉原仓位的订单和一笔开立调整后仓位的订单。两笔订单的状态均为 FILLED，属性为 REBASE。  
+如果交易所规则仅支持平掉原仓位，系统不会自动开立新仓位。该平仓订单的状态为 FILLED，属性为 SETTLEMENT。  
+exchange_type | string | Required |  | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER / ASTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
 business_type | string | Required |  | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆 / CONVERT 闪兑 / STOCK 股票 / ETF 交易所交易基金）  
 qty | string | Required |  | 基础货币下单数量  
 quote_qty | string | Required |  | 报价币种下单数量  
@@ -5588,7 +5691,7 @@ fee_coin | string | Required |  | 手续费币种
 fee | string | Required |  | 手续费金额  
 reduce_only | string | Required |  | 是否仅减仓订单（"true" 或 "false"）  
 leverage | string | Required |  | 订单杠杆倍数  
-reason | string | Required |  | 失败原因描述  
+reason | string | Required |  | 订单失败或取消的原因。Rebase 系统订单会返回调整比例，例如 `POSITION_REBASE_RATIO=10`  
 last_executed_qty | string | Required |  | 最新一次成交数量  
 last_executed_price | string | Required |  | 最新一次成交价格。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
 last_executed_amount | string | Required |  | 最新一次成交金额。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
@@ -5668,9 +5771,9 @@ string |
   
 **items / attribute**
 
-属性COMMON: 普通单 LIQ: 强平接管单 REDUCE: 强平减仓单 ADL:自动减仓
+订单属性
 
-订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算）
+订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算 / REBASE Rebase 系统订单）。 合约 Rebase 执行仓位转换时，系统生成一笔平掉原仓位的订单和一笔开立调整后仓位的订单。两笔订单的状态均为 FILLED，属性为 REBASE。 如果交易所规则仅支持平掉原仓位，系统不会自动开立新仓位。该平仓订单的状态为 FILLED，属性为 SETTLEMENT。
 
 类型 | 约束  
 ---|---  
@@ -5680,7 +5783,7 @@ string |
 
 交易所
 
-交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）
+交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER / ASTER）；股票及ETF返回上市市场（US / HK / KR / JP）
 
 类型 | 约束  
 ---|---  
@@ -5810,7 +5913,7 @@ string |
 
 原因
 
-失败原因描述
+订单失败或取消的原因。Rebase 系统订单会返回调整比例，例如 `POSITION_REBASE_RATIO=10`
 
 类型 | 约束  
 ---|---  
@@ -6402,7 +6505,7 @@ GET `/crossex/history_trades`
 
 _查询成交历史_
 
-限频：每10秒200次请求
+限频：每10秒200次请求。 股票及 ETF 的成交价格使用上市市场原生计价币种。该笔成交折合的 USDT 本金为 `qty × price × fx_rate`。手续费由 `fee` 和 `fee_coin` 单独表示。 合约 Rebase 调整仓位生成的系统成交也会出现在成交历史中，可通过 `order_id` 查询。
 
 ### 参数
 
@@ -6413,6 +6516,7 @@ limit | 请求参数 | integer | 否 | 列表返回的最大数量，最大1000
 symbol | 请求参数 | string | 否 | 交易对  
 from | 请求参数 | integer | 否 | 起始毫秒时间戳  
 to | 请求参数 | integer | 否 | 终止毫秒时间戳  
+order_id | 请求参数 | integer(int64) | 否 | 按平台订单 ID 查询该订单的成交记录  
   
 ### 返回
 
@@ -6445,11 +6549,12 @@ transaction_id | string | Optional |  | 成交记录ID
 order_id | string | Optional |  | 订单ID  
 text | string | Optional |  | 用户订单号  
 symbol | string | Optional |  | 交易对  
-exchange_type | string | Optional |  | 交易所  
-business_type | string | Optional |  | 业务类型  
+exchange_type | string | Optional |  | 交易所。股票及 ETF 返回上市市场（US、HK、KR 或 JP）  
+business_type | string | Optional |  | 业务类型。股票及 ETF 分别为 STOCK 和 ETF  
 side | string | Optional |  | 买卖方向  
 qty | string | Optional |  | 成交数量  
 price | string | Optional |  | 成交价格。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+fx_rate | string | Optional |  | 该笔股票或 ETF 成交使用的结算汇率。以十进制字符串表示，数值为每单位上市市场计价币种折合的 USDT。部分历史成交可能缺少汇率  
 fee | string | Optional |  | 手续费  
 fee_coin | string | Optional |  | 手续费币种  
 fee_rate | string | Optional |  | 手续费率  
@@ -6531,6 +6636,27 @@ WARNING
         "position_mode": "DUAL",
         "position_side": "LONG",
         "create_time": "1750941402661"
+      },
+      {
+        "user_id": "3511316454450547",
+        "transaction_id": "2069614605858560",
+        "order_id": "2069614605857536",
+        "text": "stock-buy-1",
+        "symbol": "HK_STOCK_00700_USDT",
+        "exchange_type": "HK",
+        "business_type": "STOCK",
+        "side": "BUY",
+        "qty": "2",
+        "price": "100",
+        "fx_rate": "0.127",
+        "fee": "0.0254",
+        "fee_coin": "USDT",
+        "fee_rate": "0.001",
+        "match_role": "TAKER",
+        "rpnl": "0",
+        "position_mode": "SINGLE",
+        "position_side": "NONE",
+        "create_time": "1795392000000"
       }
     ]
     
@@ -7096,9 +7222,9 @@ object | required: ["symbol","exchange_type","business_type","state","min_size",
 ---|---|---|---|---  
 symbol | string | Required |  | 交易对唯一标识，格式为 ExchangeType_BusinessType_Base_Counter。  
 股票及ETF使用市场作为ExchangeType（US/HK/KR/JP），业务类型为STOCK或ETF，例如US_STOCK_AAPL_USDT、HK_STOCK_00700_USDT、US_ETF_SPY_USDT。  
-exchange_type | string | Required |  | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
+exchange_type | string | Required |  | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER / ASTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
 business_type | string | Required |  | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆 / STOCK 股票 / ETF 交易所交易基金）  
-state | string | Required |  | 状态（live 在线 / suspend 暂停）  
+state | string | Required |  | 状态（live 在线 / suspend 暂停 / rebase 合约 Rebase 任务已开始）  
 min_size | string | Required |  | 最小下单数量  
 min_notional | string | Required |  | 最小下单价值  
 lot_size | string | Required |  | 数量步长  
@@ -7127,7 +7253,7 @@ string |
 
 交易所
 
-交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）
+交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER / ASTER）；股票及ETF返回上市市场（US / HK / KR / JP）
 
 类型 | 约束  
 ---|---  
@@ -7147,7 +7273,7 @@ string |
 
 可用状态
 
-状态（live 在线 / suspend 暂停）
+状态（live 在线 / suspend 暂停 / rebase 合约 Rebase 任务已开始）
 
 类型 | 约束  
 ---|---  
@@ -7306,6 +7432,79 @@ string |
     
     
 
+##  CrossexPositionRiskLimit
+
+类型 | 约束  
+---|---  
+object | required: ["symbol","tiers"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+symbol | string | Required |  | 仓位交易对  
+tiers | array | Required |  | 该仓位的风险限额档位列表  
+  
+**tiers**
+
+该仓位的风险限额档位列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**tiers / items**
+
+类型 | 约束  
+---|---  
+CrossexPositionRiskLimitTier | required: ["min_risk_limit_value","max_risk_limit_value","quick_cal_amount","leverage_max","maintenance_rate","tier"]  
+      
+    
+    {
+      "symbol": "string",
+      "tiers": [
+        {
+          "min_risk_limit_value": "string",
+          "max_risk_limit_value": "string",
+          "quick_cal_amount": "string",
+          "leverage_max": "string",
+          "maintenance_rate": "string",
+          "tier": "string"
+        }
+      ]
+    }
+    
+    
+
+##  CrossexPositionRiskLimitTier
+
+类型 | 约束  
+---|---  
+object | required: ["min_risk_limit_value","max_risk_limit_value","quick_cal_amount","leverage_max","maintenance_rate","tier"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+min_risk_limit_value | string | Required |  | 档位的名义价值下限  
+max_risk_limit_value | string | Required |  | 档位的名义价值上限  
+quick_cal_amount | string | Required |  | 维持保证金速算扣除额  
+leverage_max | string | Required |  | 档位允许的最大杠杆倍数  
+maintenance_rate | string | Required |  | 档位的维持保证金率  
+tier | string | Required |  | 档位编号  
+      
+    
+    {
+      "min_risk_limit_value": "string",
+      "max_risk_limit_value": "string",
+      "quick_cal_amount": "string",
+      "leverage_max": "string",
+      "maintenance_rate": "string",
+      "tier": "string"
+    }
+    
+    
+
 ##  CrossexOrder
 
 CrossexOrder
@@ -7333,8 +7532,10 @@ symbol | string | Required |  | 交易对唯一标识，示例：
 BINANCE_SPOT_BTC_USDT、BINANCE_FUTURE_BTC_USDT  
 side | string | Required |  | 方向（BUY 买入 / SELL 卖出）  
 type | string | Required |  | 订单类型（LIMIT 限价 / MARKET 市价）  
-attribute | string | Required |  | 订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算）  
-exchange_type | string | Required |  | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
+attribute | string | Required |  | 订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算 / REBASE Rebase 系统订单）。  
+合约 Rebase 执行仓位转换时，系统生成一笔平掉原仓位的订单和一笔开立调整后仓位的订单。两笔订单的状态均为 FILLED，属性为 REBASE。  
+如果交易所规则仅支持平掉原仓位，系统不会自动开立新仓位。该平仓订单的状态为 FILLED，属性为 SETTLEMENT。  
+exchange_type | string | Required |  | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER / ASTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
 business_type | string | Required |  | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆 / CONVERT 闪兑 / STOCK 股票 / ETF 交易所交易基金）  
 qty | string | Required |  | 基础货币下单数量  
 quote_qty | string | Required |  | 报价币种下单数量  
@@ -7347,7 +7548,7 @@ fee_coin | string | Required |  | 手续费币种
 fee | string | Required |  | 手续费金额  
 reduce_only | string | Required |  | 是否仅减仓订单（"true" 或 "false"）  
 leverage | string | Required |  | 订单杠杆倍数  
-reason | string | Required |  | 失败原因描述  
+reason | string | Required |  | 订单失败或取消的原因。Rebase 系统订单会返回调整比例，例如 `POSITION_REBASE_RATIO=10`  
 last_executed_qty | string | Required |  | 最新一次成交数量  
 last_executed_price | string | Required |  | 最新一次成交价格。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
 last_executed_amount | string | Required |  | 最新一次成交金额。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
@@ -7427,9 +7628,9 @@ string |
   
 **attribute**
 
-属性COMMON: 普通单 LIQ: 强平接管单 REDUCE: 强平减仓单 ADL:自动减仓
+订单属性
 
-订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算）
+订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算 / REBASE Rebase 系统订单）。 合约 Rebase 执行仓位转换时，系统生成一笔平掉原仓位的订单和一笔开立调整后仓位的订单。两笔订单的状态均为 FILLED，属性为 REBASE。 如果交易所规则仅支持平掉原仓位，系统不会自动开立新仓位。该平仓订单的状态为 FILLED，属性为 SETTLEMENT。
 
 类型 | 约束  
 ---|---  
@@ -7439,7 +7640,7 @@ string |
 
 交易所
 
-交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）
+交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER / ASTER）；股票及ETF返回上市市场（US / HK / KR / JP）
 
 类型 | 约束  
 ---|---  
@@ -7569,7 +7770,7 @@ string |
 
 原因
 
-失败原因描述
+订单失败或取消的原因。Rebase 系统订单会返回调整比例，例如 `POSITION_REBASE_RATIO=10`
 
 类型 | 约束  
 ---|---  
@@ -7842,8 +8043,8 @@ object | required: ["amount","from","coin","to"]
 ---|---|---|---|---  
 coin | string | Required |  | 币种  
 amount | string | Required |  | 转账数量  
-from | string | Required |  | 转出账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX, SPOT  
-to | string | Required |  | 转入账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX, SPOT  
+from | string | Required |  | 转出账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT  
+to | string | Required |  | 转入账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX_ASTER, CROSSEX, SPOT  
 text | string | Optional |  | 用户自定义id  
       
     
@@ -7883,7 +8084,7 @@ symbol | string | Required |  | 唯一标识 Exchange_Business_Base_Counter
 如果您想交易美股AAPL，可以使用这样的唯一标识符：`US_STOCK_AAPL_USDT`;  
 如果您想交易港股00700，可以使用这样的唯一标识符：`HK_STOCK_00700_USDT`;  
 如果您想交易美股ETF SPY，可以使用这样的唯一标识符：`US_ETF_SPY_USDT`;  
-目前支持现货订单、U本位永续合约订单、现货杠杆订单、股票订单和ETF订单。BYBIT/DERIBIT暂不支持现货杠杆订单，KRAKEN、HYPERLIQUID、LIGHTER暂不支持现货与杠杆订单；股票及ETF仅支持跨所账户模式  
+目前支持现货订单、U本位永续合约订单、现货杠杆订单、股票订单和ETF订单。BYBIT/DERIBIT暂不支持现货杠杆订单，KRAKEN、HYPERLIQUID、LIGHTER、ASTER暂不支持现货与杠杆订单；股票及ETF仅支持跨所账户模式  
 side | string | Required | enum: ["BUY","SELL"] | BUY, SELL  
 type | string | Optional | enum: ["LIMIT","MARKET"]  
 default: "LIMIT" | 订单类型（默认`LIMIT`，支持类型列举：`LIMIT`、`MARKET`）  
@@ -7895,6 +8096,7 @@ default: "GTC" | 默认GTC，支持类型枚举，`GTC`，`IOC`，`FOK`，`POC`,
 `POC`: PendingOrCancelled or PostOnly  
 `RPI`: RPI  
 股票及ETF仅支持`GTC`  
+Hyperliquid、Lighter 和 Aster 合约不支持 `FOK`  
 qty | string | Optional |  | 订单数量（强制性，除非现货和杠杆市价买入；股票及ETF必须传qty）  
 price | string | Optional |  | 限价订单价格（限价订单必须）。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
 quote_qty | string | Optional |  | 订单报价数量，现货和杠杆市价买单必传；股票及ETF不支持quote_qty下单  
@@ -7930,8 +8132,8 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-qty | string | Optional |  | 修改数量  
-price | string | Optional |  | 修改价格  
+qty | string | Optional |  | 修改后的数量。省略或传入 `"0"` 时沿用原数量  
+price | string | Optional |  | 修改后的价格。省略或传入 `"0"` 时沿用原价格  
       
     
     {
@@ -8009,7 +8211,7 @@ object |
 ---|---|---|---|---  
 position_mode | string | Optional |  | 合约仓位模式（SINGLE/DUAL）  
 account_mode | string | Optional |  | 账户模式（CROSS_EXCHANGE/ISOLATED_EXCHANGE，默认：CROSS_EXCHANGE）  
-exchange_type | string | Optional |  | 交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
+exchange_type | string | Optional |  | 交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER/ASTER/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
       
     
     {
@@ -8079,8 +8281,8 @@ object | required: ["symbol","margin"]
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
 symbol | string | Required |  | Hyperliquid合约交易币对  
-margin | string | Required |  | 保证金调整金额，正数为增加，负数为减少，超过两位小数时向下截断  
-position_side | string | Optional | enum: ["NONE","LONG","SHORT"] | 仓位方向（NONE/LONG/SHORT），单向持仓不传时默认为NONE  
+margin | string | Required |  | 保证金调整金额。正数为增加，负数为减少，超过两位小数时向零截断。追加金额折合 USDT 后不得超过账户可用保证金的 80%  
+position_side | string | Optional | enum: ["NONE","LONG","SHORT"] | 仓位方向。单向持仓省略该字段时使用 NONE，双向持仓必须指定 LONG 或 SHORT  
       
     
     {
@@ -8247,6 +8449,7 @@ object | required: ["borrowing_initial_margin","borrowing_maintenance_margin"]
 user_id | string | Optional |  | 用户id  
 coin | string | Optional |  | 币种  
 exchange_type | string | Optional |  | 交易所  
+price | string | Optional |  | 按 USDT 计价的资产估值价格。USDT 返回 `"1"`，其他币种优先使用指数价，缺少指数价时使用对应现货最新价  
 balance | string | Optional |  | 余额  
 upnl | string | Optional |  | 未结盈亏  
 equity | string | Optional |  | 币种的保证金净资产权益  
@@ -8277,6 +8480,7 @@ liability | string | Optional |  | 币种负债, 仅（USDT/USDC/USD）会有值
           "user_id": "string",
           "coin": "string",
           "exchange_type": "string",
+          "price": "string",
           "balance": "string",
           "upnl": "string",
           "equity": "string",
@@ -8306,7 +8510,7 @@ object |
 ---|---|---|---|---  
 position_mode | string | Optional |  | 请求修改的合约仓位模式（SINGLE/DUAL）  
 account_mode | string | Optional |  | 请求修改的账户模式（CROSS_EXCHANGE/ISOLATED_EXCHANGE，默认：CROSS_EXCHANGE）  
-exchange_type | string | Optional |  | 请求修改的交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
+exchange_type | string | Optional |  | 请求修改的交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER/ASTER/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
       
     
     {

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/authentication/private-logout
 api_type: JSON-RPC
-updated_at: 2026-11-25 19:00:47.036469
+updated_at: 2026-11-26 19:02:03.988085
 ---
 
 # private/logout

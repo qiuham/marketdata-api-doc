@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/account-data/get-api-key-info'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Get API Key Info
@@ -285,23 +285,23 @@ paths:
                 example:
                   error: []
                   result:
-                    apiKeyName: my-api-key
-                    apiKey: 4/SDrDBcOOPnm3nPlNfEMMJDeRcIVqPz+QhRxIodyZbI9po/aVRiHsgX
+                    api_key_name: my-api-key
+                    api_key: 4/SDrDBcOOPnm3nPlNfEMMJDeRcIVqPz+QhRxIodyZbI9po/aVRiHsgX
                     nonce: '1772627060997'
-                    nonceWindow: 0
+                    nonce_window: 0
                     permissions:
                       - query-funds
                       - withdraw-funds
                       - query-open-trades
                       - modify-trades
                     iban: AA88 N84G WOAK NMOI
-                    validUntil: '0'
-                    queryFrom: '0'
-                    queryTo: '0'
-                    createdTime: '1772542900'
-                    modifiedTime: '1772543095'
-                    ipAllowlist: []
-                    lastUsed: '1772627061'
+                    valid_until: '0'
+                    query_from: '0'
+                    query_to: '0'
+                    created_time: '1772542900'
+                    modified_time: '1772543095'
+                    ip_allowlist: []
+                    last_used: '1772627061'
 components:
   schemas:
     nonce:
@@ -328,5 +328,6 @@ components:
         payload, and URI path.
       name: API-Sign
       in: header
+      x-default: <api-sign>
 
 ````

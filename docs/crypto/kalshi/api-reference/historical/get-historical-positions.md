@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/historical/get-historical-positions'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Get Historical Positions
@@ -217,7 +217,9 @@ components:
             current market value or realized loss.
         realized_pnl_dollars:
           $ref: '#/components/schemas/FixedPointDollars'
-          description: Locked in profit and loss, in dollars
+          description: >-
+            Locked in profit and loss, in dollars, before fees. Fees are
+            reported separately in `fees_paid_dollars`.
         fees_paid_dollars:
           $ref: '#/components/schemas/FixedPointDollars'
           description: Fees paid on fill orders, in dollars
@@ -256,7 +258,9 @@ components:
           description: Cost of the aggregate event position in dollars
         realized_pnl_dollars:
           $ref: '#/components/schemas/FixedPointDollars'
-          description: Locked in profit and loss, in dollars
+          description: >-
+            Locked in profit and loss, in dollars, before fees. Fees are
+            reported separately in `fees_paid_dollars`.
         fees_paid_dollars:
           $ref: '#/components/schemas/FixedPointDollars'
           description: Fees paid on fill orders, in dollars

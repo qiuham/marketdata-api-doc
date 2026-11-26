@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/private/Fast-Fill-Channel
 api_type: WebSocket
-updated_at: 2026-11-25 19:02:08.598492
+updated_at: 2026-11-26 19:03:22.725610
 ---
 
 # Fast Fill Channel

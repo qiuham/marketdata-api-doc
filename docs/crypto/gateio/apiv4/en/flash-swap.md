@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/flash-swap
 api_type: REST
-updated_at: 2026-11-25 18:57:11.807135
+updated_at: 2026-11-26 18:58:08.353610
 ---
 
 # Flash_swap
@@ -845,9 +845,9 @@ Code samples
 
 #  Schemas
 
-##  FlashSwapOrder
+##  FlashSwapOrderPreview
 
-Flash swap order
+Flash swap order preview
 
 Type | Constraints  
 ---|---  
@@ -857,74 +857,14 @@ object |
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-id | integer(int64) | Optional | readOnly: true | Flash swap order ID  
-create_time | integer(int64) | Optional | readOnly: true | Creation time of order (in milliseconds)  
-user_id | integer(int64) | Optional | readOnly: true | User ID  
-sell_currency | string | Optional | readOnly: true | Currency to sell  
-sell_amount | string | Optional | readOnly: true | Amount to sell  
-buy_currency | string | Optional | readOnly: true | Currency to buy  
-buy_amount | string | Optional | readOnly: true | Amount to buy  
-price | string | Optional | readOnly: true | Price  
-status | integer | Optional | readOnly: true | Flash swap order status  
-  
-`1` \- success  
-`2` \- failure  
-      
-    
-    {
-      "id": 0,
-      "create_time": 0,
-      "user_id": 0,
-      "sell_currency": "string",
-      "sell_amount": "string",
-      "buy_currency": "string",
-      "buy_amount": "string",
-      "price": "string",
-      "status": 0
-    }
-    
-    
-
-##  FlashSwapErrorResponse
-
-FlashSwapErrorResponse
-
-Type | Constraints  
----|---  
-object | required: ["code","message"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-code | integer | Required |  | Error code  
-message | string | Required |  | Error message  
-      
-    
-    {
-      "code": 0,
-      "message": "string"
-    }
-    
-    
-
-##  FlashSwapOrderRequest
-
-Parameters of flash swap order creation
-
-Type | Constraints  
----|---  
-object | required: ["preview_id","sell_currency","sell_amount","buy_currency","buy_amount"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-preview_id | string | Required |  | Preview result ID  
-sell_currency | string | Required |  | Name of the asset to be sold, obtained from the interface GET /flash_swap/currency_pairs: Query the list of all trading pairs supporting flash swap  
-sell_amount | string | Required |  | Amount to sell (based on the preview result)  
-buy_currency | string | Required |  | Name of the asset to be bought, obtained from the interface GET /flash_swap/currency_pairs: Query the list of all trading pairs supporting flash swap  
-buy_amount | string | Required |  | Amount to buy (based on the preview result)  
+preview_id | string | Optional |  | Preview result ID  
+sell_currency | string | Optional |  | Name of the sold asset,  
+Refer to the interface Query the list of currencies supported for flash swap GET /flash_swap/currenciesto obtain  
+sell_amount | string | Optional |  | Amount to sell  
+buy_currency | string | Optional |  | Name of the purchased asset,  
+Refer to the interface Query the list of currencies supported for flash swap GET /flash_swap/currenciesto obtain  
+buy_amount | string | Optional |  | Amount to buy  
+price | string | Optional |  | Price  
       
     
     {
@@ -932,7 +872,8 @@ buy_amount | string | Required |  | Amount to buy (based on the preview result)
       "sell_currency": "string",
       "sell_amount": "string",
       "buy_currency": "string",
-      "buy_amount": "string"
+      "buy_amount": "string",
+      "price": "string"
     }
     
     
@@ -988,35 +929,25 @@ FlashSwapV1CurrencyPair | required: ["market","sell_asset","sell_min_amount","se
     
     
 
-##  FlashSwapOrderPreview
+##  FlashSwapErrorResponse
 
-Flash swap order preview
+FlashSwapErrorResponse
 
 Type | Constraints  
 ---|---  
-object |   
+object | required: ["code","message"]  
   
 **Properties**
 
 Name | Type | Required | Constraints | Description  
 ---|---|---|---|---  
-preview_id | string | Optional |  | Preview result ID  
-sell_currency | string | Optional |  | Name of the sold asset,  
-Refer to the interface Query the list of currencies supported for flash swap GET /flash_swap/currenciesto obtain  
-sell_amount | string | Optional |  | Amount to sell  
-buy_currency | string | Optional |  | Name of the purchased asset,  
-Refer to the interface Query the list of currencies supported for flash swap GET /flash_swap/currenciesto obtain  
-buy_amount | string | Optional |  | Amount to buy  
-price | string | Optional |  | Price  
+code | integer | Required |  | Error code  
+message | string | Required |  | Error message  
       
     
     {
-      "preview_id": "string",
-      "sell_currency": "string",
-      "sell_amount": "string",
-      "buy_currency": "string",
-      "buy_amount": "string",
-      "price": "string"
+      "code": 0,
+      "message": "string"
     }
     
     
@@ -1083,6 +1014,35 @@ It is required to choose one parameter between `sell_amount` and `buy_amount`
     
     
 
+##  FlashSwapOrderRequest
+
+Parameters of flash swap order creation
+
+Type | Constraints  
+---|---  
+object | required: ["preview_id","sell_currency","sell_amount","buy_currency","buy_amount"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+preview_id | string | Required |  | Preview result ID  
+sell_currency | string | Required |  | Name of the asset to be sold, obtained from the interface GET /flash_swap/currency_pairs: Query the list of all trading pairs supporting flash swap  
+sell_amount | string | Required |  | Amount to sell (based on the preview result)  
+buy_currency | string | Required |  | Name of the asset to be bought, obtained from the interface GET /flash_swap/currency_pairs: Query the list of all trading pairs supporting flash swap  
+buy_amount | string | Required |  | Amount to buy (based on the preview result)  
+      
+    
+    {
+      "preview_id": "string",
+      "sell_currency": "string",
+      "sell_amount": "string",
+      "buy_currency": "string",
+      "buy_amount": "string"
+    }
+    
+    
+
 ##  FlashSwapV1CurrencyPair
 
 FlashSwapV1CurrencyPair
@@ -1114,4 +1074,44 @@ buy_max_amount | string | Required | readOnly: true | Maximum buy quantity
       "buy_asset": "string",
       "buy_min_amount": "string",
       "buy_max_amount": "string"
+    }
+    
+    
+
+##  FlashSwapOrder
+
+Flash swap order
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | readOnly: true | Flash swap order ID  
+create_time | integer(int64) | Optional | readOnly: true | Creation time of order (in milliseconds)  
+user_id | integer(int64) | Optional | readOnly: true | User ID  
+sell_currency | string | Optional | readOnly: true | Currency to sell  
+sell_amount | string | Optional | readOnly: true | Amount to sell  
+buy_currency | string | Optional | readOnly: true | Currency to buy  
+buy_amount | string | Optional | readOnly: true | Amount to buy  
+price | string | Optional | readOnly: true | Price  
+status | integer | Optional | readOnly: true | Flash swap order status  
+  
+`1` \- success  
+`2` \- failure  
+      
+    
+    {
+      "id": 0,
+      "create_time": 0,
+      "user_id": 0,
+      "sell_currency": "string",
+      "sell_amount": "string",
+      "buy_currency": "string",
+      "buy_amount": "string",
+      "price": "string",
+      "status": 0
     }

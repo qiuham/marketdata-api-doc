@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/institutional-loan
 api_type: REST
-updated_at: 2026-11-25 19:02:52.001939
+updated_at: 2026-11-26 19:04:05.244085
 ---
 
 # Institutional Loan

@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/changelog/index'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # API Changelog
@@ -29,10 +29,12 @@ the `FIX` tag.
 
 **November 27, 2026**
 
-Fractional trading starts for all Single Stock Perpetuals (SSPs) on
-**November 27, 2026 at 10:00 a.m. Eastern Time**. Orders can be placed in
-increments of 0.01 contracts. Even whole-contract orders can receive fractional fills.
-See [Fixed-Point Representation](https://docs.kalshi.com/getting_started/fixed_point_migration.md#margin-markets).
+On **Friday, November 27, 2026 at 10:00 a.m. ET**, decimal order entry rolls out to the
+original 58 equities markets. The 36 equities markets launched on November 18 will support
+decimal order entry on December 10.
+The rollout for metals, energy, and index perps moves from December 17 to December 10.
+Crypto perps are scheduled for December 17.
+See the [Perps Decimal Order Entry rollout timeline](https://docs.kalshi.com/margin/decimal-order-entry.md#rollout-timeline) for tickers and dates.
 
 **TBD**
 
@@ -46,6 +48,11 @@ existing position can always be closed, and stocks you could already trade
 stay tradable. `403 stock_perps_insider_blocked` is unchanged and takes
 precedence. This is not live yet. See
 [Order rejections](https://docs.kalshi.com/margin.md#order-rejections).
+
+**November 26, 2026**
+
+`GET /portfolio/positions` now accepts `sort_by=event_ticker` to paginate
+events in ascending ticker order.
 
 **November 26, 2026**
 
@@ -520,7 +527,7 @@ will be deprecated soon.
 * `GET /klear-api/v1/margin/funding_estimate_by_asset_class`
 
 See
-[Fixed-Point Representation](https://docs.kalshi.com/getting_started/fixed_point_migration.md#margin-markets)
+[Perps Decimal Order Entry](https://docs.kalshi.com/margin/decimal-order-entry.md#api-changes)
 for details.
 
 **November 5, 2026**

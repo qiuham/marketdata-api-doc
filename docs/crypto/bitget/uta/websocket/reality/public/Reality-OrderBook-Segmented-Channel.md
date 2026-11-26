@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/reality/public/Reality-OrderBook-Segmented-Channel
 api_type: WebSocket
-updated_at: 2026-11-25 19:02:21.064991
+updated_at: 2026-11-26 19:03:34.739519
 ---
 
 # Reality Orderbook Segmented Channel

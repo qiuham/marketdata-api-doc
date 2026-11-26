@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/copy-trading
 api_type: REST
-updated_at: 2026-11-25 19:02:47.509035
+updated_at: 2026-11-26 19:04:00.886735
 ---
 
 # Copy Trading

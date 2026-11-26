@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/devtools/upload
 api_type: Guide
-updated_at: 2026-11-25 18:37:52.067585
+updated_at: 2026-11-26 18:39:03.140966
 ---
 
 # Upload to mini program platform

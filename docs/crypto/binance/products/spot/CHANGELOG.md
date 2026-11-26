@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/CHANGELOG
 api_type: Changelog
-updated_at: 2026-11-25 18:29:23.842877
+updated_at: 2026-11-26 18:30:06.357658
 ---
 
 # CHANGELOG for Binance's API

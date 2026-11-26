@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/market-data/get-midpoint-prices-request-body'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Get midpoint prices (request body)

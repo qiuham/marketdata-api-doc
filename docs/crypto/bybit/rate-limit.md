@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit
 api_type: REST
-updated_at: 2026-11-25 18:52:12.476251
+updated_at: 2026-11-26 18:53:03.321853
 ---
 
 # Rate Limit Rules

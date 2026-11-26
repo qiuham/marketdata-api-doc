@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-best-bid-ask
 api_type: Market Data
-updated_at: 2026-11-25 18:56:18.707887
+updated_at: 2026-11-26 18:57:11.238702
 ---
 
 # Get Best Bid/Ask

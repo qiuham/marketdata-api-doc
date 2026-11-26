@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/websockets/cfbenchmarks-value-5hz'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # CF Benchmarks 5Hz Value Feed

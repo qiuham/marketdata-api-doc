@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/sample-apps/sbe-java
 api_type: SBE
-updated_at: 2026-11-25 18:27:06.977405
+updated_at: 2026-11-26 18:28:01.428588
 ---
 
 # SBE Sample App (Java)

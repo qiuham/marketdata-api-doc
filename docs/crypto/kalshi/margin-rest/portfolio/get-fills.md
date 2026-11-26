@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-rest/portfolio/get-fills'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Get Fills
@@ -200,7 +200,7 @@ components:
           type: string
           description: >-
             Incremental realized PnL contributed by this fill, in fixed-point
-            dollars
+            dollars, before fees
         order_source:
           $ref: '#/components/schemas/OrderSource'
           description: >-

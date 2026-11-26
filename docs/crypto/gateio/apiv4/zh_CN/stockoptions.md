@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/stockoptions
 api_type: REST
-updated_at: 2026-11-25 18:58:17.953223
+updated_at: 2026-11-26 18:59:17.601192
 ---
 
 # StockOptions
@@ -1457,6 +1457,13 @@ client_order_id | body | string | 否 | 自定义平仓委托标识；不传或�
 \- market: 市价委托，按可成交的市场价格执行。  
 \- limit: 限价委托，须提供委托价格 price。  
 
+####  枚举值列表
+
+枚举值列表参数 | 值  
+---|---  
+order_type | market  
+order_type | limit  
+  
 ####  请求体结构
 
 `order_type` 可选。缺省或为空时按市价平仓；仅支持 `market` 或 `limit`。
@@ -1919,8 +1926,6 @@ client_order_id | body | string | 否 | 自定义委托标识，可选，按 UTF
 ---|---  
 side | 1  
 side | 2  
-order_type | market  
-order_type | limit  
 time_in_force | day  
 time_in_force | gtc  
   
@@ -3102,7 +3107,30 @@ WARNING
 
 #  模型
 
-##  StockOptionOrderDetailResponse
+##  StockOptionOrderListSide
+
+委托方向筛选。 不传表示查询全部方向。
+
+  * 1: 仅卖出委托。
+  * 2: 仅买入委托。
+
+类型 | 约束  
+---|---  
+integer |   
+  
+**枚举值列表**
+
+值  
+---  
+1  
+2  
+      
+    
+    1
+    
+    
+
+##  StockOptionClosePositionResponse
 
 类型 | 约束  
 ---|---  
@@ -3133,11 +3161,9 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-data | object | Required |  | 委托详情，可包含当前委托或已结束的委托。  
+data | object | Required |  |   
   
 **allOf[1] / data**
-
-委托详情，可包含当前委托或已结束的委托。
 
 类型 | 约束  
 ---|---  
@@ -3148,63 +3174,20 @@ object |
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
 order_id | string | Optional |  | 委托 ID。  
-symbol | string | Optional |  | 完整期权合约代码。  
-symbol_display | string | Optional |  | 用于展示的期权合约名称。  
-underlying | string | Optional |  | 期权标的代码。  
-side | integer | Optional | enum: [1,2] | 委托方向。  
-\- 1: 卖出。  
-\- 2: 买入。  
-order_type | string | Optional | enum: ["market","limit"] | 委托类型。  
-\- market: 市价委托，按可成交的市场价格执行。  
-\- limit: 限价委托，须提供委托价格 price。  
-status | integer | Optional |  | 订单详情中的委托状态，以下说明业务状态；详情接口不按状态过滤。  
-\- 1: 新订单，已验证并等待处理。  
-\- 2: 部分成交，仍有未成交数量。  
-\- 3: 全部成交，终态。  
-\- 4: 已撤销，终态；此前可能已有部分成交。  
-\- 5: 下单拒绝，终态。  
-当前委托列表仅返回 1、2；历史委托列表仅返回 3、4、5。  
-status_desc | string | Optional |  | 委托状态的可读说明，随请求语言返回。  
-time_in_force | string | Optional | enum: ["day","gtc"] | 委托有效期。限价单支持 day、gtc；市价单仅支持 day。  
-\- day: 当日有效，未成交部分在当日有效期结束后取消。  
-\- gtc: 撤销前有效。  
-平仓接口固定使用 day。  
-quantity | string | Optional |  | 委托数量。  
-filled_quantity | string | Optional |  | 已成交数量。  
-price | string | Optional |  | 委托价格。  
-time_setup | integer(int64) | Optional |  | 委托创建时间。  
-avg_fill_price | string | Optional |  | 成交均价。  
-fee | string | Optional |  | 手续费。  
-time_done | integer(int64) | Optional |  | 委托结束时间。  
       
     
     {
       "label": "",
       "message": "invalid argument",
       "data": {
-        "order_id": "string",
-        "symbol": "string",
-        "symbol_display": "string",
-        "underlying": "string",
-        "side": 1,
-        "order_type": "market",
-        "status": 0,
-        "status_desc": "string",
-        "time_in_force": "day",
-        "quantity": "string",
-        "filled_quantity": "string",
-        "price": "string",
-        "time_setup": 0,
-        "avg_fill_price": "string",
-        "fee": "string",
-        "time_done": 0
+        "order_id": "string"
       },
       "timestamp": 1785919118845
     }
     
     
 
-##  StockOptionCancelAllOrdersResponse
+##  StockOptionOrderBookResponse
 
 类型 | 约束  
 ---|---  
@@ -3238,37 +3221,139 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-success | boolean | Optional |  | 撤单请求是否成功。  
+symbol | string | Optional |  | 完整期权合约代码。  
+symbol_display | string | Optional |  | 用于展示的期权合约名称。  
+bids | array | Optional |  | 买入报价列表；最多一档，无报价时为空数组。  
+asks | array | Optional |  | 卖出报价列表；最多一档，无报价时为空数组。  
+  
+**allOf[1] / data / bids**
+
+买入报价列表；最多一档，无报价时为空数组。
+
+类型 | 约束  
+---|---  
+array |   
+  
+**allOf[1] / data / bids / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+price | string | Optional |  | 报价价格。  
+  
+**allOf[1] / data / asks**
+
+卖出报价列表；最多一档，无报价时为空数组。
+
+类型 | 约束  
+---|---  
+array |   
+  
+**allOf[1] / data / asks / items**
+
+类型 | 约束  
+---|---  
+object |   
       
     
     {
       "label": "",
       "message": "invalid argument",
       "data": {
-        "success": true
+        "symbol": "string",
+        "symbol_display": "string",
+        "bids": [
+          {}
+        ],
+        "asks": [
+          {}
+        ]
       },
       "timestamp": 1785919118845
     }
     
     
 
-##  StockOptionUpdateOrderRequest
+##  StockOptionUpdateOrderResponse
 
 类型 | 约束  
 ---|---  
-object | required: ["price","quantity"]  
+allOf |   
+  
+**allOf[0]**
+
+类型 | 约束  
+---|---  
+object | required: ["label","data","timestamp"]  
+  
+**allOf[1]**
+
+类型 | 约束  
+---|---  
+object |   
   
 **属性**
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-price | string | Required |  | 新的限价，必填，须为正数普通十进制字符串，最多 64 个字符，不支持科学计数法。  
-quantity | string | Required |  | 修改后的委托总数量，使用正数十进制字符串；不是剩余未成交数量，须大于等于已成交数量 filled_quantity。  
+data | object | Required |  |   
+  
+**allOf[1] / data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | string | Optional |  | 委托 ID。  
       
     
     {
-      "price": "1.25",
-      "quantity": "2"
+      "label": "",
+      "message": "invalid argument",
+      "data": {
+        "id": "string"
+      },
+      "timestamp": 1785919118845
+    }
+    
+    
+
+##  StockOptionClosePositionRequest
+
+`order_type` 可选。缺省或为空时按市价平仓；仅支持 `market` 或 `limit`。
+
+类型 | 约束  
+---|---  
+object | required: ["symbol","quantity"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+symbol | string | Required |  | 要平仓的期权合约代码，须有对应的可用持仓。  
+quantity | string | Required |  | 本次平仓数量，使用正数十进制字符串，不得超过可用持仓；须满足合约最小、最大数量和数量步长规则。  
+order_type | string | Optional | enum: ["market","limit"] | 委托类型。  
+\- market: 市价委托，按可成交的市场价格执行。  
+\- limit: 限价委托，须提供委托价格 price。  
+price | string | Optional |  | 限价平仓必填的正数价格，使用普通十进制字符串，最多 64 个字符，不支持科学计数法；市价平仓忽略。  
+client_order_id | string | Optional |  | 自定义平仓委托标识；不传或仅为空白时自动生成。  
+      
+    
+    {
+      "symbol": "string",
+      "quantity": "string",
+      "order_type": "market",
+      "price": "1.00",
+      "client_order_id": "string"
     }
     
     
@@ -3311,7 +3396,7 @@ client_order_id | string | Optional | maxLength: 30 | 自定义委托标识，�
     
     
 
-##  StockOptionContractListResponse
+##  StockOptionPutOrderResponse
 
 类型 | 约束  
 ---|---  
@@ -3345,8 +3430,111 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-total | integer(int64) | Optional |  | 匹配条件的总记录数。  
-total_page | integer | Optional |  | 总页数。  
+id | string | Optional |  | 委托 ID。  
+      
+    
+    {
+      "label": "",
+      "message": "invalid argument",
+      "data": {
+        "id": "string"
+      },
+      "timestamp": 1785919118845
+    }
+    
+    
+
+##  StockOptionCancelAllOrdersRequest
+
+批量撤销限价委托的筛选条件；side 为 1（卖出）或 2（买入），不传时不区分方向。
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+underlying | string | Optional |  | 期权标的代码；为空或不传时不指定标的筛选条件。  
+symbol | string | Optional |  | 期权合约代码；为空或不传时不指定合约筛选条件。  
+side | integer | Optional | enum: [1,2] | 委托方向筛选。  
+不传表示查询全部方向。  
+\- 1: 仅卖出委托。  
+\- 2: 仅买入委托。  
+      
+    
+    {
+      "underlying": "AAPL",
+      "symbol": "string",
+      "side": 1
+    }
+    
+    
+
+##  StockOptionApiResponse
+
+类型 | 约束  
+---|---  
+object | required: ["label","data","timestamp"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+label | string | Required |  | 业务错误标签。请求成功时为空字符串。  
+message | string | Optional |  | 错误信息。请求成功时不返回。  
+data | any|null | Required | nullable: true | 业务响应数据。  
+timestamp | integer(int64) | Required |  | 服务器时间戳（毫秒）。  
+      
+    
+    {
+      "label": "",
+      "message": "invalid argument",
+      "data": null,
+      "timestamp": 1785919118845
+    }
+    
+    
+
+##  StockOptionOptionChainResponse
+
+类型 | 约束  
+---|---  
+allOf |   
+  
+**allOf[0]**
+
+类型 | 约束  
+---|---  
+object | required: ["label","data","timestamp"]  
+  
+**allOf[1]**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Required |  |   
+  
+**allOf[1] / data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+underlying | string | Optional |  | 期权标的代码。  
+expiration_date | string(date) | Optional |  | 期权到期日，格式 YYYY-MM-DD。  
+expiration_date_ts | integer(int64) | Optional |  | 到期日对应的 Unix 时间戳。  
+index_price | string | Optional |  | 标的指数价格；无有效值时为空。  
 list | array | Optional |  | 查询结果列表。  
   
 **allOf[1] / data / list**
@@ -3369,42 +3557,265 @@ object |
 ---|---|---|---|---  
 symbol | string | Optional |  | 完整期权合约代码。  
 symbol_display | string | Optional |  | 用于展示的期权合约名称。  
-underlying | string | Optional |  | 期权标的代码。  
-exchange | string | Optional |  | 交易市场。  
-expiration_date | string(date) | Optional |  | 期权到期日，格式 YYYY-MM-DD。  
-settlement_date | string(date) | Optional |  | 期权结算日，格式 YYYY-MM-DD。  
 strike_price | string | Optional |  | 行权价。  
 option_type | string | Optional | enum: ["call","put"] | 期权类型。  
 \- call: 看涨期权。  
 \- put: 看跌期权。  
-multiplier | string | Optional |  | 合约乘数。  
+bid | string | Optional |  | 最佳买入报价。  
+ask | string | Optional |  | 最佳卖出报价。  
+mark_price | string | Optional |  | 标记价格。  
+mark_iv | string | Optional |  | 标记隐含波动率。  
+last | string | Optional |  | 最新成交价。  
+display_price | string | Optional |  | 展示价格。  
+breakeven_price | string | Optional |  | 盈亏平衡价格。  
+to_breakeven_pct | string | Optional |  | 距离盈亏平衡价格的百分比。  
+today_change_pct | string | Optional |  | 今日价格变化百分比。  
 open_interest | string | Optional |  | 未平仓合约数量。  
-quote_currency | string | Optional |  | 报价币种。  
-settlement_type | string | Optional |  | 结算方式。  
+position | string | Optional |  | 仓位数量。  
+delta | string | Optional |  | 期权 Delta。  
+gamma | string | Optional |  | 期权 Gamma。  
+theta | string | Optional |  | 期权 Theta。  
+vega | string | Optional |  | 期权 Vega。  
+rho | string | Optional |  | 期权 Rho。  
 trade_status | string | Optional | enum: ["open","closed"] | 合约当前交易状态。  
 \- open: 处于可交易时段，且合约及标的均可交易。  
 \- closed: 当前不可交易，包括非交易时段、合约非有效状态或标的未启用。  
 trade_mode | integer | Optional | enum: [0,4] | 当前交易模式。  
 \- 0: 禁止交易。  
 \- 4: 允许买入和卖出；普通账户卖出仍须有足够的可用多头持仓。  
-price_precision | integer | Optional |  | 价格小数位数。  
-min_order_volume | string | Optional |  | 最小委托数量。  
-max_order_volume | string | Optional |  | 最大委托数量。  
-step_order_volume | string | Optional |  | 委托数量步长。  
       
     
     {
       "label": "",
       "message": "invalid argument",
       "data": {
-        "total": 0,
-        "total_page": 0,
+        "underlying": "string",
+        "expiration_date": "2026-11-26",
+        "expiration_date_ts": 0,
+        "index_price": "string",
         "list": [
           {}
         ]
       },
       "timestamp": 1785919118845
     }
+    
+    
+
+##  StockOptionOptionType
+
+期权类型。
+
+  * call: 看涨期权。
+  * put: 看跌期权。
+
+类型 | 约束  
+---|---  
+string |   
+  
+**枚举值列表**
+
+值  
+---  
+"call"  
+"put"  
+      
+    
+    "call"
+    
+    
+
+##  StockOptionExpirationListResponse
+
+类型 | 约束  
+---|---  
+allOf |   
+  
+**allOf[0]**
+
+类型 | 约束  
+---|---  
+object | required: ["label","data","timestamp"]  
+  
+**allOf[1]**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Required |  |   
+  
+**allOf[1] / data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+underlying | string | Optional |  | 期权标的代码。  
+list | array | Optional |  | 查询结果列表。  
+  
+**allOf[1] / data / list**
+
+查询结果列表。
+
+类型 | 约束  
+---|---  
+array |   
+  
+**allOf[1] / data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+expiration_date | string(date) | Optional |  | 期权到期日，格式 YYYY-MM-DD。  
+expiration_date_ts | integer(int64) | Optional |  | 到期日对应的 Unix 时间戳。  
+      
+    
+    {
+      "label": "",
+      "message": "invalid argument",
+      "data": {
+        "underlying": "string",
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 1785919118845
+    }
+    
+    
+
+##  StockOptionSymbolListResponse
+
+类型 | 约束  
+---|---  
+allOf |   
+  
+**allOf[0]**
+
+类型 | 约束  
+---|---  
+object | required: ["label","data","timestamp"]  
+  
+**allOf[1]**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Required |  |   
+  
+**allOf[1] / data**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Optional |  | 查询结果列表。  
+  
+**allOf[1] / data / list**
+
+查询结果列表。
+
+类型 | 约束  
+---|---  
+array |   
+  
+**allOf[1] / data / list / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+underlying | string | Optional |  | 期权标的代码。  
+description | string | Optional |  | 标的描述。  
+descs | array | Optional |  | 标的的多语言描述。  
+icon_link | string | Optional |  | 标的图标链接。  
+price_precision | integer | Optional |  | 价格小数位数。  
+min_order_volume | string | Optional |  | 最小委托数量。  
+max_order_volume | string | Optional |  | 最大委托数量。  
+step_order_volume | string | Optional |  | 委托数量步长。  
+  
+**allOf[1] / data / list / items / descs**
+
+标的的多语言描述。
+
+类型 | 约束  
+---|---  
+array |   
+  
+**allOf[1] / data / list / items / descs / items**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+lang | string | Optional |  | 语言代码。  
+value | string | Optional |  | 该语言的标的描述。  
+      
+    
+    {
+      "label": "",
+      "message": "invalid argument",
+      "data": {
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 1785919118845
+    }
+    
+    
+
+##  StockOptionPositionPnlPriceType
+
+仓位盈亏计价价格类型。
+
+  * latest: 最新成交价；不传或为空时使用此值。
+  * mark: 标记价格。
+
+类型 | 约束  
+---|---  
+string | default: "latest"  
+  
+**枚举值列表**
+
+值  
+---  
+"latest"  
+"mark"  
+      
+    
+    "latest"
     
     
 
@@ -3516,175 +3927,6 @@ step_order_volume | string | Optional |  | 委托数量步长。
     
     
 
-##  StockOptionCancelOrderResponse
-
-类型 | 约束  
----|---  
-allOf |   
-  
-**allOf[0]**
-
-类型 | 约束  
----|---  
-object | required: ["label","data","timestamp"]  
-  
-**allOf[1]**
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-data | object | Required |  |   
-  
-**allOf[1] / data**
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-id | string | Optional |  | 委托 ID。  
-      
-    
-    {
-      "label": "",
-      "message": "invalid argument",
-      "data": {
-        "id": "string"
-      },
-      "timestamp": 1785919118845
-    }
-    
-    
-
-##  StockOptionExpirationListResponse
-
-类型 | 约束  
----|---  
-allOf |   
-  
-**allOf[0]**
-
-类型 | 约束  
----|---  
-object | required: ["label","data","timestamp"]  
-  
-**allOf[1]**
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-data | object | Required |  |   
-  
-**allOf[1] / data**
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-underlying | string | Optional |  | 期权标的代码。  
-list | array | Optional |  | 查询结果列表。  
-  
-**allOf[1] / data / list**
-
-查询结果列表。
-
-类型 | 约束  
----|---  
-array |   
-  
-**allOf[1] / data / list / items**
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-expiration_date | string(date) | Optional |  | 期权到期日，格式 YYYY-MM-DD。  
-expiration_date_ts | integer(int64) | Optional |  | 到期日对应的 Unix 时间戳。  
-      
-    
-    {
-      "label": "",
-      "message": "invalid argument",
-      "data": {
-        "underlying": "string",
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 1785919118845
-    }
-    
-    
-
-##  StockOptionClosePositionResponse
-
-类型 | 约束  
----|---  
-allOf |   
-  
-**allOf[0]**
-
-类型 | 约束  
----|---  
-object | required: ["label","data","timestamp"]  
-  
-**allOf[1]**
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-data | object | Required |  |   
-  
-**allOf[1] / data**
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-order_id | string | Optional |  | 委托 ID。  
-      
-    
-    {
-      "label": "",
-      "message": "invalid argument",
-      "data": {
-        "order_id": "string"
-      },
-      "timestamp": 1785919118845
-    }
-    
-    
-
 ##  StockOptionOrderHistoryResponse
 
 类型 | 约束  
@@ -3786,7 +4028,7 @@ time_done | integer(int64) | Optional |  | 委托结束时间。
     
     
 
-##  StockOptionOptionChainResponse
+##  StockOptionCancelOrderResponse
 
 类型 | 约束  
 ---|---  
@@ -3820,78 +4062,21 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-underlying | string | Optional |  | 期权标的代码。  
-expiration_date | string(date) | Optional |  | 期权到期日，格式 YYYY-MM-DD。  
-expiration_date_ts | integer(int64) | Optional |  | 到期日对应的 Unix 时间戳。  
-index_price | string | Optional |  | 标的指数价格；无有效值时为空。  
-list | array | Optional |  | 查询结果列表。  
-  
-**allOf[1] / data / list**
-
-查询结果列表。
-
-类型 | 约束  
----|---  
-array |   
-  
-**allOf[1] / data / list / items**
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-symbol | string | Optional |  | 完整期权合约代码。  
-symbol_display | string | Optional |  | 用于展示的期权合约名称。  
-strike_price | string | Optional |  | 行权价。  
-option_type | string | Optional | enum: ["call","put"] | 期权类型。  
-\- call: 看涨期权。  
-\- put: 看跌期权。  
-bid | string | Optional |  | 最佳买入报价。  
-ask | string | Optional |  | 最佳卖出报价。  
-mark_price | string | Optional |  | 标记价格。  
-mark_iv | string | Optional |  | 标记隐含波动率。  
-last | string | Optional |  | 最新成交价。  
-display_price | string | Optional |  | 展示价格。  
-breakeven_price | string | Optional |  | 盈亏平衡价格。  
-to_breakeven_pct | string | Optional |  | 距离盈亏平衡价格的百分比。  
-today_change_pct | string | Optional |  | 今日价格变化百分比。  
-open_interest | string | Optional |  | 未平仓合约数量。  
-position | string | Optional |  | 仓位数量。  
-delta | string | Optional |  | 期权 Delta。  
-gamma | string | Optional |  | 期权 Gamma。  
-theta | string | Optional |  | 期权 Theta。  
-vega | string | Optional |  | 期权 Vega。  
-rho | string | Optional |  | 期权 Rho。  
-trade_status | string | Optional | enum: ["open","closed"] | 合约当前交易状态。  
-\- open: 处于可交易时段，且合约及标的均可交易。  
-\- closed: 当前不可交易，包括非交易时段、合约非有效状态或标的未启用。  
-trade_mode | integer | Optional | enum: [0,4] | 当前交易模式。  
-\- 0: 禁止交易。  
-\- 4: 允许买入和卖出；普通账户卖出仍须有足够的可用多头持仓。  
+id | string | Optional |  | 委托 ID。  
       
     
     {
       "label": "",
       "message": "invalid argument",
       "data": {
-        "underlying": "string",
-        "expiration_date": "2026-11-20",
-        "expiration_date_ts": 0,
-        "index_price": "string",
-        "list": [
-          {}
-        ]
+        "id": "string"
       },
       "timestamp": 1785919118845
     }
     
     
 
-##  StockOptionOrderBookResponse
+##  StockOptionCancelAllOrdersResponse
 
 类型 | 约束  
 ---|---  
@@ -3925,58 +4110,14 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-symbol | string | Optional |  | 完整期权合约代码。  
-symbol_display | string | Optional |  | 用于展示的期权合约名称。  
-bids | array | Optional |  | 买入报价列表；最多一档，无报价时为空数组。  
-asks | array | Optional |  | 卖出报价列表；最多一档，无报价时为空数组。  
-  
-**allOf[1] / data / bids**
-
-买入报价列表；最多一档，无报价时为空数组。
-
-类型 | 约束  
----|---  
-array |   
-  
-**allOf[1] / data / bids / items**
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-price | string | Optional |  | 报价价格。  
-  
-**allOf[1] / data / asks**
-
-卖出报价列表；最多一档，无报价时为空数组。
-
-类型 | 约束  
----|---  
-array |   
-  
-**allOf[1] / data / asks / items**
-
-类型 | 约束  
----|---  
-object |   
+success | boolean | Optional |  | 撤单请求是否成功。  
       
     
     {
       "label": "",
       "message": "invalid argument",
       "data": {
-        "symbol": "string",
-        "symbol_display": "string",
-        "bids": [
-          {}
-        ],
-        "asks": [
-          {}
-        ]
+        "success": true
       },
       "timestamp": 1785919118845
     }
@@ -4047,7 +4188,7 @@ cat | string | Optional |  | CAT 费用。
     
     
 
-##  StockOptionUpdateOrderResponse
+##  StockOptionOrderDetailResponse
 
 类型 | 约束  
 ---|---  
@@ -4069,9 +4210,11 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-data | object | Required |  |   
+data | object | Required |  | 委托详情，可包含当前委托或已结束的委托。  
   
 **allOf[1] / data**
+
+委托详情，可包含当前委托或已结束的委托。
 
 类型 | 约束  
 ---|---  
@@ -4081,44 +4224,64 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-id | string | Optional |  | 委托 ID。  
+order_id | string | Optional |  | 委托 ID。  
+symbol | string | Optional |  | 完整期权合约代码。  
+symbol_display | string | Optional |  | 用于展示的期权合约名称。  
+underlying | string | Optional |  | 期权标的代码。  
+side | integer | Optional | enum: [1,2] | 委托方向。  
+\- 1: 卖出。  
+\- 2: 买入。  
+order_type | string | Optional | enum: ["market","limit"] | 委托类型。  
+\- market: 市价委托，按可成交的市场价格执行。  
+\- limit: 限价委托，须提供委托价格 price。  
+status | integer | Optional |  | 订单详情中的委托状态，以下说明业务状态；详情接口不按状态过滤。  
+\- 1: 新订单，已验证并等待处理。  
+\- 2: 部分成交，仍有未成交数量。  
+\- 3: 全部成交，终态。  
+\- 4: 已撤销，终态；此前可能已有部分成交。  
+\- 5: 下单拒绝，终态。  
+当前委托列表仅返回 1、2；历史委托列表仅返回 3、4、5。  
+status_desc | string | Optional |  | 委托状态的可读说明，随请求语言返回。  
+time_in_force | string | Optional | enum: ["day","gtc"] | 委托有效期。限价单支持 day、gtc；市价单仅支持 day。  
+\- day: 当日有效，未成交部分在当日有效期结束后取消。  
+\- gtc: 撤销前有效。  
+平仓接口固定使用 day。  
+quantity | string | Optional |  | 委托数量。  
+filled_quantity | string | Optional |  | 已成交数量。  
+price | string | Optional |  | 委托价格。  
+time_setup | integer(int64) | Optional |  | 委托创建时间。  
+avg_fill_price | string | Optional |  | 成交均价。  
+fee | string | Optional |  | 手续费。  
+time_done | integer(int64) | Optional |  | 委托结束时间。  
       
     
     {
       "label": "",
       "message": "invalid argument",
       "data": {
-        "id": "string"
+        "order_id": "string",
+        "symbol": "string",
+        "symbol_display": "string",
+        "underlying": "string",
+        "side": 1,
+        "order_type": "market",
+        "status": 0,
+        "status_desc": "string",
+        "time_in_force": "day",
+        "quantity": "string",
+        "filled_quantity": "string",
+        "price": "string",
+        "time_setup": 0,
+        "avg_fill_price": "string",
+        "fee": "string",
+        "time_done": 0
       },
       "timestamp": 1785919118845
     }
     
     
 
-##  StockOptionOrderListSide
-
-委托方向筛选。 不传表示查询全部方向。
-
-  * 1: 仅卖出委托。
-  * 2: 仅买入委托。
-
-类型 | 约束  
----|---  
-integer |   
-  
-**枚举值列表**
-
-值  
----  
-1  
-2  
-      
-    
-    1
-    
-    
-
-##  StockOptionSymbolListResponse
+##  StockOptionContractListResponse
 
 类型 | 约束  
 ---|---  
@@ -4152,6 +4315,8 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
+total | integer(int64) | Optional |  | 匹配条件的总记录数。  
+total_page | integer | Optional |  | 总页数。  
 list | array | Optional |  | 查询结果列表。  
   
 **allOf[1] / data / list**
@@ -4172,194 +4337,41 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
+symbol | string | Optional |  | 完整期权合约代码。  
+symbol_display | string | Optional |  | 用于展示的期权合约名称。  
 underlying | string | Optional |  | 期权标的代码。  
-description | string | Optional |  | 标的描述。  
-descs | array | Optional |  | 标的的多语言描述。  
-icon_link | string | Optional |  | 标的图标链接。  
+exchange | string | Optional |  | 交易市场。  
+expiration_date | string(date) | Optional |  | 期权到期日，格式 YYYY-MM-DD。  
+settlement_date | string(date) | Optional |  | 期权结算日，格式 YYYY-MM-DD。  
+strike_price | string | Optional |  | 行权价。  
+option_type | string | Optional | enum: ["call","put"] | 期权类型。  
+\- call: 看涨期权。  
+\- put: 看跌期权。  
+multiplier | string | Optional |  | 合约乘数。  
+open_interest | string | Optional |  | 未平仓合约数量。  
+quote_currency | string | Optional |  | 报价币种。  
+settlement_type | string | Optional |  | 结算方式。  
+trade_status | string | Optional | enum: ["open","closed"] | 合约当前交易状态。  
+\- open: 处于可交易时段，且合约及标的均可交易。  
+\- closed: 当前不可交易，包括非交易时段、合约非有效状态或标的未启用。  
+trade_mode | integer | Optional | enum: [0,4] | 当前交易模式。  
+\- 0: 禁止交易。  
+\- 4: 允许买入和卖出；普通账户卖出仍须有足够的可用多头持仓。  
 price_precision | integer | Optional |  | 价格小数位数。  
 min_order_volume | string | Optional |  | 最小委托数量。  
 max_order_volume | string | Optional |  | 最大委托数量。  
 step_order_volume | string | Optional |  | 委托数量步长。  
-  
-**allOf[1] / data / list / items / descs**
-
-标的的多语言描述。
-
-类型 | 约束  
----|---  
-array |   
-  
-**allOf[1] / data / list / items / descs / items**
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-lang | string | Optional |  | 语言代码。  
-value | string | Optional |  | 该语言的标的描述。  
       
     
     {
       "label": "",
       "message": "invalid argument",
       "data": {
+        "total": 0,
+        "total_page": 0,
         "list": [
           {}
         ]
-      },
-      "timestamp": 1785919118845
-    }
-    
-    
-
-##  StockOptionClosePositionRequest
-
-`order_type` 可选。缺省或为空时按市价平仓；仅支持 `market` 或 `limit`。
-
-类型 | 约束  
----|---  
-object | required: ["symbol","quantity"]  
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-symbol | string | Required |  | 要平仓的期权合约代码，须有对应的可用持仓。  
-quantity | string | Required |  | 本次平仓数量，使用正数十进制字符串，不得超过可用持仓；须满足合约最小、最大数量和数量步长规则。  
-order_type | string | Optional | enum: ["market","limit"] | 委托类型。  
-\- market: 市价委托，按可成交的市场价格执行。  
-\- limit: 限价委托，须提供委托价格 price。  
-price | string | Optional |  | 限价平仓必填的正数价格，使用普通十进制字符串，最多 64 个字符，不支持科学计数法；市价平仓忽略。  
-client_order_id | string | Optional |  | 自定义平仓委托标识；不传或仅为空白时自动生成。  
-      
-    
-    {
-      "symbol": "string",
-      "quantity": "string",
-      "order_type": "market",
-      "price": "1.00",
-      "client_order_id": "string"
-    }
-    
-    
-
-##  StockOptionOptionType
-
-期权类型。
-
-  * call: 看涨期权。
-  * put: 看跌期权。
-
-类型 | 约束  
----|---  
-string |   
-  
-**枚举值列表**
-
-值  
----  
-"call"  
-"put"  
-      
-    
-    "call"
-    
-    
-
-##  StockOptionApiResponse
-
-类型 | 约束  
----|---  
-object | required: ["label","data","timestamp"]  
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-label | string | Required |  | 业务错误标签。请求成功时为空字符串。  
-message | string | Optional |  | 错误信息。请求成功时不返回。  
-data | any|null | Required | nullable: true | 业务响应数据。  
-timestamp | integer(int64) | Required |  | 服务器时间戳（毫秒）。  
-      
-    
-    {
-      "label": "",
-      "message": "invalid argument",
-      "data": null,
-      "timestamp": 1785919118845
-    }
-    
-    
-
-##  StockOptionPositionPnlPriceType
-
-仓位盈亏计价价格类型。
-
-  * latest: 最新成交价；不传或为空时使用此值。
-  * mark: 标记价格。
-
-类型 | 约束  
----|---  
-string | default: "latest"  
-  
-**枚举值列表**
-
-值  
----  
-"latest"  
-"mark"  
-      
-    
-    "latest"
-    
-    
-
-##  StockOptionPutOrderResponse
-
-类型 | 约束  
----|---  
-allOf |   
-  
-**allOf[0]**
-
-类型 | 约束  
----|---  
-object | required: ["label","data","timestamp"]  
-  
-**allOf[1]**
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-data | object | Required |  |   
-  
-**allOf[1] / data**
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-id | string | Optional |  | 委托 ID。  
-      
-    
-    {
-      "label": "",
-      "message": "invalid argument",
-      "data": {
-        "id": "string"
       },
       "timestamp": 1785919118845
     }
@@ -4459,28 +4471,21 @@ time_setup | integer(int64) | Optional |  | 委托创建时间。
     
     
 
-##  StockOptionCancelAllOrdersRequest
-
-批量撤销限价委托的筛选条件；side 为 1（卖出）或 2（买入），不传时不区分方向。
+##  StockOptionUpdateOrderRequest
 
 类型 | 约束  
 ---|---  
-object |   
+object | required: ["price","quantity"]  
   
 **属性**
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-underlying | string | Optional |  | 期权标的代码；为空或不传时不指定标的筛选条件。  
-symbol | string | Optional |  | 期权合约代码；为空或不传时不指定合约筛选条件。  
-side | integer | Optional | enum: [1,2] | 委托方向筛选。  
-不传表示查询全部方向。  
-\- 1: 仅卖出委托。  
-\- 2: 仅买入委托。  
+price | string | Required |  | 新的限价，必填，须为正数普通十进制字符串，最多 64 个字符，不支持科学计数法。  
+quantity | string | Required |  | 修改后的委托总数量，使用正数十进制字符串；不是剩余未成交数量，须大于等于已成交数量 filled_quantity。  
       
     
     {
-      "underlying": "AAPL",
-      "symbol": "string",
-      "side": 1
+      "price": "1.25",
+      "quantity": "2"
     }

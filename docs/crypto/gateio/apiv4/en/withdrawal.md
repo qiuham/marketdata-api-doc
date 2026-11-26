@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/withdrawal
 api_type: Account
-updated_at: 2026-11-25 18:57:37.926740
+updated_at: 2026-11-26 18:58:35.165518
 ---
 
 # Withdrawal
@@ -495,84 +495,6 @@ Code samples
 
 #  Schemas
 
-##  UidPushWithdrawalResp
-
-Type | Constraints  
----|---  
-object |   
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-id | string | Optional |  | Order ID  
-      
-    
-    {
-      "id": "string"
-    }
-    
-    
-
-##  LedgerRecord
-
-Type | Constraints  
----|---  
-object | required: ["currency","amount","chain"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-id | string | Optional | readOnly: true | Record ID  
-txid | string | Optional | readOnly: true | Hash record of the withdrawal  
-withdraw_order_id | string | Optional |  | User-defined order number for withdrawal. Default is empty. When not empty, the specified user-defined order number record will be queried  
-timestamp | string | Optional | readOnly: true | Operation time  
-amount | string | Required |  | Token amount  
-currency | string | Required |  | Currency name  
-address | string | Optional |  | Withdrawal address. Required for withdrawals  
-memo | string | Optional |  | Additional remarks with regards to the withdrawal  
-withdraw_id | string | Optional |  | Withdrawal record ID starts with 'w', such as: w1879219868. When withdraw_id is not empty, only this specific withdrawal record will be queried, and time-based querying will be disabled  
-asset_class | string | Optional |  | Withdrawal record currency type, empty by default. Supports users to query withdrawal records in main area and innovation area on demand.  
-Valid values: SPOT, PILOT  
-  
-SPOT: Main area  
-PILOT: Innovation area  
-status | string | Optional | readOnly: true | Transaction status  
-  
-\- DONE: Completed  
-\- CANCEL: Cancelled  
-\- REQUEST: Requesting  
-\- MANUAL: Pending manual review  
-\- BCODE: GateCode operation  
-\- EXTPEND: Sent, waiting for confirmation  
-\- FAIL: Failed on chain, waiting for confirmation  
-\- INVALID: Invalid order  
-\- VERIFY: Verifying  
-\- PROCES: Processing  
-\- PEND: Processing  
-\- DMOVE: Pending manual review  
-\- REVIEW: Under review  
-chain | string | Required |  | Name of the chain used in withdrawals  
-      
-    
-    {
-      "id": "string",
-      "txid": "string",
-      "withdraw_order_id": "string",
-      "timestamp": "string",
-      "amount": "string",
-      "currency": "string",
-      "address": "string",
-      "memo": "string",
-      "withdraw_id": "string",
-      "asset_class": "string",
-      "status": "string",
-      "chain": "string"
-    }
-    
-    
-
 ##  UidPushWithdrawal
 
 Type | Constraints  
@@ -643,4 +565,82 @@ chain | string | Required |  | Name of the chain used in withdrawals
       "block_number": "string",
       "status": "string",
       "chain": "string"
+    }
+    
+    
+
+##  LedgerRecord
+
+Type | Constraints  
+---|---  
+object | required: ["currency","amount","chain"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | string | Optional | readOnly: true | Record ID  
+txid | string | Optional | readOnly: true | Hash record of the withdrawal  
+withdraw_order_id | string | Optional |  | User-defined order number for withdrawal. Default is empty. When not empty, the specified user-defined order number record will be queried  
+timestamp | string | Optional | readOnly: true | Operation time  
+amount | string | Required |  | Token amount  
+currency | string | Required |  | Currency name  
+address | string | Optional |  | Withdrawal address. Required for withdrawals  
+memo | string | Optional |  | Additional remarks with regards to the withdrawal  
+withdraw_id | string | Optional |  | Withdrawal record ID starts with 'w', such as: w1879219868. When withdraw_id is not empty, only this specific withdrawal record will be queried, and time-based querying will be disabled  
+asset_class | string | Optional |  | Withdrawal record currency type, empty by default. Supports users to query withdrawal records in main area and innovation area on demand.  
+Valid values: SPOT, PILOT  
+  
+SPOT: Main area  
+PILOT: Innovation area  
+status | string | Optional | readOnly: true | Transaction status  
+  
+\- DONE: Completed  
+\- CANCEL: Cancelled  
+\- REQUEST: Requesting  
+\- MANUAL: Pending manual review  
+\- BCODE: GateCode operation  
+\- EXTPEND: Sent, waiting for confirmation  
+\- FAIL: Failed on chain, waiting for confirmation  
+\- INVALID: Invalid order  
+\- VERIFY: Verifying  
+\- PROCES: Processing  
+\- PEND: Processing  
+\- DMOVE: Pending manual review  
+\- REVIEW: Under review  
+chain | string | Required |  | Name of the chain used in withdrawals  
+      
+    
+    {
+      "id": "string",
+      "txid": "string",
+      "withdraw_order_id": "string",
+      "timestamp": "string",
+      "amount": "string",
+      "currency": "string",
+      "address": "string",
+      "memo": "string",
+      "withdraw_id": "string",
+      "asset_class": "string",
+      "status": "string",
+      "chain": "string"
+    }
+    
+    
+
+##  UidPushWithdrawalResp
+
+Type | Constraints  
+---|---  
+object |   
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+id | string | Optional |  | Order ID  
+      
+    
+    {
+      "id": "string"
     }

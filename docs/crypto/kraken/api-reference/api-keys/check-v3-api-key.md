@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/api-keys/check-v3-api-key'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Check v3 API key
@@ -192,5 +192,6 @@ components:
       in: header
       name: authent
       x-inlineDescription: true
+      x-default: <authent>
 
 ````

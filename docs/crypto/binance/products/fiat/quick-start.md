@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/fiat/quick-start
 api_type: Guide
-updated_at: 2026-11-25 18:31:09.470256
+updated_at: 2026-11-26 18:32:07.428517
 ---
 
 # Quick Start

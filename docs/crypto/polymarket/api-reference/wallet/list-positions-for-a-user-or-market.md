@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/wallet/list-positions-for-a-user-or-market'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # List positions for a user or market
@@ -26,6 +26,11 @@ user and applies `condition` as a narrowing filter.
 settled-but-unredeemed winner still holds its tokens, so it is an open
 position whose condition resolved. `REDEEMABLE` narrows to that subset, and
 each row echoes its own `status`.
+
+When `user` is the active wallet of a Polymarket account that owns other
+wallets, `status=CLOSED` returns every wallet's closed positions; each
+row's `proxy_wallet` names the wallet it belongs to. `OPEN` and
+`REDEEMABLE` read the requested wallet.
 
 Resume contract: a `next_cursor` binds the `status`/`sortBy`/`sortDirection`
 the walk started with. To follow it, send `cursor` together with the same
@@ -193,6 +198,15 @@ paths:
         each row echoes its own `status`.
 
 
+        When `user` is the active wallet of a Polymarket account that owns other
+
+        wallets, `status=CLOSED` returns every wallet's closed positions; each
+
+        row's `proxy_wallet` names the wallet it belongs to. `OPEN` and
+
+        `REDEEMABLE` read the requested wallet.
+
+
         Resume contract: a `next_cursor` binds the
         `status`/`sortBy`/`sortDirection`
 
@@ -296,10 +310,11 @@ paths:
             One of `OPEN`, `REDEEMABLE`, `REDEEMABLE_LOST`, `MERGEABLE`, or
             `CLOSED`;
 
-            defaults to `OPEN`. `REDEEMABLE_LOST` requires `user`, supports all
-            six
+            defaults to `OPEN`. `REDEEMABLE_LOST` requires `user`, supports
+            every
 
-            sorts, and defaults to `CURRENT_VALUE`; it preserves row status
+            sort but `AVG_PRICE`, and defaults to `CURRENT_VALUE`; it preserves
+            row status
 
             `REDEEMABLE`. `MERGEABLE` is `OPEN` narrowed to live complementary
             pairs
@@ -388,15 +403,21 @@ paths:
         - name: sort_by
           in: query
           description: >-
-            One of `CURRENT_VALUE`, `PRICE`, `TOKENS`, `UNREALIZED_PNL`,
+            One of `CURRENT_VALUE`, `PRICE`, `AVG_PRICE`, `TOKENS`,
+            `UNREALIZED_PNL`,
 
             `REALIZED_PNL`, `TOTAL_PNL`, or `TIMESTAMP` (the row's
             `last_event_at`).
 
             `PRICE` ranks by the response's effective `current_price` on every
 
-            supported anchor and status. On `REDEEMABLE`, the existing
-            winners-first
+            supported anchor and status. `AVG_PRICE` ranks by the response's
+
+            `avg_price` (the entry price); a user's `CLOSED` and
+            `REDEEMABLE_LOST`
+
+            positions reject it until they have an indexed path for it. On
+            `REDEEMABLE`, the existing winners-first
 
             partition remains ahead of the requested price order. The default
 
@@ -591,6 +612,8 @@ components:
         - icon
         - event_id
         - event_slug
+        - event_title
+        - group_item_title
         - outcome
         - outcome_index
         - opposite_outcome
@@ -648,12 +671,23 @@ components:
         event_slug:
           type: string
           description: Parent event slug.
+        event_title:
+          type: string
+          description: Parent event title; `""` when Gamma has none.
         first_entry_at:
           type: integer
           format: int64
           description: >-
             First acquisition of the position (buy, split, mint, transfer in),
             epoch seconds; 0 when no acquisition is recorded.
+        group_item_title:
+          type: string
+          description: >-
+            Gamma's short label for this market inside a multi-market event
+            (e.g.
+
+            `Rene Haas` under `Next CEO of NVIDIA?`); `""` for single-market
+            events.
         icon:
           type: string
           description: Market icon URL.

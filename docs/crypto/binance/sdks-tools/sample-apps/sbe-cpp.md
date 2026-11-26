@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/sample-apps/sbe-cpp
 api_type: SBE
-updated_at: 2026-11-25 18:27:08.364558
+updated_at: 2026-11-26 18:28:02.785210
 ---
 
 # SBE Sample App (C++)

@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/wallet/get-a-users-profile-stats'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # 获取用户资料统计
@@ -201,6 +201,16 @@ paths:
 
 
         `join_date` is epoch seconds, or `null` when unknown.
+
+
+        When `user` is the active wallet of a Polymarket account that owns other
+
+        wallets, the card describes the person: `trades` counts distinct markets
+
+        across every wallet, `biggest_win` is the best of any of them, and
+
+        `all_time_pnl` adds each wallet's newest point. Any other wallet reads
+        alone.
 
 
         `all_time_pnl` is the newest persisted cumulative `/v2/user-pnl` point

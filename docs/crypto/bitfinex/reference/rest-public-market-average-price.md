@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/reference/rest-public-market-average-price'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Market Average Price

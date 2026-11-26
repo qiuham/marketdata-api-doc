@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/perps_openapi.yaml'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # perps_openapi.yaml
@@ -1120,7 +1120,7 @@ paths:
         - name: subaccount
           in: query
           required: false
-          description: Subaccount number (0 for primary, 1-63 for subaccounts). If omitted, returns positions for all subaccounts. Subaccount-restricted API keys must omit this or pass their locked subaccount, and read only that subaccount's positions.
+          description: Subaccount number (0 for primary, 1-63 for subaccounts). If omitted, returns positions for all subaccounts. `0` returns only the primary account's cross-margin positions; an isolated position is held in its market's isolated subaccount, so omit this parameter to include it. Subaccount-restricted API keys must omit this or pass their locked subaccount, and read only that subaccount's positions.
           schema:
             type: integer
         - name: ticker
@@ -2671,8 +2671,9 @@ components:
           $ref: '#/components/schemas/FixedPointCount'
           description: >-
             Contracts this trigger closes when it fires. Omit it to cover the whole position,
-            which then requires that no partial or anchored trigger already covers part of it.
-            If supplied, it must be a whole number of contracts.
+            which for a bracket requires that no partial or anchored bracket covers part of it.
+            If supplied, it must be a whole number of contracts, or a multiple of `0.01` on a
+            market whose `fractional_trading_enabled` is true.
         anchor_order_id:
           type: string
           description: >-
@@ -2808,7 +2809,9 @@ components:
             shorts. Trailing triggers only.
         count:
           $ref: '#/components/schemas/FixedPointCount'
-          description: Contracts this trigger closes when it fires. `0` means the whole position.
+          description: >-
+            Contracts this trigger closes when it fires. `0` means the whole position, except on
+            an order-anchored trigger whose order has not filled, which covers nothing.
         filled_count:
           $ref: '#/components/schemas/FixedPointCount'
           description: Contracts closed so far across fire attempts.
@@ -3087,7 +3090,7 @@ components:
           description: String representation of the order quantity in contracts.
         price:
           $ref: '#/components/schemas/FixedPointDollars'
-          description: Price for the order in fixed-point dollars.
+          description: Price for the order in fixed-point dollars per contract, not per unit of the underlying. See Prices and contract size in the Perps API overview (https://docs.kalshi.com/margin#prices-and-contract-size).
           x-go-type-skip-optional-pointer: true
         expiration_time:
           type: integer
@@ -3445,10 +3448,10 @@ components:
           description: "Deprecated: has no effect on order groups or rate limits. This field will be removed."
         contract_size:
           type: string
-          description: Fixed-point number with 6 decimal places
+          description: Size of one contract in the market's underlying units, as a fixed-point number with 6 decimal places. Prices are per contract, and track the underlying asset's price × `underlying_multiplier` × `contract_size`.
         underlying_multiplier:
           type: string
-          description: Underlying units per contract-size unit.
+          description: How many of the underlying asset make up one underlying unit, as a fixed-point number with 6 decimal places. For example, `1000.000000` on a market whose unit is a thousand of the asset.
         tick_size:
           $ref: '#/components/schemas/FixedPointDollars'
           description: Minimum price increment in dollars.
@@ -3517,13 +3520,13 @@ components:
           description: Total notional value of one sided trade volume in the last 24 hours in dollars.
         bid:
           $ref: '#/components/schemas/FixedPointDollars'
-          description: Best bid price in dollars.
+          description: Best bid price in dollars. `0.0000` when there is no bid, so check `bid_size_fp` before using it.
         bid_size_fp:
           $ref: '#/components/schemas/FixedPointCount'
           description: Total number of contracts resting at the best bid price, as a fixed-point count string. Zero when there is no bid. Omitted when market stats are unavailable.
         ask:
           $ref: '#/components/schemas/FixedPointDollars'
-          description: Best ask price in dollars.
+          description: Best ask price in dollars. When there is no ask this is a placeholder, not a price (`922337203685477.5807` or `0.0000`), so check `ask_size_fp` before using it.
         ask_size_fp:
           $ref: '#/components/schemas/FixedPointCount'
           description: Total number of contracts resting at the best ask price, as a fixed-point count string. Zero when there is no ask. Omitted when market stats are unavailable.
@@ -3785,7 +3788,7 @@ components:
           description: Fees paid on filled contracts, in dollars
         realized_pnl:
           type: string
-          description: Incremental realized PnL contributed by this fill, in fixed-point dollars
+          description: Incremental realized PnL contributed by this fill, in fixed-point dollars, before fees
         order_source:
           $ref: '#/components/schemas/OrderSource'
           description: Whether the order behind this fill was placed by the user or by the system. `system` covers liquidation, TP/SL and auto-rebalance orders alike; to tell them apart, fetch the order by `order_id` and read its `order_reason`.
@@ -3814,7 +3817,7 @@ components:
       properties:
         subaccount:
           type: integer
-          description: The subaccount number that holds this position (0 for primary, 1-63 for subaccounts)
+          description: The subaccount number that holds this position (0 for primary, 1-63 for subaccounts, 64-4095 for a market's isolated subaccount)
         subaccount_type:
           $ref: '#/components/schemas/SubaccountType'
         market_ticker:
@@ -3828,7 +3831,7 @@ components:
           description: Weighted average entry price of the open position
         unrealized_pnl:
           $ref: '#/components/schemas/FixedPointDollars'
-          description: Mark-to-market unrealized PnL for the open position
+          description: Mark-to-market unrealized PnL for the open position, before fees. Fees are reported separately in `fees`.
         margin_used:
           $ref: '#/components/schemas/FixedPointDollars'
           nullable: true
@@ -3977,7 +3980,7 @@ components:
       properties:
         subaccount:
           type: integer
-          description: The subaccount number (0 for primary, 1-63 for subaccounts)
+          description: The subaccount number (0 for primary, 1-63 for subaccounts, 64-4095 for a market's isolated subaccount)
         subaccount_type:
           $ref: '#/components/schemas/SubaccountType'
         position_value:
@@ -4026,7 +4029,7 @@ components:
       properties:
         subaccount:
           type: integer
-          description: The subaccount number (0 for primary, 1-63 for subaccounts)
+          description: The subaccount number (0 for primary, 1-63 for subaccounts, 64-4095 for a market's isolated subaccount)
         subaccount_type:
           $ref: '#/components/schemas/SubaccountType'
         market_ticker:

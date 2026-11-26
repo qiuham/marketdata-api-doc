@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/rewards/get-current-active-rewards-configurations'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # 获取当前有效的奖励配置

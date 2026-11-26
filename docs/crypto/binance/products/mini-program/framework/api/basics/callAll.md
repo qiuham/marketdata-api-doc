@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/callAll
 api_type: Guide
-updated_at: 2026-11-25 18:48:55.951284
+updated_at: 2026-11-26 18:49:24.537686
 ---
 
 # bn.callAll

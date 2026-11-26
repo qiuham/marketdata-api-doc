@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/wallet/list-combo-positions'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # List combo positions
@@ -41,6 +41,12 @@ row, not only held ones); a `status` filter keeps its own visibility. The
 upper end is always capped by a short stability ceiling (~90s behind now)
 so a mirror never reads rows that may still move. Pair with
 `sortBy=UPDATED&sortDirection=ASC` for the stable sync order.
+
+Resolved positions are history: when `status` names `RESOLVED_WIN`,
+`RESOLVED_LOSS` or `RESOLVED_PARTIAL` and `user` is the active wallet of a
+Polymarket account that owns other wallets, the page also holds the other
+wallets' positions in those resolved statuses; each row's `proxy_wallet`
+names its wallet. Open positions, and the sync window, read `user` alone.
 
 A malformed `condition` combo condition id is a `400` naming the value; a
 well-formed one that matches nothing serves an empty `data` array, which
@@ -223,6 +229,20 @@ paths:
         so a mirror never reads rows that may still move. Pair with
 
         `sortBy=UPDATED&sortDirection=ASC` for the stable sync order.
+
+
+        Resolved positions are history: when `status` names `RESOLVED_WIN`,
+
+        `RESOLVED_LOSS` or `RESOLVED_PARTIAL` and `user` is the active wallet of
+        a
+
+        Polymarket account that owns other wallets, the page also holds the
+        other
+
+        wallets' positions in those resolved statuses; each row's `proxy_wallet`
+
+        names its wallet. Open positions, and the sync window, read `user`
+        alone.
 
 
         A malformed `condition` combo condition id is a `400` naming the value;

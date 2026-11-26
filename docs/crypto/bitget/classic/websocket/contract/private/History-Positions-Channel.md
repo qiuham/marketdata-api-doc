@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/contract/private/History-Positions-Channel
 api_type: WebSocket
-updated_at: 2026-11-25 19:01:23.650853
+updated_at: 2026-11-26 19:02:39.301631
 ---
 
 # History Position Channel

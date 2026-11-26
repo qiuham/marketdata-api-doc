@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/FlutterContainer
 api_type: Guide
-updated_at: 2026-11-25 18:43:28.152572
+updated_at: 2026-11-26 18:44:00.401233
 ---
 
 # Container

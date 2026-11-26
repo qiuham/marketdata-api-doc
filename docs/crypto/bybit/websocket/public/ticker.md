@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/ticker
 api_type: WebSocket
-updated_at: 2026-11-25 18:52:56.891619
+updated_at: 2026-11-26 18:53:47.760292
 ---
 
 # Ticker
@@ -16,7 +16,7 @@ note
 
 
 
-Push frequency: Derivatives & Options - **100ms** , Spot - **50ms**
+Push frequency: Futures - **100ms** , Spot - **50ms** , Options - **300ms**
 
 **Topic:**  
 `tickers.{symbol}`
@@ -359,7 +359,7 @@ data| array| Object
 
 
 
-推送頻率: 期貨和期權 - **100ms** , 現貨 - **50ms**
+推送頻率: 期貨 - **100ms** , 現貨 - **50ms** , 期權 - **300ms**
 
 **Topic:**  
 `tickers.{symbol}`

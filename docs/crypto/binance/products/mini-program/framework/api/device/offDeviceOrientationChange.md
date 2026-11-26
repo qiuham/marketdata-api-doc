@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/device/offDeviceOrientationChange
 api_type: Guide
-updated_at: 2026-11-25 18:47:43.586934
+updated_at: 2026-11-26 18:48:15.259510
 ---
 
 # bn.offDeviceOrientationChange

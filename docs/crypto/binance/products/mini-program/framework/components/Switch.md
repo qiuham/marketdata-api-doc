@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/Switch
 api_type: Guide
-updated_at: 2026-11-25 18:42:25.365297
+updated_at: 2026-11-26 18:42:58.407737
 ---
 
 # Switch

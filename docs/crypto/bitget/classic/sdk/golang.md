@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/sdk/golang
 api_type: Guide
-updated_at: 2026-11-25 19:01:16.740066
+updated_at: 2026-11-26 19:02:32.629011
 ---
 
 # Golang

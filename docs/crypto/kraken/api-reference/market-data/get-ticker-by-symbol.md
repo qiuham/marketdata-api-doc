@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/market-data/get-ticker-by-symbol'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Get ticker by symbol

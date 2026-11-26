@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/migrate/rtds-to-polybolt'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # 从 RTDS 迁移到 PolyBolt
@@ -89,10 +89,6 @@ updated_at: 2026-11-25
 ## 评论数据流停用
 
 实时评论数据流即将停用，且不会提供替代的流式频道。支持的评论列表查询方式见[评论](https://docs.polymarket.com/cn/market-data/realtime-data.md#评论)。
-
-## RTDS 活动数据流
-
-`activity` 主题继续使用 RTDS，目前没有对应的 PolyBolt 频道。
 
 ## 将 SDK 迁移到 PolyBolt
 

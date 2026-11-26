@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-edit
 api_type: JSON-RPC
-updated_at: 2026-11-25 19:00:49.786207
+updated_at: 2026-11-26 19:02:06.023571
 ---
 
 # private/edit

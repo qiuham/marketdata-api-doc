@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-common-apidata
 api_type: REST
-updated_at: 2026-11-25 19:02:30.232200
+updated_at: 2026-11-26 19:03:43.642130
 ---
 
 # Classic Trading Insights API

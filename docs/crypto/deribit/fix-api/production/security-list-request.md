@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/security-list-request
 api_type: FIX
-updated_at: 2026-11-25 19:00:45.479749
+updated_at: 2026-11-26 19:02:02.691263
 ---
 
 # Security List Request(x) (Production FIX API)

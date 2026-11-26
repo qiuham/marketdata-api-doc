@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/getting-started/api'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # API
@@ -62,11 +62,11 @@ Polymarket API 提供对 Polymarket 平台的编程访问。
 > >
 > > 关注账户中经过身份验证的订单和交易更新。
 >
-> > [card] [RTDS](https://docs.polymarket.com/cn/market-data/realtime-data.md)
+> > [card] [PolyBolt WebSocket](https://docs.polymarket.com/cn/api-reference/live-data/overview.md)
 > >
-> > **`wss://ws-live-data.polymarket.com`**
+> > **`wss://ws-live-v2.polymarket.com/ws`**
 > >
-> > 流式传输公开参考价格、评论和交易活动。
+> > 实时接收加密货币、股票类资产和 TWAP 参考价格。
 >
 > > [card] [体育 WebSocket](https://docs.polymarket.com/cn/market-data/realtime-data.md#体育数据流)
 > >

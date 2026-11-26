@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/custody-external-api/get-task-activity-by-id'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Get task activity by id
@@ -2660,9 +2660,11 @@ components:
       type: apiKey
       in: header
       name: api-sign
+      x-default: <api-sign>
     API Key Auth (nonce):
       type: apiKey
       in: header
       name: api-nonce
+      x-default: <api-nonce>
 
 ````

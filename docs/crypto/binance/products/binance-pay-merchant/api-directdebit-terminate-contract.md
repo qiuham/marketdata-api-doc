@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-directdebit-terminate-contract
 api_type: Guide
-updated_at: 2026-11-25 18:34:41.356979
+updated_at: 2026-11-26 18:35:37.168792
 ---
 
 # Direct Debit/Pre Authorization Terminate Contract

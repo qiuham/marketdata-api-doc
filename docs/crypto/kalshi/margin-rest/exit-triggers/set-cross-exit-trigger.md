@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-rest/exit-triggers/set-cross-exit-trigger'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Set Cross Exit Trigger
@@ -142,9 +142,10 @@ components:
           $ref: '#/components/schemas/FixedPointCount'
           description: >-
             Contracts this trigger closes when it fires. Omit it to cover the
-            whole position, which then requires that no partial or anchored
-            trigger already covers part of it. If supplied, it must be a whole
-            number of contracts.
+            whole position, which for a bracket requires that no partial or
+            anchored bracket covers part of it. If supplied, it must be a whole
+            number of contracts, or a multiple of `0.01` on a market whose
+            `fractional_trading_enabled` is true.
         anchor_order_id:
           type: string
           description: >-
@@ -265,7 +266,8 @@ components:
           $ref: '#/components/schemas/FixedPointCount'
           description: >-
             Contracts this trigger closes when it fires. `0` means the whole
-            position.
+            position, except on an order-anchored trigger whose order has not
+            filled, which covers nothing.
         filled_count:
           $ref: '#/components/schemas/FixedPointCount'
           description: Contracts closed so far across fire attempts.

@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/create-subtrader-bound-api-key'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Create Subtrader-Bound API Key

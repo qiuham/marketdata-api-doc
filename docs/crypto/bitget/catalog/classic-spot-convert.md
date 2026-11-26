@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-spot-convert
 api_type: REST
-updated_at: 2026-11-25 19:02:44.718105
+updated_at: 2026-11-26 19:03:57.810779
 ---
 
 # Classic Spot Convert API

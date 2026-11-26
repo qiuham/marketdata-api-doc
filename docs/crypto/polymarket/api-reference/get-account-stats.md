@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/get-account-stats'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Get Account Stats

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/rebate
 api_type: Earn
-updated_at: 2026-11-25 18:58:12.429980
+updated_at: 2026-11-26 18:59:11.443427
 ---
 
 # Rebate
@@ -2022,9 +2022,7 @@ WARNING
 
 #  模型
 
-##  RebateUserInfo
-
-获取用户返佣信息
+##  BrokerCommission
 
 类型 | 约束  
 ---|---  
@@ -2034,11 +2032,192 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-invite_uid | integer(int64) | Optional |  | 我的邀请人UID  
+total | integer(int64) | Optional |  | 该查询下数据总数  
+list | array | Optional |  | 返佣列表  
+  
+**list**
+
+返佣列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items**
+
+BrokerCommissionItem
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+commission_time | integer(int64) | Optional |  | 返佣时间，秒级 Unix 时间戳  
+user_id | integer(int64) | Optional |  | 用户ID  
+group_name | string | Optional |  | 分组名称  
+amount | string | Optional |  | 返佣金额  
+fee | string | Optional |  | 手续费数量  
+fee_asset | string | Optional |  | 手续费币种  
+rebate_fee | string | Optional |  | 折算为USDT后返还收入  
+source | string | Optional |  | 返佣交易类型：Spot、Futures、Options、Alpha、TradFi  
+currency_pair | string | Optional |  | 交易对  
+sub_broker_info | object | Optional |  | 子经纪商信息  
+alpha_contract_addr | string | Optional |  | Alpha合约地址  
+  
+**list / items / sub_broker_info**
+
+子经纪商信息
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | 子经纪商用户ID  
+original_commission_rate | string | Optional |  | 子经纪商原始返佣比例  
+relative_commission_rate | string | Optional |  | 子经纪商相对返佣比例  
+commission_rate | string | Optional |  | 子经纪商实际返佣比例  
       
     
     {
-      "invite_uid": 0
+      "total": 0,
+      "list": [
+        {
+          "commission_time": 0,
+          "user_id": 0,
+          "group_name": "string",
+          "amount": "string",
+          "fee": "string",
+          "fee_asset": "string",
+          "rebate_fee": "string",
+          "source": "string",
+          "currency_pair": "string",
+          "sub_broker_info": {},
+          "alpha_contract_addr": "string"
+        }
+      ]
+    }
+    
+    
+
+##  PartnerSubList
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | 该查询下数据总数  
+list | array | Optional |  | 下级列表  
+  
+**list**
+
+下级列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items**
+
+PartnerSub
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | 用户 ID  
+user_join_time | integer(int64) | Optional |  | 用户加入体系的时间，秒级 Unix 时间戳  
+type | integer(int64) | Optional |  | 类型(1-子代理 2-间接直客 3-直接直客)  
+      
+    
+    {
+      "total": 0,
+      "list": [
+        {
+          "user_id": 0,
+          "user_join_time": 0,
+          "type": 0
+        }
+      ]
+    }
+    
+    
+
+##  AgencyTransactionHistory
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency_pair | string | Optional |  | 交易对  
+total | integer(int64) | Optional |  | 该查询下数据总数  
+list | array | Optional |  | 交易列表  
+  
+**list**
+
+交易列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items**
+
+AgencyTransaction
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+transaction_time | integer(int64) | Optional |  | 交易时间，秒级 Unix 时间戳  
+user_id | integer(int64) | Optional |  | 用户 ID  
+group_name | string | Optional |  | 分组名称  
+fee | string | Optional |  | 手续费数量  
+fee_asset | string | Optional |  | 手续费币种  
+currency_pair | string | Optional |  | 交易对  
+amount | string | Optional |  | 交易金额数量  
+amount_asset | string | Optional |  | 交易金额币种  
+source | string | Optional |  | 返佣交易类型, SPOT - 现货返佣, FUTURES - 合约返佣  
+      
+    
+    {
+      "currency_pair": "string",
+      "total": 0,
+      "list": [
+        {
+          "transaction_time": 0,
+          "user_id": 0,
+          "group_name": "string",
+          "fee": "string",
+          "fee_asset": "string",
+          "currency_pair": "string",
+          "amount": "string",
+          "amount_asset": "string",
+          "source": "string"
+        }
+      ]
     }
     
     
@@ -2144,507 +2323,6 @@ string |
         ]
       },
       "timestamp": 1773637797
-    }
-    
-    
-
-##  PartnerDataAggregatedResponse
-
-类型 | 约束  
----|---  
-allOf |   
-  
-**allOf[0]**
-
-类型 | 约束  
----|---  
-object | required: ["code","message","data","timestamp"]  
-  
-**allOf[1]**
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-data | object | Required | required: ["rebate_amount","trade_volume","net_fee","customer_count","trading_user_count","time_range_desc","business_type","business_type_desc"] |   
-  
-**allOf[1] / data**
-
-类型 | 约束  
----|---  
-object | required: ["rebate_amount","trade_volume","net_fee","customer_count","trading_user_count","time_range_desc","business_type","business_type_desc"]  
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-rebate_amount | string | Required | pattern: "^\\\d+(\\\\.\\\d{1,6})?$" | 返佣金额，字符串格式保证精度  
-  
-最多保留 6 位小数，去除尾零  
-trade_volume | string | Required | pattern: "^\\\d+(\\\\.\\\d{1,6})?$" | 交易量，字符串格式保证精度  
-  
-最多保留 6 位小数，去除尾零  
-net_fee | string | Required | pattern: "^\\\d+(\\\\.\\\d{1,6})?$" | 净手续费，字符串格式保证精度  
-  
-最多保留 6 位小数，去除尾零  
-customer_count | integer | Required | minimum: 0 | 客户数（邀请人数）  
-trading_user_count | string|null | Required | nullable: true  
-pattern: "^\\\d+$" | 交易人数，字符串形式（与线上 JSON 序列化一致）  
-  
-仅在 business_type=0（全部）时返回具体数值，其他业务类型返回 null  
-time_range_desc | string | Required | pattern: "^\\\d{4}-\\\d{2}-\\\d{2} ~ \\\d{4}-\\\d{2}-\\\d{2}$" | 时间范围描述  
-business_type | integer | Required | enum: [0,1,2,3,4,5,6,7,8] | 业务类型  
-business_type_desc | string | Required |  | 业务类型描述，可取值：全部, 现货, 合约, Alpha, Web3, Perps(DEX), Exchange All, Web3 All, TradFi  
-      
-    
-    {
-      "code": 0,
-      "message": "success",
-      "data": {
-        "rebate_amount": "1234.567890",
-        "trade_volume": "9876543.210000",
-        "net_fee": "543.210000",
-        "customer_count": 150,
-        "trading_user_count": "85",
-        "time_range_desc": "2024-01-01 ~ 2024-01-07",
-        "business_type": 0,
-        "business_type_desc": "全部"
-      },
-      "timestamp": 1773637797
-    }
-    
-    
-
-##  AgencyCommissionHistory
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-currency_pair | string | Optional |  | 交易对  
-total | integer(int64) | Optional |  | 该查询下数据总数  
-list | array | Optional |  | 返佣列表  
-  
-**list**
-
-返佣列表
-
-类型 | 约束  
----|---  
-array |   
-  
-**list / items**
-
-AgencyCommission
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-commission_time | integer(int64) | Optional |  | 返佣时间，秒级 Unix 时间戳  
-user_id | integer(int64) | Optional |  | 用户ID  
-group_name | string | Optional |  | 分组名称  
-commission_amount | string | Optional |  | 返佣金额数量  
-commission_asset | string | Optional |  | 返佣金额币种  
-source | string | Optional |  | 返佣交易类型, SPOT - 现货返佣, FUTURES - 合约返佣  
-      
-    
-    {
-      "currency_pair": "string",
-      "total": 0,
-      "list": [
-        {
-          "commission_time": 0,
-          "user_id": 0,
-          "group_name": "string",
-          "commission_amount": "string",
-          "commission_asset": "string",
-          "source": "string"
-        }
-      ]
-    }
-    
-    
-
-##  BrokerTransactionHistory
-
-BrokerTransactionHistory
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-total | integer(int64) | Optional |  | 该查询下数据总数  
-list | array | Optional |  | 交易列表  
-  
-**list**
-
-交易列表
-
-类型 | 约束  
----|---  
-array |   
-  
-**list / items**
-
-BrokerTransaction
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-transaction_time | integer(int64) | Optional |  | 交易时间，秒级 Unix 时间戳  
-user_id | integer(int64) | Optional |  | 用户 ID  
-group_name | string | Optional |  | 分组名称  
-fee | string | Optional |  | 手续费数量 (usdt)  
-currency_pair | string | Optional |  | 交易对  
-amount | string | Optional |  | 交易金额数量  
-fee_asset | string | Optional |  | 手续费币种  
-source | string | Optional |  | 返佣交易类型：Spot、Futures、Options、Alpha、TradFi  
-sub_broker_info | object | Optional |  | 子经纪商信息  
-alpha_contract_addr | string | Optional |  | Alpha合约地址  
-  
-**list / items / sub_broker_info**
-
-子经纪商信息
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-user_id | integer(int64) | Optional |  | 子经纪商用户ID  
-original_commission_rate | string | Optional |  | 子经纪商原始返佣比例  
-relative_commission_rate | string | Optional |  | 子经纪商相对返佣比例  
-commission_rate | string | Optional |  | 子经纪商实际返佣比例  
-      
-    
-    {
-      "total": 0,
-      "list": [
-        {
-          "transaction_time": 0,
-          "user_id": 0,
-          "group_name": "string",
-          "fee": "string",
-          "currency_pair": "string",
-          "amount": "string",
-          "fee_asset": "string",
-          "source": "string",
-          "sub_broker_info": {},
-          "alpha_contract_addr": "string"
-        }
-      ]
-    }
-    
-    
-
-##  UserSubRelation
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-list | array | Optional |  | 下级关系列表  
-  
-**list**
-
-下级关系列表
-
-类型 | 约束  
----|---  
-array |   
-  
-**list / items**
-
-UserSub
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-uid | integer(int64) | Optional |  | 用户ID  
-belong | string | Optional |  | 用户所属体系(partner / referral)，为空表示不属于任何体系  
-type | integer(int64) | Optional |  | 类型(0-不在体系 1-直接下级代理 2-间接下级代理 3-直接直客 4-间接直客 5-普通用户)  
-ref_uid | integer(int64) | Optional |  | 邀请人用户ID  
-      
-    
-    {
-      "list": [
-        {
-          "uid": 0,
-          "belong": "string",
-          "type": 0,
-          "ref_uid": 0
-        }
-      ]
-    }
-    
-    
-
-##  PartnerSubList
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-total | integer(int64) | Optional |  | 该查询下数据总数  
-list | array | Optional |  | 下级列表  
-  
-**list**
-
-下级列表
-
-类型 | 约束  
----|---  
-array |   
-  
-**list / items**
-
-PartnerSub
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-user_id | integer(int64) | Optional |  | 用户 ID  
-user_join_time | integer(int64) | Optional |  | 用户加入体系的时间，秒级 Unix 时间戳  
-type | integer(int64) | Optional |  | 类型(1-子代理 2-间接直客 3-直接直客)  
-      
-    
-    {
-      "total": 0,
-      "list": [
-        {
-          "user_id": 0,
-          "user_join_time": 0,
-          "type": 0
-        }
-      ]
-    }
-    
-    
-
-##  PartnerTransactionHistory
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-total | integer(int64) | Optional |  | 该查询下数据总数  
-list | array | Optional |  | 交易列表  
-  
-**list**
-
-交易列表
-
-类型 | 约束  
----|---  
-array |   
-  
-**list / items**
-
-PartnerTransaction
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-transaction_time | integer(int64) | Optional |  | 交易时间，秒级 Unix 时间戳  
-user_id | integer(int64) | Optional |  | 用户 ID  
-group_name | string | Optional |  | 分组名称  
-fee | string | Optional |  | 手续费数量  
-fee_asset | string | Optional |  | 手续费币种  
-currency_pair | string | Optional |  | 交易对  
-amount | string | Optional |  | 交易金额数量  
-amount_asset | string | Optional |  | 交易金额币种  
-source | string | Optional |  | 返佣交易类型, SPOT - 现货返佣, FUTURES - 合约返佣  
-      
-    
-    {
-      "total": 0,
-      "list": [
-        {
-          "transaction_time": 0,
-          "user_id": 0,
-          "group_name": "string",
-          "fee": "string",
-          "fee_asset": "string",
-          "currency_pair": "string",
-          "amount": "string",
-          "amount_asset": "string",
-          "source": "string"
-        }
-      ]
-    }
-    
-    
-
-##  AgencyTransactionHistory
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-currency_pair | string | Optional |  | 交易对  
-total | integer(int64) | Optional |  | 该查询下数据总数  
-list | array | Optional |  | 交易列表  
-  
-**list**
-
-交易列表
-
-类型 | 约束  
----|---  
-array |   
-  
-**list / items**
-
-AgencyTransaction
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-transaction_time | integer(int64) | Optional |  | 交易时间，秒级 Unix 时间戳  
-user_id | integer(int64) | Optional |  | 用户 ID  
-group_name | string | Optional |  | 分组名称  
-fee | string | Optional |  | 手续费数量  
-fee_asset | string | Optional |  | 手续费币种  
-currency_pair | string | Optional |  | 交易对  
-amount | string | Optional |  | 交易金额数量  
-amount_asset | string | Optional |  | 交易金额币种  
-source | string | Optional |  | 返佣交易类型, SPOT - 现货返佣, FUTURES - 合约返佣  
-      
-    
-    {
-      "currency_pair": "string",
-      "total": 0,
-      "list": [
-        {
-          "transaction_time": 0,
-          "user_id": 0,
-          "group_name": "string",
-          "fee": "string",
-          "fee_asset": "string",
-          "currency_pair": "string",
-          "amount": "string",
-          "amount_asset": "string",
-          "source": "string"
-        }
-      ]
-    }
-    
-    
-
-##  PartnerCommissionHistory
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-total | integer(int64) | Optional |  | 该查询下数据总数  
-list | array | Optional |  | 返佣列表  
-  
-**list**
-
-返佣列表
-
-类型 | 约束  
----|---  
-array |   
-  
-**list / items**
-
-PartnerCommission
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-commission_time | integer(int64) | Optional |  | 返佣时间，秒级 Unix 时间戳  
-user_id | integer(int64) | Optional |  | 用户ID  
-group_name | string | Optional |  | 分组名称  
-commission_amount | string | Optional |  | 返佣金额数量  
-commission_asset | string | Optional |  | 返佣金额币种  
-source | string | Optional |  | 返佣交易类型, SPOT - 现货返佣, FUTURES - 合约返佣  
-      
-    
-    {
-      "total": 0,
-      "list": [
-        {
-          "commission_time": 0,
-          "user_id": 0,
-          "group_name": "string",
-          "commission_amount": "string",
-          "commission_asset": "string",
-          "source": "string"
-        }
-      ]
     }
     
     
@@ -2809,7 +2487,9 @@ string(uri) |
     
     
 
-##  BrokerCommission
+##  RebateUserInfo
+
+获取用户返佣信息
 
 类型 | 约束  
 ---|---  
@@ -2819,76 +2499,11 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-total | integer(int64) | Optional |  | 该查询下数据总数  
-list | array | Optional |  | 返佣列表  
-  
-**list**
-
-返佣列表
-
-类型 | 约束  
----|---  
-array |   
-  
-**list / items**
-
-BrokerCommissionItem
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-commission_time | integer(int64) | Optional |  | 返佣时间，秒级 Unix 时间戳  
-user_id | integer(int64) | Optional |  | 用户ID  
-group_name | string | Optional |  | 分组名称  
-amount | string | Optional |  | 返佣金额  
-fee | string | Optional |  | 手续费数量  
-fee_asset | string | Optional |  | 手续费币种  
-rebate_fee | string | Optional |  | 折算为USDT后返还收入  
-source | string | Optional |  | 返佣交易类型：Spot、Futures、Options、Alpha、TradFi  
-currency_pair | string | Optional |  | 交易对  
-sub_broker_info | object | Optional |  | 子经纪商信息  
-alpha_contract_addr | string | Optional |  | Alpha合约地址  
-  
-**list / items / sub_broker_info**
-
-子经纪商信息
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-user_id | integer(int64) | Optional |  | 子经纪商用户ID  
-original_commission_rate | string | Optional |  | 子经纪商原始返佣比例  
-relative_commission_rate | string | Optional |  | 子经纪商相对返佣比例  
-commission_rate | string | Optional |  | 子经纪商实际返佣比例  
+invite_uid | integer(int64) | Optional |  | 我的邀请人UID  
       
     
     {
-      "total": 0,
-      "list": [
-        {
-          "commission_time": 0,
-          "user_id": 0,
-          "group_name": "string",
-          "amount": "string",
-          "fee": "string",
-          "fee_asset": "string",
-          "rebate_fee": "string",
-          "source": "string",
-          "currency_pair": "string",
-          "sub_broker_info": {},
-          "alpha_contract_addr": "string"
-        }
-      ]
+      "invite_uid": 0
     }
     
     
@@ -2914,4 +2529,389 @@ timestamp | integer(int64) | Required |  | Unix 时间戳
       "message": "Unauthorized",
       "data": {},
       "timestamp": 1773637797
+    }
+    
+    
+
+##  BrokerTransactionHistory
+
+BrokerTransactionHistory
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | 该查询下数据总数  
+list | array | Optional |  | 交易列表  
+  
+**list**
+
+交易列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items**
+
+BrokerTransaction
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+transaction_time | integer(int64) | Optional |  | 交易时间，秒级 Unix 时间戳  
+user_id | integer(int64) | Optional |  | 用户 ID  
+group_name | string | Optional |  | 分组名称  
+fee | string | Optional |  | 手续费数量 (usdt)  
+currency_pair | string | Optional |  | 交易对  
+amount | string | Optional |  | 交易金额数量  
+fee_asset | string | Optional |  | 手续费币种  
+source | string | Optional |  | 返佣交易类型：Spot、Futures、Options、Alpha、TradFi  
+sub_broker_info | object | Optional |  | 子经纪商信息  
+alpha_contract_addr | string | Optional |  | Alpha合约地址  
+  
+**list / items / sub_broker_info**
+
+子经纪商信息
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+user_id | integer(int64) | Optional |  | 子经纪商用户ID  
+original_commission_rate | string | Optional |  | 子经纪商原始返佣比例  
+relative_commission_rate | string | Optional |  | 子经纪商相对返佣比例  
+commission_rate | string | Optional |  | 子经纪商实际返佣比例  
+      
+    
+    {
+      "total": 0,
+      "list": [
+        {
+          "transaction_time": 0,
+          "user_id": 0,
+          "group_name": "string",
+          "fee": "string",
+          "currency_pair": "string",
+          "amount": "string",
+          "fee_asset": "string",
+          "source": "string",
+          "sub_broker_info": {},
+          "alpha_contract_addr": "string"
+        }
+      ]
+    }
+    
+    
+
+##  PartnerTransactionHistory
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | 该查询下数据总数  
+list | array | Optional |  | 交易列表  
+  
+**list**
+
+交易列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items**
+
+PartnerTransaction
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+transaction_time | integer(int64) | Optional |  | 交易时间，秒级 Unix 时间戳  
+user_id | integer(int64) | Optional |  | 用户 ID  
+group_name | string | Optional |  | 分组名称  
+fee | string | Optional |  | 手续费数量  
+fee_asset | string | Optional |  | 手续费币种  
+currency_pair | string | Optional |  | 交易对  
+amount | string | Optional |  | 交易金额数量  
+amount_asset | string | Optional |  | 交易金额币种  
+source | string | Optional |  | 返佣交易类型, SPOT - 现货返佣, FUTURES - 合约返佣  
+      
+    
+    {
+      "total": 0,
+      "list": [
+        {
+          "transaction_time": 0,
+          "user_id": 0,
+          "group_name": "string",
+          "fee": "string",
+          "fee_asset": "string",
+          "currency_pair": "string",
+          "amount": "string",
+          "amount_asset": "string",
+          "source": "string"
+        }
+      ]
+    }
+    
+    
+
+##  UserSubRelation
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+list | array | Optional |  | 下级关系列表  
+  
+**list**
+
+下级关系列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items**
+
+UserSub
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+uid | integer(int64) | Optional |  | 用户ID  
+belong | string | Optional |  | 用户所属体系(partner / referral)，为空表示不属于任何体系  
+type | integer(int64) | Optional |  | 类型(0-不在体系 1-直接下级代理 2-间接下级代理 3-直接直客 4-间接直客 5-普通用户)  
+ref_uid | integer(int64) | Optional |  | 邀请人用户ID  
+      
+    
+    {
+      "list": [
+        {
+          "uid": 0,
+          "belong": "string",
+          "type": 0,
+          "ref_uid": 0
+        }
+      ]
+    }
+    
+    
+
+##  PartnerCommissionHistory
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+total | integer(int64) | Optional |  | 该查询下数据总数  
+list | array | Optional |  | 返佣列表  
+  
+**list**
+
+返佣列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items**
+
+PartnerCommission
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+commission_time | integer(int64) | Optional |  | 返佣时间，秒级 Unix 时间戳  
+user_id | integer(int64) | Optional |  | 用户ID  
+group_name | string | Optional |  | 分组名称  
+commission_amount | string | Optional |  | 返佣金额数量  
+commission_asset | string | Optional |  | 返佣金额币种  
+source | string | Optional |  | 返佣交易类型, SPOT - 现货返佣, FUTURES - 合约返佣  
+      
+    
+    {
+      "total": 0,
+      "list": [
+        {
+          "commission_time": 0,
+          "user_id": 0,
+          "group_name": "string",
+          "commission_amount": "string",
+          "commission_asset": "string",
+          "source": "string"
+        }
+      ]
+    }
+    
+    
+
+##  PartnerDataAggregatedResponse
+
+类型 | 约束  
+---|---  
+allOf |   
+  
+**allOf[0]**
+
+类型 | 约束  
+---|---  
+object | required: ["code","message","data","timestamp"]  
+  
+**allOf[1]**
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+data | object | Required | required: ["rebate_amount","trade_volume","net_fee","customer_count","trading_user_count","time_range_desc","business_type","business_type_desc"] |   
+  
+**allOf[1] / data**
+
+类型 | 约束  
+---|---  
+object | required: ["rebate_amount","trade_volume","net_fee","customer_count","trading_user_count","time_range_desc","business_type","business_type_desc"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+rebate_amount | string | Required | pattern: "^\\\d+(\\\\.\\\d{1,6})?$" | 返佣金额，字符串格式保证精度  
+  
+最多保留 6 位小数，去除尾零  
+trade_volume | string | Required | pattern: "^\\\d+(\\\\.\\\d{1,6})?$" | 交易量，字符串格式保证精度  
+  
+最多保留 6 位小数，去除尾零  
+net_fee | string | Required | pattern: "^\\\d+(\\\\.\\\d{1,6})?$" | 净手续费，字符串格式保证精度  
+  
+最多保留 6 位小数，去除尾零  
+customer_count | integer | Required | minimum: 0 | 客户数（邀请人数）  
+trading_user_count | string|null | Required | nullable: true  
+pattern: "^\\\d+$" | 交易人数，字符串形式（与线上 JSON 序列化一致）  
+  
+仅在 business_type=0（全部）时返回具体数值，其他业务类型返回 null  
+time_range_desc | string | Required | pattern: "^\\\d{4}-\\\d{2}-\\\d{2} ~ \\\d{4}-\\\d{2}-\\\d{2}$" | 时间范围描述  
+business_type | integer | Required | enum: [0,1,2,3,4,5,6,7,8] | 业务类型  
+business_type_desc | string | Required |  | 业务类型描述，可取值：全部, 现货, 合约, Alpha, Web3, Perps(DEX), Exchange All, Web3 All, TradFi  
+      
+    
+    {
+      "code": 0,
+      "message": "success",
+      "data": {
+        "rebate_amount": "1234.567890",
+        "trade_volume": "9876543.210000",
+        "net_fee": "543.210000",
+        "customer_count": 150,
+        "trading_user_count": "85",
+        "time_range_desc": "2024-01-01 ~ 2024-01-07",
+        "business_type": 0,
+        "business_type_desc": "全部"
+      },
+      "timestamp": 1773637797
+    }
+    
+    
+
+##  AgencyCommissionHistory
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency_pair | string | Optional |  | 交易对  
+total | integer(int64) | Optional |  | 该查询下数据总数  
+list | array | Optional |  | 返佣列表  
+  
+**list**
+
+返佣列表
+
+类型 | 约束  
+---|---  
+array |   
+  
+**list / items**
+
+AgencyCommission
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+commission_time | integer(int64) | Optional |  | 返佣时间，秒级 Unix 时间戳  
+user_id | integer(int64) | Optional |  | 用户ID  
+group_name | string | Optional |  | 分组名称  
+commission_amount | string | Optional |  | 返佣金额数量  
+commission_asset | string | Optional |  | 返佣金额币种  
+source | string | Optional |  | 返佣交易类型, SPOT - 现货返佣, FUTURES - 合约返佣  
+      
+    
+    {
+      "currency_pair": "string",
+      "total": 0,
+      "list": [
+        {
+          "commission_time": 0,
+          "user_id": 0,
+          "group_name": "string",
+          "commission_amount": "string",
+          "commission_asset": "string",
+          "source": "string"
+        }
+      ]
     }

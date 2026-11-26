@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/announcement
 api_type: REST
-updated_at: 2026-11-25 18:56:59.418275
+updated_at: 2026-11-26 18:57:55.410576
 ---
 
 # Announcement
@@ -228,6 +228,50 @@ Code samples
 
 #  Schemas
 
+##  AnnouncementArticleListResponse
+
+AnnouncementArticleListResponse
+
+Announcement article list response
+
+Type | Constraints  
+---|---  
+object | required: ["code","data","message","version"]  
+  
+**Properties**
+
+Name | Type | Required | Constraints | Description  
+---|---|---|---|---  
+code | integer | Required |  | Business status code  
+data | AnnouncementArticleListData | Required | required: ["list","total"] | Announcement articles and total count  
+message | string | Required |  | Response message  
+version | string | Required |  | Response version  
+  
+**data**
+
+AnnouncementArticleListData
+
+Announcement articles and total count
+
+Type | Constraints  
+---|---  
+AnnouncementArticleListData | required: ["list","total"]  
+      
+    
+    {
+      "code": 0,
+      "data": {
+        "list": [
+          {}
+        ],
+        "total": 0
+      },
+      "message": "string",
+      "version": "string"
+    }
+    
+    
+
 ##  AnnouncementArticleListRequest
 
 AnnouncementArticleListRequest
@@ -269,50 +313,6 @@ filter_empty_content | integer | Optional | default: 1 | Whether to exclude arti
       "update_after": 0,
       "lang": "cn",
       "filter_empty_content": 1
-    }
-    
-    
-
-##  AnnouncementArticleListResponse
-
-AnnouncementArticleListResponse
-
-Announcement article list response
-
-Type | Constraints  
----|---  
-object | required: ["code","data","message","version"]  
-  
-**Properties**
-
-Name | Type | Required | Constraints | Description  
----|---|---|---|---  
-code | integer | Required |  | Business status code  
-data | AnnouncementArticleListData | Required | required: ["list","total"] | Announcement articles and total count  
-message | string | Required |  | Response message  
-version | string | Required |  | Response version  
-  
-**data**
-
-AnnouncementArticleListData
-
-Announcement articles and total count
-
-Type | Constraints  
----|---  
-AnnouncementArticleListData | required: ["list","total"]  
-      
-    
-    {
-      "code": 0,
-      "data": {
-        "list": [
-          {}
-        ],
-        "total": 0
-      },
-      "message": "string",
-      "version": "string"
     }
     
     

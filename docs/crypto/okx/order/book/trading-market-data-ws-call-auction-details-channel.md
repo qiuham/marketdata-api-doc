@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-ws-call-auction-details-channel
 anchor_id: order-book-trading-market-data-ws-call-auction-details-channel
 api_type: WebSocket
-updated_at: 2026-11-25 18:59:35.581082
+updated_at: 2026-11-26 19:00:37.499373
 ---
 
 # WS / Call auction details channel

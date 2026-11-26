@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-rest/exit-triggers/get-isolated-exit-triggers'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Get Isolated Exit Triggers
@@ -200,7 +200,8 @@ components:
           $ref: '#/components/schemas/FixedPointCount'
           description: >-
             Contracts this trigger closes when it fires. `0` means the whole
-            position.
+            position, except on an order-anchored trigger whose order has not
+            filled, which covers nothing.
         filled_count:
           $ref: '#/components/schemas/FixedPointCount'
           description: Contracts closed so far across fire attempts.

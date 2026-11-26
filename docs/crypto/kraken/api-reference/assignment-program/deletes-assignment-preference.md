@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/assignment-program/deletes-assignment-preference'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Deletes assignment preference
@@ -318,5 +318,6 @@ components:
       in: header
       name: Authent
       x-inlineDescription: true
+      x-default: <authent>
 
 ````

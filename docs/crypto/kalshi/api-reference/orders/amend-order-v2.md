@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/orders/amend-order-v2'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Amend Order (V2)

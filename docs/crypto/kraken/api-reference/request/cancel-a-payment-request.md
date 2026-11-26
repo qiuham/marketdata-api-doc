@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/request/cancel-a-payment-request'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Cancel a payment request
@@ -148,5 +148,6 @@ components:
         payload, and URI path.
       name: API-Sign
       in: header
+      x-default: <api-sign>
 
 ````

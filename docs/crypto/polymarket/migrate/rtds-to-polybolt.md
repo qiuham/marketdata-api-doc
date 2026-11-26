@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/migrate/rtds-to-polybolt'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Migrate from RTDS to PolyBolt
@@ -101,10 +101,6 @@ price. Do not apply that E18 conversion to PolyBolt's decimal string.
 
 The live comments stream is being retired without a replacement streaming channel.
 See [Comments](https://docs.polymarket.com/market-data/realtime-data.md#comments) for supported comment-listing options.
-
-## Activity on RTDS
-
-Keep using RTDS for the `activity` topic. It has no PolyBolt channel.
 
 ## Migrate SDKs to PolyBolt
 

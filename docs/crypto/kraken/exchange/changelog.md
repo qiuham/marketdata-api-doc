@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/changelog'
-updated_at: 2026-11-25
+updated_at: 2026-11-26
 ---
 
 # Release notes
@@ -18,6 +18,13 @@ updated_at: 2026-11-25
 > A history of changes to Kraken's Exchange APIs
 
 ## 2026
+
+### 26 November 2026 — Spot REST v1
+
+* Added an optional `include_spv` request parameter to [`Assets`](https://docs.kraken.com/api-reference/market-data/get-asset-info) and [`AssetPairs`](https://docs.kraken.com/api-reference/market-data/get-tradable-asset-pairs). It defaults to `true`, so responses are unchanged if you leave it out. It takes `true` or `false`
+* `include_spv=false` leaves out the SPV entries of tokenized assets (for example `AAPLSPV` in `Assets` and `AAPLSPVUSD` in `AssetPairs`). The rebased `x` entries (`AAPLx`, `AAPLxUSD`) are still returned
+* `include_spv` only affects full listings. It is ignored when you filter with `asset` (`Assets`) or `pair` (`AssetPairs`)
+* If you match entries by `altname`, `wsname` or `base` and only use the rebased entries, you can pass `include_spv=false` instead of updating your mapping for the 24 November change
 
 ### 24 November 2026 — Spot REST v1
 

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/error-code/websocket
 api_type: WebSocket
-updated_at: 2026-11-25 19:01:14.433666
+updated_at: 2026-11-26 19:02:29.875830
 ---
 
 # WebSocket Error Code

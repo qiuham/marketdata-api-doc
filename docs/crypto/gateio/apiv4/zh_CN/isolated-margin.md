@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/isolated-margin
 api_type: REST
-updated_at: 2026-11-25 18:58:02.651696
+updated_at: 2026-11-26 18:59:01.249754
 ---
 
 # Isolated-Margin
@@ -1986,35 +1986,6 @@ WARNING
 
 #  模型
 
-##  UniLoanRecord
-
-借贷记录
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-type | string | Optional | readOnly: true | 类型 , borrow - 借入 , repay - 还款  
-currency_pair | string | Optional | readOnly: true | 交易对  
-currency | string | Optional | readOnly: true | 币种  
-amount | string | Optional | readOnly: true | 借入或还款数量  
-create_time | integer(int64) | Optional | readOnly: true | 创建时间戳  
-      
-    
-    {
-      "type": "string",
-      "currency_pair": "string",
-      "currency": "string",
-      "amount": "string",
-      "create_time": 0
-    }
-    
-    
-
 ##  MarginTransferable
 
 MarginTransferable
@@ -2040,29 +2011,27 @@ amount | string | Optional |  | 最大可转出的额度
     
     
 
-##  FundingAccount
+##  MaxUniBorrowable
+
+MaxUniBorrowable
 
 类型 | 约束  
 ---|---  
-object |   
+object | required: ["currency","borrowable"]  
   
 **属性**
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-currency | string | Optional |  | 账户货币名称  
-available | string | Optional |  | 理财账户可以用于借出的资金，与现货账户里对应币种的 `available` 保持一致  
-locked | string | Optional |  | 冻结资金数额，如正在借出的资金  
-lent | string | Optional |  | 已借出但仍未归还的资金数额  
-total_lent | string | Optional |  | 用于借出的资金总额, total_lent = lent + locked  
+currency | string | Required | readOnly: true | 币种  
+currency_pair | string | Optional | readOnly: true | 交易对  
+borrowable | string | Required | readOnly: true | 最大可借  
       
     
     {
       "currency": "string",
-      "available": "string",
-      "locked": "string",
-      "lent": "string",
-      "total_lent": "string"
+      "currency_pair": "string",
+      "borrowable": "string"
     }
     
     
@@ -2085,6 +2054,39 @@ string |
     {
       "property1": "string",
       "property2": "string"
+    }
+    
+    
+
+##  MarginAccountBook
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+id | string | Optional |  | 账户变更记录 ID  
+time | string | Optional |  | 账户变更时间戳  
+time_ms | integer(int64) | Optional |  | 账户变更时间戳，毫秒单位  
+currency | string | Optional |  | 变更币种  
+currency_pair | string | Optional |  | 账户交易对  
+change | string | Optional |  | 变更金额，正数表示转入，负数表示转出  
+balance | string | Optional |  | 变更后账户余额  
+type | string | Optional |  | 账户变更类型 , 详见[资产流水类型](/docs/developers/apiv4/zh_CN/#资产流水类型)  
+      
+    
+    {
+      "id": "string",
+      "time": "string",
+      "time_ms": 0,
+      "currency": "string",
+      "currency_pair": "string",
+      "change": "string",
+      "balance": "string",
+      "type": "string"
     }
     
     
@@ -2123,9 +2125,7 @@ delisted_time | number(int64) | Optional |  | 下架时间
     
     
 
-##  UniLoanInterestRecord
-
-扣息记录
+##  FundingAccount
 
 类型 | 约束  
 ---|---  
@@ -2135,48 +2135,19 @@ object |
 
 名称 | 类型 | 必填 | 约束 | 描述  
 ---|---|---|---|---  
-currency | string | Optional | readOnly: true | 币种名称  
-currency_pair | string | Optional | readOnly: true | 交易对  
-actual_rate | string | Optional | readOnly: true | 实际利率  
-interest | string | Optional | readOnly: true | 利息  
-status | integer | Optional | readOnly: true | 状态 0 - 失败 , 1 - 成功  
-type | string | Optional | readOnly: true | 借贷类型，margin表示为杠杆借币  
-create_time | integer(int64) | Optional | readOnly: true | 创建时间戳  
+currency | string | Optional |  | 账户货币名称  
+available | string | Optional |  | 理财账户可以用于借出的资金，与现货账户里对应币种的 `available` 保持一致  
+locked | string | Optional |  | 冻结资金数额，如正在借出的资金  
+lent | string | Optional |  | 已借出但仍未归还的资金数额  
+total_lent | string | Optional |  | 用于借出的资金总额, total_lent = lent + locked  
       
     
     {
       "currency": "string",
-      "currency_pair": "string",
-      "actual_rate": "string",
-      "interest": "string",
-      "status": 0,
-      "type": "string",
-      "create_time": 0
-    }
-    
-    
-
-##  MaxUniBorrowable
-
-MaxUniBorrowable
-
-类型 | 约束  
----|---  
-object | required: ["currency","borrowable"]  
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-currency | string | Required | readOnly: true | 币种  
-currency_pair | string | Optional | readOnly: true | 交易对  
-borrowable | string | Required | readOnly: true | 最大可借  
-      
-    
-    {
-      "currency": "string",
-      "currency_pair": "string",
-      "borrowable": "string"
+      "available": "string",
+      "locked": "string",
+      "lent": "string",
+      "total_lent": "string"
     }
     
     
@@ -2300,6 +2271,91 @@ currency_pair | string | Required |  | 交易对
     
     
 
+##  MarginMarketLeverage
+
+市场杠杆设置
+
+类型 | 约束  
+---|---  
+object | required: ["market","leverage"]  
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency_pair | string | Optional |  | 市场  
+leverage | string | Required |  | 杠杆倍数  
+      
+    
+    {
+      "currency_pair": "string",
+      "leverage": "string"
+    }
+    
+    
+
+##  UniLoanRecord
+
+借贷记录
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+type | string | Optional | readOnly: true | 类型 , borrow - 借入 , repay - 还款  
+currency_pair | string | Optional | readOnly: true | 交易对  
+currency | string | Optional | readOnly: true | 币种  
+amount | string | Optional | readOnly: true | 借入或还款数量  
+create_time | integer(int64) | Optional | readOnly: true | 创建时间戳  
+      
+    
+    {
+      "type": "string",
+      "currency_pair": "string",
+      "currency": "string",
+      "amount": "string",
+      "create_time": 0
+    }
+    
+    
+
+##  UniLoanInterestRecord
+
+扣息记录
+
+类型 | 约束  
+---|---  
+object |   
+  
+**属性**
+
+名称 | 类型 | 必填 | 约束 | 描述  
+---|---|---|---|---  
+currency | string | Optional | readOnly: true | 币种名称  
+currency_pair | string | Optional | readOnly: true | 交易对  
+actual_rate | string | Optional | readOnly: true | 实际利率  
+interest | string | Optional | readOnly: true | 利息  
+status | integer | Optional | readOnly: true | 状态 0 - 失败 , 1 - 成功  
+type | string | Optional | readOnly: true | 借贷类型，margin表示为杠杆借币  
+create_time | integer(int64) | Optional | readOnly: true | 创建时间戳  
+      
+    
+    {
+      "currency": "string",
+      "currency_pair": "string",
+      "actual_rate": "string",
+      "interest": "string",
+      "status": 0,
+      "type": "string",
+      "create_time": 0
+    }
+    
+    
+
 ##  UniLoan
 
 借贷
@@ -2327,60 +2383,4 @@ update_time | integer(int64) | Optional | readOnly: true | 最近更新时间戳
       "type": "string",
       "create_time": 0,
       "update_time": 0
-    }
-    
-    
-
-##  MarginMarketLeverage
-
-市场杠杆设置
-
-类型 | 约束  
----|---  
-object | required: ["market","leverage"]  
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-currency_pair | string | Optional |  | 市场  
-leverage | string | Required |  | 杠杆倍数  
-      
-    
-    {
-      "currency_pair": "string",
-      "leverage": "string"
-    }
-    
-    
-
-##  MarginAccountBook
-
-类型 | 约束  
----|---  
-object |   
-  
-**属性**
-
-名称 | 类型 | 必填 | 约束 | 描述  
----|---|---|---|---  
-id | string | Optional |  | 账户变更记录 ID  
-time | string | Optional |  | 账户变更时间戳  
-time_ms | integer(int64) | Optional |  | 账户变更时间戳，毫秒单位  
-currency | string | Optional |  | 变更币种  
-currency_pair | string | Optional |  | 账户交易对  
-change | string | Optional |  | 变更金额，正数表示转入，负数表示转出  
-balance | string | Optional |  | 变更后账户余额  
-type | string | Optional |  | 账户变更类型 , 详见[资产流水类型](/docs/developers/apiv4/zh_CN/#资产流水类型)  
-      
-    
-    {
-      "id": "string",
-      "time": "string",
-      "time_ms": 0,
-      "currency": "string",
-      "currency_pair": "string",
-      "change": "string",
-      "balance": "string",
-      "type": "string"
     }

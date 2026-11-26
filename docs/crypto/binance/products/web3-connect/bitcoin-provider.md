@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/web3-connect/bitcoin-provider
 api_type: Guide
-updated_at: 2026-11-25 18:27:45.655879
+updated_at: 2026-11-26 18:28:41.694863
 ---
 
 # Bitcoin Provider
