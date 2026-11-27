@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-ticker
 api_type: JSON-RPC
-updated_at: 2026-11-26 19:02:05.667323
+updated_at: 2026-11-27 19:00:58.367066
 ---
 
 # public/ticker

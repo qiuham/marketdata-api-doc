@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/portfolio-account/basics
 api_type: Guide
-updated_at: 2026-11-26 18:30:34.224303
+updated_at: 2026-11-27 18:30:13.738748
 ---
 
 # Basics

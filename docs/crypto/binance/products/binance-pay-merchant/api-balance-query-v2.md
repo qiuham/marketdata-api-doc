@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-balance-query-v2
 api_type: Guide
-updated_at: 2026-11-26 18:35:55.200389
+updated_at: 2026-11-27 18:35:09.248003
 ---
 
 # Wallet Balance Query V2

@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/markets/list-a-markets-top-holders'
-updated_at: 2026-11-26
+updated_at: 2026-11-27
 ---
 
 # List a market's top holders

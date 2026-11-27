@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/showActionSheet
 api_type: Guide
-updated_at: 2026-11-26 18:47:10.360427
+updated_at: 2026-11-27 18:45:26.995075
 ---
 
 # bn.showActionSheet

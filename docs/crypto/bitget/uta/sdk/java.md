@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/sdk/java
 api_type: Guide
-updated_at: 2026-11-26 19:03:15.746598
+updated_at: 2026-11-27 19:02:07.491320
 ---
 
 # Java

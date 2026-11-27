@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/convert/error-code
 api_type: Guide
-updated_at: 2026-11-26 18:33:31.094673
+updated_at: 2026-11-27 18:32:57.817987
 ---
 
 # Error Codes

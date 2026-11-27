@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/release-note-v1-0-1
 api_type: Guide
-updated_at: 2026-11-26 18:34:32.852411
+updated_at: 2026-11-27 18:33:54.397579
 ---
 
 # Binance Pay API: Release Note V1.0.1

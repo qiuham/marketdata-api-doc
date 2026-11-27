@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-directdebit-pay-notify
 api_type: Guide
-updated_at: 2026-11-26 18:35:39.877636
+updated_at: 2026-11-27 18:34:55.561532
 ---
 
 # Direct Debit Payment Notification

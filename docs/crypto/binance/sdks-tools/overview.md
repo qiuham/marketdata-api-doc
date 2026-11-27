@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/overview
 api_type: Guide
-updated_at: 2026-11-26 18:27:49.225254
+updated_at: 2026-11-27 18:27:34.671379
 ---
 
 # SDKs & Tools
@@ -188,6 +188,17 @@ export const CardLink = ({
 </CardLink>
 
 <CardLink
+  to="/sdks-tools/connectors/cpp"
+  title="C++"
+  description="Official C++ connector with request signing, typed models, and examples."
+  github="https://github.com/binance/binance-connector-cpp"
+>
+  <IconTile label="C++">
+    <LanguageIcon language="cpp" />
+  </IconTile>
+</CardLink>
+
+<CardLink
   to="/sdks-tools/connectors/go"
   title="Go"
   description="Official Go connector with request signing, typed models, and examples."
@@ -222,10 +233,7 @@ export const CardLink = ({
   title=".NET"
   description="Official .NET connector with request signing, typed models, and examples."
   github="https://github.com/binance/binance-connector-dotnet"
-  registry={{
-    href: "https://www.nuget.org/packages/Binance.Spot",
-    label: "NuGet",
-  }}
+  registry={{ href: "https://www.nuget.org/profiles/binance", label: "NuGet" }}
 >
   <IconTile label=".NET">
     <LanguageIcon language="csharp" />
@@ -613,6 +621,17 @@ export const CardLink = ({
 </CardLink>
 
 <CardLink
+  to="/sdks-tools/connectors/cpp"
+  title="C++"
+  description="官方 C++ 连接器，包含请求签名、类型模型与示例代码。"
+  github="https://github.com/binance/binance-connector-cpp"
+>
+  <IconTile label="C++">
+    <LanguageIcon language="cpp" />
+  </IconTile>
+</CardLink>
+
+<CardLink
   to="/sdks-tools/connectors/go"
   title="Go"
   description="官方 Go 连接器，包含请求签名、类型模型与示例代码。"
@@ -647,10 +666,7 @@ export const CardLink = ({
   title=".NET"
   description="官方 .NET 连接器，包含请求签名、类型模型与示例代码。"
   github="https://github.com/binance/binance-connector-dotnet"
-  registry={{
-    href: "https://www.nuget.org/packages/Binance.Spot",
-    label: "NuGet",
-  }}
+  registry={{ href: "https://www.nuget.org/profiles/binance", label: "NuGet" }}
 >
   <IconTile label=".NET">
     <LanguageIcon language="csharp" />

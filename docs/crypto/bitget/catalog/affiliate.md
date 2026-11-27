@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/affiliate
 api_type: REST
-updated_at: 2026-11-26 19:03:37.958060
+updated_at: 2026-11-27 19:02:29.094261
 ---
 
 # Affiliate

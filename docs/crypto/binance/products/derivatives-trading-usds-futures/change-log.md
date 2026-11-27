@@ -2,10 +2,32 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/change-log
 api_type: Changelog
-updated_at: 2026-11-26 18:32:25.327323
+updated_at: 2026-11-27 18:31:55.262009
 ---
 
 # Change Log
+
+## 2026-11-27
+
+**Effective Date: 2026-11-27**
+
+COIN-M Futures
+
+- New endpoints for algo (conditional) orders:
+  - `POST /dapi/v1/algoOrder` (New Algo Order)
+  - `DELETE /dapi/v1/algoOrder` (Cancel Algo Order)
+  - `DELETE /dapi/v1/algoOpenOrders` (Cancel All Algo Open Orders)
+  - `GET /dapi/v1/algoOrder` (Query Algo Order)
+  - `GET /dapi/v1/openAlgoOrders` (Current All Algo Open Orders)
+  - `GET /dapi/v1/allAlgoOrders` (Query All Algo Orders)
+- New WebSocket API methods for algo (conditional) orders:
+  - `algoOrder.place` (New Algo Order)
+  - `algoOrder.cancel` (Cancel Algo Order)
+- New User Data Stream events:
+  - `ALGO_UPDATE` (Algo Order Update)
+  - `CONDITIONAL_ORDER_TRIGGER_REJECT` (Conditional Order Trigger Reject)
+
+---
 
 ## 2026-11-24
 
@@ -4126,6 +4148,28 @@ USDⓈ-M Futures
 ---
 
 # 更新日志
+
+## 2026-11-27
+
+**生效时间: 2026-11-27**
+
+币本位合约
+
+- 新增条件单相关接口：
+  - `POST /dapi/v1/algoOrder`（下条件单）
+  - `DELETE /dapi/v1/algoOrder`（撤销条件单）
+  - `DELETE /dapi/v1/algoOpenOrders`（撤销全部条件单）
+  - `GET /dapi/v1/algoOrder`（查询条件单）
+  - `GET /dapi/v1/openAlgoOrders`（查看当前全部条件挂单）
+  - `GET /dapi/v1/allAlgoOrders`（查询全部条件单）
+- 新增条件单相关 WebSocket API：
+  - `algoOrder.place`（条件单下单）
+  - `algoOrder.cancel`（条件单撤单）
+- 新增用户数据流事件：
+  - `ALGO_UPDATE`（条件单更新）
+  - `CONDITIONAL_ORDER_TRIGGER_REJECT`（条件单触发被拒绝）
+
+---
 
 ## 2026-11-24
 

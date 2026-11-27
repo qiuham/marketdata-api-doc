@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/portfolio-account/change-log
 api_type: Changelog
-updated_at: 2026-11-26 18:30:32.583899
+updated_at: 2026-11-27 18:30:12.434719
 ---
 
 # Change Log

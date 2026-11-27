@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/portfolio-account/account-structure
 api_type: Guide
-updated_at: 2026-11-26 18:30:35.597905
+updated_at: 2026-11-27 18:30:15.036409
 ---
 
 # Account Structure

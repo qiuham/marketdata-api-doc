@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/byusdt/yield
 api_type: REST
-updated_at: 2026-11-26 18:52:08.501109
+updated_at: 2026-11-27 18:50:10.285038
 ---
 
 # Get Daily Yield Records

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/trade/position
 api_type: Trading
-updated_at: 2026-11-26 18:51:50.998919
+updated_at: 2026-11-27 18:49:45.232838
 ---
 
 # Get Event Contract Position Info

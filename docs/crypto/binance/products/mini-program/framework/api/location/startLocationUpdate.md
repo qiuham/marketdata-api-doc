@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/location/startLocationUpdate
 api_type: Guide
-updated_at: 2026-11-26 18:46:06.324577
+updated_at: 2026-11-27 18:44:52.758867
 ---
 
 # bn.startLocationUpdate

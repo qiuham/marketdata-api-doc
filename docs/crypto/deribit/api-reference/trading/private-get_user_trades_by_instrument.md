@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-get_user_trades_by_instrument
 api_type: JSON-RPC
-updated_at: 2026-11-26 19:02:06.320662
+updated_at: 2026-11-27 19:01:00.106621
 ---
 
 # private/get_user_trades_by_instrument

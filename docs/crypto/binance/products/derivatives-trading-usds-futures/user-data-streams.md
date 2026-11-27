@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/user-data-streams
 api_type: WebSocket
-updated_at: 2026-11-26 18:32:17.484923
+updated_at: 2026-11-27 18:31:48.724505
 ---
 
 # User Data Streams

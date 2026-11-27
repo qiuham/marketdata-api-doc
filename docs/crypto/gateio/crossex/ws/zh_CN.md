@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/crossex/ws/zh_CN
 api_type: WebSocket
-updated_at: 2026-11-26 18:59:32.709604
+updated_at: 2026-11-27 18:58:38.491256
 ---
 
 # CrossEx WebSocket v1.0.0

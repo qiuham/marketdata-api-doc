@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-order-refund-query
 api_type: Guide
-updated_at: 2026-11-26 18:35:21.419490
+updated_at: 2026-11-27 18:34:37.354752
 ---
 
 # Query Refund

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/elite-trading-api-guide
 api_type: Guide
-updated_at: 2026-11-26 19:03:08.840535
+updated_at: 2026-11-27 19:02:00.158154
 ---
 
 # Elite Trading API Guide
@@ -90,6 +90,7 @@ The Elite Trading API does not currently support:
 - Isolated margin mode
 - One-way position mode
 - Account mode switching
+- Subscribing to WebSocket private channels
 
 ---
 
@@ -248,6 +249,7 @@ To protect your account and trading activity, we recommend that you:
 - 逐仓保证金模式
 - 单向持仓模式
 - 账户模式切换
+- 订阅 WebSocket 私有频道
 
 ## API 权限
 

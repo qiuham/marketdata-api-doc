@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/FlutterSwiperItem
 api_type: Guide
-updated_at: 2026-11-26 18:43:45.185037
+updated_at: 2026-11-27 18:42:20.430425
 ---
 
 # SwiperItem

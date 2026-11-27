@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-rest/market/get-market-candlesticks'
-updated_at: 2026-11-26
+updated_at: 2026-11-27
 ---
 
 # Get Market Candlesticks

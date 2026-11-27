@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/demo-mode/DEMO-TERMS-OF-USE
 api_type: Guide
-updated_at: 2026-11-26 18:37:22.736578
+updated_at: 2026-11-27 18:36:07.540963
 ---
 
 # SPOT Demo Mode Terms of Use

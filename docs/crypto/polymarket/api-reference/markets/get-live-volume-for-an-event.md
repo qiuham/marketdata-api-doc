@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/markets/get-live-volume-for-an-event'
-updated_at: 2026-11-26
+updated_at: 2026-11-27
 ---
 
 # Get live volume for an event

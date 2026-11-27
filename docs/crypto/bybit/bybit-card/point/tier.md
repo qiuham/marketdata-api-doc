@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bybit-card/point/tier
 api_type: REST
-updated_at: 2026-11-26 18:51:44.032436
+updated_at: 2026-11-27 18:49:36.167082
 ---
 
 # Query Tier Info

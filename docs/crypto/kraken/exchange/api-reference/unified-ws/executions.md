@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/api-reference/unified-ws/executions'
-updated_at: 2026-11-26
+updated_at: 2026-11-27
 ---
 
 # Executions
@@ -354,7 +354,7 @@ The fees paid on this trade event.
 
 For `spot`, the fees are currently expressed in the quote currency only.
 
-For `derivatives`, the array has one element: the maker or taker fee for this side of the fill. The fee is in the contract's settlement currency. This is the quote currency for linear contracts (for example, `USD` on `PF_XBTUSD`) and the base currency for inverse contracts (for example, `BTC` on `PI_XBTUSD`). `qty` is signed: a rebate is negative, and a fill with no fee reports `0`. If the engine reports no fee amount, `fees` is omitted, but the trade event is still sent.
+For `derivatives`, the array has one element: the maker or taker fee for this side of the fill. The fee is in the contract's settlement currency. This is the quote currency for linear contracts (for example, `USD` on `PF_XBTUSD`) and the base currency for inverse contracts (for example, `BTC` on `PI_XBTUSD`). `qty` is signed: a rebate is negative. A fill with no fee, for example a maker fill at a 0% maker rate, still includes `fees` with `qty` set to `0`. `fees` is left out only when the engine sends no fee amount at all (a missing value, not a zero). The trade event is still sent in that case.
 
 **properties**
 

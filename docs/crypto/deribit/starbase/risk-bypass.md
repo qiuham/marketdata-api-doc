@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/risk-bypass
 api_type: Starbase
-updated_at: 2026-11-26 19:02:03.783405
+updated_at: 2026-11-27 19:00:54.029087
 ---
 
 # Risk Bypass

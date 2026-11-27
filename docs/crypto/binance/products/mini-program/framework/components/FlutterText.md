@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/FlutterText
 api_type: Guide
-updated_at: 2026-11-26 18:43:43.532415
+updated_at: 2026-11-27 18:42:19.133797
 ---
 
 # Text

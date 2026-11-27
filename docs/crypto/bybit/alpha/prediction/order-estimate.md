@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/order-estimate
 api_type: REST
-updated_at: 2026-11-26 18:51:06.637192
+updated_at: 2026-11-27 18:48:45.199983
 ---
 
 # Get Order Estimate

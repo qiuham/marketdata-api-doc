@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/investment-and-services-discount-buy/api/rest-api
 api_type: REST
-updated_at: 2026-11-26 18:50:10.128224
+updated_at: 2026-11-27 18:48:09.975009
 ---
 
 # Discount Buy REST API

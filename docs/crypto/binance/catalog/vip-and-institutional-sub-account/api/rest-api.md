@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api
 api_type: REST
-updated_at: 2026-11-26 18:50:02.853244
+updated_at: 2026-11-27 18:48:04.735654
 ---
 
 # Sub Account REST API

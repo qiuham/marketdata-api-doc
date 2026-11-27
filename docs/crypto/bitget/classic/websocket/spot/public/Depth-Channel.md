@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/spot/public/Depth-Channel
 api_type: WebSocket
-updated_at: 2026-11-26 19:02:52.189367
+updated_at: 2026-11-27 19:01:44.273197
 ---
 
 # Depth Channel

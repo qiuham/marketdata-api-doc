@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/media/chooseMedia
 api_type: Guide
-updated_at: 2026-11-26 18:46:38.516237
+updated_at: 2026-11-27 18:44:47.231743
 ---
 
 # bn.chooseMedia

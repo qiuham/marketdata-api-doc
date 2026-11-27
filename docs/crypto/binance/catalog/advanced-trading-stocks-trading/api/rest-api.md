@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-stocks-trading/api/rest-api
 api_type: REST
-updated_at: 2026-11-26 18:50:00.184094
+updated_at: 2026-11-27 18:48:02.536797
 ---
 
 # Stocks Trading REST API
@@ -35,8 +35,8 @@ Binance 股票交易 REST API。所有接口位于 `/sapi/v1/equity/*`。
 - `POST /sapi/v1/equity/tokenized/redeem` — Tokenized Redeem (TRADE)
 - `GET /sapi/v1/equity/tokenized/convert-status` — Tokenized Convert Status (USER_DATA)
 - `GET /sapi/v1/equity/tokenized/history` — Tokenized Convert History (USER_DATA)
-- `GET /sapi/v1/equity/corp-action` — Corporate Action Records (USER_DATA)
-- `GET /sapi/v1/bstocks/corp-action` — Bstocks Corporate Action Records (USER_DATA)
+- `GET /sapi/v1/equity/corp-action/history` — Corporate Action Records (USER_DATA)
+- `GET /sapi/v1/bstocks/corp-action/history` — Bstocks Corporate Action Records (USER_DATA)
 - `POST /sapi/v1/equity/account/disclaimer` — Sign US Equity Disclaimer (TRADE)
 - `POST /sapi/v1/equity/listenKey` — Create / Renew Listen Key (USER_STREAM)
 
@@ -615,11 +615,11 @@ Operation ID: `tokenizedConvertHistory`
 
 ## Corporate Action Records (USER_DATA)（公司行动记录 (USER_DATA)）
 
-`GET /sapi/v1/equity/corp-action`
+`GET /sapi/v1/equity/corp-action/history`
 
-Query the asset balance changes caused by corporate actions (for example stock splits and cash dividends) on the caller's account. Cursor-style pagination — supply the `nextTime` and `nextId` from the previous page's response as `lastTime` and `lastId` to fetch the next page. Records are returned in descending order of modification time. This endpoint is equivalent to `/sapi/v1/bstocks/corp-action`.
+Query the asset balance changes caused by corporate actions (for example stock splits and cash dividends) on the caller's account. Cursor-style pagination — supply the `nextTime` and `nextId` from the previous page's response as `lastTime` and `lastId` to fetch the next page. Records are returned in descending order of modification time. This endpoint is equivalent to `/sapi/v1/bstocks/corp-action/history`.
 
-查询调用方账户因公司行动（例如拆股、现金分红）产生的资产变动记录。游标分页——将上一页响应中的 `nextTime` 和 `nextId` 分别作为 `lastTime` 和 `lastId` 传入即可获取下一页。记录按修改时间倒序返回。本接口与 `/sapi/v1/bstocks/corp-action` 等价。
+查询调用方账户因公司行动（例如拆股、现金分红）产生的资产变动记录。游标分页——将上一页响应中的 `nextTime` 和 `nextId` 分别作为 `lastTime` 和 `lastId` 传入即可获取下一页。记录按修改时间倒序返回。本接口与 `/sapi/v1/bstocks/corp-action/history` 等价。
 
 权重: 1
 
@@ -652,11 +652,11 @@ Operation ID: `corporateActionRecords`
 
 ## Bstocks Corporate Action Records (USER_DATA)（公司行动记录（bstocks） (USER_DATA)）
 
-`GET /sapi/v1/bstocks/corp-action`
+`GET /sapi/v1/bstocks/corp-action/history`
 
-Query the asset balance changes caused by corporate actions (for example stock splits and cash dividends) on the caller's account. Cursor-style pagination — supply the `nextTime` and `nextId` from the previous page's response as `lastTime` and `lastId` to fetch the next page. Records are returned in descending order of modification time. This endpoint is equivalent to `/sapi/v1/equity/corp-action`.
+Query the asset balance changes caused by corporate actions (for example stock splits and cash dividends) on the caller's account. Cursor-style pagination — supply the `nextTime` and `nextId` from the previous page's response as `lastTime` and `lastId` to fetch the next page. Records are returned in descending order of modification time. This endpoint is equivalent to `/sapi/v1/equity/corp-action/history`.
 
-查询调用方账户因公司行动（例如拆股、现金分红）产生的资产变动记录。游标分页——将上一页响应中的 `nextTime` 和 `nextId` 分别作为 `lastTime` 和 `lastId` 传入即可获取下一页。记录按修改时间倒序返回。本接口与 `/sapi/v1/equity/corp-action` 等价。
+查询调用方账户因公司行动（例如拆股、现金分红）产生的资产变动记录。游标分页——将上一页响应中的 `nextTime` 和 `nextId` 分别作为 `lastTime` 和 `lastId` 传入即可获取下一页。记录按修改时间倒序返回。本接口与 `/sapi/v1/equity/corp-action/history` 等价。
 
 权重: 1
 

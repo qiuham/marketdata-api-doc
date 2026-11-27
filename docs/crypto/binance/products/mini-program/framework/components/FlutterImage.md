@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/FlutterImage
 api_type: Guide
-updated_at: 2026-11-26 18:43:53.015187
+updated_at: 2026-11-27 18:42:27.002618
 ---
 
 # Image

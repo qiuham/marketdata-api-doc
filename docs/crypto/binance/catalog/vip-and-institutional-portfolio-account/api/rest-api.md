@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/vip-and-institutional-portfolio-account/api/rest-api
 api_type: REST
-updated_at: 2026-11-26 18:50:03.561893
+updated_at: 2026-11-27 18:48:05.328495
 ---
 
 # Portfolio Account REST API

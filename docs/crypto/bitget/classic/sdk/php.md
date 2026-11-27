@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/sdk/php
 api_type: Guide
-updated_at: 2026-11-26 19:02:34.892565
+updated_at: 2026-11-27 19:01:27.954835
 ---
 
 # PHP

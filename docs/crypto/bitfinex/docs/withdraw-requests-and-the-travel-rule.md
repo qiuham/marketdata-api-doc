@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/docs/withdraw-requests-and-the-travel-rule'
-updated_at: 2026-11-26
+updated_at: 2026-11-27
 ---
 
 # Withdraw requests and the "Travel Rule"

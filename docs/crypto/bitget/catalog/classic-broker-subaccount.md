@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-broker-subaccount
 api_type: REST
-updated_at: 2026-11-26 19:03:42.532363
+updated_at: 2026-11-27 19:02:33.623296
 ---
 
 # Classic Broker Subaccount API

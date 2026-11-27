@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/openservice/list-skus
 api_type: Guide
-updated_at: 2026-11-26 18:38:11.831629
+updated_at: 2026-11-27 18:37:14.594420
 ---
 
 # ListSKUs

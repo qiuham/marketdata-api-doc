@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/spot
 api_type: Trading
-updated_at: 2026-11-26 18:59:13.810523
+updated_at: 2026-11-27 18:58:20.186714
 ---
 
 # Spot

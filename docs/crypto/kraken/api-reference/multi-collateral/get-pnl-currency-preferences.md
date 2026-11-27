@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/multi-collateral/get-pnl-currency-preferences'
-updated_at: 2026-11-26
+updated_at: 2026-11-27
 ---
 
 # Get PNL currency preferences

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-set_clearance_originator
 api_type: JSON-RPC
-updated_at: 2026-11-26 19:02:06.699005
+updated_at: 2026-11-27 19:01:01.314357
 ---
 
 # private/set_clearance_originator

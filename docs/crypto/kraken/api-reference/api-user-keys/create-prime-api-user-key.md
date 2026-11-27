@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/api-user-keys/create-prime-api-user-key'
-updated_at: 2026-11-26
+updated_at: 2026-11-27
 ---
 
 # Create Prime API User Key

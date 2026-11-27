@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/market-data/deribit_price_statisticsindex_name
 api_type: WebSocket
-updated_at: 2026-11-26 19:02:02.032497
+updated_at: 2026-11-27 19:00:49.943945
 ---
 
 # deribit_price_statistics.(index_name)

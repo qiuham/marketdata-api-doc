@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/webhook-common
 api_type: Guide
-updated_at: 2026-11-26 18:34:29.679120
+updated_at: 2026-11-27 18:33:51.805326
 ---
 
 # Webhook Common Rules

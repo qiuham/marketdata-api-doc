@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#global-liquidity-program-glp-c-get-glp-c-hourly-instrument-assessment
 anchor_id: global-liquidity-program-glp-c-get-glp-c-hourly-instrument-assessment
 api_type: API
-updated_at: 2026-11-26 19:00:30.376530
+updated_at: 2026-11-27 18:59:29.348312
 ---
 
 # Get GLP-C hourly instrument assessment

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-get-rpi-order-book
 anchor_id: order-book-trading-market-data-get-rpi-order-book
 api_type: API
-updated_at: 2026-11-26 19:00:37.253636
+updated_at: 2026-11-27 18:59:36.228987
 ---
 
 # GET / RPI order book

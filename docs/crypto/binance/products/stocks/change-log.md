@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/stocks/change-log
 api_type: Changelog
-updated_at: 2026-11-26 18:29:25.711589
+updated_at: 2026-11-27 18:29:09.442030
 ---
 
 # Change Log
@@ -13,9 +13,9 @@ The latest update: 2026-11-25
 
 ### New endpoint for corporate action records
 
-- `GET /sapi/v1/equity/corp-action` and `GET /sapi/v1/bstocks/corp-action` — query the asset balance
-  changes caused by corporate actions (for example stock splits and cash dividends) on your account.
-  Cursor-style pagination with `limit`, `lastTime` and `lastId`.
+- `GET /sapi/v1/equity/corp-action/history` and `GET /sapi/v1/bstocks/corp-action/history` — query
+  the asset balance changes caused by corporate actions (for example stock splits and cash
+  dividends) on your account. Cursor-style pagination with `limit`, `lastTime` and `lastId`.
 
 ## 2026-11-24
 
@@ -149,8 +149,8 @@ market-data WebSocket streams.
 
 ### 新增公司行动记录接口
 
-- 新增接口 `GET /sapi/v1/equity/corp-action` 和
-  `GET /sapi/v1/bstocks/corp-action`：查询账户因公司行动（例如拆股、现金分红）产生的资产变动记录。使用
+- 新增接口 `GET /sapi/v1/equity/corp-action/history` 和
+  `GET /sapi/v1/bstocks/corp-action/history`：查询账户因公司行动（例如拆股、现金分红）产生的资产变动记录。使用
   `limit`、`lastTime` 和 `lastId` 进行游标分页。
 
 ## 2026-11-24

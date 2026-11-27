@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/caas/markup/integration-guide
 api_type: Guide
-updated_at: 2026-11-26 18:42:28.333950
+updated_at: 2026-11-27 18:41:15.373648
 ---
 
 # Markup Integration Guide

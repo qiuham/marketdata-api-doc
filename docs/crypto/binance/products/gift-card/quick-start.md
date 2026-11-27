@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/gift-card/quick-start
 api_type: Guide
-updated_at: 2026-11-26 18:31:59.003889
+updated_at: 2026-11-27 18:31:31.641482
 ---
 
 # Quick Start

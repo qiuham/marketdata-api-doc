@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_delivery_prices
 api_type: JSON-RPC
-updated_at: 2026-11-26 19:02:05.270767
+updated_at: 2026-11-27 19:00:57.471631
 ---
 
 # public/get_delivery_prices

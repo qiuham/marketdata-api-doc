@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/integrations/chatgpt
 api_type: Guide
-updated_at: 2026-11-26 18:28:05.894662
+updated_at: 2026-11-27 18:27:50.725295
 ---
 
 # Binance for ChatGPT

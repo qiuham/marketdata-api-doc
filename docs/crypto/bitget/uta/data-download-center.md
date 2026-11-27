@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/data-download-center
 api_type: Guide
-updated_at: 2026-11-26 19:03:07.054406
+updated_at: 2026-11-27 19:01:58.873882
 ---
 
 # Data Download Center

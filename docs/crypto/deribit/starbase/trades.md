@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/trades
 api_type: Starbase
-updated_at: 2026-11-26 19:02:03.463337
+updated_at: 2026-11-27 19:00:53.281576
 ---
 
 # Trades

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/lifecycle
 api_type: Guide
-updated_at: 2026-11-26 18:38:49.287201
+updated_at: 2026-11-27 18:37:35.943383
 ---
 
 # Lifecycle

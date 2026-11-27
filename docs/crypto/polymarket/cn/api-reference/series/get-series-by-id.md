@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/series/get-series-by-id'
-updated_at: 2026-11-26
+updated_at: 2026-11-27
 ---
 
 # 按 ID 获取系列

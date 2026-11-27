@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/ws-streams
 api_type: WebSocket Streams
-updated_at: 2026-11-26 18:50:12.416602
+updated_at: 2026-11-27 18:48:11.071643
 ---
 
 # Prediction Trading Streams

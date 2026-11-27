@@ -17,18 +17,18 @@
 
 | 范围 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |
 |------|--------|------|------|----------|----------|
-| crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 921 | 2026-11-26 |
-| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 528 | 2026-11-26 |
-| crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-26 |
-| crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 74 | 2026-11-26 |
-| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 36 | 2026-11-26 |
-| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 459 | 2026-11-26 |
-| crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 543 | 2026-11-26 |
-| crypto | Polymarket | [Polymarket](./docs/crypto/polymarket/) | ✅ | 569 | 2026-11-26 |
-| crypto | Deribit | [Deribit](./docs/crypto/deribit/) | ✅ | 342 | 2026-11-26 |
-| crypto | Bitget | [Bitget](./docs/crypto/bitget/) | ✅ | 219 | 2026-11-26 |
-| crypto | Bitfinex | [Bitfinex](./docs/crypto/bitfinex/) | ✅ | 141 | 2026-11-26 |
-| crypto | Kalshi | [Kalshi](./docs/crypto/kalshi/) | ✅ | 301 | 2026-11-26 |
+| crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 922 | 2026-11-27 |
+| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 528 | 2026-11-27 |
+| crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-27 |
+| crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 74 | 2026-11-27 |
+| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 36 | 2026-11-27 |
+| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 459 | 2026-11-27 |
+| crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 543 | 2026-11-27 |
+| crypto | Polymarket | [Polymarket](./docs/crypto/polymarket/) | ✅ | 569 | 2026-11-27 |
+| crypto | Deribit | [Deribit](./docs/crypto/deribit/) | ✅ | 342 | 2026-11-27 |
+| crypto | Bitget | [Bitget](./docs/crypto/bitget/) | ✅ | 220 | 2026-11-27 |
+| crypto | Bitfinex | [Bitfinex](./docs/crypto/bitfinex/) | ✅ | 141 | 2026-11-27 |
+| crypto | Kalshi | [Kalshi](./docs/crypto/kalshi/) | ✅ | 301 | 2026-11-27 |
 
 ## 快速开始
 
@@ -88,9 +88,9 @@ marketdata-api-doc/
 │           └── okx.yaml
 ├── docs/                 # Markdown 文档
 │   └── crypto/
-│       ├── binance/                                # 921 Markdown docs
+│       ├── binance/                                # 922 Markdown docs
 │       ├── bitfinex/                               # 141 Markdown docs
-│       ├── bitget/                                 # 219 Markdown docs
+│       ├── bitget/                                 # 220 Markdown docs
 │       ├── bybit/                                  # 528 Markdown docs
 │       ├── coinbase/                               # 78 Markdown docs
 │       ├── deribit/                                # 342 Markdown docs

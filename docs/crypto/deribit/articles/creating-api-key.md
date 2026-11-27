@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/creating-api-key
 api_type: Guide
-updated_at: 2026-11-26 19:02:01.318037
+updated_at: 2026-11-27 19:00:48.762550
 ---
 
 # Creating new API key

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-margin-isolated-trade
 api_type: REST
-updated_at: 2026-11-26 19:03:55.537142
+updated_at: 2026-11-27 19:02:46.236284
 ---
 
 # Classic Isolated Margin Trade API

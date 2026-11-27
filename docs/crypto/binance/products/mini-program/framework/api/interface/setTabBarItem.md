@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/setTabBarItem
 api_type: Guide
-updated_at: 2026-11-26 18:47:13.079223
+updated_at: 2026-11-27 18:45:30.011372
 ---
 
 # bn.setTabBarItem

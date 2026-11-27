@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bybit-card/card-limit
 api_type: REST
-updated_at: 2026-11-26 18:51:42.333417
+updated_at: 2026-11-27 18:49:33.887708
 ---
 
 # Query Card Limits

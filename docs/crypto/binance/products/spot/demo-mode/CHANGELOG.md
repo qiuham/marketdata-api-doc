@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/demo-mode/CHANGELOG
 api_type: Changelog
-updated_at: 2026-11-26 18:37:24.096433
+updated_at: 2026-11-27 18:36:08.835915
 ---
 
 # CHANGELOG for Binance SPOT Demo Mode

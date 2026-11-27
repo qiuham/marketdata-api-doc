@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/vip-loan/quick-start
 api_type: Guide
-updated_at: 2026-11-26 18:28:58.992837
+updated_at: 2026-11-27 18:28:44.333080
 ---
 
 # Quick Start

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/caas/markup/getting-started
 api_type: Guide
-updated_at: 2026-11-26 18:42:29.724223
+updated_at: 2026-11-27 18:41:16.673029
 ---
 
 # Getting Started

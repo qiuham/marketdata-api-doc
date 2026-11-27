@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/fixed-saving/set-auto-invest
 api_type: REST
-updated_at: 2026-11-26 18:52:13.637632
+updated_at: 2026-11-27 18:50:16.789124
 ---
 
 # Set Auto-Invest

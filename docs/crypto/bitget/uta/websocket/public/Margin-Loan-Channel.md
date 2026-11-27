@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/public/Margin-Loan-Channel
 api_type: WebSocket
-updated_at: 2026-11-26 19:03:29.409474
+updated_at: 2026-11-27 19:02:20.562720
 ---
 
 # Margin Loan Channel

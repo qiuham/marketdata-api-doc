@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/agentic-wallet/reference/skills
 api_type: Guide
-updated_at: 2026-11-26 18:42:44.074222
+updated_at: 2026-11-27 18:41:24.992245
 ---
 
 # Skills Reference

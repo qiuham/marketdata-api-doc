@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/market
 api_type: REST
-updated_at: 2026-11-26 19:04:06.348754
+updated_at: 2026-11-27 19:02:56.133436
 ---
 
 # Market
@@ -117,7 +117,7 @@ Operation ID: `marketGetInstruments`
 | data[].launchTime | string |  | Launch time, Unix millisecond timestamp indicating when the trading pair was launched |
 | data[].fundInterval | string |  | Funding interval<br><br>`1` Every 1 hour<br><br>`8` Every 8 hours<br><br>Only for futures |
 | data[].minLeverage | string |  | Minimum leverage<br><br>Only for futures |
-| data[].maxLeverage | string |  | Maximum leverage<br><br>Only for futures/margin |
+| data[].maxLeverage | string |  | Maximum leverage<br><br>Only for futures |
 | data[].maintainTime | string |  | Maintenance time. If not configured, it returns ""<br><br>Only for futures |
 | data[].symbolType | string |  | Symbol type (Deprecated)<br><br>`crypto` cryptocurrency<br><br>`metal` precious metals<br><br>`stock` stocks<br><br>`commodity` commodities |
 | data[].fullName | string |  | Full name, including the trading pair name, company name, ETF name, etc., and may carry an ADR/ST/QUANTO identifier<br><br>e.g., for symbol `SKHYUSDT`, `fullName` is "SK Hylix ADR"<br><br>Returned for both spot and futures trading pairs |
@@ -125,13 +125,6 @@ Operation ID: `marketGetInstruments`
 | data[].marketRegion | string |  | Market region code<br><br>Applicable to trading pairs related to traditional finance<br><br>`US` United States<br><br>`CN` China<br><br>`HK` Hong Kong<br><br>`KR` South Korea<br><br>`JP` Japan<br><br>Returned for both spot and futures trading pairs |
 | data[].isin | string |  | International Securities Identification Number (ISIN), used to uniquely identify financial securities such as stocks, bonds, funds, and warrants<br><br>Format: 2-letter country/region code + 9-character local security identifier + 1 check digit |
 | data[].maxMarketOrderQty | string |  | Maximum order quantity for a single market order, in terms of the base coin<br><br>Only for futures |
-| data[].isIsolatedBaseBorrowable | string |  | Base coin borrowable status<br><br>Only for margin trading |
-| data[].isIsolatedQuotedBorrowable | string |  | Quote coin borrowable status<br><br>Only for margin trading |
-| data[].warningRiskRatio | string |  | Warning risk ratio<br><br>Only for margin trading |
-| data[].liquidationRiskRatio | string |  | Liquidation risk ratio<br><br>Only for margin trading |
-| data[].maxCrossedLeverage | string |  | Maximum leverage for cross margin<br><br>Only for margin trading |
-| data[].maxIsolatedLeverage | string |  | Maximum leverage for isolated margin<br><br>Only for margin trading |
-| data[].userMinBorrow | string |  | Minimum borrowable amount<br><br>Only for margin trading |
 | data[].areaSymbol | string |  | Area symbol `YES`/`NO`<br><br>Only for spot trading; only returned for pairs where the value is YES |
 | data[].unrealizedProfitLimit | string |  | Unrealized profit limit<br><br>`yes` Restricted: the trading pair restricts increasing positions and withdrawals while there is unrealized profit<br><br>`no` Not restricted |
 
@@ -2542,7 +2535,7 @@ Operation ID: `marketGetInstruments`
 | data[].launchTime | string |  | 上线时间，Unix毫秒时间戳，表示交易对的上线时间 |
 | data[].fundInterval | string |  | 资金费结算周期<br><br>`1` 每小时<br><br>`8` 每8小时<br><br>仅合约返回 |
 | data[].minLeverage | string |  | 最小杠杆<br><br>仅合约返回 |
-| data[].maxLeverage | string |  | 最大杠杆<br><br>仅合约/杠杆返回 |
+| data[].maxLeverage | string |  | 最大杠杆<br><br>仅合约返回 |
 | data[].maintainTime | string |  | 币对维护时间（状态处于维护/即将维护时会有值），未配置则返回""<br><br>仅合约返回 |
 | data[].symbolType | string |  | 交易对类别(已废弃)<br><br>`crypto` 加密货币<br><br>`metal` 贵金属<br><br>`stock` 股票<br><br>`commodity` 大宗 |
 | data[].fullName | string |  | 完整名称，包括交易对名称、企业名称、ETF名称等，可能带ADR/ST/QUANTO标识<br><br>例如symbol为`SKHYUSDT`，fullName为"SK Hylix ADR"<br><br>现货合约均有该字段 |
@@ -2550,13 +2543,6 @@ Operation ID: `marketGetInstruments`
 | data[].marketRegion | string |  | 市场区域码<br><br>适用于传统金融相关的交易对<br><br>`US` 美国<br><br>`CN` 中国<br><br>`HK` 香港<br><br>`KR` 韩国<br><br>`JP` 日本<br><br>现货合约均有该字段 |
 | data[].isin | string |  | 国际证券识别码（ISIN），用来唯一标识股票、债券、基金、权证等金融证券的国际标准化代码<br><br>格式为：前两位为国家/地区代码，中间九位为本地证券识别码，最后一位为校验码 |
 | data[].maxMarketOrderQty | string |  | 单笔市价单最大下单数量，以基础币种计<br><br>仅合约返回 |
-| data[].isIsolatedBaseBorrowable | string |  | 逐仓左币是否可以借<br><br>仅适用于杠杆交易 |
-| data[].isIsolatedQuotedBorrowable | string |  | 逐仓右币是否可以借<br><br>仅适用于杠杆交易 |
-| data[].warningRiskRatio | string |  | 预警风险率<br><br>仅适用于杠杆交易 |
-| data[].liquidationRiskRatio | string |  | 强平风险率<br><br>仅适用于杠杆交易 |
-| data[].maxCrossedLeverage | string |  | 全仓最大杠杆倍数<br><br>仅适用于杠杆交易 |
-| data[].maxIsolatedLeverage | string |  | 逐仓最大杠杆倍数<br><br>仅适用于杠杆交易 |
-| data[].userMinBorrow | string |  | 最小可借<br><br>仅适用杠杆交易 |
 | data[].areaSymbol | string |  | 是否区域币对 `YES`/`NO`<br><br>仅适用于现货交易，只有为YES的币对才返回该参数 |
 | data[].unrealizedProfitLimit | string |  | 浮盈限制<br><br>`yes` 限制：该币对在存在浮盈时限制加仓与提币<br><br>`no` 不限制 |
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#global-liquidity-program-deprecated-get-glp-historical-performance
 anchor_id: global-liquidity-program-deprecated-get-glp-historical-performance
 api_type: API
-updated_at: 2026-11-26 19:00:30.526271
+updated_at: 2026-11-27 18:59:29.422923
 ---
 
 # Get GLP historical performance

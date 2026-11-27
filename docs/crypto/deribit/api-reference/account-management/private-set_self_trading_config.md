@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-set_self_trading_config
 api_type: JSON-RPC
-updated_at: 2026-11-26 19:02:04.610602
+updated_at: 2026-11-27 19:00:55.829129
 ---
 
 # private/set_self_trading_config

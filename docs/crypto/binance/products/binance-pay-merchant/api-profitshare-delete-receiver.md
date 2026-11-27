@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-profitshare-delete-receiver
 api_type: Guide
-updated_at: 2026-11-26 18:35:12.508261
+updated_at: 2026-11-27 18:34:29.330608
 ---
 
 # Delete Receiver

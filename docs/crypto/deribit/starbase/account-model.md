@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/account-model
 api_type: Starbase
-updated_at: 2026-11-26 19:02:03.689486
+updated_at: 2026-11-27 19:00:53.735231
 ---
 
 # Account Model

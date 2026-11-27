@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/routing/navigateTo
 api_type: Guide
-updated_at: 2026-11-26 18:45:05.086923
+updated_at: 2026-11-27 18:43:31.211326
 ---
 
 # bn.navigateTo

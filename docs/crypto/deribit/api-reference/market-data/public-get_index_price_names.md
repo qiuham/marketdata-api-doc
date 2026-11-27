@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_index_price_names
 api_type: JSON-RPC
-updated_at: 2026-11-26 19:02:05.400504
+updated_at: 2026-11-27 19:00:57.886949
 ---
 
 # public/get_index_price_names

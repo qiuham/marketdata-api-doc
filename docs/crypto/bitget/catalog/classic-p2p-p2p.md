@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-p2p-p2p
 api_type: REST
-updated_at: 2026-11-26 19:03:56.434256
+updated_at: 2026-11-27 19:02:46.567371
 ---
 
 # Classic P2P API

@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/getting_started/rfqs'
-updated_at: 2026-11-26
+updated_at: 2026-11-27
 ---
 
 # Request for Quote (RFQ)

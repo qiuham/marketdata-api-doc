@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/web3-connect/avail-provider
 api_type: Guide
-updated_at: 2026-11-26 18:28:43.048005
+updated_at: 2026-11-27 18:28:28.817949
 ---
 
 # Avail Provider

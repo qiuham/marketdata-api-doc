@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#global-liquidity-program-glp-c
 anchor_id: global-liquidity-program-glp-c
 api_type: API
-updated_at: 2026-11-26 19:00:30.301320
+updated_at: 2026-11-27 18:59:29.271553
 ---
 
 # GLP-C

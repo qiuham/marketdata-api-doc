@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/announcement
 api_type: Guide
-updated_at: 2026-11-26 18:31:20.227405
+updated_at: 2026-11-27 18:30:56.325727
 ---
 
 # Announcement

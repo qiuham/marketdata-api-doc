@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/rate-limit/institutional/institutional-rate-limit
 api_type: Rate Limit
-updated_at: 2026-11-26 19:03:12.745705
+updated_at: 2026-11-27 19:02:04.520056
 ---
 
 # Institutional Rate Limit

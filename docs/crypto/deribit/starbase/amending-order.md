@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/amending-order
 api_type: Starbase
-updated_at: 2026-11-26 19:02:03.387096
+updated_at: 2026-11-27 19:00:53.050271
 ---
 
 # Amending an Order

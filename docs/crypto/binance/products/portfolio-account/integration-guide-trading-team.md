@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/portfolio-account/integration-guide-trading-team
 api_type: Guide
-updated_at: 2026-11-26 18:30:24.004463
+updated_at: 2026-11-27 18:30:04.040228
 ---
 
 # Integration Guide — Trading Team

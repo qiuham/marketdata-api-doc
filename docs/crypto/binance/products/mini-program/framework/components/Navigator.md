@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/Navigator
 api_type: Guide
-updated_at: 2026-11-26 18:43:27.402558
+updated_at: 2026-11-27 18:42:05.541747
 ---
 
 # navigator

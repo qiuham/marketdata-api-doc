@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/routing/switchTab
 api_type: Guide
-updated_at: 2026-11-26 18:44:57.422527
+updated_at: 2026-11-27 18:43:24.549811
 ---
 
 # bn.switchTab

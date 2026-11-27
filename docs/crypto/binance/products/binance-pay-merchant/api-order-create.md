@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-order-create
 api_type: Guide
-updated_at: 2026-11-26 18:35:26.879757
+updated_at: 2026-11-27 18:34:42.756935
 ---
 
 # Create Order (Deprecated)

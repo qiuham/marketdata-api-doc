@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/network/onBackgroundFetchData
 api_type: Guide
-updated_at: 2026-11-26 18:45:51.407387
+updated_at: 2026-11-27 18:44:14.819993
 ---
 
 # bn.onBackgroundFetchData

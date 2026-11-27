@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#global-liquidity-program-introduction
 anchor_id: global-liquidity-program-introduction
 api_type: API
-updated_at: 2026-11-26 19:00:30.176203
+updated_at: 2026-11-27 18:59:29.147322
 ---
 
 # Introduction

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/TextArea
 api_type: Guide
-updated_at: 2026-11-26 18:42:55.588574
+updated_at: 2026-11-27 18:41:34.601037
 ---
 
 # textarea

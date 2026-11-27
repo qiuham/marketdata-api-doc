@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/cfd-account
 api_type: REST
-updated_at: 2026-11-26 19:03:39.296497
+updated_at: 2026-11-27 19:02:30.490413
 ---
 
 # CFD Account

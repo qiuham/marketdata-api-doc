@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/login/app-integration
 api_type: Guide
-updated_at: 2026-11-26 18:31:25.627590
+updated_at: 2026-11-27 18:31:01.729798
 ---
 
 # Integrate Binance Login with your App

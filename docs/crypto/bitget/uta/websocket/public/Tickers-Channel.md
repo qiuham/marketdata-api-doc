@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/public/Tickers-Channel
 api_type: WebSocket
-updated_at: 2026-11-26 19:03:32.748611
+updated_at: 2026-11-27 19:02:23.708040
 ---
 
 # Tickers Channel

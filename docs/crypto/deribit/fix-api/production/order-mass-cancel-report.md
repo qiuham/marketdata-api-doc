@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/order-mass-cancel-report
 api_type: FIX
-updated_at: 2026-11-26 19:02:02.929321
+updated_at: 2026-11-27 19:00:52.026811
 ---
 
 # Order Mass Cancel Report(r) (Production FIX API)

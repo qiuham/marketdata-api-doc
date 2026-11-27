@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/reference/virtual-asset-service-providers'
-updated_at: 2026-11-26
+updated_at: 2026-11-27
 ---
 
 # Virtual Asset Service Providers

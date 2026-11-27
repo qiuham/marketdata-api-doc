@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/flexible-saving/auto-savings
 api_type: REST
-updated_at: 2026-11-26 18:52:13.713023
+updated_at: 2026-11-27 18:50:16.862013
 ---
 
 # Get/Set Auto Savings Settings

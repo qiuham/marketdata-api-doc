@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#global-liquidity-program-glp-a-glp-b-get-glp-instrument-types
 anchor_id: global-liquidity-program-glp-a-glp-b-get-glp-instrument-types
 api_type: API
-updated_at: 2026-11-26 19:00:30.219066
+updated_at: 2026-11-27 18:59:29.188799
 ---
 
 # Get GLP instrument types

@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/wss/perps-update-leverages'
-updated_at: 2026-11-26
+updated_at: 2026-11-27
 ---
 
 # 批量更新杠杆

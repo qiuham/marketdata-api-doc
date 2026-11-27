@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/sdk/overview
 api_type: Guide
-updated_at: 2026-11-26 19:03:16.835669
+updated_at: 2026-11-27 19:02:08.522506
 ---
 
 # SDK

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/mass-cancel
 api_type: Starbase
-updated_at: 2026-11-26 19:02:03.432770
+updated_at: 2026-11-27 19:00:53.193113
 ---
 
 # Starbase Mass Cancel Messages

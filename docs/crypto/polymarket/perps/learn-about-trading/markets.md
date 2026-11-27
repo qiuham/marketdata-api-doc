@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/learn-about-trading/markets'
-updated_at: 2026-11-26
+updated_at: 2026-11-27
 ---
 
 # Markets
@@ -57,7 +57,7 @@ their specifications before trading.
 
 > [card] [Compute Perps](https://docs.polymarket.com/perps/learn-about-trading/markets/compute.md)
 >
-> Planned GPU rental-price markets, pricing, and settlement.
+> GPU rental-price markets, pricing, and settlement.
 
 
 This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

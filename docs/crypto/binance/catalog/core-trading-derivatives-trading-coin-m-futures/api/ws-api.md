@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-api
 api_type: WebSocket API
-updated_at: 2026-11-26 18:49:46.689627
+updated_at: 2026-11-27 18:47:52.338509
 ---
 
 # Futures (COIN-M) WebSocket API
@@ -24,8 +24,10 @@ Access market data, manage accounts, and trade COIN-M perpetual and delivery fut
 
 - `POST /account.status` — Account Information (USER_DATA)
 - `POST /account.balance` — Futures Account Balance (USER_DATA)
+- `POST /algoOrder.cancel` — Cancel Algo Order (TRADE)
 - `POST /order.cancel` — Cancel Order (TRADE)
 - `POST /order.modify` — Modify Order (TRADE)
+- `POST /algoOrder.place` — New Algo Order (TRADE)
 - `POST /order.place` — New Order (TRADE)
 - `POST /account.position` — Position Information (USER_DATA)
 - `POST /order.status` — Query Order (USER_DATA)
@@ -171,6 +173,61 @@ Operation ID: `futuresAccountBalance`
 | rateLimits[].intervalNum | integer (int64) |  | Rate limit interval multiplier.<br>频率限制区间倍数.<br>例: `1` |
 | rateLimits[].limit | integer (int64) |  | Maximum allowed orders for this rule.<br>该规则允许的最大订单数。<br>例: `2400` |
 | rateLimits[].count | integer (int64) |  | Total number of trades in the 24h window.<br>24 小时窗口内成交总笔数。<br>例: `10` |
+
+## Cancel Algo Order (TRADE)（条件单撤销订单 (TRADE)）
+
+`POST /algoOrder.cancel`
+
+Cancel an active algo order.
+
+撤销条件订单
+
+Operation ID: `cancelAlgoOrder`
+
+### 请求体（application/json）
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| id | string | 是 | Id.<br>请求 ID。<br>例: `e9d6b4349871b40611412680b3445fac` |
+| method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `algoOrder.cancel`<br>例: `algoOrder.cancel` |
+| params | object | 是 |  |
+| params.algoId | integer (int64) |  | Algo Id.<br>条件单 ID。<br>例: `2000000002162519` |
+| params.clientAlgoId | string |  | Client Algo Id.<br>自定义条件单 ID。<br>例: `rDMG8WSde6LkyMNtk6s825` |
+| params.recvWindow | integer (int64) |  | Recv Window.<br>接收窗口。<br>例: `5000` |
+| params.timestamp | integer (int64) | 是 | Unix timestamp in milliseconds used to sign the request. The value must reflect the current client time and is validated by the server for signed endpoints.<br>用于请求签名的 Unix 时间戳，单位为毫秒. 该值必须反映客户端当前时间，并会在签名接口中由服务器进行校验.<br>例: `1770736694138` |
+| params.apiKey | string | 是 | An API Key is required to access this endpoint and must be included in the request headers. To create an API Key, refer to: [https://www.binance.com/en/support/faq/detail/360002502072](https://www.binance.com/en/support/faq/detail/360002502072).<br>访问此接口需要 API Key，并且必须在请求头中携带。关于如何创建 API Key，请参考：[https://www.binance.com/cn/support/faq/detail/360002502072](https://www.binance.com/cn/support/faq/detail/360002502072)。<br>例: `API_KEY` |
+
+```json
+{
+  "id": "e9d6b4349871b40611412680b3445fac",
+  "method": "algoOrder.cancel",
+  "params": {
+    "algoId": 2000000002162519,
+    "clientAlgoId": "rDMG8WSde6LkyMNtk6s825",
+    "recvWindow": 5000,
+    "timestamp": 1770736694138,
+    "apiKey": "API_KEY"
+  }
+}
+```
+
+### 响应 Successful Response：Cancel Algo Order / 取消Algo 订单
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| id | string |  | 例: `unique-cancel-request-id-5678` |
+| status | integer (int64) |  | 例: `200` |
+| result | object |  |  |
+| result.algoId | integer (int64) |  | 例: `2000000002162519` |
+| result.clientAlgoId | string |  | 例: `rDMG8WSde6LkyMNtk6s825` |
+| result.code | string |  | 例: `200` |
+| result.msg | string |  | 例: `success` |
+| rateLimits | object[] |  |  |
+| rateLimits[].rateLimitType | string |  | 例: `REQUEST_WEIGHT` |
+| rateLimits[].interval | string |  | 例: `MINUTE` |
+| rateLimits[].intervalNum | integer (int64) |  | 例: `1` |
+| rateLimits[].limit | integer (int64) |  | 例: `2400` |
+| rateLimits[].count | integer (int64) |  | 例: `6` |
 
 ## Cancel Order (TRADE)（撤销订单 (TRADE)）
 
@@ -333,6 +390,114 @@ Operation ID: `modifyOrder`
 | rateLimits[].intervalNum | integer (int64) |  | Rate limit interval multiplier.<br>频率限制区间倍数.<br>例: `1` |
 | rateLimits[].limit | integer (int64) |  | Maximum allowed orders for this rule.<br>该规则允许的最大订单数。<br>例: `2400` |
 | rateLimits[].count | integer (int64) |  | Total number of trades in the 24h window.<br>24 小时窗口内成交总笔数。<br>例: `6` |
+
+## New Algo Order (TRADE)（条件单下单 (TRADE)）
+
+`POST /algoOrder.place`
+
+Send in a new algo order.
+
+条件单下单
+
+Operation ID: `newAlgoOrder`
+
+### 请求体（application/json）
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| id | string | 是 | Id.<br>请求 ID。<br>例: `e9d6b4349871b40611412680b3445fac` |
+| method | string | 是 | WebSocket API method name.<br>WebSocket API 方法名称。<br>枚举: `algoOrder.place`<br>例: `algoOrder.place` |
+| params | object | 是 |  |
+| params.algoType | string | 是 | Only support `CONDITIONAL`<br>仅支持 `CONDITIONAL`。<br>枚举: `CONDITIONAL`<br>例: `CONDITIONAL` |
+| params.symbol | string | 是 | Symbol.<br>交易对。<br>例: `BTCUSD_PERP` |
+| params.side | string | 是 | Side.<br>买卖方向。<br>枚举: `BUY`, `SELL`<br>例: `BUY` |
+| params.positionSide | string |  | Default BOTH for One-way Mode ; LONG or SHORT for Hedge Mode. It must be sent in Hedge Mode.<br>单向模式默认 `BOTH`；双向模式可为 `LONG` 或 `SHORT`，双向模式必传。<br>枚举: `BOTH`, `LONG`, `SHORT`<br>例: `BOTH` |
+| params.type | string | 是 | For `CONDITIONAL` algoType, `STOP_MARKET`/`TAKE_PROFIT_MARKET`/`STOP`/`TAKE_PROFIT`/`TRAILING_STOP_MARKET` as order type<br>当 algoType=`CONDITIONAL` 时，订单类型可为 `STOP_MARKET`/`TAKE_PROFIT_MARKET`/`STOP`/`TAKE_PROFIT`/`TRAILING_STOP_MARKET` 之一。<br>枚举: `STOP_MARKET`, `TAKE_PROFIT_MARKET`, `STOP`, `TAKE_PROFIT`, `TRAILING_STOP_MARKET`<br>例: `STOP_MARKET` |
+| params.timeInForce | string |  | `IOC` or `GTC` or `FOK` or `GTX`, default `GTC`<br>`IOC`、`GTC`、`FOK` 或 `GTX`，默认 `GTC`。<br>枚举: `IOC`, `GTC`, `FOK`, `GTX`<br>例: `GTC` |
+| params.quantity | number (float) |  | quantity measured by contract number, Cannot be sent with `closePosition`=`true`(Close-All)<br>以合约数量计量的下单数量，不可与 `closePosition=true`（全平）同时传。<br>例: `1.0` |
+| params.price | number (float) |  | Price.<br>价格。<br>例: `1.0` |
+| params.triggerPrice | number (float) |  | Trigger Price.<br>触发价格。<br>例: `1.0` |
+| params.workingType | string |  | triggerPrice triggered by: `MARK_PRICE`, `CONTRACT_PRICE`. Default `CONTRACT_PRICE`<br>触发价格类型：`MARK_PRICE` 或 `CONTRACT_PRICE`，默认 `CONTRACT_PRICE`。<br>枚举: `MARK_PRICE`, `CONTRACT_PRICE`<br>默认: `CONTRACT_PRICE`<br>例: `MARK_PRICE` |
+| params.priceMatch | string |  | only available for LIMIT/STOP/TAKE_PROFIT order; Can't be passed together with price<br>仅适用于 LIMIT/STOP/TAKE_PROFIT；不可与 price 同时传。<br>枚举: `OPPONENT`, `OPPONENT_5`, `OPPONENT_10`, `OPPONENT_20`, `QUEUE`, `QUEUE_5`, `QUEUE_10`, `QUEUE_20`<br>例: `OPPONENT` |
+| params.closePosition | string |  | Close-All，used with STOP_MARKET or TAKE_PROFIT_MARKET.<br>全平，仅用于 `STOP_MARKET` 或 `TAKE_PROFIT_MARKET`。<br>枚举: `true`, `false`<br>例: `true` |
+| params.priceProtect | string |  | Used with STOP_MARKET or TAKE_PROFIT_MARKET order. when price reaches the triggerPrice ，the difference rate between "MARK_PRICE" and "CONTRACT_PRICE" cannot be larger than the Price Protection Threshold of the symbol.<br>用于 STOP_MARKET 或 TAKE_PROFIT_MARKET；当价格触达 triggerPrice 时，MARK_PRICE 与 CONTRACT_PRICE 的价差比例不得超过该交易对的价格保护阈值。<br>枚举: `true`, `false`<br>默认: `false`<br>例: `true` |
+| params.reduceOnly | string |  | Cannot be sent in Hedge Mode; cannot be sent with closePosition=true<br>双向持仓模式不可传；不可与 closePosition=true 同时传。<br>枚举: `true`, `false`<br>默认: `false`<br>例: `true` |
+| params.activatePrice | number (float) |  | Used with TRAILING_STOP_MARKET orders, default as the latest price(supporting different workingType)<br>仅用于 TRAILING_STOP_MARKET，默认使用最新价（支持不同 workingType）。<br>例: `1.0` |
+| params.callbackRate | number (float) |  | Used with TRAILING_STOP_MARKET orders<br>仅用于 `TRAILING_STOP_MARKET`。<br>例: `1` |
+| params.clientAlgoId | string |  | A unique id among open orders. Automatically generated if not sent. Can only be string following the rule: `^[\.A-Z\:/a-z0-9_-]{1,36}$`<br>挂单中的唯一客户端订单 ID；未传则自动生成。仅支持匹配 `^[\\.A-Z\\:/a-z0-9_-]{1,36}$` 的字符串。<br>例: `1` |
+| params.newOrderRespType | string |  | "ACK", "RESULT", default "ACK"<br>`ACK` 或 `RESULT`，默认 `ACK`。<br>枚举: `ACK`, `RESULT`<br>例: `ACK` |
+| params.selfTradePreventionMode | string |  | `EXPIRE_TAKER`: expire taker order when STP triggers/ `EXPIRE_MAKER`: expire maker order when STP triggers/ `EXPIRE_BOTH`: expire both orders when STP triggers; default `NONE`<br>`EXPIRE_TAKER`（触发时撤吃单）/ `EXPIRE_MAKER`（触发时撤挂单）/ `EXPIRE_BOTH`（触发时两边都撤）；默认 `NONE`<br>枚举: `NONE`, `EXPIRE_TAKER`, `EXPIRE_BOTH`, `EXPIRE_MAKER`<br>例: `EXPIRE_TAKER` |
+| params.recvWindow | integer (int64) |  | Recv Window.<br>接收窗口。<br>例: `5000` |
+| params.timestamp | integer (int64) | 是 | Unix timestamp in milliseconds used to sign the request. The value must reflect the current client time and is validated by the server for signed endpoints.<br>用于请求签名的 Unix 时间戳，单位为毫秒. 该值必须反映客户端当前时间，并会在签名接口中由服务器进行校验.<br>例: `1770736694138` |
+| params.apiKey | string | 是 | An API Key is required to access this endpoint and must be included in the request headers. To create an API Key, refer to: [https://www.binance.com/en/support/faq/detail/360002502072](https://www.binance.com/en/support/faq/detail/360002502072).<br>访问此接口需要 API Key，并且必须在请求头中携带。关于如何创建 API Key，请参考：[https://www.binance.com/cn/support/faq/detail/360002502072](https://www.binance.com/cn/support/faq/detail/360002502072)。<br>例: `API_KEY` |
+
+```json
+{
+  "id": "e9d6b4349871b40611412680b3445fac",
+  "method": "algoOrder.place",
+  "params": {
+    "algoType": "CONDITIONAL",
+    "symbol": "BTCUSD_PERP",
+    "side": "BUY",
+    "positionSide": "BOTH",
+    "type": "STOP_MARKET",
+    "timeInForce": "GTC",
+    "quantity": "1.0",
+    "price": "1.0",
+    "triggerPrice": "1.0",
+    "workingType": "MARK_PRICE",
+    "priceMatch": "OPPONENT",
+    "closePosition": "true",
+    "priceProtect": "true",
+    "reduceOnly": "true",
+    "activatePrice": "1.0",
+    "callbackRate": 1,
+    "clientAlgoId": "1",
+    "newOrderRespType": "ACK",
+    "selfTradePreventionMode": "EXPIRE_TAKER",
+    "recvWindow": 5000,
+    "timestamp": 1770736694138,
+    "apiKey": "API_KEY"
+  }
+}
+```
+
+### 响应 Successful Response：New Algo Order / 下单（算法单）
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| id | string |  | 例: `06c9dbd8-ccbf-4ecf-a29c-fe31495ac73f` |
+| status | integer (int64) |  | 例: `200` |
+| result | object |  |  |
+| result.algoId | integer (int64) |  | 例: `3000000000003505` |
+| result.clientAlgoId | string |  | 例: `0Xkl1p621E4EryvufmYre1` |
+| result.algoType | string |  | 例: `CONDITIONAL` |
+| result.orderType | string |  | 例: `TAKE_PROFIT` |
+| result.symbol | string |  | 例: `BTCUSD_PERP` |
+| result.side | string |  | 例: `SELL` |
+| result.positionSide | string |  | 例: `SHORT` |
+| result.timeInForce | string |  | 例: `GTC` |
+| result.quantity | string |  | 例: `1.000` |
+| result.algoStatus | string |  | 例: `NEW` |
+| result.triggerPrice | string |  | 例: `120000.00` |
+| result.price | string |  | 例: `160000.00` |
+| result.icebergQuantity | string |  | Reserved field, ignore.<br>预留字段，请忽略。<br>例: `null` |
+| result.selfTradePreventionMode | string |  | 例: `EXPIRE_MAKER` |
+| result.workingType | string |  | 例: `CONTRACT_PRICE` |
+| result.priceMatch | string |  | 例: `NONE` |
+| result.closePosition | boolean |  | 例: `False` |
+| result.priceProtect | boolean |  | 例: `False` |
+| result.reduceOnly | boolean |  | 例: `False` |
+| result.createTime | integer (int64) |  | 例: `1762507264142` |
+| result.updateTime | integer (int64) |  | 例: `1762507264143` |
+| result.triggerTime | integer (int64) |  | 例: `0` |
+| result.goodTillDate | integer (int64) |  | 例: `0` |
+| rateLimits | object[] |  |  |
+| rateLimits[].rateLimitType | string |  | 例: `REQUEST_WEIGHT` |
+| rateLimits[].interval | string |  | 例: `MINUTE` |
+| rateLimits[].intervalNum | integer (int64) |  | 例: `1` |
+| rateLimits[].limit | integer (int64) |  | 例: `2400` |
+| rateLimits[].count | integer (int64) |  | 例: `1` |
 
 ## New Order (TRADE)（下单 (TRADE)）
 

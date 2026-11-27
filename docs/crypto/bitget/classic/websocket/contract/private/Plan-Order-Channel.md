@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/contract/private/Plan-Order-Channel
 api_type: WebSocket
-updated_at: 2026-11-26 19:02:41.045336
+updated_at: 2026-11-27 19:01:33.614559
 ---
 
 # Trigger Order Channel

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#global-liquidity-program-deprecated-get-glp-today-performance
 anchor_id: global-liquidity-program-deprecated-get-glp-today-performance
 api_type: API
-updated_at: 2026-11-26 19:00:30.504438
+updated_at: 2026-11-27 18:59:29.408122
 ---
 
 # Get GLP today performance

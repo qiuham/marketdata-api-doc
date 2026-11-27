@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/portfolio-management/unlock-portfolio
 api_type: JSON-RPC
-updated_at: 2026-11-26 19:02:03.625110
+updated_at: 2026-11-27 19:00:53.637548
 ---
 
 # Unlock Portfolio

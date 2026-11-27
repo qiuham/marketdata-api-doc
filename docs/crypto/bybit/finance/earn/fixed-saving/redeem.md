@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/fixed-saving/redeem
 api_type: REST
-updated_at: 2026-11-26 18:52:12.268397
+updated_at: 2026-11-27 18:50:14.841451
 ---
 
 # Redeem

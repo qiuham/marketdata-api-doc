@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/account
 api_type: REST
-updated_at: 2026-11-26 19:03:37.178561
+updated_at: 2026-11-27 19:02:28.272528
 ---
 
 # Account
@@ -490,7 +490,7 @@ Operation ID: `assetsBalanceGetMaxWithdrawal`
 | data.spotMaxWithdrawal | string |  | Max withdrawable amount for spot account |
 | data.utaMaxWithdrawal | string |  | Max withdrawable amount for unified trading account |
 | data.totalMaxWithdrawal | string |  | Total max withdrawable amount |
-| data.frozenValue | string |  | Frozen asset value, in USDT<br><br>E.g. deposits that have not yet reached the required confirmation count; this amount has already been deducted from the max withdrawable amount |
+| data.frozenValue | string |  | Frozen asset value, in USDT<br><br>E.g. deposits that have not yet reached the required confirmation count; this amount has not been deducted from the max withdrawable amount |
 
 ```json
 {
@@ -3957,7 +3957,7 @@ Operation ID: `assetsBalanceGetMaxWithdrawal`
 | data.spotMaxWithdrawal | string |  | 现货账户最大可提币数量 |
 | data.utaMaxWithdrawal | string |  | 统一账户最大可提币数量 |
 | data.totalMaxWithdrawal | string |  | 全部最大可提币数量 |
-| data.frozenValue | string |  | 冻结资产价值，单位为 USDT<br><br>如充值未达确认数的金额；最大可提币数量已扣减该部分 |
+| data.frozenValue | string |  | 冻结资产价值，单位为 USDT<br><br>如充值未达确认数的金额；最大可提币数量未扣减该部分 |
 
 ```json
 {

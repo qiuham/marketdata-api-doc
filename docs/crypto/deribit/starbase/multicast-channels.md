@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/multicast-channels
 api_type: Starbase
-updated_at: 2026-11-26 19:02:03.841578
+updated_at: 2026-11-27 19:00:54.029879
 ---
 
 # Multicast Channels

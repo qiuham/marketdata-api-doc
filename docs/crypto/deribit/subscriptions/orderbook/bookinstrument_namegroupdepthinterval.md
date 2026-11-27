@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/orderbook/bookinstrument_namegroupdepthinterval
 api_type: WebSocket
-updated_at: 2026-11-26 19:02:01.890914
+updated_at: 2026-11-27 19:00:49.743869
 ---
 
 # book.(instrument_name).(group).(depth).(interval)

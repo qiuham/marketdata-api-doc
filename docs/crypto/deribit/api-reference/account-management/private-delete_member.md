@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-delete_member
 api_type: JSON-RPC
-updated_at: 2026-11-26 19:02:04.107644
+updated_at: 2026-11-27 19:00:54.639272
 ---
 
 # private/delete_member

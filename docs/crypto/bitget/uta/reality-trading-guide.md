@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/reality-trading-guide
 api_type: Guide
-updated_at: 2026-11-26 19:03:13.920995
+updated_at: 2026-11-27 19:02:05.613530
 ---
 
 # rToken Trading Guide
@@ -269,14 +269,16 @@ trading pairs — if you need to adjust a resting order, cancel it and place a n
 ### Limit Order Trading Rules for rToken
 
 :::warning{title="Scope"}
-These rules apply to off-exchange trading only; on-exchange trading is not subject to these restrictions.
+These rules are counted and enforced per UID per trading pair. Which orders are counted is determined by the `venue` parameter in the order request, not by where the order is actually executed:
+- Orders placed without `venue` (default strategy) or with `venue=lit_market` are counted, including orders resting or matched on-exchange while the US stock market is closed (e.g., on weekends);
+- Orders placed with `venue=internal_market` are not counted.
 :::
 
 **1. Trigger conditions**
 
 The system monitors the status of terminal orders for each UID on each trading pair over a statistical cycle. The limit order function will be restricted when both of the following conditions are met:
 
-- The total number of terminal orders for a single UID on a single trading pair exceeds 1,000 within the statistical cycle (effective from the start of the statistical cycle on November 19, 2026);
+- The total number of terminal orders for a single UID on a single trading pair exceeds 1,000 within the statistical cycle;
 - The fill rate is below 10%.
 
 Filled order: an order that is fully filled.<br/>
@@ -284,7 +286,7 @@ Fill rate = number of filled orders / total number of orders.
 
 **2. Restriction details**
 
-Once the above conditions are triggered, the spot limit order function for the corresponding trading pair of that UID will be restricted.<br/>
+Once the above conditions are triggered, that UID will not be able to submit limit orders with any `venue` value (omitted, `internal_market`, or `lit_market`) on the corresponding trading pair. Market orders are not affected and can be placed normally with any `venue` value.<br/>
 When the user attempts to submit a limit order, the system will return:
 
 ```
@@ -641,14 +643,16 @@ rToken订单暂不支持改单。如需调整挂单的价格或数量，请先�
 ### rToken 限价单交易规则
 
 :::warning{title="适用范围"}
-仅限场外交易，场内交易不受此限制。
+本规则按单个 UID、单个币对进行统计与限制。统计范围按下单请求中的 `venue` 入参区分，而非订单实际成交发生地：
+- 不传 `venue`（默认策略）及 `venue=lit_market` 的订单计入统计，包括美股休市时段（如周末）在场内挂单或撮合的订单；
+- `venue=internal_market` 的订单不计入统计。
 :::
 
 **一、限制触发条件**
 
 系统将按统计周期监测单个 UID 在单个币对下的终态订单情况。若同时满足以下条件，将触发限价单功能限制：
 
-- 单个 UID、单个币对在统计周期内的终态订单总数超过 1,000 笔（自 2026 年 11 月 19 日统计周期开始生效）；
+- 单个 UID、单个币对在统计周期内的终态订单总数超过 1,000 笔；
 - 成交率低于 10%。
 
 成交订单：完全成交订单；<br/>
@@ -656,7 +660,7 @@ rToken订单暂不支持改单。如需调整挂单的价格或数量，请先�
 
 **二、限制内容**
 
-触发上述条件后，该 UID 对应币对的现货限价单功能将被限制。<br/>
+触发上述条件后，该 UID 在对应币对下将无法提交任何 `venue` 取值（不传、`internal_market`、`lit_market`）的限价单；市价单不受影响，任何 `venue` 取值均可正常下单。<br/>
 用户尝试提交限价单时，系统将提示：
 
 ```

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/isolated-margin
 api_type: REST
-updated_at: 2026-11-26 18:59:01.249754
+updated_at: 2026-11-27 18:58:08.029636
 ---
 
 # Isolated-Margin

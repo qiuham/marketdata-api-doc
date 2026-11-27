@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/vip-service/change-log
 api_type: Changelog
-updated_at: 2026-11-26 18:28:57.642423
+updated_at: 2026-11-27 18:28:43.029305
 ---
 
 # Change Log

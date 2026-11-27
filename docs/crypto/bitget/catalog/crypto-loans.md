@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/crypto-loans
 api_type: REST
-updated_at: 2026-11-26 19:04:01.079924
+updated_at: 2026-11-27 19:02:51.574534
 ---
 
 # Crypto Loans

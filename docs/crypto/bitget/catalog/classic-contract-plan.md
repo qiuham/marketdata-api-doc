@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-contract-plan
 api_type: REST
-updated_at: 2026-11-26 19:03:46.857483
+updated_at: 2026-11-27 19:02:37.987787
 ---
 
 # Classic Contract Trigger API

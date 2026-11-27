@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-contract-trade
 api_type: REST
-updated_at: 2026-11-26 19:03:47.987601
+updated_at: 2026-11-27 19:02:39.080485
 ---
 
 # Classic Contract Trade API

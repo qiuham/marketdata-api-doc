@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-directdebit-pay-apply
 api_type: Guide
-updated_at: 2026-11-26 18:35:41.243435
+updated_at: 2026-11-27 18:34:56.861920
 ---
 
 # Direct Debit/Pre Authorization Payment

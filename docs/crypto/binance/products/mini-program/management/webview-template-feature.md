@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/management/webview-template-feature
 api_type: Guide
-updated_at: 2026-11-26 18:38:28.198224
+updated_at: 2026-11-27 18:37:48.604577
 ---
 
 # Webview Template Feature

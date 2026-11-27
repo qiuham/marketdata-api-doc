@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/order_count_decrement
 api_type: Guide
-updated_at: 2026-11-26 18:37:11.271751
+updated_at: 2026-11-27 18:36:21.108711
 ---
 
 # Spot Unfilled Order Count Rules

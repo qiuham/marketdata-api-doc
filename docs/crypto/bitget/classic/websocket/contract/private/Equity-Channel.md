@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/contract/private/Equity-Channel
 api_type: WebSocket
-updated_at: 2026-11-26 19:02:38.202205
+updated_at: 2026-11-27 19:01:31.184647
 ---
 
 # Equity Channel
