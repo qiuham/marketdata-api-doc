@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/fiat-convert/query-trade
 api_type: REST
-updated_at: 2026-11-27 18:49:08.368553
+updated_at: 2026-11-28 18:48:10.895965
 ---
 
 # Get Convert Status

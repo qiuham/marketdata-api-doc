@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-copy-trading/api/rest-api
 api_type: REST
-updated_at: 2026-11-27 18:48:00.297481
+updated_at: 2026-11-28 18:47:07.372707
 ---
 
 # Copy Trading REST API

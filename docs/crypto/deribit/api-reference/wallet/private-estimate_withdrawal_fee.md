@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-estimate_withdrawal_fee
 api_type: JSON-RPC
-updated_at: 2026-11-27 19:01:00.535929
+updated_at: 2026-11-28 18:58:47.255089
 ---
 
 # private/coinbase/estimate_withdrawal_fee

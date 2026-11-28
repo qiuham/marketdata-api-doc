@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/agentic-wallet/welcome
 api_type: Guide
-updated_at: 2026-11-27 18:35:30.375953
+updated_at: 2026-11-28 18:34:33.907771
 ---
 
 # Binance Agentic Wallet

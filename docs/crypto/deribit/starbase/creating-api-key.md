@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/creating-api-key
 api_type: Starbase
-updated_at: 2026-11-27 19:00:52.826755
+updated_at: 2026-11-28 18:58:41.217089
 ---
 
 # Creating a Starbase API Key

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/spot-trading-venues
 api_type: Guide
-updated_at: 2026-11-27 19:00:49.454785
+updated_at: 2026-11-28 18:58:38.325061
 ---
 
 # Spot Trading: Deribit and Coinbase-Routed Instruments

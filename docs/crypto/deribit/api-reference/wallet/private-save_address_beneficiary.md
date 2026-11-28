@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-save_address_beneficiary
 api_type: JSON-RPC
-updated_at: 2026-11-27 19:01:01.208809
+updated_at: 2026-11-28 18:58:47.544180
 ---
 
 # private/save_address_beneficiary

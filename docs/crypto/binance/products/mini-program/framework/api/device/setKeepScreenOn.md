@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/device/setKeepScreenOn
 api_type: Guide
-updated_at: 2026-11-27 18:46:09.147440
+updated_at: 2026-11-28 18:45:18.435983
 ---
 
 # bn.setKeepScreenOn

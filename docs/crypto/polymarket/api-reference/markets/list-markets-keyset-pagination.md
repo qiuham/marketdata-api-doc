@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/markets/list-markets-keyset-pagination'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # List markets (keyset pagination)

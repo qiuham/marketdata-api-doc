@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/connectors/php
 api_type: Guide
-updated_at: 2026-11-27 18:27:56.113052
+updated_at: 2026-11-28 18:27:04.897868
 ---
 
 # PHP

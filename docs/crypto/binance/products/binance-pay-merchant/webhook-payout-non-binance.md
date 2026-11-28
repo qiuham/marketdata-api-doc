@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/webhook-payout-non-binance
 api_type: Guide
-updated_at: 2026-11-27 18:33:47.917134
+updated_at: 2026-11-28 18:32:49.776245
 ---
 
 # Payout Non-binance user Notification

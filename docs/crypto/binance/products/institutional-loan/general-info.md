@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/institutional-loan/general-info
 api_type: Guide
-updated_at: 2026-11-27 18:31:20.673362
+updated_at: 2026-11-28 18:30:26.071545
 ---
 
 # General Info

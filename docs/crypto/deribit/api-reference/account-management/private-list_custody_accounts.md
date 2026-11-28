@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-list_custody_accounts
 api_type: JSON-RPC
-updated_at: 2026-11-27 19:00:55.536914
+updated_at: 2026-11-28 18:58:43.233894
 ---
 
 # private/list_custody_accounts

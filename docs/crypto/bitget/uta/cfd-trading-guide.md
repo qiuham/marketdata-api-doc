@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/cfd-trading-guide
 api_type: Guide
-updated_at: 2026-11-27 19:01:48.445458
+updated_at: 2026-11-28 18:59:34.054385
 ---
 
 # CFD Trading Guide

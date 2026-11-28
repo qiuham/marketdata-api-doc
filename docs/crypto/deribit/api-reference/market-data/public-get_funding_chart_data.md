@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_funding_chart_data
 api_type: JSON-RPC
-updated_at: 2026-11-27 19:00:57.697903
+updated_at: 2026-11-28 18:58:44.863410
 ---
 
 # public/get_funding_chart_data

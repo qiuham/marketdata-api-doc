@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/wallet/snapshot-a-wallets-positions-at-the-end-of-a-day'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # Snapshot a wallet's positions at the end of a day

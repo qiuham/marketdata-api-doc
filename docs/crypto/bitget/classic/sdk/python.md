@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/sdk/python
 api_type: Guide
-updated_at: 2026-11-27 19:01:28.399414
+updated_at: 2026-11-28 18:59:14.383234
 ---
 
 # Python

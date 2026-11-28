@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api
 api_type: REST
-updated_at: 2026-11-27 18:47:59.178009
+updated_at: 2026-11-28 18:47:05.607812
 ---
 
 # Portfolio Margin REST API
@@ -126,6 +126,12 @@ Access account information, manage margin positions, and trade with Binance Port
 - `GET /papi/v1/um/algo/algoOrder` — Query Current UM Open Algo Order (USER_DATA)
 - `GET /papi/v1/um/algo/openAlgoOrders` — Query All Current UM Open Algo Orders (USER_DATA)
 - `GET /papi/v1/um/algo/allAlgoOrders` — Query UM Algo Order History (USER_DATA)
+- `POST /papi/v1/cm/algo/order` — New CM Algo Order (TRADE)
+- `DELETE /papi/v1/cm/algo/order` — Cancel CM Algo Order (TRADE)
+- `DELETE /papi/v1/cm/algo/allOpenOrders` — Cancel All CM Algo Open Orders (TRADE)
+- `GET /papi/v1/cm/algo/algoOrder` — Query Current CM Open Algo Order (USER_DATA)
+- `GET /papi/v1/cm/algo/openAlgoOrders` — Query All Current CM Open Algo Orders (USER_DATA)
+- `GET /papi/v1/cm/algo/allAlgoOrders` — Query CM Algo Order History (USER_DATA)
 - `POST /papi/v1/um/stock/contract` — Futures TradFi Perps Contract (USER_DATA)
 - `POST /papi/v1/listenKey` — Start User Data Stream (USER_STREAM)
 - `PUT /papi/v1/listenKey` — Keepalive User Data Stream (USER_STREAM)
@@ -4092,6 +4098,278 @@ Operation ID: `queryUmAlgoOrderHistory`
 | [].positionSide | string |  | 例: `BOTH` |
 | [].timeInForce | string |  | 例: `GTC` |
 | [].quantity | string |  | 例: `0.01` |
+| [].algoStatus | string |  | 例: `CANCELED` |
+| [].actualOrderId | string |  | 例: `` |
+| [].actualPrice | string |  | 例: `0.00000` |
+| [].triggerPrice | string |  | 例: `750.000` |
+| [].price | string |  | 例: `750.000` |
+| [].selfTradePreventionMode | string |  | 例: `EXPIRE_MAKER` |
+| [].workingType | string |  | 例: `CONTRACT_PRICE` |
+| [].priceMatch | string |  | 例: `NONE` |
+| [].closePosition | boolean |  | 例: `False` |
+| [].priceProtect | boolean |  | 例: `False` |
+| [].reduceOnly | boolean |  | 例: `False` |
+| [].createTime | integer (int64) |  | 例: `1750485492076` |
+| [].updateTime | integer (int64) |  | 例: `1750514545091` |
+| [].triggerTime | integer (int64) |  | 例: `0` |
+| [].goodTillDate | integer (int64) |  | 例: `0` |
+
+## New CM Algo Order (TRADE)（CM条件单下单 (TRADE)）
+
+`POST /papi/v1/cm/algo/order`
+
+Place new CM conditional order
+
+CM条件单下单
+
+Operation ID: `newCmAlgoOrder`
+
+### 参数
+
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| X-MBX-APIKEY | header | string | 是 | An API Key is required to access this endpoint and must be included in the request headers. To create an API Key, refer to: [https://www.binance.com/en/support/faq/detail/360002502072](https://www.binance.com/en/support/faq/detail/360002502072).<br>访问此接口需要 API Key，并且必须在请求头中携带。关于如何创建 API Key，请参考：[https://www.binance.com/cn/support/faq/detail/360002502072](https://www.binance.com/cn/support/faq/detail/360002502072)。<br>例: `API_KEY` |
+
+### 请求体（application/x-www-form-urlencoded）
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| algoType | string | 是 | Only support `CONDITIONAL`<br>仅支持 `CONDITIONAL`<br>枚举: `CONDITIONAL`<br>例: `CONDITIONAL` |
+| symbol | string | 是 | 例: `BTCUSD_PERP` |
+| side | string | 是 | 枚举: `BUY`, `SELL`<br>例: `SELL` |
+| positionSide | string |  | Default `BOTH` for One-way Mode; `LONG` or `SHORT` for Hedge Mode<br>单向持仓模式下默认且仅可填`BOTH`；双向持仓模式下必填，仅可选择 `LONG` 或 `SHORT`<br>枚举: `BOTH`, `LONG`, `SHORT`<br>例: `BOTH` |
+| type | string | 是 | Conditional order type<br>条件订单类型<br>枚举: `STOP`, `TAKE_PROFIT`, `STOP_MARKET`, `TAKE_PROFIT_MARKET`, `TRAILING_STOP_MARKET`<br>例: `TAKE_PROFIT` |
+| timeInForce | string |  | 枚举: `IOC`, `GTC`, `FOK`, `GTX`<br>默认: `GTC`<br>例: `GTC` |
+| quantity | number (float) |  | Order quantity measured by contract number. Cannot be sent with `closePosition`=`true`(Close-All)<br>以合约数量计量的下单数量，使用`closePosition`不支持此参数。<br>例: `1` |
+| price | number (float) |  | Order price<br>委托价格<br>例: `750.000` |
+| triggerPrice | number (float) |  | Trigger price<br>触发价<br>例: `750.000` |
+| workingType | string |  | Trigger price type. Default `CONTRACT_PRICE`<br>触发类型，默认 `CONTRACT_PRICE`<br>枚举: `MARK_PRICE`, `CONTRACT_PRICE`<br>默认: `CONTRACT_PRICE`<br>例: `CONTRACT_PRICE` |
+| priceMatch | string |  | Can't be passed together with `price`<br>不能与 `price` 同时传<br>枚举: `OPPONENT`, `OPPONENT_5`, `OPPONENT_10`, `OPPONENT_20`, `QUEUE`, `QUEUE_5`, `QUEUE_10`, `QUEUE_20`<br>例: `NONE` |
+| closePosition | string |  | Close-All, used with `STOP_MARKET` or `TAKE_PROFIT_MARKET`.<br>触发后全部平仓，仅支持`STOP_MARKET`和`TAKE_PROFIT_MARKET`；不与`quantity`合用；自带只平仓效果，不与`reduceOnly` 合用<br>枚举: `true`, `false`<br>例: `true` |
+| priceProtect | string |  | Price protection. Default `false`<br>条件单触发保护，默认 `false`<br>枚举: `true`, `false`<br>默认: `false`<br>例: `false` |
+| reduceOnly | string |  | Cannot be sent in Hedge Mode; cannot be sent with `closePosition`=`true`<br>非双开模式下默认`false`；双开模式下不接受此参数； 使用`closePosition`不支持此参数。<br>枚举: `true`, `false`<br>默认: `false`<br>例: `false` |
+| activatePrice | number (float) |  | Used with `TRAILING_STOP_MARKET`, default as latest price<br>追踪止损激活价格，仅`TRAILING_STOP_MARKET`需要<br>例: `700` |
+| callbackRate | number (float) |  | Used with `TRAILING_STOP_MARKET`, min 0.1, max 20 (1 = 1%)<br>追踪止损回调比例，范围[0.1, 20]，1代表1%<br>例: `1` |
+| clientAlgoId | string |  | Unique id among open orders. Auto-generated if not sent<br>用户自定义的条件订单号，不可以重复出现在挂单中<br>例: `6B2I9XVcJpCjqPAJ4YoFX7` |
+| newOrderRespType | string |  | 枚举: `ACK`, `RESULT`<br>默认: `ACK`<br>例: `ACK` |
+| selfTradePreventionMode | string |  | 枚举: `NONE`, `EXPIRE_TAKER`, `EXPIRE_MAKER`, `EXPIRE_BOTH`<br>默认: `NONE`<br>例: `NONE` |
+| recvWindow | integer (int64) |  | 例: `5000` |
+| timestamp | integer (int64) | 是 | Unix timestamp in milliseconds used to sign the request. The value must reflect the current client time and is validated by the server for signed endpoints.<br>用于请求签名的 Unix 时间戳，单位为毫秒. 该值必须反映客户端当前时间，并会在签名接口中由服务器进行校验.<br>例: `1770736694138` |
+
+### 响应 200：New CM Algo Order / CM条件单下单
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| algoId | integer (int64) |  | 例: `2146760` |
+| clientAlgoId | string |  | 例: `6B2I9XVcJpCjqPAJ4YoFX7` |
+| algoType | string |  | 例: `CONDITIONAL` |
+| orderType | string |  | 例: `TAKE_PROFIT` |
+| symbol | string |  | 例: `BTCUSD_PERP` |
+| side | string |  | 例: `SELL` |
+| positionSide | string |  | 例: `BOTH` |
+| timeInForce | string |  | 例: `GTC` |
+| quantity | string |  | 例: `1` |
+| algoStatus | string |  | 例: `NEW` |
+| triggerPrice | string |  | 例: `750.000` |
+| price | string |  | 例: `750.000` |
+| selfTradePreventionMode | string |  | 例: `EXPIRE_MAKER` |
+| workingType | string |  | 例: `CONTRACT_PRICE` |
+| priceMatch | string |  | 例: `NONE` |
+| closePosition | boolean |  | 例: `False` |
+| priceProtect | boolean |  | 例: `False` |
+| reduceOnly | boolean |  | 例: `False` |
+| activatePrice | string |  | TRAILING_STOP_MARKET order<br>例: `` |
+| callbackRate | string |  | TRAILING_STOP_MARKET order<br>例: `` |
+| createTime | integer (int64) |  | 例: `1750485492076` |
+| updateTime | integer (int64) |  | 例: `1750485492076` |
+| triggerTime | integer (int64) |  | 例: `0` |
+| goodTillDate | integer (int64) |  | 例: `0` |
+
+## Cancel CM Algo Order (TRADE)（CM撤销条件订单 (TRADE)）
+
+`DELETE /papi/v1/cm/algo/order`
+
+Cancel an active CM algo order
+
+撤销条件订单
+
+Operation ID: `cancelCmAlgoOrder`
+
+### 参数
+
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| X-MBX-APIKEY | header | string | 是 | An API Key is required to access this endpoint and must be included in the request headers. To create an API Key, refer to: [https://www.binance.com/en/support/faq/detail/360002502072](https://www.binance.com/en/support/faq/detail/360002502072).<br>访问此接口需要 API Key，并且必须在请求头中携带。关于如何创建 API Key，请参考：[https://www.binance.com/cn/support/faq/detail/360002502072](https://www.binance.com/cn/support/faq/detail/360002502072)。<br>例: `API_KEY` |
+| algoId | query | integer (int64) |  | Algo order ID<br>系统订单号<br>例: `2146760` |
+| clientAlgoId | query | string |  | Client algo order ID<br>用户自定义的订单号<br>例: `6B2I9XVcJpCjqPAJ4YoFX7` |
+| recvWindow | query | integer (int64) |  | 例: `5000` |
+| timestamp | query | integer (int64) | 是 | 用于请求签名的 Unix 时间戳，单位为毫秒. 该值必须反映客户端当前时间，并会在签名接口中由服务器进行校验.<br>例: `1770736694138` |
+
+### 响应 200：Cancel CM Algo Order / CM撤销条件订单
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| complete | boolean |  | 例: `True` |
+
+## Cancel All CM Algo Open Orders (TRADE)（CM撤销全部条件订单 (TRADE)）
+
+`DELETE /papi/v1/cm/algo/allOpenOrders`
+
+Cancel All CM Algo Open Orders
+
+CM撤销全部条件订单
+
+Operation ID: `cancelAllCmAlgoOpenOrders`
+
+### 参数
+
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| X-MBX-APIKEY | header | string | 是 | An API Key is required to access this endpoint and must be included in the request headers. To create an API Key, refer to: [https://www.binance.com/en/support/faq/detail/360002502072](https://www.binance.com/en/support/faq/detail/360002502072).<br>访问此接口需要 API Key，并且必须在请求头中携带。关于如何创建 API Key，请参考：[https://www.binance.com/cn/support/faq/detail/360002502072](https://www.binance.com/cn/support/faq/detail/360002502072)。<br>例: `API_KEY` |
+| symbol | query | string | 是 | Symbol<br>交易对<br>例: `BTCUSD_PERP` |
+| recvWindow | query | integer (int64) |  | 例: `5000` |
+| timestamp | query | integer (int64) | 是 | 用于请求签名的 Unix 时间戳，单位为毫秒. 该值必须反映客户端当前时间，并会在签名接口中由服务器进行校验.<br>例: `1770736694138` |
+
+### 响应 200：Cancel All CM Algo Open Orders / CM撤销全部条件订单
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| code | integer |  | 例: `200` |
+| msg | string |  | 例: `The operation of cancel all open order is done.` |
+
+## Query Current CM Open Algo Order (USER_DATA)（查询CM当前条件挂单 (USER_DATA)）
+
+`GET /papi/v1/cm/algo/algoOrder`
+
+Check a CM algo order's status. Orders will not be found if: status is CANCELED/EXPIRED with no fills and created 3+ days ago; or created 90+ days ago.
+
+查询CM条件订单状态。如果订单状态为 CANCELED 或 EXPIRED 且无成交记录且创建时间超过3天，或创建时间超过90天，将不会被查询到。
+
+Operation ID: `queryCurrentCmOpenAlgoOrder`
+
+### 参数
+
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| X-MBX-APIKEY | header | string | 是 | An API Key is required to access this endpoint and must be included in the request headers. To create an API Key, refer to: [https://www.binance.com/en/support/faq/detail/360002502072](https://www.binance.com/en/support/faq/detail/360002502072).<br>访问此接口需要 API Key，并且必须在请求头中携带。关于如何创建 API Key，请参考：[https://www.binance.com/cn/support/faq/detail/360002502072](https://www.binance.com/cn/support/faq/detail/360002502072)。<br>例: `API_KEY` |
+| algoId | query | integer (int64) |  | Algo order ID<br>系统订单号<br>例: `2146760` |
+| clientAlgoId | query | string |  | Client algo order ID<br>用户自定义的订单号<br>例: `6B2I9XVcJpCjqPAJ4YoFX7` |
+| recvWindow | query | integer (int64) |  | 例: `5000` |
+| timestamp | query | integer (int64) | 是 | 用于请求签名的 Unix 时间戳，单位为毫秒. 该值必须反映客户端当前时间，并会在签名接口中由服务器进行校验.<br>例: `1770736694138` |
+
+### 响应 200：Query CM Algo Order / 查询CM当前条件挂单
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| algoId | integer (int64) |  | 例: `2146760` |
+| clientAlgoId | string |  | 例: `6B2I9XVcJpCjqPAJ4YoFX7` |
+| algoType | string |  | 例: `CONDITIONAL` |
+| orderType | string |  | 例: `TAKE_PROFIT` |
+| symbol | string |  | 例: `BTCUSD_PERP` |
+| side | string |  | 例: `SELL` |
+| positionSide | string |  | 例: `BOTH` |
+| timeInForce | string |  | 例: `GTC` |
+| quantity | string |  | 例: `1` |
+| algoStatus | string |  | 例: `CANCELED` |
+| actualOrderId | string |  | 例: `` |
+| actualPrice | string |  | 例: `0.00000` |
+| triggerPrice | string |  | 例: `750.000` |
+| price | string |  | 例: `750.000` |
+| selfTradePreventionMode | string |  | 例: `EXPIRE_MAKER` |
+| workingType | string |  | 例: `CONTRACT_PRICE` |
+| priceMatch | string |  | 例: `NONE` |
+| closePosition | boolean |  | 例: `False` |
+| priceProtect | boolean |  | 例: `False` |
+| reduceOnly | boolean |  | 例: `False` |
+| createTime | integer (int64) |  | 例: `1750485492076` |
+| updateTime | integer (int64) |  | 例: `1750514545091` |
+| triggerTime | integer (int64) |  | 例: `0` |
+| goodTillDate | integer (int64) |  | 例: `0` |
+
+## Query All Current CM Open Algo Orders (USER_DATA)（查看CM当前全部条件挂单 (USER_DATA)）
+
+`GET /papi/v1/cm/algo/openAlgoOrders`
+
+Get all CM open algo orders on a symbol. If the symbol is not sent, orders for all symbols will be returned.
+
+查看当前全部条件挂单。不带symbol参数，会返回所有交易对的挂单。
+
+Operation ID: `queryAllCurrentCmOpenAlgoOrders`
+
+### 参数
+
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| X-MBX-APIKEY | header | string | 是 | An API Key is required to access this endpoint and must be included in the request headers. To create an API Key, refer to: [https://www.binance.com/en/support/faq/detail/360002502072](https://www.binance.com/en/support/faq/detail/360002502072).<br>访问此接口需要 API Key，并且必须在请求头中携带。关于如何创建 API Key，请参考：[https://www.binance.com/cn/support/faq/detail/360002502072](https://www.binance.com/cn/support/faq/detail/360002502072)。<br>例: `API_KEY` |
+| algoType | query | string |  | 例: `CONDITIONAL` |
+| symbol | query | string |  | 例: `BTCUSD_PERP` |
+| algoId | query | integer (int64) |  | 例: `2146760` |
+| recvWindow | query | integer (int64) |  | 例: `5000` |
+| timestamp | query | integer (int64) | 是 | 用于请求签名的 Unix 时间戳，单位为毫秒. 该值必须反映客户端当前时间，并会在签名接口中由服务器进行校验.<br>例: `1770736694138` |
+
+### 响应 200：Query All Current CM Open Algo Orders / 查看CM当前全部条件挂单
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| [].algoId | integer (int64) |  | 例: `2146760` |
+| [].clientAlgoId | string |  | 例: `6B2I9XVcJpCjqPAJ4YoFX7` |
+| [].algoType | string |  | 例: `CONDITIONAL` |
+| [].orderType | string |  | 例: `TAKE_PROFIT` |
+| [].symbol | string |  | 例: `BTCUSD_PERP` |
+| [].side | string |  | 例: `SELL` |
+| [].positionSide | string |  | 例: `BOTH` |
+| [].timeInForce | string |  | 例: `GTC` |
+| [].quantity | string |  | 例: `1` |
+| [].algoStatus | string |  | 例: `NEW` |
+| [].triggerPrice | string |  | 例: `750.000` |
+| [].price | string |  | 例: `750.000` |
+| [].selfTradePreventionMode | string |  | 例: `EXPIRE_MAKER` |
+| [].workingType | string |  | 例: `CONTRACT_PRICE` |
+| [].priceMatch | string |  | 例: `NONE` |
+| [].closePosition | boolean |  | 例: `False` |
+| [].priceProtect | boolean |  | 例: `False` |
+| [].reduceOnly | boolean |  | 例: `False` |
+| [].createTime | integer (int64) |  | 例: `1750485492076` |
+| [].updateTime | integer (int64) |  | 例: `1750485492076` |
+| [].triggerTime | integer (int64) |  | 例: `0` |
+| [].goodTillDate | integer (int64) |  | 例: `0` |
+
+## Query CM Algo Order History (USER_DATA)（查询CM条件单历史 (USER_DATA)）
+
+`GET /papi/v1/cm/algo/allAlgoOrders`
+
+Get all algo orders: ACTIVE, CANCELED, TRIGGERED or FINISHED.
+
+查询CM条件单历史
+
+Operation ID: `queryCmAlgoOrderHistory`
+
+### 参数
+
+| 名称 | 位置 | 类型 | 必填 | 说明 |
+|---|---|---|---|---|
+| X-MBX-APIKEY | header | string | 是 | An API Key is required to access this endpoint and must be included in the request headers. To create an API Key, refer to: [https://www.binance.com/en/support/faq/detail/360002502072](https://www.binance.com/en/support/faq/detail/360002502072).<br>访问此接口需要 API Key，并且必须在请求头中携带。关于如何创建 API Key，请参考：[https://www.binance.com/cn/support/faq/detail/360002502072](https://www.binance.com/cn/support/faq/detail/360002502072)。<br>例: `API_KEY` |
+| symbol | query | string | 是 | 例: `BTCUSD_PERP` |
+| algoId | query | integer (int64) |  | Only return orders >= this algoId<br>只返回此orderID及之后的订单，缺省返回最近的订单<br>例: `2146760` |
+| startTime | query | integer (int64) |  | 例: `1770130294138` |
+| endTime | query | integer (int64) |  | 例: `1770736694138` |
+| limit | query | integer (int64) |  | Default 500; max 1000<br>默认值:500 最大值:1000<br>默认: `500`<br>例: `500` |
+| recvWindow | query | integer (int64) |  | 例: `5000` |
+| timestamp | query | integer (int64) | 是 | 用于请求签名的 Unix 时间戳，单位为毫秒. 该值必须反映客户端当前时间，并会在签名接口中由服务器进行校验.<br>例: `1770736694138` |
+
+### 响应 200：Query CM Algo Order History / 查询CM条件单历史
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| [].algoId | integer (int64) |  | 例: `2146760` |
+| [].clientAlgoId | string |  | 例: `6B2I9XVcJpCjqPAJ4YoFX7` |
+| [].algoType | string |  | 例: `CONDITIONAL` |
+| [].orderType | string |  | 例: `TAKE_PROFIT` |
+| [].symbol | string |  | 例: `BTCUSD_PERP` |
+| [].side | string |  | 例: `SELL` |
+| [].positionSide | string |  | 例: `BOTH` |
+| [].timeInForce | string |  | 例: `GTC` |
+| [].quantity | string |  | 例: `1` |
 | [].algoStatus | string |  | 例: `CANCELED` |
 | [].actualOrderId | string |  | 例: `` |
 | [].actualPrice | string |  | 例: `0.00000` |

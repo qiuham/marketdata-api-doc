@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/worker/createWorker
 api_type: Guide
-updated_at: 2026-11-27 18:43:03.432207
+updated_at: 2026-11-28 18:42:12.482962
 ---
 
 # bn.createWorker

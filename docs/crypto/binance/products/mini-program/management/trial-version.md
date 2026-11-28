@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/management/trial-version
 api_type: Guide
-updated_at: 2026-11-27 18:37:49.901374
+updated_at: 2026-11-28 18:36:33.152685
 ---
 
 # How To Set A Trial Version

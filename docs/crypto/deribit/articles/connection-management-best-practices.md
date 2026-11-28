@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/connection-management-best-practices
 api_type: Guide
-updated_at: 2026-11-27 19:00:48.877415
+updated_at: 2026-11-28 18:58:37.720577
 ---
 
 # Connection Management

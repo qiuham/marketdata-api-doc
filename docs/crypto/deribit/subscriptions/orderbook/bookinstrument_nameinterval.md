@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/orderbook/bookinstrument_nameinterval
 api_type: WebSocket
-updated_at: 2026-11-27 19:00:49.714891
+updated_at: 2026-11-28 18:58:38.624828
 ---
 
 # book.(instrument_name).(interval)

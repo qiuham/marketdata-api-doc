@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/connect-2.0/account-and-credentials
 api_type: Guide
-updated_at: 2026-11-27 18:33:14.662984
+updated_at: 2026-11-28 18:32:19.810507
 ---
 
 # Account and Credentials

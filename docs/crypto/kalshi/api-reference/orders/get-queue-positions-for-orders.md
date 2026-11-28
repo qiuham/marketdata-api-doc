@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/orders/get-queue-positions-for-orders'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # Get Queue Positions for Orders

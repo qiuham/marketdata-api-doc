@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/devtools/faq
 api_type: Guide
-updated_at: 2026-11-27 18:38:15.750158
+updated_at: 2026-11-28 18:37:20.359804
 ---
 
 # FAQ

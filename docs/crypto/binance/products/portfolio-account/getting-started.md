@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/portfolio-account/getting-started
 api_type: Guide
-updated_at: 2026-11-27 18:30:08.531764
+updated_at: 2026-11-28 18:29:14.509933
 ---
 
 # Getting Started

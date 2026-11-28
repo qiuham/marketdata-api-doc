@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/hideShareMenu
 api_type: Guide
-updated_at: 2026-11-27 18:45:43.432176
+updated_at: 2026-11-28 18:44:53.144697
 ---
 
 # bn.hideShareMenu

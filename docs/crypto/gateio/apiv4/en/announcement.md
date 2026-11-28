@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/announcement
 api_type: REST
-updated_at: 2026-11-27 18:57:05.054750
+updated_at: 2026-11-28 18:55:11.398319
 ---
 
 # Announcement

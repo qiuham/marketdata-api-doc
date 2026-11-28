@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/staking/Introduction
 api_type: Guide
-updated_at: 2026-11-27 18:29:24.310755
+updated_at: 2026-11-28 18:28:22.062816
 ---
 
 # Introduction

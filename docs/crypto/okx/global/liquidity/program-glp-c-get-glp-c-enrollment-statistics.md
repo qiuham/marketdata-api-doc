@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#global-liquidity-program-glp-c-get-glp-c-enrollment-statistics
 anchor_id: global-liquidity-program-glp-c-get-glp-c-enrollment-statistics
 api_type: API
-updated_at: 2026-11-27 18:59:29.316694
+updated_at: 2026-11-28 18:57:22.962811
 ---
 
 # Get GLP-C enrollment statistics

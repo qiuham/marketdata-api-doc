@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/openservice/get-sku
 api_type: Guide
-updated_at: 2026-11-27 18:37:17.243016
+updated_at: 2026-11-28 18:36:20.668861
 ---
 
 # GetSKU

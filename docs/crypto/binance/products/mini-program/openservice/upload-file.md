@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/openservice/upload-file
 api_type: Guide
-updated_at: 2026-11-27 18:37:05.862595
+updated_at: 2026-11-28 18:36:08.831152
 ---
 
 # UploadFile

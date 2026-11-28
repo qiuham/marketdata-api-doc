@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/events/list-events'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # 获取事件列表

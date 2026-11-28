@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#global-liquidity-program-glp-a-glp-b-get-glp-v2-overview
 anchor_id: global-liquidity-program-glp-a-glp-b-get-glp-v2-overview
 api_type: API
-updated_at: 2026-11-27 18:59:29.203050
+updated_at: 2026-11-28 18:57:22.882925
 ---
 
 # Get GLP v2 overview

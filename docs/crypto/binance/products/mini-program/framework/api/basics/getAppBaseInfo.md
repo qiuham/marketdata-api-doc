@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/getAppBaseInfo
 api_type: Guide
-updated_at: 2026-11-27 18:47:16.482761
+updated_at: 2026-11-28 18:46:26.949418
 ---
 
 # bn.getAppBaseInfo

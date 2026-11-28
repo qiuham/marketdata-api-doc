@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/agentic-wallet/use-cases/trading/limit-order
 api_type: Guide
-updated_at: 2026-11-27 18:42:57.596604
+updated_at: 2026-11-28 18:42:06.869703
 ---
 
 # Limit Order

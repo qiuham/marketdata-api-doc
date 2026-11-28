@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#global-liquidity-program-deprecated
 anchor_id: global-liquidity-program-deprecated
 api_type: API
-updated_at: 2026-11-27 18:59:29.388035
+updated_at: 2026-11-28 18:57:23.110603
 ---
 
 # Deprecated

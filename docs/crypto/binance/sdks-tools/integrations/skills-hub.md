@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/integrations/skills-hub
 api_type: Guide
-updated_at: 2026-11-27 18:27:49.396786
+updated_at: 2026-11-28 18:26:52.483249
 ---
 
 # Binance Skills Hub

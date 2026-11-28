@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/agentic-wallet/use-cases/security-settings
 api_type: Guide
-updated_at: 2026-11-27 18:41:17.968512
+updated_at: 2026-11-28 18:40:29.095586
 ---
 
 # Security & Settings

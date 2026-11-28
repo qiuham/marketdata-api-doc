@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/FlutterFlex
 api_type: Guide
-updated_at: 2026-11-27 18:42:28.299882
+updated_at: 2026-11-28 18:41:37.844189
 ---
 
 # flex

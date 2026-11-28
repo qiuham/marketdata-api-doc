@@ -2,10 +2,39 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/change-log
 api_type: Changelog
-updated_at: 2026-11-27 18:32:35.698260
+updated_at: 2026-11-28 18:31:41.467438
 ---
 
 # Change Log
+
+## 2026-11-28
+
+**Effective Date: 2026-12-16**
+
+Portfolio Margin
+
+- The following REST Endpoints and WebSocket User Data Streams will be enabled from 2026-12-16:
+  - REST:
+    - POST `/papi/v1/cm/algo/order`
+    - DELETE `/papi/v1/cm/algo/order`
+    - DELETE `/papi/v1/cm/algo/allOpenOrders`
+    - GET `/papi/v1/cm/algo/algoOrder`
+    - GET `/papi/v1/cm/algo/openAlgoOrders`
+    - GET `/papi/v1/cm/algo/allAlgoOrders`
+  - Websocket:
+    - `ALGO_UPDATE`: algo order update event
+
+- The following REST Endpoints will be deprecated from 2026-12-16
+  - REST:
+    - POST `/papi/v1/cm/conditional/order`
+    - DELETE `/papi/v1/cm/conditional/order`
+    - DELETE `/papi/v1/cm/conditional/allOpenOrders`
+    - GET `/papi/v1/cm/conditional/allOrders`
+    - GET `/papi/v1/cm/conditional/openOrders`
+    - GET `/papi/v1/cm/conditional/openOrder`
+    - GET `/papi/v1/cm/conditional/orderHistory`
+
+---
 
 ## 2026-11-27
 
@@ -4148,6 +4177,35 @@ USDⓈ-M Futures
 ---
 
 # 更新日志
+
+## 2026-11-28
+
+**生效时间: 2026-12-16**
+
+统一账户
+
+- 将在2026-12-16启用以下REST接口和WebSocket用户数据推送：
+  - REST:
+    - POST `/papi/v1/cm/algo/order`
+    - DELETE `/papi/v1/cm/algo/order`
+    - DELETE `/papi/v1/cm/algo/allOpenOrders`
+    - GET `/papi/v1/cm/algo/algoOrder`
+    - GET `/papi/v1/cm/algo/openAlgoOrders`
+    - GET `/papi/v1/cm/algo/allAlgoOrders`
+  - Websocket:
+    - `ALGO_UPDATE`: 条件订单交易更新推送
+
+- 将在2026-12-16弃用以下REST接口：
+  - REST:
+    - POST `/papi/v1/cm/conditional/order`
+    - DELETE `/papi/v1/cm/conditional/order`
+    - DELETE `/papi/v1/cm/conditional/allOpenOrders`
+    - GET `/papi/v1/cm/conditional/allOrders`
+    - GET `/papi/v1/cm/conditional/openOrders`
+    - GET `/papi/v1/cm/conditional/openOrder`
+    - GET `/papi/v1/cm/conditional/orderHistory`
+
+---
 
 ## 2026-11-27
 

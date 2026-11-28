@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-shareinfo-account-id
 api_type: Guide
-updated_at: 2026-11-27 18:34:22.167139
+updated_at: 2026-11-28 18:33:24.106251
 ---
 
 # Share Account Id

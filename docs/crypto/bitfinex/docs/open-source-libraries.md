@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/docs/open-source-libraries'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # Open Source Libraries

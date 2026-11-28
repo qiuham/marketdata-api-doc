@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/typescript
 api_type: Guide
-updated_at: 2026-11-27 18:30:46.136651
+updated_at: 2026-11-28 18:29:52.033317
 ---
 
 # TypeScript Support

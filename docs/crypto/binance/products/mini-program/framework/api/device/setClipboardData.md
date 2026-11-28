@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/device/setClipboardData
 api_type: Guide
-updated_at: 2026-11-27 18:46:10.640711
+updated_at: 2026-11-28 18:45:19.944174
 ---
 
 # bn.setClipboardData

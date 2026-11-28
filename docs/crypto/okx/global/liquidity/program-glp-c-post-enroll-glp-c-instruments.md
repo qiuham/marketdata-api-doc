@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#global-liquidity-program-glp-c-post-enroll-glp-c-instruments
 anchor_id: global-liquidity-program-glp-c-post-enroll-glp-c-instruments
 api_type: API
-updated_at: 2026-11-27 18:59:29.306930
+updated_at: 2026-11-28 18:57:22.955200
 ---
 
 # POST / Enroll GLP-C instruments

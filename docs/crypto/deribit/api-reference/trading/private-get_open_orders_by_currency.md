@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-get_open_orders_by_currency
 api_type: JSON-RPC
-updated_at: 2026-11-27 19:00:59.610729
+updated_at: 2026-11-28 18:58:46.561387
 ---
 
 # private/get_open_orders_by_currency

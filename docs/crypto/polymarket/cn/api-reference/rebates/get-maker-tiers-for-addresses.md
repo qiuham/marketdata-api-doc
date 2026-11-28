@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/rebates/get-maker-tiers-for-addresses'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # 获取地址的 Maker 等级

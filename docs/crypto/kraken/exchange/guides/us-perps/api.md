@@ -10,14 +10,14 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/guides/us-perps/api'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # US Perps APIs
 
 > The three US Perps APIs — FIX for order entry, SBE for market data and FIX for drop copy
 
-Kraken US Perps is accessed through three APIs. Each has its own session and its own reference in the [API Reference](https://docs.kraken.com/exchange/api-reference/overview.md).
+Kraken US Perps is accessed through three APIs. Each has its own session and its own reference in the [API Reference](https://docs.kraken.com/exchange/api-reference/overview.md). A REST endpoint for instrument reference data complements them: see [Instrument Definitions](https://docs.kraken.com/exchange/api-reference/instrument-definitions).
 
 | API | Protocol | Purpose | Reference |
 | :- | :- | :- | :- |
@@ -61,6 +61,19 @@ The Execution Report has the fields of the order-entry Execution Report, in the 
 * No report is sent for an amend the exchange refuses on a live order, or for a cancel or amend that names no live order
 
 See the [Drop Copy reference](https://docs.kraken.com/exchange/api-reference/drop-copy.md).
+
+## Instrument reference data — REST
+
+The Instrument Definitions endpoint (`PUT /0/public/InstrumentDefinitions`) returns static reference data for instruments: symbol, description, market sector, listing status, quote asset, trading parameters and contract terms. It currently returns Kraken US Perps instruments. Other instruments will be added later.
+
+* The endpoint is on `https://api.kraken.com`. It is public, so it needs no API key, but it is rate limited per IP address (a burst of 10 requests, then 1 per second)
+* Definitions do not change intraday: fetch them at least once a day
+* Results are cursor-paginated, so keep requesting with `cursor.next` until the response has no `cursor`
+* To get only some instruments, send their ids in `instrument_ids` (up to 1,000). Omit it to get all of them
+* `instrument_id` is the id the SBE market data feed carries, so you can join the two
+* Trading status and other intraday data stay in the SBE market data feed
+
+See the [Instrument Definitions reference](https://docs.kraken.com/exchange/api-reference/instrument-definitions) for the request and response schema.
 
 ## Related
 

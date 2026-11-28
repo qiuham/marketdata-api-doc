@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-cancel_all_by_currency_pair
 api_type: JSON-RPC
-updated_at: 2026-11-27 19:00:59.192607
+updated_at: 2026-11-28 18:58:46.181070
 ---
 
 # private/cancel_all_by_currency_pair

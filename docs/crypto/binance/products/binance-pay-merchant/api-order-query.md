@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-order-query
 api_type: Guide
-updated_at: 2026-11-27 18:34:38.667427
+updated_at: 2026-11-28 18:33:40.458708
 ---
 
 # Query Order

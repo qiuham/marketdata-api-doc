@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/management/mini-program-version-lifecycle
 api_type: Guide
-updated_at: 2026-11-27 18:37:51.390450
+updated_at: 2026-11-28 18:36:34.461616
 ---
 
 # Mini Program Version Lifecycle

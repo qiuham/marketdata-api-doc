@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/bab-token/introduction
 api_type: Guide
-updated_at: 2026-11-27 18:33:37.086099
+updated_at: 2026-11-28 18:34:11.999780
 ---
 
 # Binance Account Bound Token

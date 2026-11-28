@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/web3-connect/solana-provider
 api_type: Guide
-updated_at: 2026-11-27 18:28:19.034446
+updated_at: 2026-11-28 18:27:26.878188
 ---
 
 # Solana Provider

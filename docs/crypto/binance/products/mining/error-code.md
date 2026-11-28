@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mining/error-code
 api_type: Guide
-updated_at: 2026-11-27 18:30:42.048579
+updated_at: 2026-11-28 18:29:48.129775
 ---
 
 # Error Codes

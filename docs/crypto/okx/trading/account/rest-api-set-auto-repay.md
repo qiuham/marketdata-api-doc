@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-auto-repay
 anchor_id: trading-account-rest-api-set-auto-repay
 api_type: REST
-updated_at: 2026-11-27 18:59:30.748950
+updated_at: 2026-11-28 18:57:24.086474
 ---
 
 # Set auto repay

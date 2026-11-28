@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/rest-authentication
 api_type: Starbase
-updated_at: 2026-11-27 19:00:53.409957
+updated_at: 2026-11-28 18:58:41.669143
 ---
 
 # REST Order Gateway Authentication

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/speed-bumps
 api_type: Starbase
-updated_at: 2026-11-27 19:00:53.914471
+updated_at: 2026-11-28 18:58:41.896342
 ---
 
 # Speed Bumps

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-affiliate-customer-info
 api_type: REST
-updated_at: 2026-11-27 19:02:32.282965
+updated_at: 2026-11-28 19:00:15.701618
 ---
 
 # Classic Affiliate Customer Info API

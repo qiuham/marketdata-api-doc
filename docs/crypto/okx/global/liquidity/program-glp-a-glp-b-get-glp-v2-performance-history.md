@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#global-liquidity-program-glp-a-glp-b-get-glp-v2-performance-history
 anchor_id: global-liquidity-program-glp-a-glp-b-get-glp-v2-performance-history
 api_type: API
-updated_at: 2026-11-27 18:59:29.228508
+updated_at: 2026-11-28 18:57:22.900750
 ---
 
 # Get GLP v2 performance history

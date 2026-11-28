@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/portfolio-account/integration-guide-capital-connect
 api_type: Guide
-updated_at: 2026-11-27 18:30:07.235661
+updated_at: 2026-11-28 18:29:13.208935
 ---
 
 # Integration Guide — Capital Connect Listing

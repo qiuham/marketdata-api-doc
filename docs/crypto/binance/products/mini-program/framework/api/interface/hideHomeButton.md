@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/hideHomeButton
 api_type: Guide
-updated_at: 2026-11-27 18:45:46.073641
+updated_at: 2026-11-28 18:44:55.741689
 ---
 
 # bn.hideHomeButton

@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/guides/us-perps/connectivity'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # US Perps connectivity

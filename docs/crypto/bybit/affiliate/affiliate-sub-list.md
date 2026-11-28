@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/affiliate/affiliate-sub-list
 api_type: REST
-updated_at: 2026-11-27 18:48:38.725647
+updated_at: 2026-11-28 18:47:43.207137
 ---
 
 # Get Affiliate Sub-Affiliate List

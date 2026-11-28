@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/off
 api_type: Guide
-updated_at: 2026-11-27 18:47:00.292288
+updated_at: 2026-11-28 18:46:10.904024
 ---
 
 # bn.off

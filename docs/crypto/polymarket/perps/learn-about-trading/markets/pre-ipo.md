@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/learn-about-trading/markets/pre-ipo'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # Pre-IPO Perps: Asset Specifications
@@ -46,7 +46,7 @@ The specifications below cover each market before and after its rebase.
 
 | Market | Status | Description | Quote Unit | Collateral | Trading Hours | Price / Size Precision | Oracle | Oracle Bounds | Funding | Margin Mode | Max Leverage | Maint. Margin | Listing Event | Listing Date | Rebase | No-IPO Resolution Date |
 | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| **ANT** (`ANT-USD`) | Live since Oct 29, 2026; listed on Nasdaq Nov 19, 2026 | ANT references 1 share of Anthropic, PBC Class A common stock (Nasdaq: ANT), quoted in USD and priced from Pyth. Anthropic builds frontier AI models and Claude. | USD per share (1 contract = 1 share) | pUSD | 24/7 | 0.001 price tick; 0.001 size step; \$10 min notional | Pyth Pro `Equity.Index.ANT/USD` ([3618](https://app.pyth.com/explore/Equity.Index.ANT%2FUSD)), per-share, 24/7. Based on 18,012,993,379 fully diluted shares (S-1/A-2). Index and Mark both reference this feed | None (valuation bounds removed at rebase) | Standard non-crypto (0.5 scale) against the Pyth Index; hourly, ±4%/hr cap | Cross & Isolated | 10x to \$500K; 5x to \$1M; 3x to \$3M; 2x to \$5M; 1x above \$5M | 5% | Nasdaq Global Select IPO | Nov 19, 2026 | Tues Nov 17, 2026, 10:00am ET. 18.012993379-for-1 (18,012,993,379 fully diluted shares ÷ 1B): size × ratio, entry ÷ ratio | N/A (listed) |
+| **OPENAI** (`OPENAI-USD`) | Planned listing: Nov 28, 2026 | OPENAI references the pre-IPO valuation of OpenAI Group PBC. OpenAI develops AI models and ChatGPT. | USD valuation units (\$1 of price = \$1B of implied valuation) | pUSD | 24/7 | 0.1 price tick; 0.00001 size step; \$10 min notional | Binance `OPENAIUSDT` pre-IPO mark, 1-second source stream, converted USDT→USDC using Pyth USDT/USD ÷ USDC/USD. | Binance source limits: 0.01–3,500; Binance mark cap: ±1%/s. | Standard non-crypto (0.5 scale) against the Index; hourly, ±4%/hr cap | Cross & Isolated | 10x to \$500K; 5x to \$1M; 3x to \$3M; 2x to \$5M; 1x above \$5M | 5% | US exchange listing (likely Nasdaq or NYSE) | Expected in 2027 | To be announced following release of the final S-1 ahead of the IPO | — |
 
 ## Pre-IPO Pricing
 

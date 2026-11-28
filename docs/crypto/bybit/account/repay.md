@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/repay
 api_type: Account
-updated_at: 2026-11-27 18:48:31.911658
+updated_at: 2026-11-28 18:47:37.371633
 ---
 
 # Manual Repay

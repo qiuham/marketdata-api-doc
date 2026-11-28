@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/agentic-wallet/use-cases/trading/stock-trading
 api_type: Guide
-updated_at: 2026-11-27 18:42:53.487752
+updated_at: 2026-11-28 18:42:02.746808
 ---
 
 # Stock Trading (Tokenized Securities)

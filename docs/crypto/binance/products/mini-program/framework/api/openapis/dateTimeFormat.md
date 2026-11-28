@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/dateTimeFormat
 api_type: Guide
-updated_at: 2026-11-27 18:44:05.532234
+updated_at: 2026-11-28 18:43:15.492601
 ---
 
 # bn.dateTimeFormat

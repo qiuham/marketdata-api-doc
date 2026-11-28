@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#global-liquidity-program-glp-c-get-glp-c-minute-assessment
 anchor_id: global-liquidity-program-glp-c-get-glp-c-minute-assessment
 api_type: API
-updated_at: 2026-11-27 18:59:29.332351
+updated_at: 2026-11-28 18:57:22.974007
 ---
 
 # Get GLP-C minute assessment

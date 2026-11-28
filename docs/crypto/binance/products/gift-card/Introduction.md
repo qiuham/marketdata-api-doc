@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/gift-card/Introduction
 api_type: Guide
-updated_at: 2026-11-27 18:31:37.219503
+updated_at: 2026-11-28 18:30:43.064634
 ---
 
 # Introduction

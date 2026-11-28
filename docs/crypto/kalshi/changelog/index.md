@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/changelog/index'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # API Changelog
@@ -26,6 +26,13 @@ Predictions and Margin exchanges. Use the entry tags to filter by API
 surface (`REST`, `WebSocket`, `FIX`) or exchange (`Predictions`, `Margin`).
 FIX API changes, previously tracked on a separate page, now live here under
 the `FIX` tag.
+
+**December 3, 2026**
+
+`GET /portfolio/intra_exchange_instance_transfers` and
+`GET /portfolio/intra_exchange_instance_transfers/{transfer_id}` can return
+`status: failed`. A failed transfer was refused after it was requested: its
+amount returns to the source balance and never reaches the destination.
 
 **November 27, 2026**
 

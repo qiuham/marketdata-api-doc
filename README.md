@@ -17,18 +17,18 @@
 
 | 范围 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |
 |------|--------|------|------|----------|----------|
-| crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 922 | 2026-11-27 |
-| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 528 | 2026-11-27 |
-| crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-27 |
-| crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 74 | 2026-11-27 |
-| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 36 | 2026-11-27 |
-| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 459 | 2026-11-27 |
-| crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 543 | 2026-11-27 |
-| crypto | Polymarket | [Polymarket](./docs/crypto/polymarket/) | ✅ | 569 | 2026-11-27 |
-| crypto | Deribit | [Deribit](./docs/crypto/deribit/) | ✅ | 342 | 2026-11-27 |
-| crypto | Bitget | [Bitget](./docs/crypto/bitget/) | ✅ | 220 | 2026-11-27 |
-| crypto | Bitfinex | [Bitfinex](./docs/crypto/bitfinex/) | ✅ | 141 | 2026-11-27 |
-| crypto | Kalshi | [Kalshi](./docs/crypto/kalshi/) | ✅ | 301 | 2026-11-27 |
+| crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 922 | 2026-11-28 |
+| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 528 | 2026-11-28 |
+| crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-28 |
+| crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 74 | 2026-11-28 |
+| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 36 | 2026-11-28 |
+| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 459 | 2026-11-28 |
+| crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 543 | 2026-11-28 |
+| crypto | Polymarket | [Polymarket](./docs/crypto/polymarket/) | ✅ | 569 | 2026-11-28 |
+| crypto | Deribit | [Deribit](./docs/crypto/deribit/) | ✅ | 342 | 2026-11-28 |
+| crypto | Bitget | [Bitget](./docs/crypto/bitget/) | ✅ | 220 | 2026-11-28 |
+| crypto | Bitfinex | [Bitfinex](./docs/crypto/bitfinex/) | ✅ | 141 | 2026-11-28 |
+| crypto | Kalshi | [Kalshi](./docs/crypto/kalshi/) | ✅ | 301 | 2026-11-28 |
 
 ## 快速开始
 

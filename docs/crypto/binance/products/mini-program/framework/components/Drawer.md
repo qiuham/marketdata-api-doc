@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/Drawer
 api_type: Guide
-updated_at: 2026-11-27 18:42:37.809413
+updated_at: 2026-11-28 18:41:47.211350
 ---
 
 # Drawer

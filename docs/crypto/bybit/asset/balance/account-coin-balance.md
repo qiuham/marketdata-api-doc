@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/balance/account-coin-balance
 api_type: REST
-updated_at: 2026-11-27 18:48:54.290530
+updated_at: 2026-11-28 18:47:58.648644
 ---
 
 # Get Single Coin Balance

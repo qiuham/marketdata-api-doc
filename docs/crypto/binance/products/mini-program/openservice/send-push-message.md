@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/openservice/send-push-message
 api_type: Guide
-updated_at: 2026-11-27 18:37:09.909811
+updated_at: 2026-11-28 18:36:13.340327
 ---
 
 # SendPushMessage

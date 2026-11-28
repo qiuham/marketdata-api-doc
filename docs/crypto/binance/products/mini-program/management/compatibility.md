@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/management/compatibility
 api_type: Guide
-updated_at: 2026-11-27 18:37:56.583720
+updated_at: 2026-11-28 18:36:39.933877
 ---
 
 # Multiple Versions Compatible Solution

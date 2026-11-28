@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/docs/flag-values'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # Flag Values

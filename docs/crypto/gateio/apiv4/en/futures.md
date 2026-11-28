@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/futures
 api_type: Trading
-updated_at: 2026-11-27 18:57:21.164914
+updated_at: 2026-11-28 18:55:26.360186
 ---
 
 # Futures

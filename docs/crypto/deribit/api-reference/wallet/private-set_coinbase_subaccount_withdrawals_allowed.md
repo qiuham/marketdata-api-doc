@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-set_coinbase_subaccount_withdrawals_allowed
 api_type: JSON-RPC
-updated_at: 2026-11-27 19:01:01.219171
+updated_at: 2026-11-28 18:58:47.668479
 ---
 
 # private/set_coinbase_subaccount_withdrawals_allowed

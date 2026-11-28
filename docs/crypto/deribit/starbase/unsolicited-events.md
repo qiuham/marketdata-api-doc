@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/unsolicited-events
 api_type: Starbase
-updated_at: 2026-11-27 19:00:53.311560
+updated_at: 2026-11-28 18:58:41.596611
 ---
 
 # Starbase Unsolicited Events

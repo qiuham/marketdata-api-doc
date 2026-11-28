@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/commission_faq
 api_type: Guide
-updated_at: 2026-11-27 18:36:27.800706
+updated_at: 2026-11-28 18:35:26.486225
 ---
 
 # Commission Rates

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/sdk/java
 api_type: Guide
-updated_at: 2026-11-27 19:01:26.239794
+updated_at: 2026-11-28 18:59:12.192622
 ---
 
 # Java

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api
 api_type: REST
-updated_at: 2026-11-27 18:48:08.268126
+updated_at: 2026-11-28 18:47:14.241321
 ---
 
 # Crypto Loan REST API

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-technical-service-provider-query-record
 api_type: Guide
-updated_at: 2026-11-27 18:34:12.084009
+updated_at: 2026-11-28 18:33:14.047234
 ---
 
 # Query Authentication Record

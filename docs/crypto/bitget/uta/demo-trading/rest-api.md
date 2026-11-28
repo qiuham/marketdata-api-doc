@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/demo-trading/rest-api
 api_type: Guide
-updated_at: 2026-11-27 19:01:59.128493
+updated_at: 2026-11-28 18:59:44.294957
 ---
 
 # Demo Trading (REST API)

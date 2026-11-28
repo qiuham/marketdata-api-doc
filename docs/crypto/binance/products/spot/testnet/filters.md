@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/filters
 api_type: Guide
-updated_at: 2026-11-27 18:35:58.974734
+updated_at: 2026-11-28 18:35:02.060254
 ---
 
 # Filters

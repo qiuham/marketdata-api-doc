@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-rest/fcm/get-fcm-subtrader-risk-controls'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # Get FCM Subtrader Risk Controls

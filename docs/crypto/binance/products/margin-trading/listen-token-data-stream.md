@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/margin-trading/listen-token-data-stream
 api_type: WebSocket
-updated_at: 2026-11-27 18:31:05.643826
+updated_at: 2026-11-28 18:30:10.882077
 ---
 
 # Listen Token User Data Stream

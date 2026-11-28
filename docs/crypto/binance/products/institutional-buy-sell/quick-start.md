@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/institutional-buy-sell/quick-start
 api_type: Guide
-updated_at: 2026-11-27 18:31:27.157926
+updated_at: 2026-11-28 18:30:32.936000
 ---
 
 # Getting Started

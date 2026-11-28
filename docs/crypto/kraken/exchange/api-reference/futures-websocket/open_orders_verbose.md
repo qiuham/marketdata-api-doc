@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/api-reference/futures-websocket/open_orders_verbose'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # Open Orders (Verbose)

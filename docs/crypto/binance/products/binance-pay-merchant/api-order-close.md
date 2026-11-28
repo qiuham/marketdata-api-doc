@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-order-close
 api_type: Guide
-updated_at: 2026-11-27 18:34:47.378052
+updated_at: 2026-11-28 18:33:48.808777
 ---
 
 # Close Order

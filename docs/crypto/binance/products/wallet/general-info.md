@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/wallet/general-info
 api_type: Guide
-updated_at: 2026-11-27 18:28:35.961924
+updated_at: 2026-11-28 18:27:43.035216
 ---
 
 # General Info

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/overview
 api_type: Starbase
-updated_at: 2026-11-27 19:00:52.630415
+updated_at: 2026-11-28 18:58:41.140025
 ---
 
 # Starbase API Overview

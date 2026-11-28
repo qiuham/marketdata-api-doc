@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bybit-card/card-list
 api_type: REST
-updated_at: 2026-11-27 18:49:33.952773
+updated_at: 2026-11-28 18:48:33.236487
 ---
 
 # Query Card List

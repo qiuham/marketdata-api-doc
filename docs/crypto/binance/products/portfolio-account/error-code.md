@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/portfolio-account/error-code
 api_type: Guide
-updated_at: 2026-11-27 18:30:09.832503
+updated_at: 2026-11-28 18:29:15.828227
 ---
 
 # Error Codes

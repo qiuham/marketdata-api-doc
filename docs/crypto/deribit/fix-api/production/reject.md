@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/reject
 api_type: FIX
-updated_at: 2026-11-27 19:00:51.506402
+updated_at: 2026-11-28 18:58:39.993155
 ---
 
 # Reject(3) (Production FIX API)

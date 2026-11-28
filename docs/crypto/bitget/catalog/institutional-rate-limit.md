@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/institutional-rate-limit
 api_type: REST
-updated_at: 2026-11-27 19:02:55.935924
+updated_at: 2026-11-28 19:00:32.731901
 ---
 
 # Institutional Rate Limit

@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/funding-beta/list-funding-claimed-addresses-v2'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # List Funding Claimed Addresses (v2)

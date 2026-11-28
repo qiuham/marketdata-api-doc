@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/openservice/activate-sku
 api_type: Guide
-updated_at: 2026-11-27 18:37:25.125700
+updated_at: 2026-11-28 18:36:29.021648
 ---
 
 # ActivateSKU

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/contract/public/Tickers-Channel
 api_type: WebSocket
-updated_at: 2026-11-27 19:01:36.685008
+updated_at: 2026-11-28 18:59:22.482208
 ---
 
 # Market Channel

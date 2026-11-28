@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-series
 anchor_id: public-data-rest-api-get-series
 api_type: REST
-updated_at: 2026-11-27 18:59:38.985994
+updated_at: 2026-11-28 18:57:29.643582
 ---
 
 # Get series

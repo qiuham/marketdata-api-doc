@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/option-base-coins
 api_type: Market Data
-updated_at: 2026-11-27 18:50:43.491808
+updated_at: 2026-11-28 18:49:33.628487
 ---
 
 # Get Option Base Coins

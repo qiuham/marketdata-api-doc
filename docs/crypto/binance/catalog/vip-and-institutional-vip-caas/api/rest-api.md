@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/vip-and-institutional-vip-caas/api/rest-api
 api_type: REST
-updated_at: 2026-11-27 18:48:06.254146
+updated_at: 2026-11-28 18:47:12.306508
 ---
 
 # VIP CAAS REST API

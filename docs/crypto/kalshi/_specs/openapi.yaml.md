@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/openapi.yaml'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # openapi.yaml
@@ -9436,8 +9436,8 @@ components:
 
     IntraExchangeInstanceTransferStatus:
       type: string
-      enum: ['pending', 'complete']
-      x-enum-varnames: ['IntraExchangeInstanceTransferStatusPending', 'IntraExchangeInstanceTransferStatusComplete']
+      enum: ['pending', 'complete', 'failed']
+      x-enum-varnames: ['IntraExchangeInstanceTransferStatusPending', 'IntraExchangeInstanceTransferStatusComplete', 'IntraExchangeInstanceTransferStatusFailed']
       description: Transfer status.
 
     IntraExchangeInstanceTransfer:

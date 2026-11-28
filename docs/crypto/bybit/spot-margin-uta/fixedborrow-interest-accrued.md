@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/fixedborrow-interest-accrued
 api_type: REST
-updated_at: 2026-11-27 18:51:38.013991
+updated_at: 2026-11-28 18:50:20.608087
 ---
 
 # Query Fixed-Rate Borrow Penalty Interest

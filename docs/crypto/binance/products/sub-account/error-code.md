@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/sub-account/error-code
 api_type: Guide
-updated_at: 2026-11-27 18:28:54.842050
+updated_at: 2026-11-28 18:28:00.812613
 ---
 
 # Error Codes

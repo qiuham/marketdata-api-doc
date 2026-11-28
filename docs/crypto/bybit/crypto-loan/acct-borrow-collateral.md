@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/crypto-loan/acct-borrow-collateral
 api_type: REST
-updated_at: 2026-11-27 18:49:36.218919
+updated_at: 2026-11-28 18:48:35.349471
 ---
 
 # Get Account Borrowable/Collateralizable Limit

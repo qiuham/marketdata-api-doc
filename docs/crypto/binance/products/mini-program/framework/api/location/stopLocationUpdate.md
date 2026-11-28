@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/location/stopLocationUpdate
 api_type: Guide
-updated_at: 2026-11-27 18:44:51.124164
+updated_at: 2026-11-28 18:43:37.504019
 ---
 
 # bn.stopLocationUpdate

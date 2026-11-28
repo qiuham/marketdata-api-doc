@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/Markdown
 api_type: Guide
-updated_at: 2026-11-27 18:42:07.034287
+updated_at: 2026-11-28 18:41:15.756444
 ---
 
 # markdown

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/collection-notification
 api_type: Guide
-updated_at: 2026-11-27 18:34:02.401724
+updated_at: 2026-11-28 18:33:04.540040
 ---
 
 # Collection Notification

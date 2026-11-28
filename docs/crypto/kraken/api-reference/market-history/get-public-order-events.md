@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/market-history/get-public-order-events'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # Get public order events

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/investment-and-services-dual-investment/api/rest-api
 api_type: REST
-updated_at: 2026-11-27 18:48:10.148999
+updated_at: 2026-11-28 18:47:16.588791
 ---
 
 # Dual Investment REST API

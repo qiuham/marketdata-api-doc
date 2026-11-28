@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/user/userordersinstrument_nameraw
 api_type: WebSocket
-updated_at: 2026-11-27 19:00:50.654327
+updated_at: 2026-11-28 18:58:39.320082
 ---
 
 # user.orders.(instrument_name).raw

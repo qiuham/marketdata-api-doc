@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/margin-rest/orders/cancel-order'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # Cancel Order

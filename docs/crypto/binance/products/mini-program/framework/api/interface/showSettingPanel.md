@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/showSettingPanel
 api_type: Guide
-updated_at: 2026-11-27 18:45:18.973178
+updated_at: 2026-11-28 18:44:29.152315
 ---
 
 # bn.showSettingPanel

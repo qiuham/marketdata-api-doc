@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/crypto-loan/unpaid-loan-order
 api_type: REST
-updated_at: 2026-11-27 18:49:40.462923
+updated_at: 2026-11-28 18:48:39.121871
 ---
 
 # Get Unpaid Loans

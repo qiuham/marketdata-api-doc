@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-websocket-notification
 anchor_id: overview-websocket-notification
 api_type: WebSocket
-updated_at: 2026-11-27 18:59:28.929816
+updated_at: 2026-11-28 18:57:22.690081
 ---
 
 # Notification

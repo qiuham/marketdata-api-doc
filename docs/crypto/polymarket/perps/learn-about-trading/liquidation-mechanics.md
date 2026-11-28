@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/learn-about-trading/liquidation-mechanics'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # Liquidation Mechanics

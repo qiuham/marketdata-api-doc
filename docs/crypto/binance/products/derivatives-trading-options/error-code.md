@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-options/error-code
 api_type: Guide
-updated_at: 2026-11-27 18:32:21.587563
+updated_at: 2026-11-28 18:31:27.564164
 ---
 
 # Error Codes

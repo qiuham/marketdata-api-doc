@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/hideControlButton
 api_type: Guide
-updated_at: 2026-11-27 18:45:47.368159
+updated_at: 2026-11-28 18:44:57.051594
 ---
 
 # bn.hideControlButton

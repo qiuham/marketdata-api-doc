@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/crypto-loan/Introduction
 api_type: Guide
-updated_at: 2026-11-27 18:32:45.864679
+updated_at: 2026-11-28 18:31:51.242446
 ---
 
 # Introduction

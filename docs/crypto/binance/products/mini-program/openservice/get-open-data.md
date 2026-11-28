@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/openservice/get-open-data
 api_type: Guide
-updated_at: 2026-11-27 18:37:18.538273
+updated_at: 2026-11-28 18:36:21.969489
 ---
 
 # GetUserOpenId

@@ -10,7 +10,7 @@ provider_name: Bitfinex
 product: api
 product_id: bitfinex
 source_url: 'https://docs.bitfinex.com/recipes/restpython-authenticated-request-example'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # [REST][Python] Authenticated request example

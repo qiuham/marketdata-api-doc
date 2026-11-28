@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/transfer/transferable-coin
 api_type: REST
-updated_at: 2026-11-27 18:49:12.788186
+updated_at: 2026-11-28 18:48:14.887267
 ---
 
 # Get Transferable Coin

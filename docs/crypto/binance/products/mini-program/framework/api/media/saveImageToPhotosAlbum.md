@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/media/saveImageToPhotosAlbum
 api_type: Guide
-updated_at: 2026-11-27 18:44:28.590869
+updated_at: 2026-11-28 18:43:48.335280
 ---
 
 # bn.saveImageToPhotosAlbum

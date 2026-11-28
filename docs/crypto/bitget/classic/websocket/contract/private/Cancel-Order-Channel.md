@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/contract/private/Cancel-Order-Channel
 api_type: WebSocket
-updated_at: 2026-11-27 19:01:30.504726
+updated_at: 2026-11-28 18:59:16.454346
 ---
 
 # Cancel Order Channel

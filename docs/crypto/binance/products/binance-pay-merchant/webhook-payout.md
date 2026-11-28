@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/webhook-payout
 api_type: Guide
-updated_at: 2026-11-27 18:33:46.623013
+updated_at: 2026-11-28 18:32:48.470451
 ---
 
 # Batch Payout Notification

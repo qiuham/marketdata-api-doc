@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/addEventListenerToBody
 api_type: Guide
-updated_at: 2026-11-27 18:45:51.654161
+updated_at: 2026-11-28 18:45:01.231637
 ---
 
 # bn.addEventListenerToBody

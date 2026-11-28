@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/fiat/change-log
 api_type: Changelog
-updated_at: 2026-11-27 18:31:44.335066
+updated_at: 2026-11-28 18:30:49.972068
 ---
 
 # Change Log

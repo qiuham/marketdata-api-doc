@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/referral/referral-user-identity-profile
 api_type: REST
-updated_at: 2026-11-27 18:51:21.375041
+updated_at: 2026-11-28 18:50:06.382620
 ---
 
 # Get Referral User Identity Profile

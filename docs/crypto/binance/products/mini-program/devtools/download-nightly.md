@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/devtools/download-nightly
 api_type: Guide
-updated_at: 2026-11-27 18:38:19.762660
+updated_at: 2026-11-28 18:37:24.395087
 ---
 
 # Download Nightly Version

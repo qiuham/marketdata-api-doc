@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/cancel-supply
 api_type: REST
-updated_at: 2026-11-27 18:50:50.263106
+updated_at: 2026-11-28 18:49:39.492048
 ---
 
 # Cancel Supply Order

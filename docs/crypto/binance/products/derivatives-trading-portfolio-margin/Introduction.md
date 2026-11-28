@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/Introduction
 api_type: Guide
-updated_at: 2026-11-27 18:32:16.176965
+updated_at: 2026-11-28 18:31:22.155185
 ---
 
 # Introduction

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/audit-rules
 api_type: Guide
-updated_at: 2026-11-27 18:30:54.818117
+updated_at: 2026-11-28 18:30:00.342949
 ---
 
 # Mini Programs Audit Rules

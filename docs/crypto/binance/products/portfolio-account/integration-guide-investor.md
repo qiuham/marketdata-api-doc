@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/portfolio-account/integration-guide-investor
 api_type: Guide
-updated_at: 2026-11-27 18:30:05.725418
+updated_at: 2026-11-28 18:29:11.908699
 ---
 
 # Integration Guide — Investor

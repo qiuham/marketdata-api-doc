@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/managing-deposits-api
 api_type: Guide
-updated_at: 2026-11-27 19:00:49.028453
+updated_at: 2026-11-28 18:58:37.828940
 ---
 
 # Managing Deposits

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/sdk/node
 api_type: Guide
-updated_at: 2026-11-27 19:01:26.902395
+updated_at: 2026-11-28 18:59:12.960342
 ---
 
 # Node.js

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/intro
 api_type: WebSocket
-updated_at: 2026-11-27 19:01:36.935432
+updated_at: 2026-11-28 18:59:22.811329
 ---
 
 # Websocket API

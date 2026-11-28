@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/investment-and-services-gift-card/api/rest-api
 api_type: REST
-updated_at: 2026-11-27 18:48:09.061836
+updated_at: 2026-11-28 18:47:15.139010
 ---
 
 # Gift Card REST API

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/sports-timeline-stages
 api_type: REST
-updated_at: 2026-11-27 18:48:49.728377
+updated_at: 2026-11-28 18:47:54.362063
 ---
 
 # Get Sports Timeline Stages

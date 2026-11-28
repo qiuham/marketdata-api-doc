@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/institutional-buy-sell/introduction
 api_type: Guide
-updated_at: 2026-11-27 18:31:28.648622
+updated_at: 2026-11-28 18:30:34.244048
 ---
 
 # Institutional Crypto Buy/Sell Solution

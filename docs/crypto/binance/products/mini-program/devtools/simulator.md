@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/devtools/simulator
 api_type: Guide
-updated_at: 2026-11-27 18:38:04.983143
+updated_at: 2026-11-28 18:37:09.704369
 ---
 
 # Simulator

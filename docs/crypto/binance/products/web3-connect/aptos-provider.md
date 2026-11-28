@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/web3-connect/aptos-provider
 api_type: Guide
-updated_at: 2026-11-27 18:28:30.333858
+updated_at: 2026-11-28 18:27:37.393371
 ---
 
 # Aptos Provider

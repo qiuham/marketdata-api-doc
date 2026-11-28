@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/about-mini-program
 api_type: Guide
-updated_at: 2026-11-27 18:30:57.630372
+updated_at: 2026-11-28 18:30:02.952245
 ---
 
 # About Mini Program

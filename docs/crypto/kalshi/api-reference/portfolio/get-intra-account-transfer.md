@@ -10,7 +10,7 @@ provider_name: Kalshi
 product: api
 product_id: kalshi
 source_url: 'https://docs.kalshi.com/api-reference/portfolio/get-intra-account-transfer'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # Get Intra Account Transfer
@@ -184,9 +184,11 @@ components:
       enum:
         - pending
         - complete
+        - failed
       x-enum-varnames:
         - IntraExchangeInstanceTransferStatusPending
         - IntraExchangeInstanceTransferStatusComplete
+        - IntraExchangeInstanceTransferStatusFailed
       description: Transfer status.
   responses:
     UnauthorizedError:

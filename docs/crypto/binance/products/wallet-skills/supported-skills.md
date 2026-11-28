@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/wallet-skills/supported-skills
 api_type: Guide
-updated_at: 2026-11-27 18:28:31.670628
+updated_at: 2026-11-28 18:27:38.702620
 ---
 
 # Supported Skills

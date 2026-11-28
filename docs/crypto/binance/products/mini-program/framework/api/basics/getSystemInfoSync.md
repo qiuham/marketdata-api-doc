@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/getSystemInfoSync
 api_type: Guide
-updated_at: 2026-11-27 18:47:06.796086
+updated_at: 2026-11-28 18:46:17.427173
 ---
 
 # bn.getSystemInfoSync

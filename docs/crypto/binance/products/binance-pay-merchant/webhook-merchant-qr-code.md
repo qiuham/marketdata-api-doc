@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/webhook-merchant-qr-code
 api_type: Guide
-updated_at: 2026-11-27 18:33:49.210203
+updated_at: 2026-11-28 18:32:51.276281
 ---
 
 # Merchant QR Code Notification

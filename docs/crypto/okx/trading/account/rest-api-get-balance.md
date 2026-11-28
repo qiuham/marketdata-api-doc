@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-balance
 anchor_id: trading-account-rest-api-get-balance
 api_type: REST
-updated_at: 2026-11-27 18:59:30.362956
+updated_at: 2026-11-28 18:57:23.767953
 ---
 
 # Get balance

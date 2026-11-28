@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-get_positions
 api_type: JSON-RPC
-updated_at: 2026-11-27 19:00:55.174114
+updated_at: 2026-11-28 18:58:43.075157
 ---
 
 # private/get_positions

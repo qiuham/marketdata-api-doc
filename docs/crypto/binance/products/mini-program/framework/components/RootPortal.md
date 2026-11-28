@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/RootPortal
 api_type: Guide
-updated_at: 2026-11-27 18:41:54.067403
+updated_at: 2026-11-28 18:41:03.600924
 ---
 
 # root-portal

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/location/chooseLocation
 api_type: Guide
-updated_at: 2026-11-27 18:44:59.994501
+updated_at: 2026-11-28 18:43:45.643213
 ---
 
 # bn.chooseLocation

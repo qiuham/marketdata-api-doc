@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/portfolio-account/core-concepts
 api_type: Guide
-updated_at: 2026-11-27 18:30:11.136974
+updated_at: 2026-11-28 18:29:17.126435
 ---
 
 # Core Concepts

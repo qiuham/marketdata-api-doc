@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/webhook-refund
 api_type: Guide
-updated_at: 2026-11-27 18:33:42.528734
+updated_at: 2026-11-28 18:32:44.570583
 ---
 
 # Binance Pay: Refund Order Notification

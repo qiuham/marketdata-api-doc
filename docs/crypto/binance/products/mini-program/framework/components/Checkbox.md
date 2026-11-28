@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/Checkbox
 api_type: Guide
-updated_at: 2026-11-27 18:42:44.997570
+updated_at: 2026-11-28 18:41:54.329226
 ---
 
 # Checkbox

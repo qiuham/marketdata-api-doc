@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/Slider
 api_type: Guide
-updated_at: 2026-11-27 18:41:49.884879
+updated_at: 2026-11-28 18:40:59.098401
 ---
 
 # slider

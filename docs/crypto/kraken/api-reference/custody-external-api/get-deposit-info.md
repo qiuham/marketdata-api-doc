@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/custody-external-api/get-deposit-info'
-updated_at: 2026-11-27
+updated_at: 2026-11-28
 ---
 
 # Get deposit info

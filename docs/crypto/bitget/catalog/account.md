@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/account
 api_type: REST
-updated_at: 2026-11-27 19:02:28.272528
+updated_at: 2026-11-28 19:00:13.194353
 ---
 
 # Account

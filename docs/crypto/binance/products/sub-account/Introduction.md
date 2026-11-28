@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/sub-account/Introduction
 api_type: Guide
-updated_at: 2026-11-27 18:28:57.583506
+updated_at: 2026-11-28 18:28:03.826120
 ---
 
 # Introduction
